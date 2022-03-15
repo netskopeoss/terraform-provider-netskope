@@ -7,11 +7,6 @@ import (
 	"github.com/ns-sbrown/nsgo"
 )
 
-//const BaseURL = "https://averagecompany.goskope.com"
-//const ApiToken = "5b29cffc47f70c2b5f96b7ec48d84195"
-
-//sedemo.goskope.com 296d7beeb66535818314bce46d32609a
-
 func resourcePublisherCreate(d *schema.ResourceData, m interface{}) error {
 
 	//Get Vars from Schema
