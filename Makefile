@@ -1,9 +1,9 @@
 TEST?=$$(go list ./... | grep -v 'vendor')
-HOSTNAME=netskope.com
-NAMESPACE=com
+HOSTNAME=github.com
+NAMESPACE=ns-sbrown
 NAME=netskope
 BINARY=terraform-provider-${NAME}
-VERSION=0.2
+VERSION=0.1.6
 OS_ARCH=darwin_amd64
 
 default: install
