@@ -28,18 +28,17 @@ func resourcePublisherCreate(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(strconv.Itoa(newpublisher.ID))
 
-	/*
-		pubid := nsgo.PublisherOptions{
-			Id: d.Get("id").(string),
-		}
+	pubid := nsgo.PublisherOptions{
+		Id: d.Get("id").(string),
+	}
 
-			token, err := nsclient.GetToken(pubid)
-			if err != nil {
-				return err
-			}
+	token, err := nsclient.GetToken(pubid)
+	if err != nil {
+		return err
+	}
 
-			d.Set("token", token.Token)
-	*/
+	d.Set("token", token.Token)
+
 	return nil
 
 }
@@ -93,13 +92,12 @@ func resourcePublisherDelete(d *schema.ResourceData, m interface{}) error {
 
 }
 
-func resourcePublisher() *schema.Resource {
+func resourcePublishers() *schema.Resource {
 	return &schema.Resource{
-		Create:   resourcePublisherCreate,
-		Read:     resourcePublisherRead,
-		Update:   resourcePublisherUpdate,
-		Delete:   resourcePublisherDelete,
-		Importer: &schema.ResourceImporter{State: schema.ImportStatePassthrough},
+		Create: resourcePublisherCreate,
+		Read:   resourcePublisherRead,
+		Update: resourcePublisherUpdate,
+		Delete: resourcePublisherDelete,
 		Schema: map[string]*schema.Schema{
 			"id": &schema.Schema{
 				Type:     schema.TypeString,
