@@ -1,31 +1,38 @@
 package netskope
 
 import (
+	"context"
+	"log"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ns-sbrown/nsgo"
 )
 
-func dataSourcePublishersRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePublishersRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	//Collect Diags
+	var diags diag.Diagnostics
+
 	//Init a client instance
 	nsclient := m.(*nsgo.Client)
 
 	//Get Publisher
 	pubs, err := nsclient.GetPublishers()
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
-
+	log.Println(pubs)
 	if err := d.Set("publishers", pubs.Publishers); err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
-	return nil
+	return diags
 
 }
 
 func dataSourcePublishers() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourcePublishersRead,
+		ReadContext: dataSourcePublishersRead,
 		Schema: map[string]*schema.Schema{
 			"publishers": &schema.Schema{
 				Type:     schema.TypeList,

@@ -1,13 +1,17 @@
 package netskope
 
 import (
+	"context"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ns-sbrown/nsgo"
 )
 
-func resourcePublisherCreate(d *schema.ResourceData, m interface{}) error {
+func resourcePublisherCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	//Collect Diags
+	var diags diag.Diagnostics
 
 	//Get Vars from Schema
 	name := d.Get("name").(string)
@@ -23,7 +27,7 @@ func resourcePublisherCreate(d *schema.ResourceData, m interface{}) error {
 
 	newpublisher, err := nsclient.CreatePublisher(publisher)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(strconv.Itoa(newpublisher.ID))
@@ -34,20 +38,25 @@ func resourcePublisherCreate(d *schema.ResourceData, m interface{}) error {
 
 	token, err := nsclient.GetToken(pubid)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.Set("token", token.Token)
 
-	return nil
+	return diags
 
 }
 
-func resourcePublisherRead(d *schema.ResourceData, m interface{}) error {
-	return nil
+func resourcePublisherRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	//Collect Diags
+	var diags diag.Diagnostics
+	return diags
 }
 
-func resourcePublisherUpdate(d *schema.ResourceData, m interface{}) error {
+func resourcePublisherUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	//Collect Diags
+	var diags diag.Diagnostics
+
 	//Get Vars from Schema
 	name := d.Get("name").(string)
 	id := d.Get("id").(string)
@@ -64,13 +73,16 @@ func resourcePublisherUpdate(d *schema.ResourceData, m interface{}) error {
 
 	_, err := nsclient.UpdatePublisher(publisher)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
-	return nil
+	return diags
 
 }
 
-func resourcePublisherDelete(d *schema.ResourceData, m interface{}) error {
+func resourcePublisherDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	//Collect Diags
+	var diags diag.Diagnostics
+
 	//Get Vars from Schema
 	id := d.Get("id").(string)
 	//Init a client instance
@@ -85,19 +97,19 @@ func resourcePublisherDelete(d *schema.ResourceData, m interface{}) error {
 	//Delete Publisher
 	_, err := nsclient.DeletePublisher(pubid)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	d.SetId("")
-	return nil
+	return diags
 
 }
 
 func resourcePublishers() *schema.Resource {
 	return &schema.Resource{
-		Create: resourcePublisherCreate,
-		Read:   resourcePublisherRead,
-		Update: resourcePublisherUpdate,
-		Delete: resourcePublisherDelete,
+		CreateContext: resourcePublisherCreate,
+		ReadContext:   resourcePublisherRead,
+		UpdateContext: resourcePublisherUpdate,
+		DeleteContext: resourcePublisherDelete,
 		Schema: map[string]*schema.Schema{
 			"id": &schema.Schema{
 				Type:     schema.TypeString,

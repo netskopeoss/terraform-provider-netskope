@@ -1,14 +1,18 @@
 package netskope
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ns-sbrown/nsgo"
 )
 
-func resourcePrivateAppsCreate(d *schema.ResourceData, m interface{}) error {
+func resourcePrivateAppsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	//Collect Diags
+	var diags diag.Diagnostics
 
 	//Get Vars from Schema
 	app_name := d.Get("app_name").(string)
@@ -48,20 +52,24 @@ func resourcePrivateAppsCreate(d *schema.ResourceData, m interface{}) error {
 
 	newapp, err := nsclient.CreatePrivateApp(appStruct)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(strconv.Itoa(newapp.Id))
 
-	return nil
+	return diags
 
 }
 
-func resourcePrivateAppsRead(d *schema.ResourceData, m interface{}) error {
-	return nil
+func resourcePrivateAppsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+	return diags
 }
 
-func resourcePrivateAppsUpdate(d *schema.ResourceData, m interface{}) error {
+func resourcePrivateAppsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	//Collect Diags
+	var diags diag.Diagnostics
+
 	//Get Vars from Schema
 	id := d.Get("id").(string)
 	app_name := d.Get("app_name").(string)
@@ -106,15 +114,18 @@ func resourcePrivateAppsUpdate(d *schema.ResourceData, m interface{}) error {
 
 	_, err := nsclient.UpdatePrivateApp(appid, appStruct)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	//d.SetId(strconv.Itoa(newapp.Id))
-	return nil
+	return diags
 
 }
 
-func resourcePrivateAppsDelete(d *schema.ResourceData, m interface{}) error {
+func resourcePrivateAppsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	//Collect Diags
+	var diags diag.Diagnostics
+
 	//Get Vars from Schema
 	id := d.Get("id").(string)
 	//Init a client instance
@@ -129,18 +140,18 @@ func resourcePrivateAppsDelete(d *schema.ResourceData, m interface{}) error {
 	//Delete Publisher
 	_, err := nsclient.DeletePrivateApp(appid)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	d.SetId("")
-	return nil
+	return diags
 }
 
 func resourcePrivateApps() *schema.Resource {
 	return &schema.Resource{
-		Create: resourcePrivateAppsCreate,
-		Read:   resourcePrivateAppsRead,
-		Update: resourcePrivateAppsUpdate,
-		Delete: resourcePrivateAppsDelete,
+		CreateContext: resourcePrivateAppsCreate,
+		ReadContext:   resourcePrivateAppsRead,
+		UpdateContext: resourcePrivateAppsUpdate,
+		DeleteContext: resourcePrivateAppsDelete,
 		Schema: map[string]*schema.Schema{
 			"id": &schema.Schema{
 				Type:     schema.TypeString,

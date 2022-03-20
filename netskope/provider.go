@@ -22,11 +22,11 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"netskope_publisher":   resourcePublishers(),
+			"netskope_publishers":  resourcePublishers(),
 			"netskope_privateapps": resourcePrivateApps(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"netskope_publisher": dataSourcePublishers(),
+			"netskope_publishers": dataSourcePublishers(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
