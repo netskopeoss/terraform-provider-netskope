@@ -26,7 +26,8 @@ func Provider() *schema.Provider {
 			"netskope_privateapps": resourcePrivateApps(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"netskope_publishers": dataSourcePublishers(),
+			"netskope_publishers":  dataSourcePublishers(),
+			"netskope_privateapps": dataSourcePrivateApps(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
