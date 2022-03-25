@@ -28,6 +28,7 @@ func Provider() *schema.Provider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"netskope_publishers":  dataSourcePublishers(),
 			"netskope_privateapps": dataSourcePrivateApps(),
+			"netskope_ipsec_pops":  dataSourceIpsecPops(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
