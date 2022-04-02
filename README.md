@@ -30,7 +30,15 @@ make install
     ```sh 
     export NS_BaseURL=https://sedemo.goskope.com && export NS_ApiToken=1234567890
     ```
-1. Something Else
+1. Run Simple Plan
+    ```sh
+    cd examples/simple
+    terraform init && terraform apply
+    ```
+1. Destroy Simple Objects
+    ```sh
+    terraform apply -destroy
+    ```
 
 
 
