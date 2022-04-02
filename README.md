@@ -26,7 +26,10 @@ make install
 
 
 ## Using  The Provider
-1. Export Provider Env Vsriables ```sh export NS_BaseURL=https://sedemo.goskope.com && export NS_ApiToken=1234567890```
+1. Export Provider Env Vsriables 
+    ```sh 
+    export NS_BaseURL=https://sedemo.goskope.com && export NS_ApiToken=1234567890
+    ```
 1. Something Else
 
 
