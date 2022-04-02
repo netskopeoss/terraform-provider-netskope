@@ -23,4 +23,12 @@ git clone https://github.com/ns-sbrown/terraform-provider-netskope.git
 cd terraform-provider-netskope
 make install
 ```
+
+
+## Using  The Provider
+1. Export Provider Env Vsriables ```export NS_BaseURL=https://sedemo.goskope.com && export NS_ApiToken=1234567890```
+1. Something Else
+
+
+
 `
