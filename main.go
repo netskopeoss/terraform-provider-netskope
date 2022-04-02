@@ -7,6 +7,8 @@ import (
 	"github.com/ns-sbrown/terraform-provider-netskope/netskope"
 )
 
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+
 func main() {
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: func() *schema.Provider {

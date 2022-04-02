@@ -77,6 +77,45 @@ func dataSourceIpsecPops() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						/*"options": &schema.Schema{
+							Type:     schema.TypeMap,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeMap,
+								Elem: &schema.Resource{
+									Schema: map[string]*schema.Schema{
+										"phase1": &schema.Schema{
+											Type:     schema.TypeList,
+											Computed: true,
+											Elem: &schema.Resource{
+												Schema: map[string]*schema.Schema{
+													"dhgroup": &schema.Schema{
+														Type:     schema.TypeString,
+														Computed: true,
+													},
+													"encryptionalgo": &schema.Schema{
+														Type:     schema.TypeString,
+														Computed: true,
+													},
+													"ikeversion": &schema.Schema{
+														Type:     schema.TypeString,
+														Computed: true,
+													},
+													"integrityalgo": &schema.Schema{
+														Type:     schema.TypeString,
+														Computed: true,
+													},
+													"salifetime": &schema.Schema{
+														Type:     schema.TypeInt,
+														Computed: true,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},*/
 					},
 				},
 			},

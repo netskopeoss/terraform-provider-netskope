@@ -5,7 +5,7 @@ import (
 	"github.com/ns-sbrown/nsgo"
 )
 
-// Provider -
+// Provider - Netskope APIv2 Provider
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
