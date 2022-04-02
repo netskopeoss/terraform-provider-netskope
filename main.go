@@ -7,6 +7,7 @@ import (
 	"github.com/ns-sbrown/terraform-provider-netskope/netskope"
 )
 
+//Build Terraform Documentation
 //go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 
 func main() {

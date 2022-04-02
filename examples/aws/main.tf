@@ -24,10 +24,10 @@ module "ec2" {
 }
 
 module "privateapps" {
-  source    = "./modules/privateapps"
-  namespace = var.namespace
-  pub_id = module.publishers.pub_id
-  pub_name = module.publishers.pub_name
+  source      = "./modules/privateapps"
+  namespace   = var.namespace
+  pub_id      = module.publishers.pub_id
+  pub_name    = module.publishers.pub_name
   private_dns = module.ec2.private_dns
 }
 

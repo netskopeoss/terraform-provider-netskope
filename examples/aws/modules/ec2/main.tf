@@ -71,7 +71,7 @@ resource "aws_instance" "ec2_private" {
 // Create aws_ami filter to pick up the ami available in your region
 data "aws_ami" "npa-publisher" {
   most_recent = true
-  owners  = ["679593333241"]
+  owners      = ["679593333241"]
 
   filter {
     name   = "name"
@@ -87,7 +87,7 @@ resource "aws_instance" "npa-publisher" {
   key_name                    = var.key_name
   subnet_id                   = var.vpc.public_subnets[0]
   vpc_security_group_ids      = [var.sg_pub_id]
-  user_data = var.token
+  user_data                   = var.token
 
 
   tags = {

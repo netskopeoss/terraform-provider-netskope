@@ -16,9 +16,9 @@ output "npa_connection_string" {
 }
 
 output "publisher_details" {
-    description = "Name and Token for the Publisher"
-    value = {
-    name         = "${module.publishers.pub_name}"
-    token         = "${module.publishers.pub_token}"
-  }  
+  description = "Name and Token for the Publisher"
+  value = {
+    name  = "${module.publishers.pub_name}"
+    token = "${module.publishers.pub_token}"
+  }
 }
