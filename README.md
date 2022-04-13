@@ -26,14 +26,34 @@ make install
 
 
 ## Using  The Provider
+The Netskope Terraform Provider Repo includes sample plans to get you started. You will need to complete several task before launching any of the samples or to use the provider in your own plans.
+
+### Netskope Tenant Tasks
+
+1. Identify the "Base URL" for your Netskope tenant.
+    - This will be the URL used to manage your Netskope tenant 
+    - For example: `https://example.goskope.com`
+1. Follow the [REST APIv2 Documentaion](https://docs.netskope.com/en/rest-api-v2-overview-312207.html) to create an API Token
+    - Required "Read+Write" Endpoints For NPA:
+        - `/api/v2/steering/private`
+        - `/api/v2/infrastructure/publisher`
+    ![API Token](images/npa_api_token.png)
+
+### Simple Terraform Plan
+1. Open a CLI shell and navigate to the provider directory
+    ```sh
+    cd <path>/terraform-provider-netskope
+    ```
 1. Export Provider Env Variables 
     ```sh 
-    export NS_BaseURL=https://sedemo.goskope.com && export NS_ApiToken=1234567890
+    export NS_BaseURL=https://<tenant url>
+    export NS_ApiToken=<apiv2 token>
     ```
 1. Run Simple Plan
     ```sh
     cd examples/simple
-    terraform init && terraform apply
+    terraform init
+    terraform apply
     ```
 1. Destroy Simple Objects
     ```sh
