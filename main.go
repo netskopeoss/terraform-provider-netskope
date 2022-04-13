@@ -4,7 +4,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 
-	"github.com/ns-sbrown/terraform-provider-netskope/netskope"
+	"github.com/netskopeoss/terraform-provider-netskope/netskope"
 )
 
 //Build Terraform Documentation

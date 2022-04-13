@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/ns-sbrown/nsgo"
+	"github.com/netskopeoss/netskope-api-client-go/nsgo"
 )
 
 func dataSourcePrivateAppsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
