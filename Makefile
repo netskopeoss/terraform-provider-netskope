@@ -1,8 +1,8 @@
 HOSTNAME=github.com
-NAMESPACE=ns-sbrown
+NAMESPACE=netskopeoss
 NAME=netskope
 BINARY=terraform-provider-${NAME}
-VERSION=0.1.6
+VERSION=0.1.0
 #Update OS_ARCH to match your platform. Run "terraform --version" to find these details.
 OS_ARCH=darwin_amd64
 

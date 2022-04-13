@@ -2,7 +2,7 @@ package netskope
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/ns-sbrown/nsgo"
+	"github.com/netskopeoss/netskope-api-client-go/nsgo"
 )
 
 // Provider - Netskope APIv2 Provider
