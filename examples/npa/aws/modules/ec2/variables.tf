@@ -1,8 +1,12 @@
-variable "namespace" {
+variable "project" {
   type = string
 }
 
-variable "token" {
+variable "token01" {
+  type = string
+}
+
+variable "token02" {
   type = string
 }
 
@@ -14,10 +18,10 @@ variable "key_name" {
   type = string
 }
 
-variable "sg_pub_id" {
+variable "internal_sg_id" {
   type = any
 }
 
-variable "sg_priv_id" {
+variable "external_sg_id" {
   type = any
 }

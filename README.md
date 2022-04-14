@@ -33,32 +33,41 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
 1. Identify the "Base URL" for your Netskope tenant.
     - This will be the URL used to manage your Netskope tenant 
     - For example: `https://example.goskope.com`
+
 1. Follow the [REST APIv2 Documentaion](https://docs.netskope.com/en/rest-api-v2-overview-312207.html) to create an API Token
     - Required "Read+Write" Endpoints For NPA:
         - `/api/v2/steering/private`
         - `/api/v2/infrastructure/publisher`
     ![API Token](images/npa_api_token.png)
 
-### Simple Terraform Plan
-1. Open a CLI shell and navigate to the provider directory
-    ```sh
-    cd <path>/terraform-provider-netskope
+
+### Terraform Plan
+
+1. Setup Required Providers in TF file
+    ```go
+    terraform {
+    required_providers {
+        netskope = {
+        version = "0.1.0"
+        source  = "github.com/netskopeoss/netskope"
+        }
+    }
+    }
     ```
-1. Export Provider Env Variables 
-    ```sh 
-    export NS_BaseURL=https://<tenant url>
-    export NS_ApiToken=<apiv2 token>
+
+1. Optionally configure Provider Block
+    - Use of `NS_BaseURL` and `NS_ApiToken` Env Variables is prefered
+    ```go
+    provider "netskope" {
+        baseurl = "https://<tenant-url>.goskope.com"
+        apitoken = "<api token>"
+    }
     ```
-1. Run Simple Plan
-    ```sh
-    cd examples/simple
-    terraform init
-    terraform apply
-    ```
-1. Destroy Simple Objects
-    ```sh
-    terraform apply -destroy
-    ```
+
+### Examples Plans
+
+- [Simple NPA Deployment in Netskope Tenant Only](./examples/npa/simple/README.md)
+- [Fully Automated NPA Depolyment in AWS](./examples/npa/aws/README.md)
 
 
 
