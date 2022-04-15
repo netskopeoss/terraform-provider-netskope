@@ -85,6 +85,53 @@ func dataSourceIpsecTunnels() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"status": &schema.Schema{
+							Type:     schema.TypeMap,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+								Elem: &schema.Resource{
+									Schema: map[string]*schema.Schema{
+										"status": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+										"since": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+										"throughput": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+									},
+								},
+							},
+						},
+						"pops": &schema.Schema{
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"name": &schema.Schema{
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"gateway": &schema.Schema{
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"probeip": &schema.Schema{
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"primary": &schema.Schema{
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+								},
+							},
+						},
 					},
 				},
 			},
