@@ -64,12 +64,71 @@ func resourceIpsecTunnelsUpdate(ctx context.Context, d *schema.ResourceData, m i
 	//Collect Diags
 	var diags diag.Diagnostics
 
+	//Get Vars from Schema
+	encryption := d.Get("encryption").(string)
+	site := d.Get("site").(string)
+	srcidentity := d.Get("srcidentity").(string)
+	srcipidentity := d.Get("srcipidentity").(string)
+	psk := d.Get("psk").(string)
+	notes := d.Get("notes").(string)
+	sourcetype := d.Get("sourcetype").(string)
+	pops := d.Get("pops").(([]interface{}))
+	bandwidth := d.Get("bandwidth").(int)
+	id := d.Get("id").(string)
+
+	//Init a client instance
+	nsclient := m.(*nsgo.Client)
+
+	//Set Request Options
+	//Options Struct
+	tunnelid := nsgo.RequestOptions{
+		Id: id,
+	}
+
+	//Define New Tunnel Struct
+	updatetunnel := nsgo.NewIpsecTunnel{
+		Encryption:    encryption,
+		Site:          site,
+		Srcidentity:   srcidentity,
+		Srcipidentity: srcipidentity,
+		Psk:           psk,
+		Pops:          pops,
+		Bandwidth:     bandwidth,
+		Notes:         notes,
+		Sourcetype:    sourcetype,
+	}
+
+	//Update Tunnel
+	_, err := nsclient.UpdateIpsecTunnel(tunnelid, updatetunnel)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	return diags
 }
 
 func resourceIpsecTunnelsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	//Collect Diags
 	var diags diag.Diagnostics
+
+	//Get Request Vars
+	id := d.Get("id").(string)
+
+	//Init a client instance
+	nsclient := m.(*nsgo.Client)
+
+	//Options Struct
+	tunnelid := nsgo.RequestOptions{
+		Id: id,
+	}
+
+	//Delete tunnel
+	_, err := nsclient.DeleteIpsecTunnel(tunnelid)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId("")
 
 	return diags
 }
