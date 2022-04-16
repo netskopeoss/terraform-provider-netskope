@@ -22,8 +22,9 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"netskope_publishers":  resourcePublishers(),
-			"netskope_privateapps": resourcePrivateApps(),
+			"netskope_publishers":    resourcePublishers(),
+			"netskope_privateapps":   resourcePrivateApps(),
+			"netskope_ipsec_tunnels": resourceIpsecTunnels(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"netskope_publishers":    dataSourcePublishers(),
