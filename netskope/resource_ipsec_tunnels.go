@@ -24,6 +24,7 @@ func resourceIpsecTunnelsCreate(ctx context.Context, d *schema.ResourceData, m i
 	sourcetype := d.Get("sourcetype").(string)
 	pops := d.Get("pops").(([]interface{}))
 	bandwidth := d.Get("bandwidth").(int)
+	enable := d.Get("enable").(bool)
 
 	//Init a client instance
 	nsclient := m.(*nsgo.Client)
@@ -39,6 +40,7 @@ func resourceIpsecTunnelsCreate(ctx context.Context, d *schema.ResourceData, m i
 		Bandwidth:     bandwidth,
 		Notes:         notes,
 		Sourcetype:    sourcetype,
+		Enable:        enable,
 	}
 
 	_, err := nsclient.CreateIpsecTunnel(newtunnel)
@@ -74,6 +76,7 @@ func resourceIpsecTunnelsUpdate(ctx context.Context, d *schema.ResourceData, m i
 	sourcetype := d.Get("sourcetype").(string)
 	pops := d.Get("pops").(([]interface{}))
 	bandwidth := d.Get("bandwidth").(int)
+	enable := d.Get("enable").(bool)
 	id := d.Get("id").(string)
 
 	//Init a client instance
@@ -96,6 +99,7 @@ func resourceIpsecTunnelsUpdate(ctx context.Context, d *schema.ResourceData, m i
 		Bandwidth:     bandwidth,
 		Notes:         notes,
 		Sourcetype:    sourcetype,
+		Enable:        enable,
 	}
 
 	//Update Tunnel
@@ -176,6 +180,10 @@ func resourceIpsecTunnels() *schema.Resource {
 			"bandwidth": &schema.Schema{
 				Type:     schema.TypeInt,
 				Required: true,
+			},
+			"enable": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
 			},
 			"pops": {
 				Type:     schema.TypeList,
