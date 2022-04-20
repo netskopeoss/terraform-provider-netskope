@@ -2,11 +2,9 @@ module github.com/netskopeoss/terraform-provider-netskope
 
 go 1.17
 
-replace github.com/netskopeoss/netskope-api-client-go => ../netskope-api-client-go
-
 require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1
-	github.com/netskopeoss/netskope-api-client-go v0.0.0-00010101000000-000000000000
+	github.com/netskopeoss/netskope-api-client-go v0.0.0-20220416202441-8317ab94a74c
 )
 
 require (
