@@ -12,16 +12,28 @@
 
 ## Building The Provider - on a Mac
 
-1. Clone netskope-api-client-go Git Repo
 1. Clone Netskope Provider Repo
 1. Navigate to the Netskope Provider Dir
 1. Compile the Netskope Provider
 
 ```sh
-git clone https://github.com/netskopeoss/netskope-api-client-go.git
 git clone https://github.com/netskopeoss/terraform-provider-netskope.git
 cd terraform-provider-netskope
 make install
+```
+
+## Building The Provider - on Windows
+
+1. Clone Netskope Provider Repo
+1. Navigate to the Netskope Provider Dir
+1. Compile the Netskope Provider
+1. Copy the Executable
+
+```cmd
+git clone https://github.com/netskopeoss/terraform-provider-netskope.git
+cd terraform-provider-netskope
+go build
+xcopy terraform-provider-netskope.exe %AppData%\terraform.d\plugins\github.com\netskopeoss\netskope\0.1.0\windows_386\ /Y
 ```
 
 
