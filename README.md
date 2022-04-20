@@ -6,8 +6,7 @@
 ## Requirements
 
 -	[Terraform](https://www.terraform.io/downloads.html) >= 1.1.7
--	[Go](https://golang.org/doc/install) >= 1.17
--   [netskope-api-client-go](https://github.com/netskopeoss/netskope-api-client-go) 
+-	[Go](https://golang.org/doc/install) >= 1.17 
 
 
 ## Building The Provider - on a Mac
