@@ -3,7 +3,6 @@ NAMESPACE=netskopeoss
 NAME=netskope
 BINARY=terraform-provider-${NAME}
 VERSION=0.1.0
-#Update OS_ARCH to match your platform. Run "terraform --version" to find these details.
 OS_ARCH=$(shell terraform -version | (grep ^on) | sed 's/on //' )
 
 default: install
