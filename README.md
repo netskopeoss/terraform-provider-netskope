@@ -9,7 +9,7 @@
 -	[Go](https://golang.org/doc/install) >= 1.17 
 
 
-## Building The Provider - on a Mac
+## Building The Provider - on Mac or Linux
 
 1. Clone Netskope Provider Repo
 1. Navigate to the Netskope Provider Dir
