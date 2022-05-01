@@ -78,8 +78,6 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
 ### Examples Plans
 
 - [Simple NPA Deployment in Netskope Tenant Only](./examples/npa/simple/README.md)
-- [Fully Automated NPA Depolyment in AWS](./examples/npa/aws/README.md)
+- [Fully Automated NPA Deployment to existing AWS VPC](./examples/npa/aws/existing-vpc/README.md)
+- [Fully Automated NPA Deployment to new AWS VPC](./examples/npa/aws/new-vpc/README.md)
 
-
-
-`
