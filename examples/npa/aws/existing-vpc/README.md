@@ -1,4 +1,4 @@
-# Netskope Publisher and Private App Creation
+# Netskope Publisher and Private App Creation - Existing VPC
 This is an example plan that uses the Netskope Provider and the AWS Provider to deploy a Publisher in an existing VPC and configure a Private App inside a Netskope Tenant to use the new Publisher.
 
 ## Providers
@@ -22,13 +22,13 @@ This is an example plan that uses the Netskope Provider and the AWS Provider to 
     aws_subnet = "<existing subnet id>"
     aws_security_group = "<existing security group>"
     ```
-1. Run Simple Plan
+1. Apply Plan
     ```sh
     cd examples/npa/aws/existing-vpc    
     terraform init
     terraform apply
     ```
-1. Destroy Simple Objects
+1. Destroy Plan
     ```sh
     terraform apply -destroy
     ```
