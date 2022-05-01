@@ -44,13 +44,14 @@ output "secondary_publisher_details" {
 resource "netskope_privateapps" "PrivateAppName" {
   app_name = "PrivateAppName"
   host     = "www.myexample.com, ssh.example.com"
+
   protocols {
     type = "tcp"
-    port = "22, 80-443"
+    port = "22, 443, 8080-8081" //Ports can be single port or ranges
   }
 
   protocols {
-    type = "udp"
+    type = "udp" 
     port = "123, 8443"
   }
 
@@ -68,3 +69,4 @@ resource "netskope_privateapps" "PrivateAppName" {
   use_publisher_dns = true
 
 }
+
