@@ -5,12 +5,12 @@ output "intenral_ec2_connection_string" {
 
 output "pub01_connection_string" {
   description = "Copy/Paste/Enter - You are in the Publisher01 npa instance"
-  value       = "ssh -i ${module.ssh-key.key_name}.pem centos@${module.ec2.pub01_ip}"
+  value       = "ssh -i ${module.ssh-key.key_name}.pem ubuntu@${module.ec2.pub01_ip}"
 }
 
 output "pub02_connection_string" {
   description = "Copy/Paste/Enter - You are in the Publisher01 npa instance"
-  value       = "ssh -i ${module.ssh-key.key_name}.pem centos@${module.ec2.pub02_ip}"
+  value       = "ssh -i ${module.ssh-key.key_name}.pem ubuntu@${module.ec2.pub02_ip}"
 }
 
 output "publisher01_details" {
