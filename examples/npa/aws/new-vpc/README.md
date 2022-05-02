@@ -39,7 +39,7 @@ Modules:
     ```sh 
     export TF_VAR_project=<project name>
     export TF_VAR_REGION=<aws region>
-    export AWS_PROFILE=<aws profile name>
+    export AWS_PROFILE=<aws profile name> #Optional
     ```
 
 1. Apply

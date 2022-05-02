@@ -19,7 +19,7 @@ This is an example plan that uses the Netskope Provider and the AWS Provider to 
 1. Export Terraform Environment Variables  or create [.tfvars file](https://www.terraform.io/language/values/variables#variable-definitions-tfvars-files) (Optional)
     ```sh
     export TF_VAR_REGION=<aws region>
-    export AWS_PROFILE=<aws profile name>
+    export AWS_PROFILE=<aws profile name> #Optional
     export TF_VAR_aws_key_name = "<existing ssh key name>"
     export TF_VAR_aws_subnet = "<existing subnet id>"
     export TF_VAR_aws_security_group = "<existing security group>"
