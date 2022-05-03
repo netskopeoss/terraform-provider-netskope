@@ -7,6 +7,10 @@ terraform {
   }
 }
 
+provider "aws" {
+  region  = var.region
+}
+
 //Netskope Resources
 //
 //Create Publisher in Netskope
