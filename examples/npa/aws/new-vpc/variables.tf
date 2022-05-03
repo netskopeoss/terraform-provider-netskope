@@ -4,15 +4,14 @@ variable "project" {
   type        = string
 }
 
-
-//Optional 
-/*
 variable "region" {
   description = "AWS region"
   default     = "us-east-1"
   type        = string
 }
 
+//Optional 
+/*
 variable "profile" {
   description = "AWS Profile to use"
   default     = "Default"

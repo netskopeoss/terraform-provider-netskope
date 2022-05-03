@@ -1,3 +1,9 @@
+variable "region" {
+  description = "AWS region"
+  default     = "us-east-1"
+  type        = string
+}
+
 variable "publisher" {
   description = "Publisher Name"
   default     = "ns-publisher-tf"
