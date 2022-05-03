@@ -35,11 +35,13 @@ Modules:
     export NS_ApiToken=<apiv2 token>
     ```
 
-1. Export Terraform Environment Variables  or create [.tfvars file](https://www.terraform.io/language/values/variables#variable-definitions-tfvars-files) (Optional)
+1. Export Required Terraform Environment Variables  or create [terraform.tfvars file](https://www.terraform.io/language/values/variables#variable-definitions-tfvars-files)
     ```sh 
     export TF_VAR_project=<project name>
+    ```
+1. Export Optional Terraform Environment Variables  or create [terraform.tfvars file](https://www.terraform.io/language/values/variables#variable-definitions-tfvars-files)
+    ```sh 
     export TF_VAR_REGION=<aws region>
-    export AWS_PROFILE=<aws profile name> #Optional
     ```
 
 1. Apply
