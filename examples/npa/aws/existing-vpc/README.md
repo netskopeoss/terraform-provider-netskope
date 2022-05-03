@@ -16,13 +16,15 @@ This is an example plan that uses the Netskope Provider and the AWS Provider to 
     export NS_BaseURL=https://<tenant url>
     export NS_ApiToken=<apiv2 token>
     ```
-1. Export Terraform Environment Variables  or create [.tfvars file](https://www.terraform.io/language/values/variables#variable-definitions-tfvars-files) (Optional)
+1. Export Required Terraform Environment Variables  or create [terraform.tfvars file](https://www.terraform.io/language/values/variables#variable-definitions-tfvars-files)
     ```sh
-    export TF_VAR_REGION=<aws region>
-    export AWS_PROFILE=<aws profile name> #Optional
     export TF_VAR_aws_key_name = "<existing ssh key name>"
     export TF_VAR_aws_subnet = "<existing subnet id>"
     export TF_VAR_aws_security_group = "<existing security group>"
+    ```
+1. Include Optional Terraform Environment Variables  or create [terraform.tfvars file](https://www.terraform.io/language/values/variables#variable-definitions-tfvars-files)
+    ```sh
+    export TF_VAR_REGION=<aws region>
     ```
 1. Apply Plan
     ```sh
