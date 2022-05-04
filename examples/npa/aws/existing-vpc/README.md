@@ -1,7 +1,7 @@
 # Netskope Publisher and Private App Creation - Existing VPC
 This is an example plan that uses the Netskope Provider along with the AWS Provider to deploy a Publisher in an existing AWS VPC. It also configures a Private App inside a Netskope Tenant to use the new Publisher.
 
-## Doucmentation
+
 [Module Documentation](./Module.md)
 
 ## Providers
