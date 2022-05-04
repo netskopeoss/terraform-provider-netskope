@@ -1,6 +1,8 @@
 # AWS VPC and Netskope Publisher Creation
 This is an example plan that uses modules to create AWS infrastructure and with Netskope Publishers and a Private App that is used to reach to internal resources.
 
+[Module Documentation](./Module.md)
+
 ## Providers
 
 - [Netskope Terraform Provider](https://github.com/netskopeoss/terraform-provider-netskope)
