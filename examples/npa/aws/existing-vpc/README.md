@@ -26,7 +26,7 @@ This is an example plan that uses the Netskope Provider along with the AWS Provi
     ```
 1. Include Optional Terraform Environment Variables  or create [terraform.tfvars file](https://www.terraform.io/language/values/variables#variable-definitions-tfvars-files)
     ```sh
-    export TF_VAR_REGION=<aws region>
+    export TF_VAR_aws_region=<aws region>
     ```
 1. Apply Plan
     ```sh
