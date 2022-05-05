@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.region
+  region  = var.aws_region
 }
 
 //Netskope Resources

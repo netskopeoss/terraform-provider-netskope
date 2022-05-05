@@ -28,7 +28,7 @@ variable "privateapp_udp" {
   type        = string
 }
 
-variable "region" {
+variable "aws_region" {
   description = "AWS region"
   default     = "us-east-1"
   type        = string
