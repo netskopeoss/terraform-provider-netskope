@@ -1,9 +1,3 @@
-variable "region" {
-  description = "AWS region"
-  default     = "us-east-1"
-  type        = string
-}
-
 variable "publisher" {
   description = "Publisher Name"
   default     = "ns-publisher-tf"
@@ -31,6 +25,12 @@ variable "privateapp_tcp" {
 variable "privateapp_udp" {
   description = "UDP Ports"
   default     = "123-124" //Example Showing range
+  type        = string
+}
+
+variable "region" {
+  description = "AWS region"
+  default     = "us-east-1"
   type        = string
 }
 
