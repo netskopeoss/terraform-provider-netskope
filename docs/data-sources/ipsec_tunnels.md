@@ -3,7 +3,7 @@
 page_title: "netskope_ipsec_tunnels Data Source - terraform-provider-netskope"
 subcategory: ""
 description: |-
-  
+  IPSec is not yet supported.
 ---
 
 # netskope_ipsec_tunnels (Data Source)
