@@ -52,7 +52,7 @@ resource "netskope_privateapps" "PrivateAppName" {
 
   protocols {
     type = "udp" 
-    port = "123, 8443"
+    port = "194"
   }
 
   publisher {
@@ -64,9 +64,6 @@ resource "netskope_privateapps" "PrivateAppName" {
     publisher_id   = netskope_publishers.SecondaryPublisherName.id
     publisher_name = netskope_publishers.SecondaryPublisherName.name
   }
-
-  //Optional Param
-  use_publisher_dns = true
 
 }
 

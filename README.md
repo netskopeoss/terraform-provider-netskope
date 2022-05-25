@@ -52,7 +52,7 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
     ![API Token](images/npa_api_token.png)
 
 
-### Terraform Plan
+### Terraform Configuration
 
 1. Setup Required Providers in TF file
     ```go
@@ -67,7 +67,7 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
     ```
 
 1. Optionally configure Provider Block
-    - Use of `NS_BaseURL` and `NS_ApiToken` Env Variables is prefered
+    - Use of `NS_BaseURL` and `NS_ApiToken` Environment Variables are preferred
     ```go
     provider "netskope" {
         baseurl = "https://<tenant-url>.goskope.com"
@@ -75,9 +75,42 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
     }
     ```
 
-### Examples Plans
+1. Create a Publisher
+    ```go
+        resource "netskope_publishers" "Publisher" {
+            name = "Example-Publisher"
+        }
+    ```
 
-- [Simple NPA Deployment in Netskope Tenant Only](./examples/npa/simple/README.md)
-- [Fully Automated NPA Deployment to existing AWS VPC](./examples/npa/aws/existing-vpc/README.md)
-- [Fully Automated NPA Deployment to new AWS VPC](./examples/npa/aws/new-vpc/README.md)
+1. Create an Private Application
+    ```go
+        resource "netskope_privateapps" "PrivateApp" {
+            app_name = "Eaxmple-Private-App"
+            host     = "site1.example.internal, site2.example.internal"
+
+            protocols {
+                type = "tcp"
+                port = "22, 443, 8080-8081"
+            }
+
+            protocols {
+                type = "udp"
+                port = "194"
+            }
+
+            publisher {
+                publisher_id   = netskope_publishers.Publisher.id
+                publisher_name = netskope_publishers.Publisher.name
+            }
+        }
+```
+
+
+### Examples
+
+- [Simple NPA Deployment in Netskope Tenant Only](./examples/npa/README.md)
+
+### Modules using the Netskope Provider
+
+- [Netskope Publisher in Amazon EC2](https://github.com/ns-sbrown/terraform-netskope-publisher-aws)
 
