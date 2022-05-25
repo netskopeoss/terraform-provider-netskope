@@ -3,7 +3,7 @@
 page_title: "netskope_privateapps Data Source - terraform-provider-netskope"
 subcategory: ""
 description: |-
-  
+  Retrieves information about Private Apps deployed in a Netskope tenant. 
 ---
 
 # netskope_privateapps (Data Source)

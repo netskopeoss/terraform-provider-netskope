@@ -3,7 +3,7 @@
 page_title: "netskope_publishers Data Source - terraform-provider-netskope"
 subcategory: ""
 description: |-
-  
+  Retrieves information about Publishers deployed in a Netskope tenant. 
 ---
 
 # netskope_publishers (Data Source)
