@@ -103,14 +103,16 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
                 publisher_name = netskope_publishers.Publisher.name
             }
         }
-```
+    ```
+
 
 
 ### Examples
+ - [NPA Deployment in Netskope Tenant](./examples/npa/README.md)
 
-- [Simple NPA Deployment in Netskope Tenant Only](./examples/npa/README.md)
 
 ### Modules using the Netskope Provider
 
 - [Netskope Publisher in Amazon EC2](https://github.com/ns-sbrown/terraform-netskope-publisher-aws)
+
 
