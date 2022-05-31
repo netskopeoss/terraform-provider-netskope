@@ -8,11 +8,47 @@ description: |-
 
 # netskope_publishers (Data Source)
 
+Use to retrieve a list of publishers. Also supports filtering based on field names and values.
+
+### Filter Operators:
+| Operator | Description |
+| -------- | ----------- |
+| eq | equal |
+| ge | greater than or equal |
+| gt | greater than |
+| le | less than or equal |
+| lt | less than |
+| ne | not equal |
+| pr | present (has value) |
+| sw | start with |  
+
+
+### Logical Operators:
+| Operator | Description |
+| -------- | ----------- |
+| and | logical and |
+| or | Logical or |
+
+
 
 ## Example Usage
 
 ```go
 data "netskope_publishers" "all" {}
+
+output "publishers" {
+  description = "Publishers"
+  value       = data.netskope_publishers.all.publishers
+}
+
+```
+
+### With Filter
+
+```go
+data "netskope_publishers" "all" {
+  filter = "publisher_name sw example and registered eq true"
+}
 
 output "publishers" {
   description = "Publishers"
