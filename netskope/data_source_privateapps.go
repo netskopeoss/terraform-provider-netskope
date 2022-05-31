@@ -15,11 +15,14 @@ func dataSourcePrivateAppsRead(ctx context.Context, d *schema.ResourceData, m in
 	//Collect Diags
 	var diags diag.Diagnostics
 
+	//Set Filter
+	filter := d.Get("filter").(string)
+
 	//Init a client instance
 	nsclient := m.(*nsgo.Client)
 
 	//Get Publishers
-	apps, err := nsclient.GetPrivateApps()
+	apps, err := nsclient.GetPrivateAppsWithFilter(filter)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -44,6 +47,10 @@ func dataSourcePrivateApps() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourcePrivateAppsRead,
 		Schema: map[string]*schema.Schema{
+			"filter": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"private_apps": &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
