@@ -15,11 +15,14 @@ func dataSourcePublishersRead(ctx context.Context, d *schema.ResourceData, m int
 	//Collect Diags
 	var diags diag.Diagnostics
 
+	//Set Filter
+	filter := d.Get("filter").(string)
+
 	//Init a client instance
 	nsclient := m.(*nsgo.Client)
 
 	//Get Publishers
-	pubs, err := nsclient.GetPublishers()
+	pubs, err := nsclient.GetPublishersWithFilter(filter)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -74,6 +77,10 @@ func dataSourcePublishers() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourcePublishersRead,
 		Schema: map[string]*schema.Schema{
+			"filter": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"publishers": &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
