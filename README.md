@@ -59,7 +59,7 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
     terraform {
     required_providers {
         netskope = {
-        version = "0.1.0"
+        version = "0.2.0"
         source  = "github.com/netskopeoss/netskope"
         }
     }
@@ -113,6 +113,6 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
 
 ### Modules using the Netskope Provider
 
-- [Netskope Publisher in Amazon EC2](https://github.com/ns-sbrown/terraform-netskope-publisher-aws)
+- [Netskope Publisher in Amazon EC2](https://github.com/netskopeoss/terraform-netskope-publisher-aws)
 
 
