@@ -6,34 +6,8 @@
 ## Requirements
 
 -	[Terraform](https://www.terraform.io/downloads.html) >= 1.1.7
--	[Go](https://golang.org/doc/install) >= 1.17 
 
 
-## Building The Provider - on Mac or Linux
-
-1. Clone Netskope Provider Repo
-1. Navigate to the Netskope Provider Dir
-1. Compile the Netskope Provider
-
-```sh
-git clone https://github.com/netskopeoss/terraform-provider-netskope.git
-cd terraform-provider-netskope
-make install
-```
-
-## Building The Provider - on Windows
-
-1. Clone Netskope Provider Repo
-1. Navigate to the Netskope Provider Dir
-1. Compile the Netskope Provider
-1. Copy the Executable
-
-```cmd
-git clone https://github.com/netskopeoss/terraform-provider-netskope.git
-cd terraform-provider-netskope
-go build
-xcopy terraform-provider-netskope.exe %AppData%\terraform.d\plugins\github.com\netskopeoss\netskope\0.1.0\windows_386\ /Y
-```
 
 
 ## Using  The Provider
@@ -59,8 +33,8 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
     terraform {
     required_providers {
         netskope = {
-        version = "0.2.0"
-        source  = "github.com/netskopeoss/netskope"
+        version = "0.2.1"
+        source  = "netskopeoss/netskope"
         }
     }
     }
@@ -114,5 +88,35 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
 ### Modules using the Netskope Provider
 
 - [Netskope Publisher in Amazon EC2](https://github.com/netskopeoss/terraform-netskope-publisher-aws)
+
+
+
+## Developing The Provider
+
+### Building The Provider - on Mac or Linux
+
+1. Clone Netskope Provider Repo
+1. Navigate to the Netskope Provider Dir
+1. Compile the Netskope Provider
+
+```sh
+git clone https://github.com/netskopeoss/terraform-provider-netskope.git
+cd terraform-provider-netskope
+make install
+```
+
+### Building The Provider - on Windows
+
+1. Clone Netskope Provider Repo
+1. Navigate to the Netskope Provider Dir
+1. Compile the Netskope Provider
+1. Copy the Executable
+
+```cmd
+git clone https://github.com/netskopeoss/terraform-provider-netskope.git
+cd terraform-provider-netskope
+go build
+xcopy terraform-provider-netskope.exe %AppData%\terraform.d\plugins\github.com\netskopeoss\netskope\0.2.1\windows_386\ /Y
+```
 
 
