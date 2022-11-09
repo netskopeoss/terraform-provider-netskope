@@ -88,6 +88,18 @@ func dataSourcePrivateApps() *schema.Resource {
 							Type:     schema.TypeBool,
 							Computed: true,
 						},
+						"tags": &schema.Schema{
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"tag_name": &schema.Schema{
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+								},
+							},
+						},
 						"protocols": &schema.Schema{
 							Type:     schema.TypeList,
 							Computed: true,
