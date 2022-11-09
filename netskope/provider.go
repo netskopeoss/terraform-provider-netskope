@@ -37,6 +37,11 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	nsclient := nsgo.NewClient(d.Get("baseurl").(string), d.Get("apitoken").(string))
+	//Client Config
+	config := nsgo.Config{
+		BaseURL:  d.Get("baseurl").(string),
+		ApiToken: d.Get("apitoken").(string),
+	}
+	nsclient := nsgo.NewRetryClient(config)
 	return nsclient, nil
 }
