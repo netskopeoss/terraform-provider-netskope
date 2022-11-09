@@ -19,6 +19,7 @@ func resourcePrivateAppsCreate(ctx context.Context, d *schema.ResourceData, m in
 	host := d.Get("host").(string)
 	protocols := d.Get("protocols").([]interface{})
 	publisher_id := d.Get("publisher").([]interface{})
+	tags := d.Get("tags").([]interface{})
 	use_publisher_dns := d.Get("use_publisher_dns").(bool)
 	clientless_access := d.Get("clientless_access").(bool)
 	trust_self_signed_certs := d.Get("trust_self_signed_certs").(bool)
@@ -40,11 +41,17 @@ func resourcePrivateAppsCreate(ctx context.Context, d *schema.ResourceData, m in
 	publishersStruct := []nsgo.PublisherIdentity{}
 	json.Unmarshal(publishers_json, &publishersStruct)
 
+	//Marshall Tags
+	tags_json, _ := json.Marshal(tags)
+	tagsStruct := []nsgo.PrivateAppTags{}
+	json.Unmarshal(tags_json, &tagsStruct)
+
 	appStruct := nsgo.PrivateApp{
 		AppName:              app_name,
 		Host:                 host,
 		Protocols:            protocolStruct,
 		Publishers:           publishersStruct,
+		Tags:                 tagsStruct,
 		UsePublisherDNS:      use_publisher_dns,
 		ClientlessAccess:     clientless_access,
 		TrustSelfSignedCerts: trust_self_signed_certs,
@@ -77,6 +84,7 @@ func resourcePrivateAppsUpdate(ctx context.Context, d *schema.ResourceData, m in
 	protocols := d.Get("protocols").([]interface{})
 	publisher_id := d.Get("publisher").([]interface{})
 	use_publisher_dns := d.Get("use_publisher_dns").(bool)
+	tags := d.Get("tags").([]interface{})
 	clientless_access := d.Get("clientless_access").(bool)
 	trust_self_signed_certs := d.Get("trust_self_signed_certs").(bool)
 	//log.Println(app_name)
@@ -102,11 +110,17 @@ func resourcePrivateAppsUpdate(ctx context.Context, d *schema.ResourceData, m in
 	publishersStruct := []nsgo.PublisherIdentity{}
 	json.Unmarshal(publishers_json, &publishersStruct)
 
+	//Marshall Tags
+	tags_json, _ := json.Marshal(tags)
+	tagsStruct := []nsgo.PrivateAppTags{}
+	json.Unmarshal(tags_json, &tagsStruct)
+
 	appStruct := nsgo.PrivateApp{
 		AppName:              app_name,
 		Host:                 host,
 		Protocols:            protocolStruct,
 		Publishers:           publishersStruct,
+		Tags:                 tagsStruct,
 		UsePublisherDNS:      use_publisher_dns,
 		ClientlessAccess:     clientless_access,
 		TrustSelfSignedCerts: trust_self_signed_certs,
@@ -176,6 +190,18 @@ func resourcePrivateApps() *schema.Resource {
 			"trust_self_signed_certs": &schema.Schema{
 				Type:     schema.TypeBool,
 				Optional: true,
+			},
+			"tags": &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_name": &schema.Schema{
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
 			},
 			"protocols": &schema.Schema{
 				Type:     schema.TypeList,
