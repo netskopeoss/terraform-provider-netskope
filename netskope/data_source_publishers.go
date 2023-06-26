@@ -99,9 +99,33 @@ func dataSourcePublishers() *schema.Resource {
 							Computed: true,
 						},
 						"upgrade_failed_reason": &schema.Schema{
-							Type:     schema.TypeString,
+							Type:     schema.TypeMap,
 							Computed: true,
-						}, "upgrade_request": &schema.Schema{
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+								Elem: &schema.Resource{
+									Schema: map[string]*schema.Schema{
+										"detail": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+										"error_code": &schema.Schema{
+											Type:     schema.TypeInt,
+											Computed: true,
+										},
+										"timestamp": &schema.Schema{
+											Type:     schema.TypeInt,
+											Computed: true,
+										},
+										"version": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+									},
+								},
+							},
+						},
+						"upgrade_request": &schema.Schema{
 							Type:     schema.TypeBool,
 							Computed: true,
 						},
