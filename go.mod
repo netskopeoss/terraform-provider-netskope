@@ -1,11 +1,10 @@
-module github.com/netskopeoss/terraform-provider-netskope
+module github.com/jeff-clearcover/terraform-provider-netskope
 
 go 1.17
 
 require (
 	github.com/hashicorp/terraform-plugin-docs v0.8.1
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1
-	github.com/jeff-clearcover/netskope-api-client-go@fix/publishers-data-source
 )
 
 require (
