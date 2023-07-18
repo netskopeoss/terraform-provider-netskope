@@ -90,6 +90,10 @@ func dataSourcePublishers() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
+						"publisher_upgrade_profiles_external_id": &schema.Schema{
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
 						"publisher_name": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
@@ -98,10 +102,7 @@ func dataSourcePublishers() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"upgrade_failed_reason": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						}, "upgrade_request": &schema.Schema{
+						"upgrade_request": &schema.Schema{
 							Type:     schema.TypeBool,
 							Computed: true,
 						},
@@ -113,9 +114,20 @@ func dataSourcePublishers() *schema.Resource {
 							Type:     schema.TypeBool,
 							Computed: true,
 						},
+						"lbrokerconnect": &schema.Schema{
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
 						"status": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
+						},
+						"tags": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
 						"stitcher_id": &schema.Schema{
 							Type:     schema.TypeFloat,
@@ -144,7 +156,57 @@ func dataSourcePublishers() *schema.Resource {
 											Type:     schema.TypeString,
 											Computed: true,
 										},
+										"latency": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
 										"version": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+									},
+								},
+							},
+						},
+						"upgrade_failed_reason": &schema.Schema{
+							Type:     schema.TypeMap,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+								Elem: &schema.Resource{
+									Schema: map[string]*schema.Schema{
+										"detail": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+										"error_code": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+										"timestamp": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+										"version": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+									},
+								},
+							},
+						},
+						"upgrade_status": &schema.Schema{
+							Type:     schema.TypeMap,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+								Elem: &schema.Resource{
+									Schema: map[string]*schema.Schema{
+										"status_failure_code": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+										"upstat": &schema.Schema{
 											Type:     schema.TypeString,
 											Computed: true,
 										},
