@@ -150,8 +150,8 @@ github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RR
 github.com/mitchellh/reflectwalk v1.0.0/go.mod h1:mSTlrgnPZtwu0c4WaC2kGObEpuNDbx0jmZXqmk4esnw=
 github.com/mitchellh/reflectwalk v1.0.2 h1:G2LzWKi524PWgd3mLHV8Y5k7s6XUvT0Gef6zxSIeXaQ=
 github.com/mitchellh/reflectwalk v1.0.2/go.mod h1:mSTlrgnPZtwu0c4WaC2kGObEpuNDbx0jmZXqmk4esnw=
-github.com/netskopeoss/netskope-api-client-go v0.3.2 h1:bL0pCtUOnjuGdmjOTKGrDLj+WufoGswvvaLT0/8RC6E=
-github.com/netskopeoss/netskope-api-client-go v0.3.2/go.mod h1:ZFtvvCESRAtyWehnLgFtgeZMRSXk9UKNUo/v7m6Xux0=
+github.com/netskopeoss/netskope-api-client-go v0.3.4 h1:PHkqMWV1WKKZUFI/uYSNaZxk/cHygjSEMER5lwnGHBg=
+github.com/netskopeoss/netskope-api-client-go v0.3.4/go.mod h1:uctOxOwkml9mUD/YTV5GLL64DYHql/hoK3nQiTK2eXw=
 github.com/oklog/run v1.0.0 h1:Ru7dDtJNOyC66gQ5dQmaCa0qIsAUFY3sFpK1Xk8igrw=
 github.com/oklog/run v1.0.0/go.mod h1:dlhp/R75TPv97u0XWUtDeV/lRKWPKSdTuV0TZvrmrQA=
 github.com/pjbgf/sha1cd v0.3.0 h1:4D5XXmUUBUl/xQ6IjCkEAbqXskkq/4O7LmGn0AqMDs4=
