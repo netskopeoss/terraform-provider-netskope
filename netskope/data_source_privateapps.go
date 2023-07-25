@@ -100,6 +100,21 @@ func dataSourcePrivateApps() *schema.Resource {
 								},
 							},
 						},
+						"reachability": &schema.Schema{
+							Type:     schema.TypeMap,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeBool,
+								Elem: &schema.Resource{
+									Schema: map[string]*schema.Schema{
+										"reachable": &schema.Schema{
+											Type:     schema.TypeString,
+											Computed: true,
+										},
+									},
+								},
+							},
+						},
 						"protocols": &schema.Schema{
 							Type:     schema.TypeList,
 							Computed: true,
@@ -132,7 +147,7 @@ func dataSourcePrivateApps() *schema.Resource {
 								},
 							},
 						},
-						/*"service_publisher_assignments": &schema.Schema{
+						"service_publisher_assignments": &schema.Schema{
 							Type:     schema.TypeList,
 							Computed: true,
 							Elem: &schema.Resource{
@@ -145,9 +160,24 @@ func dataSourcePrivateApps() *schema.Resource {
 										Type:     schema.TypeInt,
 										Computed: true,
 									},
-									"reachability": &schema.Schema{
+									/*"reachability": &schema.Schema{
 										Type:     schema.TypeString,
 										Computed: true,
+									},*/
+									"reachability": &schema.Schema{
+										Type:     schema.TypeMap,
+										Computed: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeBool,
+											Elem: &schema.Resource{
+												Schema: map[string]*schema.Schema{
+													"reachable": &schema.Schema{
+														Type:     schema.TypeString,
+														Computed: true,
+													},
+												},
+											},
+										},
 									},
 									"service_id": &schema.Schema{
 										Type:     schema.TypeInt,
@@ -155,7 +185,7 @@ func dataSourcePrivateApps() *schema.Resource {
 									},
 								},
 							},
-						},*/
+						},
 					},
 				},
 			},
