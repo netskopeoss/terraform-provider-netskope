@@ -2,12 +2,10 @@ module github.com/netskopeoss/terraform-provider-netskope
 
 go 1.20
 
-replace github.com/netskopeoss/netskope-api-client-go => /Users/sbrown/Projects/netskope-api-client-go
-
 require (
 	github.com/hashicorp/terraform-plugin-docs v0.16.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.27.0
-	github.com/netskopeoss/netskope-api-client-go v0.0.0
+	github.com/netskopeoss/netskope-api-client-go v0.3.5
 )
 
 require (
