@@ -3,7 +3,7 @@
 page_title: "netskope_ipsec_pops Data Source - terraform-provider-netskope"
 subcategory: ""
 description: |-
-  IPSec PoPs are not yet supported.
+  
 ---
 
 # netskope_ipsec_pops (Data Source)
@@ -32,5 +32,3 @@ Read-Only:
 - `name` (String)
 - `probeip` (String)
 - `region` (String)
-
-

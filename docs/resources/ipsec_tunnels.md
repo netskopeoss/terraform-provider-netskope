@@ -3,7 +3,7 @@
 page_title: "netskope_ipsec_tunnels Resource - terraform-provider-netskope"
 subcategory: ""
 description: |-
-  IPSec tunnels are not yet supported.
+  
 ---
 
 # netskope_ipsec_tunnels (Resource)
@@ -34,5 +34,3 @@ description: |-
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-
