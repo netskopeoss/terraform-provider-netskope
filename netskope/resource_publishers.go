@@ -15,6 +15,9 @@ func resourcePublisherCreate(ctx context.Context, d *schema.ResourceData, m inte
 
 	//Get Vars from Schema
 	name := d.Get("name").(string)
+	lbrokerconnect := d.Get("lbrokerconnect").(bool)
+	publisher_upgrade_profiles_id := d.Get("publisher_upgrade_profiles_id").(int)
+	//tags := d.Get("tags").([]interface{})
 
 	//Init a client instance
 	nsclient := m.(*nsgo.Client)
@@ -22,7 +25,9 @@ func resourcePublisherCreate(ctx context.Context, d *schema.ResourceData, m inte
 
 	//Init Options
 	publisher := nsgo.PublisherOptions{
-		Name: name,
+		Name:                       name,
+		Lbrokerconnect:             lbrokerconnect,
+		PublisherUpgradeProfilesID: publisher_upgrade_profiles_id,
 	}
 
 	newpublisher, err := nsclient.CreatePublisher(publisher)
@@ -122,6 +127,27 @@ func resourcePublishers() *schema.Resource {
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+			},
+			"lbrokerconnect": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"publisher_upgrade_profiles_id": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+			"tags": &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_name": &schema.Schema{
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
 			},
 		},
 	}
