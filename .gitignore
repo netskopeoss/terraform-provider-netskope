@@ -31,3 +31,6 @@ terraform.rc
 #DS Store Files
 .DS_Store
 
+#Exculde dist folder
+dist/
+
