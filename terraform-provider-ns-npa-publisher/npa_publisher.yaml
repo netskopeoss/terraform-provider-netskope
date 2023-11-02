@@ -1,0 +1,914 @@
+openapi: 3.0.0
+info:
+    title: npa_publisher
+    description: NPA publisher CRUD operations.
+    version: 1.0.1
+components:
+    schemas:
+        publisher_post_request:
+            type: object
+            x-speakeasy-entity: NPAPublisher
+            properties:
+                name:
+                    type: string
+                    default: publisher_name
+                lbrokerconnect:
+                    type: boolean
+                    default: false
+                tags:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/tag_item_no_id'
+                publisher_upgrade_profiles_id:
+                    type: integer
+                    format: int32
+                    default: 1
+            required:
+                - name
+        tag_item_no_id:
+            type: object
+            properties:
+                tag_name:
+                    type: string
+                    default: tag_name
+        tag_item:
+            type: object
+            properties:
+                tag_id:
+                    type: integer
+                    format: int32
+                tag_name:
+                    type: string
+        release_item:
+            type: object
+            properties:
+                docker_tag:
+                    type: string
+                name:
+                    type: string
+                version:
+                    type: string
+        publisher_put_request:
+            type: object
+            properties:
+                name:
+                    type: string
+                id:
+                    type: integer
+                    format: int32
+                lbrokerconnect:
+                    type: boolean
+                tags:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/tag_item'
+        publisher_response:
+            type: object
+            properties:
+                status:
+                    type: string
+                    enum:
+                        - success
+                        - not found
+                data:
+                    type: object
+                    x-speakeasy-entity: NPAPublisher
+                    properties:
+                        id:
+                            type: integer
+                            format: int32
+                        name:
+                            type: string
+                        common_name:
+                            type: string
+                        registered:
+                            type: boolean
+                        lbrokerconnect:
+                            type: boolean
+                        assessment:
+                            x-speakeasy-type-override: any
+                            type: object
+                        stitcher_id:
+                            type: integer
+                            format: int32
+                        status:
+                            type: string
+                            enum:
+                                - connected
+                                - not registered
+                        publisher_upgrade_profile_id:
+                            type: integer
+                            format: int32
+                        tags:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/tag_item'
+        publishers_response_400:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 400
+                result:
+                    type: string
+        publishers_get_response:
+            type: object
+            x-speakeasy-entity: NPAPublishers
+            properties:
+                data:
+                    $ref: '#/components/schemas/Data'
+                status:
+                    type: string
+                total:
+                    type: integer
+                    format: int32
+        Data:
+            type: object
+            additionalProperties: false
+            properties:
+                publishers:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Publisher'
+            required:
+                - publishers
+            title: Data
+        Publisher:
+            type: object
+            additionalProperties: false
+            properties:
+                apps_count:
+                    type: integer
+                assessment:
+                    anyOf:
+                        - $ref: '#/components/schemas/Assessment'
+                        - type: object
+                common_name:
+                    type: string
+                connected_apps:
+                    anyOf:
+                        - type: array
+                          items:
+                            type: string
+                lbrokerconnect:
+                    type: boolean
+                publisher_id:
+                    type: integer
+                publisher_name:
+                    type: string
+                publisher_upgrade_profiles_external_id:
+                    type: integer
+                registered:
+                    type: boolean
+                status:
+                    type: string
+                stitcher_id:
+                    anyOf:
+                        - type: integer
+                        - type: object
+                tags:
+                    type: array
+                    items: {}
+                upgrade_failed_reason:
+                    anyOf:
+                        - $ref: '#/components/schemas/UpgradeFailedReason'
+                        - type: object
+                upgrade_request:
+                    type: boolean
+                upgrade_status:
+                    $ref: '#/components/schemas/UpgradeStatus'
+            required:
+                - apps_count
+                - assessment
+                - common_name
+                - connected_apps
+                - lbrokerconnect
+                - publisher_id
+                - publisher_name
+                - publisher_upgrade_profiles_external_id
+                - registered
+                - status
+                - stitcher_id
+                - tags
+                - upgrade_failed_reason
+                - upgrade_request
+                - upgrade_status
+            title: Publisher
+        Assessment:
+            type: object
+            additionalProperties: false
+            properties:
+                eee_support:
+                    type: boolean
+                hdd_free:
+                    type: string
+                hdd_total:
+                    type: string
+                ip_address:
+                    type: string
+                latency:
+                    type: integer
+                version:
+                    type: string
+            required:
+                - eee_support
+                - hdd_free
+                - hdd_total
+                - ip_address
+                - latency
+                - version
+            title: Assessment
+        UpgradeFailedReason:
+            type: object
+            additionalProperties: false
+            properties:
+                detail:
+                    type: string
+                error_code:
+                    type: integer
+                timestamp:
+                    type: integer
+                version:
+                    type: string
+                    format: integer
+            required:
+                - detail
+                - error_code
+                - timestamp
+                - version
+            title: UpgradeFailedReason
+        UpgradeStatus:
+            type: object
+            additionalProperties: false
+            properties:
+                upstat:
+                    type: string
+            required:
+                - upstat
+            title: UpgradeStatus
+        publisher_bulk_item:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                name:
+                    type: string
+                common_name:
+                    type: string
+                registered:
+                    type: boolean
+                lbrokerconnect:
+                    type: boolean
+                assessment:
+                    type: object
+                upgrade_failed_reason:
+                    type: object
+                upgrade_request:
+                    type: boolean
+                upgrade_status:
+                    type: object
+                stitcher_id:
+                    type: integer
+                    format: int32
+                status:
+                    type: string
+                    enum:
+                        - connected
+                        - not registered
+                publisher_upgrade_profile_id:
+                    type: integer
+                    format: int32
+                tags:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/tag_item'
+        publisher_bulk_request:
+            type: object
+            properties:
+                publishers:
+                    type: object
+                    properties:
+                        id:
+                            type: array
+                            items:
+                                type: string
+                        apply:
+                            type: object
+                            properties:
+                                upgrade_request:
+                                    type: boolean
+                                    default: true
+        publishers_bulk_response:
+            type: object
+            properties:
+                status:
+                    type: string
+                    enum:
+                        - success
+                        - not found
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/publisher_bulk_item'
+        publishers_alert_get_response:
+            type: object
+            properties:
+                status:
+                    type: string
+                    enum:
+                        - success
+                        - not found
+                data:
+                    type: object
+                    properties:
+                        adminUsers:
+                            type: array
+                            items:
+                                type: string
+                                example:
+                                    - admin1@abc.com
+                                    - admin2@abc.com
+                        eventTypes:
+                            type: array
+                            items:
+                                type: string
+                                enum:
+                                    - UPGRADE_WILL_START
+                                    - UPGRADE_STARTED
+                                    - UPGRADE_SUCCEEDED
+                                    - UPGRADE_FAILED
+                                    - CONNECTION_FAILED
+                            example:
+                                - CONNECTION_FAILED
+                                - UPGRADE_STARTED
+                        selectedUsers:
+                            type: string
+                            example: abc@xyz.com,def@xyz.com
+        publishers_alert_put_request:
+            type: object
+            properties:
+                adminUsers:
+                    type: array
+                    items:
+                        type: string
+                        example:
+                            - admin1@abc.com
+                            - admin2@abc.com
+                eventTypes:
+                    type: array
+                    items:
+                        type: string
+                        enum:
+                            - UPGRADE_WILL_START
+                            - UPGRADE_STARTED
+                            - UPGRADE_SUCCEEDED
+                            - UPGRADE_FAILED
+                            - CONNECTION_FAILED
+                    minItems: 1
+                    maxItems: 5
+                    example:
+                        - CONNECTION_FAILED
+                        - UPGRADE_STARTED
+                selectedUsers:
+                    type: string
+                    example: abc@xyz.com,def@xyz.com
+        publishers_alert_put_response:
+            type: object
+            properties:
+                status:
+                    type: string
+                    enum:
+                        - success
+                        - not found
+                        - failure
+        publishers_release_get_response:
+            type: object
+            x-speakeasy-entity: NPAPublisherReleases
+            properties:
+                status:
+                    type: string
+                    enum:
+                        - success
+                        - not found
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/release_item'
+        protocol_response_item:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                port:
+                    type: string
+                transport:
+                    type: string
+                service_id:
+                    type: integer
+                    format: int32
+        service_publisher_assignment_item:
+            type: object
+            properties:
+                publisher_id:
+                    type: integer
+                    format: int32
+                service_id:
+                    type: integer
+                    format: int32
+                primary:
+                    type: boolean
+                reachability:
+                    type: object
+                    properties:
+                        error_code:
+                            type: integer
+                            format: int32
+                        reachable:
+                            type: boolean
+                        error_string:
+                            type: string
+        private_apps_response:
+            type: object
+            x-speakeasy-entity: NPAPublisherApps
+            properties:
+                status:
+                    type: string
+                    enum:
+                        - success
+                        - not found
+                data:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            id:
+                                type: integer
+                                format: int32
+                            name:
+                                type: string
+                            use_publisher_dns:
+                                type: boolean
+                            clientless_access:
+                                type: boolean
+                            trust_self_signed_certs:
+                                type: boolean
+                            host:
+                                type: string
+                            real_host:
+                                type: string
+                            protocols:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/protocol_response_item'
+                            tags:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/tag_item'
+                            service_publisher_assignments:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/service_publisher_assignment_item'
+    securitySchemes:
+        api_key:
+            in: header
+            name: Netskope-Api-Token
+            type: apiKey
+paths:
+    /infrastructure/publishers:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_publishers
+        get:
+            summary: Get list of publisher objects
+            description: Get list of publisher objects
+            x-speakeasy-name-override: list_objects
+            x-speakeasy-entity-operation: NPAPublishers#read
+            x-speakeasy-group: NPAPublishers
+            parameters:
+                - name: fields
+                  in: query
+                  required: false
+                  description: Return values only from specified fields
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_get_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+        post:
+            summary: Create a publisher
+            description: Create a publisher
+            x-speakeasy-name-override: create
+            x-speakeasy-entity-operation: NPAPublisher#create
+            x-speakeasy-group: NPAPublishers
+            parameters:
+                - name: silent
+                  x-speakeasy-terraform-ignore: true
+                  in: query
+                  required: false
+                  description: flag to skip output except status code
+                  schema:
+                    type: string
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publisher_post_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+    /infrastructure/publishers/{publisher_id}:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_publishers
+        delete:
+            summary: Delete a publisher
+            description: Delete a publisher based on publisher id
+            x-speakeasy-name-override: delete
+            x-speakeasy-entity-operation: NPAPublisher#delete
+            x-speakeasy-group: NPAPublishers
+            parameters:
+                - name: publisher_id
+                  in: path
+                  x-speakeasy-match: id
+                  required: true
+                  description: publisher id
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        enum:
+                                            - success
+                                            - error
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+        put:
+            summary: Update a publisher
+            description: update a publisher based on publisher id
+            x-speakeasy-name-override: update
+            x-speakeasy-entity-operation: NPAPublisher#update
+            x-speakeasy-group: NPAPublishers
+            parameters:
+                - name: publisher_id
+                  in: path
+                  x-speakeasy-match: id
+                  required: true
+                  description: publisher id
+                  schema:
+                    type: integer
+                    format: int32
+                - name: silent
+                  x-speakeasy-terraform-ignore: true
+                  in: query
+                  required: false
+                  description: flag to skip output except status code
+                  schema:
+                    type: string
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publisher_put_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+        patch:
+            summary: Patch a publisher
+            description: patch a publisher based on publisher id
+            parameters:
+                - name: publisher_id
+                  in: path
+                  required: true
+                  description: publisher id
+                  schema:
+                    type: integer
+                    format: int32
+                - name: silent
+                  in: query
+                  required: false
+                  description: flag to skip output except status code
+                  schema:
+                    type: string
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publisher_put_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+        get:
+            summary: Get a publisher
+            description: get a publisher based on publisher id
+            x-speakeasy-name-override: read
+            x-speakeasy-entity-operation: NPAPublisher#read
+            x-speakeasy-group: NPAPublishers
+            parameters:
+                - name: publisher_id
+                  in: path
+                  x-speakeasy-match: id
+                  required: true
+                  description: publisher id
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+    /infrastructure/publishers/{publisher_id}/registration_token:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_publishers
+        post:
+            summary: Generate and retrieve a token for publisher registration
+            description: Generate and retrieve a token for publisher registration
+            x-speakeasy-name-override: create
+            x-speakeasy-entity-operation: PublisherToken#create
+            x-speakeasy-group: PublisherToken
+            parameters:
+                - name: publisher_id
+                  in: path
+                  required: true
+                  description: publisher id
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    data:
+                                        x-speakeasy-entity: PublisherToken
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
+                                        required:
+                                            - token
+                                    status:
+                                        type: string
+                                        x-speakeasy-terraform-ignore: true
+                                        enum:
+                                            - success
+                                            - not found
+                                required:
+                                    - data
+                                    - status
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+    /infrastructure/publishers/{publisher_id}/apps:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_publishers
+        get:
+            summary: Get all private apps associated to a publisher
+            description: Get all private apps associated to a publisher
+            x-speakeasy-name-override: list_objects
+            x-speakeasy-entity-operation: NPAPublisherApps#read
+            x-speakeasy-group: NPAPublisherApps
+            parameters:
+                - name: publisher_id
+                  in: path
+                  required: true
+                  description: publisher id
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/private_apps_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+    /infrastructure/publishers/bulk:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_publishers
+        put:
+            summary: Trigger bulk publisher update action
+            description: Trigger bulk publisher update action
+            parameters:
+                - name: silent
+                  in: query
+                  required: false
+                  description: flag to skip output except status code
+                  schema:
+                    type: string
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publisher_bulk_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_bulk_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+    /infrastructure/publishers/releases:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_publishers
+        get:
+            summary: Get list of publisher release objects
+            description: Get list of publisher release objects
+            x-speakeasy-name-override: list_objects
+            x-speakeasy-entity-operation: NPAPublisherReleases#read
+            x-speakeasy-group: NPAPublisherReleases
+            parameters:
+                - name: fields
+                  in: query
+                  required: false
+                  description: Return values only from specified fields
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_release_get_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+    /infrastructure/publishers/alertsconfiguration:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_publishers
+        get:
+            summary: Get list of publisher alerts
+            description: Get list of publisher alerts
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_alert_get_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+        put:
+            summary: Configure publisher alerts
+            description: Configure publisher alerts
+            parameters:
+                - name: silent
+                  in: query
+                  required: false
+                  description: "flag to skip output except status code: \n * `1` - Skip response data \n * `0` - Do not skip response data"
+                  schema:
+                    type: string
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publishers_alert_put_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_alert_put_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+security:
+    - api_key: []
+servers:
+    - description: The production API server
+      url: https://{tenant}.goskope.com/api/v2
+      variables:
+        tenant:
+            default: demo
+            description: this value is assigned by Netskope, in this example `demo.goskope.com`
