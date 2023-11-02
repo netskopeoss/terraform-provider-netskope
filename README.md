@@ -33,7 +33,7 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
     terraform {
     required_providers {
         netskope = {
-        version = "0.2.1"
+        version = "0.2.6"
         source  = "netskopeoss/netskope"
         }
     }
@@ -75,6 +75,14 @@ The Netskope Terraform Provider Repo includes sample plans to get you started. Y
             publisher {
                 publisher_id   = netskope_publishers.Publisher.id
                 publisher_name = netskope_publishers.Publisher.name
+            }
+
+            tags {
+                tag_name = "12345"
+            }
+
+            tags {
+                tag_name = "6789"
             }
         }
     ```
