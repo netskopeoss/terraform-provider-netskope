@@ -90,6 +90,9 @@ func resourcePrivateAppsUpdate(ctx context.Context, d *schema.ResourceData, m in
 	//log.Println(app_name)
 	//log.Println(host)
 
+	//Convert ID to Int
+	id_int, _ := strconv.Atoi(id)
+
 	//Init Options
 	appid := nsgo.PrivateAppOptions{
 		Id: id,
@@ -116,6 +119,7 @@ func resourcePrivateAppsUpdate(ctx context.Context, d *schema.ResourceData, m in
 	json.Unmarshal(tags_json, &tagsStruct)
 
 	appStruct := nsgo.PrivateApp{
+		Id:                   id_int,
 		AppName:              app_name,
 		Host:                 host,
 		Protocols:            protocolStruct,
@@ -126,7 +130,7 @@ func resourcePrivateAppsUpdate(ctx context.Context, d *schema.ResourceData, m in
 		TrustSelfSignedCerts: trust_self_signed_certs,
 	}
 
-	_, err := nsclient.UpdatePrivateApp(appid, appStruct)
+	_, err := nsclient.ReplacePrivateApp(appid, appStruct)
 	if err != nil {
 		return diag.FromErr(err)
 	}
