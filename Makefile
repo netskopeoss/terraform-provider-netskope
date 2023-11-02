@@ -1,0 +1,28 @@
+.PHONY: *
+
+all: speakeasy docs
+
+docs:
+	go generate ./...
+
+npa_publisher_tf_provider: npa_publisher_spec
+	speakeasy generate sdk --lang terraform -o terraform-provider-ns-npa-publisher -s ${NETSKOPE_LOCAL_OAS_REPO}/endpoints/infrastructure/npa_publisher.yaml
+
+npa_publisher_spec: check-speakeasy check-local-oas
+	mkdir -p terraform-provider-ns-npa-publisher
+	cp ${NETSKOPE_LOCAL_OAS_REPO}/endpoints/infrastructure/npa_publisher.yaml terraform-provider-ns-npa-publisher/npa_publisher.yaml
+	#speakeasy overlay apply -s terraform-provider-ns-npa-publisher/npa_publisher.yaml -o ${NETSKOPE_LOCAL_OAS_REPO}/endpoints/infrastructure/npa_publisher_tf.yaml
+
+check-speakeasy:
+	@command -v speakeasy >/dev/null 2>&1 || { echo >&2 "speakeasy CLI is not installed. Please install before continuing."; exit 1; }
+
+check-local-oas:
+ifndef NETSKOPE_LOCAL_OAS_REPO
+	$(error Environment variable NETSKOPE_LOCAL_OAS_REPO is undefined)
+endif
+ifneq ($(wildcard ${NETSKOPE_LOCAL_OAS_REPO}/.*),)
+	@echo "Found ${NETSKOPE_LOCAL_OAS_REPO}."
+else
+	@echo "Did not find ${NETSKOPE_LOCAL_OAS_REPO}."
+endif
+
