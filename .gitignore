@@ -20,4 +20,7 @@
 # Go workspace file
 go.work
 
+# JetBrains IDE files
+*.iml
+
 .DS_Store
