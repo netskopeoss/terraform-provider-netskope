@@ -1,17 +1,17 @@
 .PHONY: *
 
-all: speakeasy docs
+all: npa_publisher_tf_provider
 
 docs:
 	go generate ./...
 
-npa_publisher_tf_provider: npa_publisher_spec
-	speakeasy generate sdk --lang terraform -o terraform-provider-ns-npa-publisher -s ${NETSKOPE_LOCAL_OAS_REPO}/endpoints/infrastructure/npa_publisher.yaml
+terraform-provider-ns-npa-publisher: terraform-provider-ns-npa-publisher/npa_publisher.yaml
+	speakeasy generate sdk --lang terraform -o terraform-provider-ns-npa-publisher -s terraform-provider-ns-npa-publisher/npa_publisher.yaml
 
-npa_publisher_spec: check-speakeasy check-local-oas
+terraform-provider-ns-npa-publisher/npa_publisher.yaml: check-speakeasy check-local-oas
 	mkdir -p terraform-provider-ns-npa-publisher
 	cp ${NETSKOPE_LOCAL_OAS_REPO}/endpoints/infrastructure/npa_publisher.yaml terraform-provider-ns-npa-publisher/npa_publisher.yaml
-	#speakeasy overlay apply -s terraform-provider-ns-npa-publisher/npa_publisher.yaml -o ${NETSKOPE_LOCAL_OAS_REPO}/endpoints/infrastructure/npa_publisher_tf.yaml
+	speakeasy overlay apply -s ${NETSKOPE_LOCAL_OAS_REPO}/endpoints/infrastructure/npa_publisher.yaml -o ${NETSKOPE_LOCAL_OAS_REPO}/endpoints/infrastructure/npa_publisher_tf.yaml > terraform-provider-ns-npa-publisher/npa_publisher.yaml
 
 check-speakeasy:
 	@command -v speakeasy >/dev/null 2>&1 || { echo >&2 "speakeasy CLI is not installed. Please install before continuing."; exit 1; }
