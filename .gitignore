@@ -23,7 +23,10 @@ go.work
 # JetBrains IDE files
 *.iml
 
+
+#OSX files
 .DS_Store
 
-#Local testing folder
+#Local testing folders
 test/
+testing/
