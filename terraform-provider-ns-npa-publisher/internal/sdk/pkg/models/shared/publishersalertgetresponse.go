@@ -7,21 +7,21 @@ import (
 	"fmt"
 )
 
-type PublishersAlertGetResponseDataEventTypes string
+type PublishersAlertGetResponseEventTypes string
 
 const (
-	PublishersAlertGetResponseDataEventTypesUpgradeWillStart PublishersAlertGetResponseDataEventTypes = "UPGRADE_WILL_START"
-	PublishersAlertGetResponseDataEventTypesUpgradeStarted   PublishersAlertGetResponseDataEventTypes = "UPGRADE_STARTED"
-	PublishersAlertGetResponseDataEventTypesUpgradeSucceeded PublishersAlertGetResponseDataEventTypes = "UPGRADE_SUCCEEDED"
-	PublishersAlertGetResponseDataEventTypesUpgradeFailed    PublishersAlertGetResponseDataEventTypes = "UPGRADE_FAILED"
-	PublishersAlertGetResponseDataEventTypesConnectionFailed PublishersAlertGetResponseDataEventTypes = "CONNECTION_FAILED"
+	PublishersAlertGetResponseEventTypesUpgradeWillStart PublishersAlertGetResponseEventTypes = "UPGRADE_WILL_START"
+	PublishersAlertGetResponseEventTypesUpgradeStarted   PublishersAlertGetResponseEventTypes = "UPGRADE_STARTED"
+	PublishersAlertGetResponseEventTypesUpgradeSucceeded PublishersAlertGetResponseEventTypes = "UPGRADE_SUCCEEDED"
+	PublishersAlertGetResponseEventTypesUpgradeFailed    PublishersAlertGetResponseEventTypes = "UPGRADE_FAILED"
+	PublishersAlertGetResponseEventTypesConnectionFailed PublishersAlertGetResponseEventTypes = "CONNECTION_FAILED"
 )
 
-func (e PublishersAlertGetResponseDataEventTypes) ToPointer() *PublishersAlertGetResponseDataEventTypes {
+func (e PublishersAlertGetResponseEventTypes) ToPointer() *PublishersAlertGetResponseEventTypes {
 	return &e
 }
 
-func (e *PublishersAlertGetResponseDataEventTypes) UnmarshalJSON(data []byte) error {
+func (e *PublishersAlertGetResponseEventTypes) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -36,17 +36,17 @@ func (e *PublishersAlertGetResponseDataEventTypes) UnmarshalJSON(data []byte) er
 	case "UPGRADE_FAILED":
 		fallthrough
 	case "CONNECTION_FAILED":
-		*e = PublishersAlertGetResponseDataEventTypes(v)
+		*e = PublishersAlertGetResponseEventTypes(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PublishersAlertGetResponseDataEventTypes: %v", v)
+		return fmt.Errorf("invalid value for PublishersAlertGetResponseEventTypes: %v", v)
 	}
 }
 
 type PublishersAlertGetResponseData struct {
-	AdminUsers    []string                                   `json:"adminUsers,omitempty"`
-	EventTypes    []PublishersAlertGetResponseDataEventTypes `json:"eventTypes,omitempty"`
-	SelectedUsers *string                                    `json:"selectedUsers,omitempty"`
+	AdminUsers    []string                               `json:"adminUsers,omitempty"`
+	EventTypes    []PublishersAlertGetResponseEventTypes `json:"eventTypes,omitempty"`
+	SelectedUsers *string                                `json:"selectedUsers,omitempty"`
 }
 
 func (o *PublishersAlertGetResponseData) GetAdminUsers() []string {
@@ -56,7 +56,7 @@ func (o *PublishersAlertGetResponseData) GetAdminUsers() []string {
 	return o.AdminUsers
 }
 
-func (o *PublishersAlertGetResponseData) GetEventTypes() []PublishersAlertGetResponseDataEventTypes {
+func (o *PublishersAlertGetResponseData) GetEventTypes() []PublishersAlertGetResponseEventTypes {
 	if o == nil {
 		return nil
 	}

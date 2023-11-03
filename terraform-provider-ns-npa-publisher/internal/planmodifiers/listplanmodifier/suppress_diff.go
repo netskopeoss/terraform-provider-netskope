@@ -4,7 +4,7 @@ package listplanmodifier
 
 import (
 	"context"
-	"npa-publisher/internal/planmodifiers/utils"
+	"ns-npa-publisher/internal/planmodifiers/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 )

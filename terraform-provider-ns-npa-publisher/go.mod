@@ -1,4 +1,4 @@
-module npa-publisher
+module ns-npa-publisher
 
 go 1.18
 

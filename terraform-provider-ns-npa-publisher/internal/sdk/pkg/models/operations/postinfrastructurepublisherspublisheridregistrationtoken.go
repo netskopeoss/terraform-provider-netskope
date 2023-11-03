@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
 
 type PostInfrastructurePublishersPublisherIDRegistrationTokenRequest struct {
@@ -21,29 +21,29 @@ func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenRequest) GetPub
 	return o.PublisherID
 }
 
-type PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONData struct {
+type Data struct {
 	Token string `json:"token"`
 }
 
-func (o *PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONData) GetToken() string {
+func (o *Data) GetToken() string {
 	if o == nil {
 		return ""
 	}
 	return o.Token
 }
 
-type PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatus string
+type PostInfrastructurePublishersPublisherIDRegistrationTokenStatus string
 
 const (
-	PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatusSuccess  PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatus = "success"
-	PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatusNotFound PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatus = "not found"
+	PostInfrastructurePublishersPublisherIDRegistrationTokenStatusSuccess  PostInfrastructurePublishersPublisherIDRegistrationTokenStatus = "success"
+	PostInfrastructurePublishersPublisherIDRegistrationTokenStatusNotFound PostInfrastructurePublishersPublisherIDRegistrationTokenStatus = "not found"
 )
 
-func (e PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatus) ToPointer() *PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatus {
+func (e PostInfrastructurePublishersPublisherIDRegistrationTokenStatus) ToPointer() *PostInfrastructurePublishersPublisherIDRegistrationTokenStatus {
 	return &e
 }
 
-func (e *PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatus) UnmarshalJSON(data []byte) error {
+func (e *PostInfrastructurePublishersPublisherIDRegistrationTokenStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -52,29 +52,29 @@ func (e *PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJ
 	case "success":
 		fallthrough
 	case "not found":
-		*e = PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatus(v)
+		*e = PostInfrastructurePublishersPublisherIDRegistrationTokenStatus(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatus: %v", v)
+		return fmt.Errorf("invalid value for PostInfrastructurePublishersPublisherIDRegistrationTokenStatus: %v", v)
 	}
 }
 
-// PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSON - successful operation
-type PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSON struct {
-	Data   PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONData   `json:"data"`
-	Status PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatus `json:"status"`
+// PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody - successful operation
+type PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody struct {
+	Data   Data                                                           `json:"data"`
+	Status PostInfrastructurePublishersPublisherIDRegistrationTokenStatus `json:"status"`
 }
 
-func (o *PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSON) GetData() PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONData {
+func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody) GetData() Data {
 	if o == nil {
-		return PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONData{}
+		return Data{}
 	}
 	return o.Data
 }
 
-func (o *PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSON) GetStatus() PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatus {
+func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody) GetStatus() PostInfrastructurePublishersPublisherIDRegistrationTokenStatus {
 	if o == nil {
-		return PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONStatus("")
+		return PostInfrastructurePublishersPublisherIDRegistrationTokenStatus("")
 	}
 	return o.Status
 }
@@ -87,7 +87,7 @@ type PostInfrastructurePublishersPublisherIDRegistrationTokenResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// successful operation
-	PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONObject *PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSON
+	Object *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody
 	// Invalid request
 	PublishersResponse400 *shared.PublishersResponse400
 }
@@ -113,11 +113,11 @@ func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponse) GetRa
 	return o.RawResponse
 }
 
-func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponse) GetPostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONObject() *PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSON {
+func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponse) GetObject() *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody {
 	if o == nil {
 		return nil
 	}
-	return o.PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONObject
+	return o.Object
 }
 
 func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponse) GetPublishersResponse400() *shared.PublishersResponse400 {

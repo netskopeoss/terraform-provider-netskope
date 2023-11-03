@@ -5,8 +5,8 @@ package provider
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type ServicePublisherAssignmentItem struct {
-	Primary      types.Bool                                  `tfsdk:"primary"`
-	PublisherID  types.Int64                                 `tfsdk:"publisher_id"`
-	Reachability *ServicePublisherAssignmentItemReachability `tfsdk:"reachability"`
-	ServiceID    types.Int64                                 `tfsdk:"service_id"`
+	Primary      types.Bool    `tfsdk:"primary"`
+	PublisherID  types.Int64   `tfsdk:"publisher_id"`
+	Reachability *Reachability `tfsdk:"reachability"`
+	ServiceID    types.Int64   `tfsdk:"service_id"`
 }

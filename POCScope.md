@@ -1,0 +1,44 @@
+Defined:
+
+ - [x] infrastructure/publishers	get `NPAPublishers#read`
+ - [x] infrastructure/publishers	post `NPAPublisher#create`
+ - [x] infrastructure/publishers/{id}	delete `NPAPublisher#create`
+ - [x] infrastructure/publishers/{id}	put `NPAPublisher#update`
+ - [x] infrastructure/publishers/{id}	patch (unnecessary)
+ - [x] infrastructure/publishers/{id}/registration_token	post `PublisherToken#create`
+ - [x] infrastructure/publishers/{id}/apps	get `NPAPublisherApps#read`
+ - [x] infrastructure/publishers/bulk	put `NPAPublisherBulkUpgrade#create`
+ - [x] infrastructure/publishers/releases	get `NPAPublisherReleases#read`
+ - [x] infrastructure/publishers/alertsconfiguration	get `NPAPublisherAlerts#read` # Note -- requires unreleased CLI version
+ - [ ] infrastructure/publishers/alertsconfiguration	put `NPAPublisherAlerts#create` 
+ - [ ] infrastructure/publisherupgradeprofiles	get
+ - [ ] infrastructure/publisherupgradeprofiles	post
+ - [ ] infrastructure/publisherupgradeprofiles/{id}	delete
+ - [ ] infrastructure/publisherupgradeprofiles/{id}	put
+ - [ ] infrastructure/publisherupgradeprofiles/{id}	get
+ - [ ] infrastructure/publisherupgradeprfofiles/bulk	put
+ - [ ] policy/npa/rules	get
+ - [ ] policy/npa/rules	post
+ - [ ] policy/npa/rules/{id}	delete
+ - [ ] policy/npa/rules/{id}	patch
+ - [ ] policy/npa/rules/{id]	get
+ - [ ] policy/npa/policygroups	get
+ - [ ] policy/npa/policygroups	post
+ - [ ] policy/npa/policygroups/{id}	delete
+ - [ ] policy/npa/policygroups/{id}	patch
+ - [ ] policy/npa/policygroups/{id}	get
+ - [ ] apps/private	get
+ - [ ] apps/private	post
+ - [ ] apps/private/{id}	delete
+ - [ ] apps/private/{id}	put
+ - [ ] apps/private/{id}	patch
+ - [ ] apps/private/{id}	get
+ - [ ] apps/private/getpolicyinuse	post
+ - [ ] apps/private/tags	post
+ - [ ] apps/private/tags	patch
+ - [ ] apps/private/tags	delete
+ - [ ] apps/private/tags	get
+ - [ ] apps/private/tags/{id}	get
+ - [ ] apps/private/tags/{id}	put
+ - [ ] apps/private/tags/{id}	delete
+ - [ ] apps/private/tags/getpolicyinuse	get

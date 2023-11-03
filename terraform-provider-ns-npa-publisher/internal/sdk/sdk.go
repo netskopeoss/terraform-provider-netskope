@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/operations"
-	"npa-publisher/internal/sdk/pkg/models/sdkerrors"
-	"npa-publisher/internal/sdk/pkg/models/shared"
-	"npa-publisher/internal/sdk/pkg/utils"
+	"ns-npa-publisher/internal/sdk/pkg/models/operations"
+	"ns-npa-publisher/internal/sdk/pkg/models/sdkerrors"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/utils"
 	"strings"
 	"time"
 )
@@ -70,10 +70,10 @@ func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
 
 // SDK - npa_publisher: NPA publisher CRUD operations.
 type SDK struct {
-	NPAPublisherApps     *npaPublisherApps
-	NPAPublisherReleases *npaPublisherReleases
-	NPAPublishers        *npaPublishers
-	PublisherToken       *publisherToken
+	NPAPublisherApps     *NPAPublisherApps
+	NPAPublisherReleases *NPAPublisherReleases
+	NPAPublishers        *NPAPublishers
+	PublisherToken       *PublisherToken
 
 	sdkConfiguration sdkConfiguration
 }
@@ -164,8 +164,8 @@ func New(opts ...SDKOption) *SDK {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.1",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.173.0",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.173.0 1.0.1 npa-publisher",
+			GenVersion:        "internal",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 internal 1.0.1 ns-npa-publisher",
 			ServerDefaults: []map[string]string{
 				{
 					"tenant": "demo",
@@ -442,11 +442,11 @@ func (s *SDK) PutInfrastructurePublishersAlertsconfiguration(ctx context.Context
 
 // PutInfrastructurePublishersBulk - Trigger bulk publisher update action
 // Trigger bulk publisher update action
-func (s *SDK) PutInfrastructurePublishersBulk(ctx context.Context, request operations.PutInfrastructurePublishersBulkRequest) (*operations.PutInfrastructurePublishersBulkResponse, error) {
+func (s *SDK) PutInfrastructurePublishersBulk(ctx context.Context, request shared.PublisherBulkRequest) (*operations.PutInfrastructurePublishersBulkResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/infrastructure/publishers/bulk"
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PublisherBulkRequest", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -465,10 +465,6 @@ func (s *SDK) PutInfrastructurePublishersBulk(ctx context.Context, request opera
 	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
 
 	req.Header.Set("Content-Type", reqContentType)
-
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
-		return nil, fmt.Errorf("error populating query params: %w", err)
-	}
 
 	client := s.sdkConfiguration.SecurityClient
 

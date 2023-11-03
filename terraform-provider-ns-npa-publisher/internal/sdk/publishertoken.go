@@ -8,25 +8,25 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/operations"
-	"npa-publisher/internal/sdk/pkg/models/sdkerrors"
-	"npa-publisher/internal/sdk/pkg/models/shared"
-	"npa-publisher/internal/sdk/pkg/utils"
+	"ns-npa-publisher/internal/sdk/pkg/models/operations"
+	"ns-npa-publisher/internal/sdk/pkg/models/sdkerrors"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/utils"
 )
 
-type publisherToken struct {
+type PublisherToken struct {
 	sdkConfiguration sdkConfiguration
 }
 
-func newPublisherToken(sdkConfig sdkConfiguration) *publisherToken {
-	return &publisherToken{
+func newPublisherToken(sdkConfig sdkConfiguration) *PublisherToken {
+	return &PublisherToken{
 		sdkConfiguration: sdkConfig,
 	}
 }
 
 // Create - Generate and retrieve a token for publisher registration
 // Generate and retrieve a token for publisher registration
-func (s *publisherToken) Create(ctx context.Context, request operations.PostInfrastructurePublishersPublisherIDRegistrationTokenRequest) (*operations.PostInfrastructurePublishersPublisherIDRegistrationTokenResponse, error) {
+func (s *PublisherToken) Create(ctx context.Context, request operations.PostInfrastructurePublishersPublisherIDRegistrationTokenRequest) (*operations.PostInfrastructurePublishersPublisherIDRegistrationTokenResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publishers/{publisher_id}/registration_token", request, nil)
 	if err != nil {
@@ -68,12 +68,12 @@ func (s *publisherToken) Create(ctx context.Context, request operations.PostInfr
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSON
+			var out operations.PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
