@@ -26,10 +26,11 @@ resource "ns-npa-publisher_npa_publisher" "my_npapublisher" {
   name                          = "Speakeasy Terraform Provider Test"
 }
 
+# Note: got a 503 one time? Does this need a retry?
 data "ns-npa-publisher_npa_publishers" "npa_publishers" {
-
   depends_on = [ns-npa-publisher_npa_publisher.my_npapublisher]
 }
+
 
 output "npa_publisher_token" {
   value = "${ns-npa-publisher_publisher_token.my_publishertoken.token}"
