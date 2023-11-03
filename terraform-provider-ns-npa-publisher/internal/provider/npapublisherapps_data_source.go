@@ -5,8 +5,8 @@ package provider
 import (
 	"context"
 	"fmt"
-	"npa-publisher/internal/sdk"
-	"npa-publisher/internal/sdk/pkg/models/operations"
+	"ns-npa-publisher/internal/sdk"
+	"ns-npa-publisher/internal/sdk/pkg/models/operations"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"

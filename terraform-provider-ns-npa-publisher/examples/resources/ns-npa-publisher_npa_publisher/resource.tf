@@ -1,4 +1,4 @@
-resource "npa-publisher_npa_publisher" "my_npapublisher" {
+resource "ns-npa-publisher_npa_publisher" "my_npapublisher" {
   lbrokerconnect                = true
   name                          = "Mr. Bessie Hickle DVM"
   publisher_upgrade_profiles_id = 5

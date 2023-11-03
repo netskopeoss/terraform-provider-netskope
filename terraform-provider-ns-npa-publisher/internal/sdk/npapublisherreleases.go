@@ -8,26 +8,26 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/operations"
-	"npa-publisher/internal/sdk/pkg/models/sdkerrors"
-	"npa-publisher/internal/sdk/pkg/models/shared"
-	"npa-publisher/internal/sdk/pkg/utils"
+	"ns-npa-publisher/internal/sdk/pkg/models/operations"
+	"ns-npa-publisher/internal/sdk/pkg/models/sdkerrors"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/utils"
 	"strings"
 )
 
-type npaPublisherReleases struct {
+type NPAPublisherReleases struct {
 	sdkConfiguration sdkConfiguration
 }
 
-func newNPAPublisherReleases(sdkConfig sdkConfiguration) *npaPublisherReleases {
-	return &npaPublisherReleases{
+func newNPAPublisherReleases(sdkConfig sdkConfiguration) *NPAPublisherReleases {
+	return &NPAPublisherReleases{
 		sdkConfiguration: sdkConfig,
 	}
 }
 
 // ListObjects - Get list of publisher release objects
 // Get list of publisher release objects
-func (s *npaPublisherReleases) ListObjects(ctx context.Context, request operations.GetInfrastructurePublishersReleasesRequest) (*operations.GetInfrastructurePublishersReleasesResponse, error) {
+func (s *NPAPublisherReleases) ListObjects(ctx context.Context, request operations.GetInfrastructurePublishersReleasesRequest) (*operations.GetInfrastructurePublishersReleasesResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/infrastructure/publishers/releases"
 

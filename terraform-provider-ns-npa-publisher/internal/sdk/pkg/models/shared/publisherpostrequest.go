@@ -3,7 +3,7 @@
 package shared
 
 import (
-	"npa-publisher/internal/sdk/pkg/utils"
+	"ns-npa-publisher/internal/sdk/pkg/utils"
 )
 
 type PublisherPostRequest struct {

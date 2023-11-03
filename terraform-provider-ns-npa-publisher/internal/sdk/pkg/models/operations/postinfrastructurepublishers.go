@@ -6,22 +6,22 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
 
-// PostInfrastructurePublishersSilent - flag to skip output except status code
-type PostInfrastructurePublishersSilent string
+// PostInfrastructurePublishersQueryParamSilent - flag to skip output except status code
+type PostInfrastructurePublishersQueryParamSilent string
 
 const (
-	PostInfrastructurePublishersSilentOne  PostInfrastructurePublishersSilent = "1"
-	PostInfrastructurePublishersSilentZero PostInfrastructurePublishersSilent = "0"
+	PostInfrastructurePublishersQueryParamSilentOne  PostInfrastructurePublishersQueryParamSilent = "1"
+	PostInfrastructurePublishersQueryParamSilentZero PostInfrastructurePublishersQueryParamSilent = "0"
 )
 
-func (e PostInfrastructurePublishersSilent) ToPointer() *PostInfrastructurePublishersSilent {
+func (e PostInfrastructurePublishersQueryParamSilent) ToPointer() *PostInfrastructurePublishersQueryParamSilent {
 	return &e
 }
 
-func (e *PostInfrastructurePublishersSilent) UnmarshalJSON(data []byte) error {
+func (e *PostInfrastructurePublishersQueryParamSilent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -30,17 +30,17 @@ func (e *PostInfrastructurePublishersSilent) UnmarshalJSON(data []byte) error {
 	case "1":
 		fallthrough
 	case "0":
-		*e = PostInfrastructurePublishersSilent(v)
+		*e = PostInfrastructurePublishersQueryParamSilent(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PostInfrastructurePublishersSilent: %v", v)
+		return fmt.Errorf("invalid value for PostInfrastructurePublishersQueryParamSilent: %v", v)
 	}
 }
 
 type PostInfrastructurePublishersRequest struct {
 	PublisherPostRequest shared.PublisherPostRequest `request:"mediaType=application/json"`
 	// flag to skip output except status code
-	Silent *PostInfrastructurePublishersSilent `queryParam:"style=form,explode=true,name=silent"`
+	Silent *PostInfrastructurePublishersQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 }
 
 func (o *PostInfrastructurePublishersRequest) GetPublisherPostRequest() shared.PublisherPostRequest {
@@ -50,7 +50,7 @@ func (o *PostInfrastructurePublishersRequest) GetPublisherPostRequest() shared.P
 	return o.PublisherPostRequest
 }
 
-func (o *PostInfrastructurePublishersRequest) GetSilent() *PostInfrastructurePublishersSilent {
+func (o *PostInfrastructurePublishersRequest) GetSilent() *PostInfrastructurePublishersQueryParamSilent {
 	if o == nil {
 		return nil
 	}

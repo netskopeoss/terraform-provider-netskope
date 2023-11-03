@@ -8,26 +8,26 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/operations"
-	"npa-publisher/internal/sdk/pkg/models/sdkerrors"
-	"npa-publisher/internal/sdk/pkg/models/shared"
-	"npa-publisher/internal/sdk/pkg/utils"
+	"ns-npa-publisher/internal/sdk/pkg/models/operations"
+	"ns-npa-publisher/internal/sdk/pkg/models/sdkerrors"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/utils"
 	"strings"
 )
 
-type npaPublishers struct {
+type NPAPublishers struct {
 	sdkConfiguration sdkConfiguration
 }
 
-func newNPAPublishers(sdkConfig sdkConfiguration) *npaPublishers {
-	return &npaPublishers{
+func newNPAPublishers(sdkConfig sdkConfiguration) *NPAPublishers {
+	return &NPAPublishers{
 		sdkConfiguration: sdkConfig,
 	}
 }
 
 // Create a publisher
 // Create a publisher
-func (s *npaPublishers) Create(ctx context.Context, request operations.PostInfrastructurePublishersRequest) (*operations.PostInfrastructurePublishersResponse, error) {
+func (s *NPAPublishers) Create(ctx context.Context, request operations.PostInfrastructurePublishersRequest) (*operations.PostInfrastructurePublishersResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/infrastructure/publishers"
 
@@ -112,7 +112,7 @@ func (s *npaPublishers) Create(ctx context.Context, request operations.PostInfra
 
 // Delete a publisher
 // Delete a publisher based on publisher id
-func (s *npaPublishers) Delete(ctx context.Context, request operations.DeleteInfrastructurePublishersPublisherIDRequest) (*operations.DeleteInfrastructurePublishersPublisherIDResponse, error) {
+func (s *NPAPublishers) Delete(ctx context.Context, request operations.DeleteInfrastructurePublishersPublisherIDRequest) (*operations.DeleteInfrastructurePublishersPublisherIDResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publishers/{publisher_id}", request, nil)
 	if err != nil {
@@ -154,12 +154,12 @@ func (s *npaPublishers) Delete(ctx context.Context, request operations.DeleteInf
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteInfrastructurePublishersPublisherID200ApplicationJSON
+			var out operations.DeleteInfrastructurePublishersPublisherIDResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.DeleteInfrastructurePublishersPublisherID200ApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -182,7 +182,7 @@ func (s *npaPublishers) Delete(ctx context.Context, request operations.DeleteInf
 
 // ListObjects - Get list of publisher objects
 // Get list of publisher objects
-func (s *npaPublishers) ListObjects(ctx context.Context, request operations.GetInfrastructurePublishersRequest) (*operations.GetInfrastructurePublishersResponse, error) {
+func (s *NPAPublishers) ListObjects(ctx context.Context, request operations.GetInfrastructurePublishersRequest) (*operations.GetInfrastructurePublishersResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/infrastructure/publishers"
 
@@ -253,7 +253,7 @@ func (s *npaPublishers) ListObjects(ctx context.Context, request operations.GetI
 
 // Read - Get a publisher
 // get a publisher based on publisher id
-func (s *npaPublishers) Read(ctx context.Context, request operations.GetInfrastructurePublishersPublisherIDRequest) (*operations.GetInfrastructurePublishersPublisherIDResponse, error) {
+func (s *NPAPublishers) Read(ctx context.Context, request operations.GetInfrastructurePublishersPublisherIDRequest) (*operations.GetInfrastructurePublishersPublisherIDResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publishers/{publisher_id}", request, nil)
 	if err != nil {
@@ -323,7 +323,7 @@ func (s *npaPublishers) Read(ctx context.Context, request operations.GetInfrastr
 
 // Update a publisher
 // update a publisher based on publisher id
-func (s *npaPublishers) Update(ctx context.Context, request operations.PutInfrastructurePublishersPublisherIDRequest) (*operations.PutInfrastructurePublishersPublisherIDResponse, error) {
+func (s *NPAPublishers) Update(ctx context.Context, request operations.PutInfrastructurePublishersPublisherIDRequest) (*operations.PutInfrastructurePublishersPublisherIDResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publishers/{publisher_id}", request, nil)
 	if err != nil {

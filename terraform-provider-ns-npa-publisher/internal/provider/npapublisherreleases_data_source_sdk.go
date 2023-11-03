@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
 
 func (r *NPAPublisherReleasesDataSourceModel) RefreshFromGetResponse(resp *shared.PublishersReleaseGetResponse) {

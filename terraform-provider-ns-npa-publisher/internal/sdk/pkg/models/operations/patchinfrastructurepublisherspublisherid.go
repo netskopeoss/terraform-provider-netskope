@@ -6,22 +6,22 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
 
-// PatchInfrastructurePublishersPublisherIDSilent - flag to skip output except status code
-type PatchInfrastructurePublishersPublisherIDSilent string
+// Silent - flag to skip output except status code
+type Silent string
 
 const (
-	PatchInfrastructurePublishersPublisherIDSilentOne  PatchInfrastructurePublishersPublisherIDSilent = "1"
-	PatchInfrastructurePublishersPublisherIDSilentZero PatchInfrastructurePublishersPublisherIDSilent = "0"
+	SilentOne  Silent = "1"
+	SilentZero Silent = "0"
 )
 
-func (e PatchInfrastructurePublishersPublisherIDSilent) ToPointer() *PatchInfrastructurePublishersPublisherIDSilent {
+func (e Silent) ToPointer() *Silent {
 	return &e
 }
 
-func (e *PatchInfrastructurePublishersPublisherIDSilent) UnmarshalJSON(data []byte) error {
+func (e *Silent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -30,10 +30,10 @@ func (e *PatchInfrastructurePublishersPublisherIDSilent) UnmarshalJSON(data []by
 	case "1":
 		fallthrough
 	case "0":
-		*e = PatchInfrastructurePublishersPublisherIDSilent(v)
+		*e = Silent(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PatchInfrastructurePublishersPublisherIDSilent: %v", v)
+		return fmt.Errorf("invalid value for Silent: %v", v)
 	}
 }
 
@@ -42,7 +42,7 @@ type PatchInfrastructurePublishersPublisherIDRequest struct {
 	PublisherID         int                        `pathParam:"style=simple,explode=false,name=publisher_id"`
 	PublisherPutRequest shared.PublisherPutRequest `request:"mediaType=application/json"`
 	// flag to skip output except status code
-	Silent *PatchInfrastructurePublishersPublisherIDSilent `queryParam:"style=form,explode=true,name=silent"`
+	Silent *Silent `queryParam:"style=form,explode=true,name=silent"`
 }
 
 func (o *PatchInfrastructurePublishersPublisherIDRequest) GetPublisherID() int {
@@ -59,7 +59,7 @@ func (o *PatchInfrastructurePublishersPublisherIDRequest) GetPublisherPutRequest
 	return o.PublisherPutRequest
 }
 
-func (o *PatchInfrastructurePublishersPublisherIDRequest) GetSilent() *PatchInfrastructurePublishersPublisherIDSilent {
+func (o *PatchInfrastructurePublishersPublisherIDRequest) GetSilent() *Silent {
 	if o == nil {
 		return nil
 	}

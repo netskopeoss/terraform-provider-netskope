@@ -3,44 +3,44 @@
 package shared
 
 import (
-	"npa-publisher/internal/sdk/pkg/utils"
+	"ns-npa-publisher/internal/sdk/pkg/utils"
 )
 
-type PublisherBulkRequestPublishersApply struct {
+type Apply struct {
 	UpgradeRequest *bool `default:"true" json:"upgrade_request"`
 }
 
-func (p PublisherBulkRequestPublishersApply) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(p, "", false)
+func (a Apply) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(a, "", false)
 }
 
-func (p *PublisherBulkRequestPublishersApply) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &p, "", false, false); err != nil {
+func (a *Apply) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &a, "", false, false); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *PublisherBulkRequestPublishersApply) GetUpgradeRequest() *bool {
+func (o *Apply) GetUpgradeRequest() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.UpgradeRequest
 }
 
-type PublisherBulkRequestPublishers struct {
-	Apply *PublisherBulkRequestPublishersApply `json:"apply,omitempty"`
-	ID    []string                             `json:"id,omitempty"`
+type Publishers struct {
+	Apply *Apply   `json:"apply,omitempty"`
+	ID    []string `json:"id,omitempty"`
 }
 
-func (o *PublisherBulkRequestPublishers) GetApply() *PublisherBulkRequestPublishersApply {
+func (o *Publishers) GetApply() *Apply {
 	if o == nil {
 		return nil
 	}
 	return o.Apply
 }
 
-func (o *PublisherBulkRequestPublishers) GetID() []string {
+func (o *Publishers) GetID() []string {
 	if o == nil {
 		return nil
 	}
@@ -48,10 +48,10 @@ func (o *PublisherBulkRequestPublishers) GetID() []string {
 }
 
 type PublisherBulkRequest struct {
-	Publishers *PublisherBulkRequestPublishers `json:"publishers,omitempty"`
+	Publishers *Publishers `json:"publishers,omitempty"`
 }
 
-func (o *PublisherBulkRequest) GetPublishers() *PublisherBulkRequestPublishers {
+func (o *PublisherBulkRequest) GetPublishers() *Publishers {
 	if o == nil {
 		return nil
 	}

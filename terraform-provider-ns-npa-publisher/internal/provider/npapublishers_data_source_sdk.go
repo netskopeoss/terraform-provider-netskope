@@ -5,7 +5,7 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
 
 func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *shared.PublishersGetResponse) {
@@ -17,6 +17,9 @@ func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *shared.Publi
 		for _, publishersItem := range resp.Data.Publishers {
 			var publishers1 Publisher
 			publishers1.AppsCount = types.Int64Value(publishersItem.AppsCount)
+			if publishersItem.Assessment.Two != nil {
+				publishers1.Assessment.Two = &PublisherBulkItemAssessment{}
+			}
 			if publishersItem.Assessment.Assessment != nil {
 				publishers1.Assessment.Assessment = &Assessment{}
 				publishers1.Assessment.Assessment.EeeSupport = types.BoolValue(publishersItem.Assessment.Assessment.EeeSupport)
@@ -25,9 +28,6 @@ func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *shared.Publi
 				publishers1.Assessment.Assessment.IPAddress = types.StringValue(publishersItem.Assessment.Assessment.IPAddress)
 				publishers1.Assessment.Assessment.Latency = types.Int64Value(publishersItem.Assessment.Assessment.Latency)
 				publishers1.Assessment.Assessment.Version = types.StringValue(publishersItem.Assessment.Assessment.Version)
-			}
-			if publishersItem.Assessment.PublisherAssessment2 != nil {
-				publishers1.Assessment.PublisherAssessment2 = &PublisherAssessment2{}
 			}
 			publishers1.CommonName = types.StringValue(publishersItem.CommonName)
 			publishers1.ConnectedApps = nil
@@ -47,8 +47,8 @@ func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *shared.Publi
 					publishers1.StitcherID.Integer = types.Int64Null()
 				}
 			}
-			if publishersItem.StitcherID.PublisherStitcherID2 != nil {
-				publishers1.StitcherID.PublisherStitcherID2 = &PublisherAssessment2{}
+			if publishersItem.StitcherID.Publisher2 != nil {
+				publishers1.StitcherID.Publisher2 = &PublisherBulkItemAssessment{}
 			}
 			publishers1.Tags = nil
 			for _, tagsItem := range publishersItem.Tags {
@@ -57,8 +57,8 @@ func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *shared.Publi
 				tags1 = types.StringValue(string(tags1Result))
 				publishers1.Tags = append(publishers1.Tags, tags1)
 			}
-			if publishersItem.UpgradeFailedReason.PublisherUpgradeFailedReason2 != nil {
-				publishers1.UpgradeFailedReason.PublisherUpgradeFailedReason2 = &PublisherAssessment2{}
+			if publishersItem.UpgradeFailedReason.PublisherSchemas2 != nil {
+				publishers1.UpgradeFailedReason.PublisherSchemas2 = &PublisherBulkItemAssessment{}
 			}
 			if publishersItem.UpgradeFailedReason.UpgradeFailedReason != nil {
 				publishers1.UpgradeFailedReason.UpgradeFailedReason = &UpgradeFailedReason{}

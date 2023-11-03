@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
 
 type DeleteInfrastructurePublishersPublisherIDRequest struct {
@@ -21,18 +21,18 @@ func (o *DeleteInfrastructurePublishersPublisherIDRequest) GetPublisherID() int 
 	return o.PublisherID
 }
 
-type DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatus string
+type Status string
 
 const (
-	DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatusSuccess DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatus = "success"
-	DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatusError   DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatus = "error"
+	StatusSuccess Status = "success"
+	StatusError   Status = "error"
 )
 
-func (e DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatus) ToPointer() *DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatus {
+func (e Status) ToPointer() *Status {
 	return &e
 }
 
-func (e *DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatus) UnmarshalJSON(data []byte) error {
+func (e *Status) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -41,19 +41,19 @@ func (e *DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatus) Unma
 	case "success":
 		fallthrough
 	case "error":
-		*e = DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatus(v)
+		*e = Status(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatus: %v", v)
+		return fmt.Errorf("invalid value for Status: %v", v)
 	}
 }
 
-// DeleteInfrastructurePublishersPublisherID200ApplicationJSON - successful operation
-type DeleteInfrastructurePublishersPublisherID200ApplicationJSON struct {
-	Status *DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatus `json:"status,omitempty"`
+// DeleteInfrastructurePublishersPublisherIDResponseBody - successful operation
+type DeleteInfrastructurePublishersPublisherIDResponseBody struct {
+	Status *Status `json:"status,omitempty"`
 }
 
-func (o *DeleteInfrastructurePublishersPublisherID200ApplicationJSON) GetStatus() *DeleteInfrastructurePublishersPublisherID200ApplicationJSONStatus {
+func (o *DeleteInfrastructurePublishersPublisherIDResponseBody) GetStatus() *Status {
 	if o == nil {
 		return nil
 	}
@@ -68,7 +68,7 @@ type DeleteInfrastructurePublishersPublisherIDResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// successful operation
-	DeleteInfrastructurePublishersPublisherID200ApplicationJSONObject *DeleteInfrastructurePublishersPublisherID200ApplicationJSON
+	Object *DeleteInfrastructurePublishersPublisherIDResponseBody
 	// Invalid request
 	PublishersResponse400 *shared.PublishersResponse400
 }
@@ -94,11 +94,11 @@ func (o *DeleteInfrastructurePublishersPublisherIDResponse) GetRawResponse() *ht
 	return o.RawResponse
 }
 
-func (o *DeleteInfrastructurePublishersPublisherIDResponse) GetDeleteInfrastructurePublishersPublisherID200ApplicationJSONObject() *DeleteInfrastructurePublishersPublisherID200ApplicationJSON {
+func (o *DeleteInfrastructurePublishersPublisherIDResponse) GetObject() *DeleteInfrastructurePublishersPublisherIDResponseBody {
 	if o == nil {
 		return nil
 	}
-	return o.DeleteInfrastructurePublishersPublisherID200ApplicationJSONObject
+	return o.Object
 }
 
 func (o *DeleteInfrastructurePublishersPublisherIDResponse) GetPublishersResponse400() *shared.PublishersResponse400 {

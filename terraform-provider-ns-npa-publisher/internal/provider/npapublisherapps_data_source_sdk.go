@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
 
 func (r *NPAPublisherAppsDataSourceModel) RefreshFromGetResponse(resp *shared.PrivateAppsResponse) {
@@ -77,7 +77,7 @@ func (r *NPAPublisherAppsDataSourceModel) RefreshFromGetResponse(resp *shared.Pr
 			if servicePublisherAssignmentsItem.Reachability == nil {
 				servicePublisherAssignments1.Reachability = nil
 			} else {
-				servicePublisherAssignments1.Reachability = &ServicePublisherAssignmentItemReachability{}
+				servicePublisherAssignments1.Reachability = &Reachability{}
 				if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
 					servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
 				} else {

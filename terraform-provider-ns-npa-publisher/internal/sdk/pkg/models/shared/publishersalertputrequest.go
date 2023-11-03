@@ -7,21 +7,21 @@ import (
 	"fmt"
 )
 
-type PublishersAlertPutRequestEventTypes string
+type EventTypes string
 
 const (
-	PublishersAlertPutRequestEventTypesUpgradeWillStart PublishersAlertPutRequestEventTypes = "UPGRADE_WILL_START"
-	PublishersAlertPutRequestEventTypesUpgradeStarted   PublishersAlertPutRequestEventTypes = "UPGRADE_STARTED"
-	PublishersAlertPutRequestEventTypesUpgradeSucceeded PublishersAlertPutRequestEventTypes = "UPGRADE_SUCCEEDED"
-	PublishersAlertPutRequestEventTypesUpgradeFailed    PublishersAlertPutRequestEventTypes = "UPGRADE_FAILED"
-	PublishersAlertPutRequestEventTypesConnectionFailed PublishersAlertPutRequestEventTypes = "CONNECTION_FAILED"
+	EventTypesUpgradeWillStart EventTypes = "UPGRADE_WILL_START"
+	EventTypesUpgradeStarted   EventTypes = "UPGRADE_STARTED"
+	EventTypesUpgradeSucceeded EventTypes = "UPGRADE_SUCCEEDED"
+	EventTypesUpgradeFailed    EventTypes = "UPGRADE_FAILED"
+	EventTypesConnectionFailed EventTypes = "CONNECTION_FAILED"
 )
 
-func (e PublishersAlertPutRequestEventTypes) ToPointer() *PublishersAlertPutRequestEventTypes {
+func (e EventTypes) ToPointer() *EventTypes {
 	return &e
 }
 
-func (e *PublishersAlertPutRequestEventTypes) UnmarshalJSON(data []byte) error {
+func (e *EventTypes) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -36,17 +36,17 @@ func (e *PublishersAlertPutRequestEventTypes) UnmarshalJSON(data []byte) error {
 	case "UPGRADE_FAILED":
 		fallthrough
 	case "CONNECTION_FAILED":
-		*e = PublishersAlertPutRequestEventTypes(v)
+		*e = EventTypes(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PublishersAlertPutRequestEventTypes: %v", v)
+		return fmt.Errorf("invalid value for EventTypes: %v", v)
 	}
 }
 
 type PublishersAlertPutRequest struct {
-	AdminUsers    []string                              `json:"adminUsers,omitempty"`
-	EventTypes    []PublishersAlertPutRequestEventTypes `json:"eventTypes,omitempty"`
-	SelectedUsers *string                               `json:"selectedUsers,omitempty"`
+	AdminUsers    []string     `json:"adminUsers,omitempty"`
+	EventTypes    []EventTypes `json:"eventTypes,omitempty"`
+	SelectedUsers *string      `json:"selectedUsers,omitempty"`
 }
 
 func (o *PublishersAlertPutRequest) GetAdminUsers() []string {
@@ -56,7 +56,7 @@ func (o *PublishersAlertPutRequest) GetAdminUsers() []string {
 	return o.AdminUsers
 }
 
-func (o *PublishersAlertPutRequest) GetEventTypes() []PublishersAlertPutRequestEventTypes {
+func (o *PublishersAlertPutRequest) GetEventTypes() []EventTypes {
 	if o == nil {
 		return nil
 	}

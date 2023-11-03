@@ -5,14 +5,15 @@ generation:
 features:
   terraform:
     constsAndDefaults: 0.1.1
-    core: 2.93.3
+    core: 3.0.0
     globalSecurity: 2.81.1
     globalServerURLs: 2.82.0
     groups: 2.81.2
+    ignores: 2.81.1
     nameOverrides: 2.81.1
     typeOverrides: 2.81.1
     unions: 2.81.5
 terraform:
   version: 0.0.1
   author: netskope
-  packageName: npa-publisher
+  packageName: ns-npa-publisher
