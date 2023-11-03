@@ -2,5 +2,5 @@
 
 package provider
 
-type PublisherAssessment2 struct {
+type PublisherBulkItemAssessment struct {
 }

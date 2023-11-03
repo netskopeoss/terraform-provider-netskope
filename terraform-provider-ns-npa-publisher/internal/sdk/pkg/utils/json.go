@@ -12,7 +12,7 @@ import (
 	"time"
 	"unsafe"
 
-	"npa-publisher/internal/sdk/pkg/types"
+	"ns-npa-publisher/internal/sdk/pkg/types"
 
 	"github.com/ericlagergren/decimal"
 )

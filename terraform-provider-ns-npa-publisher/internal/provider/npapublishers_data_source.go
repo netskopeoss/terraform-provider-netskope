@@ -5,8 +5,8 @@ package provider
 import (
 	"context"
 	"fmt"
-	"npa-publisher/internal/sdk"
-	"npa-publisher/internal/sdk/pkg/models/operations"
+	"ns-npa-publisher/internal/sdk"
+	"ns-npa-publisher/internal/sdk/pkg/models/operations"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"npa-publisher/internal/validators"
+	"ns-npa-publisher/internal/validators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -62,6 +62,10 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 								"assessment": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
+										"two": schema.SingleNestedAttribute{
+											Computed:   true,
+											Attributes: map[string]schema.Attribute{},
+										},
 										"assessment": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
@@ -84,10 +88,6 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 													Computed: true,
 												},
 											},
-										},
-										"publisher_assessment_2": schema.SingleNestedAttribute{
-											Computed:   true,
-											Attributes: map[string]schema.Attribute{},
 										},
 									},
 									Validators: []validator.Object{
@@ -125,7 +125,7 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 										"integer": schema.Int64Attribute{
 											Computed: true,
 										},
-										"publisher_stitcher_id_2": schema.SingleNestedAttribute{
+										"publisher_2": schema.SingleNestedAttribute{
 											Computed:   true,
 											Attributes: map[string]schema.Attribute{},
 										},
@@ -144,7 +144,7 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 								"upgrade_failed_reason": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
-										"publisher_upgrade_failed_reason_2": schema.SingleNestedAttribute{
+										"publisher_schemas_2": schema.SingleNestedAttribute{
 											Computed:   true,
 											Attributes: map[string]schema.Attribute{},
 										},

@@ -4,8 +4,8 @@ package provider
 
 import (
 	"context"
-	"npa-publisher/internal/sdk"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -14,27 +14,27 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-var _ provider.Provider = &NpaPublisherProvider{}
+var _ provider.Provider = &NsNpaPublisherProvider{}
 
-type NpaPublisherProvider struct {
+type NsNpaPublisherProvider struct {
 	// version is set to the provider version on release, "dev" when the
 	// provider is built and ran locally, and "test" when running acceptance
 	// testing.
 	version string
 }
 
-// NpaPublisherProviderModel describes the provider data model.
-type NpaPublisherProviderModel struct {
+// NsNpaPublisherProviderModel describes the provider data model.
+type NsNpaPublisherProviderModel struct {
 	ServerURL types.String `tfsdk:"server_url"`
 	APIKey    types.String `tfsdk:"api_key"`
 }
 
-func (p *NpaPublisherProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "npa-publisher"
+func (p *NsNpaPublisherProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "ns-npa-publisher"
 	resp.Version = p.version
 }
 
-func (p *NpaPublisherProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *NsNpaPublisherProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description: `npa_publisher: NPA publisher CRUD operations.`,
 		Attributes: map[string]schema.Attribute{
@@ -51,8 +51,8 @@ func (p *NpaPublisherProvider) Schema(ctx context.Context, req provider.SchemaRe
 	}
 }
 
-func (p *NpaPublisherProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
-	var data NpaPublisherProviderModel
+func (p *NsNpaPublisherProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	var data NsNpaPublisherProviderModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
@@ -81,16 +81,18 @@ func (p *NpaPublisherProvider) Configure(ctx context.Context, req provider.Confi
 	resp.ResourceData = client
 }
 
-func (p *NpaPublisherProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *NsNpaPublisherProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewNPAPublisherResource,
+		NewNPAPublisherBulkUpgradeResource,
 		NewPublisherTokenResource,
 	}
 }
 
-func (p *NpaPublisherProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+func (p *NsNpaPublisherProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewNPAPublisherDataSource,
+		NewNPAPublisherAlertsDataSource,
 		NewNPAPublisherAppsDataSource,
 		NewNPAPublisherReleasesDataSource,
 		NewNPAPublishersDataSource,
@@ -99,7 +101,7 @@ func (p *NpaPublisherProvider) DataSources(ctx context.Context) []func() datasou
 
 func New(version string) func() provider.Provider {
 	return func() provider.Provider {
-		return &NpaPublisherProvider{
+		return &NsNpaPublisherProvider{
 			version: version,
 		}
 	}

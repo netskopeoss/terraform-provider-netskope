@@ -15,7 +15,7 @@ type Publisher struct {
 	PublisherUpgradeProfilesExternalID types.Int64                  `tfsdk:"publisher_upgrade_profiles_external_id"`
 	Registered                         types.Bool                   `tfsdk:"registered"`
 	Status                             types.String                 `tfsdk:"status"`
-	StitcherID                         PublisherStitcherID          `tfsdk:"stitcher_id"`
+	StitcherID                         StitcherID                   `tfsdk:"stitcher_id"`
 	Tags                               []types.String               `tfsdk:"tags"`
 	UpgradeFailedReason                PublisherUpgradeFailedReason `tfsdk:"upgrade_failed_reason"`
 	UpgradeRequest                     types.Bool                   `tfsdk:"upgrade_request"`

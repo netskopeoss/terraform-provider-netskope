@@ -4,7 +4,7 @@ package provider
 
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
-type ServicePublisherAssignmentItemReachability struct {
+type Reachability struct {
 	ErrorCode   types.Int64  `tfsdk:"error_code"`
 	ErrorString types.String `tfsdk:"error_string"`
 	Reachable   types.Bool   `tfsdk:"reachable"`

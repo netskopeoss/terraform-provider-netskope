@@ -4,7 +4,7 @@ package operations
 
 import (
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
 
 type GetInfrastructurePublishersRequest struct {

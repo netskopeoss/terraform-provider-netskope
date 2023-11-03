@@ -6,22 +6,22 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
 
-// PutInfrastructurePublishersPublisherIDSilent - flag to skip output except status code
-type PutInfrastructurePublishersPublisherIDSilent string
+// PutInfrastructurePublishersPublisherIDQueryParamSilent - flag to skip output except status code
+type PutInfrastructurePublishersPublisherIDQueryParamSilent string
 
 const (
-	PutInfrastructurePublishersPublisherIDSilentOne  PutInfrastructurePublishersPublisherIDSilent = "1"
-	PutInfrastructurePublishersPublisherIDSilentZero PutInfrastructurePublishersPublisherIDSilent = "0"
+	PutInfrastructurePublishersPublisherIDQueryParamSilentOne  PutInfrastructurePublishersPublisherIDQueryParamSilent = "1"
+	PutInfrastructurePublishersPublisherIDQueryParamSilentZero PutInfrastructurePublishersPublisherIDQueryParamSilent = "0"
 )
 
-func (e PutInfrastructurePublishersPublisherIDSilent) ToPointer() *PutInfrastructurePublishersPublisherIDSilent {
+func (e PutInfrastructurePublishersPublisherIDQueryParamSilent) ToPointer() *PutInfrastructurePublishersPublisherIDQueryParamSilent {
 	return &e
 }
 
-func (e *PutInfrastructurePublishersPublisherIDSilent) UnmarshalJSON(data []byte) error {
+func (e *PutInfrastructurePublishersPublisherIDQueryParamSilent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -30,10 +30,10 @@ func (e *PutInfrastructurePublishersPublisherIDSilent) UnmarshalJSON(data []byte
 	case "1":
 		fallthrough
 	case "0":
-		*e = PutInfrastructurePublishersPublisherIDSilent(v)
+		*e = PutInfrastructurePublishersPublisherIDQueryParamSilent(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PutInfrastructurePublishersPublisherIDSilent: %v", v)
+		return fmt.Errorf("invalid value for PutInfrastructurePublishersPublisherIDQueryParamSilent: %v", v)
 	}
 }
 
@@ -42,7 +42,7 @@ type PutInfrastructurePublishersPublisherIDRequest struct {
 	PublisherID         int                        `pathParam:"style=simple,explode=false,name=publisher_id"`
 	PublisherPutRequest shared.PublisherPutRequest `request:"mediaType=application/json"`
 	// flag to skip output except status code
-	Silent *PutInfrastructurePublishersPublisherIDSilent `queryParam:"style=form,explode=true,name=silent"`
+	Silent *PutInfrastructurePublishersPublisherIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 }
 
 func (o *PutInfrastructurePublishersPublisherIDRequest) GetPublisherID() int {
@@ -59,7 +59,7 @@ func (o *PutInfrastructurePublishersPublisherIDRequest) GetPublisherPutRequest()
 	return o.PublisherPutRequest
 }
 
-func (o *PutInfrastructurePublishersPublisherIDRequest) GetSilent() *PutInfrastructurePublishersPublisherIDSilent {
+func (o *PutInfrastructurePublishersPublisherIDRequest) GetSilent() *PutInfrastructurePublishersPublisherIDQueryParamSilent {
 	if o == nil {
 		return nil
 	}

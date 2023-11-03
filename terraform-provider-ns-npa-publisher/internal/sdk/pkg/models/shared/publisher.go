@@ -4,22 +4,22 @@ package shared
 
 import (
 	"errors"
-	"npa-publisher/internal/sdk/pkg/utils"
+	"ns-npa-publisher/internal/sdk/pkg/utils"
 )
 
-type PublisherAssessment2 struct {
+type Two struct {
 }
 
 type PublisherAssessmentType string
 
 const (
-	PublisherAssessmentTypeAssessment           PublisherAssessmentType = "Assessment"
-	PublisherAssessmentTypePublisherAssessment2 PublisherAssessmentType = "Publisher_assessment_2"
+	PublisherAssessmentTypeAssessment PublisherAssessmentType = "Assessment"
+	PublisherAssessmentTypeTwo        PublisherAssessmentType = "2"
 )
 
 type PublisherAssessment struct {
-	Assessment           *Assessment
-	PublisherAssessment2 *PublisherAssessment2
+	Assessment *Assessment
+	Two        *Two
 
 	Type PublisherAssessmentType
 }
@@ -33,21 +33,21 @@ func CreatePublisherAssessmentAssessment(assessment Assessment) PublisherAssessm
 	}
 }
 
-func CreatePublisherAssessmentPublisherAssessment2(publisherAssessment2 PublisherAssessment2) PublisherAssessment {
-	typ := PublisherAssessmentTypePublisherAssessment2
+func CreatePublisherAssessmentTwo(two Two) PublisherAssessment {
+	typ := PublisherAssessmentTypeTwo
 
 	return PublisherAssessment{
-		PublisherAssessment2: &publisherAssessment2,
-		Type:                 typ,
+		Two:  &two,
+		Type: typ,
 	}
 }
 
 func (u *PublisherAssessment) UnmarshalJSON(data []byte) error {
 
-	publisherAssessment2 := new(PublisherAssessment2)
-	if err := utils.UnmarshalJSON(data, &publisherAssessment2, "", true, true); err == nil {
-		u.PublisherAssessment2 = publisherAssessment2
-		u.Type = PublisherAssessmentTypePublisherAssessment2
+	two := new(Two)
+	if err := utils.UnmarshalJSON(data, &two, "", true, true); err == nil {
+		u.Two = two
+		u.Type = PublisherAssessmentTypeTwo
 		return nil
 	}
 
@@ -66,92 +66,92 @@ func (u PublisherAssessment) MarshalJSON() ([]byte, error) {
 		return utils.MarshalJSON(u.Assessment, "", true)
 	}
 
-	if u.PublisherAssessment2 != nil {
-		return utils.MarshalJSON(u.PublisherAssessment2, "", true)
+	if u.Two != nil {
+		return utils.MarshalJSON(u.Two, "", true)
 	}
 
 	return nil, errors.New("could not marshal union type: all fields are null")
 }
 
-type PublisherStitcherID2 struct {
+type Publisher2 struct {
 }
 
-type PublisherStitcherIDType string
+type StitcherIDType string
 
 const (
-	PublisherStitcherIDTypeInteger              PublisherStitcherIDType = "integer"
-	PublisherStitcherIDTypePublisherStitcherID2 PublisherStitcherIDType = "Publisher_stitcher_id_2"
+	StitcherIDTypeInteger    StitcherIDType = "integer"
+	StitcherIDTypePublisher2 StitcherIDType = "Publisher_2"
 )
 
-type PublisherStitcherID struct {
-	Integer              *int64
-	PublisherStitcherID2 *PublisherStitcherID2
+type StitcherID struct {
+	Integer    *int64
+	Publisher2 *Publisher2
 
-	Type PublisherStitcherIDType
+	Type StitcherIDType
 }
 
-func CreatePublisherStitcherIDInteger(integer int64) PublisherStitcherID {
-	typ := PublisherStitcherIDTypeInteger
+func CreateStitcherIDInteger(integer int64) StitcherID {
+	typ := StitcherIDTypeInteger
 
-	return PublisherStitcherID{
+	return StitcherID{
 		Integer: &integer,
 		Type:    typ,
 	}
 }
 
-func CreatePublisherStitcherIDPublisherStitcherID2(publisherStitcherID2 PublisherStitcherID2) PublisherStitcherID {
-	typ := PublisherStitcherIDTypePublisherStitcherID2
+func CreateStitcherIDPublisher2(publisher2 Publisher2) StitcherID {
+	typ := StitcherIDTypePublisher2
 
-	return PublisherStitcherID{
-		PublisherStitcherID2: &publisherStitcherID2,
-		Type:                 typ,
+	return StitcherID{
+		Publisher2: &publisher2,
+		Type:       typ,
 	}
 }
 
-func (u *PublisherStitcherID) UnmarshalJSON(data []byte) error {
+func (u *StitcherID) UnmarshalJSON(data []byte) error {
 
-	publisherStitcherID2 := new(PublisherStitcherID2)
-	if err := utils.UnmarshalJSON(data, &publisherStitcherID2, "", true, true); err == nil {
-		u.PublisherStitcherID2 = publisherStitcherID2
-		u.Type = PublisherStitcherIDTypePublisherStitcherID2
+	publisher2 := new(Publisher2)
+	if err := utils.UnmarshalJSON(data, &publisher2, "", true, true); err == nil {
+		u.Publisher2 = publisher2
+		u.Type = StitcherIDTypePublisher2
 		return nil
 	}
 
 	integer := new(int64)
 	if err := utils.UnmarshalJSON(data, &integer, "", true, true); err == nil {
 		u.Integer = integer
-		u.Type = PublisherStitcherIDTypeInteger
+		u.Type = StitcherIDTypeInteger
 		return nil
 	}
 
 	return errors.New("could not unmarshal into supported union types")
 }
 
-func (u PublisherStitcherID) MarshalJSON() ([]byte, error) {
+func (u StitcherID) MarshalJSON() ([]byte, error) {
 	if u.Integer != nil {
 		return utils.MarshalJSON(u.Integer, "", true)
 	}
 
-	if u.PublisherStitcherID2 != nil {
-		return utils.MarshalJSON(u.PublisherStitcherID2, "", true)
+	if u.Publisher2 != nil {
+		return utils.MarshalJSON(u.Publisher2, "", true)
 	}
 
 	return nil, errors.New("could not marshal union type: all fields are null")
 }
 
-type PublisherUpgradeFailedReason2 struct {
+type PublisherSchemas2 struct {
 }
 
 type PublisherUpgradeFailedReasonType string
 
 const (
-	PublisherUpgradeFailedReasonTypeUpgradeFailedReason           PublisherUpgradeFailedReasonType = "UpgradeFailedReason"
-	PublisherUpgradeFailedReasonTypePublisherUpgradeFailedReason2 PublisherUpgradeFailedReasonType = "Publisher_upgrade_failed_reason_2"
+	PublisherUpgradeFailedReasonTypeUpgradeFailedReason PublisherUpgradeFailedReasonType = "UpgradeFailedReason"
+	PublisherUpgradeFailedReasonTypePublisherSchemas2   PublisherUpgradeFailedReasonType = "Publisher_Schemas_2"
 )
 
 type PublisherUpgradeFailedReason struct {
-	UpgradeFailedReason           *UpgradeFailedReason
-	PublisherUpgradeFailedReason2 *PublisherUpgradeFailedReason2
+	UpgradeFailedReason *UpgradeFailedReason
+	PublisherSchemas2   *PublisherSchemas2
 
 	Type PublisherUpgradeFailedReasonType
 }
@@ -165,21 +165,21 @@ func CreatePublisherUpgradeFailedReasonUpgradeFailedReason(upgradeFailedReason U
 	}
 }
 
-func CreatePublisherUpgradeFailedReasonPublisherUpgradeFailedReason2(publisherUpgradeFailedReason2 PublisherUpgradeFailedReason2) PublisherUpgradeFailedReason {
-	typ := PublisherUpgradeFailedReasonTypePublisherUpgradeFailedReason2
+func CreatePublisherUpgradeFailedReasonPublisherSchemas2(publisherSchemas2 PublisherSchemas2) PublisherUpgradeFailedReason {
+	typ := PublisherUpgradeFailedReasonTypePublisherSchemas2
 
 	return PublisherUpgradeFailedReason{
-		PublisherUpgradeFailedReason2: &publisherUpgradeFailedReason2,
-		Type:                          typ,
+		PublisherSchemas2: &publisherSchemas2,
+		Type:              typ,
 	}
 }
 
 func (u *PublisherUpgradeFailedReason) UnmarshalJSON(data []byte) error {
 
-	publisherUpgradeFailedReason2 := new(PublisherUpgradeFailedReason2)
-	if err := utils.UnmarshalJSON(data, &publisherUpgradeFailedReason2, "", true, true); err == nil {
-		u.PublisherUpgradeFailedReason2 = publisherUpgradeFailedReason2
-		u.Type = PublisherUpgradeFailedReasonTypePublisherUpgradeFailedReason2
+	publisherSchemas2 := new(PublisherSchemas2)
+	if err := utils.UnmarshalJSON(data, &publisherSchemas2, "", true, true); err == nil {
+		u.PublisherSchemas2 = publisherSchemas2
+		u.Type = PublisherUpgradeFailedReasonTypePublisherSchemas2
 		return nil
 	}
 
@@ -198,8 +198,8 @@ func (u PublisherUpgradeFailedReason) MarshalJSON() ([]byte, error) {
 		return utils.MarshalJSON(u.UpgradeFailedReason, "", true)
 	}
 
-	if u.PublisherUpgradeFailedReason2 != nil {
-		return utils.MarshalJSON(u.PublisherUpgradeFailedReason2, "", true)
+	if u.PublisherSchemas2 != nil {
+		return utils.MarshalJSON(u.PublisherSchemas2, "", true)
 	}
 
 	return nil, errors.New("could not marshal union type: all fields are null")
@@ -216,7 +216,7 @@ type Publisher struct {
 	PublisherUpgradeProfilesExternalID int64                        `json:"publisher_upgrade_profiles_external_id"`
 	Registered                         bool                         `json:"registered"`
 	Status                             string                       `json:"status"`
-	StitcherID                         PublisherStitcherID          `json:"stitcher_id"`
+	StitcherID                         StitcherID                   `json:"stitcher_id"`
 	Tags                               []interface{}                `json:"tags"`
 	UpgradeFailedReason                PublisherUpgradeFailedReason `json:"upgrade_failed_reason"`
 	UpgradeRequest                     bool                         `json:"upgrade_request"`
@@ -293,9 +293,9 @@ func (o *Publisher) GetStatus() string {
 	return o.Status
 }
 
-func (o *Publisher) GetStitcherID() PublisherStitcherID {
+func (o *Publisher) GetStitcherID() StitcherID {
 	if o == nil {
-		return PublisherStitcherID{}
+		return StitcherID{}
 	}
 	return o.StitcherID
 }

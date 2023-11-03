@@ -66,6 +66,7 @@ components:
             type: object
             properties:
                 status:
+                    x-speakeasy-ignore: true
                     type: string
                     enum:
                         - success
@@ -285,6 +286,7 @@ components:
                         $ref: '#/components/schemas/tag_item'
         publisher_bulk_request:
             type: object
+            x-speakeasy-entity: NPAPublisherBulkUpgrade
             properties:
                 publishers:
                     type: object
@@ -301,6 +303,7 @@ components:
                                     default: true
         publishers_bulk_response:
             type: object
+            x-speakeasy-entity: NPAPublisherBulkUpgrade
             properties:
                 status:
                     type: string
@@ -321,6 +324,7 @@ components:
                         - not found
                 data:
                     type: object
+                    x-speakeasy-entity: NPAPublisherAlerts
                     properties:
                         adminUsers:
                             type: array
@@ -788,10 +792,12 @@ paths:
         put:
             summary: Trigger bulk publisher update action
             description: Trigger bulk publisher update action
+            x-speakeasy-entity-operation: NPAPublisherBulkUpgrade#create
             parameters:
                 - name: silent
                   in: query
                   required: false
+                  x-speakeasy-ignore: true
                   description: flag to skip output except status code
                   schema:
                     type: string
@@ -858,6 +864,7 @@ paths:
         get:
             summary: Get list of publisher alerts
             description: Get list of publisher alerts
+            x-speakeasy-entity-operation: NPAPublisherAlerts#read
             responses:
                 "200":
                     description: successful operation

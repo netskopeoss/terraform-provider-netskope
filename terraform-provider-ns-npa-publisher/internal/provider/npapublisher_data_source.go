@@ -5,8 +5,8 @@ package provider
 import (
 	"context"
 	"fmt"
-	"npa-publisher/internal/sdk"
-	"npa-publisher/internal/sdk/pkg/models/operations"
+	"ns-npa-publisher/internal/sdk"
+	"ns-npa-publisher/internal/sdk/pkg/models/operations"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"npa-publisher/internal/validators"
+	"ns-npa-publisher/internal/validators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -66,7 +66,7 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed: true,
 			},
 			"id": schema.Int64Attribute{
-				Optional:    true,
+				Required:    true,
 				Description: `publisher id`,
 			},
 			"lbrokerconnect": schema.BoolAttribute{
