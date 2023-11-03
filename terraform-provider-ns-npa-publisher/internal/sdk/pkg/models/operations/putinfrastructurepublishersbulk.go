@@ -3,59 +3,9 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
-
-// PutInfrastructurePublishersBulkSilent - flag to skip output except status code
-type PutInfrastructurePublishersBulkSilent string
-
-const (
-	PutInfrastructurePublishersBulkSilentOne  PutInfrastructurePublishersBulkSilent = "1"
-	PutInfrastructurePublishersBulkSilentZero PutInfrastructurePublishersBulkSilent = "0"
-)
-
-func (e PutInfrastructurePublishersBulkSilent) ToPointer() *PutInfrastructurePublishersBulkSilent {
-	return &e
-}
-
-func (e *PutInfrastructurePublishersBulkSilent) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "1":
-		fallthrough
-	case "0":
-		*e = PutInfrastructurePublishersBulkSilent(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PutInfrastructurePublishersBulkSilent: %v", v)
-	}
-}
-
-type PutInfrastructurePublishersBulkRequest struct {
-	PublisherBulkRequest shared.PublisherBulkRequest `request:"mediaType=application/json"`
-	// flag to skip output except status code
-	Silent *PutInfrastructurePublishersBulkSilent `queryParam:"style=form,explode=true,name=silent"`
-}
-
-func (o *PutInfrastructurePublishersBulkRequest) GetPublisherBulkRequest() shared.PublisherBulkRequest {
-	if o == nil {
-		return shared.PublisherBulkRequest{}
-	}
-	return o.PublisherBulkRequest
-}
-
-func (o *PutInfrastructurePublishersBulkRequest) GetSilent() *PutInfrastructurePublishersBulkSilent {
-	if o == nil {
-		return nil
-	}
-	return o.Silent
-}
 
 type PutInfrastructurePublishersBulkResponse struct {
 	// HTTP response content type for this operation

@@ -1,12 +1,14 @@
 .PHONY: *
 
-all: npa_publisher_tf_provider
+all: terraform-provider-ns-npa-publisher
 
 docs:
 	go generate ./...
 
 terraform-provider-ns-npa-publisher: terraform-provider-ns-npa-publisher/npa_publisher.yaml
-	speakeasy generate sdk --lang terraform -o terraform-provider-ns-npa-publisher -s terraform-provider-ns-npa-publisher/npa_publisher.yaml
+#	speakeasy generate sdk --lang terraform -o terraform-provider-ns-npa-publisher -s terraform-provider-ns-npa-publisher/npa_publisher.yaml
+	go run ../../cmd/generate/main.go -l terraform -o terraform-provider-ns-npa-publisher -s terraform-provider-ns-npa-publisher/npa_publisher.yaml
+
 
 terraform-provider-ns-npa-publisher/npa_publisher.yaml: check-speakeasy check-local-oas
 	mkdir -p terraform-provider-ns-npa-publisher

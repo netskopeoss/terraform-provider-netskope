@@ -7,18 +7,18 @@ import (
 	"fmt"
 )
 
-type PublisherResponseDataStatus string
+type PublisherResponseStatus string
 
 const (
-	PublisherResponseDataStatusConnected     PublisherResponseDataStatus = "connected"
-	PublisherResponseDataStatusNotRegistered PublisherResponseDataStatus = "not registered"
+	PublisherResponseStatusConnected     PublisherResponseStatus = "connected"
+	PublisherResponseStatusNotRegistered PublisherResponseStatus = "not registered"
 )
 
-func (e PublisherResponseDataStatus) ToPointer() *PublisherResponseDataStatus {
+func (e PublisherResponseStatus) ToPointer() *PublisherResponseStatus {
 	return &e
 }
 
-func (e *PublisherResponseDataStatus) UnmarshalJSON(data []byte) error {
+func (e *PublisherResponseStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -27,24 +27,24 @@ func (e *PublisherResponseDataStatus) UnmarshalJSON(data []byte) error {
 	case "connected":
 		fallthrough
 	case "not registered":
-		*e = PublisherResponseDataStatus(v)
+		*e = PublisherResponseStatus(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PublisherResponseDataStatus: %v", v)
+		return fmt.Errorf("invalid value for PublisherResponseStatus: %v", v)
 	}
 }
 
 type PublisherResponseData struct {
-	Assessment                interface{}                  `json:"assessment,omitempty"`
-	CommonName                *string                      `json:"common_name,omitempty"`
-	ID                        *int                         `json:"id,omitempty"`
-	Lbrokerconnect            *bool                        `json:"lbrokerconnect,omitempty"`
-	Name                      *string                      `json:"name,omitempty"`
-	PublisherUpgradeProfileID *int                         `json:"publisher_upgrade_profile_id,omitempty"`
-	Registered                *bool                        `json:"registered,omitempty"`
-	Status                    *PublisherResponseDataStatus `json:"status,omitempty"`
-	StitcherID                *int                         `json:"stitcher_id,omitempty"`
-	Tags                      []TagItem                    `json:"tags,omitempty"`
+	Assessment                interface{}              `json:"assessment,omitempty"`
+	CommonName                *string                  `json:"common_name,omitempty"`
+	ID                        *int                     `json:"id,omitempty"`
+	Lbrokerconnect            *bool                    `json:"lbrokerconnect,omitempty"`
+	Name                      *string                  `json:"name,omitempty"`
+	PublisherUpgradeProfileID *int                     `json:"publisher_upgrade_profile_id,omitempty"`
+	Registered                *bool                    `json:"registered,omitempty"`
+	Status                    *PublisherResponseStatus `json:"status,omitempty"`
+	StitcherID                *int                     `json:"stitcher_id,omitempty"`
+	Tags                      []TagItem                `json:"tags,omitempty"`
 }
 
 func (o *PublisherResponseData) GetAssessment() interface{} {
@@ -96,7 +96,7 @@ func (o *PublisherResponseData) GetRegistered() *bool {
 	return o.Registered
 }
 
-func (o *PublisherResponseData) GetStatus() *PublisherResponseDataStatus {
+func (o *PublisherResponseData) GetStatus() *PublisherResponseStatus {
 	if o == nil {
 		return nil
 	}
@@ -117,36 +117,8 @@ func (o *PublisherResponseData) GetTags() []TagItem {
 	return o.Tags
 }
 
-type PublisherResponseStatus string
-
-const (
-	PublisherResponseStatusSuccess  PublisherResponseStatus = "success"
-	PublisherResponseStatusNotFound PublisherResponseStatus = "not found"
-)
-
-func (e PublisherResponseStatus) ToPointer() *PublisherResponseStatus {
-	return &e
-}
-
-func (e *PublisherResponseStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = PublisherResponseStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PublisherResponseStatus: %v", v)
-	}
-}
-
 type PublisherResponse struct {
-	Data   *PublisherResponseData   `json:"data,omitempty"`
-	Status *PublisherResponseStatus `json:"status,omitempty"`
+	Data *PublisherResponseData `json:"data,omitempty"`
 }
 
 func (o *PublisherResponse) GetData() *PublisherResponseData {
@@ -154,11 +126,4 @@ func (o *PublisherResponse) GetData() *PublisherResponseData {
 		return nil
 	}
 	return o.Data
-}
-
-func (o *PublisherResponse) GetStatus() *PublisherResponseStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }

@@ -5,7 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
-	"npa-publisher/internal/sdk"
+	"ns-npa-publisher/internal/sdk"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -112,11 +112,11 @@ func (r *PublisherTokenResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONObject == nil {
+	if res.Object == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(&res.PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONObject.Data)
+	data.RefreshFromCreateResponse(&res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

@@ -67,14 +67,14 @@ To install this provider, copy and paste this code into your Terraform configura
 ```hcl
 terraform {
   required_providers {
-    npa-publisher = {
-      source  = "netskope/npa-publisher"
+    ns-npa-publisher = {
+      source  = "netskope/ns-npa-publisher"
       version = "0.0.1"
     }
   }
 }
 
-provider "npa-publisher" {
+provider "ns-npa-publisher" {
   # Configuration options
 }
 ```
@@ -109,8 +109,6 @@ TF_REATTACH_PROVIDERS=... terraform apply
 
 
 <!-- Start Dev Containers -->
-
-
 
 <!-- End Dev Containers -->
 

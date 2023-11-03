@@ -2,27 +2,27 @@
 
 package shared
 
-type ServicePublisherAssignmentItemReachability struct {
+type Reachability struct {
 	ErrorCode   *int    `json:"error_code,omitempty"`
 	ErrorString *string `json:"error_string,omitempty"`
 	Reachable   *bool   `json:"reachable,omitempty"`
 }
 
-func (o *ServicePublisherAssignmentItemReachability) GetErrorCode() *int {
+func (o *Reachability) GetErrorCode() *int {
 	if o == nil {
 		return nil
 	}
 	return o.ErrorCode
 }
 
-func (o *ServicePublisherAssignmentItemReachability) GetErrorString() *string {
+func (o *Reachability) GetErrorString() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ErrorString
 }
 
-func (o *ServicePublisherAssignmentItemReachability) GetReachable() *bool {
+func (o *Reachability) GetReachable() *bool {
 	if o == nil {
 		return nil
 	}
@@ -30,10 +30,10 @@ func (o *ServicePublisherAssignmentItemReachability) GetReachable() *bool {
 }
 
 type ServicePublisherAssignmentItem struct {
-	Primary      *bool                                       `json:"primary,omitempty"`
-	PublisherID  *int                                        `json:"publisher_id,omitempty"`
-	Reachability *ServicePublisherAssignmentItemReachability `json:"reachability,omitempty"`
-	ServiceID    *int                                        `json:"service_id,omitempty"`
+	Primary      *bool         `json:"primary,omitempty"`
+	PublisherID  *int          `json:"publisher_id,omitempty"`
+	Reachability *Reachability `json:"reachability,omitempty"`
+	ServiceID    *int          `json:"service_id,omitempty"`
 }
 
 func (o *ServicePublisherAssignmentItem) GetPrimary() *bool {
@@ -50,7 +50,7 @@ func (o *ServicePublisherAssignmentItem) GetPublisherID() *int {
 	return o.PublisherID
 }
 
-func (o *ServicePublisherAssignmentItem) GetReachability() *ServicePublisherAssignmentItemReachability {
+func (o *ServicePublisherAssignmentItem) GetReachability() *Reachability {
 	if o == nil {
 		return nil
 	}

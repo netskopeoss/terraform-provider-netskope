@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"npa-publisher/internal/sdk/pkg/models/operations"
+	"ns-npa-publisher/internal/sdk/pkg/models/operations"
 )
 
 func (r *PublisherTokenResourceModel) ToCreateSDKType() *operations.PostInfrastructurePublishersPublisherIDRegistrationTokenRequest {
@@ -15,6 +15,6 @@ func (r *PublisherTokenResourceModel) ToCreateSDKType() *operations.PostInfrastr
 	return &out
 }
 
-func (r *PublisherTokenResourceModel) RefreshFromCreateResponse(resp *operations.PostInfrastructurePublishersPublisherIDRegistrationToken200ApplicationJSONData) {
+func (r *PublisherTokenResourceModel) RefreshFromCreateResponse(resp *operations.Data) {
 	r.Token = types.StringValue(resp.Token)
 }

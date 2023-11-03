@@ -8,25 +8,25 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/operations"
-	"npa-publisher/internal/sdk/pkg/models/sdkerrors"
-	"npa-publisher/internal/sdk/pkg/models/shared"
-	"npa-publisher/internal/sdk/pkg/utils"
+	"ns-npa-publisher/internal/sdk/pkg/models/operations"
+	"ns-npa-publisher/internal/sdk/pkg/models/sdkerrors"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/utils"
 )
 
-type npaPublisherApps struct {
+type NPAPublisherApps struct {
 	sdkConfiguration sdkConfiguration
 }
 
-func newNPAPublisherApps(sdkConfig sdkConfiguration) *npaPublisherApps {
-	return &npaPublisherApps{
+func newNPAPublisherApps(sdkConfig sdkConfiguration) *NPAPublisherApps {
+	return &NPAPublisherApps{
 		sdkConfiguration: sdkConfig,
 	}
 }
 
 // ListObjects - Get all private apps associated to a publisher
 // Get all private apps associated to a publisher
-func (s *npaPublisherApps) ListObjects(ctx context.Context, request operations.GetInfrastructurePublishersPublisherIDAppsRequest) (*operations.GetInfrastructurePublishersPublisherIDAppsResponse, error) {
+func (s *NPAPublisherApps) ListObjects(ctx context.Context, request operations.GetInfrastructurePublishersPublisherIDAppsRequest) (*operations.GetInfrastructurePublishersPublisherIDAppsResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publishers/{publisher_id}/apps", request, nil)
 	if err != nil {

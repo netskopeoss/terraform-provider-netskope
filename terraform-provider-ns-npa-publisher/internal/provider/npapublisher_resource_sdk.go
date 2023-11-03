@@ -5,7 +5,7 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
 
 func (r *NPAPublisherResourceModel) ToCreateSDKType() *shared.PublisherPostRequest {

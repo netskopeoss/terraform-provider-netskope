@@ -6,24 +6,24 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"npa-publisher/internal/sdk/pkg/models/shared"
+	"ns-npa-publisher/internal/sdk/pkg/models/shared"
 )
 
-// PutInfrastructurePublishersAlertsconfigurationSilent - flag to skip output except status code:
+// QueryParamSilent - flag to skip output except status code:
 //   - `1` - Skip response data
 //   - `0` - Do not skip response data
-type PutInfrastructurePublishersAlertsconfigurationSilent string
+type QueryParamSilent string
 
 const (
-	PutInfrastructurePublishersAlertsconfigurationSilentOne  PutInfrastructurePublishersAlertsconfigurationSilent = "1"
-	PutInfrastructurePublishersAlertsconfigurationSilentZero PutInfrastructurePublishersAlertsconfigurationSilent = "0"
+	QueryParamSilentOne  QueryParamSilent = "1"
+	QueryParamSilentZero QueryParamSilent = "0"
 )
 
-func (e PutInfrastructurePublishersAlertsconfigurationSilent) ToPointer() *PutInfrastructurePublishersAlertsconfigurationSilent {
+func (e QueryParamSilent) ToPointer() *QueryParamSilent {
 	return &e
 }
 
-func (e *PutInfrastructurePublishersAlertsconfigurationSilent) UnmarshalJSON(data []byte) error {
+func (e *QueryParamSilent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -32,10 +32,10 @@ func (e *PutInfrastructurePublishersAlertsconfigurationSilent) UnmarshalJSON(dat
 	case "1":
 		fallthrough
 	case "0":
-		*e = PutInfrastructurePublishersAlertsconfigurationSilent(v)
+		*e = QueryParamSilent(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PutInfrastructurePublishersAlertsconfigurationSilent: %v", v)
+		return fmt.Errorf("invalid value for QueryParamSilent: %v", v)
 	}
 }
 
@@ -44,7 +44,7 @@ type PutInfrastructurePublishersAlertsconfigurationRequest struct {
 	// flag to skip output except status code:
 	//  * `1` - Skip response data
 	//  * `0` - Do not skip response data
-	Silent *PutInfrastructurePublishersAlertsconfigurationSilent `queryParam:"style=form,explode=true,name=silent"`
+	Silent *QueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 }
 
 func (o *PutInfrastructurePublishersAlertsconfigurationRequest) GetPublishersAlertPutRequest() shared.PublishersAlertPutRequest {
@@ -54,7 +54,7 @@ func (o *PutInfrastructurePublishersAlertsconfigurationRequest) GetPublishersAle
 	return o.PublishersAlertPutRequest
 }
 
-func (o *PutInfrastructurePublishersAlertsconfigurationRequest) GetSilent() *PutInfrastructurePublishersAlertsconfigurationSilent {
+func (o *PutInfrastructurePublishersAlertsconfigurationRequest) GetSilent() *QueryParamSilent {
 	if o == nil {
 		return nil
 	}

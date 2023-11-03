@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"net/http"
 	"net/http/httputil"
-	tfReflect "npa-publisher/internal/provider/reflect"
+	tfReflect "ns-npa-publisher/internal/provider/reflect"
 	"reflect"
 )
 
