@@ -25,3 +25,4 @@ go.work
 #Local testing folders
 test/
 testing/
+*.tfvars

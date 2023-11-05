@@ -216,20 +216,20 @@ func (o *PatchAppsPrivatePrivateAppIDRequest) GetSilent() *Silent {
 	return o.Silent
 }
 
-// PatchAppsPrivatePrivateAppIDResponseBody - Invalid request
-type PatchAppsPrivatePrivateAppIDResponseBody struct {
+// PatchAppsPrivatePrivateAppIDResponseResponseBody - Invalid request
+type PatchAppsPrivatePrivateAppIDResponseResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *PatchAppsPrivatePrivateAppIDResponseBody) GetResult() *string {
+func (o *PatchAppsPrivatePrivateAppIDResponseResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *PatchAppsPrivatePrivateAppIDResponseBody) GetStatus() *int64 {
+func (o *PatchAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -462,19 +462,20 @@ func (e *PatchAppsPrivatePrivateAppIDStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PatchAppsPrivatePrivateAppIDResponseResponseBody struct {
+// PatchAppsPrivatePrivateAppIDResponseBody - successful operation
+type PatchAppsPrivatePrivateAppIDResponseBody struct {
 	Data   *PatchAppsPrivatePrivateAppIDData   `json:"data,omitempty"`
 	Status *PatchAppsPrivatePrivateAppIDStatus `json:"status,omitempty"`
 }
 
-func (o *PatchAppsPrivatePrivateAppIDResponseResponseBody) GetData() *PatchAppsPrivatePrivateAppIDData {
+func (o *PatchAppsPrivatePrivateAppIDResponseBody) GetData() *PatchAppsPrivatePrivateAppIDData {
 	if o == nil {
 		return nil
 	}
 	return o.Data
 }
 
-func (o *PatchAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *PatchAppsPrivatePrivateAppIDStatus {
+func (o *PatchAppsPrivatePrivateAppIDResponseBody) GetStatus() *PatchAppsPrivatePrivateAppIDStatus {
 	if o == nil {
 		return nil
 	}
@@ -482,16 +483,30 @@ func (o *PatchAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *PatchApp
 }
 
 type PatchAppsPrivatePrivateAppIDResponse struct {
+	// successful operation
+	TwoHundredApplicationJSONObject *PatchAppsPrivatePrivateAppIDResponseBody
+	// Invalid request
+	FourHundredApplicationJSONObject *PatchAppsPrivatePrivateAppIDResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// successful operation
-	Classes []PatchAppsPrivatePrivateAppIDResponseResponseBody
-	// Invalid request
-	Object *PatchAppsPrivatePrivateAppIDResponseBody
+}
+
+func (o *PatchAppsPrivatePrivateAppIDResponse) GetTwoHundredApplicationJSONObject() *PatchAppsPrivatePrivateAppIDResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.TwoHundredApplicationJSONObject
+}
+
+func (o *PatchAppsPrivatePrivateAppIDResponse) GetFourHundredApplicationJSONObject() *PatchAppsPrivatePrivateAppIDResponseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.FourHundredApplicationJSONObject
 }
 
 func (o *PatchAppsPrivatePrivateAppIDResponse) GetContentType() string {
@@ -513,18 +528,4 @@ func (o *PatchAppsPrivatePrivateAppIDResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
-}
-
-func (o *PatchAppsPrivatePrivateAppIDResponse) GetClasses() []PatchAppsPrivatePrivateAppIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Classes
-}
-
-func (o *PatchAppsPrivatePrivateAppIDResponse) GetObject() *PatchAppsPrivatePrivateAppIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Object
 }

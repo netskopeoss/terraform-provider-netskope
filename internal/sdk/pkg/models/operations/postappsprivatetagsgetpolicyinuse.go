@@ -19,20 +19,20 @@ func (o *PostAppsPrivateTagsGetpolicyinuseRequestBody) GetIds() []string {
 	return o.Ids
 }
 
-// PostAppsPrivateTagsGetpolicyinuseResponseBody - Invalid request
-type PostAppsPrivateTagsGetpolicyinuseResponseBody struct {
+// PostAppsPrivateTagsGetpolicyinuseResponseResponseBody - Invalid request
+type PostAppsPrivateTagsGetpolicyinuseResponseResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *PostAppsPrivateTagsGetpolicyinuseResponseBody) GetResult() *string {
+func (o *PostAppsPrivateTagsGetpolicyinuseResponseResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *PostAppsPrivateTagsGetpolicyinuseResponseBody) GetStatus() *int64 {
+func (o *PostAppsPrivateTagsGetpolicyinuseResponseResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -77,19 +77,20 @@ func (e *PostAppsPrivateTagsGetpolicyinuseStatus) UnmarshalJSON(data []byte) err
 	}
 }
 
-type PostAppsPrivateTagsGetpolicyinuseResponseResponseBody struct {
-	Data   *PostAppsPrivateTagsGetpolicyinuseData   `json:"data,omitempty"`
+// PostAppsPrivateTagsGetpolicyinuseResponseBody - successful operation
+type PostAppsPrivateTagsGetpolicyinuseResponseBody struct {
+	Data   []PostAppsPrivateTagsGetpolicyinuseData  `json:"data,omitempty"`
 	Status *PostAppsPrivateTagsGetpolicyinuseStatus `json:"status,omitempty"`
 }
 
-func (o *PostAppsPrivateTagsGetpolicyinuseResponseResponseBody) GetData() *PostAppsPrivateTagsGetpolicyinuseData {
+func (o *PostAppsPrivateTagsGetpolicyinuseResponseBody) GetData() []PostAppsPrivateTagsGetpolicyinuseData {
 	if o == nil {
 		return nil
 	}
 	return o.Data
 }
 
-func (o *PostAppsPrivateTagsGetpolicyinuseResponseResponseBody) GetStatus() *PostAppsPrivateTagsGetpolicyinuseStatus {
+func (o *PostAppsPrivateTagsGetpolicyinuseResponseBody) GetStatus() *PostAppsPrivateTagsGetpolicyinuseStatus {
 	if o == nil {
 		return nil
 	}
@@ -97,16 +98,30 @@ func (o *PostAppsPrivateTagsGetpolicyinuseResponseResponseBody) GetStatus() *Pos
 }
 
 type PostAppsPrivateTagsGetpolicyinuseResponse struct {
+	// successful operation
+	TwoHundredApplicationJSONObject *PostAppsPrivateTagsGetpolicyinuseResponseBody
+	// Invalid request
+	FourHundredApplicationJSONObject *PostAppsPrivateTagsGetpolicyinuseResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// successful operation
-	Classes []PostAppsPrivateTagsGetpolicyinuseResponseResponseBody
-	// Invalid request
-	Object *PostAppsPrivateTagsGetpolicyinuseResponseBody
+}
+
+func (o *PostAppsPrivateTagsGetpolicyinuseResponse) GetTwoHundredApplicationJSONObject() *PostAppsPrivateTagsGetpolicyinuseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.TwoHundredApplicationJSONObject
+}
+
+func (o *PostAppsPrivateTagsGetpolicyinuseResponse) GetFourHundredApplicationJSONObject() *PostAppsPrivateTagsGetpolicyinuseResponseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.FourHundredApplicationJSONObject
 }
 
 func (o *PostAppsPrivateTagsGetpolicyinuseResponse) GetContentType() string {
@@ -128,18 +143,4 @@ func (o *PostAppsPrivateTagsGetpolicyinuseResponse) GetRawResponse() *http.Respo
 		return nil
 	}
 	return o.RawResponse
-}
-
-func (o *PostAppsPrivateTagsGetpolicyinuseResponse) GetClasses() []PostAppsPrivateTagsGetpolicyinuseResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Classes
-}
-
-func (o *PostAppsPrivateTagsGetpolicyinuseResponse) GetObject() *PostAppsPrivateTagsGetpolicyinuseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Object
 }

@@ -8,10 +8,10 @@ import (
 
 type GetNpaPolicygroupsIDRequest struct {
 	// npa policy group id
-	ID int `pathParam:"style=simple,explode=false,name=id"`
+	ID int64 `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *GetNpaPolicygroupsIDRequest) GetID() int {
+func (o *GetNpaPolicygroupsIDRequest) GetID() int64 {
 	if o == nil {
 		return 0
 	}

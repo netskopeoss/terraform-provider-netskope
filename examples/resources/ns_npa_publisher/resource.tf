@@ -1,10 +1,10 @@
 resource "ns_npa_publisher" "my_npapublisher" {
-  lbrokerconnect                = true
-  name                          = "Miss Arnold Runolfsdottir V"
-  publisher_upgrade_profiles_id = 2
+  lbrokerconnect                = false
+  name                          = "Laverne Cummings"
+  publisher_upgrade_profiles_id = 9
   tags = [
     {
-      tag_id   = 9
+      tag_id   = 4
       tag_name = "...my_tag_name..."
     },
   ]

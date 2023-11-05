@@ -488,7 +488,6 @@ func (o *RuleOrder) GetRuleName() *string {
 type PatchNpaRulesIDRequestBody struct {
 	Description *string    `json:"description,omitempty"`
 	Enabled     *string    `json:"enabled,omitempty"`
-	GroupID     *string    `json:"group_id,omitempty"`
 	GroupName   *string    `json:"group_name,omitempty"`
 	RuleData    *RuleData  `json:"rule_data,omitempty"`
 	RuleName    *string    `json:"rule_name,omitempty"`
@@ -507,13 +506,6 @@ func (o *PatchNpaRulesIDRequestBody) GetEnabled() *string {
 		return nil
 	}
 	return o.Enabled
-}
-
-func (o *PatchNpaRulesIDRequestBody) GetGroupID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupID
 }
 
 func (o *PatchNpaRulesIDRequestBody) GetGroupName() *string {
@@ -575,7 +567,7 @@ func (e *PatchNpaRulesIDQueryParamSilent) UnmarshalJSON(data []byte) error {
 type PatchNpaRulesIDRequest struct {
 	RequestBody PatchNpaRulesIDRequestBody `request:"mediaType=application/json"`
 	// policy rule id
-	ID int `pathParam:"style=simple,explode=false,name=id"`
+	ID int64 `pathParam:"style=simple,explode=false,name=id"`
 	// flag to skip output except status code
 	Silent *PatchNpaRulesIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 }
@@ -587,7 +579,7 @@ func (o *PatchNpaRulesIDRequest) GetRequestBody() PatchNpaRulesIDRequestBody {
 	return o.RequestBody
 }
 
-func (o *PatchNpaRulesIDRequest) GetID() int {
+func (o *PatchNpaRulesIDRequest) GetID() int64 {
 	if o == nil {
 		return 0
 	}
@@ -1031,17 +1023,9 @@ func (o *PatchNpaRulesIDRuleData) GetVersion() *int64 {
 }
 
 type PatchNpaRulesIDData struct {
-	GroupID  *int64                   `json:"group_id,omitempty"`
 	RuleData *PatchNpaRulesIDRuleData `json:"rule_data,omitempty"`
 	RuleID   *int64                   `json:"rule_id,omitempty"`
 	RuleName *string                  `json:"rule_name,omitempty"`
-}
-
-func (o *PatchNpaRulesIDData) GetGroupID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.GroupID
 }
 
 func (o *PatchNpaRulesIDData) GetRuleData() *PatchNpaRulesIDRuleData {

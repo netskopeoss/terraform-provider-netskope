@@ -131,7 +131,7 @@ func (e *PatchNpaPolicygroupsIDQueryParamSilent) UnmarshalJSON(data []byte) erro
 type PatchNpaPolicygroupsIDRequest struct {
 	RequestBody PatchNpaPolicygroupsIDRequestBody `request:"mediaType=application/json"`
 	// policy group rule id
-	ID int `pathParam:"style=simple,explode=false,name=id"`
+	ID int64 `pathParam:"style=simple,explode=false,name=id"`
 	// flag to skip output except status code
 	Silent *PatchNpaPolicygroupsIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 }
@@ -143,7 +143,7 @@ func (o *PatchNpaPolicygroupsIDRequest) GetRequestBody() PatchNpaPolicygroupsIDR
 	return o.RequestBody
 }
 
-func (o *PatchNpaPolicygroupsIDRequest) GetID() int {
+func (o *PatchNpaPolicygroupsIDRequest) GetID() int64 {
 	if o == nil {
 		return 0
 	}

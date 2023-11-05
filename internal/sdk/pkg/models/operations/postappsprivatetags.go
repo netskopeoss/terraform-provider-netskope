@@ -81,20 +81,20 @@ func (o *PostAppsPrivateTagsRequestBody) GetTags() []PostAppsPrivateTagsTags {
 	return o.Tags
 }
 
-// PostAppsPrivateTagsResponseBody - Invalid request
-type PostAppsPrivateTagsResponseBody struct {
+// PostAppsPrivateTagsResponseResponseBody - Invalid request
+type PostAppsPrivateTagsResponseResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *PostAppsPrivateTagsResponseBody) GetResult() *string {
+func (o *PostAppsPrivateTagsResponseResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *PostAppsPrivateTagsResponseBody) GetStatus() *int64 {
+func (o *PostAppsPrivateTagsResponseResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -147,19 +147,20 @@ func (e *PostAppsPrivateTagsStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PostAppsPrivateTagsResponseResponseBody struct {
-	Data   *PostAppsPrivateTagsData   `json:"data,omitempty"`
+// PostAppsPrivateTagsResponseBody - successful operation
+type PostAppsPrivateTagsResponseBody struct {
+	Data   []PostAppsPrivateTagsData  `json:"data,omitempty"`
 	Status *PostAppsPrivateTagsStatus `json:"status,omitempty"`
 }
 
-func (o *PostAppsPrivateTagsResponseResponseBody) GetData() *PostAppsPrivateTagsData {
+func (o *PostAppsPrivateTagsResponseBody) GetData() []PostAppsPrivateTagsData {
 	if o == nil {
 		return nil
 	}
 	return o.Data
 }
 
-func (o *PostAppsPrivateTagsResponseResponseBody) GetStatus() *PostAppsPrivateTagsStatus {
+func (o *PostAppsPrivateTagsResponseBody) GetStatus() *PostAppsPrivateTagsStatus {
 	if o == nil {
 		return nil
 	}
@@ -167,16 +168,30 @@ func (o *PostAppsPrivateTagsResponseResponseBody) GetStatus() *PostAppsPrivateTa
 }
 
 type PostAppsPrivateTagsResponse struct {
+	// successful operation
+	TwoHundredApplicationJSONObject *PostAppsPrivateTagsResponseBody
+	// Invalid request
+	FourHundredApplicationJSONObject *PostAppsPrivateTagsResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// successful operation
-	Classes []PostAppsPrivateTagsResponseResponseBody
-	// Invalid request
-	Object *PostAppsPrivateTagsResponseBody
+}
+
+func (o *PostAppsPrivateTagsResponse) GetTwoHundredApplicationJSONObject() *PostAppsPrivateTagsResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.TwoHundredApplicationJSONObject
+}
+
+func (o *PostAppsPrivateTagsResponse) GetFourHundredApplicationJSONObject() *PostAppsPrivateTagsResponseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.FourHundredApplicationJSONObject
 }
 
 func (o *PostAppsPrivateTagsResponse) GetContentType() string {
@@ -198,18 +213,4 @@ func (o *PostAppsPrivateTagsResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
-}
-
-func (o *PostAppsPrivateTagsResponse) GetClasses() []PostAppsPrivateTagsResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Classes
-}
-
-func (o *PostAppsPrivateTagsResponse) GetObject() *PostAppsPrivateTagsResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Object
 }

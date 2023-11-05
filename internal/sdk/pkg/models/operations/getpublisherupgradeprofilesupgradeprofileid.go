@@ -3,8 +3,6 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -99,37 +97,9 @@ func (o *GetPublisherupgradeprofilesUpgradeProfileIDData) GetTimezone() *string 
 	return o.Timezone
 }
 
-type GetPublisherupgradeprofilesUpgradeProfileIDStatus string
-
-const (
-	GetPublisherupgradeprofilesUpgradeProfileIDStatusSuccess  GetPublisherupgradeprofilesUpgradeProfileIDStatus = "success"
-	GetPublisherupgradeprofilesUpgradeProfileIDStatusNotFound GetPublisherupgradeprofilesUpgradeProfileIDStatus = "not found"
-)
-
-func (e GetPublisherupgradeprofilesUpgradeProfileIDStatus) ToPointer() *GetPublisherupgradeprofilesUpgradeProfileIDStatus {
-	return &e
-}
-
-func (e *GetPublisherupgradeprofilesUpgradeProfileIDStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = GetPublisherupgradeprofilesUpgradeProfileIDStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for GetPublisherupgradeprofilesUpgradeProfileIDStatus: %v", v)
-	}
-}
-
 // GetPublisherupgradeprofilesUpgradeProfileIDResponseBody - successful operation
 type GetPublisherupgradeprofilesUpgradeProfileIDResponseBody struct {
-	Data   *GetPublisherupgradeprofilesUpgradeProfileIDData   `json:"data,omitempty"`
-	Status *GetPublisherupgradeprofilesUpgradeProfileIDStatus `json:"status,omitempty"`
+	Data *GetPublisherupgradeprofilesUpgradeProfileIDData `json:"data,omitempty"`
 }
 
 func (o *GetPublisherupgradeprofilesUpgradeProfileIDResponseBody) GetData() *GetPublisherupgradeprofilesUpgradeProfileIDData {
@@ -137,13 +107,6 @@ func (o *GetPublisherupgradeprofilesUpgradeProfileIDResponseBody) GetData() *Get
 		return nil
 	}
 	return o.Data
-}
-
-func (o *GetPublisherupgradeprofilesUpgradeProfileIDResponseBody) GetStatus() *GetPublisherupgradeprofilesUpgradeProfileIDStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type GetPublisherupgradeprofilesUpgradeProfileIDResponse struct {

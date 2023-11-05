@@ -63,27 +63,27 @@ func (o *GetNpaPolicygroupsRequest) GetSortorder() *string {
 	return o.Sortorder
 }
 
-// GetNpaPolicygroupsResponseBody - Invalid request
-type GetNpaPolicygroupsResponseBody struct {
+// GetNpaPolicygroupsResponseResponseBody - Invalid request
+type GetNpaPolicygroupsResponseResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *GetNpaPolicygroupsResponseBody) GetResult() *string {
+func (o *GetNpaPolicygroupsResponseResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *GetNpaPolicygroupsResponseBody) GetStatus() *int64 {
+func (o *GetNpaPolicygroupsResponseResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.Status
 }
 
-type GetNpaPolicygroupsResponseResponseBody struct {
+type GetNpaPolicygroupsData struct {
 	CanBeEditedDeleted *int64  `json:"can_be_edited_deleted,omitempty"`
 	GroupID            *int64  `json:"group_id,omitempty"`
 	GroupName          *string `json:"group_name,omitempty"`
@@ -94,73 +94,99 @@ type GetNpaPolicygroupsResponseResponseBody struct {
 	ModifyType         *string `json:"modify_type,omitempty"`
 }
 
-func (o *GetNpaPolicygroupsResponseResponseBody) GetCanBeEditedDeleted() *int64 {
+func (o *GetNpaPolicygroupsData) GetCanBeEditedDeleted() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.CanBeEditedDeleted
 }
 
-func (o *GetNpaPolicygroupsResponseResponseBody) GetGroupID() *int64 {
+func (o *GetNpaPolicygroupsData) GetGroupID() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.GroupID
 }
 
-func (o *GetNpaPolicygroupsResponseResponseBody) GetGroupName() *string {
+func (o *GetNpaPolicygroupsData) GetGroupName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.GroupName
 }
 
-func (o *GetNpaPolicygroupsResponseResponseBody) GetGroupPinnedID() *int64 {
+func (o *GetNpaPolicygroupsData) GetGroupPinnedID() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.GroupPinnedID
 }
 
-func (o *GetNpaPolicygroupsResponseResponseBody) GetGroupProdID() *int64 {
+func (o *GetNpaPolicygroupsData) GetGroupProdID() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.GroupProdID
 }
 
-func (o *GetNpaPolicygroupsResponseResponseBody) GetGroupType() *int64 {
+func (o *GetNpaPolicygroupsData) GetGroupType() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.GroupType
 }
 
-func (o *GetNpaPolicygroupsResponseResponseBody) GetModifyTime() *string {
+func (o *GetNpaPolicygroupsData) GetModifyTime() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ModifyTime
 }
 
-func (o *GetNpaPolicygroupsResponseResponseBody) GetModifyType() *string {
+func (o *GetNpaPolicygroupsData) GetModifyType() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ModifyType
 }
 
+// GetNpaPolicygroupsResponseBody - successful operation
+type GetNpaPolicygroupsResponseBody struct {
+	Data []GetNpaPolicygroupsData `json:"data,omitempty"`
+}
+
+func (o *GetNpaPolicygroupsResponseBody) GetData() []GetNpaPolicygroupsData {
+	if o == nil {
+		return nil
+	}
+	return o.Data
+}
+
 type GetNpaPolicygroupsResponse struct {
+	// successful operation
+	TwoHundredApplicationJSONObject *GetNpaPolicygroupsResponseBody
+	// Invalid request
+	FourHundredApplicationJSONObject *GetNpaPolicygroupsResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// successful operation
-	Classes []GetNpaPolicygroupsResponseResponseBody
-	// Invalid request
-	Object *GetNpaPolicygroupsResponseBody
+}
+
+func (o *GetNpaPolicygroupsResponse) GetTwoHundredApplicationJSONObject() *GetNpaPolicygroupsResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.TwoHundredApplicationJSONObject
+}
+
+func (o *GetNpaPolicygroupsResponse) GetFourHundredApplicationJSONObject() *GetNpaPolicygroupsResponseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.FourHundredApplicationJSONObject
 }
 
 func (o *GetNpaPolicygroupsResponse) GetContentType() string {
@@ -182,18 +208,4 @@ func (o *GetNpaPolicygroupsResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
-}
-
-func (o *GetNpaPolicygroupsResponse) GetClasses() []GetNpaPolicygroupsResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Classes
-}
-
-func (o *GetNpaPolicygroupsResponse) GetObject() *GetNpaPolicygroupsResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Object
 }

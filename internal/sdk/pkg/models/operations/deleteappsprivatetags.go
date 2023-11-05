@@ -81,20 +81,20 @@ func (o *DeleteAppsPrivateTagsRequestBody) GetTags() []DeleteAppsPrivateTagsTags
 	return o.Tags
 }
 
-// DeleteAppsPrivateTagsResponseBody - Invalid request
-type DeleteAppsPrivateTagsResponseBody struct {
+// DeleteAppsPrivateTagsResponseResponseBody - Invalid request
+type DeleteAppsPrivateTagsResponseResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *DeleteAppsPrivateTagsResponseBody) GetResult() *string {
+func (o *DeleteAppsPrivateTagsResponseResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *DeleteAppsPrivateTagsResponseBody) GetStatus() *int64 {
+func (o *DeleteAppsPrivateTagsResponseResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -147,19 +147,20 @@ func (e *DeleteAppsPrivateTagsStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type ResponseBody struct {
-	Data   *Data                        `json:"data,omitempty"`
+// DeleteAppsPrivateTagsResponseBody - successful operation
+type DeleteAppsPrivateTagsResponseBody struct {
+	Data   []Data                       `json:"data,omitempty"`
 	Status *DeleteAppsPrivateTagsStatus `json:"status,omitempty"`
 }
 
-func (o *ResponseBody) GetData() *Data {
+func (o *DeleteAppsPrivateTagsResponseBody) GetData() []Data {
 	if o == nil {
 		return nil
 	}
 	return o.Data
 }
 
-func (o *ResponseBody) GetStatus() *DeleteAppsPrivateTagsStatus {
+func (o *DeleteAppsPrivateTagsResponseBody) GetStatus() *DeleteAppsPrivateTagsStatus {
 	if o == nil {
 		return nil
 	}
@@ -167,16 +168,30 @@ func (o *ResponseBody) GetStatus() *DeleteAppsPrivateTagsStatus {
 }
 
 type DeleteAppsPrivateTagsResponse struct {
+	// successful operation
+	TwoHundredApplicationJSONObject *DeleteAppsPrivateTagsResponseBody
+	// Invalid request
+	FourHundredApplicationJSONObject *DeleteAppsPrivateTagsResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// successful operation
-	Classes []ResponseBody
-	// Invalid request
-	Object *DeleteAppsPrivateTagsResponseBody
+}
+
+func (o *DeleteAppsPrivateTagsResponse) GetTwoHundredApplicationJSONObject() *DeleteAppsPrivateTagsResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.TwoHundredApplicationJSONObject
+}
+
+func (o *DeleteAppsPrivateTagsResponse) GetFourHundredApplicationJSONObject() *DeleteAppsPrivateTagsResponseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.FourHundredApplicationJSONObject
 }
 
 func (o *DeleteAppsPrivateTagsResponse) GetContentType() string {
@@ -198,18 +213,4 @@ func (o *DeleteAppsPrivateTagsResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
-}
-
-func (o *DeleteAppsPrivateTagsResponse) GetClasses() []ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Classes
-}
-
-func (o *DeleteAppsPrivateTagsResponse) GetObject() *DeleteAppsPrivateTagsResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Object
 }

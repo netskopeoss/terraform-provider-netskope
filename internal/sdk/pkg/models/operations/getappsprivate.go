@@ -20,20 +20,20 @@ func (o *GetAppsPrivateRequest) GetFields() *string {
 	return o.Fields
 }
 
-// GetAppsPrivateResponseBody - Invalid request
-type GetAppsPrivateResponseBody struct {
+// GetAppsPrivateResponseResponseBody - Invalid request
+type GetAppsPrivateResponseResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *GetAppsPrivateResponseBody) GetResult() *string {
+func (o *GetAppsPrivateResponseResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *GetAppsPrivateResponseBody) GetStatus() *int64 {
+func (o *GetAppsPrivateResponseResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -266,27 +266,28 @@ func (e *GetAppsPrivateStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type GetAppsPrivateResponseResponseBody struct {
-	Data   *GetAppsPrivateData   `json:"data,omitempty"`
+// GetAppsPrivateResponseBody - successful operation
+type GetAppsPrivateResponseBody struct {
+	Data   []GetAppsPrivateData  `json:"data,omitempty"`
 	Status *GetAppsPrivateStatus `json:"status,omitempty"`
 	Total  *int                  `json:"total,omitempty"`
 }
 
-func (o *GetAppsPrivateResponseResponseBody) GetData() *GetAppsPrivateData {
+func (o *GetAppsPrivateResponseBody) GetData() []GetAppsPrivateData {
 	if o == nil {
 		return nil
 	}
 	return o.Data
 }
 
-func (o *GetAppsPrivateResponseResponseBody) GetStatus() *GetAppsPrivateStatus {
+func (o *GetAppsPrivateResponseBody) GetStatus() *GetAppsPrivateStatus {
 	if o == nil {
 		return nil
 	}
 	return o.Status
 }
 
-func (o *GetAppsPrivateResponseResponseBody) GetTotal() *int {
+func (o *GetAppsPrivateResponseBody) GetTotal() *int {
 	if o == nil {
 		return nil
 	}
@@ -294,16 +295,30 @@ func (o *GetAppsPrivateResponseResponseBody) GetTotal() *int {
 }
 
 type GetAppsPrivateResponse struct {
+	// successful operation
+	TwoHundredApplicationJSONObject *GetAppsPrivateResponseBody
+	// Invalid request
+	FourHundredApplicationJSONObject *GetAppsPrivateResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// successful operation
-	Classes []GetAppsPrivateResponseResponseBody
-	// Invalid request
-	Object *GetAppsPrivateResponseBody
+}
+
+func (o *GetAppsPrivateResponse) GetTwoHundredApplicationJSONObject() *GetAppsPrivateResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.TwoHundredApplicationJSONObject
+}
+
+func (o *GetAppsPrivateResponse) GetFourHundredApplicationJSONObject() *GetAppsPrivateResponseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.FourHundredApplicationJSONObject
 }
 
 func (o *GetAppsPrivateResponse) GetContentType() string {
@@ -325,18 +340,4 @@ func (o *GetAppsPrivateResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
-}
-
-func (o *GetAppsPrivateResponse) GetClasses() []GetAppsPrivateResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Classes
-}
-
-func (o *GetAppsPrivateResponse) GetObject() *GetAppsPrivateResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Object
 }

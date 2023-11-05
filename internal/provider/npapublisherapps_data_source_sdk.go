@@ -63,7 +63,7 @@ func (r *NPAPublisherAppsDataSourceModel) RefreshFromGetResponse(resp *operation
 		}
 		data1.ServicePublisherAssignments = nil
 		for _, servicePublisherAssignmentsItem := range dataItem.ServicePublisherAssignments {
-			var servicePublisherAssignments1 GetInfrastructurePublishersPublisherIDAppsServicePublisherAssignments
+			var servicePublisherAssignments1 PostAppsPrivateServicePublisherAssignments
 			if servicePublisherAssignmentsItem.Primary != nil {
 				servicePublisherAssignments1.Primary = types.BoolValue(*servicePublisherAssignmentsItem.Primary)
 			} else {
@@ -77,7 +77,7 @@ func (r *NPAPublisherAppsDataSourceModel) RefreshFromGetResponse(resp *operation
 			if servicePublisherAssignmentsItem.Reachability == nil {
 				servicePublisherAssignments1.Reachability = nil
 			} else {
-				servicePublisherAssignments1.Reachability = &GetInfrastructurePublishersPublisherIDAppsReachability{}
+				servicePublisherAssignments1.Reachability = &PostAppsPrivateReachability{}
 				if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
 					servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
 				} else {
