@@ -9,8 +9,8 @@ Defined:
  - [x] infrastructure/publishers/{id}/apps	get `NPAPublisherApps#read`
  - [x] infrastructure/publishers/bulk	put `NPAPublisherBulkUpgrade#create`
  - [x] infrastructure/publishers/releases	get `NPAPublisherReleases#read`
- - [x] infrastructure/publishers/alertsconfiguration	get `NPAPublisherAlerts#read` # Note -- requires unreleased CLI version
- - [ ] infrastructure/publishers/alertsconfiguration	put `NPAPublisherAlerts#create` 
+ - [x] infrastructure/publishers/alertsconfiguration	get `NPAPublisherAlertsList#read` # Note -- requires unreleased CLI version
+ - [x] infrastructure/publishers/alertsconfiguration	put `NPAPublisherAlerts#create` 
  - [ ] infrastructure/publisherupgradeprofiles	get
  - [ ] infrastructure/publisherupgradeprofiles	post
  - [ ] infrastructure/publisherupgradeprofiles/{id}	delete
