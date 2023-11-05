@@ -10,10 +10,10 @@ import (
 
 type DeleteNpaRulesIDRequest struct {
 	// npa policy id
-	ID int `pathParam:"style=simple,explode=false,name=id"`
+	ID int64 `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *DeleteNpaRulesIDRequest) GetID() int {
+func (o *DeleteNpaRulesIDRequest) GetID() int64 {
 	if o == nil {
 		return 0
 	}
@@ -450,17 +450,9 @@ func (o *DeleteNpaRulesIDRuleData) GetVersion() *int64 {
 }
 
 type DeleteNpaRulesIDData struct {
-	GroupID  *int64                    `json:"group_id,omitempty"`
 	RuleData *DeleteNpaRulesIDRuleData `json:"rule_data,omitempty"`
 	RuleID   *int64                    `json:"rule_id,omitempty"`
 	RuleName *string                   `json:"rule_name,omitempty"`
-}
-
-func (o *DeleteNpaRulesIDData) GetGroupID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.GroupID
 }
 
 func (o *DeleteNpaRulesIDData) GetRuleData() *DeleteNpaRulesIDRuleData {

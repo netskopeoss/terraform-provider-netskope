@@ -186,37 +186,9 @@ func (o *PostPublisherupgradeprofilesData) GetTimezone() *string {
 	return o.Timezone
 }
 
-type PostPublisherupgradeprofilesStatus string
-
-const (
-	PostPublisherupgradeprofilesStatusSuccess  PostPublisherupgradeprofilesStatus = "success"
-	PostPublisherupgradeprofilesStatusNotFound PostPublisherupgradeprofilesStatus = "not found"
-)
-
-func (e PostPublisherupgradeprofilesStatus) ToPointer() *PostPublisherupgradeprofilesStatus {
-	return &e
-}
-
-func (e *PostPublisherupgradeprofilesStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = PostPublisherupgradeprofilesStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PostPublisherupgradeprofilesStatus: %v", v)
-	}
-}
-
 // PostPublisherupgradeprofilesResponseBody - successful operation
 type PostPublisherupgradeprofilesResponseBody struct {
-	Data   *PostPublisherupgradeprofilesData   `json:"data,omitempty"`
-	Status *PostPublisherupgradeprofilesStatus `json:"status,omitempty"`
+	Data *PostPublisherupgradeprofilesData `json:"data,omitempty"`
 }
 
 func (o *PostPublisherupgradeprofilesResponseBody) GetData() *PostPublisherupgradeprofilesData {
@@ -224,13 +196,6 @@ func (o *PostPublisherupgradeprofilesResponseBody) GetData() *PostPublisherupgra
 		return nil
 	}
 	return o.Data
-}
-
-func (o *PostPublisherupgradeprofilesResponseBody) GetStatus() *PostPublisherupgradeprofilesStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type PostPublisherupgradeprofilesResponse struct {

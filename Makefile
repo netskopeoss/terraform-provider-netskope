@@ -6,8 +6,8 @@ docs:
 	go generate ./...
 
 terraform-provider-ns-npa-publisher: netskope.yaml
-#	speakeasy generate sdk --lang terraform -o terraform-provider-ns-npa-publisher -s terraform-provider-ns-npa-publisher/npa_publisher.yaml
-	go run ../../cmd/generate/main.go -l terraform -o . -s netskope.yaml
+	speakeasy generate sdk --lang terraform -o . -s netskope.yaml
+	#go run ../../cmd/generate/main.go -l terraform -o . -s netskope.yaml
 
 
 netskope.yaml: check-speakeasy check-local-oas

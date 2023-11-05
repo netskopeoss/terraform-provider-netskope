@@ -65,20 +65,20 @@ func (o *GetNpaRulesRequest) GetSortorder() *string {
 	return o.Sortorder
 }
 
-// GetNpaRulesResponseBody - Invalid request
-type GetNpaRulesResponseBody struct {
+// GetNpaRulesResponseResponseBody - Invalid request
+type GetNpaRulesResponseResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *GetNpaRulesResponseBody) GetResult() *string {
+func (o *GetNpaRulesResponseResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *GetNpaRulesResponseBody) GetStatus() *int64 {
+func (o *GetNpaRulesResponseResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -494,52 +494,70 @@ func (o *GetNpaRulesRuleData) GetVersion() *int64 {
 	return o.Version
 }
 
-type GetNpaRulesResponseResponseBody struct {
-	GroupID  *int64               `json:"group_id,omitempty"`
+type GetNpaRulesData struct {
 	RuleData *GetNpaRulesRuleData `json:"rule_data,omitempty"`
 	RuleID   *int64               `json:"rule_id,omitempty"`
 	RuleName *string              `json:"rule_name,omitempty"`
 }
 
-func (o *GetNpaRulesResponseResponseBody) GetGroupID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.GroupID
-}
-
-func (o *GetNpaRulesResponseResponseBody) GetRuleData() *GetNpaRulesRuleData {
+func (o *GetNpaRulesData) GetRuleData() *GetNpaRulesRuleData {
 	if o == nil {
 		return nil
 	}
 	return o.RuleData
 }
 
-func (o *GetNpaRulesResponseResponseBody) GetRuleID() *int64 {
+func (o *GetNpaRulesData) GetRuleID() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.RuleID
 }
 
-func (o *GetNpaRulesResponseResponseBody) GetRuleName() *string {
+func (o *GetNpaRulesData) GetRuleName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RuleName
 }
 
+// GetNpaRulesResponseBody - successful operation
+type GetNpaRulesResponseBody struct {
+	Data []GetNpaRulesData `json:"data,omitempty"`
+}
+
+func (o *GetNpaRulesResponseBody) GetData() []GetNpaRulesData {
+	if o == nil {
+		return nil
+	}
+	return o.Data
+}
+
 type GetNpaRulesResponse struct {
+	// successful operation
+	TwoHundredApplicationJSONObject *GetNpaRulesResponseBody
+	// Invalid request
+	FourHundredApplicationJSONObject *GetNpaRulesResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// successful operation
-	Classes []GetNpaRulesResponseResponseBody
-	// Invalid request
-	Object *GetNpaRulesResponseBody
+}
+
+func (o *GetNpaRulesResponse) GetTwoHundredApplicationJSONObject() *GetNpaRulesResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.TwoHundredApplicationJSONObject
+}
+
+func (o *GetNpaRulesResponse) GetFourHundredApplicationJSONObject() *GetNpaRulesResponseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.FourHundredApplicationJSONObject
 }
 
 func (o *GetNpaRulesResponse) GetContentType() string {
@@ -561,18 +579,4 @@ func (o *GetNpaRulesResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
-}
-
-func (o *GetNpaRulesResponse) GetClasses() []GetNpaRulesResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Classes
-}
-
-func (o *GetNpaRulesResponse) GetObject() *GetNpaRulesResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Object
 }

@@ -101,20 +101,20 @@ func (o *PutAppsPrivateTagsTagIDRequest) GetTagID() int {
 	return o.TagID
 }
 
-// PutAppsPrivateTagsTagIDResponseBody - Invalid request
-type PutAppsPrivateTagsTagIDResponseBody struct {
+// PutAppsPrivateTagsTagIDResponseResponseBody - Invalid request
+type PutAppsPrivateTagsTagIDResponseResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *PutAppsPrivateTagsTagIDResponseBody) GetResult() *string {
+func (o *PutAppsPrivateTagsTagIDResponseResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *PutAppsPrivateTagsTagIDResponseBody) GetStatus() *int64 {
+func (o *PutAppsPrivateTagsTagIDResponseResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -167,19 +167,20 @@ func (e *PutAppsPrivateTagsTagIDStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PutAppsPrivateTagsTagIDResponseResponseBody struct {
-	Data   *PutAppsPrivateTagsTagIDData   `json:"data,omitempty"`
+// PutAppsPrivateTagsTagIDResponseBody - successful operation
+type PutAppsPrivateTagsTagIDResponseBody struct {
+	Data   []PutAppsPrivateTagsTagIDData  `json:"data,omitempty"`
 	Status *PutAppsPrivateTagsTagIDStatus `json:"status,omitempty"`
 }
 
-func (o *PutAppsPrivateTagsTagIDResponseResponseBody) GetData() *PutAppsPrivateTagsTagIDData {
+func (o *PutAppsPrivateTagsTagIDResponseBody) GetData() []PutAppsPrivateTagsTagIDData {
 	if o == nil {
 		return nil
 	}
 	return o.Data
 }
 
-func (o *PutAppsPrivateTagsTagIDResponseResponseBody) GetStatus() *PutAppsPrivateTagsTagIDStatus {
+func (o *PutAppsPrivateTagsTagIDResponseBody) GetStatus() *PutAppsPrivateTagsTagIDStatus {
 	if o == nil {
 		return nil
 	}
@@ -187,16 +188,30 @@ func (o *PutAppsPrivateTagsTagIDResponseResponseBody) GetStatus() *PutAppsPrivat
 }
 
 type PutAppsPrivateTagsTagIDResponse struct {
+	// successful operation
+	TwoHundredApplicationJSONObject *PutAppsPrivateTagsTagIDResponseBody
+	// Invalid request
+	FourHundredApplicationJSONObject *PutAppsPrivateTagsTagIDResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// successful operation
-	Classes []PutAppsPrivateTagsTagIDResponseResponseBody
-	// Invalid request
-	Object *PutAppsPrivateTagsTagIDResponseBody
+}
+
+func (o *PutAppsPrivateTagsTagIDResponse) GetTwoHundredApplicationJSONObject() *PutAppsPrivateTagsTagIDResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.TwoHundredApplicationJSONObject
+}
+
+func (o *PutAppsPrivateTagsTagIDResponse) GetFourHundredApplicationJSONObject() *PutAppsPrivateTagsTagIDResponseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.FourHundredApplicationJSONObject
 }
 
 func (o *PutAppsPrivateTagsTagIDResponse) GetContentType() string {
@@ -218,18 +233,4 @@ func (o *PutAppsPrivateTagsTagIDResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
-}
-
-func (o *PutAppsPrivateTagsTagIDResponse) GetClasses() []PutAppsPrivateTagsTagIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Classes
-}
-
-func (o *PutAppsPrivateTagsTagIDResponse) GetObject() *PutAppsPrivateTagsTagIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Object
 }

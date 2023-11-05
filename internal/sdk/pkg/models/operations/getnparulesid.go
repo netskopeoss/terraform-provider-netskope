@@ -12,7 +12,7 @@ type GetNpaRulesIDRequest struct {
 	// Return values only from specified fields
 	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 	// npa policy id
-	ID int `pathParam:"style=simple,explode=false,name=id"`
+	ID int64 `pathParam:"style=simple,explode=false,name=id"`
 }
 
 func (o *GetNpaRulesIDRequest) GetFields() *string {
@@ -22,7 +22,7 @@ func (o *GetNpaRulesIDRequest) GetFields() *string {
 	return o.Fields
 }
 
-func (o *GetNpaRulesIDRequest) GetID() int {
+func (o *GetNpaRulesIDRequest) GetID() int64 {
 	if o == nil {
 		return 0
 	}
@@ -459,17 +459,9 @@ func (o *GetNpaRulesIDRuleData) GetVersion() *int64 {
 }
 
 type GetNpaRulesIDData struct {
-	GroupID  *int64                 `json:"group_id,omitempty"`
 	RuleData *GetNpaRulesIDRuleData `json:"rule_data,omitempty"`
 	RuleID   *int64                 `json:"rule_id,omitempty"`
 	RuleName *string                `json:"rule_name,omitempty"`
-}
-
-func (o *GetNpaRulesIDData) GetGroupID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.GroupID
 }
 
 func (o *GetNpaRulesIDData) GetRuleData() *GetNpaRulesIDRuleData {

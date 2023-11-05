@@ -10,10 +10,10 @@ import (
 
 type DeleteNpaPolicygroupsIDRequest struct {
 	// npa policy group id
-	ID int `pathParam:"style=simple,explode=false,name=id"`
+	ID int64 `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *DeleteNpaPolicygroupsIDRequest) GetID() int {
+func (o *DeleteNpaPolicygroupsIDRequest) GetID() int64 {
 	if o == nil {
 		return 0
 	}

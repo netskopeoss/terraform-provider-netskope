@@ -488,7 +488,6 @@ func (o *PostNpaRulesRuleOrder) GetRuleName() *string {
 type PostNpaRulesRequestBody struct {
 	Description *string                `json:"description,omitempty"`
 	Enabled     *string                `json:"enabled,omitempty"`
-	GroupID     *string                `json:"group_id,omitempty"`
 	GroupName   *string                `json:"group_name,omitempty"`
 	RuleData    *PostNpaRulesRuleData  `json:"rule_data,omitempty"`
 	RuleName    *string                `json:"rule_name,omitempty"`
@@ -507,13 +506,6 @@ func (o *PostNpaRulesRequestBody) GetEnabled() *string {
 		return nil
 	}
 	return o.Enabled
-}
-
-func (o *PostNpaRulesRequestBody) GetGroupID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupID
 }
 
 func (o *PostNpaRulesRequestBody) GetGroupName() *string {
@@ -542,54 +534,6 @@ func (o *PostNpaRulesRequestBody) GetRuleOrder() *PostNpaRulesRuleOrder {
 		return nil
 	}
 	return o.RuleOrder
-}
-
-// PostNpaRulesQueryParamSilent - flag to skip output except status code
-type PostNpaRulesQueryParamSilent string
-
-const (
-	PostNpaRulesQueryParamSilentOne  PostNpaRulesQueryParamSilent = "1"
-	PostNpaRulesQueryParamSilentZero PostNpaRulesQueryParamSilent = "0"
-)
-
-func (e PostNpaRulesQueryParamSilent) ToPointer() *PostNpaRulesQueryParamSilent {
-	return &e
-}
-
-func (e *PostNpaRulesQueryParamSilent) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "1":
-		fallthrough
-	case "0":
-		*e = PostNpaRulesQueryParamSilent(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PostNpaRulesQueryParamSilent: %v", v)
-	}
-}
-
-type PostNpaRulesRequest struct {
-	RequestBody PostNpaRulesRequestBody `request:"mediaType=application/json"`
-	// flag to skip output except status code
-	Silent *PostNpaRulesQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
-}
-
-func (o *PostNpaRulesRequest) GetRequestBody() PostNpaRulesRequestBody {
-	if o == nil {
-		return PostNpaRulesRequestBody{}
-	}
-	return o.RequestBody
-}
-
-func (o *PostNpaRulesRequest) GetSilent() *PostNpaRulesQueryParamSilent {
-	if o == nil {
-		return nil
-	}
-	return o.Silent
 }
 
 // PostNpaRulesResponseResponseBody - Invalid request
@@ -1023,17 +967,9 @@ func (o *PostNpaRulesResponseRuleData) GetVersion() *int64 {
 
 // PostNpaRulesResponseBody - successful operation
 type PostNpaRulesResponseBody struct {
-	GroupID  *int64                        `json:"group_id,omitempty"`
 	RuleData *PostNpaRulesResponseRuleData `json:"rule_data,omitempty"`
 	RuleID   *int64                        `json:"rule_id,omitempty"`
 	RuleName *string                       `json:"rule_name,omitempty"`
-}
-
-func (o *PostNpaRulesResponseBody) GetGroupID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.GroupID
 }
 
 func (o *PostNpaRulesResponseBody) GetRuleData() *PostNpaRulesResponseRuleData {

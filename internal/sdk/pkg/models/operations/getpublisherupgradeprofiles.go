@@ -128,12 +128,12 @@ func (e *GetPublisherupgradeprofilesStatus) UnmarshalJSON(data []byte) error {
 
 // GetPublisherupgradeprofilesResponseBody - successful operation
 type GetPublisherupgradeprofilesResponseBody struct {
-	Data   *GetPublisherupgradeprofilesData   `json:"data,omitempty"`
+	Data   []GetPublisherupgradeprofilesData  `json:"data,omitempty"`
 	Status *GetPublisherupgradeprofilesStatus `json:"status,omitempty"`
 	Total  *int                               `json:"total,omitempty"`
 }
 
-func (o *GetPublisherupgradeprofilesResponseBody) GetData() *GetPublisherupgradeprofilesData {
+func (o *GetPublisherupgradeprofilesResponseBody) GetData() []GetPublisherupgradeprofilesData {
 	if o == nil {
 		return nil
 	}

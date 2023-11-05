@@ -199,20 +199,20 @@ func (o *PostAppsPrivateRequest) GetSilent() *PostAppsPrivateQueryParamSilent {
 	return o.Silent
 }
 
-// PostAppsPrivateResponseBody - Invalid request
-type PostAppsPrivateResponseBody struct {
+// PostAppsPrivateResponseResponseBody - Invalid request
+type PostAppsPrivateResponseResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *PostAppsPrivateResponseBody) GetResult() *string {
+func (o *PostAppsPrivateResponseResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *PostAppsPrivateResponseBody) GetStatus() *int64 {
+func (o *PostAppsPrivateResponseResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -445,19 +445,20 @@ func (e *PostAppsPrivateStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PostAppsPrivateResponseResponseBody struct {
+// PostAppsPrivateResponseBody - successful operation
+type PostAppsPrivateResponseBody struct {
 	Data   *PostAppsPrivateData   `json:"data,omitempty"`
 	Status *PostAppsPrivateStatus `json:"status,omitempty"`
 }
 
-func (o *PostAppsPrivateResponseResponseBody) GetData() *PostAppsPrivateData {
+func (o *PostAppsPrivateResponseBody) GetData() *PostAppsPrivateData {
 	if o == nil {
 		return nil
 	}
 	return o.Data
 }
 
-func (o *PostAppsPrivateResponseResponseBody) GetStatus() *PostAppsPrivateStatus {
+func (o *PostAppsPrivateResponseBody) GetStatus() *PostAppsPrivateStatus {
 	if o == nil {
 		return nil
 	}
@@ -465,16 +466,30 @@ func (o *PostAppsPrivateResponseResponseBody) GetStatus() *PostAppsPrivateStatus
 }
 
 type PostAppsPrivateResponse struct {
+	// successful operation
+	TwoHundredApplicationJSONObject *PostAppsPrivateResponseBody
+	// Invalid request
+	FourHundredApplicationJSONObject *PostAppsPrivateResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// successful operation
-	Classes []PostAppsPrivateResponseResponseBody
-	// Invalid request
-	Object *PostAppsPrivateResponseBody
+}
+
+func (o *PostAppsPrivateResponse) GetTwoHundredApplicationJSONObject() *PostAppsPrivateResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.TwoHundredApplicationJSONObject
+}
+
+func (o *PostAppsPrivateResponse) GetFourHundredApplicationJSONObject() *PostAppsPrivateResponseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.FourHundredApplicationJSONObject
 }
 
 func (o *PostAppsPrivateResponse) GetContentType() string {
@@ -496,18 +511,4 @@ func (o *PostAppsPrivateResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
-}
-
-func (o *PostAppsPrivateResponse) GetClasses() []PostAppsPrivateResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Classes
-}
-
-func (o *PostAppsPrivateResponse) GetObject() *PostAppsPrivateResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Object
 }

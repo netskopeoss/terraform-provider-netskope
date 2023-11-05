@@ -365,88 +365,81 @@ components:
                             use_publisher_dns:
                                 type: boolean
                         type: object
-                    type: array
+                    type: object
+                    properties:
+                        clientless_access:
+                            type: boolean
+                        host:
+                            type: string
+                        id:
+                            format: int32
+                            type: integer
+                        name:
+                            type: string
+                        protocols:
+                            items:
+                                properties:
+                                    id:
+                                        format: int32
+                                        type: integer
+                                    port:
+                                        type: string
+                                    service_id:
+                                        format: int32
+                                        type: integer
+                                    transport:
+                                        type: string
+                                type: object
+                            type: array
+                        real_host:
+                            type: string
+                        service_publisher_assignments:
+                            items:
+                                properties:
+                                    primary:
+                                        type: boolean
+                                    publisher_id:
+                                        format: int32
+                                        type: integer
+                                    reachability:
+                                        properties:
+                                            error_code:
+                                                format: int32
+                                                type: integer
+                                            error_string:
+                                                type: string
+                                            reachable:
+                                                type: boolean
+                                        type: object
+                                    service_id:
+                                        format: int32
+                                        type: integer
+                                type: object
+                            type: array
+                        tags:
+                            items:
+                                properties:
+                                    tag_id:
+                                        format: int32
+                                        type: integer
+                                    tag_name:
+                                        type: string
+                                type: object
+                            type: array
+                        trust_self_signed_certs:
+                            type: boolean
+                        use_publisher_dns:
+                            type: boolean
+                    x-speakeasy-entity: PrivateApp
                 status:
                     enum:
                         - success
                         - not found
+                        - success
+                        - not found
                     type: string
-            type: array
+            type: object
             x-speakeasy-entity: NPAPublisherApps
-            items:
-                properties:
-                    data:
-                        properties:
-                            clientless_access:
-                                type: boolean
-                            host:
-                                type: string
-                            id:
-                                format: int32
-                                type: integer
-                            name:
-                                type: string
-                            protocols:
-                                items:
-                                    properties:
-                                        id:
-                                            format: int32
-                                            type: integer
-                                        port:
-                                            type: string
-                                        service_id:
-                                            format: int32
-                                            type: integer
-                                        transport:
-                                            type: string
-                                    type: object
-                                type: array
-                            real_host:
-                                type: string
-                            service_publisher_assignments:
-                                items:
-                                    properties:
-                                        primary:
-                                            type: boolean
-                                        publisher_id:
-                                            format: int32
-                                            type: integer
-                                        reachability:
-                                            properties:
-                                                error_code:
-                                                    format: int32
-                                                    type: integer
-                                                error_string:
-                                                    type: string
-                                                reachable:
-                                                    type: boolean
-                                            type: object
-                                        service_id:
-                                            format: int32
-                                            type: integer
-                                    type: object
-                                type: array
-                            tags:
-                                items:
-                                    properties:
-                                        tag_id:
-                                            format: int32
-                                            type: integer
-                                        tag_name:
-                                            type: string
-                                    type: object
-                                type: array
-                            trust_self_signed_certs:
-                                type: boolean
-                            use_publisher_dns:
-                                type: boolean
-                        type: object
-                    status:
-                        enum:
-                            - success
-                            - not found
-                        type: string
-                type: object
         protocol_response_item:
             properties:
                 id:
@@ -1057,24 +1050,26 @@ components:
         publisher_upgrade_profile_get_response:
             properties:
                 data:
-                    properties:
-                        docker_tag:
-                            type: string
-                        enabled:
-                            format: int32
-                            type: integer
-                        frequency:
-                            type: string
-                        id:
-                            format: int32
-                            type: integer
-                        name:
-                            type: string
-                        release_type:
-                            type: string
-                        timezone:
-                            type: string
-                    type: object
+                    items:
+                        properties:
+                            docker_tag:
+                                type: string
+                            enabled:
+                                format: int32
+                                type: integer
+                            frequency:
+                                type: string
+                            id:
+                                format: int32
+                                type: integer
+                            name:
+                                type: string
+                            release_type:
+                                type: string
+                            timezone:
+                                type: string
+                        type: object
+                    type: array
                 status:
                     enum:
                         - success
@@ -1084,7 +1079,7 @@ components:
                     format: int32
                     type: integer
             type: object
-            x-speakeasy-entity: NPAPublisherUpgradeProfiles
+            x-speakeasy-entity: NPAPublisherUpgradeProfileList
         publisher_upgrade_profile_post_request:
             properties:
                 docker_tag:
@@ -1101,7 +1096,7 @@ components:
                 timezone:
                     type: string
             type: object
-            x-speakeasy-entity: NPAPublisherUpgradeProfiles
+            x-speakeasy-entity: NPAPublisherUpgradeProfile
         publisher_upgrade_profile_put_request:
             properties:
                 docker_tag:
@@ -1121,7 +1116,7 @@ components:
                 timezone:
                     type: string
             type: object
-            x-speakeasy-entity: NPAPublisherUpgradeProfiles
+            x-speakeasy-entity: NPAPublisherUpgradeProfile
         publisher_upgrade_profile_response:
             properties:
                 data:
@@ -1143,12 +1138,13 @@ components:
                         timezone:
                             type: string
                     type: object
-                    x-speakeasy-entity: NPAPublisherUpgradeProfiles
+                    x-speakeasy-entity: NPAPublisherUpgradeProfile
                 status:
                     enum:
                         - success
                         - not found
                     type: string
+                    x-speakeasy-ignore: true
             type: object
         npa_policy_request:
             properties:
@@ -1161,6 +1157,7 @@ components:
                 group_id:
                     example: "1"
                     type: string
+                    x-speakeasy-ignore: true
                 group_name:
                     example: My policy group
                     type: string
@@ -1330,163 +1327,170 @@ components:
                             type: string
                     type: object
             type: object
+            x-speakeasy-entity: NPAPolicy
         npa_policy_response:
-            items:
-                properties:
-                    group_id:
-                        example: 1
-                        type: integer
-                    rule_data:
+            properties:
+                data:
+                    items:
                         properties:
-                            access_method:
-                                enum:
-                                    - Client
-                                    - Clientless
-                                type: string
-                            b_negateNetLocation:
-                                type: boolean
-                            b_negateSrcCountries:
-                                type: boolean
-                            classification:
-                                type: string
-                            dlp_actions:
-                                items:
-                                    properties:
-                                        actions:
-                                            example:
-                                                - allow
-                                            items:
+                            group_id:
+                                example: 1
+                                type: integer
+                                x-speakeasy-ignore: true
+                            rule_data:
+                                properties:
+                                    access_method:
+                                        enum:
+                                            - Client
+                                            - Clientless
+                                        type: string
+                                    b_negateNetLocation:
+                                        type: boolean
+                                    b_negateSrcCountries:
+                                        type: boolean
+                                    classification:
+                                        type: string
+                                    dlp_actions:
+                                        items:
+                                            properties:
+                                                actions:
+                                                    example:
+                                                        - allow
+                                                    items:
+                                                        enum:
+                                                            - allow
+                                                            - block
+                                                            - alert
+                                                            - quanrantine
+                                                            - bypass
+                                                        type: string
+                                                    type: array
+                                                dlp_profile:
+                                                    example: Payment Card
+                                                    type: string
+                                            type: object
+                                        type: array
+                                    external_dlp:
+                                        type: boolean
+                                    json_version:
+                                        example: 3
+                                        type: integer
+                                    match_criteria_action:
+                                        properties:
+                                            action_name:
                                                 enum:
                                                     - allow
                                                     - block
-                                                    - alert
-                                                    - quanrantine
-                                                    - bypass
                                                 type: string
-                                            type: array
-                                        dlp_profile:
-                                            example: Payment Card
+                                        type: object
+                                    net_location_obj:
+                                        example:
+                                            - 190.123.150.10
+                                            - 190.218.0.0/16
+                                        items:
                                             type: string
-                                    type: object
-                                type: array
-                            external_dlp:
-                                type: boolean
-                            json_version:
-                                example: 3
-                                type: integer
-                            match_criteria_action:
-                                properties:
-                                    action_name:
+                                        type: array
+                                    organization_units:
+                                        example:
+                                            - engineering/qa
+                                        items:
+                                            type: string
+                                        type: array
+                                    policy_type:
                                         enum:
-                                            - allow
-                                            - block
+                                            - private-app
                                         type: string
-                                type: object
-                            net_location_obj:
-                                example:
-                                    - 190.123.150.10
-                                    - 190.218.0.0/16
-                                items:
-                                    type: string
-                                type: array
-                            organization_units:
-                                example:
-                                    - engineering/qa
-                                items:
-                                    type: string
-                                type: array
-                            policy_type:
-                                enum:
-                                    - private-app
-                                type: string
-                            privateAppIds:
-                                example:
-                                    - "100"
-                                    - "201"
-                                items:
-                                    type: string
-                                type: array
-                            privateAppTagIds:
-                                example:
-                                    - "1"
-                                    - "2"
-                                items:
-                                    type: string
-                                type: array
-                            privateAppTags:
-                                example:
-                                    - tag1
-                                    - tag2
-                                items:
-                                    type: string
-                                type: array
-                            privateApps:
-                                example:
-                                    - app1
-                                    - app2
-                                items:
-                                    type: string
-                                type: array
-                            privateAppsWithActivities:
-                                items:
-                                    properties:
-                                        activities:
-                                            items:
-                                                properties:
-                                                    activity:
-                                                        enum:
-                                                            - any
-                                                        type: string
-                                                    list_of_constraints:
-                                                        example: []
-                                                        items:
-                                                            type: string
-                                                        type: array
-                                                type: object
-                                            type: array
-                                        appName:
-                                            example: '[172.31.12.135]'
+                                    privateAppIds:
+                                        example:
+                                            - "100"
+                                            - "201"
+                                        items:
                                             type: string
-                                    type: object
-                                type: array
-                            show_dlp_profile_action_table:
-                                type: boolean
-                            srcCountries:
-                                example:
-                                    - US
-                                    - AF
-                                    - CN
-                                items:
-                                    type: string
-                                type: array
-                            userGroups:
-                                example:
-                                    - usergroup/group1
-                                items:
-                                    type: string
-                                type: array
-                            userType:
-                                enum:
-                                    - user
-                                type: string
-                            users:
-                                example:
-                                    - vphan@netskope.com
-                                items:
-                                    type: string
-                                type: array
-                            version:
+                                        type: array
+                                    privateAppTagIds:
+                                        example:
+                                            - "1"
+                                            - "2"
+                                        items:
+                                            type: string
+                                        type: array
+                                    privateAppTags:
+                                        example:
+                                            - tag1
+                                            - tag2
+                                        items:
+                                            type: string
+                                        type: array
+                                    privateApps:
+                                        example:
+                                            - app1
+                                            - app2
+                                        items:
+                                            type: string
+                                        type: array
+                                    privateAppsWithActivities:
+                                        items:
+                                            properties:
+                                                activities:
+                                                    items:
+                                                        properties:
+                                                            activity:
+                                                                enum:
+                                                                    - any
+                                                                type: string
+                                                            list_of_constraints:
+                                                                example: []
+                                                                items:
+                                                                    type: string
+                                                                type: array
+                                                        type: object
+                                                    type: array
+                                                appName:
+                                                    example: '[172.31.12.135]'
+                                                    type: string
+                                            type: object
+                                        type: array
+                                    show_dlp_profile_action_table:
+                                        type: boolean
+                                    srcCountries:
+                                        example:
+                                            - US
+                                            - AF
+                                            - CN
+                                        items:
+                                            type: string
+                                        type: array
+                                    userGroups:
+                                        example:
+                                            - usergroup/group1
+                                        items:
+                                            type: string
+                                        type: array
+                                    userType:
+                                        enum:
+                                            - user
+                                        type: string
+                                    users:
+                                        example:
+                                            - vphan@netskope.com
+                                        items:
+                                            type: string
+                                        type: array
+                                    version:
+                                        example: 1
+                                        type: integer
+                                type: object
+                            rule_id:
                                 example: 1
                                 type: integer
+                            rule_name:
+                                example: van-test
+                                type: string
                         type: object
-                    rule_id:
-                        example: 1
-                        type: integer
-                    rule_name:
-                        example: van-test
-                        type: string
-                type: object
-            type: array
+                        x-speakeasy-entity: NPAPolicy
+                    type: array
+            type: object
+            x-speakeasy-entity: NPAPolicyList
         npa_policy_response_400:
             properties:
                 result:
@@ -1500,6 +1504,7 @@ components:
                 group_id:
                     example: 1
                     type: integer
+                    x-speakeasy-ignore: true
                 rule_data:
                     properties:
                         access_method:
@@ -1650,6 +1655,7 @@ components:
                     example: van-test
                     type: string
             type: object
+            x-speakeasy-entity: NPAPolicy
         npa_policy_rule_data:
             properties:
                 access_method:
@@ -1836,27 +1842,33 @@ components:
                 modify_type:
                     type: string
             type: object
+            x-speakeasy-entity: NPAPolicyGroup
         npa_policygroup_response:
-            items:
-                properties:
-                    can_be_edited_deleted:
-                        type: integer
-                    group_id:
-                        type: integer
-                    group_name:
-                        type: string
-                    group_pinned_id:
-                        type: integer
-                    group_prod_id:
-                        type: integer
-                    group_type:
-                        type: integer
-                    modify_time:
-                        type: string
-                    modify_type:
-                        type: string
-                type: object
-            type: array
+            properties:
+                data:
+                    items:
+                        properties:
+                            can_be_edited_deleted:
+                                type: integer
+                            group_id:
+                                type: integer
+                            group_name:
+                                type: string
+                            group_pinned_id:
+                                type: integer
+                            group_prod_id:
+                                type: integer
+                            group_type:
+                                type: integer
+                            modify_time:
+                                type: string
+                            modify_type:
+                                type: string
+                        type: object
+                        x-speakeasy-entity: NPAPolicyGroup
+                    type: array
+            type: object
+            x-speakeasy-entity: PolicyGroupList
         npa_policygroup_response_400:
             properties:
                 result:
@@ -1884,6 +1896,7 @@ components:
                 modify_type:
                     type: string
             type: object
+            x-speakeasy-entity: NPAPolicyGroup
         gre_patch_response_200:
             properties:
                 data:
@@ -2965,9 +2978,9 @@ components:
                     type: integer
             type: object
         private_apps_get_response:
-            items:
-                properties:
-                    data:
+            properties:
+                data:
+                    items:
                         properties:
                             app_id:
                                 format: int32
@@ -3032,17 +3045,18 @@ components:
                                 type: boolean
                             use_publisher_dns:
                                 type: boolean
-                        type: object
-                    status:
-                        enum:
-                            - success
-                            - not found
-                        type: string
-                    total:
-                        format: int32
-                        type: integer
-                type: object
-            type: array
+                    type: array
+                status:
+                    enum:
+                        - success
+                        - not found
+                    type: string
+                    x-speakeasy-terraform-ignore: true
+                total:
+                    format: int32
+                    type: integer
+            type: object
+            x-speakeasy-entity: PrivateAppList
         private_apps_put_request:
             properties:
                 app_name:
@@ -3093,6 +3107,7 @@ components:
                 use_publisher_dns:
                     type: boolean
             type: object
+            x-speakeasy-entity: PrivateApp
         private_apps_request:
             properties:
                 app_name:
@@ -3140,6 +3155,7 @@ components:
                 use_publisher_dns:
                     type: boolean
             type: object
+            x-speakeasy-entity: PrivateApp
         private_apps_response_400:
             properties:
                 result:
@@ -3191,10 +3207,13 @@ components:
                         type: object
                     type: array
             type: object
+            x-speakeasy-entity:
+                - PrivateAppTagList
+                - PrivateAppTag
         tag_response:
-            items:
-                properties:
-                    data:
+            properties:
+                data:
+                    items:
                         properties:
                             tag_id:
                                 format: int32
@@ -3202,13 +3221,14 @@ components:
                             tag_name:
                                 type: string
                         type: object
-                    status:
-                        enum:
-                            - success
-                            - not found
-                        type: string
-                type: object
-            type: array
+                    type: array
+                status:
+                    enum:
+                        - success
+                        - not found
+                    type: string
+            type: object
+            x-speakeasy-entity: PrivateAppTagList
         tag_response_400:
             properties:
                 result:
@@ -4335,24 +4355,26 @@ paths:
                             schema:
                                 properties:
                                     data:
-                                        properties:
-                                            docker_tag:
-                                                type: string
-                                            enabled:
-                                                format: int32
-                                                type: integer
-                                            frequency:
-                                                type: string
-                                            id:
-                                                format: int32
-                                                type: integer
-                                            name:
-                                                type: string
-                                            release_type:
-                                                type: string
-                                            timezone:
-                                                type: string
-                                        type: object
+                                        items:
+                                            properties:
+                                                docker_tag:
+                                                    type: string
+                                                enabled:
+                                                    format: int32
+                                                    type: integer
+                                                frequency:
+                                                    type: string
+                                                id:
+                                                    format: int32
+                                                    type: integer
+                                                name:
+                                                    type: string
+                                                release_type:
+                                                    type: string
+                                                timezone:
+                                                    type: string
+                                            type: object
+                                        type: array
                                     status:
                                         enum:
                                             - success
@@ -4362,7 +4384,7 @@ paths:
                                         format: int32
                                         type: integer
                                 type: object
-                                x-speakeasy-entity: NPAPublisherUpgradeProfiles
+                                x-speakeasy-entity: NPAPublisherUpgradeProfileList
                     description: successful operation
                 "400":
                     content:
@@ -4377,7 +4399,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get list of publisher upgrade profile objects
-            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#read
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfileList#read
             x-speakeasy-group: NPAPublisherUpgradeProfiles
             x-speakeasy-name-override: list_objects
         post:
@@ -4411,7 +4433,7 @@ paths:
                                 timezone:
                                     type: string
                             type: object
-                            x-speakeasy-entity: NPAPublisherUpgradeProfiles
+                            x-speakeasy-entity: NPAPublisherUpgradeProfile
             responses:
                 "200":
                     content:
@@ -4437,12 +4459,13 @@ paths:
                                             timezone:
                                                 type: string
                                         type: object
-                                        x-speakeasy-entity: NPAPublisherUpgradeProfiles
+                                        x-speakeasy-entity: NPAPublisherUpgradeProfile
                                     status:
                                         enum:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -4458,7 +4481,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Create a publisher upgrade profile
-            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#create
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#create
             x-speakeasy-group: NPAPublisherUpgradeProfiles
             x-speakeasy-name-override: create
         x-netskope-params:
@@ -4504,7 +4527,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Delete a publisher
-            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#delete
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#delete
             x-speakeasy-group: NPAPublisherUpgradeProfiles
             x-speakeasy-name-override: delete
         get:
@@ -4542,12 +4565,13 @@ paths:
                                             timezone:
                                                 type: string
                                         type: object
-                                        x-speakeasy-entity: NPAPublisherUpgradeProfiles
+                                        x-speakeasy-entity: NPAPublisherUpgradeProfile
                                     status:
                                         enum:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -4605,7 +4629,7 @@ paths:
                                 timezone:
                                     type: string
                             type: object
-                            x-speakeasy-entity: NPAPublisherUpgradeProfiles
+                            x-speakeasy-entity: NPAPublisherUpgradeProfile
                 required: true
             responses:
                 "200":
@@ -4636,7 +4660,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Update a publisher upgrade profile
-            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#update
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#update
             x-speakeasy-group: NPAPublisherUpgradeProfiles
             x-speakeasy-name-override: update
         x-netskope-params:
@@ -4758,6 +4782,7 @@ paths:
                   required: false
                   schema:
                     type: string
+                  x-speakeasy-terraform-ignore: true
                 - description: Query string based on query operaters
                   in: query
                   name: filter
@@ -4793,162 +4818,168 @@ paths:
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        group_id:
-                                            example: 1
-                                            type: integer
-                                        rule_data:
+                                properties:
+                                    data:
+                                        items:
                                             properties:
-                                                access_method:
-                                                    enum:
-                                                        - Client
-                                                        - Clientless
-                                                    type: string
-                                                b_negateNetLocation:
-                                                    type: boolean
-                                                b_negateSrcCountries:
-                                                    type: boolean
-                                                classification:
-                                                    type: string
-                                                dlp_actions:
-                                                    items:
-                                                        properties:
-                                                            actions:
-                                                                example:
-                                                                    - allow
-                                                                items:
+                                                group_id:
+                                                    example: 1
+                                                    type: integer
+                                                    x-speakeasy-ignore: true
+                                                rule_data:
+                                                    properties:
+                                                        access_method:
+                                                            enum:
+                                                                - Client
+                                                                - Clientless
+                                                            type: string
+                                                        b_negateNetLocation:
+                                                            type: boolean
+                                                        b_negateSrcCountries:
+                                                            type: boolean
+                                                        classification:
+                                                            type: string
+                                                        dlp_actions:
+                                                            items:
+                                                                properties:
+                                                                    actions:
+                                                                        example:
+                                                                            - allow
+                                                                        items:
+                                                                            enum:
+                                                                                - allow
+                                                                                - block
+                                                                                - alert
+                                                                                - quanrantine
+                                                                                - bypass
+                                                                            type: string
+                                                                        type: array
+                                                                    dlp_profile:
+                                                                        example: Payment Card
+                                                                        type: string
+                                                                type: object
+                                                            type: array
+                                                        external_dlp:
+                                                            type: boolean
+                                                        json_version:
+                                                            example: 3
+                                                            type: integer
+                                                        match_criteria_action:
+                                                            properties:
+                                                                action_name:
                                                                     enum:
                                                                         - allow
                                                                         - block
-                                                                        - alert
-                                                                        - quanrantine
-                                                                        - bypass
                                                                     type: string
-                                                                type: array
-                                                            dlp_profile:
-                                                                example: Payment Card
+                                                            type: object
+                                                        net_location_obj:
+                                                            example:
+                                                                - 190.123.150.10
+                                                                - 190.218.0.0/16
+                                                            items:
                                                                 type: string
-                                                        type: object
-                                                    type: array
-                                                external_dlp:
-                                                    type: boolean
-                                                json_version:
-                                                    example: 3
-                                                    type: integer
-                                                match_criteria_action:
-                                                    properties:
-                                                        action_name:
+                                                            type: array
+                                                        organization_units:
+                                                            example:
+                                                                - engineering/qa
+                                                            items:
+                                                                type: string
+                                                            type: array
+                                                        policy_type:
                                                             enum:
-                                                                - allow
-                                                                - block
+                                                                - private-app
                                                             type: string
-                                                    type: object
-                                                net_location_obj:
-                                                    example:
-                                                        - 190.123.150.10
-                                                        - 190.218.0.0/16
-                                                    items:
-                                                        type: string
-                                                    type: array
-                                                organization_units:
-                                                    example:
-                                                        - engineering/qa
-                                                    items:
-                                                        type: string
-                                                    type: array
-                                                policy_type:
-                                                    enum:
-                                                        - private-app
-                                                    type: string
-                                                privateAppIds:
-                                                    example:
-                                                        - "100"
-                                                        - "201"
-                                                    items:
-                                                        type: string
-                                                    type: array
-                                                privateAppTagIds:
-                                                    example:
-                                                        - "1"
-                                                        - "2"
-                                                    items:
-                                                        type: string
-                                                    type: array
-                                                privateAppTags:
-                                                    example:
-                                                        - tag1
-                                                        - tag2
-                                                    items:
-                                                        type: string
-                                                    type: array
-                                                privateApps:
-                                                    example:
-                                                        - app1
-                                                        - app2
-                                                    items:
-                                                        type: string
-                                                    type: array
-                                                privateAppsWithActivities:
-                                                    items:
-                                                        properties:
-                                                            activities:
-                                                                items:
-                                                                    properties:
-                                                                        activity:
-                                                                            enum:
-                                                                                - any
-                                                                            type: string
-                                                                        list_of_constraints:
-                                                                            example: []
-                                                                            items:
-                                                                                type: string
-                                                                            type: array
-                                                                    type: object
-                                                                type: array
-                                                            appName:
-                                                                example: '[172.31.12.135]'
+                                                        privateAppIds:
+                                                            example:
+                                                                - "100"
+                                                                - "201"
+                                                            items:
                                                                 type: string
-                                                        type: object
-                                                    type: array
-                                                show_dlp_profile_action_table:
-                                                    type: boolean
-                                                srcCountries:
-                                                    example:
-                                                        - US
-                                                        - AF
-                                                        - CN
-                                                    items:
-                                                        type: string
-                                                    type: array
-                                                userGroups:
-                                                    example:
-                                                        - usergroup/group1
-                                                    items:
-                                                        type: string
-                                                    type: array
-                                                userType:
-                                                    enum:
-                                                        - user
-                                                    type: string
-                                                users:
-                                                    example:
-                                                        - vphan@netskope.com
-                                                    items:
-                                                        type: string
-                                                    type: array
-                                                version:
+                                                            type: array
+                                                        privateAppTagIds:
+                                                            example:
+                                                                - "1"
+                                                                - "2"
+                                                            items:
+                                                                type: string
+                                                            type: array
+                                                        privateAppTags:
+                                                            example:
+                                                                - tag1
+                                                                - tag2
+                                                            items:
+                                                                type: string
+                                                            type: array
+                                                        privateApps:
+                                                            example:
+                                                                - app1
+                                                                - app2
+                                                            items:
+                                                                type: string
+                                                            type: array
+                                                        privateAppsWithActivities:
+                                                            items:
+                                                                properties:
+                                                                    activities:
+                                                                        items:
+                                                                            properties:
+                                                                                activity:
+                                                                                    enum:
+                                                                                        - any
+                                                                                    type: string
+                                                                                list_of_constraints:
+                                                                                    example: []
+                                                                                    items:
+                                                                                        type: string
+                                                                                    type: array
+                                                                            type: object
+                                                                        type: array
+                                                                    appName:
+                                                                        example: '[172.31.12.135]'
+                                                                        type: string
+                                                                type: object
+                                                            type: array
+                                                        show_dlp_profile_action_table:
+                                                            type: boolean
+                                                        srcCountries:
+                                                            example:
+                                                                - US
+                                                                - AF
+                                                                - CN
+                                                            items:
+                                                                type: string
+                                                            type: array
+                                                        userGroups:
+                                                            example:
+                                                                - usergroup/group1
+                                                            items:
+                                                                type: string
+                                                            type: array
+                                                        userType:
+                                                            enum:
+                                                                - user
+                                                            type: string
+                                                        users:
+                                                            example:
+                                                                - vphan@netskope.com
+                                                            items:
+                                                                type: string
+                                                            type: array
+                                                        version:
+                                                            example: 1
+                                                            type: integer
+                                                    type: object
+                                                rule_id:
                                                     example: 1
                                                     type: integer
+                                                rule_name:
+                                                    example: van-test
+                                                    type: string
                                             type: object
-                                        rule_id:
-                                            example: 1
-                                            type: integer
-                                        rule_name:
-                                            example: van-test
-                                            type: string
-                                    type: object
-                                type: array
+                                            x-speakeasy-entity: NPAPolicy
+                                        type: array
+                                type: object
+                                x-speakeasy-entity: NPAPolicyList
                     description: successful operation
                 "400":
                     content:
@@ -4963,6 +4994,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get list of npa policies
+            x-speakeasy-entity-operation: NPAPolicyList#get
         post:
             description: Create a policy
             parameters:
@@ -4975,6 +5007,7 @@ paths:
                         - "1"
                         - "0"
                     type: string
+                  x-speakeasy-ignore: true
             requestBody:
                 content:
                     application/json:
@@ -4989,6 +5022,7 @@ paths:
                                 group_id:
                                     example: "1"
                                     type: string
+                                    x-speakeasy-ignore: true
                                 group_name:
                                     example: My policy group
                                     type: string
@@ -5158,6 +5192,7 @@ paths:
                                             type: string
                                     type: object
                             type: object
+                            x-speakeasy-entity: NPAPolicy
                 required: true
             responses:
                 "200":
@@ -5168,6 +5203,7 @@ paths:
                                     group_id:
                                         example: 1
                                         type: integer
+                                        x-speakeasy-ignore: true
                                     rule_data:
                                         properties:
                                             access_method:
@@ -5318,6 +5354,7 @@ paths:
                                         example: van-test
                                         type: string
                                 type: object
+                                x-speakeasy-entity: NPAPolicy
                     description: successful operation
                 "400":
                     content:
@@ -5332,6 +5369,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Create a npa policy
+            x-speakeasy-entity-operation: NPAPolicy#create
         x-netskope-params:
             apiGroup: npa_policy
             customerFacing: true
@@ -5346,8 +5384,8 @@ paths:
                   name: id
                   required: true
                   schema:
-                    format: int32
                     type: integer
+                  x-speakeasy-match: RuleID
             responses:
                 "200":
                     content:
@@ -5359,6 +5397,7 @@ paths:
                                             group_id:
                                                 example: 1
                                                 type: integer
+                                                x-speakeasy-ignore: true
                                             rule_data:
                                                 properties:
                                                     access_method:
@@ -5509,6 +5548,7 @@ paths:
                                                 example: van-test
                                                 type: string
                                         type: object
+                                        x-speakeasy-entity: NPAPolicy
                                     status:
                                         enum:
                                             - success
@@ -5529,6 +5569,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Delete a npa policy
+            x-speakeasy-entity-operation: NPAPolicy#delete
         get:
             description: Get a npa policy based on policy rule id
             parameters:
@@ -5537,14 +5578,15 @@ paths:
                   name: id
                   required: true
                   schema:
-                    format: int32
                     type: integer
+                  x-speakeasy-match: RuleID
                 - description: Return values only from specified fields
                   in: query
                   name: fields
                   required: false
                   schema:
                     type: string
+                  x-speakeasy-terraform-ignore: true
             responses:
                 "200":
                     content:
@@ -5556,6 +5598,7 @@ paths:
                                             group_id:
                                                 example: 1
                                                 type: integer
+                                                x-speakeasy-ignore: true
                                             rule_data:
                                                 properties:
                                                     access_method:
@@ -5706,6 +5749,7 @@ paths:
                                                 example: van-test
                                                 type: string
                                         type: object
+                                        x-speakeasy-entity: NPAPolicy
                                     status:
                                         enum:
                                             - success
@@ -5726,6 +5770,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get a npa policy
+            x-speakeasy-entity-operation: NPAPolicy#get
         patch:
             description: Patch a npa policy based on rule id
             parameters:
@@ -5734,8 +5779,8 @@ paths:
                   name: id
                   required: true
                   schema:
-                    format: int32
                     type: integer
+                  x-speakeasy-match: RuleID
                 - description: flag to skip output except status code
                   in: query
                   name: silent
@@ -5745,6 +5790,7 @@ paths:
                         - "1"
                         - "0"
                     type: string
+                  x-speakeasy-terraform-ignore: true
             requestBody:
                 content:
                     application/json:
@@ -5759,6 +5805,7 @@ paths:
                                 group_id:
                                     example: "1"
                                     type: string
+                                    x-speakeasy-ignore: true
                                 group_name:
                                     example: My policy group
                                     type: string
@@ -5928,6 +5975,7 @@ paths:
                                             type: string
                                     type: object
                             type: object
+                            x-speakeasy-entity: NPAPolicy
                 required: true
             responses:
                 "200":
@@ -5940,6 +5988,7 @@ paths:
                                             group_id:
                                                 example: 1
                                                 type: integer
+                                                x-speakeasy-ignore: true
                                             rule_data:
                                                 properties:
                                                     access_method:
@@ -6090,6 +6139,7 @@ paths:
                                                 example: van-test
                                                 type: string
                                         type: object
+                                        x-speakeasy-entity: NPAPolicy
                                     status:
                                         enum:
                                             - success
@@ -6110,6 +6160,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Patch a npa policy
+            x-speakeasy-entity-operation: NPAPolicy#update
         x-netskope-params:
             apiGroup: npa_policy
             customerFacing: true
@@ -6125,6 +6176,7 @@ paths:
                   required: false
                   schema:
                     type: string
+                  x-speakeasy-terraform-ignore: true
                 - description: Query string based on query operaters
                   in: query
                   name: filter
@@ -6160,26 +6212,31 @@ paths:
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        can_be_edited_deleted:
-                                            type: integer
-                                        group_id:
-                                            type: integer
-                                        group_name:
-                                            type: string
-                                        group_pinned_id:
-                                            type: integer
-                                        group_prod_id:
-                                            type: integer
-                                        group_type:
-                                            type: integer
-                                        modify_time:
-                                            type: string
-                                        modify_type:
-                                            type: string
-                                    type: object
-                                type: array
+                                properties:
+                                    data:
+                                        items:
+                                            properties:
+                                                can_be_edited_deleted:
+                                                    type: integer
+                                                group_id:
+                                                    type: integer
+                                                group_name:
+                                                    type: string
+                                                group_pinned_id:
+                                                    type: integer
+                                                group_prod_id:
+                                                    type: integer
+                                                group_type:
+                                                    type: integer
+                                                modify_time:
+                                                    type: string
+                                                modify_type:
+                                                    type: string
+                                            type: object
+                                            x-speakeasy-entity: NPAPolicyGroup
+                                        type: array
+                                type: object
+                                x-speakeasy-entity: PolicyGroupList
                     description: successful operation
                 "400":
                     content:
@@ -6194,6 +6251,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get list of npa policy groups
+            x-speakeasy-entity-operation: PolicyGroupList#read
         post:
             description: Create a npa policy group
             parameters:
@@ -6206,6 +6264,7 @@ paths:
                         - "1"
                         - "0"
                     type: string
+                  x-speakeasy-terraform-ignore: true
             requestBody:
                 content:
                     application/json:
@@ -6232,6 +6291,7 @@ paths:
                                 modify_type:
                                     type: string
                             type: object
+                            x-speakeasy-entity: NPAPolicyGroup
                 required: true
             responses:
                 "200":
@@ -6256,6 +6316,7 @@ paths:
                                     modify_type:
                                         type: string
                                 type: object
+                                x-speakeasy-entity: NPAPolicyGroup
                     description: successful operation
                 "400":
                     content:
@@ -6270,6 +6331,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Create a npa policy group
+            x-speakeasy-entity-operation: NPAPolicyGroup#create
         x-netskope-params:
             apiGroup: npa_policygroup
             customerFacing: true
@@ -6284,8 +6346,8 @@ paths:
                   name: id
                   required: true
                   schema:
-                    format: int32
                     type: integer
+                  x-speakeasy-match: group_id
             responses:
                 "200":
                     content:
@@ -6312,6 +6374,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Delete a npa policy group
+            x-speakeasy-entity-operation: NPAPolicyGroup#delete
         get:
             description: Get a npa policy group based on group id
             parameters:
@@ -6320,8 +6383,8 @@ paths:
                   name: id
                   required: true
                   schema:
-                    format: int32
                     type: integer
+                  x-speakeasy-match: group_id
             responses:
                 "200":
                     content:
@@ -6345,6 +6408,7 @@ paths:
                                     modify_type:
                                         type: string
                                 type: object
+                                x-speakeasy-entity: NPAPolicyGroup
                     description: successful operation
                 "400":
                     content:
@@ -6359,6 +6423,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get a npa policy group
+            x-speakeasy-entity-operation: NPAPolicyGroup#read
         patch:
             description: Patch a npa policy group based on group id
             parameters:
@@ -6367,8 +6432,8 @@ paths:
                   name: id
                   required: true
                   schema:
-                    format: int32
                     type: integer
+                  x-speakeasy-match: group_id
                 - description: flag to skip output except status code
                   in: query
                   name: silent
@@ -6378,6 +6443,7 @@ paths:
                         - "1"
                         - "0"
                     type: string
+                  x-speakeasy-terraform-ignore: true
             requestBody:
                 content:
                     application/json:
@@ -6404,6 +6470,7 @@ paths:
                                 modify_type:
                                     type: string
                             type: object
+                            x-speakeasy-entity: NPAPolicyGroup
                 required: true
             responses:
                 "200":
@@ -6428,6 +6495,7 @@ paths:
                                     modify_type:
                                         type: string
                                 type: object
+                                x-speakeasy-entity: NPAPolicyGroup
                     description: successful operation
                 "400":
                     content:
@@ -8896,9 +8964,9 @@ paths:
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
+                                properties:
+                                    data:
+                                        items:
                                             properties:
                                                 app_id:
                                                     format: int32
@@ -8963,17 +9031,18 @@ paths:
                                                     type: boolean
                                                 use_publisher_dns:
                                                     type: boolean
-                                            type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                        total:
-                                            format: int32
-                                            type: integer
-                                    type: object
-                                type: array
+                                        type: array
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                        x-speakeasy-terraform-ignore: true
+                                    total:
+                                        format: int32
+                                        type: integer
+                                type: object
+                                x-speakeasy-entity: PrivateAppList
                     description: successful operation
                 "400":
                     content:
@@ -8988,6 +9057,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get list of private applications
+            x-speakeasy-entity-operation: PrivateAppList#read
         post:
             description: Create a private application
             parameters:
@@ -9000,6 +9070,7 @@ paths:
                         - "1"
                         - "0"
                     type: string
+                  x-speakeasy-terraform-ignore: true
             requestBody:
                 content:
                     application/json:
@@ -9050,87 +9121,87 @@ paths:
                                 use_publisher_dns:
                                     type: boolean
                             type: object
+                            x-speakeasy-entity: PrivateApp
                 required: true
             responses:
                 "200":
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
-                                            properties:
-                                                clientless_access:
-                                                    type: boolean
-                                                host:
-                                                    type: string
-                                                id:
-                                                    format: int32
-                                                    type: integer
-                                                name:
-                                                    type: string
-                                                protocols:
-                                                    items:
-                                                        properties:
-                                                            id:
-                                                                format: int32
-                                                                type: integer
-                                                            port:
-                                                                type: string
-                                                            service_id:
-                                                                format: int32
-                                                                type: integer
-                                                            transport:
-                                                                type: string
-                                                        type: object
-                                                    type: array
-                                                real_host:
-                                                    type: string
-                                                service_publisher_assignments:
-                                                    items:
-                                                        properties:
-                                                            primary:
-                                                                type: boolean
-                                                            publisher_id:
-                                                                format: int32
-                                                                type: integer
-                                                            reachability:
-                                                                properties:
-                                                                    error_code:
-                                                                        format: int32
-                                                                        type: integer
-                                                                    error_string:
-                                                                        type: string
-                                                                    reachable:
-                                                                        type: boolean
-                                                                type: object
-                                                            service_id:
-                                                                format: int32
-                                                                type: integer
-                                                        type: object
-                                                    type: array
-                                                tags:
-                                                    items:
-                                                        properties:
-                                                            tag_id:
-                                                                format: int32
-                                                                type: integer
-                                                            tag_name:
-                                                                type: string
-                                                        type: object
-                                                    type: array
-                                                trust_self_signed_certs:
-                                                    type: boolean
-                                                use_publisher_dns:
-                                                    type: boolean
-                                            type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                properties:
+                                    data:
+                                        properties:
+                                            clientless_access:
+                                                type: boolean
+                                            host:
+                                                type: string
+                                            id:
+                                                format: int32
+                                                type: integer
+                                            name:
+                                                type: string
+                                            protocols:
+                                                items:
+                                                    properties:
+                                                        id:
+                                                            format: int32
+                                                            type: integer
+                                                        port:
+                                                            type: string
+                                                        service_id:
+                                                            format: int32
+                                                            type: integer
+                                                        transport:
+                                                            type: string
+                                                    type: object
+                                                type: array
+                                            real_host:
+                                                type: string
+                                            service_publisher_assignments:
+                                                items:
+                                                    properties:
+                                                        primary:
+                                                            type: boolean
+                                                        publisher_id:
+                                                            format: int32
+                                                            type: integer
+                                                        reachability:
+                                                            properties:
+                                                                error_code:
+                                                                    format: int32
+                                                                    type: integer
+                                                                error_string:
+                                                                    type: string
+                                                                reachable:
+                                                                    type: boolean
+                                                            type: object
+                                                        service_id:
+                                                            format: int32
+                                                            type: integer
+                                                    type: object
+                                                type: array
+                                            tags:
+                                                items:
+                                                    properties:
+                                                        tag_id:
+                                                            format: int32
+                                                            type: integer
+                                                        tag_name:
+                                                            type: string
+                                                    type: object
+                                                type: array
+                                            trust_self_signed_certs:
+                                                type: boolean
+                                            use_publisher_dns:
+                                                type: boolean
+                                        type: object
+                                        x-speakeasy-entity: PrivateApp
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
                     description: successful operation
                 "400":
                     content:
@@ -9145,6 +9216,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Create a private application
+            x-speakeasy-entity-operation: PrivateApp#create
         x-netskope-params:
             apiGroup: npa_apps_private
             customerFacing: true
@@ -9161,6 +9233,7 @@ paths:
                   schema:
                     format: int32
                     type: integer
+                  x-speakeasy-match: id
             responses:
                 "200":
                     content:
@@ -9187,6 +9260,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Delete a private application
+            x-speakeasy-entity-operation: PrivateApp#delete
         get:
             description: Get a private application based on private app id
             parameters:
@@ -9202,81 +9276,80 @@ paths:
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
-                                            properties:
-                                                clientless_access:
-                                                    type: boolean
-                                                host:
-                                                    type: string
-                                                id:
-                                                    format: int32
-                                                    type: integer
-                                                name:
-                                                    type: string
-                                                protocols:
-                                                    items:
-                                                        properties:
-                                                            id:
-                                                                format: int32
-                                                                type: integer
-                                                            port:
-                                                                type: string
-                                                            service_id:
-                                                                format: int32
-                                                                type: integer
-                                                            transport:
-                                                                type: string
-                                                        type: object
-                                                    type: array
-                                                real_host:
-                                                    type: string
-                                                service_publisher_assignments:
-                                                    items:
-                                                        properties:
-                                                            primary:
-                                                                type: boolean
-                                                            publisher_id:
-                                                                format: int32
-                                                                type: integer
-                                                            reachability:
-                                                                properties:
-                                                                    error_code:
-                                                                        format: int32
-                                                                        type: integer
-                                                                    error_string:
-                                                                        type: string
-                                                                    reachable:
-                                                                        type: boolean
-                                                                type: object
-                                                            service_id:
-                                                                format: int32
-                                                                type: integer
-                                                        type: object
-                                                    type: array
-                                                tags:
-                                                    items:
-                                                        properties:
-                                                            tag_id:
-                                                                format: int32
-                                                                type: integer
-                                                            tag_name:
-                                                                type: string
-                                                        type: object
-                                                    type: array
-                                                trust_self_signed_certs:
-                                                    type: boolean
-                                                use_publisher_dns:
-                                                    type: boolean
-                                            type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                properties:
+                                    data:
+                                        properties:
+                                            clientless_access:
+                                                type: boolean
+                                            host:
+                                                type: string
+                                            id:
+                                                format: int32
+                                                type: integer
+                                            name:
+                                                type: string
+                                            protocols:
+                                                items:
+                                                    properties:
+                                                        id:
+                                                            format: int32
+                                                            type: integer
+                                                        port:
+                                                            type: string
+                                                        service_id:
+                                                            format: int32
+                                                            type: integer
+                                                        transport:
+                                                            type: string
+                                                    type: object
+                                                type: array
+                                            real_host:
+                                                type: string
+                                            service_publisher_assignments:
+                                                items:
+                                                    properties:
+                                                        primary:
+                                                            type: boolean
+                                                        publisher_id:
+                                                            format: int32
+                                                            type: integer
+                                                        reachability:
+                                                            properties:
+                                                                error_code:
+                                                                    format: int32
+                                                                    type: integer
+                                                                error_string:
+                                                                    type: string
+                                                                reachable:
+                                                                    type: boolean
+                                                            type: object
+                                                        service_id:
+                                                            format: int32
+                                                            type: integer
+                                                    type: object
+                                                type: array
+                                            tags:
+                                                items:
+                                                    properties:
+                                                        tag_id:
+                                                            format: int32
+                                                            type: integer
+                                                        tag_name:
+                                                            type: string
+                                                    type: object
+                                                type: array
+                                            trust_self_signed_certs:
+                                                type: boolean
+                                            use_publisher_dns:
+                                                type: boolean
+                                        type: object
+                                        x-speakeasy-entity: PrivateApp
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
                     description: successful operation
                 "400":
                     content:
@@ -9363,87 +9436,87 @@ paths:
                                 use_publisher_dns:
                                     type: boolean
                             type: object
+                            x-speakeasy-entity: PrivateApp
                 required: true
             responses:
                 "200":
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
-                                            properties:
-                                                clientless_access:
-                                                    type: boolean
-                                                host:
-                                                    type: string
-                                                id:
-                                                    format: int32
-                                                    type: integer
-                                                name:
-                                                    type: string
-                                                protocols:
-                                                    items:
-                                                        properties:
-                                                            id:
-                                                                format: int32
-                                                                type: integer
-                                                            port:
-                                                                type: string
-                                                            service_id:
-                                                                format: int32
-                                                                type: integer
-                                                            transport:
-                                                                type: string
-                                                        type: object
-                                                    type: array
-                                                real_host:
-                                                    type: string
-                                                service_publisher_assignments:
-                                                    items:
-                                                        properties:
-                                                            primary:
-                                                                type: boolean
-                                                            publisher_id:
-                                                                format: int32
-                                                                type: integer
-                                                            reachability:
-                                                                properties:
-                                                                    error_code:
-                                                                        format: int32
-                                                                        type: integer
-                                                                    error_string:
-                                                                        type: string
-                                                                    reachable:
-                                                                        type: boolean
-                                                                type: object
-                                                            service_id:
-                                                                format: int32
-                                                                type: integer
-                                                        type: object
-                                                    type: array
-                                                tags:
-                                                    items:
-                                                        properties:
-                                                            tag_id:
-                                                                format: int32
-                                                                type: integer
-                                                            tag_name:
-                                                                type: string
-                                                        type: object
-                                                    type: array
-                                                trust_self_signed_certs:
-                                                    type: boolean
-                                                use_publisher_dns:
-                                                    type: boolean
-                                            type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                properties:
+                                    data:
+                                        properties:
+                                            clientless_access:
+                                                type: boolean
+                                            host:
+                                                type: string
+                                            id:
+                                                format: int32
+                                                type: integer
+                                            name:
+                                                type: string
+                                            protocols:
+                                                items:
+                                                    properties:
+                                                        id:
+                                                            format: int32
+                                                            type: integer
+                                                        port:
+                                                            type: string
+                                                        service_id:
+                                                            format: int32
+                                                            type: integer
+                                                        transport:
+                                                            type: string
+                                                    type: object
+                                                type: array
+                                            real_host:
+                                                type: string
+                                            service_publisher_assignments:
+                                                items:
+                                                    properties:
+                                                        primary:
+                                                            type: boolean
+                                                        publisher_id:
+                                                            format: int32
+                                                            type: integer
+                                                        reachability:
+                                                            properties:
+                                                                error_code:
+                                                                    format: int32
+                                                                    type: integer
+                                                                error_string:
+                                                                    type: string
+                                                                reachable:
+                                                                    type: boolean
+                                                            type: object
+                                                        service_id:
+                                                            format: int32
+                                                            type: integer
+                                                    type: object
+                                                type: array
+                                            tags:
+                                                items:
+                                                    properties:
+                                                        tag_id:
+                                                            format: int32
+                                                            type: integer
+                                                        tag_name:
+                                                            type: string
+                                                    type: object
+                                                type: array
+                                            trust_self_signed_certs:
+                                                type: boolean
+                                            use_publisher_dns:
+                                                type: boolean
+                                        type: object
+                                        x-speakeasy-entity: PrivateApp
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
                     description: successful operation
                 "400":
                     content:
@@ -9468,6 +9541,7 @@ paths:
                   schema:
                     format: int32
                     type: integer
+                  x-speakeasy-match: id
                 - description: flag to skip output except status code
                   in: query
                   name: silent
@@ -9477,6 +9551,7 @@ paths:
                         - "1"
                         - "0"
                     type: string
+                  x-speakeasy-terraform-ignore: true
             requestBody:
                 content:
                     application/json:
@@ -9530,87 +9605,87 @@ paths:
                                 use_publisher_dns:
                                     type: boolean
                             type: object
+                            x-speakeasy-entity: PrivateApp
                 required: true
             responses:
                 "200":
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
-                                            properties:
-                                                clientless_access:
-                                                    type: boolean
-                                                host:
-                                                    type: string
-                                                id:
-                                                    format: int32
-                                                    type: integer
-                                                name:
-                                                    type: string
-                                                protocols:
-                                                    items:
-                                                        properties:
-                                                            id:
-                                                                format: int32
-                                                                type: integer
-                                                            port:
-                                                                type: string
-                                                            service_id:
-                                                                format: int32
-                                                                type: integer
-                                                            transport:
-                                                                type: string
-                                                        type: object
-                                                    type: array
-                                                real_host:
-                                                    type: string
-                                                service_publisher_assignments:
-                                                    items:
-                                                        properties:
-                                                            primary:
-                                                                type: boolean
-                                                            publisher_id:
-                                                                format: int32
-                                                                type: integer
-                                                            reachability:
-                                                                properties:
-                                                                    error_code:
-                                                                        format: int32
-                                                                        type: integer
-                                                                    error_string:
-                                                                        type: string
-                                                                    reachable:
-                                                                        type: boolean
-                                                                type: object
-                                                            service_id:
-                                                                format: int32
-                                                                type: integer
-                                                        type: object
-                                                    type: array
-                                                tags:
-                                                    items:
-                                                        properties:
-                                                            tag_id:
-                                                                format: int32
-                                                                type: integer
-                                                            tag_name:
-                                                                type: string
-                                                        type: object
-                                                    type: array
-                                                trust_self_signed_certs:
-                                                    type: boolean
-                                                use_publisher_dns:
-                                                    type: boolean
-                                            type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                properties:
+                                    data:
+                                        properties:
+                                            clientless_access:
+                                                type: boolean
+                                            host:
+                                                type: string
+                                            id:
+                                                format: int32
+                                                type: integer
+                                            name:
+                                                type: string
+                                            protocols:
+                                                items:
+                                                    properties:
+                                                        id:
+                                                            format: int32
+                                                            type: integer
+                                                        port:
+                                                            type: string
+                                                        service_id:
+                                                            format: int32
+                                                            type: integer
+                                                        transport:
+                                                            type: string
+                                                    type: object
+                                                type: array
+                                            real_host:
+                                                type: string
+                                            service_publisher_assignments:
+                                                items:
+                                                    properties:
+                                                        primary:
+                                                            type: boolean
+                                                        publisher_id:
+                                                            format: int32
+                                                            type: integer
+                                                        reachability:
+                                                            properties:
+                                                                error_code:
+                                                                    format: int32
+                                                                    type: integer
+                                                                error_string:
+                                                                    type: string
+                                                                reachable:
+                                                                    type: boolean
+                                                            type: object
+                                                        service_id:
+                                                            format: int32
+                                                            type: integer
+                                                    type: object
+                                                type: array
+                                            tags:
+                                                items:
+                                                    properties:
+                                                        tag_id:
+                                                            format: int32
+                                                            type: integer
+                                                        tag_name:
+                                                            type: string
+                                                    type: object
+                                                type: array
+                                            trust_self_signed_certs:
+                                                type: boolean
+                                            use_publisher_dns:
+                                                type: boolean
+                                        type: object
+                                        x-speakeasy-entity: PrivateApp
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
                     description: successful operation
                 "400":
                     content:
@@ -9625,6 +9700,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Update a private application
+            x-speakeasy-entity-operation: PrivateApp#update
         x-netskope-params:
             apiGroup: npa_apps_private
             customerFacing: true
@@ -9643,26 +9719,27 @@ paths:
                                         type: string
                                     type: array
                             type: object
+                            x-speakeasy-entity: PrivateAppPolicyUseCount
                 required: true
             responses:
                 "200":
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
+                                properties:
+                                    data:
+                                        items:
                                             properties:
                                                 token:
                                                     type: string
                                             type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                        type: array
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
                     description: successful operation
                 "400":
                     content:
@@ -9677,6 +9754,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Retrieve number of policy in use for specified private apps
+            x-speakeasy-entity: PrivateAppPolicyUseCount#read
         x-netskope-params:
             apiGroup: npa_apps_private
             customerFacing: true
@@ -9717,15 +9795,18 @@ paths:
                                         type: object
                                     type: array
                             type: object
+                            x-speakeasy-entity:
+                                - PrivateAppTagList
+                                - PrivateAppTag
                 required: true
             responses:
                 "200":
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
+                                properties:
+                                    data:
+                                        items:
                                             properties:
                                                 tag_id:
                                                     format: int32
@@ -9733,13 +9814,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                        type: array
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
+                                x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
                 "400":
                     content:
@@ -9761,9 +9843,9 @@ paths:
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
+                                properties:
+                                    data:
+                                        items:
                                             properties:
                                                 tag_id:
                                                     format: int32
@@ -9771,13 +9853,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                        type: array
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
+                                x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
                 "400":
                     content:
@@ -9792,6 +9875,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: 'Get list of private app tags '
+            x-speakeasy-entity-operation: PrivateAppTagList#read
         patch:
             description: Bulk update tags to associate with specified private apps
             requestBody:
@@ -9826,15 +9910,18 @@ paths:
                                         type: object
                                     type: array
                             type: object
+                            x-speakeasy-entity:
+                                - PrivateAppTagList
+                                - PrivateAppTag
                 required: true
             responses:
                 "200":
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
+                                properties:
+                                    data:
+                                        items:
                                             properties:
                                                 tag_id:
                                                     format: int32
@@ -9842,13 +9929,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                        type: array
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
+                                x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
                 "400":
                     content:
@@ -9897,15 +9985,18 @@ paths:
                                         type: object
                                     type: array
                             type: object
+                            x-speakeasy-entity:
+                                - PrivateAppTagList
+                                - PrivateAppTag
                 required: true
             responses:
                 "200":
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
+                                properties:
+                                    data:
+                                        items:
                                             properties:
                                                 tag_id:
                                                     format: int32
@@ -9913,13 +10004,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                        type: array
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
+                                x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
                 "400":
                     content:
@@ -9982,6 +10074,9 @@ paths:
                                         type: object
                                     type: array
                             type: object
+                            x-speakeasy-entity:
+                                - PrivateAppTagList
+                                - PrivateAppTag
                 required: true
             responses:
                 "200":
@@ -10009,6 +10104,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Delete a private app tag based on tag id
+            x-speakeasy-entity-operation: PrivateAppTag#delete
         get:
             description: Get a private app tag based on tag id
             parameters:
@@ -10024,9 +10120,9 @@ paths:
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
+                                properties:
+                                    data:
+                                        items:
                                             properties:
                                                 tag_id:
                                                     format: int32
@@ -10034,13 +10130,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                        type: array
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
+                                x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
                 "400":
                     content:
@@ -10055,6 +10152,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get a private app tag based on tag id
+            x-speakeasy-entity-operation: PrivateAppTag#read
         put:
             description: Update a private app tag based on tag id
             parameters:
@@ -10097,15 +10195,18 @@ paths:
                                         type: object
                                     type: array
                             type: object
+                            x-speakeasy-entity:
+                                - PrivateAppTagList
+                                - PrivateAppTag
                 required: true
             responses:
                 "200":
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
+                                properties:
+                                    data:
+                                        items:
                                             properties:
                                                 tag_id:
                                                     format: int32
@@ -10113,13 +10214,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                        type: array
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
+                                x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
                 "400":
                     content:
@@ -10134,6 +10236,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Update a private app tag based on tag id
+            x-speakeasy-entity-operation: PrivateAppTag#create,update
         x-netskope-params:
             apiGroup: npa_private_tag
             customerFacing: true
@@ -10152,26 +10255,28 @@ paths:
                                         type: string
                                     type: array
                             type: object
+                            x-speakeasy-entity: PrivateAppTagPolicyUseList
                 required: true
             responses:
                 "200":
                     content:
                         application/json:
                             schema:
-                                items:
-                                    properties:
-                                        data:
+                                properties:
+                                    data:
+                                        items:
                                             properties:
                                                 token:
                                                     type: string
                                             type: object
-                                        status:
-                                            enum:
-                                                - success
-                                                - not found
-                                            type: string
-                                    type: object
-                                type: array
+                                        type: array
+                                    status:
+                                        enum:
+                                            - success
+                                            - not found
+                                        type: string
+                                type: object
+                                x-speakeasy-entity: PrivateAppTagPolicyUseList
                     description: successful operation
                 "400":
                     content:
@@ -10186,6 +10291,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Retrieve number of policy in use for specified tags
+            x-speakeasy-entity-operation: PrivateAppTagPolicyUseList#get
         x-netskope-params:
             apiGroup: npa_private_tag
             customerFacing: true

@@ -20,20 +20,20 @@ func (o *GetAppsPrivateTagsTagIDRequest) GetTagID() int {
 	return o.TagID
 }
 
-// GetAppsPrivateTagsTagIDResponseBody - Invalid request
-type GetAppsPrivateTagsTagIDResponseBody struct {
+// GetAppsPrivateTagsTagIDResponseResponseBody - Invalid request
+type GetAppsPrivateTagsTagIDResponseResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *GetAppsPrivateTagsTagIDResponseBody) GetResult() *string {
+func (o *GetAppsPrivateTagsTagIDResponseResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *GetAppsPrivateTagsTagIDResponseBody) GetStatus() *int64 {
+func (o *GetAppsPrivateTagsTagIDResponseResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -86,19 +86,20 @@ func (e *GetAppsPrivateTagsTagIDStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type GetAppsPrivateTagsTagIDResponseResponseBody struct {
-	Data   *GetAppsPrivateTagsTagIDData   `json:"data,omitempty"`
+// GetAppsPrivateTagsTagIDResponseBody - successful operation
+type GetAppsPrivateTagsTagIDResponseBody struct {
+	Data   []GetAppsPrivateTagsTagIDData  `json:"data,omitempty"`
 	Status *GetAppsPrivateTagsTagIDStatus `json:"status,omitempty"`
 }
 
-func (o *GetAppsPrivateTagsTagIDResponseResponseBody) GetData() *GetAppsPrivateTagsTagIDData {
+func (o *GetAppsPrivateTagsTagIDResponseBody) GetData() []GetAppsPrivateTagsTagIDData {
 	if o == nil {
 		return nil
 	}
 	return o.Data
 }
 
-func (o *GetAppsPrivateTagsTagIDResponseResponseBody) GetStatus() *GetAppsPrivateTagsTagIDStatus {
+func (o *GetAppsPrivateTagsTagIDResponseBody) GetStatus() *GetAppsPrivateTagsTagIDStatus {
 	if o == nil {
 		return nil
 	}
@@ -106,16 +107,30 @@ func (o *GetAppsPrivateTagsTagIDResponseResponseBody) GetStatus() *GetAppsPrivat
 }
 
 type GetAppsPrivateTagsTagIDResponse struct {
+	// successful operation
+	TwoHundredApplicationJSONObject *GetAppsPrivateTagsTagIDResponseBody
+	// Invalid request
+	FourHundredApplicationJSONObject *GetAppsPrivateTagsTagIDResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// successful operation
-	Classes []GetAppsPrivateTagsTagIDResponseResponseBody
-	// Invalid request
-	Object *GetAppsPrivateTagsTagIDResponseBody
+}
+
+func (o *GetAppsPrivateTagsTagIDResponse) GetTwoHundredApplicationJSONObject() *GetAppsPrivateTagsTagIDResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.TwoHundredApplicationJSONObject
+}
+
+func (o *GetAppsPrivateTagsTagIDResponse) GetFourHundredApplicationJSONObject() *GetAppsPrivateTagsTagIDResponseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.FourHundredApplicationJSONObject
 }
 
 func (o *GetAppsPrivateTagsTagIDResponse) GetContentType() string {
@@ -137,18 +152,4 @@ func (o *GetAppsPrivateTagsTagIDResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
-}
-
-func (o *GetAppsPrivateTagsTagIDResponse) GetClasses() []GetAppsPrivateTagsTagIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Classes
-}
-
-func (o *GetAppsPrivateTagsTagIDResponse) GetObject() *GetAppsPrivateTagsTagIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.Object
 }
