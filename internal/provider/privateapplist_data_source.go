@@ -29,9 +29,9 @@ type PrivateAppListDataSource struct {
 
 // PrivateAppListDataSourceModel describes the data model.
 type PrivateAppListDataSourceModel struct {
-	Data   []GetAppsPrivateData `tfsdk:"data"`
-	Fields types.String         `tfsdk:"fields"`
-	Total  types.Int64          `tfsdk:"total"`
+	Data   []GetSteeringAppsPrivateData `tfsdk:"data"`
+	Fields types.String                 `tfsdk:"fields"`
+	Total  types.Int64                  `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -190,10 +190,10 @@ func (r *PrivateAppListDataSource) Read(ctx context.Context, req datasource.Read
 	} else {
 		fields = nil
 	}
-	request := operations.GetAppsPrivateRequest{
+	request := operations.GetSteeringAppsPrivateRequest{
 		Fields: fields,
 	}
-	res, err := r.client.GetAppsPrivate(ctx, request)
+	res, err := r.client.GetSteeringAppsPrivate(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

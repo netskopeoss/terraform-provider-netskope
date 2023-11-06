@@ -4772,7 +4772,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /npa/rules:
+    /policy/npa/rules:
         get:
             description: Get list of npa policies
             parameters:
@@ -5375,7 +5375,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /npa/rules/{id}:
+    /policy/npa/rules/{id}:
         delete:
             description: Delete a npa policy with rule id
             parameters:
@@ -6166,7 +6166,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /npa/policygroups:
+    /policy/npa/policygroups:
         get:
             description: Get list of npa policy groups
             parameters:
@@ -6337,7 +6337,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /npa/policygroups/{id}:
+    /policy/npa/policygroups/{id}:
         delete:
             description: Delete a npa policy group with group id
             parameters:
@@ -6515,7 +6515,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /gre/pops:
+    /steering/gre/pops:
         get:
             description: API to get list of GRE POPs. You can filter by parameters. Use one parameter at a time. Only lat and long should be used together. All parameters are allowed to use offset and limit in combination.
             parameters:
@@ -6679,7 +6679,7 @@ paths:
             customerFacing: true
             serviceConfig: steering
             version: 2
-    /gre/pops/{id}:
+    /steering/gre/pops/{id}:
         get:
             description: API to get GRE POP using id.
             parameters:
@@ -6808,7 +6808,7 @@ paths:
             customerFacing: true
             serviceConfig: steering
             version: 2
-    /gre/tunnels:
+    /steering/gre/tunnels:
         get:
             description: API to get list of GRE tunnels. You can filter by parameters. Use one of these parameters at a time. Only offset and limit are allowed in combination with other parameters
             parameters:
@@ -7210,7 +7210,7 @@ paths:
             customerFacing: true
             serviceConfig: steering
             version: 2
-    /gre/tunnels/{id}:
+    /steering/gre/tunnels/{id}:
         delete:
             description: API to delete GRE tunnel using id
             parameters:
@@ -7661,7 +7661,7 @@ paths:
             customerFacing: true
             serviceConfig: steering
             version: 2
-    /ipsec/pops:
+    /steering/ipsec/pops:
         get:
             description: API to get list of IPSec POPs. You can filter by parameters. Use one of these parameters at a time. Only lat and long should be used together. All parameters are allowed to use offset and limit in combination.
             parameters:
@@ -7864,7 +7864,7 @@ paths:
             customerFacing: true
             serviceConfig: steering
             version: 2
-    /ipsec/pops/{id}:
+    /steering/ipsec/pops/{id}:
         get:
             description: API to get IPSec POP using id.
             parameters:
@@ -8026,7 +8026,7 @@ paths:
             customerFacing: true
             serviceConfig: steering
             version: 2
-    /ipsec/tunnels:
+    /steering/ipsec/tunnels:
         get:
             description: API to get list of IPSec tunnels. You can filter by parameters. Use one of these parameters at a time. Only offset and limit are allowed in combination with other parameters
             parameters:
@@ -8466,7 +8466,7 @@ paths:
             customerFacing: true
             serviceConfig: steering
             version: 2
-    /ipsec/tunnels/{id}:
+    /steering/ipsec/tunnels/{id}:
         delete:
             description: API to delete IPSec tunnel using id
             parameters:
@@ -8949,7 +8949,7 @@ paths:
             customerFacing: true
             serviceConfig: steering
             version: 2
-    /apps/private:
+    /steering/apps/private:
         get:
             description: Get list of private applications
             parameters:
@@ -9222,7 +9222,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /apps/private/{private_app_id}:
+    /steering/apps/private/{private_app_id}:
         delete:
             description: Delete a private application based on private app id
             parameters:
@@ -9706,7 +9706,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /apps/private/getpolicyinuse:
+    /steering/apps/private/getpolicyinuse:
         post:
             description: Retrieve number of policy in use for specified private apps
             requestBody:
@@ -9760,7 +9760,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /apps/private/tags:
+    /steering/apps/private/tags:
         delete:
             description: Bulk delete tags for specified private apps
             requestBody:
@@ -10031,7 +10031,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /apps/private/tags/{tag_id}:
+    /steering/apps/private/tags/{tag_id}:
         delete:
             description: Delete a private app tag based on tag id
             parameters:
@@ -10242,7 +10242,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /apps/private/tags/getpolicyinuse:
+    /steering/apps/private/tags/getpolicyinuse:
         post:
             description: Retrieve number of policy in use for specified tags
             requestBody:

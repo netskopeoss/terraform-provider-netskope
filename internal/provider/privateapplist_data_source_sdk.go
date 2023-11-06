@@ -7,10 +7,10 @@ import (
 	"ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.GetAppsPrivateResponseBody) {
+func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.GetSteeringAppsPrivateResponseBody) {
 	r.Data = nil
 	for _, dataItem := range resp.Data {
-		var data1 GetAppsPrivateData
+		var data1 GetSteeringAppsPrivateData
 		if dataItem.AppID != nil {
 			data1.AppID = types.Int64Value(int64(*dataItem.AppID))
 		} else {
@@ -63,7 +63,7 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 		}
 		data1.ServicePublisherAssignments = nil
 		for _, servicePublisherAssignmentsItem := range dataItem.ServicePublisherAssignments {
-			var servicePublisherAssignments1 PostAppsPrivateServicePublisherAssignments
+			var servicePublisherAssignments1 PostSteeringAppsPrivateServicePublisherAssignments
 			if servicePublisherAssignmentsItem.Primary != nil {
 				servicePublisherAssignments1.Primary = types.BoolValue(*servicePublisherAssignmentsItem.Primary)
 			} else {
@@ -77,7 +77,7 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 			if servicePublisherAssignmentsItem.Reachability == nil {
 				servicePublisherAssignments1.Reachability = nil
 			} else {
-				servicePublisherAssignments1.Reachability = &PostAppsPrivateReachability{}
+				servicePublisherAssignments1.Reachability = &PostSteeringAppsPrivateReachability{}
 				if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
 					servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
 				} else {

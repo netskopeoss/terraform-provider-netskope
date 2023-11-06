@@ -1,11 +1,11 @@
 configVersion: 1.0.0
 generation:
+  comments: {}
   sdkClassName: SDK
-  singleTagPerOp: false
 features:
   terraform:
     constsAndDefaults: 0.1.1
-    core: 3.0.0
+    core: 3.1.0
     globalSecurity: 2.81.1
     globalServerURLs: 2.82.0
     groups: 2.81.2
@@ -16,4 +16,12 @@ features:
 terraform:
   version: 0.0.1
   author: netskope
+  imports:
+    option: openapi
+    paths:
+      callbacks: callbacks
+      errors: sdkerrors
+      operations: operations
+      shared: shared
+      webhooks: webhooks
   packageName: ns

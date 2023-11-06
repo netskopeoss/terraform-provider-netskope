@@ -35,16 +35,16 @@ type NPAPolicyGroupResource struct {
 
 // NPAPolicyGroupResourceModel describes the resource data model.
 type NPAPolicyGroupResourceModel struct {
-	CanBeEditedDeleted types.Int64                    `tfsdk:"can_be_edited_deleted"`
-	GroupID            types.Int64                    `tfsdk:"group_id"`
-	GroupName          types.String                   `tfsdk:"group_name"`
-	GroupOrder         *PostNpaPolicygroupsGroupOrder `tfsdk:"group_order"`
-	GroupPinnedID      types.Int64                    `tfsdk:"group_pinned_id"`
-	GroupProdID        types.Int64                    `tfsdk:"group_prod_id"`
-	GroupType          types.Int64                    `tfsdk:"group_type"`
-	ModifyBy           types.String                   `tfsdk:"modify_by"`
-	ModifyTime         types.String                   `tfsdk:"modify_time"`
-	ModifyType         types.String                   `tfsdk:"modify_type"`
+	CanBeEditedDeleted types.Int64                          `tfsdk:"can_be_edited_deleted"`
+	GroupID            types.Int64                          `tfsdk:"group_id"`
+	GroupName          types.String                         `tfsdk:"group_name"`
+	GroupOrder         *PostPolicyNpaPolicygroupsGroupOrder `tfsdk:"group_order"`
+	GroupPinnedID      types.Int64                          `tfsdk:"group_pinned_id"`
+	GroupProdID        types.Int64                          `tfsdk:"group_prod_id"`
+	GroupType          types.Int64                          `tfsdk:"group_type"`
+	ModifyBy           types.String                         `tfsdk:"modify_by"`
+	ModifyTime         types.String                         `tfsdk:"modify_time"`
+	ModifyType         types.String                         `tfsdk:"modify_type"`
 }
 
 func (r *NPAPolicyGroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -172,10 +172,10 @@ func (r *NPAPolicyGroupResource) Create(ctx context.Context, req resource.Create
 	}
 
 	requestBody := *data.ToCreateSDKType()
-	request := operations.PostNpaPolicygroupsRequest{
+	request := operations.PostPolicyNpaPolicygroupsRequest{
 		RequestBody: requestBody,
 	}
-	res, err := r.client.PostNpaPolicygroups(ctx, request)
+	res, err := r.client.PostPolicyNpaPolicygroups(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -220,10 +220,10 @@ func (r *NPAPolicyGroupResource) Read(ctx context.Context, req resource.ReadRequ
 	}
 
 	id := data.GroupID.ValueInt64()
-	request := operations.GetNpaPolicygroupsIDRequest{
+	request := operations.GetPolicyNpaPolicygroupsIDRequest{
 		ID: id,
 	}
-	res, err := r.client.GetNpaPolicygroupsID(ctx, request)
+	res, err := r.client.GetPolicyNpaPolicygroupsID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -281,10 +281,10 @@ func (r *NPAPolicyGroupResource) Delete(ctx context.Context, req resource.Delete
 	}
 
 	id := data.GroupID.ValueInt64()
-	request := operations.DeleteNpaPolicygroupsIDRequest{
+	request := operations.DeletePolicyNpaPolicygroupsIDRequest{
 		ID: id,
 	}
-	res, err := r.client.DeleteNpaPolicygroupsID(ctx, request)
+	res, err := r.client.DeletePolicyNpaPolicygroupsID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

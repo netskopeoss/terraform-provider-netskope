@@ -7,7 +7,7 @@ import (
 	"ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *PrivateAppTagListDataSourceModel) RefreshFromGetResponse(resp *operations.GetAppsPrivateTagsResponseBody) {
+func (r *PrivateAppTagListDataSourceModel) RefreshFromGetResponse(resp *operations.GetSteeringAppsPrivateTagsResponseBody) {
 	r.Data = nil
 	for _, dataItem := range resp.Data {
 		var data1 PostInfrastructurePublishersTags

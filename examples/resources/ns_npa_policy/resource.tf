@@ -3,22 +3,22 @@ resource "ns_npa_policy" "my_npapolicy" {
   enabled     = "1"
   group_name  = "My policy group"
   rule_data = {
-    access_method          = "Client"
+    access_method          = "Clientless"
     b_negate_net_location  = true
     b_negate_src_countries = true
     classification         = "...my_classification..."
     dlp_actions = [
       {
         actions = [
-          "quanrantine",
+          "bypass",
         ]
         dlp_profile = "Payment Card"
       },
     ]
-    external_dlp = true
+    external_dlp = false
     json_version = 3
     match_criteria_action = {
-      action_name = "allow"
+      action_name = "block"
     }
     net_location_obj = [
       "...",
@@ -67,7 +67,7 @@ resource "ns_npa_policy" "my_npapolicy" {
   }
   rule_name = "van-test"
   rule_order = {
-    order     = "after"
+    order     = "before"
     position  = 5
     rule_id   = 1
     rule_name = "api-policy-managed"

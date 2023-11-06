@@ -31,9 +31,9 @@ type NPAPolicyDataSource struct {
 
 // NPAPolicyDataSourceModel describes the data model.
 type NPAPolicyDataSourceModel struct {
-	RuleData *PostNpaRulesRuleData `tfsdk:"rule_data"`
-	RuleID   types.Int64           `tfsdk:"rule_id"`
-	RuleName types.String          `tfsdk:"rule_name"`
+	RuleData *PostPolicyNpaRulesRuleData `tfsdk:"rule_data"`
+	RuleID   types.Int64                 `tfsdk:"rule_id"`
+	RuleName types.String                `tfsdk:"rule_name"`
 }
 
 // Metadata returns the data source type name.
@@ -246,10 +246,10 @@ func (r *NPAPolicyDataSource) Read(ctx context.Context, req datasource.ReadReque
 	}
 
 	id := data.RuleID.ValueInt64()
-	request := operations.GetNpaRulesIDRequest{
+	request := operations.GetPolicyNpaRulesIDRequest{
 		ID: id,
 	}
-	res, err := r.client.GetNpaRulesID(ctx, request)
+	res, err := r.client.GetPolicyNpaRulesID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

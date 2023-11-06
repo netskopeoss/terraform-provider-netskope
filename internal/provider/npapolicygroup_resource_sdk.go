@@ -7,16 +7,16 @@ import (
 	"ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *NPAPolicyGroupResourceModel) ToCreateSDKType() *operations.PostNpaPolicygroupsRequestBody {
+func (r *NPAPolicyGroupResourceModel) ToCreateSDKType() *operations.PostPolicyNpaPolicygroupsRequestBody {
 	groupName := new(string)
 	if !r.GroupName.IsUnknown() && !r.GroupName.IsNull() {
 		*groupName = r.GroupName.ValueString()
 	} else {
 		groupName = nil
 	}
-	var groupOrder *operations.PostNpaPolicygroupsGroupOrder
+	var groupOrder *operations.PostPolicyNpaPolicygroupsGroupOrder
 	if r.GroupOrder != nil {
-		var groupOrder1 *operations.PostNpaPolicygroupsRequestGroupOrder
+		var groupOrder1 *operations.PostPolicyNpaPolicygroupsRequestGroupOrder
 		if r.GroupOrder.GroupOrder != nil {
 			groupID := new(string)
 			if !r.GroupOrder.GroupOrder.GroupID.IsUnknown() && !r.GroupOrder.GroupOrder.GroupID.IsNull() {
@@ -24,18 +24,18 @@ func (r *NPAPolicyGroupResourceModel) ToCreateSDKType() *operations.PostNpaPolic
 			} else {
 				groupID = nil
 			}
-			order := new(operations.PostNpaPolicygroupsOrder)
+			order := new(operations.PostPolicyNpaPolicygroupsOrder)
 			if !r.GroupOrder.GroupOrder.Order.IsUnknown() && !r.GroupOrder.GroupOrder.Order.IsNull() {
-				*order = operations.PostNpaPolicygroupsOrder(r.GroupOrder.GroupOrder.Order.ValueString())
+				*order = operations.PostPolicyNpaPolicygroupsOrder(r.GroupOrder.GroupOrder.Order.ValueString())
 			} else {
 				order = nil
 			}
-			groupOrder1 = &operations.PostNpaPolicygroupsRequestGroupOrder{
+			groupOrder1 = &operations.PostPolicyNpaPolicygroupsRequestGroupOrder{
 				GroupID: groupID,
 				Order:   order,
 			}
 		}
-		groupOrder = &operations.PostNpaPolicygroupsGroupOrder{
+		groupOrder = &operations.PostPolicyNpaPolicygroupsGroupOrder{
 			GroupOrder: groupOrder1,
 		}
 	}
@@ -51,7 +51,7 @@ func (r *NPAPolicyGroupResourceModel) ToCreateSDKType() *operations.PostNpaPolic
 	} else {
 		modifyType = nil
 	}
-	out := operations.PostNpaPolicygroupsRequestBody{
+	out := operations.PostPolicyNpaPolicygroupsRequestBody{
 		GroupName:  groupName,
 		GroupOrder: groupOrder,
 		ModifyBy:   modifyBy,
@@ -60,17 +60,17 @@ func (r *NPAPolicyGroupResourceModel) ToCreateSDKType() *operations.PostNpaPolic
 	return &out
 }
 
-func (r *NPAPolicyGroupResourceModel) ToGetSDKType() *operations.PostNpaPolicygroupsRequestBody {
+func (r *NPAPolicyGroupResourceModel) ToGetSDKType() *operations.PostPolicyNpaPolicygroupsRequestBody {
 	out := r.ToCreateSDKType()
 	return out
 }
 
-func (r *NPAPolicyGroupResourceModel) ToDeleteSDKType() *operations.PostNpaPolicygroupsRequestBody {
+func (r *NPAPolicyGroupResourceModel) ToDeleteSDKType() *operations.PostPolicyNpaPolicygroupsRequestBody {
 	out := r.ToCreateSDKType()
 	return out
 }
 
-func (r *NPAPolicyGroupResourceModel) RefreshFromGetResponse(resp *operations.GetNpaPolicygroupsIDResponseBody) {
+func (r *NPAPolicyGroupResourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsIDResponseBody) {
 	if resp.CanBeEditedDeleted != nil {
 		r.CanBeEditedDeleted = types.Int64Value(*resp.CanBeEditedDeleted)
 	} else {
@@ -113,7 +113,7 @@ func (r *NPAPolicyGroupResourceModel) RefreshFromGetResponse(resp *operations.Ge
 	}
 }
 
-func (r *NPAPolicyGroupResourceModel) RefreshFromCreateResponse(resp *operations.PostNpaPolicygroupsResponseBody) {
+func (r *NPAPolicyGroupResourceModel) RefreshFromCreateResponse(resp *operations.PostPolicyNpaPolicygroupsResponseBody) {
 	if resp.CanBeEditedDeleted != nil {
 		r.CanBeEditedDeleted = types.Int64Value(*resp.CanBeEditedDeleted)
 	} else {

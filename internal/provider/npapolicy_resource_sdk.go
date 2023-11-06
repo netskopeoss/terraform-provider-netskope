@@ -7,7 +7,7 @@ import (
 	"ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesRequestBody {
+func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostPolicyNpaRulesRequestBody {
 	description := new(string)
 	if !r.Description.IsUnknown() && !r.Description.IsNull() {
 		*description = r.Description.ValueString()
@@ -26,11 +26,11 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 	} else {
 		groupName = nil
 	}
-	var ruleData *operations.PostNpaRulesRuleData
+	var ruleData *operations.PostPolicyNpaRulesRuleData
 	if r.RuleData != nil {
-		accessMethod := new(operations.PostNpaRulesAccessMethod)
+		accessMethod := new(operations.PostPolicyNpaRulesAccessMethod)
 		if !r.RuleData.AccessMethod.IsUnknown() && !r.RuleData.AccessMethod.IsNull() {
-			*accessMethod = operations.PostNpaRulesAccessMethod(r.RuleData.AccessMethod.ValueString())
+			*accessMethod = operations.PostPolicyNpaRulesAccessMethod(r.RuleData.AccessMethod.ValueString())
 		} else {
 			accessMethod = nil
 		}
@@ -52,11 +52,11 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 		} else {
 			classification = nil
 		}
-		var dlpActions []operations.PostNpaRulesDlpActions = nil
+		var dlpActions []operations.PostPolicyNpaRulesDlpActions = nil
 		for _, dlpActionsItem := range r.RuleData.DlpActions {
-			var actions []operations.PostNpaRulesActions = nil
+			var actions []operations.PostPolicyNpaRulesActions = nil
 			for _, actionsItem := range dlpActionsItem.Actions {
-				actions = append(actions, operations.PostNpaRulesActions(actionsItem.ValueString()))
+				actions = append(actions, operations.PostPolicyNpaRulesActions(actionsItem.ValueString()))
 			}
 			dlpProfile := new(string)
 			if !dlpActionsItem.DlpProfile.IsUnknown() && !dlpActionsItem.DlpProfile.IsNull() {
@@ -64,7 +64,7 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 			} else {
 				dlpProfile = nil
 			}
-			dlpActions = append(dlpActions, operations.PostNpaRulesDlpActions{
+			dlpActions = append(dlpActions, operations.PostPolicyNpaRulesDlpActions{
 				Actions:    actions,
 				DlpProfile: dlpProfile,
 			})
@@ -81,15 +81,15 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 		} else {
 			jsonVersion = nil
 		}
-		var matchCriteriaAction *operations.PostNpaRulesMatchCriteriaAction
+		var matchCriteriaAction *operations.PostPolicyNpaRulesMatchCriteriaAction
 		if r.RuleData.MatchCriteriaAction != nil {
-			actionName := new(operations.PostNpaRulesActionName)
+			actionName := new(operations.PostPolicyNpaRulesActionName)
 			if !r.RuleData.MatchCriteriaAction.ActionName.IsUnknown() && !r.RuleData.MatchCriteriaAction.ActionName.IsNull() {
-				*actionName = operations.PostNpaRulesActionName(r.RuleData.MatchCriteriaAction.ActionName.ValueString())
+				*actionName = operations.PostPolicyNpaRulesActionName(r.RuleData.MatchCriteriaAction.ActionName.ValueString())
 			} else {
 				actionName = nil
 			}
-			matchCriteriaAction = &operations.PostNpaRulesMatchCriteriaAction{
+			matchCriteriaAction = &operations.PostPolicyNpaRulesMatchCriteriaAction{
 				ActionName: actionName,
 			}
 		}
@@ -101,9 +101,9 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 		for _, organizationUnitsItem := range r.RuleData.OrganizationUnits {
 			organizationUnits = append(organizationUnits, organizationUnitsItem.ValueString())
 		}
-		policyType := new(operations.PostNpaRulesPolicyType)
+		policyType := new(operations.PostPolicyNpaRulesPolicyType)
 		if !r.RuleData.PolicyType.IsUnknown() && !r.RuleData.PolicyType.IsNull() {
-			*policyType = operations.PostNpaRulesPolicyType(r.RuleData.PolicyType.ValueString())
+			*policyType = operations.PostPolicyNpaRulesPolicyType(r.RuleData.PolicyType.ValueString())
 		} else {
 			policyType = nil
 		}
@@ -123,13 +123,13 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 		for _, privateAppsItem := range r.RuleData.PrivateApps {
 			privateApps = append(privateApps, privateAppsItem.ValueString())
 		}
-		var privateAppsWithActivities []operations.PostNpaRulesPrivateAppsWithActivities = nil
+		var privateAppsWithActivities []operations.PostPolicyNpaRulesPrivateAppsWithActivities = nil
 		for _, privateAppsWithActivitiesItem := range r.RuleData.PrivateAppsWithActivities {
-			var activities []operations.PostNpaRulesActivities = nil
+			var activities []operations.PostPolicyNpaRulesActivities = nil
 			for _, activitiesItem := range privateAppsWithActivitiesItem.Activities {
-				activity := new(operations.PostNpaRulesActivity)
+				activity := new(operations.PostPolicyNpaRulesActivity)
 				if !activitiesItem.Activity.IsUnknown() && !activitiesItem.Activity.IsNull() {
-					*activity = operations.PostNpaRulesActivity(activitiesItem.Activity.ValueString())
+					*activity = operations.PostPolicyNpaRulesActivity(activitiesItem.Activity.ValueString())
 				} else {
 					activity = nil
 				}
@@ -137,7 +137,7 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 				for _, listOfConstraintsItem := range activitiesItem.ListOfConstraints {
 					listOfConstraints = append(listOfConstraints, listOfConstraintsItem.ValueString())
 				}
-				activities = append(activities, operations.PostNpaRulesActivities{
+				activities = append(activities, operations.PostPolicyNpaRulesActivities{
 					Activity:          activity,
 					ListOfConstraints: listOfConstraints,
 				})
@@ -148,7 +148,7 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 			} else {
 				appName = nil
 			}
-			privateAppsWithActivities = append(privateAppsWithActivities, operations.PostNpaRulesPrivateAppsWithActivities{
+			privateAppsWithActivities = append(privateAppsWithActivities, operations.PostPolicyNpaRulesPrivateAppsWithActivities{
 				Activities: activities,
 				AppName:    appName,
 			})
@@ -167,9 +167,9 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 		for _, userGroupsItem := range r.RuleData.UserGroups {
 			userGroups = append(userGroups, userGroupsItem.ValueString())
 		}
-		userType := new(operations.PostNpaRulesUserType)
+		userType := new(operations.PostPolicyNpaRulesUserType)
 		if !r.RuleData.UserType.IsUnknown() && !r.RuleData.UserType.IsNull() {
-			*userType = operations.PostNpaRulesUserType(r.RuleData.UserType.ValueString())
+			*userType = operations.PostPolicyNpaRulesUserType(r.RuleData.UserType.ValueString())
 		} else {
 			userType = nil
 		}
@@ -183,7 +183,7 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 		} else {
 			version = nil
 		}
-		ruleData = &operations.PostNpaRulesRuleData{
+		ruleData = &operations.PostPolicyNpaRulesRuleData{
 			AccessMethod:              accessMethod,
 			BNegateNetLocation:        bNegateNetLocation,
 			BNegateSrcCountries:       bNegateSrcCountries,
@@ -214,11 +214,11 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 	} else {
 		ruleName = nil
 	}
-	var ruleOrder *operations.PostNpaRulesRuleOrder
+	var ruleOrder *operations.PostPolicyNpaRulesRuleOrder
 	if r.RuleOrder != nil {
-		order := new(operations.PostNpaRulesOrder)
+		order := new(operations.PostPolicyNpaRulesOrder)
 		if !r.RuleOrder.Order.IsUnknown() && !r.RuleOrder.Order.IsNull() {
-			*order = operations.PostNpaRulesOrder(r.RuleOrder.Order.ValueString())
+			*order = operations.PostPolicyNpaRulesOrder(r.RuleOrder.Order.ValueString())
 		} else {
 			order = nil
 		}
@@ -240,14 +240,14 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 		} else {
 			ruleName1 = nil
 		}
-		ruleOrder = &operations.PostNpaRulesRuleOrder{
+		ruleOrder = &operations.PostPolicyNpaRulesRuleOrder{
 			Order:    order,
 			Position: position,
 			RuleID:   ruleID,
 			RuleName: ruleName1,
 		}
 	}
-	out := operations.PostNpaRulesRequestBody{
+	out := operations.PostPolicyNpaRulesRequestBody{
 		Description: description,
 		Enabled:     enabled,
 		GroupName:   groupName,
@@ -258,12 +258,12 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostNpaRulesReque
 	return &out
 }
 
-func (r *NPAPolicyResourceModel) ToGetSDKType() *operations.PostNpaRulesRequestBody {
+func (r *NPAPolicyResourceModel) ToGetSDKType() *operations.PostPolicyNpaRulesRequestBody {
 	out := r.ToCreateSDKType()
 	return out
 }
 
-func (r *NPAPolicyResourceModel) ToUpdateSDKType() *operations.PatchNpaRulesIDRequestBody {
+func (r *NPAPolicyResourceModel) ToUpdateSDKType() *operations.PatchPolicyNpaRulesIDRequestBody {
 	description := new(string)
 	if !r.Description.IsUnknown() && !r.Description.IsNull() {
 		*description = r.Description.ValueString()
@@ -472,9 +472,9 @@ func (r *NPAPolicyResourceModel) ToUpdateSDKType() *operations.PatchNpaRulesIDRe
 	}
 	var ruleOrder *operations.RuleOrder
 	if r.RuleOrder != nil {
-		order := new(operations.PatchNpaRulesIDOrder)
+		order := new(operations.PatchPolicyNpaRulesIDOrder)
 		if !r.RuleOrder.Order.IsUnknown() && !r.RuleOrder.Order.IsNull() {
-			*order = operations.PatchNpaRulesIDOrder(r.RuleOrder.Order.ValueString())
+			*order = operations.PatchPolicyNpaRulesIDOrder(r.RuleOrder.Order.ValueString())
 		} else {
 			order = nil
 		}
@@ -503,7 +503,7 @@ func (r *NPAPolicyResourceModel) ToUpdateSDKType() *operations.PatchNpaRulesIDRe
 			RuleName: ruleName1,
 		}
 	}
-	out := operations.PatchNpaRulesIDRequestBody{
+	out := operations.PatchPolicyNpaRulesIDRequestBody{
 		Description: description,
 		Enabled:     enabled,
 		GroupName:   groupName,
@@ -514,16 +514,16 @@ func (r *NPAPolicyResourceModel) ToUpdateSDKType() *operations.PatchNpaRulesIDRe
 	return &out
 }
 
-func (r *NPAPolicyResourceModel) ToDeleteSDKType() *operations.PostNpaRulesRequestBody {
+func (r *NPAPolicyResourceModel) ToDeleteSDKType() *operations.PostPolicyNpaRulesRequestBody {
 	out := r.ToCreateSDKType()
 	return out
 }
 
-func (r *NPAPolicyResourceModel) RefreshFromGetResponse(resp *operations.GetNpaRulesIDData) {
+func (r *NPAPolicyResourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaRulesIDData) {
 	if resp.RuleData == nil {
 		r.RuleData = nil
 	} else {
-		r.RuleData = &PostNpaRulesRuleData{}
+		r.RuleData = &PostPolicyNpaRulesRuleData{}
 		if resp.RuleData.AccessMethod != nil {
 			r.RuleData.AccessMethod = types.StringValue(string(*resp.RuleData.AccessMethod))
 		} else {
@@ -571,7 +571,7 @@ func (r *NPAPolicyResourceModel) RefreshFromGetResponse(resp *operations.GetNpaR
 		if resp.RuleData.MatchCriteriaAction == nil {
 			r.RuleData.MatchCriteriaAction = nil
 		} else {
-			r.RuleData.MatchCriteriaAction = &PostNpaRulesMatchCriteriaAction{}
+			r.RuleData.MatchCriteriaAction = &PostPolicyNpaRulesMatchCriteriaAction{}
 			if resp.RuleData.MatchCriteriaAction.ActionName != nil {
 				r.RuleData.MatchCriteriaAction.ActionName = types.StringValue(string(*resp.RuleData.MatchCriteriaAction.ActionName))
 			} else {
@@ -671,11 +671,11 @@ func (r *NPAPolicyResourceModel) RefreshFromGetResponse(resp *operations.GetNpaR
 	}
 }
 
-func (r *NPAPolicyResourceModel) RefreshFromCreateResponse(resp *operations.PostNpaRulesResponseBody) {
+func (r *NPAPolicyResourceModel) RefreshFromCreateResponse(resp *operations.PostPolicyNpaRulesResponseBody) {
 	if resp.RuleData == nil {
 		r.RuleData = nil
 	} else {
-		r.RuleData = &PostNpaRulesRuleData{}
+		r.RuleData = &PostPolicyNpaRulesRuleData{}
 		if resp.RuleData.AccessMethod != nil {
 			r.RuleData.AccessMethod = types.StringValue(string(*resp.RuleData.AccessMethod))
 		} else {
@@ -723,7 +723,7 @@ func (r *NPAPolicyResourceModel) RefreshFromCreateResponse(resp *operations.Post
 		if resp.RuleData.MatchCriteriaAction == nil {
 			r.RuleData.MatchCriteriaAction = nil
 		} else {
-			r.RuleData.MatchCriteriaAction = &PostNpaRulesMatchCriteriaAction{}
+			r.RuleData.MatchCriteriaAction = &PostPolicyNpaRulesMatchCriteriaAction{}
 			if resp.RuleData.MatchCriteriaAction.ActionName != nil {
 				r.RuleData.MatchCriteriaAction.ActionName = types.StringValue(string(*resp.RuleData.MatchCriteriaAction.ActionName))
 			} else {
@@ -823,11 +823,11 @@ func (r *NPAPolicyResourceModel) RefreshFromCreateResponse(resp *operations.Post
 	}
 }
 
-func (r *NPAPolicyResourceModel) RefreshFromUpdateResponse(resp *operations.PatchNpaRulesIDData) {
+func (r *NPAPolicyResourceModel) RefreshFromUpdateResponse(resp *operations.PatchPolicyNpaRulesIDData) {
 	if resp.RuleData == nil {
 		r.RuleData = nil
 	} else {
-		r.RuleData = &PostNpaRulesRuleData{}
+		r.RuleData = &PostPolicyNpaRulesRuleData{}
 		if resp.RuleData.AccessMethod != nil {
 			r.RuleData.AccessMethod = types.StringValue(string(*resp.RuleData.AccessMethod))
 		} else {
@@ -875,7 +875,7 @@ func (r *NPAPolicyResourceModel) RefreshFromUpdateResponse(resp *operations.Patc
 		if resp.RuleData.MatchCriteriaAction == nil {
 			r.RuleData.MatchCriteriaAction = nil
 		} else {
-			r.RuleData.MatchCriteriaAction = &PostNpaRulesMatchCriteriaAction{}
+			r.RuleData.MatchCriteriaAction = &PostPolicyNpaRulesMatchCriteriaAction{}
 			if resp.RuleData.MatchCriteriaAction.ActionName != nil {
 				r.RuleData.MatchCriteriaAction.ActionName = types.StringValue(string(*resp.RuleData.MatchCriteriaAction.ActionName))
 			} else {

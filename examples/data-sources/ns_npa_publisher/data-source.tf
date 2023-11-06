@@ -1,3 +1,3 @@
 data "ns_npa_publisher" "my_npapublisher" {
-  id = 4
+  id = 5
 }

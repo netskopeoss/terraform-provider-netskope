@@ -117,10 +117,10 @@ func (r *PrivateAppTagDataSource) Read(ctx context.Context, req datasource.ReadR
 	}
 
 	tagID := int(data.TagID.ValueInt64())
-	request := operations.GetAppsPrivateTagsTagIDRequest{
+	request := operations.GetSteeringAppsPrivateTagsTagIDRequest{
 		TagID: tagID,
 	}
-	res, err := r.client.GetAppsPrivateTagsTagID(ctx, request)
+	res, err := r.client.GetSteeringAppsPrivateTagsTagID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

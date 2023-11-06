@@ -19,9 +19,9 @@ resource "ns_private_app" "my_privateapp" {
   host              = "...my_host..."
   protocols = [
     {
-      id         = 4
+      id         = 6
       port       = "...my_port..."
-      service_id = 3
+      service_id = 4
       transport  = "...my_transport..."
       type       = "...my_type..."
     },
@@ -44,7 +44,7 @@ resource "ns_private_app" "my_privateapp" {
       tag_name = "...my_tag_name..."
     },
   ]
-  trust_self_signed_certs = false
+  trust_self_signed_certs = true
   use_publisher_dns       = true
 }
 ```

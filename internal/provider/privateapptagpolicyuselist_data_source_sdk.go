@@ -7,21 +7,21 @@ import (
 	"ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *PrivateAppTagPolicyUseListDataSourceModel) ToGetSDKType() *operations.PostAppsPrivateTagsGetpolicyinuseRequestBody {
+func (r *PrivateAppTagPolicyUseListDataSourceModel) ToGetSDKType() *operations.PostSteeringAppsPrivateTagsGetpolicyinuseRequestBody {
 	var ids []string = nil
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
 	}
-	out := operations.PostAppsPrivateTagsGetpolicyinuseRequestBody{
+	out := operations.PostSteeringAppsPrivateTagsGetpolicyinuseRequestBody{
 		Ids: ids,
 	}
 	return &out
 }
 
-func (r *PrivateAppTagPolicyUseListDataSourceModel) RefreshFromGetResponse(resp *operations.PostAppsPrivateTagsGetpolicyinuseResponseBody) {
+func (r *PrivateAppTagPolicyUseListDataSourceModel) RefreshFromGetResponse(resp *operations.PostSteeringAppsPrivateTagsGetpolicyinuseResponseBody) {
 	r.Data = nil
 	for _, dataItem := range resp.Data {
-		var data1 PostAppsPrivateTagsGetpolicyinuseData
+		var data1 PostSteeringAppsPrivateTagsGetpolicyinuseData
 		if dataItem.Token != nil {
 			data1.Token = types.StringValue(*dataItem.Token)
 		} else {
