@@ -1,4 +1,4 @@
-# terraform-provider-n
+# terraform-provider-ns
 
 <!-- No SDK Installation -->
 <!-- No SDK Example Usage -->
@@ -10,5 +10,3 @@
 <!-- End Dev Containers -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
-
-s
