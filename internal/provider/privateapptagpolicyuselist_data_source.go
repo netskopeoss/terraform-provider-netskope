@@ -30,9 +30,9 @@ type PrivateAppTagPolicyUseListDataSource struct {
 
 // PrivateAppTagPolicyUseListDataSourceModel describes the data model.
 type PrivateAppTagPolicyUseListDataSourceModel struct {
-	Data   []PostAppsPrivateTagsGetpolicyinuseData `tfsdk:"data"`
-	Ids    []types.String                          `tfsdk:"ids"`
-	Status types.String                            `tfsdk:"status"`
+	Data   []PostSteeringAppsPrivateTagsGetpolicyinuseData `tfsdk:"data"`
+	Ids    []types.String                                  `tfsdk:"ids"`
+	Status types.String                                    `tfsdk:"status"`
 }
 
 // Metadata returns the data source type name.
@@ -113,7 +113,7 @@ func (r *PrivateAppTagPolicyUseListDataSource) Read(ctx context.Context, req dat
 	}
 
 	request := *data.ToGetSDKType()
-	res, err := r.client.PostAppsPrivateTagsGetpolicyinuse(ctx, request)
+	res, err := r.client.PostSteeringAppsPrivateTagsGetpolicyinuse(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

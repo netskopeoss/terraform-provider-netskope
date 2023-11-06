@@ -7,7 +7,7 @@ import (
 	"ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *NPAPolicyGroupDataSourceModel) RefreshFromGetResponse(resp *operations.GetNpaPolicygroupsIDResponseBody) {
+func (r *NPAPolicyGroupDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsIDResponseBody) {
 	if resp.CanBeEditedDeleted != nil {
 		r.CanBeEditedDeleted = types.Int64Value(*resp.CanBeEditedDeleted)
 	} else {

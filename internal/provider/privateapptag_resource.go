@@ -154,11 +154,11 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 
 	requestBody := *data.ToCreateSDKType()
 	tagID := int(data.TagID.ValueInt64())
-	request := operations.PutAppsPrivateTagsTagIDRequest{
+	request := operations.PutSteeringAppsPrivateTagsTagIDRequest{
 		RequestBody: requestBody,
 		TagID:       tagID,
 	}
-	res, err := r.client.PutAppsPrivateTagsTagID(ctx, request)
+	res, err := r.client.PutSteeringAppsPrivateTagsTagID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -203,10 +203,10 @@ func (r *PrivateAppTagResource) Read(ctx context.Context, req resource.ReadReque
 	}
 
 	tagID := int(data.TagID.ValueInt64())
-	request := operations.GetAppsPrivateTagsTagIDRequest{
+	request := operations.GetSteeringAppsPrivateTagsTagIDRequest{
 		TagID: tagID,
 	}
-	res, err := r.client.GetAppsPrivateTagsTagID(ctx, request)
+	res, err := r.client.GetSteeringAppsPrivateTagsTagID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -241,11 +241,11 @@ func (r *PrivateAppTagResource) Update(ctx context.Context, req resource.UpdateR
 
 	requestBody := *data.ToUpdateSDKType()
 	tagID := int(data.TagID.ValueInt64())
-	request := operations.PutAppsPrivateTagsTagIDRequest{
+	request := operations.PutSteeringAppsPrivateTagsTagIDRequest{
 		RequestBody: requestBody,
 		TagID:       tagID,
 	}
-	res, err := r.client.PutAppsPrivateTagsTagID(ctx, request)
+	res, err := r.client.PutSteeringAppsPrivateTagsTagID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -291,11 +291,11 @@ func (r *PrivateAppTagResource) Delete(ctx context.Context, req resource.DeleteR
 
 	requestBody := *data.ToDeleteSDKType()
 	tagID := int(data.TagID.ValueInt64())
-	request := operations.DeleteAppsPrivateTagsTagIDRequest{
+	request := operations.DeleteSteeringAppsPrivateTagsTagIDRequest{
 		RequestBody: requestBody,
 		TagID:       tagID,
 	}
-	res, err := r.client.DeleteAppsPrivateTagsTagID(ctx, request)
+	res, err := r.client.DeleteSteeringAppsPrivateTagsTagID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

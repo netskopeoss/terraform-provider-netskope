@@ -118,10 +118,10 @@ func (r *NPAPolicyGroupDataSource) Read(ctx context.Context, req datasource.Read
 	}
 
 	id := data.GroupID.ValueInt64()
-	request := operations.GetNpaPolicygroupsIDRequest{
+	request := operations.GetPolicyNpaPolicygroupsIDRequest{
 		ID: id,
 	}
-	res, err := r.client.GetNpaPolicygroupsID(ctx, request)
+	res, err := r.client.GetPolicyNpaPolicygroupsID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

@@ -11,7 +11,7 @@ type GetInfrastructurePublishersPublisherIDAppsData struct {
 	Name                        types.String                                          `tfsdk:"name"`
 	Protocols                   []GetInfrastructurePublishersPublisherIDAppsProtocols `tfsdk:"protocols"`
 	RealHost                    types.String                                          `tfsdk:"real_host"`
-	ServicePublisherAssignments []PostAppsPrivateServicePublisherAssignments          `tfsdk:"service_publisher_assignments"`
+	ServicePublisherAssignments []PostSteeringAppsPrivateServicePublisherAssignments  `tfsdk:"service_publisher_assignments"`
 	Tags                        []PostInfrastructurePublishersTags                    `tfsdk:"tags"`
 	TrustSelfSignedCerts        types.Bool                                            `tfsdk:"trust_self_signed_certs"`
 	UsePublisherDNS             types.Bool                                            `tfsdk:"use_publisher_dns"`

@@ -7,7 +7,7 @@ import (
 	"ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *PrivateAppResourceModel) ToCreateSDKType() *operations.PostAppsPrivateRequestBody {
+func (r *PrivateAppResourceModel) ToCreateSDKType() *operations.PostSteeringAppsPrivateRequestBody {
 	appName := new(string)
 	if !r.AppName.IsUnknown() && !r.AppName.IsNull() {
 		*appName = r.AppName.ValueString()
@@ -26,7 +26,7 @@ func (r *PrivateAppResourceModel) ToCreateSDKType() *operations.PostAppsPrivateR
 	} else {
 		host = nil
 	}
-	var protocols []operations.PostAppsPrivateProtocols = nil
+	var protocols []operations.PostSteeringAppsPrivateProtocols = nil
 	for _, protocolsItem := range r.Protocols {
 		port := new(string)
 		if !protocolsItem.Port.IsUnknown() && !protocolsItem.Port.IsNull() {
@@ -40,12 +40,12 @@ func (r *PrivateAppResourceModel) ToCreateSDKType() *operations.PostAppsPrivateR
 		} else {
 			typeVar = nil
 		}
-		protocols = append(protocols, operations.PostAppsPrivateProtocols{
+		protocols = append(protocols, operations.PostSteeringAppsPrivateProtocols{
 			Port: port,
 			Type: typeVar,
 		})
 	}
-	var publisherTags []operations.PostAppsPrivatePublisherTags = nil
+	var publisherTags []operations.PostSteeringAppsPrivatePublisherTags = nil
 	for _, publisherTagsItem := range r.PublisherTags {
 		tagName := new(string)
 		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {
@@ -53,11 +53,11 @@ func (r *PrivateAppResourceModel) ToCreateSDKType() *operations.PostAppsPrivateR
 		} else {
 			tagName = nil
 		}
-		publisherTags = append(publisherTags, operations.PostAppsPrivatePublisherTags{
+		publisherTags = append(publisherTags, operations.PostSteeringAppsPrivatePublisherTags{
 			TagName: tagName,
 		})
 	}
-	var publishers []operations.PostAppsPrivatePublishers = nil
+	var publishers []operations.PostSteeringAppsPrivatePublishers = nil
 	for _, publishersItem := range r.Publishers {
 		publisherID := new(string)
 		if !publishersItem.PublisherID.IsUnknown() && !publishersItem.PublisherID.IsNull() {
@@ -71,7 +71,7 @@ func (r *PrivateAppResourceModel) ToCreateSDKType() *operations.PostAppsPrivateR
 		} else {
 			publisherName = nil
 		}
-		publishers = append(publishers, operations.PostAppsPrivatePublishers{
+		publishers = append(publishers, operations.PostSteeringAppsPrivatePublishers{
 			PublisherID:   publisherID,
 			PublisherName: publisherName,
 		})
@@ -82,7 +82,7 @@ func (r *PrivateAppResourceModel) ToCreateSDKType() *operations.PostAppsPrivateR
 	} else {
 		realHost = nil
 	}
-	var tags []operations.PostAppsPrivateTags = nil
+	var tags []operations.PostSteeringAppsPrivateTags = nil
 	for _, tagsItem := range r.Tags {
 		tagName1 := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
@@ -90,7 +90,7 @@ func (r *PrivateAppResourceModel) ToCreateSDKType() *operations.PostAppsPrivateR
 		} else {
 			tagName1 = nil
 		}
-		tags = append(tags, operations.PostAppsPrivateTags{
+		tags = append(tags, operations.PostSteeringAppsPrivateTags{
 			TagName: tagName1,
 		})
 	}
@@ -106,7 +106,7 @@ func (r *PrivateAppResourceModel) ToCreateSDKType() *operations.PostAppsPrivateR
 	} else {
 		usePublisherDNS = nil
 	}
-	out := operations.PostAppsPrivateRequestBody{
+	out := operations.PostSteeringAppsPrivateRequestBody{
 		AppName:              appName,
 		ClientlessAccess:     clientlessAccess,
 		Host:                 host,
@@ -121,7 +121,7 @@ func (r *PrivateAppResourceModel) ToCreateSDKType() *operations.PostAppsPrivateR
 	return &out
 }
 
-func (r *PrivateAppResourceModel) ToUpdateSDKType() *operations.PutAppsPrivatePrivateAppIDRequestBody {
+func (r *PrivateAppResourceModel) ToUpdateSDKType() *operations.PutSteeringAppsPrivatePrivateAppIDRequestBody {
 	appName := new(string)
 	if !r.AppName.IsUnknown() && !r.AppName.IsNull() {
 		*appName = r.AppName.ValueString()
@@ -146,7 +146,7 @@ func (r *PrivateAppResourceModel) ToUpdateSDKType() *operations.PutAppsPrivatePr
 	} else {
 		id = nil
 	}
-	var protocols []operations.PutAppsPrivatePrivateAppIDProtocols = nil
+	var protocols []operations.PutSteeringAppsPrivatePrivateAppIDProtocols = nil
 	for _, protocolsItem := range r.Protocols {
 		port := new(string)
 		if !protocolsItem.Port.IsUnknown() && !protocolsItem.Port.IsNull() {
@@ -160,12 +160,12 @@ func (r *PrivateAppResourceModel) ToUpdateSDKType() *operations.PutAppsPrivatePr
 		} else {
 			typeVar = nil
 		}
-		protocols = append(protocols, operations.PutAppsPrivatePrivateAppIDProtocols{
+		protocols = append(protocols, operations.PutSteeringAppsPrivatePrivateAppIDProtocols{
 			Port: port,
 			Type: typeVar,
 		})
 	}
-	var publisherTags []operations.PutAppsPrivatePrivateAppIDPublisherTags = nil
+	var publisherTags []operations.PutSteeringAppsPrivatePrivateAppIDPublisherTags = nil
 	for _, publisherTagsItem := range r.PublisherTags {
 		tagName := new(string)
 		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {
@@ -173,11 +173,11 @@ func (r *PrivateAppResourceModel) ToUpdateSDKType() *operations.PutAppsPrivatePr
 		} else {
 			tagName = nil
 		}
-		publisherTags = append(publisherTags, operations.PutAppsPrivatePrivateAppIDPublisherTags{
+		publisherTags = append(publisherTags, operations.PutSteeringAppsPrivatePrivateAppIDPublisherTags{
 			TagName: tagName,
 		})
 	}
-	var publishers []operations.PutAppsPrivatePrivateAppIDPublishers = nil
+	var publishers []operations.PutSteeringAppsPrivatePrivateAppIDPublishers = nil
 	for _, publishersItem := range r.Publishers {
 		publisherID := new(string)
 		if !publishersItem.PublisherID.IsUnknown() && !publishersItem.PublisherID.IsNull() {
@@ -191,7 +191,7 @@ func (r *PrivateAppResourceModel) ToUpdateSDKType() *operations.PutAppsPrivatePr
 		} else {
 			publisherName = nil
 		}
-		publishers = append(publishers, operations.PutAppsPrivatePrivateAppIDPublishers{
+		publishers = append(publishers, operations.PutSteeringAppsPrivatePrivateAppIDPublishers{
 			PublisherID:   publisherID,
 			PublisherName: publisherName,
 		})
@@ -202,7 +202,7 @@ func (r *PrivateAppResourceModel) ToUpdateSDKType() *operations.PutAppsPrivatePr
 	} else {
 		realHost = nil
 	}
-	var tags []operations.PutAppsPrivatePrivateAppIDTags = nil
+	var tags []operations.PutSteeringAppsPrivatePrivateAppIDTags = nil
 	for _, tagsItem := range r.Tags {
 		tagName1 := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
@@ -210,7 +210,7 @@ func (r *PrivateAppResourceModel) ToUpdateSDKType() *operations.PutAppsPrivatePr
 		} else {
 			tagName1 = nil
 		}
-		tags = append(tags, operations.PutAppsPrivatePrivateAppIDTags{
+		tags = append(tags, operations.PutSteeringAppsPrivatePrivateAppIDTags{
 			TagName: tagName1,
 		})
 	}
@@ -226,7 +226,7 @@ func (r *PrivateAppResourceModel) ToUpdateSDKType() *operations.PutAppsPrivatePr
 	} else {
 		usePublisherDNS = nil
 	}
-	out := operations.PutAppsPrivatePrivateAppIDRequestBody{
+	out := operations.PutSteeringAppsPrivatePrivateAppIDRequestBody{
 		AppName:              appName,
 		ClientlessAccess:     clientlessAccess,
 		Host:                 host,
@@ -242,12 +242,12 @@ func (r *PrivateAppResourceModel) ToUpdateSDKType() *operations.PutAppsPrivatePr
 	return &out
 }
 
-func (r *PrivateAppResourceModel) ToDeleteSDKType() *operations.PostAppsPrivateRequestBody {
+func (r *PrivateAppResourceModel) ToDeleteSDKType() *operations.PostSteeringAppsPrivateRequestBody {
 	out := r.ToCreateSDKType()
 	return out
 }
 
-func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.PostAppsPrivateData) {
+func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.PostSteeringAppsPrivateData) {
 	if resp.ClientlessAccess != nil {
 		r.ClientlessAccess = types.BoolValue(*resp.ClientlessAccess)
 	} else {
@@ -270,7 +270,7 @@ func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.Pos
 	}
 	r.Protocols = nil
 	for _, protocolsItem := range resp.Protocols {
-		var protocols1 PostAppsPrivateProtocols
+		var protocols1 PostSteeringAppsPrivateProtocols
 		if protocolsItem.ID != nil {
 			protocols1.ID = types.Int64Value(int64(*protocolsItem.ID))
 		} else {
@@ -300,7 +300,7 @@ func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.Pos
 	}
 	r.ServicePublisherAssignments = nil
 	for _, servicePublisherAssignmentsItem := range resp.ServicePublisherAssignments {
-		var servicePublisherAssignments1 PostAppsPrivateServicePublisherAssignments
+		var servicePublisherAssignments1 PostSteeringAppsPrivateServicePublisherAssignments
 		if servicePublisherAssignmentsItem.Primary != nil {
 			servicePublisherAssignments1.Primary = types.BoolValue(*servicePublisherAssignmentsItem.Primary)
 		} else {
@@ -314,7 +314,7 @@ func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.Pos
 		if servicePublisherAssignmentsItem.Reachability == nil {
 			servicePublisherAssignments1.Reachability = nil
 		} else {
-			servicePublisherAssignments1.Reachability = &PostAppsPrivateReachability{}
+			servicePublisherAssignments1.Reachability = &PostSteeringAppsPrivateReachability{}
 			if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
 				servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
 			} else {
@@ -365,7 +365,7 @@ func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.Pos
 	}
 }
 
-func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *operations.PutAppsPrivatePrivateAppIDData) {
+func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *operations.PutSteeringAppsPrivatePrivateAppIDData) {
 	if resp.ClientlessAccess != nil {
 		r.ClientlessAccess = types.BoolValue(*resp.ClientlessAccess)
 	} else {
@@ -388,7 +388,7 @@ func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *operations.Put
 	}
 	r.Protocols = nil
 	for _, protocolsItem := range resp.Protocols {
-		var protocols1 PostAppsPrivateProtocols
+		var protocols1 PostSteeringAppsPrivateProtocols
 		if protocolsItem.ID != nil {
 			protocols1.ID = types.Int64Value(int64(*protocolsItem.ID))
 		} else {
@@ -418,7 +418,7 @@ func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *operations.Put
 	}
 	r.ServicePublisherAssignments = nil
 	for _, servicePublisherAssignmentsItem := range resp.ServicePublisherAssignments {
-		var servicePublisherAssignments1 PostAppsPrivateServicePublisherAssignments
+		var servicePublisherAssignments1 PostSteeringAppsPrivateServicePublisherAssignments
 		if servicePublisherAssignmentsItem.Primary != nil {
 			servicePublisherAssignments1.Primary = types.BoolValue(*servicePublisherAssignmentsItem.Primary)
 		} else {
@@ -432,7 +432,7 @@ func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *operations.Put
 		if servicePublisherAssignmentsItem.Reachability == nil {
 			servicePublisherAssignments1.Reachability = nil
 		} else {
-			servicePublisherAssignments1.Reachability = &PostAppsPrivateReachability{}
+			servicePublisherAssignments1.Reachability = &PostSteeringAppsPrivateReachability{}
 			if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
 				servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
 			} else {

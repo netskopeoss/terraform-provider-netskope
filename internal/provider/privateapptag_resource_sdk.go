@@ -7,7 +7,7 @@ import (
 	"ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PutAppsPrivateTagsTagIDRequestBody {
+func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PutSteeringAppsPrivateTagsTagIDRequestBody {
 	id := new(string)
 	if !r.ID.IsUnknown() && !r.ID.IsNull() {
 		*id = r.ID.ValueString()
@@ -18,7 +18,7 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PutAppsPrivat
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
 	}
-	var publisherTags []operations.PutAppsPrivateTagsTagIDPublisherTags = nil
+	var publisherTags []operations.PutSteeringAppsPrivateTagsTagIDPublisherTags = nil
 	for _, publisherTagsItem := range r.PublisherTags {
 		tagID := new(int)
 		if !publisherTagsItem.TagID.IsUnknown() && !publisherTagsItem.TagID.IsNull() {
@@ -32,12 +32,12 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PutAppsPrivat
 		} else {
 			tagName = nil
 		}
-		publisherTags = append(publisherTags, operations.PutAppsPrivateTagsTagIDPublisherTags{
+		publisherTags = append(publisherTags, operations.PutSteeringAppsPrivateTagsTagIDPublisherTags{
 			TagID:   tagID,
 			TagName: tagName,
 		})
 	}
-	var tags []operations.PutAppsPrivateTagsTagIDTags = nil
+	var tags []operations.PutSteeringAppsPrivateTagsTagIDTags = nil
 	for _, tagsItem := range r.Tags {
 		tagId1 := new(int)
 		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
@@ -51,12 +51,12 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PutAppsPrivat
 		} else {
 			tagName1 = nil
 		}
-		tags = append(tags, operations.PutAppsPrivateTagsTagIDTags{
+		tags = append(tags, operations.PutSteeringAppsPrivateTagsTagIDTags{
 			TagID:   tagId1,
 			TagName: tagName1,
 		})
 	}
-	out := operations.PutAppsPrivateTagsTagIDRequestBody{
+	out := operations.PutSteeringAppsPrivateTagsTagIDRequestBody{
 		ID:            id,
 		Ids:           ids,
 		PublisherTags: publisherTags,
@@ -65,17 +65,17 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PutAppsPrivat
 	return &out
 }
 
-func (r *PrivateAppTagResourceModel) ToGetSDKType() *operations.PutAppsPrivateTagsTagIDRequestBody {
+func (r *PrivateAppTagResourceModel) ToGetSDKType() *operations.PutSteeringAppsPrivateTagsTagIDRequestBody {
 	out := r.ToCreateSDKType()
 	return out
 }
 
-func (r *PrivateAppTagResourceModel) ToUpdateSDKType() *operations.PutAppsPrivateTagsTagIDRequestBody {
+func (r *PrivateAppTagResourceModel) ToUpdateSDKType() *operations.PutSteeringAppsPrivateTagsTagIDRequestBody {
 	out := r.ToCreateSDKType()
 	return out
 }
 
-func (r *PrivateAppTagResourceModel) ToDeleteSDKType() *operations.DeleteAppsPrivateTagsTagIDRequestBody {
+func (r *PrivateAppTagResourceModel) ToDeleteSDKType() *operations.DeleteSteeringAppsPrivateTagsTagIDRequestBody {
 	id := new(string)
 	if !r.ID.IsUnknown() && !r.ID.IsNull() {
 		*id = r.ID.ValueString()
@@ -124,7 +124,7 @@ func (r *PrivateAppTagResourceModel) ToDeleteSDKType() *operations.DeleteAppsPri
 			TagName: tagName1,
 		})
 	}
-	out := operations.DeleteAppsPrivateTagsTagIDRequestBody{
+	out := operations.DeleteSteeringAppsPrivateTagsTagIDRequestBody{
 		ID:            id,
 		Ids:           ids,
 		PublisherTags: publisherTags,
@@ -133,7 +133,7 @@ func (r *PrivateAppTagResourceModel) ToDeleteSDKType() *operations.DeleteAppsPri
 	return &out
 }
 
-func (r *PrivateAppTagResourceModel) RefreshFromGetResponse(resp *operations.GetAppsPrivateTagsTagIDResponseBody) {
+func (r *PrivateAppTagResourceModel) RefreshFromGetResponse(resp *operations.GetSteeringAppsPrivateTagsTagIDResponseBody) {
 	r.Data = nil
 	for _, dataItem := range resp.Data {
 		var data1 PostInfrastructurePublishersTags
@@ -156,7 +156,7 @@ func (r *PrivateAppTagResourceModel) RefreshFromGetResponse(resp *operations.Get
 	}
 }
 
-func (r *PrivateAppTagResourceModel) RefreshFromCreateResponse(resp *operations.PutAppsPrivateTagsTagIDResponseBody) {
+func (r *PrivateAppTagResourceModel) RefreshFromCreateResponse(resp *operations.PutSteeringAppsPrivateTagsTagIDResponseBody) {
 	r.Data = nil
 	for _, dataItem := range resp.Data {
 		var data1 PostInfrastructurePublishersTags
@@ -179,6 +179,6 @@ func (r *PrivateAppTagResourceModel) RefreshFromCreateResponse(resp *operations.
 	}
 }
 
-func (r *PrivateAppTagResourceModel) RefreshFromUpdateResponse(resp *operations.PutAppsPrivateTagsTagIDResponseBody) {
+func (r *PrivateAppTagResourceModel) RefreshFromUpdateResponse(resp *operations.PutSteeringAppsPrivateTagsTagIDResponseBody) {
 	r.RefreshFromCreateResponse(resp)
 }

@@ -31,20 +31,20 @@ type PrivateAppResource struct {
 
 // PrivateAppResourceModel describes the resource data model.
 type PrivateAppResourceModel struct {
-	AppName                     types.String                                 `tfsdk:"app_name"`
-	ClientlessAccess            types.Bool                                   `tfsdk:"clientless_access"`
-	Host                        types.String                                 `tfsdk:"host"`
-	ID                          types.Int64                                  `tfsdk:"id"`
-	Name                        types.String                                 `tfsdk:"name"`
-	Protocols                   []PostAppsPrivateProtocols                   `tfsdk:"protocols"`
-	PublisherTags               []PostAppsPrivatePublisherTags               `tfsdk:"publisher_tags"`
-	Publishers                  []PostAppsPrivatePublishers                  `tfsdk:"publishers"`
-	RealHost                    types.String                                 `tfsdk:"real_host"`
-	ServicePublisherAssignments []PostAppsPrivateServicePublisherAssignments `tfsdk:"service_publisher_assignments"`
-	Status                      types.String                                 `tfsdk:"status"`
-	Tags                        []PostInfrastructurePublishersTags           `tfsdk:"tags"`
-	TrustSelfSignedCerts        types.Bool                                   `tfsdk:"trust_self_signed_certs"`
-	UsePublisherDNS             types.Bool                                   `tfsdk:"use_publisher_dns"`
+	AppName                     types.String                                         `tfsdk:"app_name"`
+	ClientlessAccess            types.Bool                                           `tfsdk:"clientless_access"`
+	Host                        types.String                                         `tfsdk:"host"`
+	ID                          types.Int64                                          `tfsdk:"id"`
+	Name                        types.String                                         `tfsdk:"name"`
+	Protocols                   []PostSteeringAppsPrivateProtocols                   `tfsdk:"protocols"`
+	PublisherTags               []PostSteeringAppsPrivatePublisherTags               `tfsdk:"publisher_tags"`
+	Publishers                  []PostSteeringAppsPrivatePublishers                  `tfsdk:"publishers"`
+	RealHost                    types.String                                         `tfsdk:"real_host"`
+	ServicePublisherAssignments []PostSteeringAppsPrivateServicePublisherAssignments `tfsdk:"service_publisher_assignments"`
+	Status                      types.String                                         `tfsdk:"status"`
+	Tags                        []PostInfrastructurePublishersTags                   `tfsdk:"tags"`
+	TrustSelfSignedCerts        types.Bool                                           `tfsdk:"trust_self_signed_certs"`
+	UsePublisherDNS             types.Bool                                           `tfsdk:"use_publisher_dns"`
 }
 
 func (r *PrivateAppResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -230,10 +230,10 @@ func (r *PrivateAppResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 
 	requestBody := *data.ToCreateSDKType()
-	request := operations.PostAppsPrivateRequest{
+	request := operations.PostSteeringAppsPrivateRequest{
 		RequestBody: requestBody,
 	}
-	res, err := r.client.PostAppsPrivate(ctx, request)
+	res, err := r.client.PostSteeringAppsPrivate(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -292,11 +292,11 @@ func (r *PrivateAppResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	requestBody := *data.ToUpdateSDKType()
 	privateAppID := int(data.ID.ValueInt64())
-	request := operations.PutAppsPrivatePrivateAppIDRequest{
+	request := operations.PutSteeringAppsPrivatePrivateAppIDRequest{
 		RequestBody:  requestBody,
 		PrivateAppID: privateAppID,
 	}
-	res, err := r.client.PutAppsPrivatePrivateAppID(ctx, request)
+	res, err := r.client.PutSteeringAppsPrivatePrivateAppID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -341,10 +341,10 @@ func (r *PrivateAppResource) Delete(ctx context.Context, req resource.DeleteRequ
 	}
 
 	privateAppID := int(data.ID.ValueInt64())
-	request := operations.DeleteAppsPrivatePrivateAppIDRequest{
+	request := operations.DeleteSteeringAppsPrivatePrivateAppIDRequest{
 		PrivateAppID: privateAppID,
 	}
-	res, err := r.client.DeleteAppsPrivatePrivateAppID(ctx, request)
+	res, err := r.client.DeleteSteeringAppsPrivatePrivateAppID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

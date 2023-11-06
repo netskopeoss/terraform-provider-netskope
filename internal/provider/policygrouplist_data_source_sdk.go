@@ -7,10 +7,10 @@ import (
 	"ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *PolicyGroupListDataSourceModel) RefreshFromGetResponse(resp *operations.GetNpaPolicygroupsResponseBody) {
+func (r *PolicyGroupListDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsResponseBody) {
 	r.Data = nil
 	for _, dataItem := range resp.Data {
-		var data1 GetNpaPolicygroupsData
+		var data1 GetPolicyNpaPolicygroupsData
 		if dataItem.CanBeEditedDeleted != nil {
 			data1.CanBeEditedDeleted = types.Int64Value(*dataItem.CanBeEditedDeleted)
 		} else {

@@ -7,14 +7,14 @@ import (
 	"ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.GetNpaRulesResponseBody) {
+func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaRulesResponseBody) {
 	r.Data = nil
 	for _, dataItem := range resp.Data {
-		var data1 GetNpaRulesData
+		var data1 GetPolicyNpaRulesData
 		if dataItem.RuleData == nil {
 			data1.RuleData = nil
 		} else {
-			data1.RuleData = &PostNpaRulesRuleData{}
+			data1.RuleData = &PostPolicyNpaRulesRuleData{}
 			if dataItem.RuleData.AccessMethod != nil {
 				data1.RuleData.AccessMethod = types.StringValue(string(*dataItem.RuleData.AccessMethod))
 			} else {
@@ -62,7 +62,7 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.G
 			if dataItem.RuleData.MatchCriteriaAction == nil {
 				data1.RuleData.MatchCriteriaAction = nil
 			} else {
-				data1.RuleData.MatchCriteriaAction = &PostNpaRulesMatchCriteriaAction{}
+				data1.RuleData.MatchCriteriaAction = &PostPolicyNpaRulesMatchCriteriaAction{}
 				if dataItem.RuleData.MatchCriteriaAction.ActionName != nil {
 					data1.RuleData.MatchCriteriaAction.ActionName = types.StringValue(string(*dataItem.RuleData.MatchCriteriaAction.ActionName))
 				} else {

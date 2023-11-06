@@ -29,12 +29,12 @@ type PolicyGroupListDataSource struct {
 
 // PolicyGroupListDataSourceModel describes the data model.
 type PolicyGroupListDataSourceModel struct {
-	Data      []GetNpaPolicygroupsData `tfsdk:"data"`
-	Filter    types.String             `tfsdk:"filter"`
-	Limit     types.Int64              `tfsdk:"limit"`
-	Offset    types.Int64              `tfsdk:"offset"`
-	Sortby    types.String             `tfsdk:"sortby"`
-	Sortorder types.String             `tfsdk:"sortorder"`
+	Data      []GetPolicyNpaPolicygroupsData `tfsdk:"data"`
+	Filter    types.String                   `tfsdk:"filter"`
+	Limit     types.Int64                    `tfsdk:"limit"`
+	Offset    types.Int64                    `tfsdk:"offset"`
+	Sortby    types.String                   `tfsdk:"sortby"`
+	Sortorder types.String                   `tfsdk:"sortorder"`
 }
 
 // Metadata returns the data source type name.
@@ -171,14 +171,14 @@ func (r *PolicyGroupListDataSource) Read(ctx context.Context, req datasource.Rea
 	} else {
 		sortorder = nil
 	}
-	request := operations.GetNpaPolicygroupsRequest{
+	request := operations.GetPolicyNpaPolicygroupsRequest{
 		Filter:    filter,
 		Limit:     limit,
 		Offset:    offset,
 		Sortby:    sortby,
 		Sortorder: sortorder,
 	}
-	res, err := r.client.GetNpaPolicygroups(ctx, request)
+	res, err := r.client.GetPolicyNpaPolicygroups(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

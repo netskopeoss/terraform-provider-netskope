@@ -62,19 +62,19 @@ func (o *PatchInfrastructurePublishersPublisherIDRequestBody) GetTags() []PatchI
 	return o.Tags
 }
 
-// QueryParamSilent - flag to skip output except status code
-type QueryParamSilent string
+// Silent - flag to skip output except status code
+type Silent string
 
 const (
-	QueryParamSilentOne  QueryParamSilent = "1"
-	QueryParamSilentZero QueryParamSilent = "0"
+	SilentOne  Silent = "1"
+	SilentZero Silent = "0"
 )
 
-func (e QueryParamSilent) ToPointer() *QueryParamSilent {
+func (e Silent) ToPointer() *Silent {
 	return &e
 }
 
-func (e *QueryParamSilent) UnmarshalJSON(data []byte) error {
+func (e *Silent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -83,10 +83,10 @@ func (e *QueryParamSilent) UnmarshalJSON(data []byte) error {
 	case "1":
 		fallthrough
 	case "0":
-		*e = QueryParamSilent(v)
+		*e = Silent(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for QueryParamSilent: %v", v)
+		return fmt.Errorf("invalid value for Silent: %v", v)
 	}
 }
 
@@ -95,7 +95,7 @@ type PatchInfrastructurePublishersPublisherIDRequest struct {
 	// publisher id
 	PublisherID int `pathParam:"style=simple,explode=false,name=publisher_id"`
 	// flag to skip output except status code
-	Silent *QueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
+	Silent *Silent `queryParam:"style=form,explode=true,name=silent"`
 }
 
 func (o *PatchInfrastructurePublishersPublisherIDRequest) GetRequestBody() PatchInfrastructurePublishersPublisherIDRequestBody {
@@ -112,7 +112,7 @@ func (o *PatchInfrastructurePublishersPublisherIDRequest) GetPublisherID() int {
 	return o.PublisherID
 }
 
-func (o *PatchInfrastructurePublishersPublisherIDRequest) GetSilent() *QueryParamSilent {
+func (o *PatchInfrastructurePublishersPublisherIDRequest) GetSilent() *Silent {
 	if o == nil {
 		return nil
 	}

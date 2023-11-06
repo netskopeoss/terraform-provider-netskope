@@ -31,12 +31,12 @@ type NPAPolicyListDataSource struct {
 
 // NPAPolicyListDataSourceModel describes the data model.
 type NPAPolicyListDataSourceModel struct {
-	Data      []GetNpaRulesData `tfsdk:"data"`
-	Filter    types.String      `tfsdk:"filter"`
-	Limit     types.Int64       `tfsdk:"limit"`
-	Offset    types.Int64       `tfsdk:"offset"`
-	Sortby    types.String      `tfsdk:"sortby"`
-	Sortorder types.String      `tfsdk:"sortorder"`
+	Data      []GetPolicyNpaRulesData `tfsdk:"data"`
+	Filter    types.String            `tfsdk:"filter"`
+	Limit     types.Int64             `tfsdk:"limit"`
+	Offset    types.Int64             `tfsdk:"offset"`
+	Sortby    types.String            `tfsdk:"sortby"`
+	Sortorder types.String            `tfsdk:"sortorder"`
 }
 
 // Metadata returns the data source type name.
@@ -304,14 +304,14 @@ func (r *NPAPolicyListDataSource) Read(ctx context.Context, req datasource.ReadR
 	} else {
 		sortorder = nil
 	}
-	request := operations.GetNpaRulesRequest{
+	request := operations.GetPolicyNpaRulesRequest{
 		Filter:    filter,
 		Limit:     limit,
 		Offset:    offset,
 		Sortby:    sortby,
 		Sortorder: sortorder,
 	}
-	res, err := r.client.GetNpaRules(ctx, request)
+	res, err := r.client.GetPolicyNpaRules(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

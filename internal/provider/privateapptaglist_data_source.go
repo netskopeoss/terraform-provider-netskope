@@ -110,7 +110,7 @@ func (r *PrivateAppTagListDataSource) Read(ctx context.Context, req datasource.R
 		return
 	}
 
-	res, err := r.client.GetAppsPrivateTags(ctx)
+	res, err := r.client.GetSteeringAppsPrivateTags(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
