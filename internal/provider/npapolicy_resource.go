@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"ns/internal/sdk/pkg/models/operations"
+	"strconv"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -469,5 +470,10 @@ func (r *NPAPolicyResource) Delete(ctx context.Context, req resource.DeleteReque
 }
 
 func (r *NPAPolicyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("rule_id"), req, resp)
+	ruleID, err := strconv.Atoi(req.ID)
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
+	}
+
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("rule_id"), int64(ruleID))...)
 }

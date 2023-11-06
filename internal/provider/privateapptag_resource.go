@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"strconv"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -315,5 +316,10 @@ func (r *PrivateAppTagResource) Delete(ctx context.Context, req resource.DeleteR
 }
 
 func (r *PrivateAppTagResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("tag_id"), req, resp)
+	tagId2, err := strconv.Atoi(req.ID)
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
+	}
+
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("tag_id"), int64(tagId2))...)
 }
