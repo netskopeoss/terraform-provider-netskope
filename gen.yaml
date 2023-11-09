@@ -2,10 +2,12 @@ configVersion: 1.0.0
 generation:
   comments: {}
   sdkClassName: SDK
+  usageSnippets:
+    optionalPropertyRendering: withExample
 features:
   terraform:
     constsAndDefaults: 0.1.1
-    core: 3.2.0
+    core: 3.4.1
     globalSecurity: 2.81.1
     globalServerURLs: 2.82.0
     groups: 2.81.2
@@ -24,4 +26,6 @@ terraform:
       operations: operations
       shared: shared
       webhooks: webhooks
+  inputModelSuffix: input
+  outputModelSuffix: output
   packageName: ns

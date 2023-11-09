@@ -4,10 +4,10 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PutSteeringAppsPrivateTagsTagIDRequestBody {
+func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PostSteeringAppsPrivateTagsRequestBody {
 	id := new(string)
 	if !r.ID.IsUnknown() && !r.ID.IsNull() {
 		*id = r.ID.ValueString()
@@ -18,7 +18,7 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PutSteeringAp
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
 	}
-	var publisherTags []operations.PutSteeringAppsPrivateTagsTagIDPublisherTags = nil
+	var publisherTags []operations.PostSteeringAppsPrivateTagsPublisherTags = nil
 	for _, publisherTagsItem := range r.PublisherTags {
 		tagID := new(int)
 		if !publisherTagsItem.TagID.IsUnknown() && !publisherTagsItem.TagID.IsNull() {
@@ -32,12 +32,12 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PutSteeringAp
 		} else {
 			tagName = nil
 		}
-		publisherTags = append(publisherTags, operations.PutSteeringAppsPrivateTagsTagIDPublisherTags{
+		publisherTags = append(publisherTags, operations.PostSteeringAppsPrivateTagsPublisherTags{
 			TagID:   tagID,
 			TagName: tagName,
 		})
 	}
-	var tags []operations.PutSteeringAppsPrivateTagsTagIDTags = nil
+	var tags []operations.PostSteeringAppsPrivateTagsTags = nil
 	for _, tagsItem := range r.Tags {
 		tagId1 := new(int)
 		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
@@ -51,12 +51,12 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PutSteeringAp
 		} else {
 			tagName1 = nil
 		}
-		tags = append(tags, operations.PutSteeringAppsPrivateTagsTagIDTags{
+		tags = append(tags, operations.PostSteeringAppsPrivateTagsTags{
 			TagID:   tagId1,
 			TagName: tagName1,
 		})
 	}
-	out := operations.PutSteeringAppsPrivateTagsTagIDRequestBody{
+	out := operations.PostSteeringAppsPrivateTagsRequestBody{
 		ID:            id,
 		Ids:           ids,
 		PublisherTags: publisherTags,
@@ -65,75 +65,7 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PutSteeringAp
 	return &out
 }
 
-func (r *PrivateAppTagResourceModel) ToGetSDKType() *operations.PutSteeringAppsPrivateTagsTagIDRequestBody {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *PrivateAppTagResourceModel) ToUpdateSDKType() *operations.PutSteeringAppsPrivateTagsTagIDRequestBody {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *PrivateAppTagResourceModel) ToDeleteSDKType() *operations.DeleteSteeringAppsPrivateTagsTagIDRequestBody {
-	id := new(string)
-	if !r.ID.IsUnknown() && !r.ID.IsNull() {
-		*id = r.ID.ValueString()
-	} else {
-		id = nil
-	}
-	var ids []string = nil
-	for _, idsItem := range r.Ids {
-		ids = append(ids, idsItem.ValueString())
-	}
-	var publisherTags []operations.PublisherTags = nil
-	for _, publisherTagsItem := range r.PublisherTags {
-		tagID := new(int)
-		if !publisherTagsItem.TagID.IsUnknown() && !publisherTagsItem.TagID.IsNull() {
-			*tagID = int(publisherTagsItem.TagID.ValueInt64())
-		} else {
-			tagID = nil
-		}
-		tagName := new(string)
-		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {
-			*tagName = publisherTagsItem.TagName.ValueString()
-		} else {
-			tagName = nil
-		}
-		publisherTags = append(publisherTags, operations.PublisherTags{
-			TagID:   tagID,
-			TagName: tagName,
-		})
-	}
-	var tags []operations.Tags = nil
-	for _, tagsItem := range r.Tags {
-		tagId1 := new(int)
-		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
-			*tagId1 = int(tagsItem.TagID.ValueInt64())
-		} else {
-			tagId1 = nil
-		}
-		tagName1 := new(string)
-		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
-			*tagName1 = tagsItem.TagName.ValueString()
-		} else {
-			tagName1 = nil
-		}
-		tags = append(tags, operations.Tags{
-			TagID:   tagId1,
-			TagName: tagName1,
-		})
-	}
-	out := operations.DeleteSteeringAppsPrivateTagsTagIDRequestBody{
-		ID:            id,
-		Ids:           ids,
-		PublisherTags: publisherTags,
-		Tags:          tags,
-	}
-	return &out
-}
-
-func (r *PrivateAppTagResourceModel) RefreshFromGetResponse(resp *operations.GetSteeringAppsPrivateTagsTagIDResponseBody) {
+func (r *PrivateAppTagResourceModel) RefreshFromCreateResponse(resp *operations.PostSteeringAppsPrivateTagsResponseBody) {
 	r.Data = nil
 	for _, dataItem := range resp.Data {
 		var data1 PostInfrastructurePublishersTags
@@ -149,36 +81,4 @@ func (r *PrivateAppTagResourceModel) RefreshFromGetResponse(resp *operations.Get
 		}
 		r.Data = append(r.Data, data1)
 	}
-	if resp.Status != nil {
-		r.Status = types.StringValue(string(*resp.Status))
-	} else {
-		r.Status = types.StringNull()
-	}
-}
-
-func (r *PrivateAppTagResourceModel) RefreshFromCreateResponse(resp *operations.PutSteeringAppsPrivateTagsTagIDResponseBody) {
-	r.Data = nil
-	for _, dataItem := range resp.Data {
-		var data1 PostInfrastructurePublishersTags
-		if dataItem.TagID != nil {
-			data1.TagID = types.Int64Value(int64(*dataItem.TagID))
-		} else {
-			data1.TagID = types.Int64Null()
-		}
-		if dataItem.TagName != nil {
-			data1.TagName = types.StringValue(*dataItem.TagName)
-		} else {
-			data1.TagName = types.StringNull()
-		}
-		r.Data = append(r.Data, data1)
-	}
-	if resp.Status != nil {
-		r.Status = types.StringValue(string(*resp.Status))
-	} else {
-		r.Status = types.StringNull()
-	}
-}
-
-func (r *PrivateAppTagResourceModel) RefreshFromUpdateResponse(resp *operations.PutSteeringAppsPrivateTagsTagIDResponseBody) {
-	r.RefreshFromCreateResponse(resp)
 }

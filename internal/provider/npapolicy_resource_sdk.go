@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
 func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostPolicyNpaRulesRequestBody {
@@ -28,11 +28,9 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostPolicyNpaRule
 	}
 	var ruleData *operations.PostPolicyNpaRulesRuleData
 	if r.RuleData != nil {
-		accessMethod := new(operations.PostPolicyNpaRulesAccessMethod)
-		if !r.RuleData.AccessMethod.IsUnknown() && !r.RuleData.AccessMethod.IsNull() {
-			*accessMethod = operations.PostPolicyNpaRulesAccessMethod(r.RuleData.AccessMethod.ValueString())
-		} else {
-			accessMethod = nil
+		var accessMethod []string = nil
+		for _, accessMethodItem := range r.RuleData.AccessMethod {
+			accessMethod = append(accessMethod, accessMethodItem.ValueString())
 		}
 		bNegateNetLocation := new(bool)
 		if !r.RuleData.BNegateNetLocation.IsUnknown() && !r.RuleData.BNegateNetLocation.IsNull() {
@@ -228,9 +226,9 @@ func (r *NPAPolicyResourceModel) ToCreateSDKType() *operations.PostPolicyNpaRule
 		} else {
 			position = nil
 		}
-		ruleID := new(int64)
+		ruleID := new(string)
 		if !r.RuleOrder.RuleID.IsUnknown() && !r.RuleOrder.RuleID.IsNull() {
-			*ruleID = r.RuleOrder.RuleID.ValueInt64()
+			*ruleID = r.RuleOrder.RuleID.ValueString()
 		} else {
 			ruleID = nil
 		}
@@ -284,11 +282,9 @@ func (r *NPAPolicyResourceModel) ToUpdateSDKType() *operations.PatchPolicyNpaRul
 	}
 	var ruleData *operations.RuleData
 	if r.RuleData != nil {
-		accessMethod := new(operations.AccessMethod)
-		if !r.RuleData.AccessMethod.IsUnknown() && !r.RuleData.AccessMethod.IsNull() {
-			*accessMethod = operations.AccessMethod(r.RuleData.AccessMethod.ValueString())
-		} else {
-			accessMethod = nil
+		var accessMethod []string = nil
+		for _, accessMethodItem := range r.RuleData.AccessMethod {
+			accessMethod = append(accessMethod, accessMethodItem.ValueString())
 		}
 		bNegateNetLocation := new(bool)
 		if !r.RuleData.BNegateNetLocation.IsUnknown() && !r.RuleData.BNegateNetLocation.IsNull() {
@@ -484,9 +480,9 @@ func (r *NPAPolicyResourceModel) ToUpdateSDKType() *operations.PatchPolicyNpaRul
 		} else {
 			position = nil
 		}
-		ruleID := new(int64)
+		ruleID := new(string)
 		if !r.RuleOrder.RuleID.IsUnknown() && !r.RuleOrder.RuleID.IsNull() {
-			*ruleID = r.RuleOrder.RuleID.ValueInt64()
+			*ruleID = r.RuleOrder.RuleID.ValueString()
 		} else {
 			ruleID = nil
 		}
@@ -524,10 +520,9 @@ func (r *NPAPolicyResourceModel) RefreshFromGetResponse(resp *operations.GetPoli
 		r.RuleData = nil
 	} else {
 		r.RuleData = &PostPolicyNpaRulesRuleData{}
-		if resp.RuleData.AccessMethod != nil {
-			r.RuleData.AccessMethod = types.StringValue(string(*resp.RuleData.AccessMethod))
-		} else {
-			r.RuleData.AccessMethod = types.StringNull()
+		r.RuleData.AccessMethod = nil
+		for _, v := range resp.RuleData.AccessMethod {
+			r.RuleData.AccessMethod = append(r.RuleData.AccessMethod, types.StringValue(v))
 		}
 		if resp.RuleData.BNegateNetLocation != nil {
 			r.RuleData.BNegateNetLocation = types.BoolValue(*resp.RuleData.BNegateNetLocation)
@@ -660,9 +655,9 @@ func (r *NPAPolicyResourceModel) RefreshFromGetResponse(resp *operations.GetPoli
 		}
 	}
 	if resp.RuleID != nil {
-		r.RuleID = types.Int64Value(*resp.RuleID)
+		r.RuleID = types.StringValue(*resp.RuleID)
 	} else {
-		r.RuleID = types.Int64Null()
+		r.RuleID = types.StringNull()
 	}
 	if resp.RuleName != nil {
 		r.RuleName = types.StringValue(*resp.RuleName)
@@ -671,15 +666,14 @@ func (r *NPAPolicyResourceModel) RefreshFromGetResponse(resp *operations.GetPoli
 	}
 }
 
-func (r *NPAPolicyResourceModel) RefreshFromCreateResponse(resp *operations.PostPolicyNpaRulesResponseBody) {
+func (r *NPAPolicyResourceModel) RefreshFromCreateResponse(resp *operations.PostPolicyNpaRulesData) {
 	if resp.RuleData == nil {
 		r.RuleData = nil
 	} else {
 		r.RuleData = &PostPolicyNpaRulesRuleData{}
-		if resp.RuleData.AccessMethod != nil {
-			r.RuleData.AccessMethod = types.StringValue(string(*resp.RuleData.AccessMethod))
-		} else {
-			r.RuleData.AccessMethod = types.StringNull()
+		r.RuleData.AccessMethod = nil
+		for _, v := range resp.RuleData.AccessMethod {
+			r.RuleData.AccessMethod = append(r.RuleData.AccessMethod, types.StringValue(v))
 		}
 		if resp.RuleData.BNegateNetLocation != nil {
 			r.RuleData.BNegateNetLocation = types.BoolValue(*resp.RuleData.BNegateNetLocation)
@@ -812,9 +806,9 @@ func (r *NPAPolicyResourceModel) RefreshFromCreateResponse(resp *operations.Post
 		}
 	}
 	if resp.RuleID != nil {
-		r.RuleID = types.Int64Value(*resp.RuleID)
+		r.RuleID = types.StringValue(*resp.RuleID)
 	} else {
-		r.RuleID = types.Int64Null()
+		r.RuleID = types.StringNull()
 	}
 	if resp.RuleName != nil {
 		r.RuleName = types.StringValue(*resp.RuleName)
@@ -828,10 +822,9 @@ func (r *NPAPolicyResourceModel) RefreshFromUpdateResponse(resp *operations.Patc
 		r.RuleData = nil
 	} else {
 		r.RuleData = &PostPolicyNpaRulesRuleData{}
-		if resp.RuleData.AccessMethod != nil {
-			r.RuleData.AccessMethod = types.StringValue(string(*resp.RuleData.AccessMethod))
-		} else {
-			r.RuleData.AccessMethod = types.StringNull()
+		r.RuleData.AccessMethod = nil
+		for _, v := range resp.RuleData.AccessMethod {
+			r.RuleData.AccessMethod = append(r.RuleData.AccessMethod, types.StringValue(v))
 		}
 		if resp.RuleData.BNegateNetLocation != nil {
 			r.RuleData.BNegateNetLocation = types.BoolValue(*resp.RuleData.BNegateNetLocation)
@@ -964,9 +957,9 @@ func (r *NPAPolicyResourceModel) RefreshFromUpdateResponse(resp *operations.Patc
 		}
 	}
 	if resp.RuleID != nil {
-		r.RuleID = types.Int64Value(*resp.RuleID)
+		r.RuleID = types.StringValue(*resp.RuleID)
 	} else {
-		r.RuleID = types.Int64Null()
+		r.RuleID = types.StringNull()
 	}
 	if resp.RuleName != nil {
 		r.RuleName = types.StringValue(*resp.RuleName)

@@ -5,12 +5,10 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
@@ -30,9 +28,8 @@ type PrivateAppTagPolicyUseListDataSource struct {
 
 // PrivateAppTagPolicyUseListDataSourceModel describes the data model.
 type PrivateAppTagPolicyUseListDataSourceModel struct {
-	Data   []PostSteeringAppsPrivateTagsGetpolicyinuseData `tfsdk:"data"`
-	Ids    []types.String                                  `tfsdk:"ids"`
-	Status types.String                                    `tfsdk:"status"`
+	Data []PostSteeringAppsPrivateTagsGetpolicyinuseData `tfsdk:"data"`
+	Ids  []types.String                                  `tfsdk:"ids"`
 }
 
 // Metadata returns the data source type name.
@@ -59,16 +56,6 @@ func (r *PrivateAppTagPolicyUseListDataSource) Schema(ctx context.Context, req d
 			"ids": schema.ListAttribute{
 				Optional:    true,
 				ElementType: types.StringType,
-			},
-			"status": schema.StringAttribute{
-				Computed: true,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"success",
-						"not found",
-					),
-				},
-				Description: `must be one of ["success", "not found"]`,
 			},
 		},
 	}

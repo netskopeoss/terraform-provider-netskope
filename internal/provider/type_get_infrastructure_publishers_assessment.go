@@ -3,6 +3,6 @@
 package provider
 
 type GetInfrastructurePublishersAssessment struct {
-	Two                                                *Assessment                                         `tfsdk:"two"`
-	GetInfrastructurePublishersNPAPublishersAssessment *GetInfrastructurePublishersNPAPublishersAssessment `tfsdk:"get_infrastructure_publishers_npa_publishers_assessment"`
+	Assessment *GetInfrastructurePublishersNPAPublishersAssessment `tfsdk:"assessment"`
+	Two        *Assessment                                         `tfsdk:"two"`
 }

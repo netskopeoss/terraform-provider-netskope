@@ -1,3 +1,3 @@
 data "ns_npa_policy" "my_npapolicy" {
-  rule_id = 1
+  rule_id = "...my_rule_id..."
 }

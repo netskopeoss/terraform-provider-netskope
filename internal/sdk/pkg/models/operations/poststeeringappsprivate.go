@@ -220,17 +220,7 @@ func (o *PostSteeringAppsPrivateResponseResponseBody) GetStatus() *int64 {
 }
 
 type PostSteeringAppsPrivateResponseProtocols struct {
-	ID        *int    `json:"id,omitempty"`
-	Port      *string `json:"port,omitempty"`
-	ServiceID *int    `json:"service_id,omitempty"`
-	Transport *string `json:"transport,omitempty"`
-}
-
-func (o *PostSteeringAppsPrivateResponseProtocols) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
+	Port *string `json:"port,omitempty"`
 }
 
 func (o *PostSteeringAppsPrivateResponseProtocols) GetPort() *string {
@@ -238,20 +228,6 @@ func (o *PostSteeringAppsPrivateResponseProtocols) GetPort() *string {
 		return nil
 	}
 	return o.Port
-}
-
-func (o *PostSteeringAppsPrivateResponseProtocols) GetServiceID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ServiceID
-}
-
-func (o *PostSteeringAppsPrivateResponseProtocols) GetTransport() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Transport
 }
 
 type PostSteeringAppsPrivateReachability struct {
@@ -418,37 +394,9 @@ func (o *PostSteeringAppsPrivateData) GetUsePublisherDNS() *bool {
 	return o.UsePublisherDNS
 }
 
-type PostSteeringAppsPrivateStatus string
-
-const (
-	PostSteeringAppsPrivateStatusSuccess  PostSteeringAppsPrivateStatus = "success"
-	PostSteeringAppsPrivateStatusNotFound PostSteeringAppsPrivateStatus = "not found"
-)
-
-func (e PostSteeringAppsPrivateStatus) ToPointer() *PostSteeringAppsPrivateStatus {
-	return &e
-}
-
-func (e *PostSteeringAppsPrivateStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = PostSteeringAppsPrivateStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PostSteeringAppsPrivateStatus: %v", v)
-	}
-}
-
 // PostSteeringAppsPrivateResponseBody - successful operation
 type PostSteeringAppsPrivateResponseBody struct {
-	Data   *PostSteeringAppsPrivateData   `json:"data,omitempty"`
-	Status *PostSteeringAppsPrivateStatus `json:"status,omitempty"`
+	Data *PostSteeringAppsPrivateData `json:"data,omitempty"`
 }
 
 func (o *PostSteeringAppsPrivateResponseBody) GetData() *PostSteeringAppsPrivateData {
@@ -456,13 +404,6 @@ func (o *PostSteeringAppsPrivateResponseBody) GetData() *PostSteeringAppsPrivate
 		return nil
 	}
 	return o.Data
-}
-
-func (o *PostSteeringAppsPrivateResponseBody) GetStatus() *PostSteeringAppsPrivateStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type PostSteeringAppsPrivateResponse struct {

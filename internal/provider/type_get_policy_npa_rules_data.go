@@ -6,6 +6,6 @@ import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type GetPolicyNpaRulesData struct {
 	RuleData *PostPolicyNpaRulesRuleData `tfsdk:"rule_data"`
-	RuleID   types.Int64                 `tfsdk:"rule_id"`
+	RuleID   types.String                `tfsdk:"rule_id"`
 	RuleName types.String                `tfsdk:"rule_name"`
 }

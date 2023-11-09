@@ -382,13 +382,16 @@ components:
                                     id:
                                         format: int32
                                         type: integer
+                                        x-speakeasy-ignore: true
                                     port:
                                         type: string
                                     service_id:
                                         format: int32
                                         type: integer
+                                        x-speakeasy-ignore: true
                                     transport:
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                             type: array
                         real_host:
@@ -438,6 +441,7 @@ components:
                         - success
                         - not found
                     type: string
+                    x-speakeasy-ignore: true
             type: object
             x-speakeasy-entity: NPAPublisherApps
         protocol_response_item:
@@ -445,13 +449,16 @@ components:
                 id:
                     format: int32
                     type: integer
+                    x-speakeasy-ignore: true
                 port:
                     type: string
                 service_id:
                     format: int32
                     type: integer
+                    x-speakeasy-ignore: true
                 transport:
                     type: string
+                    x-speakeasy-ignore: true
             type: object
         publisher_bulk_item:
             properties:
@@ -1146,6 +1153,171 @@ components:
                     type: string
                     x-speakeasy-ignore: true
             type: object
+        npa_policy_list_response:
+            properties:
+                data:
+                    items:
+                        properties:
+                            group_id:
+                                example: 1
+                                type: integer
+                                x-speakeasy-ignore: true
+                            rule_data:
+                                properties:
+                                    access_method:
+                                        items:
+                                            example:
+                                                - Client
+                                                - Clientless
+                                            type: string
+                                        type: array
+                                    b_negateNetLocation:
+                                        type: boolean
+                                    b_negateSrcCountries:
+                                        type: boolean
+                                    classification:
+                                        type: string
+                                    dlp_actions:
+                                        items:
+                                            properties:
+                                                actions:
+                                                    example:
+                                                        - allow
+                                                    items:
+                                                        enum:
+                                                            - allow
+                                                            - block
+                                                            - alert
+                                                            - quanrantine
+                                                            - bypass
+                                                        type: string
+                                                    type: array
+                                                dlp_profile:
+                                                    example: Payment Card
+                                                    type: string
+                                            type: object
+                                        type: array
+                                    external_dlp:
+                                        type: boolean
+                                    json_version:
+                                        example: 3
+                                        type: integer
+                                    match_criteria_action:
+                                        properties:
+                                            action_name:
+                                                enum:
+                                                    - allow
+                                                    - block
+                                                type: string
+                                        type: object
+                                    net_location_obj:
+                                        example:
+                                            - 190.123.150.10
+                                            - 190.218.0.0/16
+                                        items:
+                                            type: string
+                                        type: array
+                                    organization_units:
+                                        example:
+                                            - engineering/qa
+                                        items:
+                                            type: string
+                                        type: array
+                                    policy_type:
+                                        enum:
+                                            - private-app
+                                        type: string
+                                    privateAppIds:
+                                        example:
+                                            - "100"
+                                            - "201"
+                                        items:
+                                            type: string
+                                        type: array
+                                    privateAppTagIds:
+                                        example:
+                                            - "1"
+                                            - "2"
+                                        items:
+                                            type: string
+                                        type: array
+                                    privateAppTags:
+                                        example:
+                                            - tag1
+                                            - tag2
+                                        items:
+                                            type: string
+                                        type: array
+                                    privateApps:
+                                        example:
+                                            - app1
+                                            - app2
+                                        items:
+                                            type: string
+                                        type: array
+                                    privateAppsWithActivities:
+                                        items:
+                                            properties:
+                                                activities:
+                                                    items:
+                                                        properties:
+                                                            activity:
+                                                                enum:
+                                                                    - any
+                                                                type: string
+                                                            list_of_constraints:
+                                                                example: []
+                                                                items:
+                                                                    type: string
+                                                                type: array
+                                                        type: object
+                                                    type: array
+                                                appName:
+                                                    example: '[172.31.12.135]'
+                                                    type: string
+                                            type: object
+                                        type: array
+                                    show_dlp_profile_action_table:
+                                        type: boolean
+                                    srcCountries:
+                                        example:
+                                            - US
+                                            - AF
+                                            - CN
+                                        items:
+                                            type: string
+                                        type: array
+                                    userGroups:
+                                        example:
+                                            - usergroup/group1
+                                        items:
+                                            type: string
+                                        type: array
+                                    userType:
+                                        enum:
+                                            - user
+                                        type: string
+                                    users:
+                                        example:
+                                            - vphan@netskope.com
+                                        items:
+                                            type: string
+                                        type: array
+                                    version:
+                                        example: 1
+                                        type: integer
+                                type: object
+                            rule_id:
+                                example: "1"
+                                type: string
+                            rule_name:
+                                example: van-test
+                                type: string
+                        type: object
+                        x-speakeasy-entity: NPAPolicy
+                    type: array
+            type: object
+            x-speakeasy-entity: NPAPolicyList
         npa_policy_request:
             properties:
                 description:
@@ -1164,10 +1336,12 @@ components:
                 rule_data:
                     properties:
                         access_method:
-                            enum:
-                                - Client
-                                - Clientless
-                            type: string
+                            items:
+                                example:
+                                    - Client
+                                    - Clientless
+                                type: string
+                            type: array
                         b_negateNetLocation:
                             type: boolean
                         b_negateSrcCountries:
@@ -1320,177 +1494,14 @@ components:
                             example: 5
                             type: integer
                         rule_id:
-                            example: 1
-                            type: integer
+                            example: "1"
+                            type: string
                         rule_name:
                             example: api-policy-managed
                             type: string
                     type: object
             type: object
             x-speakeasy-entity: NPAPolicy
-        npa_policy_response:
-            properties:
-                data:
-                    items:
-                        properties:
-                            group_id:
-                                example: 1
-                                type: integer
-                                x-speakeasy-ignore: true
-                            rule_data:
-                                properties:
-                                    access_method:
-                                        enum:
-                                            - Client
-                                            - Clientless
-                                        type: string
-                                    b_negateNetLocation:
-                                        type: boolean
-                                    b_negateSrcCountries:
-                                        type: boolean
-                                    classification:
-                                        type: string
-                                    dlp_actions:
-                                        items:
-                                            properties:
-                                                actions:
-                                                    example:
-                                                        - allow
-                                                    items:
-                                                        enum:
-                                                            - allow
-                                                            - block
-                                                            - alert
-                                                            - quanrantine
-                                                            - bypass
-                                                        type: string
-                                                    type: array
-                                                dlp_profile:
-                                                    example: Payment Card
-                                                    type: string
-                                            type: object
-                                        type: array
-                                    external_dlp:
-                                        type: boolean
-                                    json_version:
-                                        example: 3
-                                        type: integer
-                                    match_criteria_action:
-                                        properties:
-                                            action_name:
-                                                enum:
-                                                    - allow
-                                                    - block
-                                                type: string
-                                        type: object
-                                    net_location_obj:
-                                        example:
-                                            - 190.123.150.10
-                                            - 190.218.0.0/16
-                                        items:
-                                            type: string
-                                        type: array
-                                    organization_units:
-                                        example:
-                                            - engineering/qa
-                                        items:
-                                            type: string
-                                        type: array
-                                    policy_type:
-                                        enum:
-                                            - private-app
-                                        type: string
-                                    privateAppIds:
-                                        example:
-                                            - "100"
-                                            - "201"
-                                        items:
-                                            type: string
-                                        type: array
-                                    privateAppTagIds:
-                                        example:
-                                            - "1"
-                                            - "2"
-                                        items:
-                                            type: string
-                                        type: array
-                                    privateAppTags:
-                                        example:
-                                            - tag1
-                                            - tag2
-                                        items:
-                                            type: string
-                                        type: array
-                                    privateApps:
-                                        example:
-                                            - app1
-                                            - app2
-                                        items:
-                                            type: string
-                                        type: array
-                                    privateAppsWithActivities:
-                                        items:
-                                            properties:
-                                                activities:
-                                                    items:
-                                                        properties:
-                                                            activity:
-                                                                enum:
-                                                                    - any
-                                                                type: string
-                                                            list_of_constraints:
-                                                                example: []
-                                                                items:
-                                                                    type: string
-                                                                type: array
-                                                        type: object
-                                                    type: array
-                                                appName:
-                                                    example: '[172.31.12.135]'
-                                                    type: string
-                                            type: object
-                                        type: array
-                                    show_dlp_profile_action_table:
-                                        type: boolean
-                                    srcCountries:
-                                        example:
-                                            - US
-                                            - AF
-                                            - CN
-                                        items:
-                                            type: string
-                                        type: array
-                                    userGroups:
-                                        example:
-                                            - usergroup/group1
-                                        items:
-                                            type: string
-                                        type: array
-                                    userType:
-                                        enum:
-                                            - user
-                                        type: string
-                                    users:
-                                        example:
-                                            - vphan@netskope.com
-                                        items:
-                                            type: string
-                                        type: array
-                                    version:
-                                        example: 1
-                                        type: integer
-                                type: object
-                            rule_id:
-                                example: 1
-                                type: integer
-                            rule_name:
-                                example: van-test
-                                type: string
-                        type: object
-                        x-speakeasy-entity: NPAPolicy
-                    type: array
-            type: object
-            x-speakeasy-entity: NPAPolicyList
         npa_policy_response_400:
             properties:
                 result:
@@ -1508,10 +1519,12 @@ components:
                 rule_data:
                     properties:
                         access_method:
-                            enum:
-                                - Client
-                                - Clientless
-                            type: string
+                            items:
+                                example:
+                                    - Client
+                                    - Clientless
+                                type: string
+                            type: array
                         b_negateNetLocation:
                             type: boolean
                         b_negateSrcCountries:
@@ -1649,8 +1662,8 @@ components:
                             type: integer
                     type: object
                 rule_id:
-                    example: 1
-                    type: integer
+                    example: "1"
+                    type: string
                 rule_name:
                     example: van-test
                     type: string
@@ -1659,10 +1672,12 @@ components:
         npa_policy_rule_data:
             properties:
                 access_method:
-                    enum:
-                        - Client
-                        - Clientless
-                    type: string
+                    items:
+                        example:
+                            - Client
+                            - Clientless
+                        type: string
+                    type: array
                 b_negateNetLocation:
                     type: boolean
                 b_negateSrcCountries:
@@ -2997,13 +3012,16 @@ components:
                                         id:
                                             format: int32
                                             type: integer
+                                            x-speakeasy-ignore: true
                                         port:
                                             type: string
                                         service_id:
                                             format: int32
                                             type: integer
+                                            x-speakeasy-ignore: true
                                         transport:
                                             type: string
+                                            x-speakeasy-ignore: true
                                     type: object
                                 type: array
                             real_host:
@@ -3221,12 +3239,14 @@ components:
                             tag_name:
                                 type: string
                         type: object
+                        x-speakeasy-entity: PrivateAppTag
                     type: array
                 status:
                     enum:
                         - success
                         - not found
                     type: string
+                    x-speakeasy-ignore: true
             type: object
             x-speakeasy-entity: PrivateAppTagList
         tag_response_400:
@@ -4829,10 +4849,12 @@ paths:
                                                 rule_data:
                                                     properties:
                                                         access_method:
-                                                            enum:
-                                                                - Client
-                                                                - Clientless
-                                                            type: string
+                                                            items:
+                                                                example:
+                                                                    - Client
+                                                                    - Clientless
+                                                                type: string
+                                                            type: array
                                                         b_negateNetLocation:
                                                             type: boolean
                                                         b_negateSrcCountries:
@@ -4970,8 +4992,8 @@ paths:
                                                             type: integer
                                                     type: object
                                                 rule_id:
-                                                    example: 1
-                                                    type: integer
+                                                    example: "1"
+                                                    type: string
                                                 rule_name:
                                                     example: van-test
                                                     type: string
@@ -5029,10 +5051,12 @@ paths:
                                 rule_data:
                                     properties:
                                         access_method:
-                                            enum:
-                                                - Client
-                                                - Clientless
-                                            type: string
+                                            items:
+                                                example:
+                                                    - Client
+                                                    - Clientless
+                                                type: string
+                                            type: array
                                         b_negateNetLocation:
                                             type: boolean
                                         b_negateSrcCountries:
@@ -5185,8 +5209,8 @@ paths:
                                             example: 5
                                             type: integer
                                         rule_id:
-                                            example: 1
-                                            type: integer
+                                            example: "1"
+                                            type: string
                                         rule_name:
                                             example: api-policy-managed
                                             type: string
@@ -5200,161 +5224,172 @@ paths:
                         application/json:
                             schema:
                                 properties:
-                                    group_id:
-                                        example: 1
-                                        type: integer
-                                        x-speakeasy-ignore: true
-                                    rule_data:
+                                    data:
                                         properties:
-                                            access_method:
-                                                enum:
-                                                    - Client
-                                                    - Clientless
-                                                type: string
-                                            b_negateNetLocation:
-                                                type: boolean
-                                            b_negateSrcCountries:
-                                                type: boolean
-                                            classification:
-                                                type: string
-                                            dlp_actions:
-                                                items:
-                                                    properties:
-                                                        actions:
+                                            group_id:
+                                                example: 1
+                                                type: integer
+                                                x-speakeasy-ignore: true
+                                            rule_data:
+                                                properties:
+                                                    access_method:
+                                                        items:
                                                             example:
-                                                                - allow
-                                                            items:
+                                                                - Client
+                                                                - Clientless
+                                                            type: string
+                                                        type: array
+                                                    b_negateNetLocation:
+                                                        type: boolean
+                                                    b_negateSrcCountries:
+                                                        type: boolean
+                                                    classification:
+                                                        type: string
+                                                    dlp_actions:
+                                                        items:
+                                                            properties:
+                                                                actions:
+                                                                    example:
+                                                                        - allow
+                                                                    items:
+                                                                        enum:
+                                                                            - allow
+                                                                            - block
+                                                                            - alert
+                                                                            - quanrantine
+                                                                            - bypass
+                                                                        type: string
+                                                                    type: array
+                                                                dlp_profile:
+                                                                    example: Payment Card
+                                                                    type: string
+                                                            type: object
+                                                        type: array
+                                                    external_dlp:
+                                                        type: boolean
+                                                    json_version:
+                                                        example: 3
+                                                        type: integer
+                                                    match_criteria_action:
+                                                        properties:
+                                                            action_name:
                                                                 enum:
                                                                     - allow
                                                                     - block
-                                                                    - alert
-                                                                    - quanrantine
-                                                                    - bypass
                                                                 type: string
-                                                            type: array
-                                                        dlp_profile:
-                                                            example: Payment Card
+                                                        type: object
+                                                    net_location_obj:
+                                                        example:
+                                                            - 190.123.150.10
+                                                            - 190.218.0.0/16
+                                                        items:
                                                             type: string
-                                                    type: object
-                                                type: array
-                                            external_dlp:
-                                                type: boolean
-                                            json_version:
-                                                example: 3
-                                                type: integer
-                                            match_criteria_action:
-                                                properties:
-                                                    action_name:
+                                                        type: array
+                                                    organization_units:
+                                                        example:
+                                                            - engineering/qa
+                                                        items:
+                                                            type: string
+                                                        type: array
+                                                    policy_type:
                                                         enum:
-                                                            - allow
-                                                            - block
+                                                            - private-app
                                                         type: string
-                                                type: object
-                                            net_location_obj:
-                                                example:
-                                                    - 190.123.150.10
-                                                    - 190.218.0.0/16
-                                                items:
-                                                    type: string
-                                                type: array
-                                            organization_units:
-                                                example:
-                                                    - engineering/qa
-                                                items:
-                                                    type: string
-                                                type: array
-                                            policy_type:
-                                                enum:
-                                                    - private-app
-                                                type: string
-                                            privateAppIds:
-                                                example:
-                                                    - "100"
-                                                    - "201"
-                                                items:
-                                                    type: string
-                                                type: array
-                                            privateAppTagIds:
-                                                example:
-                                                    - "1"
-                                                    - "2"
-                                                items:
-                                                    type: string
-                                                type: array
-                                            privateAppTags:
-                                                example:
-                                                    - tag1
-                                                    - tag2
-                                                items:
-                                                    type: string
-                                                type: array
-                                            privateApps:
-                                                example:
-                                                    - app1
-                                                    - app2
-                                                items:
-                                                    type: string
-                                                type: array
-                                            privateAppsWithActivities:
-                                                items:
-                                                    properties:
-                                                        activities:
-                                                            items:
-                                                                properties:
-                                                                    activity:
-                                                                        enum:
-                                                                            - any
-                                                                        type: string
-                                                                    list_of_constraints:
-                                                                        example: []
-                                                                        items:
-                                                                            type: string
-                                                                        type: array
-                                                                type: object
-                                                            type: array
-                                                        appName:
-                                                            example: '[172.31.12.135]'
+                                                    privateAppIds:
+                                                        example:
+                                                            - "100"
+                                                            - "201"
+                                                        items:
                                                             type: string
-                                                    type: object
-                                                type: array
-                                            show_dlp_profile_action_table:
-                                                type: boolean
-                                            srcCountries:
-                                                example:
-                                                    - US
-                                                    - AF
-                                                    - CN
-                                                items:
-                                                    type: string
-                                                type: array
-                                            userGroups:
-                                                example:
-                                                    - usergroup/group1
-                                                items:
-                                                    type: string
-                                                type: array
-                                            userType:
-                                                enum:
-                                                    - user
+                                                        type: array
+                                                    privateAppTagIds:
+                                                        example:
+                                                            - "1"
+                                                            - "2"
+                                                        items:
+                                                            type: string
+                                                        type: array
+                                                    privateAppTags:
+                                                        example:
+                                                            - tag1
+                                                            - tag2
+                                                        items:
+                                                            type: string
+                                                        type: array
+                                                    privateApps:
+                                                        example:
+                                                            - app1
+                                                            - app2
+                                                        items:
+                                                            type: string
+                                                        type: array
+                                                    privateAppsWithActivities:
+                                                        items:
+                                                            properties:
+                                                                activities:
+                                                                    items:
+                                                                        properties:
+                                                                            activity:
+                                                                                enum:
+                                                                                    - any
+                                                                                type: string
+                                                                            list_of_constraints:
+                                                                                example: []
+                                                                                items:
+                                                                                    type: string
+                                                                                type: array
+                                                                        type: object
+                                                                    type: array
+                                                                appName:
+                                                                    example: '[172.31.12.135]'
+                                                                    type: string
+                                                            type: object
+                                                        type: array
+                                                    show_dlp_profile_action_table:
+                                                        type: boolean
+                                                    srcCountries:
+                                                        example:
+                                                            - US
+                                                            - AF
+                                                            - CN
+                                                        items:
+                                                            type: string
+                                                        type: array
+                                                    userGroups:
+                                                        example:
+                                                            - usergroup/group1
+                                                        items:
+                                                            type: string
+                                                        type: array
+                                                    userType:
+                                                        enum:
+                                                            - user
+                                                        type: string
+                                                    users:
+                                                        example:
+                                                            - vphan@netskope.com
+                                                        items:
+                                                            type: string
+                                                        type: array
+                                                    version:
+                                                        example: 1
+                                                        type: integer
+                                                type: object
+                                            rule_id:
+                                                example: "1"
                                                 type: string
-                                            users:
-                                                example:
-                                                    - vphan@netskope.com
-                                                items:
-                                                    type: string
-                                                type: array
-                                            version:
-                                                example: 1
-                                                type: integer
+                                            rule_name:
+                                                example: van-test
+                                                type: string
                                         type: object
-                                    rule_id:
-                                        example: 1
-                                        type: integer
-                                    rule_name:
-                                        example: van-test
+                                        x-speakeasy-entity: NPAPolicy
+                                    status:
+                                        enum:
+                                            - success
+                                            - error
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
-                                x-speakeasy-entity: NPAPolicy
                     description: successful operation
                 "400":
                     content:
@@ -5384,8 +5419,8 @@ paths:
                   name: id
                   required: true
                   schema:
-                    type: integer
-                  x-speakeasy-match: RuleID
+                    type: string
+                  x-speakeasy-match: rule_id
             responses:
                 "200":
                     content:
@@ -5401,10 +5436,12 @@ paths:
                                             rule_data:
                                                 properties:
                                                     access_method:
-                                                        enum:
-                                                            - Client
-                                                            - Clientless
-                                                        type: string
+                                                        items:
+                                                            example:
+                                                                - Client
+                                                                - Clientless
+                                                            type: string
+                                                        type: array
                                                     b_negateNetLocation:
                                                         type: boolean
                                                     b_negateSrcCountries:
@@ -5542,8 +5579,8 @@ paths:
                                                         type: integer
                                                 type: object
                                             rule_id:
-                                                example: 1
-                                                type: integer
+                                                example: "1"
+                                                type: string
                                             rule_name:
                                                 example: van-test
                                                 type: string
@@ -5554,6 +5591,7 @@ paths:
                                             - success
                                             - error
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -5578,8 +5616,8 @@ paths:
                   name: id
                   required: true
                   schema:
-                    type: integer
-                  x-speakeasy-match: RuleID
+                    type: string
+                  x-speakeasy-match: rule_id
                 - description: Return values only from specified fields
                   in: query
                   name: fields
@@ -5602,10 +5640,12 @@ paths:
                                             rule_data:
                                                 properties:
                                                     access_method:
-                                                        enum:
-                                                            - Client
-                                                            - Clientless
-                                                        type: string
+                                                        items:
+                                                            example:
+                                                                - Client
+                                                                - Clientless
+                                                            type: string
+                                                        type: array
                                                     b_negateNetLocation:
                                                         type: boolean
                                                     b_negateSrcCountries:
@@ -5743,8 +5783,8 @@ paths:
                                                         type: integer
                                                 type: object
                                             rule_id:
-                                                example: 1
-                                                type: integer
+                                                example: "1"
+                                                type: string
                                             rule_name:
                                                 example: van-test
                                                 type: string
@@ -5755,6 +5795,7 @@ paths:
                                             - success
                                             - error
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -5779,8 +5820,8 @@ paths:
                   name: id
                   required: true
                   schema:
-                    type: integer
-                  x-speakeasy-match: RuleID
+                    type: string
+                  x-speakeasy-match: rule_id
                 - description: flag to skip output except status code
                   in: query
                   name: silent
@@ -5812,10 +5853,12 @@ paths:
                                 rule_data:
                                     properties:
                                         access_method:
-                                            enum:
-                                                - Client
-                                                - Clientless
-                                            type: string
+                                            items:
+                                                example:
+                                                    - Client
+                                                    - Clientless
+                                                type: string
+                                            type: array
                                         b_negateNetLocation:
                                             type: boolean
                                         b_negateSrcCountries:
@@ -5968,8 +6011,8 @@ paths:
                                             example: 5
                                             type: integer
                                         rule_id:
-                                            example: 1
-                                            type: integer
+                                            example: "1"
+                                            type: string
                                         rule_name:
                                             example: api-policy-managed
                                             type: string
@@ -5992,10 +6035,12 @@ paths:
                                             rule_data:
                                                 properties:
                                                     access_method:
-                                                        enum:
-                                                            - Client
-                                                            - Clientless
-                                                        type: string
+                                                        items:
+                                                            example:
+                                                                - Client
+                                                                - Clientless
+                                                            type: string
+                                                        type: array
                                                     b_negateNetLocation:
                                                         type: boolean
                                                     b_negateSrcCountries:
@@ -6133,8 +6178,8 @@ paths:
                                                         type: integer
                                                 type: object
                                             rule_id:
-                                                example: 1
-                                                type: integer
+                                                example: "1"
+                                                type: string
                                             rule_name:
                                                 example: van-test
                                                 type: string
@@ -6145,6 +6190,7 @@ paths:
                                             - success
                                             - error
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -8983,13 +9029,16 @@ paths:
                                                             id:
                                                                 format: int32
                                                                 type: integer
+                                                                x-speakeasy-ignore: true
                                                             port:
                                                                 type: string
                                                             service_id:
                                                                 format: int32
                                                                 type: integer
+                                                                x-speakeasy-ignore: true
                                                             transport:
                                                                 type: string
+                                                                x-speakeasy-ignore: true
                                                         type: object
                                                     type: array
                                                 real_host:
@@ -9146,13 +9195,16 @@ paths:
                                                         id:
                                                             format: int32
                                                             type: integer
+                                                            x-speakeasy-ignore: true
                                                         port:
                                                             type: string
                                                         service_id:
                                                             format: int32
                                                             type: integer
+                                                            x-speakeasy-ignore: true
                                                         transport:
                                                             type: string
+                                                            x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
                                             real_host:
@@ -9201,6 +9253,7 @@ paths:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -9245,6 +9298,7 @@ paths:
                                             - success
                                             - error
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -9294,13 +9348,16 @@ paths:
                                                         id:
                                                             format: int32
                                                             type: integer
+                                                            x-speakeasy-ignore: true
                                                         port:
                                                             type: string
                                                         service_id:
                                                             format: int32
                                                             type: integer
+                                                            x-speakeasy-ignore: true
                                                         transport:
                                                             type: string
+                                                            x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
                                             real_host:
@@ -9349,6 +9406,7 @@ paths:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -9461,13 +9519,16 @@ paths:
                                                         id:
                                                             format: int32
                                                             type: integer
+                                                            x-speakeasy-ignore: true
                                                         port:
                                                             type: string
                                                         service_id:
                                                             format: int32
                                                             type: integer
+                                                            x-speakeasy-ignore: true
                                                         transport:
                                                             type: string
+                                                            x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
                                             real_host:
@@ -9516,6 +9577,7 @@ paths:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -9630,13 +9692,16 @@ paths:
                                                         id:
                                                             format: int32
                                                             type: integer
+                                                            x-speakeasy-ignore: true
                                                         port:
                                                             type: string
                                                         service_id:
                                                             format: int32
                                                             type: integer
+                                                            x-speakeasy-ignore: true
                                                         transport:
                                                             type: string
+                                                            x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
                                             real_host:
@@ -9685,6 +9750,7 @@ paths:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -9739,6 +9805,7 @@ paths:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -9814,12 +9881,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
+                                            x-speakeasy-entity: PrivateAppTag
                                         type: array
                                     status:
                                         enum:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                                 x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
@@ -9853,12 +9922,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
+                                            x-speakeasy-entity: PrivateAppTag
                                         type: array
                                     status:
                                         enum:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                                 x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
@@ -9929,12 +10000,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
+                                            x-speakeasy-entity: PrivateAppTag
                                         type: array
                                     status:
                                         enum:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                                 x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
@@ -10004,12 +10077,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
+                                            x-speakeasy-entity: PrivateAppTag
                                         type: array
                                     status:
                                         enum:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                                 x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
@@ -10026,6 +10101,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: create tags for private apps
+            x-speakeasy-entity-operation: PrivateAppTag#create
         x-netskope-params:
             apiGroup: npa_private_tag
             customerFacing: true
@@ -10089,6 +10165,7 @@ paths:
                                             - success
                                             - error
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                     description: successful operation
                 "400":
@@ -10104,7 +10181,6 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Delete a private app tag based on tag id
-            x-speakeasy-entity-operation: PrivateAppTag#delete
         get:
             description: Get a private app tag based on tag id
             parameters:
@@ -10130,12 +10206,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
+                                            x-speakeasy-entity: PrivateAppTag
                                         type: array
                                     status:
                                         enum:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                                 x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
@@ -10152,7 +10230,6 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get a private app tag based on tag id
-            x-speakeasy-entity-operation: PrivateAppTag#read
         put:
             description: Update a private app tag based on tag id
             parameters:
@@ -10214,12 +10291,14 @@ paths:
                                                 tag_name:
                                                     type: string
                                             type: object
+                                            x-speakeasy-entity: PrivateAppTag
                                         type: array
                                     status:
                                         enum:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                                 x-speakeasy-entity: PrivateAppTagList
                     description: successful operation
@@ -10236,7 +10315,6 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Update a private app tag based on tag id
-            x-speakeasy-entity-operation: PrivateAppTag#create,update
         x-netskope-params:
             apiGroup: npa_private_tag
             customerFacing: true
@@ -10275,6 +10353,7 @@ paths:
                                             - success
                                             - not found
                                         type: string
+                                        x-speakeasy-ignore: true
                                 type: object
                                 x-speakeasy-entity: PrivateAppTagPolicyUseList
                     description: successful operation

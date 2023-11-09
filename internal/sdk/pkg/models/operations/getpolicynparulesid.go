@@ -12,7 +12,7 @@ type GetPolicyNpaRulesIDRequest struct {
 	// Return values only from specified fields
 	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 	// npa policy id
-	ID int64 `pathParam:"style=simple,explode=false,name=id"`
+	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
 func (o *GetPolicyNpaRulesIDRequest) GetFields() *string {
@@ -22,9 +22,9 @@ func (o *GetPolicyNpaRulesIDRequest) GetFields() *string {
 	return o.Fields
 }
 
-func (o *GetPolicyNpaRulesIDRequest) GetID() int64 {
+func (o *GetPolicyNpaRulesIDRequest) GetID() string {
 	if o == nil {
-		return 0
+		return ""
 	}
 	return o.ID
 }
@@ -47,33 +47,6 @@ func (o *GetPolicyNpaRulesIDResponseResponseBody) GetStatus() *int64 {
 		return nil
 	}
 	return o.Status
-}
-
-type GetPolicyNpaRulesIDAccessMethod string
-
-const (
-	GetPolicyNpaRulesIDAccessMethodClient     GetPolicyNpaRulesIDAccessMethod = "Client"
-	GetPolicyNpaRulesIDAccessMethodClientless GetPolicyNpaRulesIDAccessMethod = "Clientless"
-)
-
-func (e GetPolicyNpaRulesIDAccessMethod) ToPointer() *GetPolicyNpaRulesIDAccessMethod {
-	return &e
-}
-
-func (e *GetPolicyNpaRulesIDAccessMethod) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "Client":
-		fallthrough
-	case "Clientless":
-		*e = GetPolicyNpaRulesIDAccessMethod(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for GetPolicyNpaRulesIDAccessMethod: %v", v)
-	}
 }
 
 type GetPolicyNpaRulesIDActions string
@@ -280,7 +253,7 @@ func (e *GetPolicyNpaRulesIDUserType) UnmarshalJSON(data []byte) error {
 }
 
 type GetPolicyNpaRulesIDRuleData struct {
-	AccessMethod              *GetPolicyNpaRulesIDAccessMethod               `json:"access_method,omitempty"`
+	AccessMethod              []string                                       `json:"access_method,omitempty"`
 	BNegateNetLocation        *bool                                          `json:"b_negateNetLocation,omitempty"`
 	BNegateSrcCountries       *bool                                          `json:"b_negateSrcCountries,omitempty"`
 	Classification            *string                                        `json:"classification,omitempty"`
@@ -304,7 +277,7 @@ type GetPolicyNpaRulesIDRuleData struct {
 	Version                   *int64                                         `json:"version,omitempty"`
 }
 
-func (o *GetPolicyNpaRulesIDRuleData) GetAccessMethod() *GetPolicyNpaRulesIDAccessMethod {
+func (o *GetPolicyNpaRulesIDRuleData) GetAccessMethod() []string {
 	if o == nil {
 		return nil
 	}
@@ -460,7 +433,7 @@ func (o *GetPolicyNpaRulesIDRuleData) GetVersion() *int64 {
 
 type GetPolicyNpaRulesIDData struct {
 	RuleData *GetPolicyNpaRulesIDRuleData `json:"rule_data,omitempty"`
-	RuleID   *int64                       `json:"rule_id,omitempty"`
+	RuleID   *string                      `json:"rule_id,omitempty"`
 	RuleName *string                      `json:"rule_name,omitempty"`
 }
 
@@ -471,7 +444,7 @@ func (o *GetPolicyNpaRulesIDData) GetRuleData() *GetPolicyNpaRulesIDRuleData {
 	return o.RuleData
 }
 
-func (o *GetPolicyNpaRulesIDData) GetRuleID() *int64 {
+func (o *GetPolicyNpaRulesIDData) GetRuleID() *string {
 	if o == nil {
 		return nil
 	}
@@ -485,37 +458,9 @@ func (o *GetPolicyNpaRulesIDData) GetRuleName() *string {
 	return o.RuleName
 }
 
-type GetPolicyNpaRulesIDStatus string
-
-const (
-	GetPolicyNpaRulesIDStatusSuccess GetPolicyNpaRulesIDStatus = "success"
-	GetPolicyNpaRulesIDStatusError   GetPolicyNpaRulesIDStatus = "error"
-)
-
-func (e GetPolicyNpaRulesIDStatus) ToPointer() *GetPolicyNpaRulesIDStatus {
-	return &e
-}
-
-func (e *GetPolicyNpaRulesIDStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "error":
-		*e = GetPolicyNpaRulesIDStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for GetPolicyNpaRulesIDStatus: %v", v)
-	}
-}
-
 // GetPolicyNpaRulesIDResponseBody - successful operation
 type GetPolicyNpaRulesIDResponseBody struct {
-	Data   *GetPolicyNpaRulesIDData   `json:"data,omitempty"`
-	Status *GetPolicyNpaRulesIDStatus `json:"status,omitempty"`
+	Data *GetPolicyNpaRulesIDData `json:"data,omitempty"`
 }
 
 func (o *GetPolicyNpaRulesIDResponseBody) GetData() *GetPolicyNpaRulesIDData {
@@ -523,13 +468,6 @@ func (o *GetPolicyNpaRulesIDResponseBody) GetData() *GetPolicyNpaRulesIDData {
 		return nil
 	}
 	return o.Data
-}
-
-func (o *GetPolicyNpaRulesIDResponseBody) GetStatus() *GetPolicyNpaRulesIDStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type GetPolicyNpaRulesIDResponse struct {

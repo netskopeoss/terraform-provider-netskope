@@ -5,16 +5,13 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"ns/internal/validators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -56,10 +53,7 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 
 		Attributes: map[string]schema.Attribute{
 			"assessment": schema.StringAttribute{
-				Computed: true,
-				Validators: []validator.String{
-					validators.IsValidJSON(),
-				},
+				Computed:    true,
 				Description: `Parsed as JSON.`,
 			},
 			"common_name": schema.StringAttribute{
@@ -82,13 +76,7 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed: true,
 			},
 			"status": schema.StringAttribute{
-				Computed: true,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"connected",
-						"not registered",
-					),
-				},
+				Computed:    true,
 				Description: `must be one of ["connected", "not registered"]`,
 			},
 			"stitcher_id": schema.Int64Attribute{

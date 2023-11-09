@@ -5,12 +5,10 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
@@ -30,8 +28,7 @@ type PrivateAppTagListDataSource struct {
 
 // PrivateAppTagListDataSourceModel describes the data model.
 type PrivateAppTagListDataSourceModel struct {
-	Data   []PostInfrastructurePublishersTags `tfsdk:"data"`
-	Status types.String                       `tfsdk:"status"`
+	Data []PostInfrastructurePublishersTags `tfsdk:"data"`
 }
 
 // Metadata returns the data source type name.
@@ -57,16 +54,6 @@ func (r *PrivateAppTagListDataSource) Schema(ctx context.Context, req datasource
 						},
 					},
 				},
-			},
-			"status": schema.StringAttribute{
-				Computed: true,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"success",
-						"not found",
-					),
-				},
-				Description: `must be one of ["success", "not found"]`,
 			},
 		},
 	}

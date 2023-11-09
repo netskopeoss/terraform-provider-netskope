@@ -19,11 +19,8 @@ resource "ns_private_app" "my_privateapp" {
   host              = "...my_host..."
   protocols = [
     {
-      id         = 6
-      port       = "...my_port..."
-      service_id = 4
-      transport  = "...my_transport..."
-      type       = "...my_type..."
+      port = "...my_port..."
+      type = "...my_type..."
     },
   ]
   publisher_tags = [
@@ -40,11 +37,11 @@ resource "ns_private_app" "my_privateapp" {
   real_host = "...my_real_host..."
   tags = [
     {
-      tag_id   = 1
+      tag_id   = 8
       tag_name = "...my_tag_name..."
     },
   ]
-  trust_self_signed_certs = true
+  trust_self_signed_certs = false
   use_publisher_dns       = true
 }
 ```
@@ -70,7 +67,6 @@ resource "ns_private_app" "my_privateapp" {
 - `id` (Number) The ID of this resource.
 - `name` (String)
 - `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--service_publisher_assignments))
-- `status` (String) must be one of ["success", "not found"]
 
 <a id="nestedatt--protocols"></a>
 ### Nested Schema for `protocols`
@@ -79,12 +75,6 @@ Optional:
 
 - `port` (String)
 - `type` (String)
-
-Read-Only:
-
-- `id` (Number)
-- `service_id` (Number)
-- `transport` (String)
 
 
 <a id="nestedatt--publisher_tags"></a>

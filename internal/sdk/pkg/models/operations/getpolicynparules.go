@@ -85,33 +85,6 @@ func (o *GetPolicyNpaRulesResponseResponseBody) GetStatus() *int64 {
 	return o.Status
 }
 
-type GetPolicyNpaRulesAccessMethod string
-
-const (
-	GetPolicyNpaRulesAccessMethodClient     GetPolicyNpaRulesAccessMethod = "Client"
-	GetPolicyNpaRulesAccessMethodClientless GetPolicyNpaRulesAccessMethod = "Clientless"
-)
-
-func (e GetPolicyNpaRulesAccessMethod) ToPointer() *GetPolicyNpaRulesAccessMethod {
-	return &e
-}
-
-func (e *GetPolicyNpaRulesAccessMethod) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "Client":
-		fallthrough
-	case "Clientless":
-		*e = GetPolicyNpaRulesAccessMethod(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for GetPolicyNpaRulesAccessMethod: %v", v)
-	}
-}
-
 type GetPolicyNpaRulesActions string
 
 const (
@@ -316,7 +289,7 @@ func (e *GetPolicyNpaRulesUserType) UnmarshalJSON(data []byte) error {
 }
 
 type GetPolicyNpaRulesRuleData struct {
-	AccessMethod              *GetPolicyNpaRulesAccessMethod               `json:"access_method,omitempty"`
+	AccessMethod              []string                                     `json:"access_method,omitempty"`
 	BNegateNetLocation        *bool                                        `json:"b_negateNetLocation,omitempty"`
 	BNegateSrcCountries       *bool                                        `json:"b_negateSrcCountries,omitempty"`
 	Classification            *string                                      `json:"classification,omitempty"`
@@ -340,7 +313,7 @@ type GetPolicyNpaRulesRuleData struct {
 	Version                   *int64                                       `json:"version,omitempty"`
 }
 
-func (o *GetPolicyNpaRulesRuleData) GetAccessMethod() *GetPolicyNpaRulesAccessMethod {
+func (o *GetPolicyNpaRulesRuleData) GetAccessMethod() []string {
 	if o == nil {
 		return nil
 	}
@@ -496,7 +469,7 @@ func (o *GetPolicyNpaRulesRuleData) GetVersion() *int64 {
 
 type GetPolicyNpaRulesData struct {
 	RuleData *GetPolicyNpaRulesRuleData `json:"rule_data,omitempty"`
-	RuleID   *int64                     `json:"rule_id,omitempty"`
+	RuleID   *string                    `json:"rule_id,omitempty"`
 	RuleName *string                    `json:"rule_name,omitempty"`
 }
 
@@ -507,7 +480,7 @@ func (o *GetPolicyNpaRulesData) GetRuleData() *GetPolicyNpaRulesRuleData {
 	return o.RuleData
 }
 
-func (o *GetPolicyNpaRulesData) GetRuleID() *int64 {
+func (o *GetPolicyNpaRulesData) GetRuleID() *string {
 	if o == nil {
 		return nil
 	}

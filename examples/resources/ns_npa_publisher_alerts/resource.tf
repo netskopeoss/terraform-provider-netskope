@@ -3,7 +3,7 @@ resource "ns_npa_publisher_alerts" "my_npapublisheralerts" {
     ["admin1@abc.com", "admin2@abc.com"],
   ]
   event_types = [
-    "CONNECTION_FAILED",
+    "UPGRADE_FAILED",
   ]
   selected_users = "abc@xyz.com,def@xyz.com"
 }

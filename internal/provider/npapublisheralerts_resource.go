@@ -5,7 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -69,7 +69,8 @@ func (r *NPAPublisherAlertsResource) Schema(ctx context.Context, req resource.Sc
 				Optional: true,
 			},
 			"status": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: `must be one of ["success", "not found", "failure"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"success",
@@ -77,7 +78,6 @@ func (r *NPAPublisherAlertsResource) Schema(ctx context.Context, req resource.Sc
 						"failure",
 					),
 				},
-				Description: `must be one of ["success", "not found", "failure"]`,
 			},
 		},
 	}

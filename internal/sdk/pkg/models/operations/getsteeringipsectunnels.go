@@ -3,8 +3,8 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
 	"net/http"
-	"ns/internal/sdk/pkg/utils"
 )
 
 type GetSteeringIpsecTunnelsRequest struct {

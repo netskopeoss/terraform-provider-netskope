@@ -4,8 +4,8 @@ package provider
 
 import (
 	"context"
-	"ns/internal/sdk"
-	"ns/internal/sdk/pkg/models/shared"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -108,7 +108,6 @@ func (p *NsProvider) DataSources(ctx context.Context) []func() datasource.DataSo
 		NewNPAPublisherUpgradeProfileListDataSource,
 		NewPolicyGroupListDataSource,
 		NewPrivateAppListDataSource,
-		NewPrivateAppTagDataSource,
 		NewPrivateAppTagListDataSource,
 		NewPrivateAppTagPolicyUseListDataSource,
 	}

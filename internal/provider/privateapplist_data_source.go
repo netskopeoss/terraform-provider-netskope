@@ -5,8 +5,8 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -65,16 +65,7 @@ func (r *PrivateAppListDataSource) Schema(ctx context.Context, req datasource.Sc
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
-									"id": schema.Int64Attribute{
-										Computed: true,
-									},
 									"port": schema.StringAttribute{
-										Computed: true,
-									},
-									"service_id": schema.Int64Attribute{
-										Computed: true,
-									},
-									"transport": schema.StringAttribute{
 										Computed: true,
 									},
 								},

@@ -5,17 +5,19 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"ns/internal/validators"
+	"github.com/netskope/terraform-provider-ns/internal/validators"
 	"strconv"
 )
 
@@ -57,11 +59,11 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 
 		Attributes: map[string]schema.Attribute{
 			"assessment": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: `Parsed as JSON.`,
 				Validators: []validator.String{
 					validators.IsValidJSON(),
 				},
-				Description: `Parsed as JSON.`,
 			},
 			"common_name": schema.StringAttribute{
 				Computed: true,
@@ -81,6 +83,9 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 			},
 			"publisher_upgrade_profiles_id": schema.Int64Attribute{
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.RequiresReplace(),
+				},
 				Optional:    true,
 				Description: `Default: 1`,
 			},
@@ -88,14 +93,14 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 			},
 			"status": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: `must be one of ["connected", "not registered"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"connected",
 						"not registered",
 					),
 				},
-				Description: `must be one of ["connected", "not registered"]`,
 			},
 			"stitcher_id": schema.Int64Attribute{
 				Computed: true,

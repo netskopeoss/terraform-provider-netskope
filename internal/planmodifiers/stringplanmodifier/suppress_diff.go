@@ -4,7 +4,7 @@ package stringplanmodifier
 
 import (
 	"context"
-	"ns/internal/planmodifiers/utils"
+	"github.com/netskope/terraform-provider-ns/internal/planmodifiers/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 )

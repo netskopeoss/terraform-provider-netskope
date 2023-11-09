@@ -5,17 +5,16 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"strconv"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -37,8 +36,6 @@ type PrivateAppTagResourceModel struct {
 	ID            types.String                       `tfsdk:"id"`
 	Ids           []types.String                     `tfsdk:"ids"`
 	PublisherTags []PostInfrastructurePublishersTags `tfsdk:"publisher_tags"`
-	Status        types.String                       `tfsdk:"status"`
-	TagID         types.Int64                        `tfsdk:"tag_id"`
 	Tags          []PostInfrastructurePublishersTags `tfsdk:"tags"`
 }
 
@@ -65,47 +62,57 @@ func (r *PrivateAppTagResource) Schema(ctx context.Context, req resource.SchemaR
 				},
 			},
 			"id": schema.StringAttribute{
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 				Optional: true,
 			},
 			"ids": schema.ListAttribute{
+				PlanModifiers: []planmodifier.List{
+					listplanmodifier.RequiresReplace(),
+				},
 				Optional:    true,
 				ElementType: types.StringType,
 			},
 			"publisher_tags": schema.ListNestedAttribute{
+				PlanModifiers: []planmodifier.List{
+					listplanmodifier.RequiresReplace(),
+				},
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"tag_id": schema.Int64Attribute{
+							PlanModifiers: []planmodifier.Int64{
+								int64planmodifier.RequiresReplace(),
+							},
 							Optional: true,
 						},
 						"tag_name": schema.StringAttribute{
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.RequiresReplace(),
+							},
 							Optional: true,
 						},
 					},
 				},
 			},
-			"status": schema.StringAttribute{
-				Computed: true,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"success",
-						"not found",
-					),
-				},
-				Description: `must be one of ["success", "not found"]`,
-			},
-			"tag_id": schema.Int64Attribute{
-				Required:    true,
-				Description: `tag id`,
-			},
 			"tags": schema.ListNestedAttribute{
+				PlanModifiers: []planmodifier.List{
+					listplanmodifier.RequiresReplace(),
+				},
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"tag_id": schema.Int64Attribute{
+							PlanModifiers: []planmodifier.Int64{
+								int64planmodifier.RequiresReplace(),
+							},
 							Optional: true,
 						},
 						"tag_name": schema.StringAttribute{
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.RequiresReplace(),
+							},
 							Optional: true,
 						},
 					},
@@ -153,13 +160,8 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
-	requestBody := *data.ToCreateSDKType()
-	tagID := int(data.TagID.ValueInt64())
-	request := operations.PutSteeringAppsPrivateTagsTagIDRequest{
-		RequestBody: requestBody,
-		TagID:       tagID,
-	}
-	res, err := r.client.PutSteeringAppsPrivateTagsTagID(ctx, request)
+	request := *data.ToCreateSDKType()
+	res, err := r.client.PostSteeringAppsPrivateTags(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -203,31 +205,7 @@ func (r *PrivateAppTagResource) Read(ctx context.Context, req resource.ReadReque
 		return
 	}
 
-	tagID := int(data.TagID.ValueInt64())
-	request := operations.GetSteeringAppsPrivateTagsTagIDRequest{
-		TagID: tagID,
-	}
-	res, err := r.client.GetSteeringAppsPrivateTagsTagID(ctx, request)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
-		}
-		return
-	}
-	if res == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
-		return
-	}
-	if res.TwoHundredApplicationJSONObject == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
-		return
-	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject)
+	// Not Implemented; we rely entirely on CREATE API request response
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -240,33 +218,7 @@ func (r *PrivateAppTagResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 
-	requestBody := *data.ToUpdateSDKType()
-	tagID := int(data.TagID.ValueInt64())
-	request := operations.PutSteeringAppsPrivateTagsTagIDRequest{
-		RequestBody: requestBody,
-		TagID:       tagID,
-	}
-	res, err := r.client.PutSteeringAppsPrivateTagsTagID(ctx, request)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
-		}
-		return
-	}
-	if res == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
-		return
-	}
-	if res.TwoHundredApplicationJSONObject == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
-		return
-	}
-	data.RefreshFromUpdateResponse(res.TwoHundredApplicationJSONObject)
+	// Not Implemented; all attributes marked as RequiresReplace
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -290,36 +242,9 @@ func (r *PrivateAppTagResource) Delete(ctx context.Context, req resource.DeleteR
 		return
 	}
 
-	requestBody := *data.ToDeleteSDKType()
-	tagID := int(data.TagID.ValueInt64())
-	request := operations.DeleteSteeringAppsPrivateTagsTagIDRequest{
-		RequestBody: requestBody,
-		TagID:       tagID,
-	}
-	res, err := r.client.DeleteSteeringAppsPrivateTagsTagID(ctx, request)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
-		}
-		return
-	}
-	if res == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
-		return
-	}
-
+	// Not Implemented; entity does not have a configured DELETE operation
 }
 
 func (r *PrivateAppTagResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	tagId2, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
-	}
-
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("tag_id"), int64(tagId2))...)
+	resp.Diagnostics.AddError("Not Implemented", "No available import state operation is available for resource private_app_tag.")
 }

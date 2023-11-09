@@ -18,14 +18,16 @@ resource "ns_npa_policy" "my_npapolicy" {
   enabled     = "1"
   group_name  = "My policy group"
   rule_data = {
-    access_method          = "Clientless"
+    access_method = [
+      ["Client", "Clientless"],
+    ]
     b_negate_net_location  = true
     b_negate_src_countries = true
     classification         = "...my_classification..."
     dlp_actions = [
       {
         actions = [
-          "bypass",
+          "allow",
         ]
         dlp_profile = "Payment Card"
       },
@@ -84,7 +86,7 @@ resource "ns_npa_policy" "my_npapolicy" {
   rule_order = {
     order     = "before"
     position  = 5
-    rule_id   = 1
+    rule_id   = "1"
     rule_name = "api-policy-managed"
   }
 }
@@ -104,14 +106,14 @@ resource "ns_npa_policy" "my_npapolicy" {
 
 ### Read-Only
 
-- `rule_id` (Number)
+- `rule_id` (String)
 
 <a id="nestedatt--rule_data"></a>
 ### Nested Schema for `rule_data`
 
 Optional:
 
-- `access_method` (String) must be one of ["Client", "Clientless"]
+- `access_method` (List of String)
 - `b_negate_net_location` (Boolean)
 - `b_negate_src_countries` (Boolean)
 - `classification` (String)
@@ -177,7 +179,7 @@ Optional:
 
 - `order` (String) must be one of ["top", "bottom", "before", "after"]
 - `position` (Number)
-- `rule_id` (Number)
+- `rule_id` (String)
 - `rule_name` (String)
 
 

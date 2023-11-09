@@ -3,8 +3,6 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -41,17 +39,7 @@ func (o *GetSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *in
 }
 
 type GetSteeringAppsPrivatePrivateAppIDProtocols struct {
-	ID        *int    `json:"id,omitempty"`
-	Port      *string `json:"port,omitempty"`
-	ServiceID *int    `json:"service_id,omitempty"`
-	Transport *string `json:"transport,omitempty"`
-}
-
-func (o *GetSteeringAppsPrivatePrivateAppIDProtocols) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
+	Port *string `json:"port,omitempty"`
 }
 
 func (o *GetSteeringAppsPrivatePrivateAppIDProtocols) GetPort() *string {
@@ -59,20 +47,6 @@ func (o *GetSteeringAppsPrivatePrivateAppIDProtocols) GetPort() *string {
 		return nil
 	}
 	return o.Port
-}
-
-func (o *GetSteeringAppsPrivatePrivateAppIDProtocols) GetServiceID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ServiceID
-}
-
-func (o *GetSteeringAppsPrivatePrivateAppIDProtocols) GetTransport() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Transport
 }
 
 type Reachability struct {
@@ -239,37 +213,9 @@ func (o *GetSteeringAppsPrivatePrivateAppIDData) GetUsePublisherDNS() *bool {
 	return o.UsePublisherDNS
 }
 
-type GetSteeringAppsPrivatePrivateAppIDStatus string
-
-const (
-	GetSteeringAppsPrivatePrivateAppIDStatusSuccess  GetSteeringAppsPrivatePrivateAppIDStatus = "success"
-	GetSteeringAppsPrivatePrivateAppIDStatusNotFound GetSteeringAppsPrivatePrivateAppIDStatus = "not found"
-)
-
-func (e GetSteeringAppsPrivatePrivateAppIDStatus) ToPointer() *GetSteeringAppsPrivatePrivateAppIDStatus {
-	return &e
-}
-
-func (e *GetSteeringAppsPrivatePrivateAppIDStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = GetSteeringAppsPrivatePrivateAppIDStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for GetSteeringAppsPrivatePrivateAppIDStatus: %v", v)
-	}
-}
-
 // GetSteeringAppsPrivatePrivateAppIDResponseBody - successful operation
 type GetSteeringAppsPrivatePrivateAppIDResponseBody struct {
-	Data   *GetSteeringAppsPrivatePrivateAppIDData   `json:"data,omitempty"`
-	Status *GetSteeringAppsPrivatePrivateAppIDStatus `json:"status,omitempty"`
+	Data *GetSteeringAppsPrivatePrivateAppIDData `json:"data,omitempty"`
 }
 
 func (o *GetSteeringAppsPrivatePrivateAppIDResponseBody) GetData() *GetSteeringAppsPrivatePrivateAppIDData {
@@ -277,13 +223,6 @@ func (o *GetSteeringAppsPrivatePrivateAppIDResponseBody) GetData() *GetSteeringA
 		return nil
 	}
 	return o.Data
-}
-
-func (o *GetSteeringAppsPrivatePrivateAppIDResponseBody) GetStatus() *GetSteeringAppsPrivatePrivateAppIDStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type GetSteeringAppsPrivatePrivateAppIDResponse struct {

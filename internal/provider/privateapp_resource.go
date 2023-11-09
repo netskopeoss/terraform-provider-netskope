@@ -5,13 +5,11 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
@@ -41,7 +39,6 @@ type PrivateAppResourceModel struct {
 	Publishers                  []PostSteeringAppsPrivatePublishers                  `tfsdk:"publishers"`
 	RealHost                    types.String                                         `tfsdk:"real_host"`
 	ServicePublisherAssignments []PostSteeringAppsPrivateServicePublisherAssignments `tfsdk:"service_publisher_assignments"`
-	Status                      types.String                                         `tfsdk:"status"`
 	Tags                        []PostInfrastructurePublishersTags                   `tfsdk:"tags"`
 	TrustSelfSignedCerts        types.Bool                                           `tfsdk:"trust_self_signed_certs"`
 	UsePublisherDNS             types.Bool                                           `tfsdk:"use_publisher_dns"`
@@ -78,18 +75,9 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"id": schema.Int64Attribute{
-							Computed: true,
-						},
 						"port": schema.StringAttribute{
 							Computed: true,
 							Optional: true,
-						},
-						"service_id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"transport": schema.StringAttribute{
-							Computed: true,
 						},
 						"type": schema.StringAttribute{
 							Optional: true,
@@ -153,16 +141,6 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 						},
 					},
 				},
-			},
-			"status": schema.StringAttribute{
-				Computed: true,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"success",
-						"not found",
-					),
-				},
-				Description: `must be one of ["success", "not found"]`,
 			},
 			"tags": schema.ListNestedAttribute{
 				Computed: true,

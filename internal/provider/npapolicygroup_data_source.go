@@ -5,8 +5,8 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -30,11 +30,11 @@ type NPAPolicyGroupDataSource struct {
 // NPAPolicyGroupDataSourceModel describes the data model.
 type NPAPolicyGroupDataSourceModel struct {
 	CanBeEditedDeleted types.Int64  `tfsdk:"can_be_edited_deleted"`
-	GroupID            types.Int64  `tfsdk:"group_id"`
 	GroupName          types.String `tfsdk:"group_name"`
 	GroupPinnedID      types.Int64  `tfsdk:"group_pinned_id"`
 	GroupProdID        types.Int64  `tfsdk:"group_prod_id"`
 	GroupType          types.Int64  `tfsdk:"group_type"`
+	GroupID            types.Int64  `tfsdk:"group_id"`
 	ModifyTime         types.String `tfsdk:"modify_time"`
 	ModifyType         types.String `tfsdk:"modify_type"`
 }
@@ -53,10 +53,6 @@ func (r *NPAPolicyGroupDataSource) Schema(ctx context.Context, req datasource.Sc
 			"can_be_edited_deleted": schema.Int64Attribute{
 				Computed: true,
 			},
-			"group_id": schema.Int64Attribute{
-				Required:    true,
-				Description: `npa policy group id`,
-			},
 			"group_name": schema.StringAttribute{
 				Computed: true,
 			},
@@ -68,6 +64,10 @@ func (r *NPAPolicyGroupDataSource) Schema(ctx context.Context, req datasource.Sc
 			},
 			"group_type": schema.Int64Attribute{
 				Computed: true,
+			},
+			"group_id": schema.Int64Attribute{
+				Required:    true,
+				Description: `npa policy group id`,
 			},
 			"modify_time": schema.StringAttribute{
 				Computed: true,

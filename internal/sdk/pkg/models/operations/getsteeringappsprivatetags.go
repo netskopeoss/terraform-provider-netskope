@@ -3,8 +3,6 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -47,37 +45,9 @@ func (o *GetSteeringAppsPrivateTagsData) GetTagName() *string {
 	return o.TagName
 }
 
-type GetSteeringAppsPrivateTagsStatus string
-
-const (
-	GetSteeringAppsPrivateTagsStatusSuccess  GetSteeringAppsPrivateTagsStatus = "success"
-	GetSteeringAppsPrivateTagsStatusNotFound GetSteeringAppsPrivateTagsStatus = "not found"
-)
-
-func (e GetSteeringAppsPrivateTagsStatus) ToPointer() *GetSteeringAppsPrivateTagsStatus {
-	return &e
-}
-
-func (e *GetSteeringAppsPrivateTagsStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = GetSteeringAppsPrivateTagsStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for GetSteeringAppsPrivateTagsStatus: %v", v)
-	}
-}
-
 // GetSteeringAppsPrivateTagsResponseBody - successful operation
 type GetSteeringAppsPrivateTagsResponseBody struct {
-	Data   []GetSteeringAppsPrivateTagsData  `json:"data,omitempty"`
-	Status *GetSteeringAppsPrivateTagsStatus `json:"status,omitempty"`
+	Data []GetSteeringAppsPrivateTagsData `json:"data,omitempty"`
 }
 
 func (o *GetSteeringAppsPrivateTagsResponseBody) GetData() []GetSteeringAppsPrivateTagsData {
@@ -85,13 +55,6 @@ func (o *GetSteeringAppsPrivateTagsResponseBody) GetData() []GetSteeringAppsPriv
 		return nil
 	}
 	return o.Data
-}
-
-func (o *GetSteeringAppsPrivateTagsResponseBody) GetStatus() *GetSteeringAppsPrivateTagsStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type GetSteeringAppsPrivateTagsResponse struct {

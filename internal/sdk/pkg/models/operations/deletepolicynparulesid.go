@@ -10,12 +10,12 @@ import (
 
 type DeletePolicyNpaRulesIDRequest struct {
 	// npa policy id
-	ID int64 `pathParam:"style=simple,explode=false,name=id"`
+	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *DeletePolicyNpaRulesIDRequest) GetID() int64 {
+func (o *DeletePolicyNpaRulesIDRequest) GetID() string {
 	if o == nil {
-		return 0
+		return ""
 	}
 	return o.ID
 }
@@ -38,33 +38,6 @@ func (o *DeletePolicyNpaRulesIDResponseResponseBody) GetStatus() *int64 {
 		return nil
 	}
 	return o.Status
-}
-
-type DeletePolicyNpaRulesIDAccessMethod string
-
-const (
-	DeletePolicyNpaRulesIDAccessMethodClient     DeletePolicyNpaRulesIDAccessMethod = "Client"
-	DeletePolicyNpaRulesIDAccessMethodClientless DeletePolicyNpaRulesIDAccessMethod = "Clientless"
-)
-
-func (e DeletePolicyNpaRulesIDAccessMethod) ToPointer() *DeletePolicyNpaRulesIDAccessMethod {
-	return &e
-}
-
-func (e *DeletePolicyNpaRulesIDAccessMethod) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "Client":
-		fallthrough
-	case "Clientless":
-		*e = DeletePolicyNpaRulesIDAccessMethod(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for DeletePolicyNpaRulesIDAccessMethod: %v", v)
-	}
 }
 
 type DeletePolicyNpaRulesIDActions string
@@ -271,7 +244,7 @@ func (e *DeletePolicyNpaRulesIDUserType) UnmarshalJSON(data []byte) error {
 }
 
 type DeletePolicyNpaRulesIDRuleData struct {
-	AccessMethod              *DeletePolicyNpaRulesIDAccessMethod               `json:"access_method,omitempty"`
+	AccessMethod              []string                                          `json:"access_method,omitempty"`
 	BNegateNetLocation        *bool                                             `json:"b_negateNetLocation,omitempty"`
 	BNegateSrcCountries       *bool                                             `json:"b_negateSrcCountries,omitempty"`
 	Classification            *string                                           `json:"classification,omitempty"`
@@ -295,7 +268,7 @@ type DeletePolicyNpaRulesIDRuleData struct {
 	Version                   *int64                                            `json:"version,omitempty"`
 }
 
-func (o *DeletePolicyNpaRulesIDRuleData) GetAccessMethod() *DeletePolicyNpaRulesIDAccessMethod {
+func (o *DeletePolicyNpaRulesIDRuleData) GetAccessMethod() []string {
 	if o == nil {
 		return nil
 	}
@@ -451,7 +424,7 @@ func (o *DeletePolicyNpaRulesIDRuleData) GetVersion() *int64 {
 
 type Data struct {
 	RuleData *DeletePolicyNpaRulesIDRuleData `json:"rule_data,omitempty"`
-	RuleID   *int64                          `json:"rule_id,omitempty"`
+	RuleID   *string                         `json:"rule_id,omitempty"`
 	RuleName *string                         `json:"rule_name,omitempty"`
 }
 
@@ -462,7 +435,7 @@ func (o *Data) GetRuleData() *DeletePolicyNpaRulesIDRuleData {
 	return o.RuleData
 }
 
-func (o *Data) GetRuleID() *int64 {
+func (o *Data) GetRuleID() *string {
 	if o == nil {
 		return nil
 	}
@@ -476,37 +449,9 @@ func (o *Data) GetRuleName() *string {
 	return o.RuleName
 }
 
-type DeletePolicyNpaRulesIDStatus string
-
-const (
-	DeletePolicyNpaRulesIDStatusSuccess DeletePolicyNpaRulesIDStatus = "success"
-	DeletePolicyNpaRulesIDStatusError   DeletePolicyNpaRulesIDStatus = "error"
-)
-
-func (e DeletePolicyNpaRulesIDStatus) ToPointer() *DeletePolicyNpaRulesIDStatus {
-	return &e
-}
-
-func (e *DeletePolicyNpaRulesIDStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "error":
-		*e = DeletePolicyNpaRulesIDStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for DeletePolicyNpaRulesIDStatus: %v", v)
-	}
-}
-
 // DeletePolicyNpaRulesIDResponseBody - successful operation
 type DeletePolicyNpaRulesIDResponseBody struct {
-	Data   *Data                         `json:"data,omitempty"`
-	Status *DeletePolicyNpaRulesIDStatus `json:"status,omitempty"`
+	Data *Data `json:"data,omitempty"`
 }
 
 func (o *DeletePolicyNpaRulesIDResponseBody) GetData() *Data {
@@ -514,13 +459,6 @@ func (o *DeletePolicyNpaRulesIDResponseBody) GetData() *Data {
 		return nil
 	}
 	return o.Data
-}
-
-func (o *DeletePolicyNpaRulesIDResponseBody) GetStatus() *DeletePolicyNpaRulesIDStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type DeletePolicyNpaRulesIDResponse struct {

@@ -5,7 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -75,14 +75,14 @@ func (r *NPAPublisherBulkUpgradeResource) Schema(ctx context.Context, req resour
 							Computed: true,
 						},
 						"status": schema.StringAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: `must be one of ["connected", "not registered"]`,
 							Validators: []validator.String{
 								stringvalidator.OneOf(
 									"connected",
 									"not registered",
 								),
 							},
-							Description: `must be one of ["connected", "not registered"]`,
 						},
 						"stitcher_id": schema.Int64Attribute{
 							Computed: true,
@@ -145,14 +145,14 @@ func (r *NPAPublisherBulkUpgradeResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"status": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: `must be one of ["success", "not found"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"success",
 						"not found",
 					),
 				},
-				Description: `must be one of ["success", "not found"]`,
 			},
 		},
 	}

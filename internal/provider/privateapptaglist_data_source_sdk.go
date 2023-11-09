@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
 func (r *PrivateAppTagListDataSourceModel) RefreshFromGetResponse(resp *operations.GetSteeringAppsPrivateTagsResponseBody) {
@@ -22,10 +22,5 @@ func (r *PrivateAppTagListDataSourceModel) RefreshFromGetResponse(resp *operatio
 			data1.TagName = types.StringNull()
 		}
 		r.Data = append(r.Data, data1)
-	}
-	if resp.Status != nil {
-		r.Status = types.StringValue(string(*resp.Status))
-	} else {
-		r.Status = types.StringNull()
 	}
 }

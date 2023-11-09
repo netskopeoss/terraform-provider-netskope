@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
 func (r *NPAPolicyDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaRulesIDData) {
@@ -12,10 +12,9 @@ func (r *NPAPolicyDataSourceModel) RefreshFromGetResponse(resp *operations.GetPo
 		r.RuleData = nil
 	} else {
 		r.RuleData = &PostPolicyNpaRulesRuleData{}
-		if resp.RuleData.AccessMethod != nil {
-			r.RuleData.AccessMethod = types.StringValue(string(*resp.RuleData.AccessMethod))
-		} else {
-			r.RuleData.AccessMethod = types.StringNull()
+		r.RuleData.AccessMethod = nil
+		for _, v := range resp.RuleData.AccessMethod {
+			r.RuleData.AccessMethod = append(r.RuleData.AccessMethod, types.StringValue(v))
 		}
 		if resp.RuleData.BNegateNetLocation != nil {
 			r.RuleData.BNegateNetLocation = types.BoolValue(*resp.RuleData.BNegateNetLocation)
@@ -83,6 +82,14 @@ func (r *NPAPolicyDataSourceModel) RefreshFromGetResponse(resp *operations.GetPo
 		for _, v := range resp.RuleData.PrivateAppIds {
 			r.RuleData.PrivateAppIds = append(r.RuleData.PrivateAppIds, types.StringValue(v))
 		}
+		r.RuleData.PrivateAppTagIds = nil
+		for _, v := range resp.RuleData.PrivateAppTagIds {
+			r.RuleData.PrivateAppTagIds = append(r.RuleData.PrivateAppTagIds, types.StringValue(v))
+		}
+		r.RuleData.PrivateAppTags = nil
+		for _, v := range resp.RuleData.PrivateAppTags {
+			r.RuleData.PrivateAppTags = append(r.RuleData.PrivateAppTags, types.StringValue(v))
+		}
 		r.RuleData.PrivateApps = nil
 		for _, v := range resp.RuleData.PrivateApps {
 			r.RuleData.PrivateApps = append(r.RuleData.PrivateApps, types.StringValue(v))
@@ -111,14 +118,6 @@ func (r *NPAPolicyDataSourceModel) RefreshFromGetResponse(resp *operations.GetPo
 			}
 			r.RuleData.PrivateAppsWithActivities = append(r.RuleData.PrivateAppsWithActivities, privateAppsWithActivities1)
 		}
-		r.RuleData.PrivateAppTagIds = nil
-		for _, v := range resp.RuleData.PrivateAppTagIds {
-			r.RuleData.PrivateAppTagIds = append(r.RuleData.PrivateAppTagIds, types.StringValue(v))
-		}
-		r.RuleData.PrivateAppTags = nil
-		for _, v := range resp.RuleData.PrivateAppTags {
-			r.RuleData.PrivateAppTags = append(r.RuleData.PrivateAppTags, types.StringValue(v))
-		}
 		if resp.RuleData.ShowDlpProfileActionTable != nil {
 			r.RuleData.ShowDlpProfileActionTable = types.BoolValue(*resp.RuleData.ShowDlpProfileActionTable)
 		} else {
@@ -132,14 +131,14 @@ func (r *NPAPolicyDataSourceModel) RefreshFromGetResponse(resp *operations.GetPo
 		for _, v := range resp.RuleData.UserGroups {
 			r.RuleData.UserGroups = append(r.RuleData.UserGroups, types.StringValue(v))
 		}
-		r.RuleData.Users = nil
-		for _, v := range resp.RuleData.Users {
-			r.RuleData.Users = append(r.RuleData.Users, types.StringValue(v))
-		}
 		if resp.RuleData.UserType != nil {
 			r.RuleData.UserType = types.StringValue(string(*resp.RuleData.UserType))
 		} else {
 			r.RuleData.UserType = types.StringNull()
+		}
+		r.RuleData.Users = nil
+		for _, v := range resp.RuleData.Users {
+			r.RuleData.Users = append(r.RuleData.Users, types.StringValue(v))
 		}
 		if resp.RuleData.Version != nil {
 			r.RuleData.Version = types.Int64Value(*resp.RuleData.Version)
@@ -148,9 +147,9 @@ func (r *NPAPolicyDataSourceModel) RefreshFromGetResponse(resp *operations.GetPo
 		}
 	}
 	if resp.RuleID != nil {
-		r.RuleID = types.Int64Value(*resp.RuleID)
+		r.RuleID = types.StringValue(*resp.RuleID)
 	} else {
-		r.RuleID = types.Int64Null()
+		r.RuleID = types.StringNull()
 	}
 	if resp.RuleName != nil {
 		r.RuleName = types.StringValue(*resp.RuleName)
