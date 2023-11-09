@@ -5,16 +5,13 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"ns/internal/validators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -62,11 +59,7 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 								"assessment": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
-										"two": schema.SingleNestedAttribute{
-											Computed:   true,
-											Attributes: map[string]schema.Attribute{},
-										},
-										"get_infrastructure_publishers_npa_publishers_assessment": schema.SingleNestedAttribute{
+										"assessment": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
 												"eee_support": schema.BoolAttribute{
@@ -89,9 +82,10 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 												},
 											},
 										},
-									},
-									Validators: []validator.Object{
-										validators.ExactlyOneChild(),
+										"two": schema.SingleNestedAttribute{
+											Computed:   true,
+											Attributes: map[string]schema.Attribute{},
+										},
 									},
 								},
 								"common_name": schema.StringAttribute{
@@ -125,30 +119,20 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 										"integer": schema.Int64Attribute{
 											Computed: true,
 										},
-										"get_infrastructure_publishers_2": schema.SingleNestedAttribute{
+										"two": schema.SingleNestedAttribute{
 											Computed:   true,
 											Attributes: map[string]schema.Attribute{},
 										},
-									},
-									Validators: []validator.Object{
-										validators.ExactlyOneChild(),
 									},
 								},
 								"tags": schema.ListAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
-									Validators: []validator.List{
-										listvalidator.ValueStringsAre(validators.IsValidJSON()),
-									},
 								},
 								"upgrade_failed_reason": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
-										"get_infrastructure_publishers_npa_publishers_2": schema.SingleNestedAttribute{
-											Computed:   true,
-											Attributes: map[string]schema.Attribute{},
-										},
-										"get_infrastructure_publishers_npa_publishers_upgrade_failed_reason": schema.SingleNestedAttribute{
+										"upgrade_failed_reason": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
 												"detail": schema.StringAttribute{
@@ -165,9 +149,10 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 												},
 											},
 										},
-									},
-									Validators: []validator.Object{
-										validators.ExactlyOneChild(),
+										"two": schema.SingleNestedAttribute{
+											Computed:   true,
+											Attributes: map[string]schema.Attribute{},
+										},
 									},
 								},
 								"upgrade_request": schema.BoolAttribute{

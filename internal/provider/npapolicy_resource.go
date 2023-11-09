@@ -5,7 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -14,8 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"ns/internal/sdk/pkg/models/operations"
-	"strconv"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -37,7 +36,7 @@ type NPAPolicyResourceModel struct {
 	Enabled     types.String                 `tfsdk:"enabled"`
 	GroupName   types.String                 `tfsdk:"group_name"`
 	RuleData    *PostPolicyNpaRulesRuleData  `tfsdk:"rule_data"`
-	RuleID      types.Int64                  `tfsdk:"rule_id"`
+	RuleID      types.String                 `tfsdk:"rule_id"`
 	RuleName    types.String                 `tfsdk:"rule_name"`
 	RuleOrder   *PostPolicyNpaRulesRuleOrder `tfsdk:"rule_order"`
 }
@@ -64,16 +63,10 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 				Computed: true,
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
-					"access_method": schema.StringAttribute{
-						Computed: true,
-						Optional: true,
-						Validators: []validator.String{
-							stringvalidator.OneOf(
-								"Client",
-								"Clientless",
-							),
-						},
-						Description: `must be one of ["Client", "Clientless"]`,
+					"access_method": schema.ListAttribute{
+						Computed:    true,
+						Optional:    true,
+						ElementType: types.StringType,
 					},
 					"b_negate_net_location": schema.BoolAttribute{
 						Computed: true,
@@ -117,15 +110,15 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"action_name": schema.StringAttribute{
-								Computed: true,
-								Optional: true,
+								Computed:    true,
+								Optional:    true,
+								Description: `must be one of ["allow", "block"]`,
 								Validators: []validator.String{
 									stringvalidator.OneOf(
 										"allow",
 										"block",
 									),
 								},
-								Description: `must be one of ["allow", "block"]`,
 							},
 						},
 					},
@@ -140,14 +133,14 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 						ElementType: types.StringType,
 					},
 					"policy_type": schema.StringAttribute{
-						Computed: true,
-						Optional: true,
+						Computed:    true,
+						Optional:    true,
+						Description: `must be one of ["private-app"]`,
 						Validators: []validator.String{
 							stringvalidator.OneOf(
 								"private-app",
 							),
 						},
-						Description: `must be one of ["private-app"]`,
 					},
 					"private_app_ids": schema.ListAttribute{
 						Computed:    true,
@@ -170,14 +163,14 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: map[string]schema.Attribute{
 											"activity": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
+												Computed:    true,
+												Optional:    true,
+												Description: `must be one of ["any"]`,
 												Validators: []validator.String{
 													stringvalidator.OneOf(
 														"any",
 													),
 												},
-												Description: `must be one of ["any"]`,
 											},
 											"list_of_constraints": schema.ListAttribute{
 												Computed:    true,
@@ -224,14 +217,14 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 						ElementType: types.StringType,
 					},
 					"user_type": schema.StringAttribute{
-						Computed: true,
-						Optional: true,
+						Computed:    true,
+						Optional:    true,
+						Description: `must be one of ["user"]`,
 						Validators: []validator.String{
 							stringvalidator.OneOf(
 								"user",
 							),
 						},
-						Description: `must be one of ["user"]`,
 					},
 					"version": schema.Int64Attribute{
 						Computed: true,
@@ -239,7 +232,7 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 					},
 				},
 			},
-			"rule_id": schema.Int64Attribute{
+			"rule_id": schema.StringAttribute{
 				Computed: true,
 			},
 			"rule_name": schema.StringAttribute{
@@ -250,7 +243,8 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
 					"order": schema.StringAttribute{
-						Optional: true,
+						Optional:    true,
+						Description: `must be one of ["top", "bottom", "before", "after"]`,
 						Validators: []validator.String{
 							stringvalidator.OneOf(
 								"top",
@@ -259,12 +253,11 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 								"after",
 							),
 						},
-						Description: `must be one of ["top", "bottom", "before", "after"]`,
 					},
 					"position": schema.Int64Attribute{
 						Optional: true,
 					},
-					"rule_id": schema.Int64Attribute{
+					"rule_id": schema.StringAttribute{
 						Optional: true,
 					},
 					"rule_name": schema.StringAttribute{
@@ -331,11 +324,11 @@ func (r *NPAPolicyResource) Create(ctx context.Context, req resource.CreateReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromCreateResponse(res.TwoHundredApplicationJSONObject.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -359,7 +352,7 @@ func (r *NPAPolicyResource) Read(ctx context.Context, req resource.ReadRequest, 
 		return
 	}
 
-	id := data.RuleID.ValueInt64()
+	id := data.RuleID.ValueString()
 	request := operations.GetPolicyNpaRulesIDRequest{
 		ID: id,
 	}
@@ -397,7 +390,7 @@ func (r *NPAPolicyResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 
 	requestBody := *data.ToUpdateSDKType()
-	id := data.RuleID.ValueInt64()
+	id := data.RuleID.ValueString()
 	request := operations.PatchPolicyNpaRulesIDRequest{
 		RequestBody: requestBody,
 		ID:          id,
@@ -446,7 +439,7 @@ func (r *NPAPolicyResource) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	}
 
-	id := data.RuleID.ValueInt64()
+	id := data.RuleID.ValueString()
 	request := operations.DeletePolicyNpaRulesIDRequest{
 		ID: id,
 	}
@@ -470,10 +463,5 @@ func (r *NPAPolicyResource) Delete(ctx context.Context, req resource.DeleteReque
 }
 
 func (r *NPAPolicyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	ruleID, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
-	}
-
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("rule_id"), int64(ruleID))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("rule_id"), req.ID)...)
 }

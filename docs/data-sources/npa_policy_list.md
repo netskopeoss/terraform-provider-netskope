@@ -15,8 +15,8 @@ NPAPolicyList DataSource
 ```terraform
 data "ns_npa_policy_list" "my_npapolicylist" {
   filter    = "...my_filter..."
-  limit     = 7
-  offset    = 6
+  limit     = 5
+  offset    = 2
   sortby    = "...my_sortby..."
   sortorder = "...my_sortorder..."
 }
@@ -43,7 +43,7 @@ data "ns_npa_policy_list" "my_npapolicylist" {
 Read-Only:
 
 - `rule_data` (Attributes) (see [below for nested schema](#nestedatt--data--rule_data))
-- `rule_id` (Number)
+- `rule_id` (String)
 - `rule_name` (String)
 
 <a id="nestedatt--data--rule_data"></a>
@@ -51,7 +51,7 @@ Read-Only:
 
 Read-Only:
 
-- `access_method` (String) must be one of ["Client", "Clientless"]
+- `access_method` (List of String)
 - `b_negate_net_location` (Boolean)
 - `b_negate_src_countries` (Boolean)
 - `classification` (String)

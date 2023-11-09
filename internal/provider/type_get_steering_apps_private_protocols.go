@@ -4,7 +4,6 @@ package provider
 
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
-type PostSteeringAppsPrivateProtocols struct {
+type GetSteeringAppsPrivateProtocols struct {
 	Port types.String `tfsdk:"port"`
-	Type types.String `tfsdk:"type"`
 }

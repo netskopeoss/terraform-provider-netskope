@@ -3,6 +3,6 @@
 package provider
 
 type GetInfrastructurePublishersUpgradeFailedReason struct {
-	GetInfrastructurePublishersNPAPublishers2                   *Assessment                                                  `tfsdk:"get_infrastructure_publishers_npa_publishers_2"`
-	GetInfrastructurePublishersNPAPublishersUpgradeFailedReason *GetInfrastructurePublishersNPAPublishersUpgradeFailedReason `tfsdk:"get_infrastructure_publishers_npa_publishers_upgrade_failed_reason"`
+	UpgradeFailedReason *GetInfrastructurePublishersNPAPublishersUpgradeFailedReason `tfsdk:"upgrade_failed_reason"`
+	Two                 *Assessment                                                  `tfsdk:"two"`
 }

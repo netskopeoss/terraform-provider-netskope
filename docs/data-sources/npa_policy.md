@@ -14,7 +14,7 @@ NPAPolicy DataSource
 
 ```terraform
 data "ns_npa_policy" "my_npapolicy" {
-  rule_id = 1
+  rule_id = "...my_rule_id..."
 }
 ```
 
@@ -23,7 +23,7 @@ data "ns_npa_policy" "my_npapolicy" {
 
 ### Required
 
-- `rule_id` (Number) npa policy id
+- `rule_id` (String) npa policy id
 
 ### Read-Only
 
@@ -35,7 +35,7 @@ data "ns_npa_policy" "my_npapolicy" {
 
 Read-Only:
 
-- `access_method` (String) must be one of ["Client", "Clientless"]
+- `access_method` (List of String)
 - `b_negate_net_location` (Boolean)
 - `b_negate_src_countries` (Boolean)
 - `classification` (String)

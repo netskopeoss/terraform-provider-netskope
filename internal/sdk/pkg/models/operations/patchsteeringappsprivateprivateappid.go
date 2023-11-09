@@ -237,17 +237,7 @@ func (o *PatchSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *
 }
 
 type PatchSteeringAppsPrivatePrivateAppIDProtocols struct {
-	ID        *int    `json:"id,omitempty"`
-	Port      *string `json:"port,omitempty"`
-	ServiceID *int    `json:"service_id,omitempty"`
-	Transport *string `json:"transport,omitempty"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDProtocols) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
+	Port *string `json:"port,omitempty"`
 }
 
 func (o *PatchSteeringAppsPrivatePrivateAppIDProtocols) GetPort() *string {
@@ -255,20 +245,6 @@ func (o *PatchSteeringAppsPrivatePrivateAppIDProtocols) GetPort() *string {
 		return nil
 	}
 	return o.Port
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDProtocols) GetServiceID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ServiceID
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDProtocols) GetTransport() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Transport
 }
 
 type PatchSteeringAppsPrivatePrivateAppIDReachability struct {
@@ -435,37 +411,9 @@ func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetUsePublisherDNS() *bool {
 	return o.UsePublisherDNS
 }
 
-type PatchSteeringAppsPrivatePrivateAppIDStatus string
-
-const (
-	PatchSteeringAppsPrivatePrivateAppIDStatusSuccess  PatchSteeringAppsPrivatePrivateAppIDStatus = "success"
-	PatchSteeringAppsPrivatePrivateAppIDStatusNotFound PatchSteeringAppsPrivatePrivateAppIDStatus = "not found"
-)
-
-func (e PatchSteeringAppsPrivatePrivateAppIDStatus) ToPointer() *PatchSteeringAppsPrivatePrivateAppIDStatus {
-	return &e
-}
-
-func (e *PatchSteeringAppsPrivatePrivateAppIDStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = PatchSteeringAppsPrivatePrivateAppIDStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PatchSteeringAppsPrivatePrivateAppIDStatus: %v", v)
-	}
-}
-
 // PatchSteeringAppsPrivatePrivateAppIDResponseBody - successful operation
 type PatchSteeringAppsPrivatePrivateAppIDResponseBody struct {
-	Data   *PatchSteeringAppsPrivatePrivateAppIDData   `json:"data,omitempty"`
-	Status *PatchSteeringAppsPrivatePrivateAppIDStatus `json:"status,omitempty"`
+	Data *PatchSteeringAppsPrivatePrivateAppIDData `json:"data,omitempty"`
 }
 
 func (o *PatchSteeringAppsPrivatePrivateAppIDResponseBody) GetData() *PatchSteeringAppsPrivatePrivateAppIDData {
@@ -473,13 +421,6 @@ func (o *PatchSteeringAppsPrivatePrivateAppIDResponseBody) GetData() *PatchSteer
 		return nil
 	}
 	return o.Data
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponseBody) GetStatus() *PatchSteeringAppsPrivatePrivateAppIDStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type PatchSteeringAppsPrivatePrivateAppIDResponse struct {

@@ -64,10 +64,10 @@ Read-Only:
 
 Read-Only:
 
-- `get_infrastructure_publishers_npa_publishers_assessment` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--assessment--get_infrastructure_publishers_npa_publishers_assessment))
+- `assessment` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--assessment--assessment))
 - `two` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--assessment--two))
 
-<a id="nestedatt--data--publishers--assessment--get_infrastructure_publishers_npa_publishers_assessment"></a>
+<a id="nestedatt--data--publishers--assessment--assessment"></a>
 ### Nested Schema for `data.publishers.assessment.two`
 
 Read-Only:
@@ -90,11 +90,11 @@ Read-Only:
 
 Read-Only:
 
-- `get_infrastructure_publishers_2` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--stitcher_id--get_infrastructure_publishers_2))
 - `integer` (Number)
+- `two` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--stitcher_id--two))
 
-<a id="nestedatt--data--publishers--stitcher_id--get_infrastructure_publishers_2"></a>
-### Nested Schema for `data.publishers.stitcher_id.integer`
+<a id="nestedatt--data--publishers--stitcher_id--two"></a>
+### Nested Schema for `data.publishers.stitcher_id.two`
 
 
 
@@ -103,15 +103,15 @@ Read-Only:
 
 Read-Only:
 
-- `get_infrastructure_publishers_npa_publishers_2` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--upgrade_failed_reason--get_infrastructure_publishers_npa_publishers_2))
-- `get_infrastructure_publishers_npa_publishers_upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--upgrade_failed_reason--get_infrastructure_publishers_npa_publishers_upgrade_failed_reason))
+- `two` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--upgrade_failed_reason--two))
+- `upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--upgrade_failed_reason--upgrade_failed_reason))
 
-<a id="nestedatt--data--publishers--upgrade_failed_reason--get_infrastructure_publishers_npa_publishers_2"></a>
-### Nested Schema for `data.publishers.upgrade_failed_reason.get_infrastructure_publishers_npa_publishers_upgrade_failed_reason`
+<a id="nestedatt--data--publishers--upgrade_failed_reason--two"></a>
+### Nested Schema for `data.publishers.upgrade_failed_reason.upgrade_failed_reason`
 
 
-<a id="nestedatt--data--publishers--upgrade_failed_reason--get_infrastructure_publishers_npa_publishers_upgrade_failed_reason"></a>
-### Nested Schema for `data.publishers.upgrade_failed_reason.get_infrastructure_publishers_npa_publishers_upgrade_failed_reason`
+<a id="nestedatt--data--publishers--upgrade_failed_reason--upgrade_failed_reason"></a>
+### Nested Schema for `data.publishers.upgrade_failed_reason.upgrade_failed_reason`
 
 Read-Only:
 

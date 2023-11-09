@@ -8,33 +8,6 @@ import (
 	"net/http"
 )
 
-type PostPolicyNpaRulesAccessMethod string
-
-const (
-	PostPolicyNpaRulesAccessMethodClient     PostPolicyNpaRulesAccessMethod = "Client"
-	PostPolicyNpaRulesAccessMethodClientless PostPolicyNpaRulesAccessMethod = "Clientless"
-)
-
-func (e PostPolicyNpaRulesAccessMethod) ToPointer() *PostPolicyNpaRulesAccessMethod {
-	return &e
-}
-
-func (e *PostPolicyNpaRulesAccessMethod) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "Client":
-		fallthrough
-	case "Clientless":
-		*e = PostPolicyNpaRulesAccessMethod(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PostPolicyNpaRulesAccessMethod: %v", v)
-	}
-}
-
 type PostPolicyNpaRulesActions string
 
 const (
@@ -239,7 +212,7 @@ func (e *PostPolicyNpaRulesUserType) UnmarshalJSON(data []byte) error {
 }
 
 type PostPolicyNpaRulesRuleData struct {
-	AccessMethod              *PostPolicyNpaRulesAccessMethod               `json:"access_method,omitempty"`
+	AccessMethod              []string                                      `json:"access_method,omitempty"`
 	BNegateNetLocation        *bool                                         `json:"b_negateNetLocation,omitempty"`
 	BNegateSrcCountries       *bool                                         `json:"b_negateSrcCountries,omitempty"`
 	Classification            *string                                       `json:"classification,omitempty"`
@@ -263,7 +236,7 @@ type PostPolicyNpaRulesRuleData struct {
 	Version                   *int64                                        `json:"version,omitempty"`
 }
 
-func (o *PostPolicyNpaRulesRuleData) GetAccessMethod() *PostPolicyNpaRulesAccessMethod {
+func (o *PostPolicyNpaRulesRuleData) GetAccessMethod() []string {
 	if o == nil {
 		return nil
 	}
@@ -453,7 +426,7 @@ func (e *PostPolicyNpaRulesOrder) UnmarshalJSON(data []byte) error {
 type PostPolicyNpaRulesRuleOrder struct {
 	Order    *PostPolicyNpaRulesOrder `json:"order,omitempty"`
 	Position *int64                   `json:"position,omitempty"`
-	RuleID   *int64                   `json:"rule_id,omitempty"`
+	RuleID   *string                  `json:"rule_id,omitempty"`
 	RuleName *string                  `json:"rule_name,omitempty"`
 }
 
@@ -471,7 +444,7 @@ func (o *PostPolicyNpaRulesRuleOrder) GetPosition() *int64 {
 	return o.Position
 }
 
-func (o *PostPolicyNpaRulesRuleOrder) GetRuleID() *int64 {
+func (o *PostPolicyNpaRulesRuleOrder) GetRuleID() *string {
 	if o == nil {
 		return nil
 	}
@@ -554,33 +527,6 @@ func (o *PostPolicyNpaRulesResponseResponseBody) GetStatus() *int64 {
 		return nil
 	}
 	return o.Status
-}
-
-type PostPolicyNpaRulesResponseAccessMethod string
-
-const (
-	PostPolicyNpaRulesResponseAccessMethodClient     PostPolicyNpaRulesResponseAccessMethod = "Client"
-	PostPolicyNpaRulesResponseAccessMethodClientless PostPolicyNpaRulesResponseAccessMethod = "Clientless"
-)
-
-func (e PostPolicyNpaRulesResponseAccessMethod) ToPointer() *PostPolicyNpaRulesResponseAccessMethod {
-	return &e
-}
-
-func (e *PostPolicyNpaRulesResponseAccessMethod) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "Client":
-		fallthrough
-	case "Clientless":
-		*e = PostPolicyNpaRulesResponseAccessMethod(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PostPolicyNpaRulesResponseAccessMethod: %v", v)
-	}
 }
 
 type PostPolicyNpaRulesResponseActions string
@@ -787,7 +733,7 @@ func (e *PostPolicyNpaRulesResponseUserType) UnmarshalJSON(data []byte) error {
 }
 
 type PostPolicyNpaRulesResponseRuleData struct {
-	AccessMethod              *PostPolicyNpaRulesResponseAccessMethod               `json:"access_method,omitempty"`
+	AccessMethod              []string                                              `json:"access_method,omitempty"`
 	BNegateNetLocation        *bool                                                 `json:"b_negateNetLocation,omitempty"`
 	BNegateSrcCountries       *bool                                                 `json:"b_negateSrcCountries,omitempty"`
 	Classification            *string                                               `json:"classification,omitempty"`
@@ -811,7 +757,7 @@ type PostPolicyNpaRulesResponseRuleData struct {
 	Version                   *int64                                                `json:"version,omitempty"`
 }
 
-func (o *PostPolicyNpaRulesResponseRuleData) GetAccessMethod() *PostPolicyNpaRulesResponseAccessMethod {
+func (o *PostPolicyNpaRulesResponseRuleData) GetAccessMethod() []string {
 	if o == nil {
 		return nil
 	}
@@ -965,32 +911,43 @@ func (o *PostPolicyNpaRulesResponseRuleData) GetVersion() *int64 {
 	return o.Version
 }
 
-// PostPolicyNpaRulesResponseBody - successful operation
-type PostPolicyNpaRulesResponseBody struct {
+type PostPolicyNpaRulesData struct {
 	RuleData *PostPolicyNpaRulesResponseRuleData `json:"rule_data,omitempty"`
-	RuleID   *int64                              `json:"rule_id,omitempty"`
+	RuleID   *string                             `json:"rule_id,omitempty"`
 	RuleName *string                             `json:"rule_name,omitempty"`
 }
 
-func (o *PostPolicyNpaRulesResponseBody) GetRuleData() *PostPolicyNpaRulesResponseRuleData {
+func (o *PostPolicyNpaRulesData) GetRuleData() *PostPolicyNpaRulesResponseRuleData {
 	if o == nil {
 		return nil
 	}
 	return o.RuleData
 }
 
-func (o *PostPolicyNpaRulesResponseBody) GetRuleID() *int64 {
+func (o *PostPolicyNpaRulesData) GetRuleID() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RuleID
 }
 
-func (o *PostPolicyNpaRulesResponseBody) GetRuleName() *string {
+func (o *PostPolicyNpaRulesData) GetRuleName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RuleName
+}
+
+// PostPolicyNpaRulesResponseBody - successful operation
+type PostPolicyNpaRulesResponseBody struct {
+	Data *PostPolicyNpaRulesData `json:"data,omitempty"`
+}
+
+func (o *PostPolicyNpaRulesResponseBody) GetData() *PostPolicyNpaRulesData {
+	if o == nil {
+		return nil
+	}
+	return o.Data
 }
 
 type PostPolicyNpaRulesResponse struct {

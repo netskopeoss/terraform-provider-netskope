@@ -5,13 +5,11 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
@@ -32,7 +30,7 @@ type NPAPolicyDataSource struct {
 // NPAPolicyDataSourceModel describes the data model.
 type NPAPolicyDataSourceModel struct {
 	RuleData *PostPolicyNpaRulesRuleData `tfsdk:"rule_data"`
-	RuleID   types.Int64                 `tfsdk:"rule_id"`
+	RuleID   types.String                `tfsdk:"rule_id"`
 	RuleName types.String                `tfsdk:"rule_name"`
 }
 
@@ -50,15 +48,9 @@ func (r *NPAPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			"rule_data": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
-					"access_method": schema.StringAttribute{
-						Computed: true,
-						Validators: []validator.String{
-							stringvalidator.OneOf(
-								"Client",
-								"Clientless",
-							),
-						},
-						Description: `must be one of ["Client", "Clientless"]`,
+					"access_method": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
 					},
 					"b_negate_net_location": schema.BoolAttribute{
 						Computed: true,
@@ -93,13 +85,7 @@ func (r *NPAPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
 							"action_name": schema.StringAttribute{
-								Computed: true,
-								Validators: []validator.String{
-									stringvalidator.OneOf(
-										"allow",
-										"block",
-									),
-								},
+								Computed:    true,
 								Description: `must be one of ["allow", "block"]`,
 							},
 						},
@@ -113,15 +99,18 @@ func (r *NPAPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						ElementType: types.StringType,
 					},
 					"policy_type": schema.StringAttribute{
-						Computed: true,
-						Validators: []validator.String{
-							stringvalidator.OneOf(
-								"private-app",
-							),
-						},
+						Computed:    true,
 						Description: `must be one of ["private-app"]`,
 					},
 					"private_app_ids": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"private_app_tag_ids": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"private_app_tags": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
 					},
@@ -138,12 +127,7 @@ func (r *NPAPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: map[string]schema.Attribute{
 											"activity": schema.StringAttribute{
-												Computed: true,
-												Validators: []validator.String{
-													stringvalidator.OneOf(
-														"any",
-													),
-												},
+												Computed:    true,
 												Description: `must be one of ["any"]`,
 											},
 											"list_of_constraints": schema.ListAttribute{
@@ -159,14 +143,6 @@ func (r *NPAPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							},
 						},
 					},
-					"private_app_tag_ids": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"private_app_tags": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
 					"show_dlp_profile_action_table": schema.BoolAttribute{
 						Computed: true,
 					},
@@ -178,25 +154,20 @@ func (r *NPAPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						Computed:    true,
 						ElementType: types.StringType,
 					},
+					"user_type": schema.StringAttribute{
+						Computed:    true,
+						Description: `must be one of ["user"]`,
+					},
 					"users": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
-					},
-					"user_type": schema.StringAttribute{
-						Computed: true,
-						Validators: []validator.String{
-							stringvalidator.OneOf(
-								"user",
-							),
-						},
-						Description: `must be one of ["user"]`,
 					},
 					"version": schema.Int64Attribute{
 						Computed: true,
 					},
 				},
 			},
-			"rule_id": schema.Int64Attribute{
+			"rule_id": schema.StringAttribute{
 				Required:    true,
 				Description: `npa policy id`,
 			},
@@ -245,7 +216,7 @@ func (r *NPAPolicyDataSource) Read(ctx context.Context, req datasource.ReadReque
 		return
 	}
 
-	id := data.RuleID.ValueInt64()
+	id := data.RuleID.ValueString()
 	request := operations.GetPolicyNpaRulesIDRequest{
 		ID: id,
 	}

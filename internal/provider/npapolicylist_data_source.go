@@ -5,13 +5,11 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
@@ -57,15 +55,9 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"rule_data": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{
-								"access_method": schema.StringAttribute{
-									Computed: true,
-									Validators: []validator.String{
-										stringvalidator.OneOf(
-											"Client",
-											"Clientless",
-										),
-									},
-									Description: `must be one of ["Client", "Clientless"]`,
+								"access_method": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
 								},
 								"b_negate_net_location": schema.BoolAttribute{
 									Computed: true,
@@ -100,13 +92,7 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
 										"action_name": schema.StringAttribute{
-											Computed: true,
-											Validators: []validator.String{
-												stringvalidator.OneOf(
-													"allow",
-													"block",
-												),
-											},
+											Computed:    true,
 											Description: `must be one of ["allow", "block"]`,
 										},
 									},
@@ -120,15 +106,18 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 									ElementType: types.StringType,
 								},
 								"policy_type": schema.StringAttribute{
-									Computed: true,
-									Validators: []validator.String{
-										stringvalidator.OneOf(
-											"private-app",
-										),
-									},
+									Computed:    true,
 									Description: `must be one of ["private-app"]`,
 								},
 								"private_app_ids": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"private_app_tag_ids": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"private_app_tags": schema.ListAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
 								},
@@ -145,12 +134,7 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 												NestedObject: schema.NestedAttributeObject{
 													Attributes: map[string]schema.Attribute{
 														"activity": schema.StringAttribute{
-															Computed: true,
-															Validators: []validator.String{
-																stringvalidator.OneOf(
-																	"any",
-																),
-															},
+															Computed:    true,
 															Description: `must be one of ["any"]`,
 														},
 														"list_of_constraints": schema.ListAttribute{
@@ -166,14 +150,6 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 										},
 									},
 								},
-								"private_app_tag_ids": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
-								"private_app_tags": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
 								"show_dlp_profile_action_table": schema.BoolAttribute{
 									Computed: true,
 								},
@@ -185,25 +161,20 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 									Computed:    true,
 									ElementType: types.StringType,
 								},
+								"user_type": schema.StringAttribute{
+									Computed:    true,
+									Description: `must be one of ["user"]`,
+								},
 								"users": schema.ListAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
-								},
-								"user_type": schema.StringAttribute{
-									Computed: true,
-									Validators: []validator.String{
-										stringvalidator.OneOf(
-											"user",
-										),
-									},
-									Description: `must be one of ["user"]`,
 								},
 								"version": schema.Int64Attribute{
 									Computed: true,
 								},
 							},
 						},
-						"rule_id": schema.Int64Attribute{
+						"rule_id": schema.StringAttribute{
 							Computed: true,
 						},
 						"rule_name": schema.StringAttribute{

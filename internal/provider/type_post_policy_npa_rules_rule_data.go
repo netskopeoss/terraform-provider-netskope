@@ -5,7 +5,7 @@ package provider
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type PostPolicyNpaRulesRuleData struct {
-	AccessMethod              types.String                           `tfsdk:"access_method"`
+	AccessMethod              []types.String                         `tfsdk:"access_method"`
 	BNegateNetLocation        types.Bool                             `tfsdk:"b_negate_net_location"`
 	BNegateSrcCountries       types.Bool                             `tfsdk:"b_negate_src_countries"`
 	Classification            types.String                           `tfsdk:"classification"`

@@ -3,8 +3,6 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -50,37 +48,9 @@ func (o *PostSteeringAppsPrivateGetpolicyinuseData) GetToken() *string {
 	return o.Token
 }
 
-type PostSteeringAppsPrivateGetpolicyinuseStatus string
-
-const (
-	PostSteeringAppsPrivateGetpolicyinuseStatusSuccess  PostSteeringAppsPrivateGetpolicyinuseStatus = "success"
-	PostSteeringAppsPrivateGetpolicyinuseStatusNotFound PostSteeringAppsPrivateGetpolicyinuseStatus = "not found"
-)
-
-func (e PostSteeringAppsPrivateGetpolicyinuseStatus) ToPointer() *PostSteeringAppsPrivateGetpolicyinuseStatus {
-	return &e
-}
-
-func (e *PostSteeringAppsPrivateGetpolicyinuseStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = PostSteeringAppsPrivateGetpolicyinuseStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PostSteeringAppsPrivateGetpolicyinuseStatus: %v", v)
-	}
-}
-
 // PostSteeringAppsPrivateGetpolicyinuseResponseBody - successful operation
 type PostSteeringAppsPrivateGetpolicyinuseResponseBody struct {
-	Data   []PostSteeringAppsPrivateGetpolicyinuseData  `json:"data,omitempty"`
-	Status *PostSteeringAppsPrivateGetpolicyinuseStatus `json:"status,omitempty"`
+	Data []PostSteeringAppsPrivateGetpolicyinuseData `json:"data,omitempty"`
 }
 
 func (o *PostSteeringAppsPrivateGetpolicyinuseResponseBody) GetData() []PostSteeringAppsPrivateGetpolicyinuseData {
@@ -88,13 +58,6 @@ func (o *PostSteeringAppsPrivateGetpolicyinuseResponseBody) GetData() []PostStee
 		return nil
 	}
 	return o.Data
-}
-
-func (o *PostSteeringAppsPrivateGetpolicyinuseResponseBody) GetStatus() *PostSteeringAppsPrivateGetpolicyinuseStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type PostSteeringAppsPrivateGetpolicyinuseResponse struct {

@@ -8,33 +8,6 @@ import (
 	"net/http"
 )
 
-type AccessMethod string
-
-const (
-	AccessMethodClient     AccessMethod = "Client"
-	AccessMethodClientless AccessMethod = "Clientless"
-)
-
-func (e AccessMethod) ToPointer() *AccessMethod {
-	return &e
-}
-
-func (e *AccessMethod) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "Client":
-		fallthrough
-	case "Clientless":
-		*e = AccessMethod(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for AccessMethod: %v", v)
-	}
-}
-
 type Actions string
 
 const (
@@ -239,7 +212,7 @@ func (e *UserType) UnmarshalJSON(data []byte) error {
 }
 
 type RuleData struct {
-	AccessMethod              *AccessMethod               `json:"access_method,omitempty"`
+	AccessMethod              []string                    `json:"access_method,omitempty"`
 	BNegateNetLocation        *bool                       `json:"b_negateNetLocation,omitempty"`
 	BNegateSrcCountries       *bool                       `json:"b_negateSrcCountries,omitempty"`
 	Classification            *string                     `json:"classification,omitempty"`
@@ -263,7 +236,7 @@ type RuleData struct {
 	Version                   *int64                      `json:"version,omitempty"`
 }
 
-func (o *RuleData) GetAccessMethod() *AccessMethod {
+func (o *RuleData) GetAccessMethod() []string {
 	if o == nil {
 		return nil
 	}
@@ -453,7 +426,7 @@ func (e *PatchPolicyNpaRulesIDOrder) UnmarshalJSON(data []byte) error {
 type RuleOrder struct {
 	Order    *PatchPolicyNpaRulesIDOrder `json:"order,omitempty"`
 	Position *int64                      `json:"position,omitempty"`
-	RuleID   *int64                      `json:"rule_id,omitempty"`
+	RuleID   *string                     `json:"rule_id,omitempty"`
 	RuleName *string                     `json:"rule_name,omitempty"`
 }
 
@@ -471,7 +444,7 @@ func (o *RuleOrder) GetPosition() *int64 {
 	return o.Position
 }
 
-func (o *RuleOrder) GetRuleID() *int64 {
+func (o *RuleOrder) GetRuleID() *string {
 	if o == nil {
 		return nil
 	}
@@ -567,7 +540,7 @@ func (e *PatchPolicyNpaRulesIDQueryParamSilent) UnmarshalJSON(data []byte) error
 type PatchPolicyNpaRulesIDRequest struct {
 	RequestBody PatchPolicyNpaRulesIDRequestBody `request:"mediaType=application/json"`
 	// policy rule id
-	ID int64 `pathParam:"style=simple,explode=false,name=id"`
+	ID string `pathParam:"style=simple,explode=false,name=id"`
 	// flag to skip output except status code
 	Silent *PatchPolicyNpaRulesIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 }
@@ -579,9 +552,9 @@ func (o *PatchPolicyNpaRulesIDRequest) GetRequestBody() PatchPolicyNpaRulesIDReq
 	return o.RequestBody
 }
 
-func (o *PatchPolicyNpaRulesIDRequest) GetID() int64 {
+func (o *PatchPolicyNpaRulesIDRequest) GetID() string {
 	if o == nil {
-		return 0
+		return ""
 	}
 	return o.ID
 }
@@ -611,33 +584,6 @@ func (o *PatchPolicyNpaRulesIDResponseResponseBody) GetStatus() *int64 {
 		return nil
 	}
 	return o.Status
-}
-
-type PatchPolicyNpaRulesIDAccessMethod string
-
-const (
-	PatchPolicyNpaRulesIDAccessMethodClient     PatchPolicyNpaRulesIDAccessMethod = "Client"
-	PatchPolicyNpaRulesIDAccessMethodClientless PatchPolicyNpaRulesIDAccessMethod = "Clientless"
-)
-
-func (e PatchPolicyNpaRulesIDAccessMethod) ToPointer() *PatchPolicyNpaRulesIDAccessMethod {
-	return &e
-}
-
-func (e *PatchPolicyNpaRulesIDAccessMethod) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "Client":
-		fallthrough
-	case "Clientless":
-		*e = PatchPolicyNpaRulesIDAccessMethod(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PatchPolicyNpaRulesIDAccessMethod: %v", v)
-	}
 }
 
 type PatchPolicyNpaRulesIDActions string
@@ -844,7 +790,7 @@ func (e *PatchPolicyNpaRulesIDUserType) UnmarshalJSON(data []byte) error {
 }
 
 type PatchPolicyNpaRulesIDRuleData struct {
-	AccessMethod              *PatchPolicyNpaRulesIDAccessMethod               `json:"access_method,omitempty"`
+	AccessMethod              []string                                         `json:"access_method,omitempty"`
 	BNegateNetLocation        *bool                                            `json:"b_negateNetLocation,omitempty"`
 	BNegateSrcCountries       *bool                                            `json:"b_negateSrcCountries,omitempty"`
 	Classification            *string                                          `json:"classification,omitempty"`
@@ -868,7 +814,7 @@ type PatchPolicyNpaRulesIDRuleData struct {
 	Version                   *int64                                           `json:"version,omitempty"`
 }
 
-func (o *PatchPolicyNpaRulesIDRuleData) GetAccessMethod() *PatchPolicyNpaRulesIDAccessMethod {
+func (o *PatchPolicyNpaRulesIDRuleData) GetAccessMethod() []string {
 	if o == nil {
 		return nil
 	}
@@ -1024,7 +970,7 @@ func (o *PatchPolicyNpaRulesIDRuleData) GetVersion() *int64 {
 
 type PatchPolicyNpaRulesIDData struct {
 	RuleData *PatchPolicyNpaRulesIDRuleData `json:"rule_data,omitempty"`
-	RuleID   *int64                         `json:"rule_id,omitempty"`
+	RuleID   *string                        `json:"rule_id,omitempty"`
 	RuleName *string                        `json:"rule_name,omitempty"`
 }
 
@@ -1035,7 +981,7 @@ func (o *PatchPolicyNpaRulesIDData) GetRuleData() *PatchPolicyNpaRulesIDRuleData
 	return o.RuleData
 }
 
-func (o *PatchPolicyNpaRulesIDData) GetRuleID() *int64 {
+func (o *PatchPolicyNpaRulesIDData) GetRuleID() *string {
 	if o == nil {
 		return nil
 	}
@@ -1049,37 +995,9 @@ func (o *PatchPolicyNpaRulesIDData) GetRuleName() *string {
 	return o.RuleName
 }
 
-type PatchPolicyNpaRulesIDStatus string
-
-const (
-	PatchPolicyNpaRulesIDStatusSuccess PatchPolicyNpaRulesIDStatus = "success"
-	PatchPolicyNpaRulesIDStatusError   PatchPolicyNpaRulesIDStatus = "error"
-)
-
-func (e PatchPolicyNpaRulesIDStatus) ToPointer() *PatchPolicyNpaRulesIDStatus {
-	return &e
-}
-
-func (e *PatchPolicyNpaRulesIDStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "error":
-		*e = PatchPolicyNpaRulesIDStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PatchPolicyNpaRulesIDStatus: %v", v)
-	}
-}
-
 // PatchPolicyNpaRulesIDResponseBody - successful operation
 type PatchPolicyNpaRulesIDResponseBody struct {
-	Data   *PatchPolicyNpaRulesIDData   `json:"data,omitempty"`
-	Status *PatchPolicyNpaRulesIDStatus `json:"status,omitempty"`
+	Data *PatchPolicyNpaRulesIDData `json:"data,omitempty"`
 }
 
 func (o *PatchPolicyNpaRulesIDResponseBody) GetData() *PatchPolicyNpaRulesIDData {
@@ -1087,13 +1005,6 @@ func (o *PatchPolicyNpaRulesIDResponseBody) GetData() *PatchPolicyNpaRulesIDData
 		return nil
 	}
 	return o.Data
-}
-
-func (o *PatchPolicyNpaRulesIDResponseBody) GetStatus() *PatchPolicyNpaRulesIDStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type PatchPolicyNpaRulesIDResponse struct {

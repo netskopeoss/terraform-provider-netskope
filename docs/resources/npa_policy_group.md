@@ -18,7 +18,7 @@ resource "ns_npa_policy_group" "my_npapolicygroup" {
   group_order = {
     group_order = {
       group_id = "1"
-      order    = "before"
+      order    = "after"
     }
   }
   modify_by   = "...my_modify_by..."

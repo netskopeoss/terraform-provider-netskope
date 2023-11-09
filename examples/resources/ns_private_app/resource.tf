@@ -4,11 +4,8 @@ resource "ns_private_app" "my_privateapp" {
   host              = "...my_host..."
   protocols = [
     {
-      id         = 6
-      port       = "...my_port..."
-      service_id = 4
-      transport  = "...my_transport..."
-      type       = "...my_type..."
+      port = "...my_port..."
+      type = "...my_type..."
     },
   ]
   publisher_tags = [
@@ -25,10 +22,10 @@ resource "ns_private_app" "my_privateapp" {
   real_host = "...my_real_host..."
   tags = [
     {
-      tag_id   = 1
+      tag_id   = 8
       tag_name = "...my_tag_name..."
     },
   ]
-  trust_self_signed_certs = true
+  trust_self_signed_certs = false
   use_publisher_dns       = true
 }

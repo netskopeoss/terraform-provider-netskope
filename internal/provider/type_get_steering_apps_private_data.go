@@ -5,14 +5,14 @@ package provider
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type GetSteeringAppsPrivateData struct {
-	AppID                       types.Int64                                           `tfsdk:"app_id"`
-	AppName                     types.String                                          `tfsdk:"app_name"`
-	ClientlessAccess            types.Bool                                            `tfsdk:"clientless_access"`
-	Host                        types.String                                          `tfsdk:"host"`
-	Protocols                   []GetInfrastructurePublishersPublisherIDAppsProtocols `tfsdk:"protocols"`
-	RealHost                    types.String                                          `tfsdk:"real_host"`
-	ServicePublisherAssignments []PostSteeringAppsPrivateServicePublisherAssignments  `tfsdk:"service_publisher_assignments"`
-	Tags                        []PostInfrastructurePublishersTags                    `tfsdk:"tags"`
-	TrustSelfSignedCerts        types.Bool                                            `tfsdk:"trust_self_signed_certs"`
-	UsePublisherDNS             types.Bool                                            `tfsdk:"use_publisher_dns"`
+	AppID                       types.Int64                                          `tfsdk:"app_id"`
+	AppName                     types.String                                         `tfsdk:"app_name"`
+	ClientlessAccess            types.Bool                                           `tfsdk:"clientless_access"`
+	Host                        types.String                                         `tfsdk:"host"`
+	Protocols                   []GetSteeringAppsPrivateProtocols                    `tfsdk:"protocols"`
+	RealHost                    types.String                                         `tfsdk:"real_host"`
+	ServicePublisherAssignments []PostSteeringAppsPrivateServicePublisherAssignments `tfsdk:"service_publisher_assignments"`
+	Tags                        []PostInfrastructurePublishersTags                   `tfsdk:"tags"`
+	TrustSelfSignedCerts        types.Bool                                           `tfsdk:"trust_self_signed_certs"`
+	UsePublisherDNS             types.Bool                                           `tfsdk:"use_publisher_dns"`
 }

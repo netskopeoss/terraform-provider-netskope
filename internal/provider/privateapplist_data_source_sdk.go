@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
 func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.GetSteeringAppsPrivateResponseBody) {
@@ -33,26 +33,11 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 		}
 		data1.Protocols = nil
 		for _, protocolsItem := range dataItem.Protocols {
-			var protocols1 GetInfrastructurePublishersPublisherIDAppsProtocols
-			if protocolsItem.ID != nil {
-				protocols1.ID = types.Int64Value(int64(*protocolsItem.ID))
-			} else {
-				protocols1.ID = types.Int64Null()
-			}
+			var protocols1 GetSteeringAppsPrivateProtocols
 			if protocolsItem.Port != nil {
 				protocols1.Port = types.StringValue(*protocolsItem.Port)
 			} else {
 				protocols1.Port = types.StringNull()
-			}
-			if protocolsItem.ServiceID != nil {
-				protocols1.ServiceID = types.Int64Value(int64(*protocolsItem.ServiceID))
-			} else {
-				protocols1.ServiceID = types.Int64Null()
-			}
-			if protocolsItem.Transport != nil {
-				protocols1.Transport = types.StringValue(*protocolsItem.Transport)
-			} else {
-				protocols1.Transport = types.StringNull()
 			}
 			data1.Protocols = append(data1.Protocols, protocols1)
 		}

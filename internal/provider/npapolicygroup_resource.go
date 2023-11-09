@@ -5,8 +5,8 @@ package provider
 import (
 	"context"
 	"fmt"
-	"ns/internal/sdk"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -92,14 +92,14 @@ func (r *NPAPolicyGroupResource) Schema(ctx context.Context, req resource.Schema
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplace(),
 								},
-								Optional: true,
+								Optional:    true,
+								Description: `must be one of ["before", "after"]`,
 								Validators: []validator.String{
 									stringvalidator.OneOf(
 										"before",
 										"after",
 									),
 								},
-								Description: `must be one of ["before", "after"]`,
 							},
 						},
 					},

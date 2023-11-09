@@ -6,12 +6,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/sdkerrors"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
 	"io"
 	"net/http"
-	"ns/internal/sdk/pkg/models/operations"
-	"ns/internal/sdk/pkg/models/sdkerrors"
-	"ns/internal/sdk/pkg/models/shared"
-	"ns/internal/sdk/pkg/utils"
 	"strings"
 	"time"
 )
@@ -165,8 +165,8 @@ func New(opts ...SDKOption) *SDK {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "internal",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 internal 1.0.0 ns",
+			GenVersion:        "2.187.2",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.187.2 1.0.0 ns",
 			ServerDefaults: []map[string]string{
 				{
 					"tenant": "demo",

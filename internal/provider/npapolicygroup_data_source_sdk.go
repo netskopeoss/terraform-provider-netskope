@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
 func (r *NPAPolicyGroupDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsIDResponseBody) {
@@ -12,11 +12,6 @@ func (r *NPAPolicyGroupDataSourceModel) RefreshFromGetResponse(resp *operations.
 		r.CanBeEditedDeleted = types.Int64Value(*resp.CanBeEditedDeleted)
 	} else {
 		r.CanBeEditedDeleted = types.Int64Null()
-	}
-	if resp.GroupID != nil {
-		r.GroupID = types.Int64Value(*resp.GroupID)
-	} else {
-		r.GroupID = types.Int64Null()
 	}
 	if resp.GroupName != nil {
 		r.GroupName = types.StringValue(*resp.GroupName)
@@ -37,6 +32,11 @@ func (r *NPAPolicyGroupDataSourceModel) RefreshFromGetResponse(resp *operations.
 		r.GroupType = types.Int64Value(*resp.GroupType)
 	} else {
 		r.GroupType = types.Int64Null()
+	}
+	if resp.GroupID != nil {
+		r.GroupID = types.Int64Value(*resp.GroupID)
+	} else {
+		r.GroupID = types.Int64Null()
 	}
 	if resp.ModifyTime != nil {
 		r.ModifyTime = types.StringValue(*resp.ModifyTime)

@@ -3,8 +3,6 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -140,37 +138,9 @@ func (o *PutSteeringAppsPrivateTagsTagIDData) GetTagName() *string {
 	return o.TagName
 }
 
-type PutSteeringAppsPrivateTagsTagIDStatus string
-
-const (
-	PutSteeringAppsPrivateTagsTagIDStatusSuccess  PutSteeringAppsPrivateTagsTagIDStatus = "success"
-	PutSteeringAppsPrivateTagsTagIDStatusNotFound PutSteeringAppsPrivateTagsTagIDStatus = "not found"
-)
-
-func (e PutSteeringAppsPrivateTagsTagIDStatus) ToPointer() *PutSteeringAppsPrivateTagsTagIDStatus {
-	return &e
-}
-
-func (e *PutSteeringAppsPrivateTagsTagIDStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = PutSteeringAppsPrivateTagsTagIDStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PutSteeringAppsPrivateTagsTagIDStatus: %v", v)
-	}
-}
-
 // PutSteeringAppsPrivateTagsTagIDResponseBody - successful operation
 type PutSteeringAppsPrivateTagsTagIDResponseBody struct {
-	Data   []PutSteeringAppsPrivateTagsTagIDData  `json:"data,omitempty"`
-	Status *PutSteeringAppsPrivateTagsTagIDStatus `json:"status,omitempty"`
+	Data []PutSteeringAppsPrivateTagsTagIDData `json:"data,omitempty"`
 }
 
 func (o *PutSteeringAppsPrivateTagsTagIDResponseBody) GetData() []PutSteeringAppsPrivateTagsTagIDData {
@@ -178,13 +148,6 @@ func (o *PutSteeringAppsPrivateTagsTagIDResponseBody) GetData() []PutSteeringApp
 		return nil
 	}
 	return o.Data
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDResponseBody) GetStatus() *PutSteeringAppsPrivateTagsTagIDStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type PutSteeringAppsPrivateTagsTagIDResponse struct {

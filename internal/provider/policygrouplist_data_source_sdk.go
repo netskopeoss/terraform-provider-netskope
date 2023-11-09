@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
 func (r *PolicyGroupListDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsResponseBody) {

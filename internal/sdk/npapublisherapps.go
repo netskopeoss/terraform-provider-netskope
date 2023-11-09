@@ -6,11 +6,11 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/sdkerrors"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
 	"io"
 	"net/http"
-	"ns/internal/sdk/pkg/models/operations"
-	"ns/internal/sdk/pkg/models/sdkerrors"
-	"ns/internal/sdk/pkg/utils"
 )
 
 type NPAPublisherApps struct {

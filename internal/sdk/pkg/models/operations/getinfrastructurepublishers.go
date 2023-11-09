@@ -4,8 +4,8 @@ package operations
 
 import (
 	"errors"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
 	"net/http"
-	"ns/internal/sdk/pkg/utils"
 )
 
 type GetInfrastructurePublishersRequest struct {

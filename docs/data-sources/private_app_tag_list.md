@@ -23,7 +23,6 @@ data "ns_private_app_tag_list" "my_privateapptaglist" {
 ### Read-Only
 
 - `data` (Attributes List) (see [below for nested schema](#nestedatt--data))
-- `status` (String) must be one of ["success", "not found"]
 
 <a id="nestedatt--data"></a>
 ### Nested Schema for `data`

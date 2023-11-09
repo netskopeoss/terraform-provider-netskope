@@ -3,8 +3,6 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -40,43 +38,8 @@ func (o *DeleteSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() 
 	return o.Status
 }
 
-type DeleteSteeringAppsPrivatePrivateAppIDStatus string
-
-const (
-	DeleteSteeringAppsPrivatePrivateAppIDStatusSuccess DeleteSteeringAppsPrivatePrivateAppIDStatus = "success"
-	DeleteSteeringAppsPrivatePrivateAppIDStatusError   DeleteSteeringAppsPrivatePrivateAppIDStatus = "error"
-)
-
-func (e DeleteSteeringAppsPrivatePrivateAppIDStatus) ToPointer() *DeleteSteeringAppsPrivatePrivateAppIDStatus {
-	return &e
-}
-
-func (e *DeleteSteeringAppsPrivatePrivateAppIDStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "error":
-		*e = DeleteSteeringAppsPrivatePrivateAppIDStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for DeleteSteeringAppsPrivatePrivateAppIDStatus: %v", v)
-	}
-}
-
 // DeleteSteeringAppsPrivatePrivateAppIDResponseBody - successful operation
 type DeleteSteeringAppsPrivatePrivateAppIDResponseBody struct {
-	Status *DeleteSteeringAppsPrivatePrivateAppIDStatus `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringAppsPrivatePrivateAppIDResponseBody) GetStatus() *DeleteSteeringAppsPrivatePrivateAppIDStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type DeleteSteeringAppsPrivatePrivateAppIDResponse struct {

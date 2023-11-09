@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
 func (r *PrivateAppResourceModel) ToCreateSDKType() *operations.PostSteeringAppsPrivateRequestBody {
@@ -271,25 +271,10 @@ func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.Pos
 	r.Protocols = nil
 	for _, protocolsItem := range resp.Protocols {
 		var protocols1 PostSteeringAppsPrivateProtocols
-		if protocolsItem.ID != nil {
-			protocols1.ID = types.Int64Value(int64(*protocolsItem.ID))
-		} else {
-			protocols1.ID = types.Int64Null()
-		}
 		if protocolsItem.Port != nil {
 			protocols1.Port = types.StringValue(*protocolsItem.Port)
 		} else {
 			protocols1.Port = types.StringNull()
-		}
-		if protocolsItem.ServiceID != nil {
-			protocols1.ServiceID = types.Int64Value(int64(*protocolsItem.ServiceID))
-		} else {
-			protocols1.ServiceID = types.Int64Null()
-		}
-		if protocolsItem.Transport != nil {
-			protocols1.Transport = types.StringValue(*protocolsItem.Transport)
-		} else {
-			protocols1.Transport = types.StringNull()
 		}
 		r.Protocols = append(r.Protocols, protocols1)
 	}
@@ -389,25 +374,10 @@ func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *operations.Put
 	r.Protocols = nil
 	for _, protocolsItem := range resp.Protocols {
 		var protocols1 PostSteeringAppsPrivateProtocols
-		if protocolsItem.ID != nil {
-			protocols1.ID = types.Int64Value(int64(*protocolsItem.ID))
-		} else {
-			protocols1.ID = types.Int64Null()
-		}
 		if protocolsItem.Port != nil {
 			protocols1.Port = types.StringValue(*protocolsItem.Port)
 		} else {
 			protocols1.Port = types.StringNull()
-		}
-		if protocolsItem.ServiceID != nil {
-			protocols1.ServiceID = types.Int64Value(int64(*protocolsItem.ServiceID))
-		} else {
-			protocols1.ServiceID = types.Int64Null()
-		}
-		if protocolsItem.Transport != nil {
-			protocols1.Transport = types.StringValue(*protocolsItem.Transport)
-		} else {
-			protocols1.Transport = types.StringNull()
 		}
 		r.Protocols = append(r.Protocols, protocols1)
 	}
