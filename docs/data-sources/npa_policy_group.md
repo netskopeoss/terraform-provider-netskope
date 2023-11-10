@@ -14,7 +14,7 @@ NPAPolicyGroup DataSource
 
 ```terraform
 data "ns_npa_policy_group" "my_npapolicygroup" {
-  group_id = 8
+  group_id = "...my_group_id..."
 }
 ```
 
@@ -23,15 +23,15 @@ data "ns_npa_policy_group" "my_npapolicygroup" {
 
 ### Required
 
-- `group_id` (Number) npa policy group id
+- `group_id` (String) npa policy group id
 
 ### Read-Only
 
-- `can_be_edited_deleted` (Number)
+- `can_be_edited_deleted` (String)
 - `group_name` (String)
 - `group_pinned_id` (Number)
 - `group_prod_id` (Number)
-- `group_type` (Number)
+- `group_type` (String)
 - `modify_time` (String)
 - `modify_type` (String)
 

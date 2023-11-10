@@ -84,24 +84,24 @@ func (o *GetPolicyNpaPolicygroupsResponseResponseBody) GetStatus() *int64 {
 }
 
 type GetPolicyNpaPolicygroupsData struct {
-	CanBeEditedDeleted *int64  `json:"can_be_edited_deleted,omitempty"`
-	GroupID            *int64  `json:"group_id,omitempty"`
+	CanBeEditedDeleted *string `json:"can_be_edited_deleted,omitempty"`
+	GroupID            *string `json:"group_id,omitempty"`
 	GroupName          *string `json:"group_name,omitempty"`
 	GroupPinnedID      *int64  `json:"group_pinned_id,omitempty"`
 	GroupProdID        *int64  `json:"group_prod_id,omitempty"`
-	GroupType          *int64  `json:"group_type,omitempty"`
+	GroupType          *string `json:"group_type,omitempty"`
 	ModifyTime         *string `json:"modify_time,omitempty"`
 	ModifyType         *string `json:"modify_type,omitempty"`
 }
 
-func (o *GetPolicyNpaPolicygroupsData) GetCanBeEditedDeleted() *int64 {
+func (o *GetPolicyNpaPolicygroupsData) GetCanBeEditedDeleted() *string {
 	if o == nil {
 		return nil
 	}
 	return o.CanBeEditedDeleted
 }
 
-func (o *GetPolicyNpaPolicygroupsData) GetGroupID() *int64 {
+func (o *GetPolicyNpaPolicygroupsData) GetGroupID() *string {
 	if o == nil {
 		return nil
 	}
@@ -129,7 +129,7 @@ func (o *GetPolicyNpaPolicygroupsData) GetGroupProdID() *int64 {
 	return o.GroupProdID
 }
 
-func (o *GetPolicyNpaPolicygroupsData) GetGroupType() *int64 {
+func (o *GetPolicyNpaPolicygroupsData) GetGroupType() *string {
 	if o == nil {
 		return nil
 	}

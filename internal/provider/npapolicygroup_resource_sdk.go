@@ -16,46 +16,26 @@ func (r *NPAPolicyGroupResourceModel) ToCreateSDKType() *operations.PostPolicyNp
 	}
 	var groupOrder *operations.PostPolicyNpaPolicygroupsGroupOrder
 	if r.GroupOrder != nil {
-		var groupOrder1 *operations.PostPolicyNpaPolicygroupsRequestGroupOrder
-		if r.GroupOrder.GroupOrder != nil {
-			groupID := new(string)
-			if !r.GroupOrder.GroupOrder.GroupID.IsUnknown() && !r.GroupOrder.GroupOrder.GroupID.IsNull() {
-				*groupID = r.GroupOrder.GroupOrder.GroupID.ValueString()
-			} else {
-				groupID = nil
-			}
-			order := new(operations.PostPolicyNpaPolicygroupsOrder)
-			if !r.GroupOrder.GroupOrder.Order.IsUnknown() && !r.GroupOrder.GroupOrder.Order.IsNull() {
-				*order = operations.PostPolicyNpaPolicygroupsOrder(r.GroupOrder.GroupOrder.Order.ValueString())
-			} else {
-				order = nil
-			}
-			groupOrder1 = &operations.PostPolicyNpaPolicygroupsRequestGroupOrder{
-				GroupID: groupID,
-				Order:   order,
-			}
+		groupID := new(string)
+		if !r.GroupOrder.GroupID.IsUnknown() && !r.GroupOrder.GroupID.IsNull() {
+			*groupID = r.GroupOrder.GroupID.ValueString()
+		} else {
+			groupID = nil
+		}
+		order := new(operations.PostPolicyNpaPolicygroupsOrder)
+		if !r.GroupOrder.Order.IsUnknown() && !r.GroupOrder.Order.IsNull() {
+			*order = operations.PostPolicyNpaPolicygroupsOrder(r.GroupOrder.Order.ValueString())
+		} else {
+			order = nil
 		}
 		groupOrder = &operations.PostPolicyNpaPolicygroupsGroupOrder{
-			GroupOrder: groupOrder1,
+			GroupID: groupID,
+			Order:   order,
 		}
-	}
-	modifyBy := new(string)
-	if !r.ModifyBy.IsUnknown() && !r.ModifyBy.IsNull() {
-		*modifyBy = r.ModifyBy.ValueString()
-	} else {
-		modifyBy = nil
-	}
-	modifyType := new(string)
-	if !r.ModifyType.IsUnknown() && !r.ModifyType.IsNull() {
-		*modifyType = r.ModifyType.ValueString()
-	} else {
-		modifyType = nil
 	}
 	out := operations.PostPolicyNpaPolicygroupsRequestBody{
 		GroupName:  groupName,
 		GroupOrder: groupOrder,
-		ModifyBy:   modifyBy,
-		ModifyType: modifyType,
 	}
 	return &out
 }
@@ -70,16 +50,16 @@ func (r *NPAPolicyGroupResourceModel) ToDeleteSDKType() *operations.PostPolicyNp
 	return out
 }
 
-func (r *NPAPolicyGroupResourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsIDResponseBody) {
+func (r *NPAPolicyGroupResourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsIDData) {
 	if resp.CanBeEditedDeleted != nil {
-		r.CanBeEditedDeleted = types.Int64Value(*resp.CanBeEditedDeleted)
+		r.CanBeEditedDeleted = types.StringValue(*resp.CanBeEditedDeleted)
 	} else {
-		r.CanBeEditedDeleted = types.Int64Null()
+		r.CanBeEditedDeleted = types.StringNull()
 	}
 	if resp.GroupID != nil {
-		r.GroupID = types.Int64Value(*resp.GroupID)
+		r.GroupID = types.StringValue(*resp.GroupID)
 	} else {
-		r.GroupID = types.Int64Null()
+		r.GroupID = types.StringNull()
 	}
 	if resp.GroupName != nil {
 		r.GroupName = types.StringValue(*resp.GroupName)
@@ -97,9 +77,9 @@ func (r *NPAPolicyGroupResourceModel) RefreshFromGetResponse(resp *operations.Ge
 		r.GroupProdID = types.Int64Null()
 	}
 	if resp.GroupType != nil {
-		r.GroupType = types.Int64Value(*resp.GroupType)
+		r.GroupType = types.StringValue(*resp.GroupType)
 	} else {
-		r.GroupType = types.Int64Null()
+		r.GroupType = types.StringNull()
 	}
 	if resp.ModifyTime != nil {
 		r.ModifyTime = types.StringValue(*resp.ModifyTime)
@@ -113,16 +93,16 @@ func (r *NPAPolicyGroupResourceModel) RefreshFromGetResponse(resp *operations.Ge
 	}
 }
 
-func (r *NPAPolicyGroupResourceModel) RefreshFromCreateResponse(resp *operations.PostPolicyNpaPolicygroupsResponseBody) {
+func (r *NPAPolicyGroupResourceModel) RefreshFromCreateResponse(resp *operations.PostPolicyNpaPolicygroupsData) {
 	if resp.CanBeEditedDeleted != nil {
-		r.CanBeEditedDeleted = types.Int64Value(*resp.CanBeEditedDeleted)
+		r.CanBeEditedDeleted = types.StringValue(*resp.CanBeEditedDeleted)
 	} else {
-		r.CanBeEditedDeleted = types.Int64Null()
+		r.CanBeEditedDeleted = types.StringNull()
 	}
 	if resp.GroupID != nil {
-		r.GroupID = types.Int64Value(*resp.GroupID)
+		r.GroupID = types.StringValue(*resp.GroupID)
 	} else {
-		r.GroupID = types.Int64Null()
+		r.GroupID = types.StringNull()
 	}
 	if resp.GroupName != nil {
 		r.GroupName = types.StringValue(*resp.GroupName)
@@ -140,9 +120,9 @@ func (r *NPAPolicyGroupResourceModel) RefreshFromCreateResponse(resp *operations
 		r.GroupProdID = types.Int64Null()
 	}
 	if resp.GroupType != nil {
-		r.GroupType = types.Int64Value(*resp.GroupType)
+		r.GroupType = types.StringValue(*resp.GroupType)
 	} else {
-		r.GroupType = types.Int64Null()
+		r.GroupType = types.StringNull()
 	}
 	if resp.ModifyTime != nil {
 		r.ModifyTime = types.StringValue(*resp.ModifyTime)

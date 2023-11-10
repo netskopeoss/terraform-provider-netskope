@@ -8,12 +8,12 @@ import (
 
 type GetPolicyNpaPolicygroupsIDRequest struct {
 	// npa policy group id
-	ID int64 `pathParam:"style=simple,explode=false,name=id"`
+	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *GetPolicyNpaPolicygroupsIDRequest) GetID() int64 {
+func (o *GetPolicyNpaPolicygroupsIDRequest) GetID() string {
 	if o == nil {
-		return 0
+		return ""
 	}
 	return o.ID
 }
@@ -38,72 +38,83 @@ func (o *GetPolicyNpaPolicygroupsIDResponseResponseBody) GetStatus() *int64 {
 	return o.Status
 }
 
-// GetPolicyNpaPolicygroupsIDResponseBody - successful operation
-type GetPolicyNpaPolicygroupsIDResponseBody struct {
-	CanBeEditedDeleted *int64  `json:"can_be_edited_deleted,omitempty"`
-	GroupID            *int64  `json:"group_id,omitempty"`
+type GetPolicyNpaPolicygroupsIDData struct {
+	CanBeEditedDeleted *string `json:"can_be_edited_deleted,omitempty"`
+	GroupID            *string `json:"group_id,omitempty"`
 	GroupName          *string `json:"group_name,omitempty"`
 	GroupPinnedID      *int64  `json:"group_pinned_id,omitempty"`
 	GroupProdID        *int64  `json:"group_prod_id,omitempty"`
-	GroupType          *int64  `json:"group_type,omitempty"`
+	GroupType          *string `json:"group_type,omitempty"`
 	ModifyTime         *string `json:"modify_time,omitempty"`
 	ModifyType         *string `json:"modify_type,omitempty"`
 }
 
-func (o *GetPolicyNpaPolicygroupsIDResponseBody) GetCanBeEditedDeleted() *int64 {
+func (o *GetPolicyNpaPolicygroupsIDData) GetCanBeEditedDeleted() *string {
 	if o == nil {
 		return nil
 	}
 	return o.CanBeEditedDeleted
 }
 
-func (o *GetPolicyNpaPolicygroupsIDResponseBody) GetGroupID() *int64 {
+func (o *GetPolicyNpaPolicygroupsIDData) GetGroupID() *string {
 	if o == nil {
 		return nil
 	}
 	return o.GroupID
 }
 
-func (o *GetPolicyNpaPolicygroupsIDResponseBody) GetGroupName() *string {
+func (o *GetPolicyNpaPolicygroupsIDData) GetGroupName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.GroupName
 }
 
-func (o *GetPolicyNpaPolicygroupsIDResponseBody) GetGroupPinnedID() *int64 {
+func (o *GetPolicyNpaPolicygroupsIDData) GetGroupPinnedID() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.GroupPinnedID
 }
 
-func (o *GetPolicyNpaPolicygroupsIDResponseBody) GetGroupProdID() *int64 {
+func (o *GetPolicyNpaPolicygroupsIDData) GetGroupProdID() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.GroupProdID
 }
 
-func (o *GetPolicyNpaPolicygroupsIDResponseBody) GetGroupType() *int64 {
+func (o *GetPolicyNpaPolicygroupsIDData) GetGroupType() *string {
 	if o == nil {
 		return nil
 	}
 	return o.GroupType
 }
 
-func (o *GetPolicyNpaPolicygroupsIDResponseBody) GetModifyTime() *string {
+func (o *GetPolicyNpaPolicygroupsIDData) GetModifyTime() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ModifyTime
 }
 
-func (o *GetPolicyNpaPolicygroupsIDResponseBody) GetModifyType() *string {
+func (o *GetPolicyNpaPolicygroupsIDData) GetModifyType() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ModifyType
+}
+
+// GetPolicyNpaPolicygroupsIDResponseBody - successful operation
+type GetPolicyNpaPolicygroupsIDResponseBody struct {
+	Data *GetPolicyNpaPolicygroupsIDData `json:"data,omitempty"`
+}
+
+func (o *GetPolicyNpaPolicygroupsIDResponseBody) GetData() *GetPolicyNpaPolicygroupsIDData {
+	if o == nil {
+		return nil
+	}
+	return o.Data
 }
 
 type GetPolicyNpaPolicygroupsIDResponse struct {

@@ -52,10 +52,10 @@ func (r *PolicyGroupListDataSource) Schema(ctx context.Context, req datasource.S
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"can_be_edited_deleted": schema.Int64Attribute{
+						"can_be_edited_deleted": schema.StringAttribute{
 							Computed: true,
 						},
-						"group_id": schema.Int64Attribute{
+						"group_id": schema.StringAttribute{
 							Computed: true,
 						},
 						"group_name": schema.StringAttribute{
@@ -67,7 +67,7 @@ func (r *PolicyGroupListDataSource) Schema(ctx context.Context, req datasource.S
 						"group_prod_id": schema.Int64Attribute{
 							Computed: true,
 						},
-						"group_type": schema.Int64Attribute{
+						"group_type": schema.StringAttribute{
 							Computed: true,
 						},
 						"modify_time": schema.StringAttribute{

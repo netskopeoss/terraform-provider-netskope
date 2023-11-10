@@ -165,8 +165,8 @@ func New(opts ...SDKOption) *SDK {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.187.2",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.187.2 1.0.0 ns",
+			GenVersion:        "2.187.4",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.187.4 1.0.0 ns",
 			ServerDefaults: []map[string]string{
 				{
 					"tenant": "demo",

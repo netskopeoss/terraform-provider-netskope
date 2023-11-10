@@ -35,41 +35,28 @@ func (e *PostPolicyNpaPolicygroupsOrder) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PostPolicyNpaPolicygroupsRequestGroupOrder struct {
+type PostPolicyNpaPolicygroupsGroupOrder struct {
 	GroupID *string                         `json:"group_id,omitempty"`
 	Order   *PostPolicyNpaPolicygroupsOrder `json:"order,omitempty"`
 }
 
-func (o *PostPolicyNpaPolicygroupsRequestGroupOrder) GetGroupID() *string {
+func (o *PostPolicyNpaPolicygroupsGroupOrder) GetGroupID() *string {
 	if o == nil {
 		return nil
 	}
 	return o.GroupID
 }
 
-func (o *PostPolicyNpaPolicygroupsRequestGroupOrder) GetOrder() *PostPolicyNpaPolicygroupsOrder {
+func (o *PostPolicyNpaPolicygroupsGroupOrder) GetOrder() *PostPolicyNpaPolicygroupsOrder {
 	if o == nil {
 		return nil
 	}
 	return o.Order
 }
 
-type PostPolicyNpaPolicygroupsGroupOrder struct {
-	GroupOrder *PostPolicyNpaPolicygroupsRequestGroupOrder `json:"group_order,omitempty"`
-}
-
-func (o *PostPolicyNpaPolicygroupsGroupOrder) GetGroupOrder() *PostPolicyNpaPolicygroupsRequestGroupOrder {
-	if o == nil {
-		return nil
-	}
-	return o.GroupOrder
-}
-
 type PostPolicyNpaPolicygroupsRequestBody struct {
 	GroupName  *string                              `json:"group_name,omitempty"`
 	GroupOrder *PostPolicyNpaPolicygroupsGroupOrder `json:"group_order,omitempty"`
-	ModifyBy   *string                              `json:"modify_by,omitempty"`
-	ModifyType *string                              `json:"modify_type,omitempty"`
 }
 
 func (o *PostPolicyNpaPolicygroupsRequestBody) GetGroupName() *string {
@@ -84,20 +71,6 @@ func (o *PostPolicyNpaPolicygroupsRequestBody) GetGroupOrder() *PostPolicyNpaPol
 		return nil
 	}
 	return o.GroupOrder
-}
-
-func (o *PostPolicyNpaPolicygroupsRequestBody) GetModifyBy() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ModifyBy
-}
-
-func (o *PostPolicyNpaPolicygroupsRequestBody) GetModifyType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ModifyType
 }
 
 // PostPolicyNpaPolicygroupsQueryParamSilent - flag to skip output except status code
@@ -168,72 +141,83 @@ func (o *PostPolicyNpaPolicygroupsResponseResponseBody) GetStatus() *int64 {
 	return o.Status
 }
 
-// PostPolicyNpaPolicygroupsResponseBody - successful operation
-type PostPolicyNpaPolicygroupsResponseBody struct {
-	CanBeEditedDeleted *int64  `json:"can_be_edited_deleted,omitempty"`
-	GroupID            *int64  `json:"group_id,omitempty"`
+type PostPolicyNpaPolicygroupsData struct {
+	CanBeEditedDeleted *string `json:"can_be_edited_deleted,omitempty"`
+	GroupID            *string `json:"group_id,omitempty"`
 	GroupName          *string `json:"group_name,omitempty"`
 	GroupPinnedID      *int64  `json:"group_pinned_id,omitempty"`
 	GroupProdID        *int64  `json:"group_prod_id,omitempty"`
-	GroupType          *int64  `json:"group_type,omitempty"`
+	GroupType          *string `json:"group_type,omitempty"`
 	ModifyTime         *string `json:"modify_time,omitempty"`
 	ModifyType         *string `json:"modify_type,omitempty"`
 }
 
-func (o *PostPolicyNpaPolicygroupsResponseBody) GetCanBeEditedDeleted() *int64 {
+func (o *PostPolicyNpaPolicygroupsData) GetCanBeEditedDeleted() *string {
 	if o == nil {
 		return nil
 	}
 	return o.CanBeEditedDeleted
 }
 
-func (o *PostPolicyNpaPolicygroupsResponseBody) GetGroupID() *int64 {
+func (o *PostPolicyNpaPolicygroupsData) GetGroupID() *string {
 	if o == nil {
 		return nil
 	}
 	return o.GroupID
 }
 
-func (o *PostPolicyNpaPolicygroupsResponseBody) GetGroupName() *string {
+func (o *PostPolicyNpaPolicygroupsData) GetGroupName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.GroupName
 }
 
-func (o *PostPolicyNpaPolicygroupsResponseBody) GetGroupPinnedID() *int64 {
+func (o *PostPolicyNpaPolicygroupsData) GetGroupPinnedID() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.GroupPinnedID
 }
 
-func (o *PostPolicyNpaPolicygroupsResponseBody) GetGroupProdID() *int64 {
+func (o *PostPolicyNpaPolicygroupsData) GetGroupProdID() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.GroupProdID
 }
 
-func (o *PostPolicyNpaPolicygroupsResponseBody) GetGroupType() *int64 {
+func (o *PostPolicyNpaPolicygroupsData) GetGroupType() *string {
 	if o == nil {
 		return nil
 	}
 	return o.GroupType
 }
 
-func (o *PostPolicyNpaPolicygroupsResponseBody) GetModifyTime() *string {
+func (o *PostPolicyNpaPolicygroupsData) GetModifyTime() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ModifyTime
 }
 
-func (o *PostPolicyNpaPolicygroupsResponseBody) GetModifyType() *string {
+func (o *PostPolicyNpaPolicygroupsData) GetModifyType() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ModifyType
+}
+
+// PostPolicyNpaPolicygroupsResponseBody - successful operation
+type PostPolicyNpaPolicygroupsResponseBody struct {
+	Data *PostPolicyNpaPolicygroupsData `json:"data,omitempty"`
+}
+
+func (o *PostPolicyNpaPolicygroupsResponseBody) GetData() *PostPolicyNpaPolicygroupsData {
+	if o == nil {
+		return nil
+	}
+	return o.Data
 }
 
 type PostPolicyNpaPolicygroupsResponse struct {
