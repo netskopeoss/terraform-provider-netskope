@@ -19,14 +19,20 @@ func (r *PrivateAppTagPolicyUseListDataSourceModel) ToGetSDKType() *operations.P
 }
 
 func (r *PrivateAppTagPolicyUseListDataSourceModel) RefreshFromGetResponse(resp *operations.PostSteeringAppsPrivateTagsGetpolicyinuseResponseBody) {
-	r.Data = nil
-	for _, dataItem := range resp.Data {
+	if len(r.Data) > len(resp.Data) {
+		r.Data = r.Data[:len(resp.Data)]
+	}
+	for dataCount, dataItem := range resp.Data {
 		var data1 PostSteeringAppsPrivateTagsGetpolicyinuseData
 		if dataItem.Token != nil {
 			data1.Token = types.StringValue(*dataItem.Token)
 		} else {
 			data1.Token = types.StringNull()
 		}
-		r.Data = append(r.Data, data1)
+		if dataCount+1 > len(r.Data) {
+			r.Data = append(r.Data, data1)
+		} else {
+			r.Data[dataCount].Token = data1.Token
+		}
 	}
 }

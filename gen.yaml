@@ -7,7 +7,7 @@ generation:
 features:
   terraform:
     constsAndDefaults: 0.1.1
-    core: 3.4.1
+    core: 3.4.3
     globalSecurity: 2.81.1
     globalServerURLs: 2.82.0
     groups: 2.81.2

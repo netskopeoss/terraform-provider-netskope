@@ -7,10 +7,12 @@ import (
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *NPAPublisherUpgradeProfileListDataSourceModel) RefreshFromGetResponse(resp *operations.GetPublisherupgradeprofilesResponseBody) {
-	r.Data = nil
-	for _, dataItem := range resp.Data {
-		var data1 GetPublisherupgradeprofilesData
+func (r *NPAPublisherUpgradeProfileListDataSourceModel) RefreshFromGetResponse(resp *operations.GetInfrastructurePublisherupgradeprofilesResponseBody) {
+	if len(r.Data) > len(resp.Data) {
+		r.Data = r.Data[:len(resp.Data)]
+	}
+	for dataCount, dataItem := range resp.Data {
+		var data1 GetInfrastructurePublisherupgradeprofilesData
 		if dataItem.DockerTag != nil {
 			data1.DockerTag = types.StringValue(*dataItem.DockerTag)
 		} else {
@@ -46,7 +48,17 @@ func (r *NPAPublisherUpgradeProfileListDataSourceModel) RefreshFromGetResponse(r
 		} else {
 			data1.Timezone = types.StringNull()
 		}
-		r.Data = append(r.Data, data1)
+		if dataCount+1 > len(r.Data) {
+			r.Data = append(r.Data, data1)
+		} else {
+			r.Data[dataCount].DockerTag = data1.DockerTag
+			r.Data[dataCount].Enabled = data1.Enabled
+			r.Data[dataCount].Frequency = data1.Frequency
+			r.Data[dataCount].ID = data1.ID
+			r.Data[dataCount].Name = data1.Name
+			r.Data[dataCount].ReleaseType = data1.ReleaseType
+			r.Data[dataCount].Timezone = data1.Timezone
+		}
 	}
 	if resp.Status != nil {
 		r.Status = types.StringValue(string(*resp.Status))

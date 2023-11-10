@@ -26,9 +26,9 @@ func newNPAPublisherUpgradeProfiles(sdkConfig sdkConfiguration) *NPAPublisherUpg
 
 // Create a publisher upgrade profile
 // Create a publisher upgrade profile
-func (s *NPAPublisherUpgradeProfiles) Create(ctx context.Context, request operations.PostPublisherupgradeprofilesRequest) (*operations.PostPublisherupgradeprofilesResponse, error) {
+func (s *NPAPublisherUpgradeProfiles) Create(ctx context.Context, request operations.PostInfrastructurePublisherupgradeprofilesRequest) (*operations.PostInfrastructurePublisherupgradeprofilesResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url := strings.TrimSuffix(baseURL, "/") + "/publisherupgradeprofiles"
+	url := strings.TrimSuffix(baseURL, "/") + "/infrastructure/publisherupgradeprofiles"
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "RequestBody", "json", `request:"mediaType=application/json"`)
 	if err != nil {
@@ -70,7 +70,7 @@ func (s *NPAPublisherUpgradeProfiles) Create(ctx context.Context, request operat
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.PostPublisherupgradeprofilesResponse{
+	res := &operations.PostInfrastructurePublisherupgradeprofilesResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 		RawResponse: httpRes,
@@ -79,7 +79,7 @@ func (s *NPAPublisherUpgradeProfiles) Create(ctx context.Context, request operat
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostPublisherupgradeprofilesResponseBody
+			var out operations.PostInfrastructurePublisherupgradeprofilesResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -91,7 +91,7 @@ func (s *NPAPublisherUpgradeProfiles) Create(ctx context.Context, request operat
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostPublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody
+			var out operations.PostInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -107,9 +107,9 @@ func (s *NPAPublisherUpgradeProfiles) Create(ctx context.Context, request operat
 
 // Delete a publisher
 // Delete a publisher upgrade profile based on profile id
-func (s *NPAPublisherUpgradeProfiles) Delete(ctx context.Context, request operations.DeletePublisherupgradeprofilesUpgradeProfileIDRequest) (*operations.DeletePublisherupgradeprofilesUpgradeProfileIDResponse, error) {
+func (s *NPAPublisherUpgradeProfiles) Delete(ctx context.Context, request operations.DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest) (*operations.DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/publisherupgradeprofiles/{upgrade_profile_id}", request, nil)
+	url, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publisherupgradeprofiles/{upgrade_profile_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -140,7 +140,7 @@ func (s *NPAPublisherUpgradeProfiles) Delete(ctx context.Context, request operat
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.DeletePublisherupgradeprofilesUpgradeProfileIDResponse{
+	res := &operations.DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 		RawResponse: httpRes,
@@ -149,7 +149,7 @@ func (s *NPAPublisherUpgradeProfiles) Delete(ctx context.Context, request operat
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeletePublisherupgradeprofilesUpgradeProfileIDResponseBody
+			var out operations.DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -161,7 +161,7 @@ func (s *NPAPublisherUpgradeProfiles) Delete(ctx context.Context, request operat
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeletePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody
+			var out operations.DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -177,9 +177,9 @@ func (s *NPAPublisherUpgradeProfiles) Delete(ctx context.Context, request operat
 
 // ListObjects - Get list of publisher upgrade profile objects
 // Get list of publisher upgrade profile objects
-func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, request operations.GetPublisherupgradeprofilesRequest) (*operations.GetPublisherupgradeprofilesResponse, error) {
+func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, request operations.GetInfrastructurePublisherupgradeprofilesRequest) (*operations.GetInfrastructurePublisherupgradeprofilesResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url := strings.TrimSuffix(baseURL, "/") + "/publisherupgradeprofiles"
+	url := strings.TrimSuffix(baseURL, "/") + "/infrastructure/publisherupgradeprofiles"
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -211,7 +211,7 @@ func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, request o
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.GetPublisherupgradeprofilesResponse{
+	res := &operations.GetInfrastructurePublisherupgradeprofilesResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 		RawResponse: httpRes,
@@ -220,7 +220,7 @@ func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, request o
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetPublisherupgradeprofilesResponseBody
+			var out operations.GetInfrastructurePublisherupgradeprofilesResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -232,7 +232,7 @@ func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, request o
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetPublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody
+			var out operations.GetInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -248,9 +248,9 @@ func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, request o
 
 // Update a publisher upgrade profile
 // update a publisher upgrade profile based on publisher upgrade profile id
-func (s *NPAPublisherUpgradeProfiles) Update(ctx context.Context, request operations.PutPublisherupgradeprofilesUpgradeProfileIDRequest) (*operations.PutPublisherupgradeprofilesUpgradeProfileIDResponse, error) {
+func (s *NPAPublisherUpgradeProfiles) Update(ctx context.Context, request operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest) (*operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/publisherupgradeprofiles/{upgrade_profile_id}", request, nil)
+	url, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publisherupgradeprofiles/{upgrade_profile_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -299,7 +299,7 @@ func (s *NPAPublisherUpgradeProfiles) Update(ctx context.Context, request operat
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.PutPublisherupgradeprofilesUpgradeProfileIDResponse{
+	res := &operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 		RawResponse: httpRes,
@@ -308,7 +308,7 @@ func (s *NPAPublisherUpgradeProfiles) Update(ctx context.Context, request operat
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutPublisherupgradeprofilesUpgradeProfileIDResponseBody
+			var out operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -320,7 +320,7 @@ func (s *NPAPublisherUpgradeProfiles) Update(ctx context.Context, request operat
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutPublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody
+			var out operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}

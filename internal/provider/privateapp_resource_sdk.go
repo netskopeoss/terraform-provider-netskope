@@ -268,23 +268,31 @@ func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.Pos
 	} else {
 		r.Name = types.StringNull()
 	}
-	r.Protocols = nil
-	for _, protocolsItem := range resp.Protocols {
+	if len(r.Protocols) > len(resp.Protocols) {
+		r.Protocols = r.Protocols[:len(resp.Protocols)]
+	}
+	for protocolsCount, protocolsItem := range resp.Protocols {
 		var protocols1 PostSteeringAppsPrivateProtocols
 		if protocolsItem.Port != nil {
 			protocols1.Port = types.StringValue(*protocolsItem.Port)
 		} else {
 			protocols1.Port = types.StringNull()
 		}
-		r.Protocols = append(r.Protocols, protocols1)
+		if protocolsCount+1 > len(r.Protocols) {
+			r.Protocols = append(r.Protocols, protocols1)
+		} else {
+			r.Protocols[protocolsCount].Port = protocols1.Port
+		}
 	}
 	if resp.RealHost != nil {
 		r.RealHost = types.StringValue(*resp.RealHost)
 	} else {
 		r.RealHost = types.StringNull()
 	}
-	r.ServicePublisherAssignments = nil
-	for _, servicePublisherAssignmentsItem := range resp.ServicePublisherAssignments {
+	if len(r.ServicePublisherAssignments) > len(resp.ServicePublisherAssignments) {
+		r.ServicePublisherAssignments = r.ServicePublisherAssignments[:len(resp.ServicePublisherAssignments)]
+	}
+	for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range resp.ServicePublisherAssignments {
 		var servicePublisherAssignments1 PostSteeringAppsPrivateServicePublisherAssignments
 		if servicePublisherAssignmentsItem.Primary != nil {
 			servicePublisherAssignments1.Primary = types.BoolValue(*servicePublisherAssignmentsItem.Primary)
@@ -321,10 +329,19 @@ func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.Pos
 		} else {
 			servicePublisherAssignments1.ServiceID = types.Int64Null()
 		}
-		r.ServicePublisherAssignments = append(r.ServicePublisherAssignments, servicePublisherAssignments1)
+		if servicePublisherAssignmentsCount+1 > len(r.ServicePublisherAssignments) {
+			r.ServicePublisherAssignments = append(r.ServicePublisherAssignments, servicePublisherAssignments1)
+		} else {
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].Primary = servicePublisherAssignments1.Primary
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].PublisherID = servicePublisherAssignments1.PublisherID
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].Reachability = servicePublisherAssignments1.Reachability
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].ServiceID = servicePublisherAssignments1.ServiceID
+		}
 	}
-	r.Tags = nil
-	for _, tagsItem := range resp.Tags {
+	if len(r.Tags) > len(resp.Tags) {
+		r.Tags = r.Tags[:len(resp.Tags)]
+	}
+	for tagsCount, tagsItem := range resp.Tags {
 		var tags1 PostInfrastructurePublishersTags
 		if tagsItem.TagID != nil {
 			tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
@@ -336,7 +353,12 @@ func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.Pos
 		} else {
 			tags1.TagName = types.StringNull()
 		}
-		r.Tags = append(r.Tags, tags1)
+		if tagsCount+1 > len(r.Tags) {
+			r.Tags = append(r.Tags, tags1)
+		} else {
+			r.Tags[tagsCount].TagID = tags1.TagID
+			r.Tags[tagsCount].TagName = tags1.TagName
+		}
 	}
 	if resp.TrustSelfSignedCerts != nil {
 		r.TrustSelfSignedCerts = types.BoolValue(*resp.TrustSelfSignedCerts)
@@ -371,23 +393,31 @@ func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *operations.Put
 	} else {
 		r.Name = types.StringNull()
 	}
-	r.Protocols = nil
-	for _, protocolsItem := range resp.Protocols {
+	if len(r.Protocols) > len(resp.Protocols) {
+		r.Protocols = r.Protocols[:len(resp.Protocols)]
+	}
+	for protocolsCount, protocolsItem := range resp.Protocols {
 		var protocols1 PostSteeringAppsPrivateProtocols
 		if protocolsItem.Port != nil {
 			protocols1.Port = types.StringValue(*protocolsItem.Port)
 		} else {
 			protocols1.Port = types.StringNull()
 		}
-		r.Protocols = append(r.Protocols, protocols1)
+		if protocolsCount+1 > len(r.Protocols) {
+			r.Protocols = append(r.Protocols, protocols1)
+		} else {
+			r.Protocols[protocolsCount].Port = protocols1.Port
+		}
 	}
 	if resp.RealHost != nil {
 		r.RealHost = types.StringValue(*resp.RealHost)
 	} else {
 		r.RealHost = types.StringNull()
 	}
-	r.ServicePublisherAssignments = nil
-	for _, servicePublisherAssignmentsItem := range resp.ServicePublisherAssignments {
+	if len(r.ServicePublisherAssignments) > len(resp.ServicePublisherAssignments) {
+		r.ServicePublisherAssignments = r.ServicePublisherAssignments[:len(resp.ServicePublisherAssignments)]
+	}
+	for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range resp.ServicePublisherAssignments {
 		var servicePublisherAssignments1 PostSteeringAppsPrivateServicePublisherAssignments
 		if servicePublisherAssignmentsItem.Primary != nil {
 			servicePublisherAssignments1.Primary = types.BoolValue(*servicePublisherAssignmentsItem.Primary)
@@ -424,10 +454,19 @@ func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *operations.Put
 		} else {
 			servicePublisherAssignments1.ServiceID = types.Int64Null()
 		}
-		r.ServicePublisherAssignments = append(r.ServicePublisherAssignments, servicePublisherAssignments1)
+		if servicePublisherAssignmentsCount+1 > len(r.ServicePublisherAssignments) {
+			r.ServicePublisherAssignments = append(r.ServicePublisherAssignments, servicePublisherAssignments1)
+		} else {
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].Primary = servicePublisherAssignments1.Primary
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].PublisherID = servicePublisherAssignments1.PublisherID
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].Reachability = servicePublisherAssignments1.Reachability
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].ServiceID = servicePublisherAssignments1.ServiceID
+		}
 	}
-	r.Tags = nil
-	for _, tagsItem := range resp.Tags {
+	if len(r.Tags) > len(resp.Tags) {
+		r.Tags = r.Tags[:len(resp.Tags)]
+	}
+	for tagsCount, tagsItem := range resp.Tags {
 		var tags1 PostInfrastructurePublishersTags
 		if tagsItem.TagID != nil {
 			tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
@@ -439,7 +478,12 @@ func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *operations.Put
 		} else {
 			tags1.TagName = types.StringNull()
 		}
-		r.Tags = append(r.Tags, tags1)
+		if tagsCount+1 > len(r.Tags) {
+			r.Tags = append(r.Tags, tags1)
+		} else {
+			r.Tags[tagsCount].TagID = tags1.TagID
+			r.Tags[tagsCount].TagName = tags1.TagName
+		}
 	}
 	if resp.TrustSelfSignedCerts != nil {
 		r.TrustSelfSignedCerts = types.BoolValue(*resp.TrustSelfSignedCerts)

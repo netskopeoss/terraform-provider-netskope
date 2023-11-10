@@ -20,20 +20,20 @@ func (o *GetInfrastructurePublishersReleasesRequest) GetFields() *string {
 	return o.Fields
 }
 
-// GetInfrastructurePublishersReleasesNPAPublisherReleasesResponseBody - Invalid request
-type GetInfrastructurePublishersReleasesNPAPublisherReleasesResponseBody struct {
+// GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody - Invalid request
+type GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *GetInfrastructurePublishersReleasesNPAPublisherReleasesResponseBody) GetResult() *string {
+func (o *GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *GetInfrastructurePublishersReleasesNPAPublisherReleasesResponseBody) GetStatus() *int64 {
+func (o *GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -118,7 +118,7 @@ type GetInfrastructurePublishersReleasesResponse struct {
 	// successful operation
 	TwoHundredApplicationJSONObject *GetInfrastructurePublishersReleasesResponseBody
 	// Invalid request
-	FourHundredApplicationJSONObject *GetInfrastructurePublishersReleasesNPAPublisherReleasesResponseBody
+	FourHundredApplicationJSONObject *GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -134,7 +134,7 @@ func (o *GetInfrastructurePublishersReleasesResponse) GetTwoHundredApplicationJS
 	return o.TwoHundredApplicationJSONObject
 }
 
-func (o *GetInfrastructurePublishersReleasesResponse) GetFourHundredApplicationJSONObject() *GetInfrastructurePublishersReleasesNPAPublisherReleasesResponseBody {
+func (o *GetInfrastructurePublishersReleasesResponse) GetFourHundredApplicationJSONObject() *GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody {
 	if o == nil {
 		return nil
 	}

@@ -8,8 +8,10 @@ import (
 )
 
 func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.GetSteeringAppsPrivateResponseBody) {
-	r.Data = nil
-	for _, dataItem := range resp.Data {
+	if len(r.Data) > len(resp.Data) {
+		r.Data = r.Data[:len(resp.Data)]
+	}
+	for dataCount, dataItem := range resp.Data {
 		var data1 GetSteeringAppsPrivateData
 		if dataItem.AppID != nil {
 			data1.AppID = types.Int64Value(int64(*dataItem.AppID))
@@ -31,23 +33,31 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 		} else {
 			data1.Host = types.StringNull()
 		}
-		data1.Protocols = nil
-		for _, protocolsItem := range dataItem.Protocols {
+		if len(data1.Protocols) > len(dataItem.Protocols) {
+			data1.Protocols = data1.Protocols[:len(dataItem.Protocols)]
+		}
+		for protocolsCount, protocolsItem := range dataItem.Protocols {
 			var protocols1 GetSteeringAppsPrivateProtocols
 			if protocolsItem.Port != nil {
 				protocols1.Port = types.StringValue(*protocolsItem.Port)
 			} else {
 				protocols1.Port = types.StringNull()
 			}
-			data1.Protocols = append(data1.Protocols, protocols1)
+			if protocolsCount+1 > len(data1.Protocols) {
+				data1.Protocols = append(data1.Protocols, protocols1)
+			} else {
+				data1.Protocols[protocolsCount].Port = protocols1.Port
+			}
 		}
 		if dataItem.RealHost != nil {
 			data1.RealHost = types.StringValue(*dataItem.RealHost)
 		} else {
 			data1.RealHost = types.StringNull()
 		}
-		data1.ServicePublisherAssignments = nil
-		for _, servicePublisherAssignmentsItem := range dataItem.ServicePublisherAssignments {
+		if len(data1.ServicePublisherAssignments) > len(dataItem.ServicePublisherAssignments) {
+			data1.ServicePublisherAssignments = data1.ServicePublisherAssignments[:len(dataItem.ServicePublisherAssignments)]
+		}
+		for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range dataItem.ServicePublisherAssignments {
 			var servicePublisherAssignments1 PostSteeringAppsPrivateServicePublisherAssignments
 			if servicePublisherAssignmentsItem.Primary != nil {
 				servicePublisherAssignments1.Primary = types.BoolValue(*servicePublisherAssignmentsItem.Primary)
@@ -84,10 +94,19 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 			} else {
 				servicePublisherAssignments1.ServiceID = types.Int64Null()
 			}
-			data1.ServicePublisherAssignments = append(data1.ServicePublisherAssignments, servicePublisherAssignments1)
+			if servicePublisherAssignmentsCount+1 > len(data1.ServicePublisherAssignments) {
+				data1.ServicePublisherAssignments = append(data1.ServicePublisherAssignments, servicePublisherAssignments1)
+			} else {
+				data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].Primary = servicePublisherAssignments1.Primary
+				data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].PublisherID = servicePublisherAssignments1.PublisherID
+				data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].Reachability = servicePublisherAssignments1.Reachability
+				data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].ServiceID = servicePublisherAssignments1.ServiceID
+			}
 		}
-		data1.Tags = nil
-		for _, tagsItem := range dataItem.Tags {
+		if len(data1.Tags) > len(dataItem.Tags) {
+			data1.Tags = data1.Tags[:len(dataItem.Tags)]
+		}
+		for tagsCount, tagsItem := range dataItem.Tags {
 			var tags1 PostInfrastructurePublishersTags
 			if tagsItem.TagID != nil {
 				tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
@@ -99,7 +118,12 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 			} else {
 				tags1.TagName = types.StringNull()
 			}
-			data1.Tags = append(data1.Tags, tags1)
+			if tagsCount+1 > len(data1.Tags) {
+				data1.Tags = append(data1.Tags, tags1)
+			} else {
+				data1.Tags[tagsCount].TagID = tags1.TagID
+				data1.Tags[tagsCount].TagName = tags1.TagName
+			}
 		}
 		if dataItem.TrustSelfSignedCerts != nil {
 			data1.TrustSelfSignedCerts = types.BoolValue(*dataItem.TrustSelfSignedCerts)
@@ -111,7 +135,20 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 		} else {
 			data1.UsePublisherDNS = types.BoolNull()
 		}
-		r.Data = append(r.Data, data1)
+		if dataCount+1 > len(r.Data) {
+			r.Data = append(r.Data, data1)
+		} else {
+			r.Data[dataCount].AppID = data1.AppID
+			r.Data[dataCount].AppName = data1.AppName
+			r.Data[dataCount].ClientlessAccess = data1.ClientlessAccess
+			r.Data[dataCount].Host = data1.Host
+			r.Data[dataCount].Protocols = data1.Protocols
+			r.Data[dataCount].RealHost = data1.RealHost
+			r.Data[dataCount].ServicePublisherAssignments = data1.ServicePublisherAssignments
+			r.Data[dataCount].Tags = data1.Tags
+			r.Data[dataCount].TrustSelfSignedCerts = data1.TrustSelfSignedCerts
+			r.Data[dataCount].UsePublisherDNS = data1.UsePublisherDNS
+		}
 	}
 	if resp.Total != nil {
 		r.Total = types.Int64Value(int64(*resp.Total))

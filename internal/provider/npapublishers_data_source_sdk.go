@@ -8,78 +8,73 @@ import (
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *operations.GetInfrastructurePublishersResponseBody) {
-	if resp.Data == nil {
-		r.Data = nil
+func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *operations.GetInfrastructurePublishersPublisherIDData) {
+	if resp.Assessment == nil {
+		r.Assessment = types.StringNull()
 	} else {
-		r.Data = &GetInfrastructurePublishersData{}
-		r.Data.Publishers = nil
-		for _, publishersItem := range resp.Data.Publishers {
-			var publishers1 Publisher
-			publishers1.AppsCount = types.Int64Value(publishersItem.AppsCount)
-			if publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment != nil {
-				publishers1.Assessment.Assessment = &GetInfrastructurePublishersNPAPublishersAssessment{}
-				publishers1.Assessment.Assessment.EeeSupport = types.BoolValue(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.EeeSupport)
-				publishers1.Assessment.Assessment.HddFree = types.StringValue(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.HddFree)
-				publishers1.Assessment.Assessment.HddTotal = types.StringValue(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.HddTotal)
-				publishers1.Assessment.Assessment.IPAddress = types.StringValue(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.IPAddress)
-				publishers1.Assessment.Assessment.Latency = types.Int64Value(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.Latency)
-				publishers1.Assessment.Assessment.Version = types.StringValue(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.Version)
-			}
-			if publishersItem.Assessment.Two != nil {
-				publishers1.Assessment.Two = &Assessment{}
-			}
-			publishers1.CommonName = types.StringValue(publishersItem.CommonName)
-			publishers1.ConnectedApps = nil
-			for _, v := range publishersItem.ConnectedApps {
-				publishers1.ConnectedApps = append(publishers1.ConnectedApps, types.StringValue(v))
-			}
-			publishers1.Lbrokerconnect = types.BoolValue(publishersItem.Lbrokerconnect)
-			publishers1.PublisherID = types.Int64Value(publishersItem.PublisherID)
-			publishers1.PublisherName = types.StringValue(publishersItem.PublisherName)
-			publishers1.PublisherUpgradeProfilesExternalID = types.Int64Value(publishersItem.PublisherUpgradeProfilesExternalID)
-			publishers1.Registered = types.BoolValue(publishersItem.Registered)
-			publishers1.Status = types.StringValue(publishersItem.Status)
-			if publishersItem.StitcherID.Integer != nil {
-				if publishersItem.StitcherID.Integer != nil {
-					publishers1.StitcherID.Integer = types.Int64Value(*publishersItem.StitcherID.Integer)
-				} else {
-					publishers1.StitcherID.Integer = types.Int64Null()
-				}
-			}
-			if publishersItem.StitcherID.GetInfrastructurePublishers2 != nil {
-				publishers1.StitcherID.Two = &Assessment{}
-			}
-			publishers1.Tags = nil
-			for _, tagsItem := range publishersItem.Tags {
-				var tags1 types.String
-				tags1Result, _ := json.Marshal(tagsItem)
-				tags1 = types.StringValue(string(tags1Result))
-				publishers1.Tags = append(publishers1.Tags, tags1)
-			}
-			if publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishersUpgradeFailedReason != nil {
-				publishers1.UpgradeFailedReason.UpgradeFailedReason = &GetInfrastructurePublishersNPAPublishersUpgradeFailedReason{}
-				publishers1.UpgradeFailedReason.UpgradeFailedReason.Detail = types.StringValue(publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishersUpgradeFailedReason.Detail)
-				publishers1.UpgradeFailedReason.UpgradeFailedReason.ErrorCode = types.Int64Value(publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishersUpgradeFailedReason.ErrorCode)
-				publishers1.UpgradeFailedReason.UpgradeFailedReason.Timestamp = types.Int64Value(publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishersUpgradeFailedReason.Timestamp)
-				publishers1.UpgradeFailedReason.UpgradeFailedReason.Version = types.StringValue(publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishersUpgradeFailedReason.Version)
-			}
-			if publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishers2 != nil {
-				publishers1.UpgradeFailedReason.Two = &Assessment{}
-			}
-			publishers1.UpgradeRequest = types.BoolValue(publishersItem.UpgradeRequest)
-			publishers1.UpgradeStatus.Upstat = types.StringValue(publishersItem.UpgradeStatus.Upstat)
-			r.Data.Publishers = append(r.Data.Publishers, publishers1)
-		}
+		assessmentResult, _ := json.Marshal(resp.Assessment)
+		r.Assessment = types.StringValue(string(assessmentResult))
+	}
+	if resp.CommonName != nil {
+		r.CommonName = types.StringValue(*resp.CommonName)
+	} else {
+		r.CommonName = types.StringNull()
+	}
+	if resp.ID != nil {
+		r.ID = types.Int64Value(int64(*resp.ID))
+	} else {
+		r.ID = types.Int64Null()
+	}
+	if resp.Lbrokerconnect != nil {
+		r.Lbrokerconnect = types.BoolValue(*resp.Lbrokerconnect)
+	} else {
+		r.Lbrokerconnect = types.BoolNull()
+	}
+	if resp.Name != nil {
+		r.Name = types.StringValue(*resp.Name)
+	} else {
+		r.Name = types.StringNull()
+	}
+	if resp.PublisherUpgradeProfileID != nil {
+		r.PublisherUpgradeProfileID = types.Int64Value(int64(*resp.PublisherUpgradeProfileID))
+	} else {
+		r.PublisherUpgradeProfileID = types.Int64Null()
+	}
+	if resp.Registered != nil {
+		r.Registered = types.BoolValue(*resp.Registered)
+	} else {
+		r.Registered = types.BoolNull()
 	}
 	if resp.Status != nil {
-		r.Status = types.StringValue(*resp.Status)
+		r.Status = types.StringValue(string(*resp.Status))
 	} else {
 		r.Status = types.StringNull()
 	}
-	if resp.Total != nil {
-		r.Total = types.Int64Value(int64(*resp.Total))
+	if resp.StitcherID != nil {
+		r.StitcherID = types.Int64Value(int64(*resp.StitcherID))
 	} else {
-		r.Total = types.Int64Null()
+		r.StitcherID = types.Int64Null()
+	}
+	if len(r.Tags) > len(resp.Tags) {
+		r.Tags = r.Tags[:len(resp.Tags)]
+	}
+	for tagsCount, tagsItem := range resp.Tags {
+		var tags1 PostInfrastructurePublishersTags
+		if tagsItem.TagID != nil {
+			tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
+		} else {
+			tags1.TagID = types.Int64Null()
+		}
+		if tagsItem.TagName != nil {
+			tags1.TagName = types.StringValue(*tagsItem.TagName)
+		} else {
+			tags1.TagName = types.StringNull()
+		}
+		if tagsCount+1 > len(r.Tags) {
+			r.Tags = append(r.Tags, tags1)
+		} else {
+			r.Tags[tagsCount].TagID = tags1.TagID
+			r.Tags[tagsCount].TagName = tags1.TagName
+		}
 	}
 }

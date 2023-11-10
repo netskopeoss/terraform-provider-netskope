@@ -29,9 +29,9 @@ type NPAPublisherUpgradeProfileListDataSource struct {
 
 // NPAPublisherUpgradeProfileListDataSourceModel describes the data model.
 type NPAPublisherUpgradeProfileListDataSourceModel struct {
-	Data   []GetPublisherupgradeprofilesData `tfsdk:"data"`
-	Status types.String                      `tfsdk:"status"`
-	Total  types.Int64                       `tfsdk:"total"`
+	Data   []GetInfrastructurePublisherupgradeprofilesData `tfsdk:"data"`
+	Status types.String                                    `tfsdk:"status"`
+	Total  types.Int64                                     `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -122,7 +122,7 @@ func (r *NPAPublisherUpgradeProfileListDataSource) Read(ctx context.Context, req
 		return
 	}
 
-	request := operations.GetPublisherupgradeprofilesRequest{}
+	request := operations.GetInfrastructurePublisherupgradeprofilesRequest{}
 	res, err := r.client.NPAPublisherUpgradeProfiles.ListObjects(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())

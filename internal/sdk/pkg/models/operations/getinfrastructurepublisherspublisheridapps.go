@@ -20,20 +20,20 @@ func (o *GetInfrastructurePublishersPublisherIDAppsRequest) GetPublisherID() int
 	return o.PublisherID
 }
 
-// GetInfrastructurePublishersPublisherIDAppsNPAPublisherAppsResponseBody - Invalid request
-type GetInfrastructurePublishersPublisherIDAppsNPAPublisherAppsResponseBody struct {
+// GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody - Invalid request
+type GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody struct {
 	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *GetInfrastructurePublishersPublisherIDAppsNPAPublisherAppsResponseBody) GetResult() *string {
+func (o *GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody) GetResult() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Result
 }
 
-func (o *GetInfrastructurePublishersPublisherIDAppsNPAPublisherAppsResponseBody) GetStatus() *int64 {
+func (o *GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -290,7 +290,7 @@ type GetInfrastructurePublishersPublisherIDAppsResponse struct {
 	// successful operation
 	TwoHundredApplicationJSONObject *GetInfrastructurePublishersPublisherIDAppsResponseBody
 	// Invalid request
-	FourHundredApplicationJSONObject *GetInfrastructurePublishersPublisherIDAppsNPAPublisherAppsResponseBody
+	FourHundredApplicationJSONObject *GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -306,7 +306,7 @@ func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetTwoHundredApplic
 	return o.TwoHundredApplicationJSONObject
 }
 
-func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetFourHundredApplicationJSONObject() *GetInfrastructurePublishersPublisherIDAppsNPAPublisherAppsResponseBody {
+func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetFourHundredApplicationJSONObject() *GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody {
 	if o == nil {
 		return nil
 	}

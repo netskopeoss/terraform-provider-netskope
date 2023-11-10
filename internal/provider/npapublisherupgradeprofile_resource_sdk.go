@@ -7,7 +7,7 @@ import (
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *NPAPublisherUpgradeProfileResourceModel) ToCreateSDKType() *operations.PostPublisherupgradeprofilesRequestBody {
+func (r *NPAPublisherUpgradeProfileResourceModel) ToCreateSDKType() *operations.PostInfrastructurePublisherupgradeprofilesRequestBody {
 	dockerTag := new(string)
 	if !r.DockerTag.IsUnknown() && !r.DockerTag.IsNull() {
 		*dockerTag = r.DockerTag.ValueString()
@@ -44,7 +44,7 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToCreateSDKType() *operations.
 	} else {
 		timezone = nil
 	}
-	out := operations.PostPublisherupgradeprofilesRequestBody{
+	out := operations.PostInfrastructurePublisherupgradeprofilesRequestBody{
 		DockerTag:   dockerTag,
 		Enabled:     enabled,
 		Frequency:   frequency,
@@ -55,7 +55,7 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToCreateSDKType() *operations.
 	return &out
 }
 
-func (r *NPAPublisherUpgradeProfileResourceModel) ToUpdateSDKType() *operations.PutPublisherupgradeprofilesUpgradeProfileIDRequestBody {
+func (r *NPAPublisherUpgradeProfileResourceModel) ToUpdateSDKType() *operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody {
 	dockerTag := new(string)
 	if !r.DockerTag.IsUnknown() && !r.DockerTag.IsNull() {
 		*dockerTag = r.DockerTag.ValueString()
@@ -98,7 +98,7 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToUpdateSDKType() *operations.
 	} else {
 		timezone = nil
 	}
-	out := operations.PutPublisherupgradeprofilesUpgradeProfileIDRequestBody{
+	out := operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody{
 		DockerTag:   dockerTag,
 		Enabled:     enabled,
 		Frequency:   frequency,
@@ -110,12 +110,12 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToUpdateSDKType() *operations.
 	return &out
 }
 
-func (r *NPAPublisherUpgradeProfileResourceModel) ToDeleteSDKType() *operations.PostPublisherupgradeprofilesRequestBody {
+func (r *NPAPublisherUpgradeProfileResourceModel) ToDeleteSDKType() *operations.PostInfrastructurePublisherupgradeprofilesRequestBody {
 	out := r.ToCreateSDKType()
 	return out
 }
 
-func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromCreateResponse(resp *operations.PostPublisherupgradeprofilesData) {
+func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromCreateResponse(resp *operations.PostInfrastructurePublisherupgradeprofilesData) {
 	if resp.DockerTag != nil {
 		r.DockerTag = types.StringValue(*resp.DockerTag)
 	} else {
@@ -153,6 +153,6 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromCreateResponse(resp
 	}
 }
 
-func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromUpdateResponse(resp *operations.PutPublisherupgradeprofilesUpgradeProfileIDResponseBody) {
+func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromUpdateResponse(resp *operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody) {
 
 }

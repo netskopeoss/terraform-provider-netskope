@@ -1,4 +1,4 @@
-Defined:
+## Defined:
 
  - [x] infrastructure/publishers	get `NPAPublishers#read`
  - [x] infrastructure/publishers	post `NPAPublisher#create`
@@ -42,3 +42,4 @@ Defined:
  - [x] apps/private/tags/{id}	put `PrivateAppTag#create,update`
  - [x] apps/private/tags/{id}	delete `PrivateAppTag#delete`
  - [x] apps/private/tags/getpolicyinuse	get `PrivateAppTagPolicyUseList#get`
+

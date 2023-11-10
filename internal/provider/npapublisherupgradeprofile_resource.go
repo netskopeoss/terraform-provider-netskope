@@ -117,7 +117,7 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 	}
 
 	requestBody := data.ToCreateSDKType()
-	request := operations.PostPublisherupgradeprofilesRequest{
+	request := operations.PostInfrastructurePublisherupgradeprofilesRequest{
 		RequestBody: requestBody,
 	}
 	res, err := r.client.NPAPublisherUpgradeProfiles.Create(ctx, request)
@@ -179,7 +179,7 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 
 	requestBody := *data.ToUpdateSDKType()
 	upgradeProfileID := int(data.ID.ValueInt64())
-	request := operations.PutPublisherupgradeprofilesUpgradeProfileIDRequest{
+	request := operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest{
 		RequestBody:      requestBody,
 		UpgradeProfileID: upgradeProfileID,
 	}
@@ -228,7 +228,7 @@ func (r *NPAPublisherUpgradeProfileResource) Delete(ctx context.Context, req res
 	}
 
 	upgradeProfileID := int(data.ID.ValueInt64())
-	request := operations.DeletePublisherupgradeprofilesUpgradeProfileIDRequest{
+	request := operations.DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest{
 		UpgradeProfileID: upgradeProfileID,
 	}
 	res, err := r.client.NPAPublisherUpgradeProfiles.Delete(ctx, request)
