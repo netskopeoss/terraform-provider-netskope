@@ -443,7 +443,7 @@ components:
                     type: string
                     x-speakeasy-ignore: true
             type: object
-            x-speakeasy-entity: NPAPublisherApps
+            x-speakeasy-entity: NPAPublishersAppsList
         protocol_response_item:
             properties:
                 id:
@@ -519,7 +519,7 @@ components:
                             type: array
                     type: object
             type: object
-            x-speakeasy-entity: NPAPublisherBulkUpgrade
+            x-speakeasy-entity: NPAPublishersBulkUpgrade
         publisher_post_request:
             properties:
                 lbrokerconnect:
@@ -543,7 +543,7 @@ components:
             required:
                 - name
             type: object
-            x-speakeasy-entity: NPAPublisher
+            x-speakeasy-entity: NPAPublishers
         publisher_put_request:
             properties:
                 id:
@@ -564,7 +564,7 @@ components:
                         type: object
                     type: array
             type: object
-            x-speakeasy-entity: NPAPublisher
+            x-speakeasy-entity: NPAPublishers
         publisher_response:
             properties:
                 data:
@@ -605,7 +605,7 @@ components:
                                 type: object
                             type: array
                     type: object
-                    x-speakeasy-entity: NPAPublisher
+                    x-speakeasy-entity: NPAPublishers
                 status:
                     enum:
                         - success
@@ -673,8 +673,8 @@ components:
                             type: string
                     type: object
                     x-speakeasy-entity:
-                        - NPAPublisherAlerts
-                        - NPAPublisherAlertsList
+                        - NPAPublishersAlerts
+                        - NPAPublishersAlertsList
                 status:
                     enum:
                         - success
@@ -709,7 +709,9 @@ components:
                     example: abc@xyz.com,def@xyz.com
                     type: string
             type: object
-            x-speakeasy-entity: NPAPublisherAlerts
+            x-speakeasy-entity:
+                - NPAPublishersAlerts
+                - NPAPublishersAlertsList
         publishers_alert_put_response:
             properties:
                 status:
@@ -772,7 +774,7 @@ components:
                         - not found
                     type: string
             type: object
-            x-speakeasy-entity: NPAPublisherBulkUpgrade
+            x-speakeasy-entity: NPAPublishersBulkUpgrade
         publishers_get_response:
             properties:
                 data:
@@ -897,7 +899,7 @@ components:
                     format: int32
                     type: integer
             type: object
-            x-speakeasy-entity: NPAPublishers
+            x-speakeasy-entity: NPAPublishersList
         publishers_release_get_response:
             properties:
                 data:
@@ -917,7 +919,7 @@ components:
                         - not found
                     type: string
             type: object
-            x-speakeasy-entity: NPAPublisherReleases
+            x-speakeasy-entity: NPAPublishersReleasesList
         publishers_response_400:
             properties:
                 result:
@@ -3389,7 +3391,7 @@ paths:
                                         format: int32
                                         type: integer
                                 type: object
-                                x-speakeasy-entity: NPAPublishers
+                                x-speakeasy-entity: NPAPublishersList
                     description: successful operation
                 "400":
                     content:
@@ -3404,7 +3406,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get list of publisher objects
-            x-speakeasy-entity-operation: NPAPublishers#read
+            x-speakeasy-entity-operation: NPAPublishersList#read
             x-speakeasy-group: NPAPublishers
             x-speakeasy-name-override: list_objects
         post:
@@ -3446,7 +3448,7 @@ paths:
                             required:
                                 - name
                             type: object
-                            x-speakeasy-entity: NPAPublisher
+                            x-speakeasy-entity: NPAPublishers
                 required: true
             responses:
                 "200":
@@ -3492,7 +3494,7 @@ paths:
                                                     type: object
                                                 type: array
                                         type: object
-                                        x-speakeasy-entity: NPAPublisher
+                                        x-speakeasy-entity: NPAPublishers
                                     status:
                                         enum:
                                             - success
@@ -3514,7 +3516,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Create a publisher
-            x-speakeasy-entity-operation: NPAPublisher#create
+            x-speakeasy-entity-operation: NPAPublishers#create
             x-speakeasy-group: NPAPublishers
             x-speakeasy-name-override: create
         x-netskope-params:
@@ -3560,7 +3562,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Delete a publisher
-            x-speakeasy-entity-operation: NPAPublisher#delete
+            x-speakeasy-entity-operation: NPAPublishers#delete
             x-speakeasy-group: NPAPublishers
             x-speakeasy-name-override: delete
         get:
@@ -3618,7 +3620,7 @@ paths:
                                                     type: object
                                                 type: array
                                         type: object
-                                        x-speakeasy-entity: NPAPublisher
+                                        x-speakeasy-entity: NPAPublishers
                                     status:
                                         enum:
                                             - success
@@ -3640,7 +3642,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get a publisher
-            x-speakeasy-entity-operation: NPAPublisher#read
+            x-speakeasy-entity-operation: NPAPublishers#read
             x-speakeasy-group: NPAPublishers
             x-speakeasy-name-override: read
         patch:
@@ -3685,7 +3687,7 @@ paths:
                                         type: object
                                     type: array
                             type: object
-                            x-speakeasy-entity: NPAPublisher
+                            x-speakeasy-entity: NPAPublishers
                 required: true
             responses:
                 "200":
@@ -3731,7 +3733,7 @@ paths:
                                                     type: object
                                                 type: array
                                         type: object
-                                        x-speakeasy-entity: NPAPublisher
+                                        x-speakeasy-entity: NPAPublishers
                                     status:
                                         enum:
                                             - success
@@ -3797,7 +3799,7 @@ paths:
                                         type: object
                                     type: array
                             type: object
-                            x-speakeasy-entity: NPAPublisher
+                            x-speakeasy-entity: NPAPublishers
                 required: true
             responses:
                 "200":
@@ -3843,7 +3845,7 @@ paths:
                                                     type: object
                                                 type: array
                                         type: object
-                                        x-speakeasy-entity: NPAPublisher
+                                        x-speakeasy-entity: NPAPublishers
                                     status:
                                         enum:
                                             - success
@@ -3865,7 +3867,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Update a publisher
-            x-speakeasy-entity-operation: NPAPublisher#update
+            x-speakeasy-entity-operation: NPAPublishers#update
             x-speakeasy-group: NPAPublishers
             x-speakeasy-name-override: update
         x-netskope-params:
@@ -3964,7 +3966,7 @@ paths:
                                             - not found
                                         type: string
                                 type: object
-                                x-speakeasy-entity: NPAPublisherApps
+                                x-speakeasy-entity: NPAPublishersAppsList
                     description: successful operation
                 "400":
                     content:
@@ -3979,8 +3981,8 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get all private apps associated to a publisher
-            x-speakeasy-entity-operation: NPAPublisherApps#read
-            x-speakeasy-group: NPAPublisherApps
+            x-speakeasy-entity-operation: NPAPublishersAppsList#read
+            x-speakeasy-group: NPAPublishersApps
             x-speakeasy-name-override: list_objects
         x-netskope-params:
             apiGroup: npa_publishers
@@ -4080,8 +4082,8 @@ paths:
                                                 type: string
                                         type: object
                                         x-speakeasy-entity:
-                                            - NPAPublisherAlerts
-                                            - NPAPublisherAlertsList
+                                            - NPAPublishersAlerts
+                                            - NPAPublishersAlertsList
                                     status:
                                         enum:
                                             - success
@@ -4102,7 +4104,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get list of publisher alerts
-            x-speakeasy-entity-operation: NPAPublisherAlertsList#read
+            x-speakeasy-entity-operation: NPAPublishersAlertsList#read
         put:
             description: Configure publisher alerts
             parameters:
@@ -4147,7 +4149,9 @@ paths:
                                     example: abc@xyz.com,def@xyz.com
                                     type: string
                             type: object
-                            x-speakeasy-entity: NPAPublisherAlerts
+                            x-speakeasy-entity:
+                                - NPAPublishersAlerts
+                                - NPAPublishersAlertsList
                 required: true
             responses:
                 "200":
@@ -4176,7 +4180,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Configure publisher alerts
-            x-speakeasy-entity-operation: NPAPublisherAlerts#create
+            x-speakeasy-entity-operation: NPAPublishersAlerts#create
         x-netskope-params:
             apiGroup: npa_publishers
             customerFacing: true
@@ -4215,7 +4219,7 @@ paths:
                                             type: array
                                     type: object
                             type: object
-                            x-speakeasy-entity: NPAPublisherBulkUpgrade
+                            x-speakeasy-entity: NPAPublishersBulkUpgrade
                 required: true
             responses:
                 "200":
@@ -4274,7 +4278,7 @@ paths:
                                             - not found
                                         type: string
                                 type: object
-                                x-speakeasy-entity: NPAPublisherBulkUpgrade
+                                x-speakeasy-entity: NPAPublishersBulkUpgrade
                     description: successful operation
                 "400":
                     content:
@@ -4289,7 +4293,7 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Trigger bulk publisher update action
-            x-speakeasy-entity-operation: NPAPublisherBulkUpgrade#create
+            x-speakeasy-entity-operation: NPAPublishersBulkUpgrade#create
         x-netskope-params:
             apiGroup: npa_publishers
             customerFacing: true
@@ -4328,7 +4332,7 @@ paths:
                                             - not found
                                         type: string
                                 type: object
-                                x-speakeasy-entity: NPAPublisherReleases
+                                x-speakeasy-entity: NPAPublishersReleasesList
                     description: successful operation
                 "400":
                     content:
@@ -4343,15 +4347,15 @@ paths:
                                 type: object
                     description: Invalid request
             summary: Get list of publisher release objects
-            x-speakeasy-entity-operation: NPAPublisherReleases#read
-            x-speakeasy-group: NPAPublisherReleases
+            x-speakeasy-entity-operation: NPAPublishersReleasesList#read
+            x-speakeasy-group: NPAPublishersReleases
             x-speakeasy-name-override: list_objects
         x-netskope-params:
             apiGroup: npa_publishers
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /publisherupgradeprofiles:
+    /infrastructure/publisherupgradeprofiles:
         get:
             description: Get list of publisher upgrade profile objects
             parameters:
@@ -4502,7 +4506,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /publisherupgradeprofiles/{upgrade_profile_id}:
+    /infrastructure/publisherupgradeprofiles/{upgrade_profile_id}:
         delete:
             description: Delete a publisher upgrade profile based on profile id
             parameters:
@@ -4681,7 +4685,7 @@ paths:
             customerFacing: true
             serviceConfig: provisioner-pycore-ws
             version: 2
-    /publisherupgradeprofiles/bulk:
+    /infrastructure/publisherupgradeprofiles/bulk:
         description: Update the profile of multiple publishers
         put:
             parameters:

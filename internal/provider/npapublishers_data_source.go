@@ -29,10 +29,16 @@ type NPAPublishersDataSource struct {
 
 // NPAPublishersDataSourceModel describes the data model.
 type NPAPublishersDataSourceModel struct {
-	Data   *GetInfrastructurePublishersData `tfsdk:"data"`
-	Fields types.String                     `tfsdk:"fields"`
-	Status types.String                     `tfsdk:"status"`
-	Total  types.Int64                      `tfsdk:"total"`
+	Assessment                types.String                       `tfsdk:"assessment"`
+	CommonName                types.String                       `tfsdk:"common_name"`
+	ID                        types.Int64                        `tfsdk:"id"`
+	Lbrokerconnect            types.Bool                         `tfsdk:"lbrokerconnect"`
+	Name                      types.String                       `tfsdk:"name"`
+	PublisherUpgradeProfileID types.Int64                        `tfsdk:"publisher_upgrade_profile_id"`
+	Registered                types.Bool                         `tfsdk:"registered"`
+	Status                    types.String                       `tfsdk:"status"`
+	StitcherID                types.Int64                        `tfsdk:"stitcher_id"`
+	Tags                      []PostInfrastructurePublishersTags `tfsdk:"tags"`
 }
 
 // Metadata returns the data source type name.
@@ -46,140 +52,48 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 		MarkdownDescription: "NPAPublishers DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"data": schema.SingleNestedAttribute{
+			"assessment": schema.StringAttribute{
+				Computed:    true,
+				Description: `Parsed as JSON.`,
+			},
+			"common_name": schema.StringAttribute{
 				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"publishers": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"apps_count": schema.Int64Attribute{
-									Computed: true,
-								},
-								"assessment": schema.SingleNestedAttribute{
-									Computed: true,
-									Attributes: map[string]schema.Attribute{
-										"assessment": schema.SingleNestedAttribute{
-											Computed: true,
-											Attributes: map[string]schema.Attribute{
-												"eee_support": schema.BoolAttribute{
-													Computed: true,
-												},
-												"hdd_free": schema.StringAttribute{
-													Computed: true,
-												},
-												"hdd_total": schema.StringAttribute{
-													Computed: true,
-												},
-												"ip_address": schema.StringAttribute{
-													Computed: true,
-												},
-												"latency": schema.Int64Attribute{
-													Computed: true,
-												},
-												"version": schema.StringAttribute{
-													Computed: true,
-												},
-											},
-										},
-										"two": schema.SingleNestedAttribute{
-											Computed:   true,
-											Attributes: map[string]schema.Attribute{},
-										},
-									},
-								},
-								"common_name": schema.StringAttribute{
-									Computed: true,
-								},
-								"connected_apps": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
-								"lbrokerconnect": schema.BoolAttribute{
-									Computed: true,
-								},
-								"publisher_id": schema.Int64Attribute{
-									Computed: true,
-								},
-								"publisher_name": schema.StringAttribute{
-									Computed: true,
-								},
-								"publisher_upgrade_profiles_external_id": schema.Int64Attribute{
-									Computed: true,
-								},
-								"registered": schema.BoolAttribute{
-									Computed: true,
-								},
-								"status": schema.StringAttribute{
-									Computed: true,
-								},
-								"stitcher_id": schema.SingleNestedAttribute{
-									Computed: true,
-									Attributes: map[string]schema.Attribute{
-										"integer": schema.Int64Attribute{
-											Computed: true,
-										},
-										"two": schema.SingleNestedAttribute{
-											Computed:   true,
-											Attributes: map[string]schema.Attribute{},
-										},
-									},
-								},
-								"tags": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
-								"upgrade_failed_reason": schema.SingleNestedAttribute{
-									Computed: true,
-									Attributes: map[string]schema.Attribute{
-										"upgrade_failed_reason": schema.SingleNestedAttribute{
-											Computed: true,
-											Attributes: map[string]schema.Attribute{
-												"detail": schema.StringAttribute{
-													Computed: true,
-												},
-												"error_code": schema.Int64Attribute{
-													Computed: true,
-												},
-												"timestamp": schema.Int64Attribute{
-													Computed: true,
-												},
-												"version": schema.StringAttribute{
-													Computed: true,
-												},
-											},
-										},
-										"two": schema.SingleNestedAttribute{
-											Computed:   true,
-											Attributes: map[string]schema.Attribute{},
-										},
-									},
-								},
-								"upgrade_request": schema.BoolAttribute{
-									Computed: true,
-								},
-								"upgrade_status": schema.SingleNestedAttribute{
-									Computed: true,
-									Attributes: map[string]schema.Attribute{
-										"upstat": schema.StringAttribute{
-											Computed: true,
-										},
-									},
-								},
-							},
+			},
+			"id": schema.Int64Attribute{
+				Required:    true,
+				Description: `publisher id`,
+			},
+			"lbrokerconnect": schema.BoolAttribute{
+				Computed: true,
+			},
+			"name": schema.StringAttribute{
+				Computed: true,
+			},
+			"publisher_upgrade_profile_id": schema.Int64Attribute{
+				Computed: true,
+			},
+			"registered": schema.BoolAttribute{
+				Computed: true,
+			},
+			"status": schema.StringAttribute{
+				Computed:    true,
+				Description: `must be one of ["connected", "not registered"]`,
+			},
+			"stitcher_id": schema.Int64Attribute{
+				Computed: true,
+			},
+			"tags": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"tag_id": schema.Int64Attribute{
+							Computed: true,
+						},
+						"tag_name": schema.StringAttribute{
+							Computed: true,
 						},
 					},
 				},
-			},
-			"fields": schema.StringAttribute{
-				Optional:    true,
-				Description: `Return values only from specified fields`,
-			},
-			"status": schema.StringAttribute{
-				Computed: true,
-			},
-			"total": schema.Int64Attribute{
-				Computed: true,
 			},
 		},
 	}
@@ -223,16 +137,11 @@ func (r *NPAPublishersDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	fields := new(string)
-	if !data.Fields.IsUnknown() && !data.Fields.IsNull() {
-		*fields = data.Fields.ValueString()
-	} else {
-		fields = nil
+	publisherID := int(data.ID.ValueInt64())
+	request := operations.GetInfrastructurePublishersPublisherIDRequest{
+		PublisherID: publisherID,
 	}
-	request := operations.GetInfrastructurePublishersRequest{
-		Fields: fields,
-	}
-	res, err := r.client.NPAPublishers.ListObjects(ctx, request)
+	res, err := r.client.NPAPublishers.Read(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -248,11 +157,11 @@ func (r *NPAPublishersDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

@@ -71,8 +71,8 @@ func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
 // SDK - Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy
 type SDK struct {
 	NPAPublishers               *NPAPublishers
-	NPAPublisherReleases        *NPAPublisherReleases
-	NPAPublisherApps            *NPAPublisherApps
+	NPAPublishersReleases       *NPAPublishersReleases
+	NPAPublishersApps           *NPAPublishersApps
 	PublisherToken              *PublisherToken
 	NPAPublisherUpgradeProfiles *NPAPublisherUpgradeProfiles
 
@@ -165,8 +165,8 @@ func New(opts ...SDKOption) *SDK {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.187.4",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.187.4 1.0.0 ns",
+			GenVersion:        "2.188.1",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.188.1 1.0.0 ns",
 			ServerDefaults: []map[string]string{
 				{
 					"tenant": "demo",
@@ -192,9 +192,9 @@ func New(opts ...SDKOption) *SDK {
 
 	sdk.NPAPublishers = newNPAPublishers(sdk.sdkConfiguration)
 
-	sdk.NPAPublisherReleases = newNPAPublisherReleases(sdk.sdkConfiguration)
+	sdk.NPAPublishersReleases = newNPAPublishersReleases(sdk.sdkConfiguration)
 
-	sdk.NPAPublisherApps = newNPAPublisherApps(sdk.sdkConfiguration)
+	sdk.NPAPublishersApps = newNPAPublishersApps(sdk.sdkConfiguration)
 
 	sdk.PublisherToken = newPublisherToken(sdk.sdkConfiguration)
 
@@ -881,6 +881,76 @@ func (s *SDK) GetInfrastructurePublishersAlertsconfiguration(ctx context.Context
 	return res, nil
 }
 
+// GetInfrastructurePublisherupgradeprofilesUpgradeProfileID - Get a publisher upgrade profile
+// get a publisher upgrade profile based on publisher upgrade profile id
+func (s *SDK) GetInfrastructurePublisherupgradeprofilesUpgradeProfileID(ctx context.Context, request operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest) (*operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse, error) {
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	url, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publisherupgradeprofiles/{upgrade_profile_id}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+
+	client := s.sdkConfiguration.SecurityClient
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+
+	rawBody, err := io.ReadAll(httpRes.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading response body: %w", err)
+	}
+	httpRes.Body.Close()
+	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+		RawResponse: httpRes,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.TwoHundredApplicationJSONObject = &out
+		default:
+			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
+		}
+	case httpRes.StatusCode == 400:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseResponseBody
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.FourHundredApplicationJSONObject = &out
+		default:
+			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
+		}
+	}
+
+	return res, nil
+}
+
 // GetPolicyNpaPolicygroups - Get list of npa policy groups
 // Get list of npa policy groups
 func (s *SDK) GetPolicyNpaPolicygroups(ctx context.Context, request operations.GetPolicyNpaPolicygroupsRequest) (*operations.GetPolicyNpaPolicygroupsResponse, error) {
@@ -1154,76 +1224,6 @@ func (s *SDK) GetPolicyNpaRulesID(ctx context.Context, request operations.GetPol
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
 			var out operations.GetPolicyNpaRulesIDResponseResponseBody
-			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
-				return nil, err
-			}
-
-			res.FourHundredApplicationJSONObject = &out
-		default:
-			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
-		}
-	}
-
-	return res, nil
-}
-
-// GetPublisherupgradeprofilesUpgradeProfileID - Get a publisher upgrade profile
-// get a publisher upgrade profile based on publisher upgrade profile id
-func (s *SDK) GetPublisherupgradeprofilesUpgradeProfileID(ctx context.Context, request operations.GetPublisherupgradeprofilesUpgradeProfileIDRequest) (*operations.GetPublisherupgradeprofilesUpgradeProfileIDResponse, error) {
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url, err := utils.GenerateURL(ctx, baseURL, "/publisherupgradeprofiles/{upgrade_profile_id}", request, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error generating URL: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
-
-	client := s.sdkConfiguration.SecurityClient
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-
-	rawBody, err := io.ReadAll(httpRes.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response body: %w", err)
-	}
-	httpRes.Body.Close()
-	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.GetPublisherupgradeprofilesUpgradeProfileIDResponse{
-		StatusCode:  httpRes.StatusCode,
-		ContentType: contentType,
-		RawResponse: httpRes,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetPublisherupgradeprofilesUpgradeProfileIDResponseBody
-			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
-				return nil, err
-			}
-
-			res.TwoHundredApplicationJSONObject = &out
-		default:
-			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
-		}
-	case httpRes.StatusCode == 400:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetPublisherupgradeprofilesUpgradeProfileIDResponseResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -4186,10 +4186,10 @@ func (s *SDK) PutInfrastructurePublishersBulk(ctx context.Context, request opera
 	return res, nil
 }
 
-// PutPublisherupgradeprofilesBulk - Update the profile of multiple publishers
-func (s *SDK) PutPublisherupgradeprofilesBulk(ctx context.Context, request operations.PutPublisherupgradeprofilesBulkRequest) (*operations.PutPublisherupgradeprofilesBulkResponse, error) {
+// PutInfrastructurePublisherupgradeprofilesBulk - Update the profile of multiple publishers
+func (s *SDK) PutInfrastructurePublisherupgradeprofilesBulk(ctx context.Context, request operations.PutInfrastructurePublisherupgradeprofilesBulkRequest) (*operations.PutInfrastructurePublisherupgradeprofilesBulkResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	url := strings.TrimSuffix(baseURL, "/") + "/publisherupgradeprofiles/bulk"
+	url := strings.TrimSuffix(baseURL, "/") + "/infrastructure/publisherupgradeprofiles/bulk"
 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
 	if err != nil {
@@ -4235,7 +4235,7 @@ func (s *SDK) PutPublisherupgradeprofilesBulk(ctx context.Context, request opera
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.PutPublisherupgradeprofilesBulkResponse{
+	res := &operations.PutInfrastructurePublisherupgradeprofilesBulkResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 		RawResponse: httpRes,
@@ -4244,7 +4244,7 @@ func (s *SDK) PutPublisherupgradeprofilesBulk(ctx context.Context, request opera
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutPublisherupgradeprofilesBulkResponseBody
+			var out operations.PutInfrastructurePublisherupgradeprofilesBulkResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -4256,7 +4256,7 @@ func (s *SDK) PutPublisherupgradeprofilesBulk(ctx context.Context, request opera
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutPublisherupgradeprofilesBulkResponseResponseBody
+			var out operations.PutInfrastructurePublisherupgradeprofilesBulkResponseResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}

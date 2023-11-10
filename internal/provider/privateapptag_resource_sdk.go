@@ -66,8 +66,10 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PostSteeringA
 }
 
 func (r *PrivateAppTagResourceModel) RefreshFromCreateResponse(resp *operations.PostSteeringAppsPrivateTagsResponseBody) {
-	r.Data = nil
-	for _, dataItem := range resp.Data {
+	if len(r.Data) > len(resp.Data) {
+		r.Data = r.Data[:len(resp.Data)]
+	}
+	for dataCount, dataItem := range resp.Data {
 		var data1 PostInfrastructurePublishersTags
 		if dataItem.TagID != nil {
 			data1.TagID = types.Int64Value(int64(*dataItem.TagID))
@@ -79,6 +81,11 @@ func (r *PrivateAppTagResourceModel) RefreshFromCreateResponse(resp *operations.
 		} else {
 			data1.TagName = types.StringNull()
 		}
-		r.Data = append(r.Data, data1)
+		if dataCount+1 > len(r.Data) {
+			r.Data = append(r.Data, data1)
+		} else {
+			r.Data[dataCount].TagID = data1.TagID
+			r.Data[dataCount].TagName = data1.TagName
+		}
 	}
 }

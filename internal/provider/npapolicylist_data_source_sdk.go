@@ -8,8 +8,10 @@ import (
 )
 
 func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaRulesResponseBody) {
-	r.Data = nil
-	for _, dataItem := range resp.Data {
+	if len(r.Data) > len(resp.Data) {
+		r.Data = r.Data[:len(resp.Data)]
+	}
+	for dataCount, dataItem := range resp.Data {
 		var data1 GetPolicyNpaRulesData
 		if dataItem.RuleData == nil {
 			data1.RuleData = nil
@@ -34,8 +36,10 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.G
 			} else {
 				data1.RuleData.Classification = types.StringNull()
 			}
-			data1.RuleData.DlpActions = nil
-			for _, dlpActionsItem := range dataItem.RuleData.DlpActions {
+			if len(data1.RuleData.DlpActions) > len(dataItem.RuleData.DlpActions) {
+				data1.RuleData.DlpActions = data1.RuleData.DlpActions[:len(dataItem.RuleData.DlpActions)]
+			}
+			for dlpActionsCount, dlpActionsItem := range dataItem.RuleData.DlpActions {
 				var dlpActions1 DlpActions
 				dlpActions1.Actions = nil
 				for _, v := range dlpActionsItem.Actions {
@@ -46,7 +50,12 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.G
 				} else {
 					dlpActions1.DlpProfile = types.StringNull()
 				}
-				data1.RuleData.DlpActions = append(data1.RuleData.DlpActions, dlpActions1)
+				if dlpActionsCount+1 > len(data1.RuleData.DlpActions) {
+					data1.RuleData.DlpActions = append(data1.RuleData.DlpActions, dlpActions1)
+				} else {
+					data1.RuleData.DlpActions[dlpActionsCount].Actions = dlpActions1.Actions
+					data1.RuleData.DlpActions[dlpActionsCount].DlpProfile = dlpActions1.DlpProfile
+				}
 			}
 			if dataItem.RuleData.ExternalDlp != nil {
 				data1.RuleData.ExternalDlp = types.BoolValue(*dataItem.RuleData.ExternalDlp)
@@ -97,11 +106,15 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.G
 			for _, v := range dataItem.RuleData.PrivateApps {
 				data1.RuleData.PrivateApps = append(data1.RuleData.PrivateApps, types.StringValue(v))
 			}
-			data1.RuleData.PrivateAppsWithActivities = nil
-			for _, privateAppsWithActivitiesItem := range dataItem.RuleData.PrivateAppsWithActivities {
+			if len(data1.RuleData.PrivateAppsWithActivities) > len(dataItem.RuleData.PrivateAppsWithActivities) {
+				data1.RuleData.PrivateAppsWithActivities = data1.RuleData.PrivateAppsWithActivities[:len(dataItem.RuleData.PrivateAppsWithActivities)]
+			}
+			for privateAppsWithActivitiesCount, privateAppsWithActivitiesItem := range dataItem.RuleData.PrivateAppsWithActivities {
 				var privateAppsWithActivities1 PrivateAppsWithActivities
-				privateAppsWithActivities1.Activities = nil
-				for _, activitiesItem := range privateAppsWithActivitiesItem.Activities {
+				if len(privateAppsWithActivities1.Activities) > len(privateAppsWithActivitiesItem.Activities) {
+					privateAppsWithActivities1.Activities = privateAppsWithActivities1.Activities[:len(privateAppsWithActivitiesItem.Activities)]
+				}
+				for activitiesCount, activitiesItem := range privateAppsWithActivitiesItem.Activities {
 					var activities1 Activities
 					if activitiesItem.Activity != nil {
 						activities1.Activity = types.StringValue(string(*activitiesItem.Activity))
@@ -112,14 +125,24 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.G
 					for _, v := range activitiesItem.ListOfConstraints {
 						activities1.ListOfConstraints = append(activities1.ListOfConstraints, types.StringValue(v))
 					}
-					privateAppsWithActivities1.Activities = append(privateAppsWithActivities1.Activities, activities1)
+					if activitiesCount+1 > len(privateAppsWithActivities1.Activities) {
+						privateAppsWithActivities1.Activities = append(privateAppsWithActivities1.Activities, activities1)
+					} else {
+						privateAppsWithActivities1.Activities[activitiesCount].Activity = activities1.Activity
+						privateAppsWithActivities1.Activities[activitiesCount].ListOfConstraints = activities1.ListOfConstraints
+					}
 				}
 				if privateAppsWithActivitiesItem.AppName != nil {
 					privateAppsWithActivities1.AppName = types.StringValue(*privateAppsWithActivitiesItem.AppName)
 				} else {
 					privateAppsWithActivities1.AppName = types.StringNull()
 				}
-				data1.RuleData.PrivateAppsWithActivities = append(data1.RuleData.PrivateAppsWithActivities, privateAppsWithActivities1)
+				if privateAppsWithActivitiesCount+1 > len(data1.RuleData.PrivateAppsWithActivities) {
+					data1.RuleData.PrivateAppsWithActivities = append(data1.RuleData.PrivateAppsWithActivities, privateAppsWithActivities1)
+				} else {
+					data1.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].Activities = privateAppsWithActivities1.Activities
+					data1.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppName = privateAppsWithActivities1.AppName
+				}
 			}
 			if dataItem.RuleData.ShowDlpProfileActionTable != nil {
 				data1.RuleData.ShowDlpProfileActionTable = types.BoolValue(*dataItem.RuleData.ShowDlpProfileActionTable)
@@ -159,6 +182,12 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.G
 		} else {
 			data1.RuleName = types.StringNull()
 		}
-		r.Data = append(r.Data, data1)
+		if dataCount+1 > len(r.Data) {
+			r.Data = append(r.Data, data1)
+		} else {
+			r.Data[dataCount].RuleData = data1.RuleData
+			r.Data[dataCount].RuleID = data1.RuleID
+			r.Data[dataCount].RuleName = data1.RuleName
+		}
 	}
 }

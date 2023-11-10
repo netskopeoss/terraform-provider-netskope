@@ -8,8 +8,10 @@ import (
 )
 
 func (r *PolicyGroupListDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsResponseBody) {
-	r.Data = nil
-	for _, dataItem := range resp.Data {
+	if len(r.Data) > len(resp.Data) {
+		r.Data = r.Data[:len(resp.Data)]
+	}
+	for dataCount, dataItem := range resp.Data {
 		var data1 GetPolicyNpaPolicygroupsData
 		if dataItem.CanBeEditedDeleted != nil {
 			data1.CanBeEditedDeleted = types.StringValue(*dataItem.CanBeEditedDeleted)
@@ -51,6 +53,17 @@ func (r *PolicyGroupListDataSourceModel) RefreshFromGetResponse(resp *operations
 		} else {
 			data1.ModifyType = types.StringNull()
 		}
-		r.Data = append(r.Data, data1)
+		if dataCount+1 > len(r.Data) {
+			r.Data = append(r.Data, data1)
+		} else {
+			r.Data[dataCount].CanBeEditedDeleted = data1.CanBeEditedDeleted
+			r.Data[dataCount].GroupID = data1.GroupID
+			r.Data[dataCount].GroupName = data1.GroupName
+			r.Data[dataCount].GroupPinnedID = data1.GroupPinnedID
+			r.Data[dataCount].GroupProdID = data1.GroupProdID
+			r.Data[dataCount].GroupType = data1.GroupType
+			r.Data[dataCount].ModifyTime = data1.ModifyTime
+			r.Data[dataCount].ModifyType = data1.ModifyType
+		}
 	}
 }
