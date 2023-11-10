@@ -12,14 +12,14 @@ func (r *PolicyGroupListDataSourceModel) RefreshFromGetResponse(resp *operations
 	for _, dataItem := range resp.Data {
 		var data1 GetPolicyNpaPolicygroupsData
 		if dataItem.CanBeEditedDeleted != nil {
-			data1.CanBeEditedDeleted = types.Int64Value(*dataItem.CanBeEditedDeleted)
+			data1.CanBeEditedDeleted = types.StringValue(*dataItem.CanBeEditedDeleted)
 		} else {
-			data1.CanBeEditedDeleted = types.Int64Null()
+			data1.CanBeEditedDeleted = types.StringNull()
 		}
 		if dataItem.GroupID != nil {
-			data1.GroupID = types.Int64Value(*dataItem.GroupID)
+			data1.GroupID = types.StringValue(*dataItem.GroupID)
 		} else {
-			data1.GroupID = types.Int64Null()
+			data1.GroupID = types.StringNull()
 		}
 		if dataItem.GroupName != nil {
 			data1.GroupName = types.StringValue(*dataItem.GroupName)
@@ -37,9 +37,9 @@ func (r *PolicyGroupListDataSourceModel) RefreshFromGetResponse(resp *operations
 			data1.GroupProdID = types.Int64Null()
 		}
 		if dataItem.GroupType != nil {
-			data1.GroupType = types.Int64Value(*dataItem.GroupType)
+			data1.GroupType = types.StringValue(*dataItem.GroupType)
 		} else {
-			data1.GroupType = types.Int64Null()
+			data1.GroupType = types.StringNull()
 		}
 		if dataItem.ModifyTime != nil {
 			data1.ModifyTime = types.StringValue(*dataItem.ModifyTime)

@@ -29,12 +29,12 @@ type NPAPolicyGroupDataSource struct {
 
 // NPAPolicyGroupDataSourceModel describes the data model.
 type NPAPolicyGroupDataSourceModel struct {
-	CanBeEditedDeleted types.Int64  `tfsdk:"can_be_edited_deleted"`
+	CanBeEditedDeleted types.String `tfsdk:"can_be_edited_deleted"`
+	GroupID            types.String `tfsdk:"group_id"`
 	GroupName          types.String `tfsdk:"group_name"`
 	GroupPinnedID      types.Int64  `tfsdk:"group_pinned_id"`
 	GroupProdID        types.Int64  `tfsdk:"group_prod_id"`
-	GroupType          types.Int64  `tfsdk:"group_type"`
-	GroupID            types.Int64  `tfsdk:"group_id"`
+	GroupType          types.String `tfsdk:"group_type"`
 	ModifyTime         types.String `tfsdk:"modify_time"`
 	ModifyType         types.String `tfsdk:"modify_type"`
 }
@@ -50,8 +50,12 @@ func (r *NPAPolicyGroupDataSource) Schema(ctx context.Context, req datasource.Sc
 		MarkdownDescription: "NPAPolicyGroup DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"can_be_edited_deleted": schema.Int64Attribute{
+			"can_be_edited_deleted": schema.StringAttribute{
 				Computed: true,
+			},
+			"group_id": schema.StringAttribute{
+				Required:    true,
+				Description: `npa policy group id`,
 			},
 			"group_name": schema.StringAttribute{
 				Computed: true,
@@ -62,12 +66,8 @@ func (r *NPAPolicyGroupDataSource) Schema(ctx context.Context, req datasource.Sc
 			"group_prod_id": schema.Int64Attribute{
 				Computed: true,
 			},
-			"group_type": schema.Int64Attribute{
+			"group_type": schema.StringAttribute{
 				Computed: true,
-			},
-			"group_id": schema.Int64Attribute{
-				Required:    true,
-				Description: `npa policy group id`,
 			},
 			"modify_time": schema.StringAttribute{
 				Computed: true,
@@ -117,7 +117,7 @@ func (r *NPAPolicyGroupDataSource) Read(ctx context.Context, req datasource.Read
 		return
 	}
 
-	id := data.GroupID.ValueInt64()
+	id := data.GroupID.ValueString()
 	request := operations.GetPolicyNpaPolicygroupsIDRequest{
 		ID: id,
 	}
@@ -137,11 +137,11 @@ func (r *NPAPolicyGroupDataSource) Read(ctx context.Context, req datasource.Read
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

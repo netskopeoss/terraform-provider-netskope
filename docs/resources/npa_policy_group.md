@@ -16,13 +16,9 @@ NPAPolicyGroup Resource
 resource "ns_npa_policy_group" "my_npapolicygroup" {
   group_name = "...my_group_name..."
   group_order = {
-    group_order = {
-      group_id = "1"
-      order    = "after"
-    }
+    group_id = "1"
+    order    = "after"
   }
-  modify_by   = "...my_modify_by..."
-  modify_type = "...my_modify_type..."
 }
 ```
 
@@ -33,27 +29,19 @@ resource "ns_npa_policy_group" "my_npapolicygroup" {
 
 - `group_name` (String)
 - `group_order` (Attributes) (see [below for nested schema](#nestedatt--group_order))
-- `modify_by` (String)
-- `modify_type` (String)
 
 ### Read-Only
 
-- `can_be_edited_deleted` (Number)
-- `group_id` (Number)
+- `can_be_edited_deleted` (String)
+- `group_id` (String)
 - `group_pinned_id` (Number)
 - `group_prod_id` (Number)
-- `group_type` (Number)
+- `group_type` (String)
 - `modify_time` (String)
+- `modify_type` (String)
 
 <a id="nestedatt--group_order"></a>
 ### Nested Schema for `group_order`
-
-Optional:
-
-- `group_order` (Attributes) (see [below for nested schema](#nestedatt--group_order--group_order))
-
-<a id="nestedatt--group_order--group_order"></a>
-### Nested Schema for `group_order.group_order`
 
 Optional:
 

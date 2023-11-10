@@ -2,6 +2,9 @@
 
 package provider
 
+import "github.com/hashicorp/terraform-plugin-framework/types"
+
 type PostPolicyNpaPolicygroupsGroupOrder struct {
-	GroupOrder *PostPolicyNpaPolicygroupsRequestGroupOrder `tfsdk:"group_order"`
+	GroupID types.String `tfsdk:"group_id"`
+	Order   types.String `tfsdk:"order"`
 }

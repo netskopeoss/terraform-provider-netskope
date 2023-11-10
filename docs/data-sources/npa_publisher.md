@@ -14,7 +14,7 @@ NPAPublisher DataSource
 
 ```terraform
 data "ns_npa_publisher" "my_npapublisher" {
-  id = 6
+  id = 2
 }
 ```
 

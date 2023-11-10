@@ -119,7 +119,6 @@ internal/provider/type_activities.go
 internal/provider/type_private_apps_with_activities.go
 internal/provider/type_post_policy_npa_rules_rule_data.go
 internal/provider/type_post_policy_npa_rules_rule_order.go
-internal/provider/type_post_policy_npa_policygroups_request_group_order.go
 internal/provider/type_post_policy_npa_policygroups_group_order.go
 internal/provider/type_post_infrastructure_publishers_tags.go
 internal/provider/type_assessment.go

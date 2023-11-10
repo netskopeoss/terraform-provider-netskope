@@ -18,7 +18,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"strconv"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -36,14 +35,13 @@ type NPAPolicyGroupResource struct {
 
 // NPAPolicyGroupResourceModel describes the resource data model.
 type NPAPolicyGroupResourceModel struct {
-	CanBeEditedDeleted types.Int64                          `tfsdk:"can_be_edited_deleted"`
-	GroupID            types.Int64                          `tfsdk:"group_id"`
+	CanBeEditedDeleted types.String                         `tfsdk:"can_be_edited_deleted"`
+	GroupID            types.String                         `tfsdk:"group_id"`
 	GroupName          types.String                         `tfsdk:"group_name"`
 	GroupOrder         *PostPolicyNpaPolicygroupsGroupOrder `tfsdk:"group_order"`
 	GroupPinnedID      types.Int64                          `tfsdk:"group_pinned_id"`
 	GroupProdID        types.Int64                          `tfsdk:"group_prod_id"`
-	GroupType          types.Int64                          `tfsdk:"group_type"`
-	ModifyBy           types.String                         `tfsdk:"modify_by"`
+	GroupType          types.String                         `tfsdk:"group_type"`
 	ModifyTime         types.String                         `tfsdk:"modify_time"`
 	ModifyType         types.String                         `tfsdk:"modify_type"`
 }
@@ -57,10 +55,10 @@ func (r *NPAPolicyGroupResource) Schema(ctx context.Context, req resource.Schema
 		MarkdownDescription: "NPAPolicyGroup Resource",
 
 		Attributes: map[string]schema.Attribute{
-			"can_be_edited_deleted": schema.Int64Attribute{
+			"can_be_edited_deleted": schema.StringAttribute{
 				Computed: true,
 			},
-			"group_id": schema.Int64Attribute{
+			"group_id": schema.StringAttribute{
 				Computed: true,
 			},
 			"group_name": schema.StringAttribute{
@@ -76,31 +74,23 @@ func (r *NPAPolicyGroupResource) Schema(ctx context.Context, req resource.Schema
 				},
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
-					"group_order": schema.SingleNestedAttribute{
-						PlanModifiers: []planmodifier.Object{
-							objectplanmodifier.RequiresReplace(),
+					"group_id": schema.StringAttribute{
+						PlanModifiers: []planmodifier.String{
+							stringplanmodifier.RequiresReplace(),
 						},
 						Optional: true,
-						Attributes: map[string]schema.Attribute{
-							"group_id": schema.StringAttribute{
-								PlanModifiers: []planmodifier.String{
-									stringplanmodifier.RequiresReplace(),
-								},
-								Optional: true,
-							},
-							"order": schema.StringAttribute{
-								PlanModifiers: []planmodifier.String{
-									stringplanmodifier.RequiresReplace(),
-								},
-								Optional:    true,
-								Description: `must be one of ["before", "after"]`,
-								Validators: []validator.String{
-									stringvalidator.OneOf(
-										"before",
-										"after",
-									),
-								},
-							},
+					},
+					"order": schema.StringAttribute{
+						PlanModifiers: []planmodifier.String{
+							stringplanmodifier.RequiresReplace(),
+						},
+						Optional:    true,
+						Description: `must be one of ["before", "after"]`,
+						Validators: []validator.String{
+							stringvalidator.OneOf(
+								"before",
+								"after",
+							),
 						},
 					},
 				},
@@ -111,24 +101,14 @@ func (r *NPAPolicyGroupResource) Schema(ctx context.Context, req resource.Schema
 			"group_prod_id": schema.Int64Attribute{
 				Computed: true,
 			},
-			"group_type": schema.Int64Attribute{
+			"group_type": schema.StringAttribute{
 				Computed: true,
-			},
-			"modify_by": schema.StringAttribute{
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-				Optional: true,
 			},
 			"modify_time": schema.StringAttribute{
 				Computed: true,
 			},
 			"modify_type": schema.StringAttribute{
 				Computed: true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-				Optional: true,
 			},
 		},
 	}
@@ -192,11 +172,11 @@ func (r *NPAPolicyGroupResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromCreateResponse(res.TwoHundredApplicationJSONObject.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -220,7 +200,7 @@ func (r *NPAPolicyGroupResource) Read(ctx context.Context, req resource.ReadRequ
 		return
 	}
 
-	id := data.GroupID.ValueInt64()
+	id := data.GroupID.ValueString()
 	request := operations.GetPolicyNpaPolicygroupsIDRequest{
 		ID: id,
 	}
@@ -240,11 +220,11 @@ func (r *NPAPolicyGroupResource) Read(ctx context.Context, req resource.ReadRequ
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -281,7 +261,7 @@ func (r *NPAPolicyGroupResource) Delete(ctx context.Context, req resource.Delete
 		return
 	}
 
-	id := data.GroupID.ValueInt64()
+	id := data.GroupID.ValueString()
 	request := operations.DeletePolicyNpaPolicygroupsIDRequest{
 		ID: id,
 	}
@@ -305,10 +285,5 @@ func (r *NPAPolicyGroupResource) Delete(ctx context.Context, req resource.Delete
 }
 
 func (r *NPAPolicyGroupResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	groupID, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
-	}
-
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), int64(groupID))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), req.ID)...)
 }

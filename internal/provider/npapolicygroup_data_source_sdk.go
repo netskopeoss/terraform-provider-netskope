@@ -7,11 +7,16 @@ import (
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 )
 
-func (r *NPAPolicyGroupDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsIDResponseBody) {
+func (r *NPAPolicyGroupDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsIDData) {
 	if resp.CanBeEditedDeleted != nil {
-		r.CanBeEditedDeleted = types.Int64Value(*resp.CanBeEditedDeleted)
+		r.CanBeEditedDeleted = types.StringValue(*resp.CanBeEditedDeleted)
 	} else {
-		r.CanBeEditedDeleted = types.Int64Null()
+		r.CanBeEditedDeleted = types.StringNull()
+	}
+	if resp.GroupID != nil {
+		r.GroupID = types.StringValue(*resp.GroupID)
+	} else {
+		r.GroupID = types.StringNull()
 	}
 	if resp.GroupName != nil {
 		r.GroupName = types.StringValue(*resp.GroupName)
@@ -29,14 +34,9 @@ func (r *NPAPolicyGroupDataSourceModel) RefreshFromGetResponse(resp *operations.
 		r.GroupProdID = types.Int64Null()
 	}
 	if resp.GroupType != nil {
-		r.GroupType = types.Int64Value(*resp.GroupType)
+		r.GroupType = types.StringValue(*resp.GroupType)
 	} else {
-		r.GroupType = types.Int64Null()
-	}
-	if resp.GroupID != nil {
-		r.GroupID = types.Int64Value(*resp.GroupID)
-	} else {
-		r.GroupID = types.Int64Null()
+		r.GroupType = types.StringNull()
 	}
 	if resp.ModifyTime != nil {
 		r.ModifyTime = types.StringValue(*resp.ModifyTime)

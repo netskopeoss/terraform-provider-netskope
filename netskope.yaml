@@ -1840,22 +1840,15 @@ components:
                     type: string
                 group_order:
                     properties:
-                        group_order:
-                            properties:
-                                group_id:
-                                    example: "1"
-                                    type: string
-                                order:
-                                    enum:
-                                        - before
-                                        - after
-                                    type: string
-                            type: object
+                        group_id:
+                            example: "1"
+                            type: string
+                        order:
+                            enum:
+                                - before
+                                - after
+                            type: string
                     type: object
-                modify_by:
-                    type: string
-                modify_type:
-                    type: string
             type: object
             x-speakeasy-entity: NPAPolicyGroup
         npa_policygroup_response:
@@ -1864,9 +1857,9 @@ components:
                     items:
                         properties:
                             can_be_edited_deleted:
-                                type: integer
+                                type: string
                             group_id:
-                                type: integer
+                                type: string
                             group_name:
                                 type: string
                             group_pinned_id:
@@ -1874,7 +1867,7 @@ components:
                             group_prod_id:
                                 type: integer
                             group_type:
-                                type: integer
+                                type: string
                             modify_time:
                                 type: string
                             modify_type:
@@ -1895,9 +1888,9 @@ components:
         npa_policygroup_response_item:
             properties:
                 can_be_edited_deleted:
-                    type: integer
+                    type: string
                 group_id:
-                    type: integer
+                    type: string
                 group_name:
                     type: string
                 group_pinned_id:
@@ -1905,7 +1898,7 @@ components:
                 group_prod_id:
                     type: integer
                 group_type:
-                    type: integer
+                    type: string
                 modify_time:
                     type: string
                 modify_type:
@@ -6263,9 +6256,9 @@ paths:
                                         items:
                                             properties:
                                                 can_be_edited_deleted:
-                                                    type: integer
+                                                    type: string
                                                 group_id:
-                                                    type: integer
+                                                    type: string
                                                 group_name:
                                                     type: string
                                                 group_pinned_id:
@@ -6273,7 +6266,7 @@ paths:
                                                 group_prod_id:
                                                     type: integer
                                                 group_type:
-                                                    type: integer
+                                                    type: string
                                                 modify_time:
                                                     type: string
                                                 modify_type:
@@ -6320,22 +6313,15 @@ paths:
                                     type: string
                                 group_order:
                                     properties:
-                                        group_order:
-                                            properties:
-                                                group_id:
-                                                    example: "1"
-                                                    type: string
-                                                order:
-                                                    enum:
-                                                        - before
-                                                        - after
-                                                    type: string
-                                            type: object
+                                        group_id:
+                                            example: "1"
+                                            type: string
+                                        order:
+                                            enum:
+                                                - before
+                                                - after
+                                            type: string
                                     type: object
-                                modify_by:
-                                    type: string
-                                modify_type:
-                                    type: string
                             type: object
                             x-speakeasy-entity: NPAPolicyGroup
                 required: true
@@ -6345,24 +6331,33 @@ paths:
                         application/json:
                             schema:
                                 properties:
-                                    can_be_edited_deleted:
-                                        type: integer
-                                    group_id:
-                                        type: integer
-                                    group_name:
+                                    data:
+                                        properties:
+                                            can_be_edited_deleted:
+                                                type: string
+                                            group_id:
+                                                type: string
+                                            group_name:
+                                                type: string
+                                            group_pinned_id:
+                                                type: integer
+                                            group_prod_id:
+                                                type: integer
+                                            group_type:
+                                                type: string
+                                            modify_time:
+                                                type: string
+                                            modify_type:
+                                                type: string
+                                        type: object
+                                        x-speakeasy-entity: NPAPolicyGroup
+                                    status:
+                                        enum:
+                                            - success
+                                            - error
                                         type: string
-                                    group_pinned_id:
-                                        type: integer
-                                    group_prod_id:
-                                        type: integer
-                                    group_type:
-                                        type: integer
-                                    modify_time:
-                                        type: string
-                                    modify_type:
-                                        type: string
+                                        x-speakeasy-ignore: true
                                 type: object
-                                x-speakeasy-entity: NPAPolicyGroup
                     description: successful operation
                 "400":
                     content:
@@ -6392,7 +6387,7 @@ paths:
                   name: id
                   required: true
                   schema:
-                    type: integer
+                    type: string
                   x-speakeasy-match: group_id
             responses:
                 "200":
@@ -6429,7 +6424,7 @@ paths:
                   name: id
                   required: true
                   schema:
-                    type: integer
+                    type: string
                   x-speakeasy-match: group_id
             responses:
                 "200":
@@ -6437,24 +6432,33 @@ paths:
                         application/json:
                             schema:
                                 properties:
-                                    can_be_edited_deleted:
-                                        type: integer
-                                    group_id:
-                                        type: integer
-                                    group_name:
+                                    data:
+                                        properties:
+                                            can_be_edited_deleted:
+                                                type: string
+                                            group_id:
+                                                type: string
+                                            group_name:
+                                                type: string
+                                            group_pinned_id:
+                                                type: integer
+                                            group_prod_id:
+                                                type: integer
+                                            group_type:
+                                                type: string
+                                            modify_time:
+                                                type: string
+                                            modify_type:
+                                                type: string
+                                        type: object
+                                        x-speakeasy-entity: NPAPolicyGroup
+                                    status:
+                                        enum:
+                                            - success
+                                            - error
                                         type: string
-                                    group_pinned_id:
-                                        type: integer
-                                    group_prod_id:
-                                        type: integer
-                                    group_type:
-                                        type: integer
-                                    modify_time:
-                                        type: string
-                                    modify_type:
-                                        type: string
+                                        x-speakeasy-ignore: true
                                 type: object
-                                x-speakeasy-entity: NPAPolicyGroup
                     description: successful operation
                 "400":
                     content:
@@ -6478,7 +6482,7 @@ paths:
                   name: id
                   required: true
                   schema:
-                    type: integer
+                    type: string
                   x-speakeasy-match: group_id
                 - description: flag to skip output except status code
                   in: query
@@ -6499,22 +6503,15 @@ paths:
                                     type: string
                                 group_order:
                                     properties:
-                                        group_order:
-                                            properties:
-                                                group_id:
-                                                    example: "1"
-                                                    type: string
-                                                order:
-                                                    enum:
-                                                        - before
-                                                        - after
-                                                    type: string
-                                            type: object
+                                        group_id:
+                                            example: "1"
+                                            type: string
+                                        order:
+                                            enum:
+                                                - before
+                                                - after
+                                            type: string
                                     type: object
-                                modify_by:
-                                    type: string
-                                modify_type:
-                                    type: string
                             type: object
                             x-speakeasy-entity: NPAPolicyGroup
                 required: true
@@ -6524,24 +6521,33 @@ paths:
                         application/json:
                             schema:
                                 properties:
-                                    can_be_edited_deleted:
-                                        type: integer
-                                    group_id:
-                                        type: integer
-                                    group_name:
+                                    data:
+                                        properties:
+                                            can_be_edited_deleted:
+                                                type: string
+                                            group_id:
+                                                type: string
+                                            group_name:
+                                                type: string
+                                            group_pinned_id:
+                                                type: integer
+                                            group_prod_id:
+                                                type: integer
+                                            group_type:
+                                                type: string
+                                            modify_time:
+                                                type: string
+                                            modify_type:
+                                                type: string
+                                        type: object
+                                        x-speakeasy-entity: NPAPolicyGroup
+                                    status:
+                                        enum:
+                                            - success
+                                            - error
                                         type: string
-                                    group_pinned_id:
-                                        type: integer
-                                    group_prod_id:
-                                        type: integer
-                                    group_type:
-                                        type: integer
-                                    modify_time:
-                                        type: string
-                                    modify_type:
-                                        type: string
+                                        x-speakeasy-ignore: true
                                 type: object
-                                x-speakeasy-entity: NPAPolicyGroup
                     description: successful operation
                 "400":
                     content:
