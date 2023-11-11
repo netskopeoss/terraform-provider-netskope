@@ -219,11 +219,11 @@ func (o *PostSteeringAppsPrivateResponseResponseBody) GetStatus() *int64 {
 	return o.Status
 }
 
-type PostSteeringAppsPrivateResponseProtocols struct {
+type PostSteeringAppsPrivateResolvedProtocols struct {
 	Port *string `json:"port,omitempty"`
 }
 
-func (o *PostSteeringAppsPrivateResponseProtocols) GetPort() *string {
+func (o *PostSteeringAppsPrivateResolvedProtocols) GetPort() *string {
 	if o == nil {
 		return nil
 	}
@@ -316,8 +316,8 @@ type PostSteeringAppsPrivateData struct {
 	Host                        *string                                              `json:"host,omitempty"`
 	ID                          *int                                                 `json:"id,omitempty"`
 	Name                        *string                                              `json:"name,omitempty"`
-	Protocols                   []PostSteeringAppsPrivateResponseProtocols           `json:"protocols,omitempty"`
 	RealHost                    *string                                              `json:"real_host,omitempty"`
+	ResolvedProtocols           []PostSteeringAppsPrivateResolvedProtocols           `json:"protocols,omitempty"`
 	ServicePublisherAssignments []PostSteeringAppsPrivateServicePublisherAssignments `json:"service_publisher_assignments,omitempty"`
 	Tags                        []PostSteeringAppsPrivateResponseTags                `json:"tags,omitempty"`
 	TrustSelfSignedCerts        *bool                                                `json:"trust_self_signed_certs,omitempty"`
@@ -352,18 +352,18 @@ func (o *PostSteeringAppsPrivateData) GetName() *string {
 	return o.Name
 }
 
-func (o *PostSteeringAppsPrivateData) GetProtocols() []PostSteeringAppsPrivateResponseProtocols {
-	if o == nil {
-		return nil
-	}
-	return o.Protocols
-}
-
 func (o *PostSteeringAppsPrivateData) GetRealHost() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RealHost
+}
+
+func (o *PostSteeringAppsPrivateData) GetResolvedProtocols() []PostSteeringAppsPrivateResolvedProtocols {
+	if o == nil {
+		return nil
+	}
+	return o.ResolvedProtocols
 }
 
 func (o *PostSteeringAppsPrivateData) GetServicePublisherAssignments() []PostSteeringAppsPrivateServicePublisherAssignments {

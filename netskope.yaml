@@ -394,6 +394,7 @@ components:
                                         x-speakeasy-ignore: true
                                 type: object
                             type: array
+                            x-speakeasy-name-override: resolved_protocols
                         real_host:
                             type: string
                         service_publisher_assignments:
@@ -9217,6 +9218,7 @@ paths:
                                                             x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
+                                                x-speakeasy-name-override: resolved_protocols
                                             real_host:
                                                 type: string
                                             service_publisher_assignments:
@@ -9370,6 +9372,7 @@ paths:
                                                             x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
+                                                x-speakeasy-name-override: resolved_protocols
                                             real_host:
                                                 type: string
                                             service_publisher_assignments:
@@ -9541,6 +9544,7 @@ paths:
                                                             x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
+                                                x-speakeasy-name-override: resolved_protocols
                                             real_host:
                                                 type: string
                                             service_publisher_assignments:
@@ -9714,6 +9718,7 @@ paths:
                                                             x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
+                                                x-speakeasy-name-override: resolved_protocols
                                             real_host:
                                                 type: string
                                             service_publisher_assignments:

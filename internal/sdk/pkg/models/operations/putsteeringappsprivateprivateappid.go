@@ -236,11 +236,11 @@ func (o *PutSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *in
 	return o.Status
 }
 
-type PutSteeringAppsPrivatePrivateAppIDResponseProtocols struct {
+type PutSteeringAppsPrivatePrivateAppIDResolvedProtocols struct {
 	Port *string `json:"port,omitempty"`
 }
 
-func (o *PutSteeringAppsPrivatePrivateAppIDResponseProtocols) GetPort() *string {
+func (o *PutSteeringAppsPrivatePrivateAppIDResolvedProtocols) GetPort() *string {
 	if o == nil {
 		return nil
 	}
@@ -333,8 +333,8 @@ type PutSteeringAppsPrivatePrivateAppIDData struct {
 	Host                        *string                                                         `json:"host,omitempty"`
 	ID                          *int                                                            `json:"id,omitempty"`
 	Name                        *string                                                         `json:"name,omitempty"`
-	Protocols                   []PutSteeringAppsPrivatePrivateAppIDResponseProtocols           `json:"protocols,omitempty"`
 	RealHost                    *string                                                         `json:"real_host,omitempty"`
+	ResolvedProtocols           []PutSteeringAppsPrivatePrivateAppIDResolvedProtocols           `json:"protocols,omitempty"`
 	ServicePublisherAssignments []PutSteeringAppsPrivatePrivateAppIDServicePublisherAssignments `json:"service_publisher_assignments,omitempty"`
 	Tags                        []PutSteeringAppsPrivatePrivateAppIDResponseTags                `json:"tags,omitempty"`
 	TrustSelfSignedCerts        *bool                                                           `json:"trust_self_signed_certs,omitempty"`
@@ -369,18 +369,18 @@ func (o *PutSteeringAppsPrivatePrivateAppIDData) GetName() *string {
 	return o.Name
 }
 
-func (o *PutSteeringAppsPrivatePrivateAppIDData) GetProtocols() []PutSteeringAppsPrivatePrivateAppIDResponseProtocols {
-	if o == nil {
-		return nil
-	}
-	return o.Protocols
-}
-
 func (o *PutSteeringAppsPrivatePrivateAppIDData) GetRealHost() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RealHost
+}
+
+func (o *PutSteeringAppsPrivatePrivateAppIDData) GetResolvedProtocols() []PutSteeringAppsPrivatePrivateAppIDResolvedProtocols {
+	if o == nil {
+		return nil
+	}
+	return o.ResolvedProtocols
 }
 
 func (o *PutSteeringAppsPrivatePrivateAppIDData) GetServicePublisherAssignments() []PutSteeringAppsPrivatePrivateAppIDServicePublisherAssignments {

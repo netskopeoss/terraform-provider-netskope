@@ -236,11 +236,11 @@ func (o *PatchSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *
 	return o.Status
 }
 
-type PatchSteeringAppsPrivatePrivateAppIDProtocols struct {
+type PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols struct {
 	Port *string `json:"port,omitempty"`
 }
 
-func (o *PatchSteeringAppsPrivatePrivateAppIDProtocols) GetPort() *string {
+func (o *PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols) GetPort() *string {
 	if o == nil {
 		return nil
 	}
@@ -333,8 +333,8 @@ type PatchSteeringAppsPrivatePrivateAppIDData struct {
 	Host                        *string                                                           `json:"host,omitempty"`
 	ID                          *int                                                              `json:"id,omitempty"`
 	Name                        *string                                                           `json:"name,omitempty"`
-	Protocols                   []PatchSteeringAppsPrivatePrivateAppIDProtocols                   `json:"protocols,omitempty"`
 	RealHost                    *string                                                           `json:"real_host,omitempty"`
+	ResolvedProtocols           []PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols           `json:"protocols,omitempty"`
 	ServicePublisherAssignments []PatchSteeringAppsPrivatePrivateAppIDServicePublisherAssignments `json:"service_publisher_assignments,omitempty"`
 	Tags                        []PatchSteeringAppsPrivatePrivateAppIDResponseTags                `json:"tags,omitempty"`
 	TrustSelfSignedCerts        *bool                                                             `json:"trust_self_signed_certs,omitempty"`
@@ -369,18 +369,18 @@ func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetName() *string {
 	return o.Name
 }
 
-func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetProtocols() []PatchSteeringAppsPrivatePrivateAppIDProtocols {
-	if o == nil {
-		return nil
-	}
-	return o.Protocols
-}
-
 func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetRealHost() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RealHost
+}
+
+func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetResolvedProtocols() []PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols {
+	if o == nil {
+		return nil
+	}
+	return o.ResolvedProtocols
 }
 
 func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetServicePublisherAssignments() []PatchSteeringAppsPrivatePrivateAppIDServicePublisherAssignments {
