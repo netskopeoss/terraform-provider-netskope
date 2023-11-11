@@ -9,7 +9,7 @@ type GetSteeringAppsPrivateData struct {
 	AppName                     types.String                                         `tfsdk:"app_name"`
 	ClientlessAccess            types.Bool                                           `tfsdk:"clientless_access"`
 	Host                        types.String                                         `tfsdk:"host"`
-	Protocols                   []GetSteeringAppsPrivateProtocols                    `tfsdk:"protocols"`
+	Protocols                   []PostSteeringAppsPrivateResolvedProtocols           `tfsdk:"protocols"`
 	RealHost                    types.String                                         `tfsdk:"real_host"`
 	ServicePublisherAssignments []PostSteeringAppsPrivateServicePublisherAssignments `tfsdk:"service_publisher_assignments"`
 	Tags                        []PostInfrastructurePublishersTags                   `tfsdk:"tags"`

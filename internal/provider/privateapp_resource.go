@@ -38,6 +38,7 @@ type PrivateAppResourceModel struct {
 	PublisherTags               []PostSteeringAppsPrivatePublisherTags               `tfsdk:"publisher_tags"`
 	Publishers                  []PostSteeringAppsPrivatePublishers                  `tfsdk:"publishers"`
 	RealHost                    types.String                                         `tfsdk:"real_host"`
+	ResolvedProtocols           []PostSteeringAppsPrivateResolvedProtocols           `tfsdk:"resolved_protocols"`
 	ServicePublisherAssignments []PostSteeringAppsPrivateServicePublisherAssignments `tfsdk:"service_publisher_assignments"`
 	Tags                        []PostInfrastructurePublishersTags                   `tfsdk:"tags"`
 	TrustSelfSignedCerts        types.Bool                                           `tfsdk:"trust_self_signed_certs"`
@@ -71,12 +72,10 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed: true,
 			},
 			"protocols": schema.ListNestedAttribute{
-				Computed: true,
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"port": schema.StringAttribute{
-							Computed: true,
 							Optional: true,
 						},
 						"type": schema.StringAttribute{
@@ -111,6 +110,16 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 			"real_host": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
+			},
+			"resolved_protocols": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"port": schema.StringAttribute{
+							Computed: true,
+						},
+					},
+				},
 			},
 			"service_publisher_assignments": schema.ListNestedAttribute{
 				Computed: true,

@@ -66,6 +66,7 @@ resource "ns_private_app" "my_privateapp" {
 
 - `id` (Number) The ID of this resource.
 - `name` (String)
+- `resolved_protocols` (Attributes List) (see [below for nested schema](#nestedatt--resolved_protocols))
 - `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--service_publisher_assignments))
 
 <a id="nestedatt--protocols"></a>
@@ -104,6 +105,14 @@ Optional:
 Read-Only:
 
 - `tag_id` (Number)
+
+
+<a id="nestedatt--resolved_protocols"></a>
+### Nested Schema for `resolved_protocols`
+
+Read-Only:
+
+- `port` (String)
 
 
 <a id="nestedatt--service_publisher_assignments"></a>

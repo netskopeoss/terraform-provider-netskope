@@ -268,26 +268,26 @@ func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.Pos
 	} else {
 		r.Name = types.StringNull()
 	}
-	if len(r.Protocols) > len(resp.Protocols) {
-		r.Protocols = r.Protocols[:len(resp.Protocols)]
-	}
-	for protocolsCount, protocolsItem := range resp.Protocols {
-		var protocols1 PostSteeringAppsPrivateProtocols
-		if protocolsItem.Port != nil {
-			protocols1.Port = types.StringValue(*protocolsItem.Port)
-		} else {
-			protocols1.Port = types.StringNull()
-		}
-		if protocolsCount+1 > len(r.Protocols) {
-			r.Protocols = append(r.Protocols, protocols1)
-		} else {
-			r.Protocols[protocolsCount].Port = protocols1.Port
-		}
-	}
 	if resp.RealHost != nil {
 		r.RealHost = types.StringValue(*resp.RealHost)
 	} else {
 		r.RealHost = types.StringNull()
+	}
+	if len(r.ResolvedProtocols) > len(resp.ResolvedProtocols) {
+		r.ResolvedProtocols = r.ResolvedProtocols[:len(resp.ResolvedProtocols)]
+	}
+	for resolvedProtocolsCount, resolvedProtocolsItem := range resp.ResolvedProtocols {
+		var resolvedProtocols1 PostSteeringAppsPrivateResolvedProtocols
+		if resolvedProtocolsItem.Port != nil {
+			resolvedProtocols1.Port = types.StringValue(*resolvedProtocolsItem.Port)
+		} else {
+			resolvedProtocols1.Port = types.StringNull()
+		}
+		if resolvedProtocolsCount+1 > len(r.ResolvedProtocols) {
+			r.ResolvedProtocols = append(r.ResolvedProtocols, resolvedProtocols1)
+		} else {
+			r.ResolvedProtocols[resolvedProtocolsCount].Port = resolvedProtocols1.Port
+		}
 	}
 	if len(r.ServicePublisherAssignments) > len(resp.ServicePublisherAssignments) {
 		r.ServicePublisherAssignments = r.ServicePublisherAssignments[:len(resp.ServicePublisherAssignments)]
@@ -393,26 +393,26 @@ func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *operations.Put
 	} else {
 		r.Name = types.StringNull()
 	}
-	if len(r.Protocols) > len(resp.Protocols) {
-		r.Protocols = r.Protocols[:len(resp.Protocols)]
-	}
-	for protocolsCount, protocolsItem := range resp.Protocols {
-		var protocols1 PostSteeringAppsPrivateProtocols
-		if protocolsItem.Port != nil {
-			protocols1.Port = types.StringValue(*protocolsItem.Port)
-		} else {
-			protocols1.Port = types.StringNull()
-		}
-		if protocolsCount+1 > len(r.Protocols) {
-			r.Protocols = append(r.Protocols, protocols1)
-		} else {
-			r.Protocols[protocolsCount].Port = protocols1.Port
-		}
-	}
 	if resp.RealHost != nil {
 		r.RealHost = types.StringValue(*resp.RealHost)
 	} else {
 		r.RealHost = types.StringNull()
+	}
+	if len(r.ResolvedProtocols) > len(resp.ResolvedProtocols) {
+		r.ResolvedProtocols = r.ResolvedProtocols[:len(resp.ResolvedProtocols)]
+	}
+	for resolvedProtocolsCount, resolvedProtocolsItem := range resp.ResolvedProtocols {
+		var resolvedProtocols1 PostSteeringAppsPrivateResolvedProtocols
+		if resolvedProtocolsItem.Port != nil {
+			resolvedProtocols1.Port = types.StringValue(*resolvedProtocolsItem.Port)
+		} else {
+			resolvedProtocols1.Port = types.StringNull()
+		}
+		if resolvedProtocolsCount+1 > len(r.ResolvedProtocols) {
+			r.ResolvedProtocols = append(r.ResolvedProtocols, resolvedProtocols1)
+		} else {
+			r.ResolvedProtocols[resolvedProtocolsCount].Port = resolvedProtocols1.Port
+		}
 	}
 	if len(r.ServicePublisherAssignments) > len(resp.ServicePublisherAssignments) {
 		r.ServicePublisherAssignments = r.ServicePublisherAssignments[:len(resp.ServicePublisherAssignments)]

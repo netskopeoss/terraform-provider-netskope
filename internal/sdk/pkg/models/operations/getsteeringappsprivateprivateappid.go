@@ -38,11 +38,11 @@ func (o *GetSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *in
 	return o.Status
 }
 
-type GetSteeringAppsPrivatePrivateAppIDProtocols struct {
+type ResolvedProtocols struct {
 	Port *string `json:"port,omitempty"`
 }
 
-func (o *GetSteeringAppsPrivatePrivateAppIDProtocols) GetPort() *string {
+func (o *ResolvedProtocols) GetPort() *string {
 	if o == nil {
 		return nil
 	}
@@ -131,16 +131,16 @@ func (o *GetSteeringAppsPrivatePrivateAppIDTags) GetTagName() *string {
 }
 
 type GetSteeringAppsPrivatePrivateAppIDData struct {
-	ClientlessAccess            *bool                                         `json:"clientless_access,omitempty"`
-	Host                        *string                                       `json:"host,omitempty"`
-	ID                          *int                                          `json:"id,omitempty"`
-	Name                        *string                                       `json:"name,omitempty"`
-	Protocols                   []GetSteeringAppsPrivatePrivateAppIDProtocols `json:"protocols,omitempty"`
-	RealHost                    *string                                       `json:"real_host,omitempty"`
-	ServicePublisherAssignments []ServicePublisherAssignments                 `json:"service_publisher_assignments,omitempty"`
-	Tags                        []GetSteeringAppsPrivatePrivateAppIDTags      `json:"tags,omitempty"`
-	TrustSelfSignedCerts        *bool                                         `json:"trust_self_signed_certs,omitempty"`
-	UsePublisherDNS             *bool                                         `json:"use_publisher_dns,omitempty"`
+	ClientlessAccess            *bool                                    `json:"clientless_access,omitempty"`
+	Host                        *string                                  `json:"host,omitempty"`
+	ID                          *int                                     `json:"id,omitempty"`
+	Name                        *string                                  `json:"name,omitempty"`
+	RealHost                    *string                                  `json:"real_host,omitempty"`
+	ResolvedProtocols           []ResolvedProtocols                      `json:"protocols,omitempty"`
+	ServicePublisherAssignments []ServicePublisherAssignments            `json:"service_publisher_assignments,omitempty"`
+	Tags                        []GetSteeringAppsPrivatePrivateAppIDTags `json:"tags,omitempty"`
+	TrustSelfSignedCerts        *bool                                    `json:"trust_self_signed_certs,omitempty"`
+	UsePublisherDNS             *bool                                    `json:"use_publisher_dns,omitempty"`
 }
 
 func (o *GetSteeringAppsPrivatePrivateAppIDData) GetClientlessAccess() *bool {
@@ -171,18 +171,18 @@ func (o *GetSteeringAppsPrivatePrivateAppIDData) GetName() *string {
 	return o.Name
 }
 
-func (o *GetSteeringAppsPrivatePrivateAppIDData) GetProtocols() []GetSteeringAppsPrivatePrivateAppIDProtocols {
-	if o == nil {
-		return nil
-	}
-	return o.Protocols
-}
-
 func (o *GetSteeringAppsPrivatePrivateAppIDData) GetRealHost() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RealHost
+}
+
+func (o *GetSteeringAppsPrivatePrivateAppIDData) GetResolvedProtocols() []ResolvedProtocols {
+	if o == nil {
+		return nil
+	}
+	return o.ResolvedProtocols
 }
 
 func (o *GetSteeringAppsPrivatePrivateAppIDData) GetServicePublisherAssignments() []ServicePublisherAssignments {

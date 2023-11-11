@@ -37,7 +37,7 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 			data1.Protocols = data1.Protocols[:len(dataItem.Protocols)]
 		}
 		for protocolsCount, protocolsItem := range dataItem.Protocols {
-			var protocols1 GetSteeringAppsPrivateProtocols
+			var protocols1 PostSteeringAppsPrivateResolvedProtocols
 			if protocolsItem.Port != nil {
 				protocols1.Port = types.StringValue(*protocolsItem.Port)
 			} else {
