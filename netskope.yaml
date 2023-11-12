@@ -391,7 +391,6 @@ components:
                                         x-speakeasy-ignore: true
                                     transport:
                                         type: string
-                                        x-speakeasy-ignore: true
                                 type: object
                             type: array
                             x-speakeasy-name-override: resolved_protocols
@@ -459,7 +458,6 @@ components:
                     x-speakeasy-ignore: true
                 transport:
                     type: string
-                    x-speakeasy-ignore: true
             type: object
         publisher_bulk_item:
             properties:
@@ -1851,7 +1849,13 @@ components:
                                 - before
                                 - after
                             type: string
+                    required:
+                        - order
+                        - group_id
                     type: object
+            required:
+                - group_name
+                - group_order
             type: object
             x-speakeasy-entity: NPAPolicyGroup
         npa_policygroup_response:
@@ -3017,7 +3021,6 @@ components:
                                             x-speakeasy-ignore: true
                                         transport:
                                             type: string
-                                            x-speakeasy-ignore: true
                                     type: object
                                 type: array
                             real_host:
@@ -6326,7 +6329,13 @@ paths:
                                                 - before
                                                 - after
                                             type: string
+                                    required:
+                                        - order
+                                        - group_id
                                     type: object
+                            required:
+                                - group_name
+                                - group_order
                             type: object
                             x-speakeasy-entity: NPAPolicyGroup
                 required: true
@@ -6516,7 +6525,13 @@ paths:
                                                 - before
                                                 - after
                                             type: string
+                                    required:
+                                        - order
+                                        - group_id
                                     type: object
+                            required:
+                                - group_name
+                                - group_order
                             type: object
                             x-speakeasy-entity: NPAPolicyGroup
                 required: true
@@ -9049,7 +9064,6 @@ paths:
                                                                 x-speakeasy-ignore: true
                                                             transport:
                                                                 type: string
-                                                                x-speakeasy-ignore: true
                                                         type: object
                                                     type: array
                                                 real_host:
@@ -9215,7 +9229,6 @@ paths:
                                                             x-speakeasy-ignore: true
                                                         transport:
                                                             type: string
-                                                            x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
                                                 x-speakeasy-name-override: resolved_protocols
@@ -9369,7 +9382,6 @@ paths:
                                                             x-speakeasy-ignore: true
                                                         transport:
                                                             type: string
-                                                            x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
                                                 x-speakeasy-name-override: resolved_protocols
@@ -9541,7 +9553,6 @@ paths:
                                                             x-speakeasy-ignore: true
                                                         transport:
                                                             type: string
-                                                            x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
                                                 x-speakeasy-name-override: resolved_protocols
@@ -9715,7 +9726,6 @@ paths:
                                                             x-speakeasy-ignore: true
                                                         transport:
                                                             type: string
-                                                            x-speakeasy-ignore: true
                                                     type: object
                                                 type: array
                                                 x-speakeasy-name-override: resolved_protocols

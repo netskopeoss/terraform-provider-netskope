@@ -1,24 +1,24 @@
 ## Publisher Validation
 
 ### Data Sources Read
- - [] npa_policy
- - [] npa_policy_group
- - [] npa_policy_list
+ - [x] npa_policy
+ - [x] npa_policy_group
+ - [x] npa_policy_list
  - [] npa_publisher_upgrade_profile_list
  - [] npa_publishers
  - [] npa_publishers_alerts_list
  - [] npa_publishers_apps_list
  - [] npa_publishers_list
  - [] npa_publishers_releases_list
- - [] policy_group_list
- - [] private_app_list
+ - [x] policy_group_list
+ - [-] private_app_list (Need to troubleshoot)
  - [] private_app_tag_list
  - [] private_app_tag_policy_use_list
 
 
  ### Resource Create
-- [] npa_policy
-- [] npa_policy_group
+- [x] npa_policy
+- [x] npa_policy_group
 - [] npa_publisher_upgrade_profile
 - [x] npa_publishers
 - [] npa_publishers_alerts
@@ -28,8 +28,8 @@
 - [x] publisher_token
 
  ### Resource Update
-- [] npa_policy
-- [] npa_policy_group
+- [x] npa_policy
+- [x] npa_policy_group
 - [] npa_publisher_upgrade_profile
 - [x] npa_publishers
 - [] npa_publishers_alerts
@@ -39,7 +39,7 @@
 
  ### Resource Delete
 - [x] npa_policy
-- [] npa_policy_group
+- [x] npa_policy_group
 - [] npa_publisher_upgrade_profile
 - [x] npa_publishers
 - [] npa_publishers_alerts

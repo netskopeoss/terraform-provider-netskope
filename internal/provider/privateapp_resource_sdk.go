@@ -283,10 +283,16 @@ func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *operations.Pos
 		} else {
 			resolvedProtocols1.Port = types.StringNull()
 		}
+		if resolvedProtocolsItem.Transport != nil {
+			resolvedProtocols1.Transport = types.StringValue(*resolvedProtocolsItem.Transport)
+		} else {
+			resolvedProtocols1.Transport = types.StringNull()
+		}
 		if resolvedProtocolsCount+1 > len(r.ResolvedProtocols) {
 			r.ResolvedProtocols = append(r.ResolvedProtocols, resolvedProtocols1)
 		} else {
 			r.ResolvedProtocols[resolvedProtocolsCount].Port = resolvedProtocols1.Port
+			r.ResolvedProtocols[resolvedProtocolsCount].Transport = resolvedProtocols1.Transport
 		}
 	}
 	if len(r.ServicePublisherAssignments) > len(resp.ServicePublisherAssignments) {
@@ -408,10 +414,16 @@ func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *operations.Put
 		} else {
 			resolvedProtocols1.Port = types.StringNull()
 		}
+		if resolvedProtocolsItem.Transport != nil {
+			resolvedProtocols1.Transport = types.StringValue(*resolvedProtocolsItem.Transport)
+		} else {
+			resolvedProtocols1.Transport = types.StringNull()
+		}
 		if resolvedProtocolsCount+1 > len(r.ResolvedProtocols) {
 			r.ResolvedProtocols = append(r.ResolvedProtocols, resolvedProtocols1)
 		} else {
 			r.ResolvedProtocols[resolvedProtocolsCount].Port = resolvedProtocols1.Port
+			r.ResolvedProtocols[resolvedProtocolsCount].Transport = resolvedProtocols1.Transport
 		}
 	}
 	if len(r.ServicePublisherAssignments) > len(resp.ServicePublisherAssignments) {

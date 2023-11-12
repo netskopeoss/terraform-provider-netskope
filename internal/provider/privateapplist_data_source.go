@@ -68,6 +68,9 @@ func (r *PrivateAppListDataSource) Schema(ctx context.Context, req datasource.Sc
 									"port": schema.StringAttribute{
 										Computed: true,
 									},
+									"transport": schema.StringAttribute{
+										Computed: true,
+									},
 								},
 							},
 						},

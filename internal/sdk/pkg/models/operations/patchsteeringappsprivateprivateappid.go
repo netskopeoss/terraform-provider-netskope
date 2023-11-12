@@ -237,7 +237,8 @@ func (o *PatchSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *
 }
 
 type PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols struct {
-	Port *string `json:"port,omitempty"`
+	Port      *string `json:"port,omitempty"`
+	Transport *string `json:"transport,omitempty"`
 }
 
 func (o *PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols) GetPort() *string {
@@ -245,6 +246,13 @@ func (o *PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols) GetPort() *strin
 		return nil
 	}
 	return o.Port
+}
+
+func (o *PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols) GetTransport() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Transport
 }
 
 type PatchSteeringAppsPrivatePrivateAppIDReachability struct {
