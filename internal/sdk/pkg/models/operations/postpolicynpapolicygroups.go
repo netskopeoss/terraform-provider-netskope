@@ -36,39 +36,39 @@ func (e *PostPolicyNpaPolicygroupsOrder) UnmarshalJSON(data []byte) error {
 }
 
 type PostPolicyNpaPolicygroupsGroupOrder struct {
-	GroupID *string                         `json:"group_id,omitempty"`
-	Order   *PostPolicyNpaPolicygroupsOrder `json:"order,omitempty"`
+	GroupID string                         `json:"group_id"`
+	Order   PostPolicyNpaPolicygroupsOrder `json:"order"`
 }
 
-func (o *PostPolicyNpaPolicygroupsGroupOrder) GetGroupID() *string {
+func (o *PostPolicyNpaPolicygroupsGroupOrder) GetGroupID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.GroupID
 }
 
-func (o *PostPolicyNpaPolicygroupsGroupOrder) GetOrder() *PostPolicyNpaPolicygroupsOrder {
+func (o *PostPolicyNpaPolicygroupsGroupOrder) GetOrder() PostPolicyNpaPolicygroupsOrder {
 	if o == nil {
-		return nil
+		return PostPolicyNpaPolicygroupsOrder("")
 	}
 	return o.Order
 }
 
 type PostPolicyNpaPolicygroupsRequestBody struct {
-	GroupName  *string                              `json:"group_name,omitempty"`
-	GroupOrder *PostPolicyNpaPolicygroupsGroupOrder `json:"group_order,omitempty"`
+	GroupName  string                              `json:"group_name"`
+	GroupOrder PostPolicyNpaPolicygroupsGroupOrder `json:"group_order"`
 }
 
-func (o *PostPolicyNpaPolicygroupsRequestBody) GetGroupName() *string {
+func (o *PostPolicyNpaPolicygroupsRequestBody) GetGroupName() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.GroupName
 }
 
-func (o *PostPolicyNpaPolicygroupsRequestBody) GetGroupOrder() *PostPolicyNpaPolicygroupsGroupOrder {
+func (o *PostPolicyNpaPolicygroupsRequestBody) GetGroupOrder() PostPolicyNpaPolicygroupsGroupOrder {
 	if o == nil {
-		return nil
+		return PostPolicyNpaPolicygroupsGroupOrder{}
 	}
 	return o.GroupOrder
 }

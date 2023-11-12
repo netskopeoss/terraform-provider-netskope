@@ -35,15 +35,15 @@ type NPAPolicyGroupResource struct {
 
 // NPAPolicyGroupResourceModel describes the resource data model.
 type NPAPolicyGroupResourceModel struct {
-	CanBeEditedDeleted types.String                         `tfsdk:"can_be_edited_deleted"`
-	GroupID            types.String                         `tfsdk:"group_id"`
-	GroupName          types.String                         `tfsdk:"group_name"`
-	GroupOrder         *PostPolicyNpaPolicygroupsGroupOrder `tfsdk:"group_order"`
-	GroupPinnedID      types.Int64                          `tfsdk:"group_pinned_id"`
-	GroupProdID        types.Int64                          `tfsdk:"group_prod_id"`
-	GroupType          types.String                         `tfsdk:"group_type"`
-	ModifyTime         types.String                         `tfsdk:"modify_time"`
-	ModifyType         types.String                         `tfsdk:"modify_type"`
+	CanBeEditedDeleted types.String                        `tfsdk:"can_be_edited_deleted"`
+	GroupID            types.String                        `tfsdk:"group_id"`
+	GroupName          types.String                        `tfsdk:"group_name"`
+	GroupOrder         PostPolicyNpaPolicygroupsGroupOrder `tfsdk:"group_order"`
+	GroupPinnedID      types.Int64                         `tfsdk:"group_pinned_id"`
+	GroupProdID        types.Int64                         `tfsdk:"group_prod_id"`
+	GroupType          types.String                        `tfsdk:"group_type"`
+	ModifyTime         types.String                        `tfsdk:"modify_time"`
+	ModifyType         types.String                        `tfsdk:"modify_type"`
 }
 
 func (r *NPAPolicyGroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -72,19 +72,19 @@ func (r *NPAPolicyGroupResource) Schema(ctx context.Context, req resource.Schema
 				PlanModifiers: []planmodifier.Object{
 					objectplanmodifier.RequiresReplace(),
 				},
-				Optional: true,
+				Required: true,
 				Attributes: map[string]schema.Attribute{
 					"group_id": schema.StringAttribute{
 						PlanModifiers: []planmodifier.String{
 							stringplanmodifier.RequiresReplace(),
 						},
-						Optional: true,
+						Required: true,
 					},
 					"order": schema.StringAttribute{
 						PlanModifiers: []planmodifier.String{
 							stringplanmodifier.RequiresReplace(),
 						},
-						Optional:    true,
+						Required:    true,
 						Description: `must be one of ["before", "after"]`,
 						Validators: []validator.String{
 							stringvalidator.OneOf(

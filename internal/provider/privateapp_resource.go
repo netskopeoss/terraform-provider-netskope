@@ -118,6 +118,9 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 						"port": schema.StringAttribute{
 							Computed: true,
 						},
+						"transport": schema.StringAttribute{
+							Computed: true,
+						},
 					},
 				},
 			},

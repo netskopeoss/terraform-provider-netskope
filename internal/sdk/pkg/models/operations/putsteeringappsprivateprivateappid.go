@@ -237,7 +237,8 @@ func (o *PutSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *in
 }
 
 type PutSteeringAppsPrivatePrivateAppIDResolvedProtocols struct {
-	Port *string `json:"port,omitempty"`
+	Port      *string `json:"port,omitempty"`
+	Transport *string `json:"transport,omitempty"`
 }
 
 func (o *PutSteeringAppsPrivatePrivateAppIDResolvedProtocols) GetPort() *string {
@@ -245,6 +246,13 @@ func (o *PutSteeringAppsPrivatePrivateAppIDResolvedProtocols) GetPort() *string 
 		return nil
 	}
 	return o.Port
+}
+
+func (o *PutSteeringAppsPrivatePrivateAppIDResolvedProtocols) GetTransport() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Transport
 }
 
 type PutSteeringAppsPrivatePrivateAppIDReachability struct {

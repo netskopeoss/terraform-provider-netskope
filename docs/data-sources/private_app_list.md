@@ -52,6 +52,7 @@ Read-Only:
 Read-Only:
 
 - `port` (String)
+- `transport` (String)
 
 
 <a id="nestedatt--data--service_publisher_assignments"></a>

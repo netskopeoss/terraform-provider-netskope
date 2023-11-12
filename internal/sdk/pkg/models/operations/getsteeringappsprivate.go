@@ -41,7 +41,8 @@ func (o *GetSteeringAppsPrivateResponseResponseBody) GetStatus() *int64 {
 }
 
 type GetSteeringAppsPrivateProtocols struct {
-	Port *string `json:"port,omitempty"`
+	Port      *string `json:"port,omitempty"`
+	Transport *string `json:"transport,omitempty"`
 }
 
 func (o *GetSteeringAppsPrivateProtocols) GetPort() *string {
@@ -49,6 +50,13 @@ func (o *GetSteeringAppsPrivateProtocols) GetPort() *string {
 		return nil
 	}
 	return o.Port
+}
+
+func (o *GetSteeringAppsPrivateProtocols) GetTransport() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Transport
 }
 
 type GetSteeringAppsPrivateReachability struct {

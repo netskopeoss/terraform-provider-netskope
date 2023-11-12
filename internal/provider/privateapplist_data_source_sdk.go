@@ -43,10 +43,16 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 			} else {
 				protocols1.Port = types.StringNull()
 			}
+			if protocolsItem.Transport != nil {
+				protocols1.Transport = types.StringValue(*protocolsItem.Transport)
+			} else {
+				protocols1.Transport = types.StringNull()
+			}
 			if protocolsCount+1 > len(data1.Protocols) {
 				data1.Protocols = append(data1.Protocols, protocols1)
 			} else {
 				data1.Protocols[protocolsCount].Port = protocols1.Port
+				data1.Protocols[protocolsCount].Transport = protocols1.Transport
 			}
 		}
 		if dataItem.RealHost != nil {

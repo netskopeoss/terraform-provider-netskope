@@ -36,39 +36,39 @@ func (e *Order) UnmarshalJSON(data []byte) error {
 }
 
 type GroupOrder struct {
-	GroupID *string `json:"group_id,omitempty"`
-	Order   *Order  `json:"order,omitempty"`
+	GroupID string `json:"group_id"`
+	Order   Order  `json:"order"`
 }
 
-func (o *GroupOrder) GetGroupID() *string {
+func (o *GroupOrder) GetGroupID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.GroupID
 }
 
-func (o *GroupOrder) GetOrder() *Order {
+func (o *GroupOrder) GetOrder() Order {
 	if o == nil {
-		return nil
+		return Order("")
 	}
 	return o.Order
 }
 
 type PatchPolicyNpaPolicygroupsIDRequestBody struct {
-	GroupName  *string     `json:"group_name,omitempty"`
-	GroupOrder *GroupOrder `json:"group_order,omitempty"`
+	GroupName  string     `json:"group_name"`
+	GroupOrder GroupOrder `json:"group_order"`
 }
 
-func (o *PatchPolicyNpaPolicygroupsIDRequestBody) GetGroupName() *string {
+func (o *PatchPolicyNpaPolicygroupsIDRequestBody) GetGroupName() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.GroupName
 }
 
-func (o *PatchPolicyNpaPolicygroupsIDRequestBody) GetGroupOrder() *GroupOrder {
+func (o *PatchPolicyNpaPolicygroupsIDRequestBody) GetGroupOrder() GroupOrder {
 	if o == nil {
-		return nil
+		return GroupOrder{}
 	}
 	return o.GroupOrder
 }

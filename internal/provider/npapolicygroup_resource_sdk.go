@@ -8,30 +8,12 @@ import (
 )
 
 func (r *NPAPolicyGroupResourceModel) ToCreateSDKType() *operations.PostPolicyNpaPolicygroupsRequestBody {
-	groupName := new(string)
-	if !r.GroupName.IsUnknown() && !r.GroupName.IsNull() {
-		*groupName = r.GroupName.ValueString()
-	} else {
-		groupName = nil
-	}
-	var groupOrder *operations.PostPolicyNpaPolicygroupsGroupOrder
-	if r.GroupOrder != nil {
-		groupID := new(string)
-		if !r.GroupOrder.GroupID.IsUnknown() && !r.GroupOrder.GroupID.IsNull() {
-			*groupID = r.GroupOrder.GroupID.ValueString()
-		} else {
-			groupID = nil
-		}
-		order := new(operations.PostPolicyNpaPolicygroupsOrder)
-		if !r.GroupOrder.Order.IsUnknown() && !r.GroupOrder.Order.IsNull() {
-			*order = operations.PostPolicyNpaPolicygroupsOrder(r.GroupOrder.Order.ValueString())
-		} else {
-			order = nil
-		}
-		groupOrder = &operations.PostPolicyNpaPolicygroupsGroupOrder{
-			GroupID: groupID,
-			Order:   order,
-		}
+	groupName := r.GroupName.ValueString()
+	groupID := r.GroupOrder.GroupID.ValueString()
+	order := operations.PostPolicyNpaPolicygroupsOrder(r.GroupOrder.Order.ValueString())
+	groupOrder := operations.PostPolicyNpaPolicygroupsGroupOrder{
+		GroupID: groupID,
+		Order:   order,
 	}
 	out := operations.PostPolicyNpaPolicygroupsRequestBody{
 		GroupName:  groupName,
