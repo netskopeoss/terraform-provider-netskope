@@ -68,7 +68,7 @@ func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
 	return ServerList[c.ServerIndex], c.ServerDefaults[c.ServerIndex]
 }
 
-// SDK - Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy
+// SDK - npa_private_app_tags: NPA Private app tag operations.
 type SDK struct {
 	NPAPublishers               *NPAPublishers
 	NPAPublishersReleases       *NPAPublishersReleases
@@ -165,8 +165,8 @@ func New(opts ...SDKOption) *SDK {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.188.1",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.188.1 1.0.0 ns",
+			GenVersion:        "2.188.3",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.188.3 1.0.0 ns",
 			ServerDefaults: []map[string]string{
 				{
 					"tenant": "demo",
@@ -252,19 +252,19 @@ func (s *SDK) DeletePolicyNpaPolicygroupsID(ctx context.Context, request operati
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeletePolicyNpaPolicygroupsIDResponseResponseBody
+			var out shared.NpaPolicygroupResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.NpaPolicygroupResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -322,19 +322,19 @@ func (s *SDK) DeletePolicyNpaRulesID(ctx context.Context, request operations.Del
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeletePolicyNpaRulesIDResponseResponseBody
+			var out shared.NpaPolicyResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.NpaPolicyResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -345,7 +345,7 @@ func (s *SDK) DeletePolicyNpaRulesID(ctx context.Context, request operations.Del
 
 // DeleteSteeringAppsPrivateTags - bulk delete tags for specified private apps
 // Bulk delete tags for specified private apps
-func (s *SDK) DeleteSteeringAppsPrivateTags(ctx context.Context, request operations.DeleteSteeringAppsPrivateTagsRequestBody) (*operations.DeleteSteeringAppsPrivateTagsResponse, error) {
+func (s *SDK) DeleteSteeringAppsPrivateTags(ctx context.Context, request shared.TagRequest) (*operations.DeleteSteeringAppsPrivateTagsResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/steering/apps/private/tags"
 
@@ -398,24 +398,24 @@ func (s *SDK) DeleteSteeringAppsPrivateTags(ctx context.Context, request operati
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringAppsPrivateTagsResponseBody
+			var out shared.TagResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.TagResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringAppsPrivateTagsResponseResponseBody
+			var out shared.TagResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.TagResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -433,7 +433,7 @@ func (s *SDK) DeleteSteeringAppsPrivateTagsTagID(ctx context.Context, request op
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "TagRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -487,19 +487,19 @@ func (s *SDK) DeleteSteeringAppsPrivateTagsTagID(ctx context.Context, request op
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringAppsPrivateTagsTagIDResponseResponseBody
+			var out shared.TagResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.TagResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -557,19 +557,19 @@ func (s *SDK) DeleteSteeringAppsPrivatePrivateAppID(ctx context.Context, request
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringAppsPrivatePrivateAppIDResponseResponseBody
+			var out shared.PrivateAppsResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PrivateAppsResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -622,72 +622,72 @@ func (s *SDK) DeleteSteeringGreTunnelsID(ctx context.Context, request operations
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringGreTunnelsIDResponseBody
+			var out shared.GreResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.GreResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringGreTunnelsIDResponseResponseBody
+			var out shared.GreResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.GreResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringGreTunnelsIDResponse404ResponseBody
+			var out shared.GreResponse404
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFourApplicationJSONObject = &out
+			res.GreResponse404 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringGreTunnelsIDResponse405ResponseBody
+			var out shared.GreResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.GreResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringGreTunnelsIDResponse429ResponseBody
+			var out shared.GreResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.GreResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringGreTunnelsIDResponse500ResponseBody
+			var out shared.GreResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.GreResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -740,72 +740,72 @@ func (s *SDK) DeleteSteeringIpsecTunnelsID(ctx context.Context, request operatio
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringIpsecTunnelsIDResponseBody
+			var out shared.IpsecResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.IpsecResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringIpsecTunnelsIDResponseResponseBody
+			var out shared.IpsecResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.IpsecResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringIpsecTunnelsIDResponse404ResponseBody
+			var out shared.IpsecResponse404
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFourApplicationJSONObject = &out
+			res.IpsecResponse404 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringIpsecTunnelsIDResponse405ResponseBody
+			var out shared.IpsecResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.IpsecResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringIpsecTunnelsIDResponse429ResponseBody
+			var out shared.IpsecResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.IpsecResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteSteeringIpsecTunnelsIDResponse500ResponseBody
+			var out shared.IpsecResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.IpsecResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -855,24 +855,24 @@ func (s *SDK) GetInfrastructurePublishersAlertsconfiguration(ctx context.Context
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetInfrastructurePublishersAlertsconfigurationResponseBody
+			var out shared.PublishersAlertGetResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PublishersAlertGetResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetInfrastructurePublishersAlertsconfigurationResponseResponseBody
+			var out shared.PublishersResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PublishersResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -925,24 +925,24 @@ func (s *SDK) GetInfrastructurePublisherupgradeprofilesUpgradeProfileID(ctx cont
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody
+			var out shared.PublisherUpgradeProfileResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PublisherUpgradeProfileResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseResponseBody
+			var out shared.FourHundred
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.FourHundred = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -996,24 +996,24 @@ func (s *SDK) GetPolicyNpaPolicygroups(ctx context.Context, request operations.G
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetPolicyNpaPolicygroupsResponseBody
+			var out shared.NpaPolicygroupResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.NpaPolicygroupResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetPolicyNpaPolicygroupsResponseResponseBody
+			var out shared.NpaPolicygroupResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.NpaPolicygroupResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -1071,19 +1071,19 @@ func (s *SDK) GetPolicyNpaPolicygroupsID(ctx context.Context, request operations
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetPolicyNpaPolicygroupsIDResponseResponseBody
+			var out shared.NpaPolicygroupResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.NpaPolicygroupResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -1137,24 +1137,24 @@ func (s *SDK) GetPolicyNpaRules(ctx context.Context, request operations.GetPolic
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetPolicyNpaRulesResponseBody
+			var out shared.NpaPolicyListResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.NpaPolicyListResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetPolicyNpaRulesResponseResponseBody
+			var out shared.NpaPolicyResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.NpaPolicyResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -1216,19 +1216,19 @@ func (s *SDK) GetPolicyNpaRulesID(ctx context.Context, request operations.GetPol
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetPolicyNpaRulesIDResponseResponseBody
+			var out shared.NpaPolicyResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.NpaPolicyResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -1282,24 +1282,24 @@ func (s *SDK) GetSteeringAppsPrivate(ctx context.Context, request operations.Get
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringAppsPrivateResponseBody
+			var out shared.PrivateAppsGetResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PrivateAppsGetResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringAppsPrivateResponseResponseBody
+			var out shared.PrivateAppsResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PrivateAppsResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -1349,24 +1349,24 @@ func (s *SDK) GetSteeringAppsPrivateTags(ctx context.Context) (*operations.GetSt
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringAppsPrivateTagsResponseBody
+			var out shared.TagResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.TagResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringAppsPrivateTagsResponseResponseBody
+			var out shared.TagResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.TagResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -1419,24 +1419,24 @@ func (s *SDK) GetSteeringAppsPrivateTagsTagID(ctx context.Context, request opera
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringAppsPrivateTagsTagIDResponseBody
+			var out shared.TagResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.TagResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringAppsPrivateTagsTagIDResponseResponseBody
+			var out shared.TagResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.TagResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -1489,24 +1489,24 @@ func (s *SDK) GetSteeringAppsPrivatePrivateAppID(ctx context.Context, request op
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringAppsPrivatePrivateAppIDResponseBody
+			var out shared.PrivateAppsResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PrivateAppsResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringAppsPrivatePrivateAppIDResponseResponseBody
+			var out shared.PrivateAppsResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PrivateAppsResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -1560,72 +1560,72 @@ func (s *SDK) GetSteeringGrePops(ctx context.Context, request operations.GetStee
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsResponseBody
+			var out shared.GrePopResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.GrePopResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsResponseResponseBody
+			var out shared.GreResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.GreResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsResponse403ResponseBody
+			var out shared.GreResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.GreResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsResponse405ResponseBody
+			var out shared.GreResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.GreResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsResponse429ResponseBody
+			var out shared.GreResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.GreResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsResponse500ResponseBody
+			var out shared.GreResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.GreResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -1682,84 +1682,84 @@ func (s *SDK) GetSteeringGrePopsID(ctx context.Context, request operations.GetSt
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsIDResponseBody
+			var out shared.GrePopResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.GrePopResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsIDResponseResponseBody
+			var out shared.GreResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.GreResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsIDResponse403ResponseBody
+			var out shared.GreResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.GreResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsIDResponse404ResponseBody
+			var out shared.GreResponse404
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFourApplicationJSONObject = &out
+			res.GreResponse404 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsIDResponse405ResponseBody
+			var out shared.GreResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.GreResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsIDResponse429ResponseBody
+			var out shared.GreResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.GreResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGrePopsIDResponse500ResponseBody
+			var out shared.GreResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.GreResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -1813,72 +1813,72 @@ func (s *SDK) GetSteeringGreTunnels(ctx context.Context, request operations.GetS
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsResponseBody
+			var out shared.GreTunnelResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.GreTunnelResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsResponseResponseBody
+			var out shared.GreResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.GreResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsResponse403ResponseBody
+			var out shared.GreResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.GreResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsResponse405ResponseBody
+			var out shared.GreResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.GreResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsResponse429ResponseBody
+			var out shared.GreResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.GreResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsResponse500ResponseBody
+			var out shared.GreResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.GreResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -1935,84 +1935,84 @@ func (s *SDK) GetSteeringGreTunnelsID(ctx context.Context, request operations.Ge
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsIDResponseBody
+			var out shared.GreTunnelResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.GreTunnelResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsIDResponseResponseBody
+			var out shared.GreResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.GreResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsIDResponse403ResponseBody
+			var out shared.GreResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.GreResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsIDResponse404ResponseBody
+			var out shared.GreResponse404
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFourApplicationJSONObject = &out
+			res.GreResponse404 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsIDResponse405ResponseBody
+			var out shared.GreResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.GreResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsIDResponse429ResponseBody
+			var out shared.GreResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.GreResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringGreTunnelsIDResponse500ResponseBody
+			var out shared.GreResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.GreResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -2066,72 +2066,72 @@ func (s *SDK) GetSteeringIpsecPops(ctx context.Context, request operations.GetSt
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsResponseBody
+			var out shared.IpsecPopResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.IpsecPopResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsResponseResponseBody
+			var out shared.IpsecResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.IpsecResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsResponse403ResponseBody
+			var out shared.IpsecResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.IpsecResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsResponse405ResponseBody
+			var out shared.IpsecResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.IpsecResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsResponse429ResponseBody
+			var out shared.IpsecResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.IpsecResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsResponse500ResponseBody
+			var out shared.IpsecResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.IpsecResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -2188,84 +2188,84 @@ func (s *SDK) GetSteeringIpsecPopsID(ctx context.Context, request operations.Get
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsIDResponseBody
+			var out shared.IpsecPopResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.IpsecPopResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsIDResponseResponseBody
+			var out shared.IpsecResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.IpsecResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsIDResponse403ResponseBody
+			var out shared.IpsecResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.IpsecResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsIDResponse404ResponseBody
+			var out shared.IpsecResponse404
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFourApplicationJSONObject = &out
+			res.IpsecResponse404 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsIDResponse405ResponseBody
+			var out shared.IpsecResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.IpsecResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsIDResponse429ResponseBody
+			var out shared.IpsecResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.IpsecResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecPopsIDResponse500ResponseBody
+			var out shared.IpsecResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.IpsecResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -2319,72 +2319,72 @@ func (s *SDK) GetSteeringIpsecTunnels(ctx context.Context, request operations.Ge
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsResponseBody
+			var out shared.IpsecTunnelResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.IpsecTunnelResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsResponseResponseBody
+			var out shared.IpsecResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.IpsecResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsResponse403ResponseBody
+			var out shared.IpsecResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.IpsecResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsResponse405ResponseBody
+			var out shared.IpsecResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.IpsecResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsResponse429ResponseBody
+			var out shared.IpsecResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.IpsecResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsResponse500ResponseBody
+			var out shared.IpsecResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.IpsecResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -2441,84 +2441,84 @@ func (s *SDK) GetSteeringIpsecTunnelsID(ctx context.Context, request operations.
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsIDResponseBody
+			var out shared.IpsecTunnelResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.IpsecTunnelResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsIDResponseResponseBody
+			var out shared.IpsecResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.IpsecResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsIDResponse403ResponseBody
+			var out shared.IpsecResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.IpsecResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsIDResponse404ResponseBody
+			var out shared.IpsecResponse404
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFourApplicationJSONObject = &out
+			res.IpsecResponse404 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsIDResponse405ResponseBody
+			var out shared.IpsecResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.IpsecResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsIDResponse429ResponseBody
+			var out shared.IpsecResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.IpsecResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetSteeringIpsecTunnelsIDResponse500ResponseBody
+			var out shared.IpsecResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.IpsecResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -2536,7 +2536,7 @@ func (s *SDK) PatchInfrastructurePublishersPublisherID(ctx context.Context, requ
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PublisherPutRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -2589,24 +2589,24 @@ func (s *SDK) PatchInfrastructurePublishersPublisherID(ctx context.Context, requ
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchInfrastructurePublishersPublisherIDResponseBody
+			var out shared.PublisherResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PublisherResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchInfrastructurePublishersPublisherIDResponseResponseBody
+			var out shared.PublishersResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PublishersResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -2624,7 +2624,7 @@ func (s *SDK) PatchPolicyNpaPolicygroupsID(ctx context.Context, request operatio
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "NpaPolicygroupRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -2682,19 +2682,19 @@ func (s *SDK) PatchPolicyNpaPolicygroupsID(ctx context.Context, request operatio
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchPolicyNpaPolicygroupsIDResponseResponseBody
+			var out shared.NpaPolicygroupResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.NpaPolicygroupResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -2712,7 +2712,7 @@ func (s *SDK) PatchPolicyNpaRulesID(ctx context.Context, request operations.Patc
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "NpaPolicyRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -2770,19 +2770,19 @@ func (s *SDK) PatchPolicyNpaRulesID(ctx context.Context, request operations.Patc
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchPolicyNpaRulesIDResponseResponseBody
+			var out shared.NpaPolicyResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.NpaPolicyResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -2793,7 +2793,7 @@ func (s *SDK) PatchPolicyNpaRulesID(ctx context.Context, request operations.Patc
 
 // PatchSteeringAppsPrivateTags - bulk update tags to associate with specified private apps
 // Bulk update tags to associate with specified private apps
-func (s *SDK) PatchSteeringAppsPrivateTags(ctx context.Context, request operations.PatchSteeringAppsPrivateTagsRequestBody) (*operations.PatchSteeringAppsPrivateTagsResponse, error) {
+func (s *SDK) PatchSteeringAppsPrivateTags(ctx context.Context, request shared.TagRequest) (*operations.PatchSteeringAppsPrivateTagsResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/steering/apps/private/tags"
 
@@ -2846,24 +2846,24 @@ func (s *SDK) PatchSteeringAppsPrivateTags(ctx context.Context, request operatio
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringAppsPrivateTagsResponseBody
+			var out shared.TagResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.TagResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringAppsPrivateTagsResponseResponseBody
+			var out shared.TagResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.TagResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -2881,7 +2881,7 @@ func (s *SDK) PatchSteeringAppsPrivatePrivateAppID(ctx context.Context, request 
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PrivateAppsPutRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -2934,24 +2934,24 @@ func (s *SDK) PatchSteeringAppsPrivatePrivateAppID(ctx context.Context, request 
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringAppsPrivatePrivateAppIDResponseBody
+			var out shared.PrivateAppsResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PrivateAppsResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringAppsPrivatePrivateAppIDResponseResponseBody
+			var out shared.PrivateAppsResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PrivateAppsResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -2969,7 +2969,7 @@ func (s *SDK) PatchSteeringGreTunnelsID(ctx context.Context, request operations.
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "GreTunnelRequestPatch", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -3018,84 +3018,84 @@ func (s *SDK) PatchSteeringGreTunnelsID(ctx context.Context, request operations.
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringGreTunnelsIDResponseBody
+			var out shared.GrePatchResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.GrePatchResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringGreTunnelsIDResponseResponseBody
+			var out shared.GreResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.GreResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringGreTunnelsIDResponse403ResponseBody
+			var out shared.GreResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.GreResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringGreTunnelsIDResponse404ResponseBody
+			var out shared.GreResponse404
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFourApplicationJSONObject = &out
+			res.GreResponse404 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringGreTunnelsIDResponse405ResponseBody
+			var out shared.GreResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.GreResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringGreTunnelsIDResponse429ResponseBody
+			var out shared.GreResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.GreResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringGreTunnelsIDResponse500ResponseBody
+			var out shared.GreResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.GreResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -3113,7 +3113,7 @@ func (s *SDK) PatchSteeringIpsecTunnelsID(ctx context.Context, request operation
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "IpsecTunnelRequestPatch", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -3162,84 +3162,84 @@ func (s *SDK) PatchSteeringIpsecTunnelsID(ctx context.Context, request operation
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringIpsecTunnelsIDResponseBody
+			var out shared.IpsecPatchResponse200
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.IpsecPatchResponse200 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringIpsecTunnelsIDResponseResponseBody
+			var out shared.IpsecResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.IpsecResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringIpsecTunnelsIDResponse403ResponseBody
+			var out shared.IpsecResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.IpsecResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringIpsecTunnelsIDResponse404ResponseBody
+			var out shared.IpsecResponse404
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFourApplicationJSONObject = &out
+			res.IpsecResponse404 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringIpsecTunnelsIDResponse405ResponseBody
+			var out shared.IpsecResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.IpsecResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringIpsecTunnelsIDResponse429ResponseBody
+			var out shared.IpsecResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.IpsecResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PatchSteeringIpsecTunnelsIDResponse500ResponseBody
+			var out shared.IpsecResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.IpsecResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -3254,7 +3254,7 @@ func (s *SDK) PostPolicyNpaPolicygroups(ctx context.Context, request operations.
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/policy/npa/policygroups"
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "NpaPolicygroupRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -3312,19 +3312,19 @@ func (s *SDK) PostPolicyNpaPolicygroups(ctx context.Context, request operations.
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostPolicyNpaPolicygroupsResponseResponseBody
+			var out shared.NpaPolicygroupResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.NpaPolicygroupResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -3335,7 +3335,7 @@ func (s *SDK) PostPolicyNpaPolicygroups(ctx context.Context, request operations.
 
 // PostPolicyNpaRules - Create a npa policy
 // Create a policy
-func (s *SDK) PostPolicyNpaRules(ctx context.Context, request operations.PostPolicyNpaRulesRequestBody) (*operations.PostPolicyNpaRulesResponse, error) {
+func (s *SDK) PostPolicyNpaRules(ctx context.Context, request shared.NpaPolicyRequest) (*operations.PostPolicyNpaRulesResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/policy/npa/rules"
 
@@ -3393,19 +3393,19 @@ func (s *SDK) PostPolicyNpaRules(ctx context.Context, request operations.PostPol
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostPolicyNpaRulesResponseResponseBody
+			var out shared.NpaPolicyResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.NpaPolicyResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -3420,7 +3420,7 @@ func (s *SDK) PostSteeringAppsPrivate(ctx context.Context, request operations.Po
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/steering/apps/private"
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PrivateAppsRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -3473,24 +3473,24 @@ func (s *SDK) PostSteeringAppsPrivate(ctx context.Context, request operations.Po
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringAppsPrivateResponseBody
+			var out shared.PrivateAppsResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PrivateAppsResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringAppsPrivateResponseResponseBody
+			var out shared.PrivateAppsResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PrivateAppsResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -3559,19 +3559,19 @@ func (s *SDK) PostSteeringAppsPrivateGetpolicyinuse(ctx context.Context, request
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringAppsPrivateGetpolicyinuseResponseResponseBody
+			var out shared.PrivateAppsResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PrivateAppsResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -3582,7 +3582,7 @@ func (s *SDK) PostSteeringAppsPrivateGetpolicyinuse(ctx context.Context, request
 
 // PostSteeringAppsPrivateTags - create tags for private apps
 // Create tags for private apps
-func (s *SDK) PostSteeringAppsPrivateTags(ctx context.Context, request operations.PostSteeringAppsPrivateTagsRequestBody) (*operations.PostSteeringAppsPrivateTagsResponse, error) {
+func (s *SDK) PostSteeringAppsPrivateTags(ctx context.Context, request shared.TagRequest) (*operations.PostSteeringAppsPrivateTagsResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/steering/apps/private/tags"
 
@@ -3635,24 +3635,24 @@ func (s *SDK) PostSteeringAppsPrivateTags(ctx context.Context, request operation
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringAppsPrivateTagsResponseBody
+			var out shared.TagResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.TagResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringAppsPrivateTagsResponseResponseBody
+			var out shared.TagResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.TagResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -3721,19 +3721,19 @@ func (s *SDK) PostSteeringAppsPrivateTagsGetpolicyinuse(ctx context.Context, req
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringAppsPrivateTagsGetpolicyinuseResponseResponseBody
+			var out shared.TagResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.TagResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -3744,7 +3744,7 @@ func (s *SDK) PostSteeringAppsPrivateTagsGetpolicyinuse(ctx context.Context, req
 
 // PostSteeringGreTunnels - Create GRE tunnel
 // API to create new GRE tunnel. You can pass json body with tunnel details.
-func (s *SDK) PostSteeringGreTunnels(ctx context.Context, request operations.PostSteeringGreTunnelsRequestBody) (*operations.PostSteeringGreTunnelsResponse, error) {
+func (s *SDK) PostSteeringGreTunnels(ctx context.Context, request shared.GreTunnelRequestPost) (*operations.PostSteeringGreTunnelsResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/steering/gre/tunnels"
 
@@ -3797,84 +3797,84 @@ func (s *SDK) PostSteeringGreTunnels(ctx context.Context, request operations.Pos
 	case httpRes.StatusCode == 201:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringGreTunnelsResponseBody
+			var out shared.GreResponse201
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredAndOneApplicationJSONObject = &out
+			res.GreResponse201 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringGreTunnelsResponseResponseBody
+			var out shared.GreResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.GreResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringGreTunnelsResponse403ResponseBody
+			var out shared.GreResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.GreResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringGreTunnelsResponse405ResponseBody
+			var out shared.GreResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.GreResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 409:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringGreTunnelsResponse409ResponseBody
+			var out shared.GreResponse409
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndNineApplicationJSONObject = &out
+			res.GreResponse409 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringGreTunnelsResponse429ResponseBody
+			var out shared.GreResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.GreResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringGreTunnelsResponse500ResponseBody
+			var out shared.GreResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.GreResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -3885,7 +3885,7 @@ func (s *SDK) PostSteeringGreTunnels(ctx context.Context, request operations.Pos
 
 // PostSteeringIpsecTunnels - Create IPSec tunnel
 // API to create new IPSec tunnel. You can pass json body with tunnel details.
-func (s *SDK) PostSteeringIpsecTunnels(ctx context.Context, request operations.PostSteeringIpsecTunnelsRequestBody) (*operations.PostSteeringIpsecTunnelsResponse, error) {
+func (s *SDK) PostSteeringIpsecTunnels(ctx context.Context, request shared.IpsecTunnelRequestPost) (*operations.PostSteeringIpsecTunnelsResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/steering/ipsec/tunnels"
 
@@ -3938,84 +3938,84 @@ func (s *SDK) PostSteeringIpsecTunnels(ctx context.Context, request operations.P
 	case httpRes.StatusCode == 201:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringIpsecTunnelsResponseBody
+			var out shared.IpsecResponse201
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredAndOneApplicationJSONObject = &out
+			res.IpsecResponse201 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringIpsecTunnelsResponseResponseBody
+			var out shared.IpsecResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.IpsecResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringIpsecTunnelsResponse403ResponseBody
+			var out shared.IpsecResponse403
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndThreeApplicationJSONObject = &out
+			res.IpsecResponse403 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 405:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringIpsecTunnelsResponse405ResponseBody
+			var out shared.IpsecResponse405
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndFiveApplicationJSONObject = &out
+			res.IpsecResponse405 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 409:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringIpsecTunnelsResponse409ResponseBody
+			var out shared.IpsecResponse409
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndNineApplicationJSONObject = &out
+			res.IpsecResponse409 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 429:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringIpsecTunnelsResponse429ResponseBody
+			var out shared.IpsecResponse429
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredAndTwentyNineApplicationJSONObject = &out
+			res.IpsecResponse429 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostSteeringIpsecTunnelsResponse500ResponseBody
+			var out shared.IpsecResponse500
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FiveHundredApplicationJSONObject = &out
+			res.IpsecResponse500 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -4026,7 +4026,7 @@ func (s *SDK) PostSteeringIpsecTunnels(ctx context.Context, request operations.P
 
 // PutInfrastructurePublishersAlertsconfiguration - Configure publisher alerts
 // Configure publisher alerts
-func (s *SDK) PutInfrastructurePublishersAlertsconfiguration(ctx context.Context, request operations.PutInfrastructurePublishersAlertsconfigurationRequestBody) (*operations.PutInfrastructurePublishersAlertsconfigurationResponse, error) {
+func (s *SDK) PutInfrastructurePublishersAlertsconfiguration(ctx context.Context, request shared.PublishersAlertPutRequest) (*operations.PutInfrastructurePublishersAlertsconfigurationResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/infrastructure/publishers/alertsconfiguration"
 
@@ -4079,24 +4079,24 @@ func (s *SDK) PutInfrastructurePublishersAlertsconfiguration(ctx context.Context
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutInfrastructurePublishersAlertsconfigurationResponseBody
+			var out shared.PublishersAlertPutResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PublishersAlertPutResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutInfrastructurePublishersAlertsconfigurationResponseResponseBody
+			var out shared.PublishersResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PublishersResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -4107,7 +4107,7 @@ func (s *SDK) PutInfrastructurePublishersAlertsconfiguration(ctx context.Context
 
 // PutInfrastructurePublishersBulk - Trigger bulk publisher update action
 // Trigger bulk publisher update action
-func (s *SDK) PutInfrastructurePublishersBulk(ctx context.Context, request operations.PutInfrastructurePublishersBulkRequestBody) (*operations.PutInfrastructurePublishersBulkResponse, error) {
+func (s *SDK) PutInfrastructurePublishersBulk(ctx context.Context, request shared.PublisherBulkRequest) (*operations.PutInfrastructurePublishersBulkResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/infrastructure/publishers/bulk"
 
@@ -4160,24 +4160,24 @@ func (s *SDK) PutInfrastructurePublishersBulk(ctx context.Context, request opera
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutInfrastructurePublishersBulkResponseBody
+			var out shared.PublishersBulkResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PublishersBulkResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutInfrastructurePublishersBulkResponseResponseBody
+			var out shared.PublishersResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PublishersResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -4191,7 +4191,7 @@ func (s *SDK) PutInfrastructurePublisherupgradeprofilesBulk(ctx context.Context,
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/infrastructure/publisherupgradeprofiles/bulk"
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PublisherUpgradeProfileBulkRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -4244,24 +4244,24 @@ func (s *SDK) PutInfrastructurePublisherupgradeprofilesBulk(ctx context.Context,
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutInfrastructurePublisherupgradeprofilesBulkResponseBody
+			var out shared.PublisherUpgradeProfileBulkResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PublisherUpgradeProfileBulkResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutInfrastructurePublisherupgradeprofilesBulkResponseResponseBody
+			var out shared.FourHundred
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.FourHundred = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -4279,7 +4279,7 @@ func (s *SDK) PutSteeringAppsPrivateTagsTagID(ctx context.Context, request opera
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "TagRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -4328,24 +4328,24 @@ func (s *SDK) PutSteeringAppsPrivateTagsTagID(ctx context.Context, request opera
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutSteeringAppsPrivateTagsTagIDResponseBody
+			var out shared.TagResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.TagResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutSteeringAppsPrivateTagsTagIDResponseResponseBody
+			var out shared.TagResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.TagResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -4363,7 +4363,7 @@ func (s *SDK) PutSteeringAppsPrivatePrivateAppID(ctx context.Context, request op
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PrivateAppsPutRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -4416,24 +4416,24 @@ func (s *SDK) PutSteeringAppsPrivatePrivateAppID(ctx context.Context, request op
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutSteeringAppsPrivatePrivateAppIDResponseBody
+			var out shared.PrivateAppsResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PrivateAppsResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutSteeringAppsPrivatePrivateAppIDResponseResponseBody
+			var out shared.PrivateAppsResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PrivateAppsResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}

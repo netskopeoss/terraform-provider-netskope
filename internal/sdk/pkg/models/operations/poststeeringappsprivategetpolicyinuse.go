@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -17,31 +18,11 @@ func (o *PostSteeringAppsPrivateGetpolicyinuseRequestBody) GetIds() []string {
 	return o.Ids
 }
 
-// PostSteeringAppsPrivateGetpolicyinuseResponseResponseBody - Invalid request
-type PostSteeringAppsPrivateGetpolicyinuseResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PostSteeringAppsPrivateGetpolicyinuseResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PostSteeringAppsPrivateGetpolicyinuseResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type PostSteeringAppsPrivateGetpolicyinuseData struct {
+type Data struct {
 	Token *string `json:"token,omitempty"`
 }
 
-func (o *PostSteeringAppsPrivateGetpolicyinuseData) GetToken() *string {
+func (o *Data) GetToken() *string {
 	if o == nil {
 		return nil
 	}
@@ -50,10 +31,10 @@ func (o *PostSteeringAppsPrivateGetpolicyinuseData) GetToken() *string {
 
 // PostSteeringAppsPrivateGetpolicyinuseResponseBody - successful operation
 type PostSteeringAppsPrivateGetpolicyinuseResponseBody struct {
-	Data []PostSteeringAppsPrivateGetpolicyinuseData `json:"data,omitempty"`
+	Data []Data `json:"data,omitempty"`
 }
 
-func (o *PostSteeringAppsPrivateGetpolicyinuseResponseBody) GetData() []PostSteeringAppsPrivateGetpolicyinuseData {
+func (o *PostSteeringAppsPrivateGetpolicyinuseResponseBody) GetData() []Data {
 	if o == nil {
 		return nil
 	}
@@ -61,30 +42,16 @@ func (o *PostSteeringAppsPrivateGetpolicyinuseResponseBody) GetData() []PostStee
 }
 
 type PostSteeringAppsPrivateGetpolicyinuseResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *PostSteeringAppsPrivateGetpolicyinuseResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *PostSteeringAppsPrivateGetpolicyinuseResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *PostSteeringAppsPrivateGetpolicyinuseResponse) GetTwoHundredApplicationJSONObject() *PostSteeringAppsPrivateGetpolicyinuseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *PostSteeringAppsPrivateGetpolicyinuseResponse) GetFourHundredApplicationJSONObject() *PostSteeringAppsPrivateGetpolicyinuseResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	Object *PostSteeringAppsPrivateGetpolicyinuseResponseBody
+	// Invalid request
+	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
 func (o *PostSteeringAppsPrivateGetpolicyinuseResponse) GetContentType() string {
@@ -106,4 +73,18 @@ func (o *PostSteeringAppsPrivateGetpolicyinuseResponse) GetRawResponse() *http.R
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PostSteeringAppsPrivateGetpolicyinuseResponse) GetObject() *PostSteeringAppsPrivateGetpolicyinuseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.Object
+}
+
+func (o *PostSteeringAppsPrivateGetpolicyinuseResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.PrivateAppsResponse400
 }

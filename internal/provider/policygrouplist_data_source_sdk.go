@@ -4,15 +4,15 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *PolicyGroupListDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsResponseBody) {
+func (r *PolicyGroupListDataSourceModel) RefreshFromGetResponse(resp *shared.NpaPolicygroupResponse) {
 	if len(r.Data) > len(resp.Data) {
 		r.Data = r.Data[:len(resp.Data)]
 	}
 	for dataCount, dataItem := range resp.Data {
-		var data1 GetPolicyNpaPolicygroupsData
+		var data1 NpaPolicygroupResponseItem
 		if dataItem.CanBeEditedDeleted != nil {
 			data1.CanBeEditedDeleted = types.StringValue(*dataItem.CanBeEditedDeleted)
 		} else {

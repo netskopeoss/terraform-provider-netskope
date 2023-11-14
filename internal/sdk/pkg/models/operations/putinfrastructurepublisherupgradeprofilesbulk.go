@@ -5,49 +5,9 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
-
-type PutInfrastructurePublisherupgradeprofilesBulkApply struct {
-	PublisherUpgradeProfilesID *string `json:"publisher_upgrade_profiles_id,omitempty"`
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkApply) GetPublisherUpgradeProfilesID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherUpgradeProfilesID
-}
-
-type PutInfrastructurePublisherupgradeprofilesBulkPublishers struct {
-	Apply *PutInfrastructurePublisherupgradeprofilesBulkApply `json:"apply,omitempty"`
-	ID    []string                                            `json:"id,omitempty"`
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkPublishers) GetApply() *PutInfrastructurePublisherupgradeprofilesBulkApply {
-	if o == nil {
-		return nil
-	}
-	return o.Apply
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkPublishers) GetID() []string {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-type PutInfrastructurePublisherupgradeprofilesBulkRequestBody struct {
-	Publishers *PutInfrastructurePublisherupgradeprofilesBulkPublishers `json:"publishers,omitempty"`
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkRequestBody) GetPublishers() *PutInfrastructurePublisherupgradeprofilesBulkPublishers {
-	if o == nil {
-		return nil
-	}
-	return o.Publishers
-}
 
 // PutInfrastructurePublisherupgradeprofilesBulkQueryParamSilent - flag to skip output except status code:
 //   - `1` - Skip response data
@@ -80,18 +40,18 @@ func (e *PutInfrastructurePublisherupgradeprofilesBulkQueryParamSilent) Unmarsha
 }
 
 type PutInfrastructurePublisherupgradeprofilesBulkRequest struct {
-	RequestBody PutInfrastructurePublisherupgradeprofilesBulkRequestBody `request:"mediaType=application/json"`
+	PublisherUpgradeProfileBulkRequest shared.PublisherUpgradeProfileBulkRequest `request:"mediaType=application/json"`
 	// flag to skip output except status code:
 	//  * `1` - Skip response data
 	//  * `0` - Do not skip response data
 	Silent *PutInfrastructurePublisherupgradeprofilesBulkQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 }
 
-func (o *PutInfrastructurePublisherupgradeprofilesBulkRequest) GetRequestBody() PutInfrastructurePublisherupgradeprofilesBulkRequestBody {
+func (o *PutInfrastructurePublisherupgradeprofilesBulkRequest) GetPublisherUpgradeProfileBulkRequest() shared.PublisherUpgradeProfileBulkRequest {
 	if o == nil {
-		return PutInfrastructurePublisherupgradeprofilesBulkRequestBody{}
+		return shared.PublisherUpgradeProfileBulkRequest{}
 	}
-	return o.RequestBody
+	return o.PublisherUpgradeProfileBulkRequest
 }
 
 func (o *PutInfrastructurePublisherupgradeprofilesBulkRequest) GetSilent() *PutInfrastructurePublisherupgradeprofilesBulkQueryParamSilent {
@@ -101,238 +61,24 @@ func (o *PutInfrastructurePublisherupgradeprofilesBulkRequest) GetSilent() *PutI
 	return o.Silent
 }
 
-// PutInfrastructurePublisherupgradeprofilesBulkResponseResponseBody - Invalid request
-type PutInfrastructurePublisherupgradeprofilesBulkResponseResponseBody struct {
-	Message *string `json:"message,omitempty"`
-	Status  *int64  `json:"status,omitempty"`
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkResponseResponseBody) GetMessage() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Message
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type PutInfrastructurePublisherupgradeprofilesBulkAssessment struct {
-}
-
-type PutInfrastructurePublisherupgradeprofilesBulkResponseStatus string
-
-const (
-	PutInfrastructurePublisherupgradeprofilesBulkResponseStatusConnected     PutInfrastructurePublisherupgradeprofilesBulkResponseStatus = "connected"
-	PutInfrastructurePublisherupgradeprofilesBulkResponseStatusNotRegistered PutInfrastructurePublisherupgradeprofilesBulkResponseStatus = "not registered"
-)
-
-func (e PutInfrastructurePublisherupgradeprofilesBulkResponseStatus) ToPointer() *PutInfrastructurePublisherupgradeprofilesBulkResponseStatus {
-	return &e
-}
-
-func (e *PutInfrastructurePublisherupgradeprofilesBulkResponseStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "connected":
-		fallthrough
-	case "not registered":
-		*e = PutInfrastructurePublisherupgradeprofilesBulkResponseStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PutInfrastructurePublisherupgradeprofilesBulkResponseStatus: %v", v)
-	}
-}
-
-type PutInfrastructurePublisherupgradeprofilesBulkTags struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkTags) GetTagID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.TagID
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkTags) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-type PutInfrastructurePublisherupgradeprofilesBulkData struct {
-	Assessment                *PutInfrastructurePublisherupgradeprofilesBulkAssessment     `json:"assessment,omitempty"`
-	CommonName                *string                                                      `json:"common_name,omitempty"`
-	Lbrokerconnect            *bool                                                        `json:"lbrokerconnect,omitempty"`
-	PublisherID               *int                                                         `json:"publisher_id,omitempty"`
-	PublisherName             *string                                                      `json:"publisher_name,omitempty"`
-	PublisherUpgradeProfileID *int                                                         `json:"publisher_upgrade_profile_id,omitempty"`
-	Registered                *bool                                                        `json:"registered,omitempty"`
-	Status                    *PutInfrastructurePublisherupgradeprofilesBulkResponseStatus `json:"status,omitempty"`
-	StitcherID                *int                                                         `json:"stitcher_id,omitempty"`
-	Tags                      []PutInfrastructurePublisherupgradeprofilesBulkTags          `json:"tags,omitempty"`
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkData) GetAssessment() *PutInfrastructurePublisherupgradeprofilesBulkAssessment {
-	if o == nil {
-		return nil
-	}
-	return o.Assessment
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkData) GetCommonName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.CommonName
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkData) GetLbrokerconnect() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Lbrokerconnect
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkData) GetPublisherID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherID
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkData) GetPublisherName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherName
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkData) GetPublisherUpgradeProfileID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherUpgradeProfileID
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkData) GetRegistered() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Registered
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkData) GetStatus() *PutInfrastructurePublisherupgradeprofilesBulkResponseStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkData) GetStitcherID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.StitcherID
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkData) GetTags() []PutInfrastructurePublisherupgradeprofilesBulkTags {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
-}
-
-type PutInfrastructurePublisherupgradeprofilesBulkStatus string
-
-const (
-	PutInfrastructurePublisherupgradeprofilesBulkStatusSuccess  PutInfrastructurePublisherupgradeprofilesBulkStatus = "success"
-	PutInfrastructurePublisherupgradeprofilesBulkStatusNotFound PutInfrastructurePublisherupgradeprofilesBulkStatus = "not found"
-)
-
-func (e PutInfrastructurePublisherupgradeprofilesBulkStatus) ToPointer() *PutInfrastructurePublisherupgradeprofilesBulkStatus {
-	return &e
-}
-
-func (e *PutInfrastructurePublisherupgradeprofilesBulkStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = PutInfrastructurePublisherupgradeprofilesBulkStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PutInfrastructurePublisherupgradeprofilesBulkStatus: %v", v)
-	}
-}
-
-// PutInfrastructurePublisherupgradeprofilesBulkResponseBody - successful operation
-type PutInfrastructurePublisherupgradeprofilesBulkResponseBody struct {
-	Data   []PutInfrastructurePublisherupgradeprofilesBulkData  `json:"data,omitempty"`
-	Status *PutInfrastructurePublisherupgradeprofilesBulkStatus `json:"status,omitempty"`
-	Total  *int                                                 `json:"total,omitempty"`
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkResponseBody) GetData() []PutInfrastructurePublisherupgradeprofilesBulkData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkResponseBody) GetStatus() *PutInfrastructurePublisherupgradeprofilesBulkStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkResponseBody) GetTotal() *int {
-	if o == nil {
-		return nil
-	}
-	return o.Total
-}
-
 type PutInfrastructurePublisherupgradeprofilesBulkResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *PutInfrastructurePublisherupgradeprofilesBulkResponseBody
 	// Invalid request
-	FourHundredApplicationJSONObject *PutInfrastructurePublisherupgradeprofilesBulkResponseResponseBody
+	FourHundred *shared.FourHundred
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
+	// successful operation
+	PublisherUpgradeProfileBulkResponse *shared.PublisherUpgradeProfileBulkResponse
 }
 
-func (o *PutInfrastructurePublisherupgradeprofilesBulkResponse) GetTwoHundredApplicationJSONObject() *PutInfrastructurePublisherupgradeprofilesBulkResponseBody {
+func (o *PutInfrastructurePublisherupgradeprofilesBulkResponse) GetFourHundred() *shared.FourHundred {
 	if o == nil {
 		return nil
 	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesBulkResponse) GetFourHundredApplicationJSONObject() *PutInfrastructurePublisherupgradeprofilesBulkResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	return o.FourHundred
 }
 
 func (o *PutInfrastructurePublisherupgradeprofilesBulkResponse) GetContentType() string {
@@ -354,4 +100,11 @@ func (o *PutInfrastructurePublisherupgradeprofilesBulkResponse) GetRawResponse()
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PutInfrastructurePublisherupgradeprofilesBulkResponse) GetPublisherUpgradeProfileBulkResponse() *shared.PublisherUpgradeProfileBulkResponse {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherUpgradeProfileBulkResponse
 }

@@ -29,16 +29,17 @@ type NPAPublishersDataSource struct {
 
 // NPAPublishersDataSourceModel describes the data model.
 type NPAPublishersDataSourceModel struct {
-	Assessment                types.String                       `tfsdk:"assessment"`
-	CommonName                types.String                       `tfsdk:"common_name"`
-	ID                        types.Int64                        `tfsdk:"id"`
-	Lbrokerconnect            types.Bool                         `tfsdk:"lbrokerconnect"`
-	Name                      types.String                       `tfsdk:"name"`
-	PublisherUpgradeProfileID types.Int64                        `tfsdk:"publisher_upgrade_profile_id"`
-	Registered                types.Bool                         `tfsdk:"registered"`
-	Status                    types.String                       `tfsdk:"status"`
-	StitcherID                types.Int64                        `tfsdk:"stitcher_id"`
-	Tags                      []PostInfrastructurePublishersTags `tfsdk:"tags"`
+	Assessment                *PublisherResponseAssessment `tfsdk:"assessment"`
+	CommonName                types.String                 `tfsdk:"common_name"`
+	ID                        types.Int64                  `tfsdk:"id"`
+	Lbrokerconnect            types.Bool                   `tfsdk:"lbrokerconnect"`
+	PublisherID               types.Int64                  `tfsdk:"publisher_id"`
+	PublisherName             types.String                 `tfsdk:"publisher_name"`
+	PublisherUpgradeProfileID types.Int64                  `tfsdk:"publisher_upgrade_profile_id"`
+	Registered                types.Bool                   `tfsdk:"registered"`
+	Status                    types.String                 `tfsdk:"status"`
+	StitcherID                types.Int64                  `tfsdk:"stitcher_id"`
+	Tags                      []TagItem                    `tfsdk:"tags"`
 }
 
 // Metadata returns the data source type name.
@@ -52,9 +53,9 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 		MarkdownDescription: "NPAPublishers DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"assessment": schema.StringAttribute{
-				Computed:    true,
-				Description: `Parsed as JSON.`,
+			"assessment": schema.SingleNestedAttribute{
+				Computed:   true,
+				Attributes: map[string]schema.Attribute{},
 			},
 			"common_name": schema.StringAttribute{
 				Computed: true,
@@ -66,7 +67,10 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 			"lbrokerconnect": schema.BoolAttribute{
 				Computed: true,
 			},
-			"name": schema.StringAttribute{
+			"publisher_id": schema.Int64Attribute{
+				Computed: true,
+			},
+			"publisher_name": schema.StringAttribute{
 				Computed: true,
 			},
 			"publisher_upgrade_profile_id": schema.Int64Attribute{
@@ -157,11 +161,11 @@ func (r *NPAPublishersDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
+	if res.PublisherResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject.Data)
+	data.RefreshFromGetResponse(res.PublisherResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

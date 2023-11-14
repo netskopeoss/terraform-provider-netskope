@@ -116,9 +116,9 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 		return
 	}
 
-	requestBody := data.ToCreateSDKType()
+	publisherUpgradeProfilePostRequest := data.ToCreateSDKType()
 	request := operations.PostInfrastructurePublisherupgradeprofilesRequest{
-		RequestBody: requestBody,
+		PublisherUpgradeProfilePostRequest: publisherUpgradeProfilePostRequest,
 	}
 	res, err := r.client.NPAPublisherUpgradeProfiles.Create(ctx, request)
 	if err != nil {
@@ -136,11 +136,11 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
+	if res.PublisherUpgradeProfileResponse == nil || res.PublisherUpgradeProfileResponse.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.TwoHundredApplicationJSONObject.Data)
+	data.RefreshFromCreateResponse(res.PublisherUpgradeProfileResponse.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -177,11 +177,11 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 		return
 	}
 
-	requestBody := *data.ToUpdateSDKType()
+	publisherUpgradeProfilePutRequest := *data.ToUpdateSDKType()
 	upgradeProfileID := int(data.ID.ValueInt64())
 	request := operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest{
-		RequestBody:      requestBody,
-		UpgradeProfileID: upgradeProfileID,
+		PublisherUpgradeProfilePutRequest: publisherUpgradeProfilePutRequest,
+		UpgradeProfileID:                  upgradeProfileID,
 	}
 	res, err := r.client.NPAPublisherUpgradeProfiles.Update(ctx, request)
 	if err != nil {
@@ -199,11 +199,11 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.TwoHundred == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromUpdateResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromUpdateResponse(res.TwoHundred)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

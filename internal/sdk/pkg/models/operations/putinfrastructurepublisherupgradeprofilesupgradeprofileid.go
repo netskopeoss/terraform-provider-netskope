@@ -5,67 +5,9 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
-
-type PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody struct {
-	DockerTag   *string `json:"docker_tag,omitempty"`
-	Enabled     *int    `json:"enabled,omitempty"`
-	Frequency   *string `json:"frequency,omitempty"`
-	ID          *int    `json:"id,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	ReleaseType *string `json:"release_type,omitempty"`
-	Timezone    *string `json:"timezone,omitempty"`
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody) GetDockerTag() *string {
-	if o == nil {
-		return nil
-	}
-	return o.DockerTag
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody) GetEnabled() *int {
-	if o == nil {
-		return nil
-	}
-	return o.Enabled
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody) GetFrequency() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Frequency
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody) GetReleaseType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ReleaseType
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody) GetTimezone() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Timezone
-}
 
 // PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDQueryParamSilent - flag to skip output except status code
 type PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDQueryParamSilent string
@@ -96,18 +38,18 @@ func (e *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDQueryParamSile
 }
 
 type PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest struct {
-	RequestBody PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody `request:"mediaType=application/json"`
+	PublisherUpgradeProfilePutRequest shared.PublisherUpgradeProfilePutRequest `request:"mediaType=application/json"`
 	// flag to skip output except status code
 	Silent *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 	// publisher upgrade profile id
 	UpgradeProfileID int `pathParam:"style=simple,explode=false,name=upgrade_profile_id"`
 }
 
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest) GetRequestBody() PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody {
+func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest) GetPublisherUpgradeProfilePutRequest() shared.PublisherUpgradeProfilePutRequest {
 	if o == nil {
-		return PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequestBody{}
+		return shared.PublisherUpgradeProfilePutRequest{}
 	}
-	return o.RequestBody
+	return o.PublisherUpgradeProfilePutRequest
 }
 
 func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest) GetSilent() *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDQueryParamSilent {
@@ -124,54 +66,11 @@ func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest) GetUp
 	return o.UpgradeProfileID
 }
 
-// PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody - Invalid request
-type PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody struct {
-	Message *string `json:"message,omitempty"`
-	Status  *int64  `json:"status,omitempty"`
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody) GetMessage() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Message
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResult struct {
-}
-
-// PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody - successful operation
-type PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody struct {
-	Result []PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResult `json:"result,omitempty"`
-	Status *int64                                                            `json:"status,omitempty"`
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody) GetResult() []PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResult {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
 type PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse struct {
 	// successful operation
-	TwoHundredApplicationJSONObject *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody
+	TwoHundred *shared.TwoHundred
 	// Invalid request
-	FourHundredApplicationJSONObject *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody
+	FourHundred *shared.FourHundred
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -180,18 +79,18 @@ type PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetTwoHundredApplicationJSONObject() *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody {
+func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetTwoHundred() *shared.TwoHundred {
 	if o == nil {
 		return nil
 	}
-	return o.TwoHundredApplicationJSONObject
+	return o.TwoHundred
 }
 
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetFourHundredApplicationJSONObject() *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody {
+func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetFourHundred() *shared.FourHundred {
 	if o == nil {
 		return nil
 	}
-	return o.FourHundredApplicationJSONObject
+	return o.FourHundred
 }
 
 func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetContentType() string {

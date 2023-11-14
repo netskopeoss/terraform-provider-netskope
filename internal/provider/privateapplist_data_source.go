@@ -29,7 +29,7 @@ type PrivateAppListDataSource struct {
 
 // PrivateAppListDataSourceModel describes the data model.
 type PrivateAppListDataSourceModel struct {
-	Data   []GetSteeringAppsPrivateData `tfsdk:"data"`
+	Data   []PrivateAppsGetResponseData `tfsdk:"data"`
 	Fields types.String                 `tfsdk:"fields"`
 	Total  types.Int64                  `tfsdk:"total"`
 }
@@ -65,7 +65,13 @@ func (r *PrivateAppListDataSource) Schema(ctx context.Context, req datasource.Sc
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
+									"id": schema.Int64Attribute{
+										Computed: true,
+									},
 									"port": schema.StringAttribute{
+										Computed: true,
+									},
+									"service_id": schema.Int64Attribute{
 										Computed: true,
 									},
 									"transport": schema.StringAttribute{
@@ -203,11 +209,11 @@ func (r *PrivateAppListDataSource) Read(ctx context.Context, req datasource.Read
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.PrivateAppsGetResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromGetResponse(res.PrivateAppsGetResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

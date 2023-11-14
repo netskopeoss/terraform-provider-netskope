@@ -3,8 +3,7 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -20,297 +19,17 @@ func (o *GetInfrastructurePublishersPublisherIDAppsRequest) GetPublisherID() int
 	return o.PublisherID
 }
 
-// GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody - Invalid request
-type GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type GetInfrastructurePublishersPublisherIDAppsProtocols struct {
-	ID        *int    `json:"id,omitempty"`
-	Port      *string `json:"port,omitempty"`
-	ServiceID *int    `json:"service_id,omitempty"`
-	Transport *string `json:"transport,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsProtocols) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsProtocols) GetPort() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Port
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsProtocols) GetServiceID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ServiceID
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsProtocols) GetTransport() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Transport
-}
-
-type GetInfrastructurePublishersPublisherIDAppsReachability struct {
-	ErrorCode   *int    `json:"error_code,omitempty"`
-	ErrorString *string `json:"error_string,omitempty"`
-	Reachable   *bool   `json:"reachable,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsReachability) GetErrorCode() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ErrorCode
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsReachability) GetErrorString() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ErrorString
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsReachability) GetReachable() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Reachable
-}
-
-type GetInfrastructurePublishersPublisherIDAppsServicePublisherAssignments struct {
-	Primary      *bool                                                   `json:"primary,omitempty"`
-	PublisherID  *int                                                    `json:"publisher_id,omitempty"`
-	Reachability *GetInfrastructurePublishersPublisherIDAppsReachability `json:"reachability,omitempty"`
-	ServiceID    *int                                                    `json:"service_id,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsServicePublisherAssignments) GetPrimary() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Primary
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsServicePublisherAssignments) GetPublisherID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherID
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsServicePublisherAssignments) GetReachability() *GetInfrastructurePublishersPublisherIDAppsReachability {
-	if o == nil {
-		return nil
-	}
-	return o.Reachability
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsServicePublisherAssignments) GetServiceID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ServiceID
-}
-
-type GetInfrastructurePublishersPublisherIDAppsTags struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsTags) GetTagID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.TagID
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsTags) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-type GetInfrastructurePublishersPublisherIDAppsData struct {
-	ClientlessAccess            *bool                                                                   `json:"clientless_access,omitempty"`
-	Host                        *string                                                                 `json:"host,omitempty"`
-	ID                          *int                                                                    `json:"id,omitempty"`
-	Name                        *string                                                                 `json:"name,omitempty"`
-	Protocols                   []GetInfrastructurePublishersPublisherIDAppsProtocols                   `json:"protocols,omitempty"`
-	RealHost                    *string                                                                 `json:"real_host,omitempty"`
-	ServicePublisherAssignments []GetInfrastructurePublishersPublisherIDAppsServicePublisherAssignments `json:"service_publisher_assignments,omitempty"`
-	Tags                        []GetInfrastructurePublishersPublisherIDAppsTags                        `json:"tags,omitempty"`
-	TrustSelfSignedCerts        *bool                                                                   `json:"trust_self_signed_certs,omitempty"`
-	UsePublisherDNS             *bool                                                                   `json:"use_publisher_dns,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsData) GetClientlessAccess() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.ClientlessAccess
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsData) GetHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Host
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsData) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsData) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsData) GetProtocols() []GetInfrastructurePublishersPublisherIDAppsProtocols {
-	if o == nil {
-		return nil
-	}
-	return o.Protocols
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsData) GetRealHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.RealHost
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsData) GetServicePublisherAssignments() []GetInfrastructurePublishersPublisherIDAppsServicePublisherAssignments {
-	if o == nil {
-		return nil
-	}
-	return o.ServicePublisherAssignments
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsData) GetTags() []GetInfrastructurePublishersPublisherIDAppsTags {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsData) GetTrustSelfSignedCerts() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.TrustSelfSignedCerts
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsData) GetUsePublisherDNS() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.UsePublisherDNS
-}
-
-type GetInfrastructurePublishersPublisherIDAppsStatus string
-
-const (
-	GetInfrastructurePublishersPublisherIDAppsStatusSuccess  GetInfrastructurePublishersPublisherIDAppsStatus = "success"
-	GetInfrastructurePublishersPublisherIDAppsStatusNotFound GetInfrastructurePublishersPublisherIDAppsStatus = "not found"
-)
-
-func (e GetInfrastructurePublishersPublisherIDAppsStatus) ToPointer() *GetInfrastructurePublishersPublisherIDAppsStatus {
-	return &e
-}
-
-func (e *GetInfrastructurePublishersPublisherIDAppsStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = GetInfrastructurePublishersPublisherIDAppsStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for GetInfrastructurePublishersPublisherIDAppsStatus: %v", v)
-	}
-}
-
-// GetInfrastructurePublishersPublisherIDAppsResponseBody - successful operation
-type GetInfrastructurePublishersPublisherIDAppsResponseBody struct {
-	Data   []GetInfrastructurePublishersPublisherIDAppsData  `json:"data,omitempty"`
-	Status *GetInfrastructurePublishersPublisherIDAppsStatus `json:"status,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsResponseBody) GetData() []GetInfrastructurePublishersPublisherIDAppsData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsResponseBody) GetStatus() *GetInfrastructurePublishersPublisherIDAppsStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
 type GetInfrastructurePublishersPublisherIDAppsResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *GetInfrastructurePublishersPublisherIDAppsResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetTwoHundredApplicationJSONObject() *GetInfrastructurePublishersPublisherIDAppsResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetFourHundredApplicationJSONObject() *GetInfrastructurePublishersPublisherIDAppsNPAPublishersAppsResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	PrivateAppsResponse *shared.PrivateAppsResponse
+	// Invalid request
+	PublishersResponse400 *shared.PublishersResponse400
 }
 
 func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetContentType() string {
@@ -332,4 +51,18 @@ func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetRawResponse() *h
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetPrivateAppsResponse() *shared.PrivateAppsResponse {
+	if o == nil {
+		return nil
+	}
+	return o.PrivateAppsResponse
+}
+
+func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.PublishersResponse400
 }

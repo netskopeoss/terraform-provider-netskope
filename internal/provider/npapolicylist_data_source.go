@@ -29,7 +29,7 @@ type NPAPolicyListDataSource struct {
 
 // NPAPolicyListDataSourceModel describes the data model.
 type NPAPolicyListDataSourceModel struct {
-	Data      []GetPolicyNpaRulesData `tfsdk:"data"`
+	Data      []NpaPolicyResponseItem `tfsdk:"data"`
 	Filter    types.String            `tfsdk:"filter"`
 	Limit     types.Int64             `tfsdk:"limit"`
 	Offset    types.Int64             `tfsdk:"offset"`
@@ -298,11 +298,11 @@ func (r *NPAPolicyListDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.NpaPolicyListResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromGetResponse(res.NpaPolicyListResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
