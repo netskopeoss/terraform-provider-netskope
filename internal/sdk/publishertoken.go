@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/sdkerrors"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
 	"io"
 	"net/http"
@@ -72,19 +73,19 @@ func (s *PublisherToken) Create(ctx context.Context, request operations.PostInfr
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostInfrastructurePublishersPublisherIDRegistrationTokenPublisherTokenResponseBody
+			var out shared.PublishersResponse400
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.PublishersResponse400 = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}

@@ -5,6 +5,6 @@ package provider
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type StitcherID struct {
-	Integer types.Int64 `tfsdk:"integer"`
-	Two     *Assessment `tfsdk:"two"`
+	Integer types.Int64                  `tfsdk:"integer"`
+	Two     *PublisherResponseAssessment `tfsdk:"two"`
 }

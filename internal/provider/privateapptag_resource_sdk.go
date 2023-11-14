@@ -4,10 +4,10 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PostSteeringAppsPrivateTagsRequestBody {
+func (r *PrivateAppTagResourceModel) ToCreateSDKType() *shared.TagRequest {
 	id := new(string)
 	if !r.ID.IsUnknown() && !r.ID.IsNull() {
 		*id = r.ID.ValueString()
@@ -18,7 +18,7 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PostSteeringA
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
 	}
-	var publisherTags []operations.PostSteeringAppsPrivateTagsPublisherTags = nil
+	var publisherTags []shared.TagItem = nil
 	for _, publisherTagsItem := range r.PublisherTags {
 		tagID := new(int)
 		if !publisherTagsItem.TagID.IsUnknown() && !publisherTagsItem.TagID.IsNull() {
@@ -32,12 +32,12 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PostSteeringA
 		} else {
 			tagName = nil
 		}
-		publisherTags = append(publisherTags, operations.PostSteeringAppsPrivateTagsPublisherTags{
+		publisherTags = append(publisherTags, shared.TagItem{
 			TagID:   tagID,
 			TagName: tagName,
 		})
 	}
-	var tags []operations.PostSteeringAppsPrivateTagsTags = nil
+	var tags []shared.TagItem = nil
 	for _, tagsItem := range r.Tags {
 		tagId1 := new(int)
 		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
@@ -51,12 +51,12 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PostSteeringA
 		} else {
 			tagName1 = nil
 		}
-		tags = append(tags, operations.PostSteeringAppsPrivateTagsTags{
+		tags = append(tags, shared.TagItem{
 			TagID:   tagId1,
 			TagName: tagName1,
 		})
 	}
-	out := operations.PostSteeringAppsPrivateTagsRequestBody{
+	out := shared.TagRequest{
 		ID:            id,
 		Ids:           ids,
 		PublisherTags: publisherTags,
@@ -65,12 +65,12 @@ func (r *PrivateAppTagResourceModel) ToCreateSDKType() *operations.PostSteeringA
 	return &out
 }
 
-func (r *PrivateAppTagResourceModel) RefreshFromCreateResponse(resp *operations.PostSteeringAppsPrivateTagsResponseBody) {
+func (r *PrivateAppTagResourceModel) RefreshFromCreateResponse(resp *shared.TagResponse) {
 	if len(r.Data) > len(resp.Data) {
 		r.Data = r.Data[:len(resp.Data)]
 	}
 	for dataCount, dataItem := range resp.Data {
-		var data1 PostInfrastructurePublishersTags
+		var data1 TagItem
 		if dataItem.TagID != nil {
 			data1.TagID = types.Int64Value(int64(*dataItem.TagID))
 		} else {

@@ -26,3 +26,4 @@ go.work
 test/
 testing/
 *.tfvars
+spec/merged.yaml

@@ -28,7 +28,7 @@ type PrivateAppTagListDataSource struct {
 
 // PrivateAppTagListDataSourceModel describes the data model.
 type PrivateAppTagListDataSourceModel struct {
-	Data []PostInfrastructurePublishersTags `tfsdk:"data"`
+	Data []TagItem `tfsdk:"data"`
 }
 
 // Metadata returns the data source type name.
@@ -113,11 +113,11 @@ func (r *PrivateAppTagListDataSource) Read(ctx context.Context, req datasource.R
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.TagResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromGetResponse(res.TagResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

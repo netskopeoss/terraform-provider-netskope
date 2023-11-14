@@ -4,19 +4,19 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaRulesResponseBody) {
+func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *shared.NpaPolicyListResponse) {
 	if len(r.Data) > len(resp.Data) {
 		r.Data = r.Data[:len(resp.Data)]
 	}
 	for dataCount, dataItem := range resp.Data {
-		var data1 GetPolicyNpaRulesData
+		var data1 NpaPolicyResponseItem
 		if dataItem.RuleData == nil {
 			data1.RuleData = nil
 		} else {
-			data1.RuleData = &PostPolicyNpaRulesRuleData{}
+			data1.RuleData = &NpaPolicyRuleData{}
 			data1.RuleData.AccessMethod = nil
 			for _, v := range dataItem.RuleData.AccessMethod {
 				data1.RuleData.AccessMethod = append(data1.RuleData.AccessMethod, types.StringValue(v))
@@ -40,7 +40,7 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.G
 				data1.RuleData.DlpActions = data1.RuleData.DlpActions[:len(dataItem.RuleData.DlpActions)]
 			}
 			for dlpActionsCount, dlpActionsItem := range dataItem.RuleData.DlpActions {
-				var dlpActions1 DlpActions
+				var dlpActions1 NpaPolicyRuleDlp
 				dlpActions1.Actions = nil
 				for _, v := range dlpActionsItem.Actions {
 					dlpActions1.Actions = append(dlpActions1.Actions, types.StringValue(string(v)))
@@ -70,7 +70,7 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromGetResponse(resp *operations.G
 			if dataItem.RuleData.MatchCriteriaAction == nil {
 				data1.RuleData.MatchCriteriaAction = nil
 			} else {
-				data1.RuleData.MatchCriteriaAction = &PostPolicyNpaRulesMatchCriteriaAction{}
+				data1.RuleData.MatchCriteriaAction = &MatchCriteriaAction{}
 				if dataItem.RuleData.MatchCriteriaAction.ActionName != nil {
 					data1.RuleData.MatchCriteriaAction.ActionName = types.StringValue(string(*dataItem.RuleData.MatchCriteriaAction.ActionName))
 				} else {

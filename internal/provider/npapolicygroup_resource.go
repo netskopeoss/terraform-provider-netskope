@@ -35,15 +35,15 @@ type NPAPolicyGroupResource struct {
 
 // NPAPolicyGroupResourceModel describes the resource data model.
 type NPAPolicyGroupResourceModel struct {
-	CanBeEditedDeleted types.String                        `tfsdk:"can_be_edited_deleted"`
-	GroupID            types.String                        `tfsdk:"group_id"`
-	GroupName          types.String                        `tfsdk:"group_name"`
-	GroupOrder         PostPolicyNpaPolicygroupsGroupOrder `tfsdk:"group_order"`
-	GroupPinnedID      types.Int64                         `tfsdk:"group_pinned_id"`
-	GroupProdID        types.Int64                         `tfsdk:"group_prod_id"`
-	GroupType          types.String                        `tfsdk:"group_type"`
-	ModifyTime         types.String                        `tfsdk:"modify_time"`
-	ModifyType         types.String                        `tfsdk:"modify_type"`
+	CanBeEditedDeleted types.String `tfsdk:"can_be_edited_deleted"`
+	GroupID            types.String `tfsdk:"group_id"`
+	GroupName          types.String `tfsdk:"group_name"`
+	GroupOrder         GroupOrder   `tfsdk:"group_order"`
+	GroupPinnedID      types.Int64  `tfsdk:"group_pinned_id"`
+	GroupProdID        types.Int64  `tfsdk:"group_prod_id"`
+	GroupType          types.String `tfsdk:"group_type"`
+	ModifyTime         types.String `tfsdk:"modify_time"`
+	ModifyType         types.String `tfsdk:"modify_type"`
 }
 
 func (r *NPAPolicyGroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -152,9 +152,9 @@ func (r *NPAPolicyGroupResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	requestBody := *data.ToCreateSDKType()
+	npaPolicygroupRequest := *data.ToCreateSDKType()
 	request := operations.PostPolicyNpaPolicygroupsRequest{
-		RequestBody: requestBody,
+		NpaPolicygroupRequest: npaPolicygroupRequest,
 	}
 	res, err := r.client.PostPolicyNpaPolicygroups(ctx, request)
 	if err != nil {
@@ -172,11 +172,11 @@ func (r *NPAPolicyGroupResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
+	if res.Object == nil || res.Object.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.TwoHundredApplicationJSONObject.Data)
+	data.RefreshFromCreateResponse(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -220,11 +220,11 @@ func (r *NPAPolicyGroupResource) Read(ctx context.Context, req resource.ReadRequ
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
+	if res.Object == nil || res.Object.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject.Data)
+	data.RefreshFromGetResponse(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

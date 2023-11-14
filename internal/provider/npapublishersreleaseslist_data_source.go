@@ -29,9 +29,9 @@ type NPAPublishersReleasesListDataSource struct {
 
 // NPAPublishersReleasesListDataSourceModel describes the data model.
 type NPAPublishersReleasesListDataSourceModel struct {
-	Data   []GetInfrastructurePublishersReleasesData `tfsdk:"data"`
-	Fields types.String                              `tfsdk:"fields"`
-	Status types.String                              `tfsdk:"status"`
+	Data   []ReleaseItem `tfsdk:"data"`
+	Fields types.String  `tfsdk:"fields"`
+	Status types.String  `tfsdk:"status"`
 }
 
 // Metadata returns the data source type name.
@@ -136,11 +136,11 @@ func (r *NPAPublishersReleasesListDataSource) Read(ctx context.Context, req data
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.PublishersReleaseGetResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromGetResponse(res.PublishersReleaseGetResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

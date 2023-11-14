@@ -32,11 +32,11 @@ type PrivateAppTagResource struct {
 
 // PrivateAppTagResourceModel describes the resource data model.
 type PrivateAppTagResourceModel struct {
-	Data          []PostInfrastructurePublishersTags `tfsdk:"data"`
-	ID            types.String                       `tfsdk:"id"`
-	Ids           []types.String                     `tfsdk:"ids"`
-	PublisherTags []PostInfrastructurePublishersTags `tfsdk:"publisher_tags"`
-	Tags          []PostInfrastructurePublishersTags `tfsdk:"tags"`
+	Data          []TagItem      `tfsdk:"data"`
+	ID            types.String   `tfsdk:"id"`
+	Ids           []types.String `tfsdk:"ids"`
+	PublisherTags []TagItem      `tfsdk:"publisher_tags"`
+	Tags          []TagItem      `tfsdk:"tags"`
 }
 
 func (r *PrivateAppTagResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -177,11 +177,11 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.TagResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromCreateResponse(res.TagResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

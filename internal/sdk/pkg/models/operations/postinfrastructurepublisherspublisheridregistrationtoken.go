@@ -5,6 +5,7 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -18,26 +19,6 @@ func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenRequest) GetPub
 		return 0
 	}
 	return o.PublisherID
-}
-
-// PostInfrastructurePublishersPublisherIDRegistrationTokenPublisherTokenResponseBody - Invalid request
-type PostInfrastructurePublishersPublisherIDRegistrationTokenPublisherTokenResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenPublisherTokenResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenPublisherTokenResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type PostInfrastructurePublishersPublisherIDRegistrationTokenData struct {
@@ -99,30 +80,16 @@ func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody) G
 }
 
 type PostInfrastructurePublishersPublisherIDRegistrationTokenResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *PostInfrastructurePublishersPublisherIDRegistrationTokenPublisherTokenResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponse) GetTwoHundredApplicationJSONObject() *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponse) GetFourHundredApplicationJSONObject() *PostInfrastructurePublishersPublisherIDRegistrationTokenPublisherTokenResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	Object *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody
+	// Invalid request
+	PublishersResponse400 *shared.PublishersResponse400
 }
 
 func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponse) GetContentType() string {
@@ -144,4 +111,18 @@ func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponse) GetRa
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponse) GetObject() *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.Object
+}
+
+func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.PublishersResponse400
 }

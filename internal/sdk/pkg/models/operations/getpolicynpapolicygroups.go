@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -63,130 +64,17 @@ func (o *GetPolicyNpaPolicygroupsRequest) GetSortorder() *string {
 	return o.Sortorder
 }
 
-// GetPolicyNpaPolicygroupsResponseResponseBody - Invalid request
-type GetPolicyNpaPolicygroupsResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetPolicyNpaPolicygroupsResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetPolicyNpaPolicygroupsResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type GetPolicyNpaPolicygroupsData struct {
-	CanBeEditedDeleted *string `json:"can_be_edited_deleted,omitempty"`
-	GroupID            *string `json:"group_id,omitempty"`
-	GroupName          *string `json:"group_name,omitempty"`
-	GroupPinnedID      *int64  `json:"group_pinned_id,omitempty"`
-	GroupProdID        *int64  `json:"group_prod_id,omitempty"`
-	GroupType          *string `json:"group_type,omitempty"`
-	ModifyTime         *string `json:"modify_time,omitempty"`
-	ModifyType         *string `json:"modify_type,omitempty"`
-}
-
-func (o *GetPolicyNpaPolicygroupsData) GetCanBeEditedDeleted() *string {
-	if o == nil {
-		return nil
-	}
-	return o.CanBeEditedDeleted
-}
-
-func (o *GetPolicyNpaPolicygroupsData) GetGroupID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupID
-}
-
-func (o *GetPolicyNpaPolicygroupsData) GetGroupName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupName
-}
-
-func (o *GetPolicyNpaPolicygroupsData) GetGroupPinnedID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.GroupPinnedID
-}
-
-func (o *GetPolicyNpaPolicygroupsData) GetGroupProdID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.GroupProdID
-}
-
-func (o *GetPolicyNpaPolicygroupsData) GetGroupType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupType
-}
-
-func (o *GetPolicyNpaPolicygroupsData) GetModifyTime() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ModifyTime
-}
-
-func (o *GetPolicyNpaPolicygroupsData) GetModifyType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ModifyType
-}
-
-// GetPolicyNpaPolicygroupsResponseBody - successful operation
-type GetPolicyNpaPolicygroupsResponseBody struct {
-	Data []GetPolicyNpaPolicygroupsData `json:"data,omitempty"`
-}
-
-func (o *GetPolicyNpaPolicygroupsResponseBody) GetData() []GetPolicyNpaPolicygroupsData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
 type GetPolicyNpaPolicygroupsResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *GetPolicyNpaPolicygroupsResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *GetPolicyNpaPolicygroupsResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *GetPolicyNpaPolicygroupsResponse) GetTwoHundredApplicationJSONObject() *GetPolicyNpaPolicygroupsResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *GetPolicyNpaPolicygroupsResponse) GetFourHundredApplicationJSONObject() *GetPolicyNpaPolicygroupsResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	NpaPolicygroupResponse *shared.NpaPolicygroupResponse
+	// Invalid request
+	NpaPolicygroupResponse400 *shared.NpaPolicygroupResponse400
 }
 
 func (o *GetPolicyNpaPolicygroupsResponse) GetContentType() string {
@@ -208,4 +96,18 @@ func (o *GetPolicyNpaPolicygroupsResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *GetPolicyNpaPolicygroupsResponse) GetNpaPolicygroupResponse() *shared.NpaPolicygroupResponse {
+	if o == nil {
+		return nil
+	}
+	return o.NpaPolicygroupResponse
+}
+
+func (o *GetPolicyNpaPolicygroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.NpaPolicygroupResponse400
 }

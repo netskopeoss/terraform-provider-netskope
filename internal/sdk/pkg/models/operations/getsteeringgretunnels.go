@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
 	"net/http"
 )
@@ -111,391 +112,25 @@ func (o *GetSteeringGreTunnelsRequest) GetStatus() *string {
 	return o.Status
 }
 
-// GetSteeringGreTunnelsResponse500ResponseBody - Internal server error
-type GetSteeringGreTunnelsResponse500ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringGreTunnelsResponse500ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringGreTunnelsResponse500ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// GetSteeringGreTunnelsResponse429ResponseBody - Too many requests
-type GetSteeringGreTunnelsResponse429ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringGreTunnelsResponse429ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringGreTunnelsResponse429ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// GetSteeringGreTunnelsResponse405ResponseBody - Method not allowed
-type GetSteeringGreTunnelsResponse405ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringGreTunnelsResponse405ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringGreTunnelsResponse405ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// GetSteeringGreTunnelsResponse403ResponseBody - Access forbidden
-type GetSteeringGreTunnelsResponse403ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringGreTunnelsResponse403ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringGreTunnelsResponse403ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// GetSteeringGreTunnelsResponseResponseBody - Invalid request
-type GetSteeringGreTunnelsResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringGreTunnelsResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringGreTunnelsResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type GetSteeringGreTunnelsXff struct {
-	Enabled *bool    `json:"enabled,omitempty"`
-	Iplist  []string `json:"iplist,omitempty"`
-}
-
-func (o *GetSteeringGreTunnelsXff) GetEnabled() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Enabled
-}
-
-func (o *GetSteeringGreTunnelsXff) GetIplist() []string {
-	if o == nil {
-		return nil
-	}
-	return o.Iplist
-}
-
-type GetSteeringGreTunnelsOptions struct {
-	Xff *GetSteeringGreTunnelsXff `json:"xff,omitempty"`
-}
-
-func (o *GetSteeringGreTunnelsOptions) GetXff() *GetSteeringGreTunnelsXff {
-	if o == nil {
-		return nil
-	}
-	return o.Xff
-}
-
-type GetSteeringGreTunnelsPops struct {
-	Gateway           *string `json:"gateway,omitempty"`
-	KeepaliveLast     *string `json:"keepaliveLast,omitempty"`
-	KeepaliveStatus   *string `json:"keepaliveStatus,omitempty"`
-	Name              *string `json:"name,omitempty"`
-	Primary           *bool   `json:"primary,omitempty"`
-	Probeip           *string `json:"probeip,omitempty"`
-	Throughput        *string `json:"throughput,omitempty"`
-	UsertrafficLast   *string `json:"usertrafficLast,omitempty"`
-	UsertrafficStatus *string `json:"usertrafficStatus,omitempty"`
-}
-
-func (o *GetSteeringGreTunnelsPops) GetGateway() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Gateway
-}
-
-func (o *GetSteeringGreTunnelsPops) GetKeepaliveLast() *string {
-	if o == nil {
-		return nil
-	}
-	return o.KeepaliveLast
-}
-
-func (o *GetSteeringGreTunnelsPops) GetKeepaliveStatus() *string {
-	if o == nil {
-		return nil
-	}
-	return o.KeepaliveStatus
-}
-
-func (o *GetSteeringGreTunnelsPops) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *GetSteeringGreTunnelsPops) GetPrimary() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Primary
-}
-
-func (o *GetSteeringGreTunnelsPops) GetProbeip() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Probeip
-}
-
-func (o *GetSteeringGreTunnelsPops) GetThroughput() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Throughput
-}
-
-func (o *GetSteeringGreTunnelsPops) GetUsertrafficLast() *string {
-	if o == nil {
-		return nil
-	}
-	return o.UsertrafficLast
-}
-
-func (o *GetSteeringGreTunnelsPops) GetUsertrafficStatus() *string {
-	if o == nil {
-		return nil
-	}
-	return o.UsertrafficStatus
-}
-
-type GetSteeringGreTunnelsResult struct {
-	Enabled       *bool                         `json:"enabled,omitempty"`
-	ID            *int64                        `json:"id,omitempty"`
-	Notes         *string                       `json:"notes,omitempty"`
-	Options       *GetSteeringGreTunnelsOptions `json:"options,omitempty"`
-	Pops          []GetSteeringGreTunnelsPops   `json:"pops,omitempty"`
-	Site          *string                       `json:"site,omitempty"`
-	Sourcetype    *string                       `json:"sourcetype,omitempty"`
-	Srcipidentity *string                       `json:"srcipidentity,omitempty"`
-	Template      *string                       `json:"template,omitempty"`
-	Vendor        *string                       `json:"vendor,omitempty"`
-	Version       *int64                        `json:"version,omitempty"`
-}
-
-func (o *GetSteeringGreTunnelsResult) GetEnabled() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Enabled
-}
-
-func (o *GetSteeringGreTunnelsResult) GetID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *GetSteeringGreTunnelsResult) GetNotes() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Notes
-}
-
-func (o *GetSteeringGreTunnelsResult) GetOptions() *GetSteeringGreTunnelsOptions {
-	if o == nil {
-		return nil
-	}
-	return o.Options
-}
-
-func (o *GetSteeringGreTunnelsResult) GetPops() []GetSteeringGreTunnelsPops {
-	if o == nil {
-		return nil
-	}
-	return o.Pops
-}
-
-func (o *GetSteeringGreTunnelsResult) GetSite() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Site
-}
-
-func (o *GetSteeringGreTunnelsResult) GetSourcetype() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Sourcetype
-}
-
-func (o *GetSteeringGreTunnelsResult) GetSrcipidentity() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Srcipidentity
-}
-
-func (o *GetSteeringGreTunnelsResult) GetTemplate() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Template
-}
-
-func (o *GetSteeringGreTunnelsResult) GetVendor() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Vendor
-}
-
-func (o *GetSteeringGreTunnelsResult) GetVersion() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Version
-}
-
-// GetSteeringGreTunnelsResponseBody - Successful operation
-type GetSteeringGreTunnelsResponseBody struct {
-	Result []GetSteeringGreTunnelsResult `json:"result,omitempty"`
-	Status *int64                        `json:"status,omitempty"`
-	Total  *int64                        `json:"total,omitempty"`
-}
-
-func (o *GetSteeringGreTunnelsResponseBody) GetResult() []GetSteeringGreTunnelsResult {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringGreTunnelsResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-func (o *GetSteeringGreTunnelsResponseBody) GetTotal() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Total
-}
-
 type GetSteeringGreTunnelsResponse struct {
-	// Successful operation
-	TwoHundredApplicationJSONObject *GetSteeringGreTunnelsResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *GetSteeringGreTunnelsResponseResponseBody
-	// Access forbidden
-	FourHundredAndThreeApplicationJSONObject *GetSteeringGreTunnelsResponse403ResponseBody
-	// Method not allowed
-	FourHundredAndFiveApplicationJSONObject *GetSteeringGreTunnelsResponse405ResponseBody
-	// Too many requests
-	FourHundredAndTwentyNineApplicationJSONObject *GetSteeringGreTunnelsResponse429ResponseBody
-	// Internal server error
-	FiveHundredApplicationJSONObject *GetSteeringGreTunnelsResponse500ResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *GetSteeringGreTunnelsResponse) GetTwoHundredApplicationJSONObject() *GetSteeringGreTunnelsResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *GetSteeringGreTunnelsResponse) GetFourHundredApplicationJSONObject() *GetSteeringGreTunnelsResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
-}
-
-func (o *GetSteeringGreTunnelsResponse) GetFourHundredAndThreeApplicationJSONObject() *GetSteeringGreTunnelsResponse403ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndThreeApplicationJSONObject
-}
-
-func (o *GetSteeringGreTunnelsResponse) GetFourHundredAndFiveApplicationJSONObject() *GetSteeringGreTunnelsResponse405ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndFiveApplicationJSONObject
-}
-
-func (o *GetSteeringGreTunnelsResponse) GetFourHundredAndTwentyNineApplicationJSONObject() *GetSteeringGreTunnelsResponse429ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndTwentyNineApplicationJSONObject
-}
-
-func (o *GetSteeringGreTunnelsResponse) GetFiveHundredApplicationJSONObject() *GetSteeringGreTunnelsResponse500ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FiveHundredApplicationJSONObject
+	// Invalid request
+	GreResponse400 *shared.GreResponse400
+	// Access forbidden
+	GreResponse403 *shared.GreResponse403
+	// Method not allowed
+	GreResponse405 *shared.GreResponse405
+	// Too many requests
+	GreResponse429 *shared.GreResponse429
+	// Internal server error
+	GreResponse500 *shared.GreResponse500
+	// Successful operation
+	GreTunnelResponse200 *shared.GreTunnelResponse200
 }
 
 func (o *GetSteeringGreTunnelsResponse) GetContentType() string {
@@ -517,4 +152,46 @@ func (o *GetSteeringGreTunnelsResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *GetSteeringGreTunnelsResponse) GetGreResponse400() *shared.GreResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.GreResponse400
+}
+
+func (o *GetSteeringGreTunnelsResponse) GetGreResponse403() *shared.GreResponse403 {
+	if o == nil {
+		return nil
+	}
+	return o.GreResponse403
+}
+
+func (o *GetSteeringGreTunnelsResponse) GetGreResponse405() *shared.GreResponse405 {
+	if o == nil {
+		return nil
+	}
+	return o.GreResponse405
+}
+
+func (o *GetSteeringGreTunnelsResponse) GetGreResponse429() *shared.GreResponse429 {
+	if o == nil {
+		return nil
+	}
+	return o.GreResponse429
+}
+
+func (o *GetSteeringGreTunnelsResponse) GetGreResponse500() *shared.GreResponse500 {
+	if o == nil {
+		return nil
+	}
+	return o.GreResponse500
+}
+
+func (o *GetSteeringGreTunnelsResponse) GetGreTunnelResponse200() *shared.GreTunnelResponse200 {
+	if o == nil {
+		return nil
+	}
+	return o.GreTunnelResponse200
 }

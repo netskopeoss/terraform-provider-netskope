@@ -32,13 +32,13 @@ type NPAPolicyResource struct {
 
 // NPAPolicyResourceModel describes the resource data model.
 type NPAPolicyResourceModel struct {
-	Description types.String                 `tfsdk:"description"`
-	Enabled     types.String                 `tfsdk:"enabled"`
-	GroupName   types.String                 `tfsdk:"group_name"`
-	RuleData    *PostPolicyNpaRulesRuleData  `tfsdk:"rule_data"`
-	RuleID      types.String                 `tfsdk:"rule_id"`
-	RuleName    types.String                 `tfsdk:"rule_name"`
-	RuleOrder   *PostPolicyNpaRulesRuleOrder `tfsdk:"rule_order"`
+	Description types.String       `tfsdk:"description"`
+	Enabled     types.String       `tfsdk:"enabled"`
+	GroupName   types.String       `tfsdk:"group_name"`
+	RuleData    *NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleID      types.String       `tfsdk:"rule_id"`
+	RuleName    types.String       `tfsdk:"rule_name"`
+	RuleOrder   *RuleOrder         `tfsdk:"rule_order"`
 }
 
 func (r *NPAPolicyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -324,11 +324,11 @@ func (r *NPAPolicyResource) Create(ctx context.Context, req resource.CreateReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
+	if res.Object == nil || res.Object.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.TwoHundredApplicationJSONObject.Data)
+	data.RefreshFromCreateResponse(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -372,11 +372,11 @@ func (r *NPAPolicyResource) Read(ctx context.Context, req resource.ReadRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
+	if res.Object == nil || res.Object.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject.Data)
+	data.RefreshFromGetResponse(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -389,11 +389,11 @@ func (r *NPAPolicyResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 
-	requestBody := *data.ToUpdateSDKType()
 	id := data.RuleID.ValueString()
+	npaPolicyRequest := *data.ToUpdateSDKType()
 	request := operations.PatchPolicyNpaRulesIDRequest{
-		RequestBody: requestBody,
-		ID:          id,
+		ID:               id,
+		NpaPolicyRequest: npaPolicyRequest,
 	}
 	res, err := r.client.PatchPolicyNpaRulesID(ctx, request)
 	if err != nil {
@@ -411,11 +411,11 @@ func (r *NPAPolicyResource) Update(ctx context.Context, req resource.UpdateReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
+	if res.Object == nil || res.Object.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromUpdateResponse(res.TwoHundredApplicationJSONObject.Data)
+	data.RefreshFromUpdateResponse(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

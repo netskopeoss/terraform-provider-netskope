@@ -3,158 +3,21 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
-type DeleteSteeringAppsPrivateTagsPublisherTags struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *DeleteSteeringAppsPrivateTagsPublisherTags) GetTagID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.TagID
-}
-
-func (o *DeleteSteeringAppsPrivateTagsPublisherTags) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-type DeleteSteeringAppsPrivateTagsTags struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *DeleteSteeringAppsPrivateTagsTags) GetTagID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.TagID
-}
-
-func (o *DeleteSteeringAppsPrivateTagsTags) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-type DeleteSteeringAppsPrivateTagsRequestBody struct {
-	ID            *string                                      `json:"id,omitempty"`
-	Ids           []string                                     `json:"ids,omitempty"`
-	PublisherTags []DeleteSteeringAppsPrivateTagsPublisherTags `json:"publisher_tags,omitempty"`
-	Tags          []DeleteSteeringAppsPrivateTagsTags          `json:"tags,omitempty"`
-}
-
-func (o *DeleteSteeringAppsPrivateTagsRequestBody) GetID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *DeleteSteeringAppsPrivateTagsRequestBody) GetIds() []string {
-	if o == nil {
-		return nil
-	}
-	return o.Ids
-}
-
-func (o *DeleteSteeringAppsPrivateTagsRequestBody) GetPublisherTags() []DeleteSteeringAppsPrivateTagsPublisherTags {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherTags
-}
-
-func (o *DeleteSteeringAppsPrivateTagsRequestBody) GetTags() []DeleteSteeringAppsPrivateTagsTags {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
-}
-
-// DeleteSteeringAppsPrivateTagsResponseResponseBody - Invalid request
-type DeleteSteeringAppsPrivateTagsResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringAppsPrivateTagsResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringAppsPrivateTagsResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type DeleteSteeringAppsPrivateTagsData struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *DeleteSteeringAppsPrivateTagsData) GetTagID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.TagID
-}
-
-func (o *DeleteSteeringAppsPrivateTagsData) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-// DeleteSteeringAppsPrivateTagsResponseBody - successful operation
-type DeleteSteeringAppsPrivateTagsResponseBody struct {
-	Data []DeleteSteeringAppsPrivateTagsData `json:"data,omitempty"`
-}
-
-func (o *DeleteSteeringAppsPrivateTagsResponseBody) GetData() []DeleteSteeringAppsPrivateTagsData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
 type DeleteSteeringAppsPrivateTagsResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *DeleteSteeringAppsPrivateTagsResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *DeleteSteeringAppsPrivateTagsResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *DeleteSteeringAppsPrivateTagsResponse) GetTwoHundredApplicationJSONObject() *DeleteSteeringAppsPrivateTagsResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *DeleteSteeringAppsPrivateTagsResponse) GetFourHundredApplicationJSONObject() *DeleteSteeringAppsPrivateTagsResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	TagResponse *shared.TagResponse
+	// Invalid request
+	TagResponse400 *shared.TagResponse400
 }
 
 func (o *DeleteSteeringAppsPrivateTagsResponse) GetContentType() string {
@@ -176,4 +39,18 @@ func (o *DeleteSteeringAppsPrivateTagsResponse) GetRawResponse() *http.Response 
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *DeleteSteeringAppsPrivateTagsResponse) GetTagResponse() *shared.TagResponse {
+	if o == nil {
+		return nil
+	}
+	return o.TagResponse
+}
+
+func (o *DeleteSteeringAppsPrivateTagsResponse) GetTagResponse400() *shared.TagResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.TagResponse400
 }

@@ -5,73 +5,9 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
-
-type PostPolicyNpaPolicygroupsOrder string
-
-const (
-	PostPolicyNpaPolicygroupsOrderBefore PostPolicyNpaPolicygroupsOrder = "before"
-	PostPolicyNpaPolicygroupsOrderAfter  PostPolicyNpaPolicygroupsOrder = "after"
-)
-
-func (e PostPolicyNpaPolicygroupsOrder) ToPointer() *PostPolicyNpaPolicygroupsOrder {
-	return &e
-}
-
-func (e *PostPolicyNpaPolicygroupsOrder) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "before":
-		fallthrough
-	case "after":
-		*e = PostPolicyNpaPolicygroupsOrder(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PostPolicyNpaPolicygroupsOrder: %v", v)
-	}
-}
-
-type PostPolicyNpaPolicygroupsGroupOrder struct {
-	GroupID string                         `json:"group_id"`
-	Order   PostPolicyNpaPolicygroupsOrder `json:"order"`
-}
-
-func (o *PostPolicyNpaPolicygroupsGroupOrder) GetGroupID() string {
-	if o == nil {
-		return ""
-	}
-	return o.GroupID
-}
-
-func (o *PostPolicyNpaPolicygroupsGroupOrder) GetOrder() PostPolicyNpaPolicygroupsOrder {
-	if o == nil {
-		return PostPolicyNpaPolicygroupsOrder("")
-	}
-	return o.Order
-}
-
-type PostPolicyNpaPolicygroupsRequestBody struct {
-	GroupName  string                              `json:"group_name"`
-	GroupOrder PostPolicyNpaPolicygroupsGroupOrder `json:"group_order"`
-}
-
-func (o *PostPolicyNpaPolicygroupsRequestBody) GetGroupName() string {
-	if o == nil {
-		return ""
-	}
-	return o.GroupName
-}
-
-func (o *PostPolicyNpaPolicygroupsRequestBody) GetGroupOrder() PostPolicyNpaPolicygroupsGroupOrder {
-	if o == nil {
-		return PostPolicyNpaPolicygroupsGroupOrder{}
-	}
-	return o.GroupOrder
-}
 
 // PostPolicyNpaPolicygroupsQueryParamSilent - flag to skip output except status code
 type PostPolicyNpaPolicygroupsQueryParamSilent string
@@ -102,16 +38,16 @@ func (e *PostPolicyNpaPolicygroupsQueryParamSilent) UnmarshalJSON(data []byte) e
 }
 
 type PostPolicyNpaPolicygroupsRequest struct {
-	RequestBody PostPolicyNpaPolicygroupsRequestBody `request:"mediaType=application/json"`
+	NpaPolicygroupRequest shared.NpaPolicygroupRequest `request:"mediaType=application/json"`
 	// flag to skip output except status code
 	Silent *PostPolicyNpaPolicygroupsQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 }
 
-func (o *PostPolicyNpaPolicygroupsRequest) GetRequestBody() PostPolicyNpaPolicygroupsRequestBody {
+func (o *PostPolicyNpaPolicygroupsRequest) GetNpaPolicygroupRequest() shared.NpaPolicygroupRequest {
 	if o == nil {
-		return PostPolicyNpaPolicygroupsRequestBody{}
+		return shared.NpaPolicygroupRequest{}
 	}
-	return o.RequestBody
+	return o.NpaPolicygroupRequest
 }
 
 func (o *PostPolicyNpaPolicygroupsRequest) GetSilent() *PostPolicyNpaPolicygroupsQueryParamSilent {
@@ -121,99 +57,12 @@ func (o *PostPolicyNpaPolicygroupsRequest) GetSilent() *PostPolicyNpaPolicygroup
 	return o.Silent
 }
 
-// PostPolicyNpaPolicygroupsResponseResponseBody - Invalid request
-type PostPolicyNpaPolicygroupsResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PostPolicyNpaPolicygroupsResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PostPolicyNpaPolicygroupsResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type PostPolicyNpaPolicygroupsData struct {
-	CanBeEditedDeleted *string `json:"can_be_edited_deleted,omitempty"`
-	GroupID            *string `json:"group_id,omitempty"`
-	GroupName          *string `json:"group_name,omitempty"`
-	GroupPinnedID      *int64  `json:"group_pinned_id,omitempty"`
-	GroupProdID        *int64  `json:"group_prod_id,omitempty"`
-	GroupType          *string `json:"group_type,omitempty"`
-	ModifyTime         *string `json:"modify_time,omitempty"`
-	ModifyType         *string `json:"modify_type,omitempty"`
-}
-
-func (o *PostPolicyNpaPolicygroupsData) GetCanBeEditedDeleted() *string {
-	if o == nil {
-		return nil
-	}
-	return o.CanBeEditedDeleted
-}
-
-func (o *PostPolicyNpaPolicygroupsData) GetGroupID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupID
-}
-
-func (o *PostPolicyNpaPolicygroupsData) GetGroupName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupName
-}
-
-func (o *PostPolicyNpaPolicygroupsData) GetGroupPinnedID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.GroupPinnedID
-}
-
-func (o *PostPolicyNpaPolicygroupsData) GetGroupProdID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.GroupProdID
-}
-
-func (o *PostPolicyNpaPolicygroupsData) GetGroupType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupType
-}
-
-func (o *PostPolicyNpaPolicygroupsData) GetModifyTime() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ModifyTime
-}
-
-func (o *PostPolicyNpaPolicygroupsData) GetModifyType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ModifyType
-}
-
 // PostPolicyNpaPolicygroupsResponseBody - successful operation
 type PostPolicyNpaPolicygroupsResponseBody struct {
-	Data *PostPolicyNpaPolicygroupsData `json:"data,omitempty"`
+	Data *shared.NpaPolicygroupResponseItem `json:"data,omitempty"`
 }
 
-func (o *PostPolicyNpaPolicygroupsResponseBody) GetData() *PostPolicyNpaPolicygroupsData {
+func (o *PostPolicyNpaPolicygroupsResponseBody) GetData() *shared.NpaPolicygroupResponseItem {
 	if o == nil {
 		return nil
 	}
@@ -221,30 +70,16 @@ func (o *PostPolicyNpaPolicygroupsResponseBody) GetData() *PostPolicyNpaPolicygr
 }
 
 type PostPolicyNpaPolicygroupsResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *PostPolicyNpaPolicygroupsResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *PostPolicyNpaPolicygroupsResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *PostPolicyNpaPolicygroupsResponse) GetTwoHundredApplicationJSONObject() *PostPolicyNpaPolicygroupsResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *PostPolicyNpaPolicygroupsResponse) GetFourHundredApplicationJSONObject() *PostPolicyNpaPolicygroupsResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// Invalid request
+	NpaPolicygroupResponse400 *shared.NpaPolicygroupResponse400
+	// successful operation
+	Object *PostPolicyNpaPolicygroupsResponseBody
 }
 
 func (o *PostPolicyNpaPolicygroupsResponse) GetContentType() string {
@@ -266,4 +101,18 @@ func (o *PostPolicyNpaPolicygroupsResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PostPolicyNpaPolicygroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.NpaPolicygroupResponse400
+}
+
+func (o *PostPolicyNpaPolicygroupsResponse) GetObject() *PostPolicyNpaPolicygroupsResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.Object
 }

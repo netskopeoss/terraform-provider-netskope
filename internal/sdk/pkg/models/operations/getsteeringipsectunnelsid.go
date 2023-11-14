@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -27,444 +28,27 @@ func (o *GetSteeringIpsecTunnelsIDRequest) GetID() int64 {
 	return o.ID
 }
 
-// GetSteeringIpsecTunnelsIDResponse500ResponseBody - Internal server error
-type GetSteeringIpsecTunnelsIDResponse500ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse500ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse500ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// GetSteeringIpsecTunnelsIDResponse429ResponseBody - Too many requests
-type GetSteeringIpsecTunnelsIDResponse429ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse429ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse429ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// GetSteeringIpsecTunnelsIDResponse405ResponseBody - Method not allowed
-type GetSteeringIpsecTunnelsIDResponse405ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse405ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse405ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// GetSteeringIpsecTunnelsIDResponse404ResponseBody - Not found
-type GetSteeringIpsecTunnelsIDResponse404ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse404ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse404ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// GetSteeringIpsecTunnelsIDResponse403ResponseBody - Access forbidden
-type GetSteeringIpsecTunnelsIDResponse403ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse403ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse403ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// GetSteeringIpsecTunnelsIDResponseResponseBody - Invalid request
-type GetSteeringIpsecTunnelsIDResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type GetSteeringIpsecTunnelsIDXff struct {
-	Enabled *bool    `json:"enabled,omitempty"`
-	Iplist  []string `json:"iplist,omitempty"`
-}
-
-func (o *GetSteeringIpsecTunnelsIDXff) GetEnabled() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Enabled
-}
-
-func (o *GetSteeringIpsecTunnelsIDXff) GetIplist() []string {
-	if o == nil {
-		return nil
-	}
-	return o.Iplist
-}
-
-type GetSteeringIpsecTunnelsIDOptions struct {
-	Reauth *bool                         `json:"reauth,omitempty"`
-	Rekey  *bool                         `json:"rekey,omitempty"`
-	Xff    *GetSteeringIpsecTunnelsIDXff `json:"xff,omitempty"`
-}
-
-func (o *GetSteeringIpsecTunnelsIDOptions) GetReauth() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Reauth
-}
-
-func (o *GetSteeringIpsecTunnelsIDOptions) GetRekey() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Rekey
-}
-
-func (o *GetSteeringIpsecTunnelsIDOptions) GetXff() *GetSteeringIpsecTunnelsIDXff {
-	if o == nil {
-		return nil
-	}
-	return o.Xff
-}
-
-type GetSteeringIpsecTunnelsIDPops struct {
-	Gateway    *string `json:"gateway,omitempty"`
-	Name       *string `json:"name,omitempty"`
-	Primary    *bool   `json:"primary,omitempty"`
-	Probeip    *string `json:"probeip,omitempty"`
-	Since      *string `json:"since,omitempty"`
-	Status     *string `json:"status,omitempty"`
-	Throughput *string `json:"throughput,omitempty"`
-}
-
-func (o *GetSteeringIpsecTunnelsIDPops) GetGateway() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Gateway
-}
-
-func (o *GetSteeringIpsecTunnelsIDPops) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *GetSteeringIpsecTunnelsIDPops) GetPrimary() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Primary
-}
-
-func (o *GetSteeringIpsecTunnelsIDPops) GetProbeip() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Probeip
-}
-
-func (o *GetSteeringIpsecTunnelsIDPops) GetSince() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Since
-}
-
-func (o *GetSteeringIpsecTunnelsIDPops) GetStatus() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-func (o *GetSteeringIpsecTunnelsIDPops) GetThroughput() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Throughput
-}
-
-type GetSteeringIpsecTunnelsIDResult struct {
-	Bandwidth     *int64                            `json:"bandwidth,omitempty"`
-	Enabled       *bool                             `json:"enabled,omitempty"`
-	Encryption    *string                           `json:"encryption,omitempty"`
-	ID            *int64                            `json:"id,omitempty"`
-	Notes         *string                           `json:"notes,omitempty"`
-	Options       *GetSteeringIpsecTunnelsIDOptions `json:"options,omitempty"`
-	Pops          []GetSteeringIpsecTunnelsIDPops   `json:"pops,omitempty"`
-	Site          *string                           `json:"site,omitempty"`
-	Sourcetype    *string                           `json:"sourcetype,omitempty"`
-	Srcidentity   *string                           `json:"srcidentity,omitempty"`
-	Srcipidentity *string                           `json:"srcipidentity,omitempty"`
-	Template      *string                           `json:"template,omitempty"`
-	Vendor        *string                           `json:"vendor,omitempty"`
-	Version       *int64                            `json:"version,omitempty"`
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetBandwidth() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Bandwidth
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetEnabled() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Enabled
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetEncryption() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Encryption
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetNotes() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Notes
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetOptions() *GetSteeringIpsecTunnelsIDOptions {
-	if o == nil {
-		return nil
-	}
-	return o.Options
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetPops() []GetSteeringIpsecTunnelsIDPops {
-	if o == nil {
-		return nil
-	}
-	return o.Pops
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetSite() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Site
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetSourcetype() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Sourcetype
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetSrcidentity() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Srcidentity
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetSrcipidentity() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Srcipidentity
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetTemplate() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Template
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetVendor() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Vendor
-}
-
-func (o *GetSteeringIpsecTunnelsIDResult) GetVersion() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Version
-}
-
-// GetSteeringIpsecTunnelsIDResponseBody - Successful operation
-type GetSteeringIpsecTunnelsIDResponseBody struct {
-	Result []GetSteeringIpsecTunnelsIDResult `json:"result,omitempty"`
-	Status *int64                            `json:"status,omitempty"`
-	Total  *int64                            `json:"total,omitempty"`
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponseBody) GetResult() []GetSteeringIpsecTunnelsIDResult {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponseBody) GetTotal() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Total
-}
-
 type GetSteeringIpsecTunnelsIDResponse struct {
-	// Successful operation
-	TwoHundredApplicationJSONObject *GetSteeringIpsecTunnelsIDResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *GetSteeringIpsecTunnelsIDResponseResponseBody
-	// Access forbidden
-	FourHundredAndThreeApplicationJSONObject *GetSteeringIpsecTunnelsIDResponse403ResponseBody
-	// Not found
-	FourHundredAndFourApplicationJSONObject *GetSteeringIpsecTunnelsIDResponse404ResponseBody
-	// Method not allowed
-	FourHundredAndFiveApplicationJSONObject *GetSteeringIpsecTunnelsIDResponse405ResponseBody
-	// Too many requests
-	FourHundredAndTwentyNineApplicationJSONObject *GetSteeringIpsecTunnelsIDResponse429ResponseBody
-	// Internal server error
-	FiveHundredApplicationJSONObject *GetSteeringIpsecTunnelsIDResponse500ResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse) GetTwoHundredApplicationJSONObject() *GetSteeringIpsecTunnelsIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse) GetFourHundredApplicationJSONObject() *GetSteeringIpsecTunnelsIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse) GetFourHundredAndThreeApplicationJSONObject() *GetSteeringIpsecTunnelsIDResponse403ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndThreeApplicationJSONObject
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse) GetFourHundredAndFourApplicationJSONObject() *GetSteeringIpsecTunnelsIDResponse404ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndFourApplicationJSONObject
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse) GetFourHundredAndFiveApplicationJSONObject() *GetSteeringIpsecTunnelsIDResponse405ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndFiveApplicationJSONObject
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse) GetFourHundredAndTwentyNineApplicationJSONObject() *GetSteeringIpsecTunnelsIDResponse429ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndTwentyNineApplicationJSONObject
-}
-
-func (o *GetSteeringIpsecTunnelsIDResponse) GetFiveHundredApplicationJSONObject() *GetSteeringIpsecTunnelsIDResponse500ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FiveHundredApplicationJSONObject
+	// Invalid request
+	IpsecResponse400 *shared.IpsecResponse400
+	// Access forbidden
+	IpsecResponse403 *shared.IpsecResponse403
+	// Not found
+	IpsecResponse404 *shared.IpsecResponse404
+	// Method not allowed
+	IpsecResponse405 *shared.IpsecResponse405
+	// Too many requests
+	IpsecResponse429 *shared.IpsecResponse429
+	// Internal server error
+	IpsecResponse500 *shared.IpsecResponse500
+	// Successful operation
+	IpsecTunnelResponse200 *shared.IpsecTunnelResponse200
 }
 
 func (o *GetSteeringIpsecTunnelsIDResponse) GetContentType() string {
@@ -486,4 +70,53 @@ func (o *GetSteeringIpsecTunnelsIDResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *GetSteeringIpsecTunnelsIDResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse400
+}
+
+func (o *GetSteeringIpsecTunnelsIDResponse) GetIpsecResponse403() *shared.IpsecResponse403 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse403
+}
+
+func (o *GetSteeringIpsecTunnelsIDResponse) GetIpsecResponse404() *shared.IpsecResponse404 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse404
+}
+
+func (o *GetSteeringIpsecTunnelsIDResponse) GetIpsecResponse405() *shared.IpsecResponse405 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse405
+}
+
+func (o *GetSteeringIpsecTunnelsIDResponse) GetIpsecResponse429() *shared.IpsecResponse429 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse429
+}
+
+func (o *GetSteeringIpsecTunnelsIDResponse) GetIpsecResponse500() *shared.IpsecResponse500 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse500
+}
+
+func (o *GetSteeringIpsecTunnelsIDResponse) GetIpsecTunnelResponse200() *shared.IpsecTunnelResponse200 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecTunnelResponse200
 }

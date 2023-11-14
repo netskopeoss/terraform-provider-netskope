@@ -4,13 +4,13 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPublishersBulkUpgradeResourceModel) ToCreateSDKType() *operations.PutInfrastructurePublishersBulkRequestBody {
-	var publishers *operations.PutInfrastructurePublishersBulkPublishers
+func (r *NPAPublishersBulkUpgradeResourceModel) ToCreateSDKType() *shared.PublisherBulkRequest {
+	var publishers *shared.Publishers
 	if r.Publishers != nil {
-		var apply *operations.Apply
+		var apply *shared.Apply
 		if r.Publishers.Apply != nil {
 			upgradeRequest := new(bool)
 			if !r.Publishers.Apply.UpgradeRequest.IsUnknown() && !r.Publishers.Apply.UpgradeRequest.IsNull() {
@@ -18,7 +18,7 @@ func (r *NPAPublishersBulkUpgradeResourceModel) ToCreateSDKType() *operations.Pu
 			} else {
 				upgradeRequest = nil
 			}
-			apply = &operations.Apply{
+			apply = &shared.Apply{
 				UpgradeRequest: upgradeRequest,
 			}
 		}
@@ -26,27 +26,27 @@ func (r *NPAPublishersBulkUpgradeResourceModel) ToCreateSDKType() *operations.Pu
 		for _, idItem := range r.Publishers.ID {
 			id = append(id, idItem.ValueString())
 		}
-		publishers = &operations.PutInfrastructurePublishersBulkPublishers{
+		publishers = &shared.Publishers{
 			Apply: apply,
 			ID:    id,
 		}
 	}
-	out := operations.PutInfrastructurePublishersBulkRequestBody{
+	out := shared.PublisherBulkRequest{
 		Publishers: publishers,
 	}
 	return &out
 }
 
-func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromCreateResponse(resp *operations.PutInfrastructurePublishersBulkResponseBody) {
+func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromCreateResponse(resp *shared.PublishersBulkResponse) {
 	if len(r.Data) > len(resp.Data) {
 		r.Data = r.Data[:len(resp.Data)]
 	}
 	for dataCount, dataItem := range resp.Data {
-		var data1 PutInfrastructurePublishersBulkData
+		var data1 PublisherBulkItem
 		if dataItem.Assessment == nil {
 			data1.Assessment = nil
 		} else {
-			data1.Assessment = &Assessment{}
+			data1.Assessment = &PublisherResponseAssessment{}
 		}
 		if dataItem.CommonName != nil {
 			data1.CommonName = types.StringValue(*dataItem.CommonName)
@@ -92,7 +92,7 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromCreateResponse(resp *
 			data1.Tags = data1.Tags[:len(dataItem.Tags)]
 		}
 		for tagsCount, tagsItem := range dataItem.Tags {
-			var tags1 PostInfrastructurePublishersTags
+			var tags1 TagItem
 			if tagsItem.TagID != nil {
 				tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
 			} else {
@@ -113,7 +113,7 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromCreateResponse(resp *
 		if dataItem.UpgradeFailedReason == nil {
 			data1.UpgradeFailedReason = nil
 		} else {
-			data1.UpgradeFailedReason = &Assessment{}
+			data1.UpgradeFailedReason = &PublisherResponseAssessment{}
 		}
 		if dataItem.UpgradeRequest != nil {
 			data1.UpgradeRequest = types.BoolValue(*dataItem.UpgradeRequest)
@@ -123,7 +123,7 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromCreateResponse(resp *
 		if dataItem.UpgradeStatus == nil {
 			data1.UpgradeStatus = nil
 		} else {
-			data1.UpgradeStatus = &Assessment{}
+			data1.UpgradeStatus = &PublisherResponseAssessment{}
 		}
 		if dataCount+1 > len(r.Data) {
 			r.Data = append(r.Data, data1)

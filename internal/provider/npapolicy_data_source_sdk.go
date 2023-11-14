@@ -4,14 +4,14 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPolicyDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaRulesIDData) {
+func (r *NPAPolicyDataSourceModel) RefreshFromGetResponse(resp *shared.NpaPolicyResponseItem) {
 	if resp.RuleData == nil {
 		r.RuleData = nil
 	} else {
-		r.RuleData = &PostPolicyNpaRulesRuleData{}
+		r.RuleData = &NpaPolicyRuleData{}
 		r.RuleData.AccessMethod = nil
 		for _, v := range resp.RuleData.AccessMethod {
 			r.RuleData.AccessMethod = append(r.RuleData.AccessMethod, types.StringValue(v))
@@ -35,7 +35,7 @@ func (r *NPAPolicyDataSourceModel) RefreshFromGetResponse(resp *operations.GetPo
 			r.RuleData.DlpActions = r.RuleData.DlpActions[:len(resp.RuleData.DlpActions)]
 		}
 		for dlpActionsCount, dlpActionsItem := range resp.RuleData.DlpActions {
-			var dlpActions1 DlpActions
+			var dlpActions1 NpaPolicyRuleDlp
 			dlpActions1.Actions = nil
 			for _, v := range dlpActionsItem.Actions {
 				dlpActions1.Actions = append(dlpActions1.Actions, types.StringValue(string(v)))
@@ -65,7 +65,7 @@ func (r *NPAPolicyDataSourceModel) RefreshFromGetResponse(resp *operations.GetPo
 		if resp.RuleData.MatchCriteriaAction == nil {
 			r.RuleData.MatchCriteriaAction = nil
 		} else {
-			r.RuleData.MatchCriteriaAction = &PostPolicyNpaRulesMatchCriteriaAction{}
+			r.RuleData.MatchCriteriaAction = &MatchCriteriaAction{}
 			if resp.RuleData.MatchCriteriaAction.ActionName != nil {
 				r.RuleData.MatchCriteriaAction.ActionName = types.StringValue(string(*resp.RuleData.MatchCriteriaAction.ActionName))
 			} else {

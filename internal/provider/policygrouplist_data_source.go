@@ -29,12 +29,12 @@ type PolicyGroupListDataSource struct {
 
 // PolicyGroupListDataSourceModel describes the data model.
 type PolicyGroupListDataSourceModel struct {
-	Data      []GetPolicyNpaPolicygroupsData `tfsdk:"data"`
-	Filter    types.String                   `tfsdk:"filter"`
-	Limit     types.Int64                    `tfsdk:"limit"`
-	Offset    types.Int64                    `tfsdk:"offset"`
-	Sortby    types.String                   `tfsdk:"sortby"`
-	Sortorder types.String                   `tfsdk:"sortorder"`
+	Data      []NpaPolicygroupResponseItem `tfsdk:"data"`
+	Filter    types.String                 `tfsdk:"filter"`
+	Limit     types.Int64                  `tfsdk:"limit"`
+	Offset    types.Int64                  `tfsdk:"offset"`
+	Sortby    types.String                 `tfsdk:"sortby"`
+	Sortorder types.String                 `tfsdk:"sortorder"`
 }
 
 // Metadata returns the data source type name.
@@ -194,11 +194,11 @@ func (r *PolicyGroupListDataSource) Read(ctx context.Context, req datasource.Rea
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.NpaPolicygroupResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromGetResponse(res.NpaPolicygroupResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

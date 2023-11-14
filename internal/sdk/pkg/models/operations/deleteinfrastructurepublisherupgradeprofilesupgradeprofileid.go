@@ -5,6 +5,7 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -18,26 +19,6 @@ func (o *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest) Ge
 		return 0
 	}
 	return o.UpgradeProfileID
-}
-
-// DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody - Invalid request
-type DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody struct {
-	Message *string `json:"message,omitempty"`
-	Status  *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody) GetMessage() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Message
-}
-
-func (o *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDStatus string
@@ -80,30 +61,23 @@ func (o *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBod
 }
 
 type DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody
 	// Invalid request
-	FourHundredApplicationJSONObject *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody
+	FourHundred *shared.FourHundred
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
+	// successful operation
+	Object *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody
 }
 
-func (o *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetTwoHundredApplicationJSONObject() *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody {
+func (o *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetFourHundred() *shared.FourHundred {
 	if o == nil {
 		return nil
 	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetFourHundredApplicationJSONObject() *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	return o.FourHundred
 }
 
 func (o *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetContentType() string {
@@ -125,4 +99,11 @@ func (o *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) G
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetObject() *DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.Object
 }
