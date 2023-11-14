@@ -29,9 +29,9 @@ type NPAPublisherUpgradeProfileListDataSource struct {
 
 // NPAPublisherUpgradeProfileListDataSourceModel describes the data model.
 type NPAPublisherUpgradeProfileListDataSourceModel struct {
-	Data   []GetInfrastructurePublisherupgradeprofilesData `tfsdk:"data"`
-	Status types.String                                    `tfsdk:"status"`
-	Total  types.Int64                                     `tfsdk:"total"`
+	Data   []PublisherUpgradeProfileGetResponseData `tfsdk:"data"`
+	Status types.String                             `tfsdk:"status"`
+	Total  types.Int64                              `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -139,11 +139,11 @@ func (r *NPAPublisherUpgradeProfileListDataSource) Read(ctx context.Context, req
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.PublisherUpgradeProfileGetResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromGetResponse(res.PublisherUpgradeProfileGetResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

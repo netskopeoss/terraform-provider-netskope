@@ -9,7 +9,6 @@ import (
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
@@ -17,8 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/netskope/terraform-provider-ns/internal/validators"
-	"strconv"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -36,17 +33,18 @@ type NPAPublishersResource struct {
 
 // NPAPublishersResourceModel describes the resource data model.
 type NPAPublishersResourceModel struct {
-	Assessment                 types.String                       `tfsdk:"assessment"`
-	CommonName                 types.String                       `tfsdk:"common_name"`
-	ID                         types.Int64                        `tfsdk:"id"`
-	Lbrokerconnect             types.Bool                         `tfsdk:"lbrokerconnect"`
-	Name                       types.String                       `tfsdk:"name"`
-	PublisherUpgradeProfileID  types.Int64                        `tfsdk:"publisher_upgrade_profile_id"`
-	PublisherUpgradeProfilesID types.Int64                        `tfsdk:"publisher_upgrade_profiles_id"`
-	Registered                 types.Bool                         `tfsdk:"registered"`
-	Status                     types.String                       `tfsdk:"status"`
-	StitcherID                 types.Int64                        `tfsdk:"stitcher_id"`
-	Tags                       []PostInfrastructurePublishersTags `tfsdk:"tags"`
+	Assessment                 *PublisherResponseAssessment `tfsdk:"assessment"`
+	CommonName                 types.String                 `tfsdk:"common_name"`
+	Lbrokerconnect             types.Bool                   `tfsdk:"lbrokerconnect"`
+	Name                       types.String                 `tfsdk:"name"`
+	PublisherID                types.Int64                  `tfsdk:"publisher_id"`
+	PublisherName              types.String                 `tfsdk:"publisher_name"`
+	PublisherUpgradeProfileID  types.Int64                  `tfsdk:"publisher_upgrade_profile_id"`
+	PublisherUpgradeProfilesID types.Int64                  `tfsdk:"publisher_upgrade_profiles_id"`
+	Registered                 types.Bool                   `tfsdk:"registered"`
+	Status                     types.String                 `tfsdk:"status"`
+	StitcherID                 types.Int64                  `tfsdk:"stitcher_id"`
+	Tags                       []TagItem                    `tfsdk:"tags"`
 }
 
 func (r *NPAPublishersResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -58,26 +56,27 @@ func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaR
 		MarkdownDescription: "NPAPublishers Resource",
 
 		Attributes: map[string]schema.Attribute{
-			"assessment": schema.StringAttribute{
-				Computed:    true,
-				Description: `Parsed as JSON.`,
-				Validators: []validator.String{
-					validators.IsValidJSON(),
-				},
+			"assessment": schema.SingleNestedAttribute{
+				Computed:   true,
+				Attributes: map[string]schema.Attribute{},
 			},
 			"common_name": schema.StringAttribute{
 				Computed: true,
 			},
-			"id": schema.Int64Attribute{
-				Computed: true,
-			},
 			"lbrokerconnect": schema.BoolAttribute{
-				Computed: true,
-				Optional: true,
+				Computed:    true,
+				Optional:    true,
+				Description: `Default: false`,
 			},
 			"name": schema.StringAttribute{
+				Optional:    true,
+				Description: `Default: "publisher_name"`,
+			},
+			"publisher_id": schema.Int64Attribute{
 				Computed: true,
-				Optional: true,
+			},
+			"publisher_name": schema.StringAttribute{
+				Computed: true,
 			},
 			"publisher_upgrade_profile_id": schema.Int64Attribute{
 				Computed: true,
@@ -114,8 +113,9 @@ func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaR
 							Computed: true,
 						},
 						"tag_name": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `Default: "tag_name"`,
 						},
 					},
 				},
@@ -162,9 +162,9 @@ func (r *NPAPublishersResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
-	requestBody := *data.ToCreateSDKType()
+	publisherPostRequest := *data.ToCreateSDKType()
 	request := operations.PostInfrastructurePublishersRequest{
-		RequestBody: requestBody,
+		PublisherPostRequest: publisherPostRequest,
 	}
 	res, err := r.client.NPAPublishers.Create(ctx, request)
 	if err != nil {
@@ -182,11 +182,11 @@ func (r *NPAPublishersResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
+	if res.PublisherResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.TwoHundredApplicationJSONObject.Data)
+	data.RefreshFromCreateResponse(res.PublisherResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -210,7 +210,7 @@ func (r *NPAPublishersResource) Read(ctx context.Context, req resource.ReadReque
 		return
 	}
 
-	publisherID := int(data.ID.ValueInt64())
+	publisherID := int(data.ValueInt64())
 	request := operations.GetInfrastructurePublishersPublisherIDRequest{
 		PublisherID: publisherID,
 	}
@@ -230,11 +230,11 @@ func (r *NPAPublishersResource) Read(ctx context.Context, req resource.ReadReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
+	if res.PublisherResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject.Data)
+	data.RefreshFromGetResponse(res.PublisherResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -247,11 +247,11 @@ func (r *NPAPublishersResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 
-	requestBody := *data.ToUpdateSDKType()
-	publisherID := int(data.ID.ValueInt64())
+	publisherID := int(data.ValueInt64())
+	publisherPutRequest := *data.ToUpdateSDKType()
 	request := operations.PutInfrastructurePublishersPublisherIDRequest{
-		RequestBody: requestBody,
-		PublisherID: publisherID,
+		PublisherID:         publisherID,
+		PublisherPutRequest: publisherPutRequest,
 	}
 	res, err := r.client.NPAPublishers.Update(ctx, request)
 	if err != nil {
@@ -269,11 +269,11 @@ func (r *NPAPublishersResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
+	if res.PublisherResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromUpdateResponse(res.TwoHundredApplicationJSONObject.Data)
+	data.RefreshFromUpdateResponse(res.PublisherResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -297,7 +297,7 @@ func (r *NPAPublishersResource) Delete(ctx context.Context, req resource.DeleteR
 		return
 	}
 
-	publisherID := int(data.ID.ValueInt64())
+	publisherID := int(data.ValueInt64())
 	request := operations.DeleteInfrastructurePublishersPublisherIDRequest{
 		PublisherID: publisherID,
 	}
@@ -321,10 +321,5 @@ func (r *NPAPublishersResource) Delete(ctx context.Context, req resource.DeleteR
 }
 
 func (r *NPAPublishersResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	id, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
-	}
 
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), int64(id))...)
 }

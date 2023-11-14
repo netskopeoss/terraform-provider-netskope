@@ -3,166 +3,21 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
-// GetInfrastructurePublishersAlertsconfigurationResponseResponseBody - Invalid request
-type GetInfrastructurePublishersAlertsconfigurationResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersAlertsconfigurationResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetInfrastructurePublishersAlertsconfigurationResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type GetInfrastructurePublishersAlertsconfigurationEventTypes string
-
-const (
-	GetInfrastructurePublishersAlertsconfigurationEventTypesUpgradeWillStart GetInfrastructurePublishersAlertsconfigurationEventTypes = "UPGRADE_WILL_START"
-	GetInfrastructurePublishersAlertsconfigurationEventTypesUpgradeStarted   GetInfrastructurePublishersAlertsconfigurationEventTypes = "UPGRADE_STARTED"
-	GetInfrastructurePublishersAlertsconfigurationEventTypesUpgradeSucceeded GetInfrastructurePublishersAlertsconfigurationEventTypes = "UPGRADE_SUCCEEDED"
-	GetInfrastructurePublishersAlertsconfigurationEventTypesUpgradeFailed    GetInfrastructurePublishersAlertsconfigurationEventTypes = "UPGRADE_FAILED"
-	GetInfrastructurePublishersAlertsconfigurationEventTypesConnectionFailed GetInfrastructurePublishersAlertsconfigurationEventTypes = "CONNECTION_FAILED"
-)
-
-func (e GetInfrastructurePublishersAlertsconfigurationEventTypes) ToPointer() *GetInfrastructurePublishersAlertsconfigurationEventTypes {
-	return &e
-}
-
-func (e *GetInfrastructurePublishersAlertsconfigurationEventTypes) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "UPGRADE_WILL_START":
-		fallthrough
-	case "UPGRADE_STARTED":
-		fallthrough
-	case "UPGRADE_SUCCEEDED":
-		fallthrough
-	case "UPGRADE_FAILED":
-		fallthrough
-	case "CONNECTION_FAILED":
-		*e = GetInfrastructurePublishersAlertsconfigurationEventTypes(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for GetInfrastructurePublishersAlertsconfigurationEventTypes: %v", v)
-	}
-}
-
-type GetInfrastructurePublishersAlertsconfigurationData struct {
-	AdminUsers    []string                                                   `json:"adminUsers,omitempty"`
-	EventTypes    []GetInfrastructurePublishersAlertsconfigurationEventTypes `json:"eventTypes,omitempty"`
-	SelectedUsers *string                                                    `json:"selectedUsers,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersAlertsconfigurationData) GetAdminUsers() []string {
-	if o == nil {
-		return nil
-	}
-	return o.AdminUsers
-}
-
-func (o *GetInfrastructurePublishersAlertsconfigurationData) GetEventTypes() []GetInfrastructurePublishersAlertsconfigurationEventTypes {
-	if o == nil {
-		return nil
-	}
-	return o.EventTypes
-}
-
-func (o *GetInfrastructurePublishersAlertsconfigurationData) GetSelectedUsers() *string {
-	if o == nil {
-		return nil
-	}
-	return o.SelectedUsers
-}
-
-type GetInfrastructurePublishersAlertsconfigurationStatus string
-
-const (
-	GetInfrastructurePublishersAlertsconfigurationStatusSuccess  GetInfrastructurePublishersAlertsconfigurationStatus = "success"
-	GetInfrastructurePublishersAlertsconfigurationStatusNotFound GetInfrastructurePublishersAlertsconfigurationStatus = "not found"
-)
-
-func (e GetInfrastructurePublishersAlertsconfigurationStatus) ToPointer() *GetInfrastructurePublishersAlertsconfigurationStatus {
-	return &e
-}
-
-func (e *GetInfrastructurePublishersAlertsconfigurationStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = GetInfrastructurePublishersAlertsconfigurationStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for GetInfrastructurePublishersAlertsconfigurationStatus: %v", v)
-	}
-}
-
-// GetInfrastructurePublishersAlertsconfigurationResponseBody - successful operation
-type GetInfrastructurePublishersAlertsconfigurationResponseBody struct {
-	Data   *GetInfrastructurePublishersAlertsconfigurationData   `json:"data,omitempty"`
-	Status *GetInfrastructurePublishersAlertsconfigurationStatus `json:"status,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersAlertsconfigurationResponseBody) GetData() *GetInfrastructurePublishersAlertsconfigurationData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
-func (o *GetInfrastructurePublishersAlertsconfigurationResponseBody) GetStatus() *GetInfrastructurePublishersAlertsconfigurationStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
 type GetInfrastructurePublishersAlertsconfigurationResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *GetInfrastructurePublishersAlertsconfigurationResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *GetInfrastructurePublishersAlertsconfigurationResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *GetInfrastructurePublishersAlertsconfigurationResponse) GetTwoHundredApplicationJSONObject() *GetInfrastructurePublishersAlertsconfigurationResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *GetInfrastructurePublishersAlertsconfigurationResponse) GetFourHundredApplicationJSONObject() *GetInfrastructurePublishersAlertsconfigurationResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	PublishersAlertGetResponse *shared.PublishersAlertGetResponse
+	// Invalid request
+	PublishersResponse400 *shared.PublishersResponse400
 }
 
 func (o *GetInfrastructurePublishersAlertsconfigurationResponse) GetContentType() string {
@@ -184,4 +39,18 @@ func (o *GetInfrastructurePublishersAlertsconfigurationResponse) GetRawResponse(
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *GetInfrastructurePublishersAlertsconfigurationResponse) GetPublishersAlertGetResponse() *shared.PublishersAlertGetResponse {
+	if o == nil {
+		return nil
+	}
+	return o.PublishersAlertGetResponse
+}
+
+func (o *GetInfrastructurePublishersAlertsconfigurationResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.PublishersResponse400
 }

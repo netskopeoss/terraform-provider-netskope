@@ -5,6 +5,7 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -18,26 +19,6 @@ func (o *DeleteInfrastructurePublishersPublisherIDRequest) GetPublisherID() int 
 		return 0
 	}
 	return o.PublisherID
-}
-
-// DeleteInfrastructurePublishersPublisherIDNPAPublishersResponseBody - Invalid request
-type DeleteInfrastructurePublishersPublisherIDNPAPublishersResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteInfrastructurePublishersPublisherIDNPAPublishersResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteInfrastructurePublishersPublisherIDNPAPublishersResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type DeleteInfrastructurePublishersPublisherIDStatus string
@@ -80,30 +61,16 @@ func (o *DeleteInfrastructurePublishersPublisherIDResponseBody) GetStatus() *Del
 }
 
 type DeleteInfrastructurePublishersPublisherIDResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *DeleteInfrastructurePublishersPublisherIDResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *DeleteInfrastructurePublishersPublisherIDNPAPublishersResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *DeleteInfrastructurePublishersPublisherIDResponse) GetTwoHundredApplicationJSONObject() *DeleteInfrastructurePublishersPublisherIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *DeleteInfrastructurePublishersPublisherIDResponse) GetFourHundredApplicationJSONObject() *DeleteInfrastructurePublishersPublisherIDNPAPublishersResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	Object *DeleteInfrastructurePublishersPublisherIDResponseBody
+	// Invalid request
+	PublishersResponse400 *shared.PublishersResponse400
 }
 
 func (o *DeleteInfrastructurePublishersPublisherIDResponse) GetContentType() string {
@@ -125,4 +92,18 @@ func (o *DeleteInfrastructurePublishersPublisherIDResponse) GetRawResponse() *ht
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *DeleteInfrastructurePublishersPublisherIDResponse) GetObject() *DeleteInfrastructurePublishersPublisherIDResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.Object
+}
+
+func (o *DeleteInfrastructurePublishersPublisherIDResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.PublishersResponse400
 }

@@ -5,6 +5,7 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -18,26 +19,6 @@ func (o *DeletePolicyNpaPolicygroupsIDRequest) GetID() string {
 		return ""
 	}
 	return o.ID
-}
-
-// DeletePolicyNpaPolicygroupsIDResponseResponseBody - Invalid request
-type DeletePolicyNpaPolicygroupsIDResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeletePolicyNpaPolicygroupsIDResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeletePolicyNpaPolicygroupsIDResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type Status string
@@ -80,30 +61,16 @@ func (o *DeletePolicyNpaPolicygroupsIDResponseBody) GetStatus() *Status {
 }
 
 type DeletePolicyNpaPolicygroupsIDResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *DeletePolicyNpaPolicygroupsIDResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *DeletePolicyNpaPolicygroupsIDResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *DeletePolicyNpaPolicygroupsIDResponse) GetTwoHundredApplicationJSONObject() *DeletePolicyNpaPolicygroupsIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *DeletePolicyNpaPolicygroupsIDResponse) GetFourHundredApplicationJSONObject() *DeletePolicyNpaPolicygroupsIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// Invalid request
+	NpaPolicygroupResponse400 *shared.NpaPolicygroupResponse400
+	// successful operation
+	Object *DeletePolicyNpaPolicygroupsIDResponseBody
 }
 
 func (o *DeletePolicyNpaPolicygroupsIDResponse) GetContentType() string {
@@ -125,4 +92,18 @@ func (o *DeletePolicyNpaPolicygroupsIDResponse) GetRawResponse() *http.Response 
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *DeletePolicyNpaPolicygroupsIDResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.NpaPolicygroupResponse400
+}
+
+func (o *DeletePolicyNpaPolicygroupsIDResponse) GetObject() *DeletePolicyNpaPolicygroupsIDResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.Object
 }

@@ -5,159 +5,9 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
-
-type Protocols struct {
-	Port *string `json:"port,omitempty"`
-	Type *string `json:"type,omitempty"`
-}
-
-func (o *Protocols) GetPort() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Port
-}
-
-func (o *Protocols) GetType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Type
-}
-
-type PatchSteeringAppsPrivatePrivateAppIDPublisherTags struct {
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDPublisherTags) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-type Publishers struct {
-	PublisherID   *string `json:"publisher_id,omitempty"`
-	PublisherName *string `json:"publisher_name,omitempty"`
-}
-
-func (o *Publishers) GetPublisherID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherID
-}
-
-func (o *Publishers) GetPublisherName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherName
-}
-
-type PatchSteeringAppsPrivatePrivateAppIDTags struct {
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDTags) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-type PatchSteeringAppsPrivatePrivateAppIDRequestBody struct {
-	AppName              *string                                             `json:"app_name,omitempty"`
-	ClientlessAccess     *bool                                               `json:"clientless_access,omitempty"`
-	Host                 *string                                             `json:"host,omitempty"`
-	ID                   *int                                                `json:"id,omitempty"`
-	Protocols            []Protocols                                         `json:"protocols,omitempty"`
-	PublisherTags        []PatchSteeringAppsPrivatePrivateAppIDPublisherTags `json:"publisher_tags,omitempty"`
-	Publishers           []Publishers                                        `json:"publishers,omitempty"`
-	RealHost             *string                                             `json:"real_host,omitempty"`
-	Tags                 []PatchSteeringAppsPrivatePrivateAppIDTags          `json:"tags,omitempty"`
-	TrustSelfSignedCerts *bool                                               `json:"trust_self_signed_certs,omitempty"`
-	UsePublisherDNS      *bool                                               `json:"use_publisher_dns,omitempty"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequestBody) GetAppName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.AppName
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequestBody) GetClientlessAccess() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.ClientlessAccess
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequestBody) GetHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Host
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequestBody) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequestBody) GetProtocols() []Protocols {
-	if o == nil {
-		return nil
-	}
-	return o.Protocols
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequestBody) GetPublisherTags() []PatchSteeringAppsPrivatePrivateAppIDPublisherTags {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherTags
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequestBody) GetPublishers() []Publishers {
-	if o == nil {
-		return nil
-	}
-	return o.Publishers
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequestBody) GetRealHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.RealHost
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequestBody) GetTags() []PatchSteeringAppsPrivatePrivateAppIDTags {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequestBody) GetTrustSelfSignedCerts() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.TrustSelfSignedCerts
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequestBody) GetUsePublisherDNS() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.UsePublisherDNS
-}
 
 // PatchSteeringAppsPrivatePrivateAppIDQueryParamSilent - flag to skip output except status code
 type PatchSteeringAppsPrivatePrivateAppIDQueryParamSilent string
@@ -188,18 +38,11 @@ func (e *PatchSteeringAppsPrivatePrivateAppIDQueryParamSilent) UnmarshalJSON(dat
 }
 
 type PatchSteeringAppsPrivatePrivateAppIDRequest struct {
-	RequestBody PatchSteeringAppsPrivatePrivateAppIDRequestBody `request:"mediaType=application/json"`
 	// private apps id
-	PrivateAppID int `pathParam:"style=simple,explode=false,name=private_app_id"`
+	PrivateAppID          int                          `pathParam:"style=simple,explode=false,name=private_app_id"`
+	PrivateAppsPutRequest shared.PrivateAppsPutRequest `request:"mediaType=application/json"`
 	// flag to skip output except status code
 	Silent *PatchSteeringAppsPrivatePrivateAppIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequest) GetRequestBody() PatchSteeringAppsPrivatePrivateAppIDRequestBody {
-	if o == nil {
-		return PatchSteeringAppsPrivatePrivateAppIDRequestBody{}
-	}
-	return o.RequestBody
 }
 
 func (o *PatchSteeringAppsPrivatePrivateAppIDRequest) GetPrivateAppID() int {
@@ -209,6 +52,13 @@ func (o *PatchSteeringAppsPrivatePrivateAppIDRequest) GetPrivateAppID() int {
 	return o.PrivateAppID
 }
 
+func (o *PatchSteeringAppsPrivatePrivateAppIDRequest) GetPrivateAppsPutRequest() shared.PrivateAppsPutRequest {
+	if o == nil {
+		return shared.PrivateAppsPutRequest{}
+	}
+	return o.PrivateAppsPutRequest
+}
+
 func (o *PatchSteeringAppsPrivatePrivateAppIDRequest) GetSilent() *PatchSteeringAppsPrivatePrivateAppIDQueryParamSilent {
 	if o == nil {
 		return nil
@@ -216,246 +66,17 @@ func (o *PatchSteeringAppsPrivatePrivateAppIDRequest) GetSilent() *PatchSteering
 	return o.Silent
 }
 
-// PatchSteeringAppsPrivatePrivateAppIDResponseResponseBody - Invalid request
-type PatchSteeringAppsPrivatePrivateAppIDResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols struct {
-	Port      *string `json:"port,omitempty"`
-	Transport *string `json:"transport,omitempty"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols) GetPort() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Port
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols) GetTransport() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Transport
-}
-
-type PatchSteeringAppsPrivatePrivateAppIDReachability struct {
-	ErrorCode   *int    `json:"error_code,omitempty"`
-	ErrorString *string `json:"error_string,omitempty"`
-	Reachable   *bool   `json:"reachable,omitempty"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDReachability) GetErrorCode() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ErrorCode
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDReachability) GetErrorString() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ErrorString
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDReachability) GetReachable() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Reachable
-}
-
-type PatchSteeringAppsPrivatePrivateAppIDServicePublisherAssignments struct {
-	Primary      *bool                                             `json:"primary,omitempty"`
-	PublisherID  *int                                              `json:"publisher_id,omitempty"`
-	Reachability *PatchSteeringAppsPrivatePrivateAppIDReachability `json:"reachability,omitempty"`
-	ServiceID    *int                                              `json:"service_id,omitempty"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDServicePublisherAssignments) GetPrimary() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Primary
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDServicePublisherAssignments) GetPublisherID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherID
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDServicePublisherAssignments) GetReachability() *PatchSteeringAppsPrivatePrivateAppIDReachability {
-	if o == nil {
-		return nil
-	}
-	return o.Reachability
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDServicePublisherAssignments) GetServiceID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ServiceID
-}
-
-type PatchSteeringAppsPrivatePrivateAppIDResponseTags struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponseTags) GetTagID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.TagID
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponseTags) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-type PatchSteeringAppsPrivatePrivateAppIDData struct {
-	ClientlessAccess            *bool                                                             `json:"clientless_access,omitempty"`
-	Host                        *string                                                           `json:"host,omitempty"`
-	ID                          *int                                                              `json:"id,omitempty"`
-	Name                        *string                                                           `json:"name,omitempty"`
-	RealHost                    *string                                                           `json:"real_host,omitempty"`
-	ResolvedProtocols           []PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols           `json:"protocols,omitempty"`
-	ServicePublisherAssignments []PatchSteeringAppsPrivatePrivateAppIDServicePublisherAssignments `json:"service_publisher_assignments,omitempty"`
-	Tags                        []PatchSteeringAppsPrivatePrivateAppIDResponseTags                `json:"tags,omitempty"`
-	TrustSelfSignedCerts        *bool                                                             `json:"trust_self_signed_certs,omitempty"`
-	UsePublisherDNS             *bool                                                             `json:"use_publisher_dns,omitempty"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetClientlessAccess() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.ClientlessAccess
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Host
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetRealHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.RealHost
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetResolvedProtocols() []PatchSteeringAppsPrivatePrivateAppIDResolvedProtocols {
-	if o == nil {
-		return nil
-	}
-	return o.ResolvedProtocols
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetServicePublisherAssignments() []PatchSteeringAppsPrivatePrivateAppIDServicePublisherAssignments {
-	if o == nil {
-		return nil
-	}
-	return o.ServicePublisherAssignments
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetTags() []PatchSteeringAppsPrivatePrivateAppIDResponseTags {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetTrustSelfSignedCerts() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.TrustSelfSignedCerts
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDData) GetUsePublisherDNS() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.UsePublisherDNS
-}
-
-// PatchSteeringAppsPrivatePrivateAppIDResponseBody - successful operation
-type PatchSteeringAppsPrivatePrivateAppIDResponseBody struct {
-	Data *PatchSteeringAppsPrivatePrivateAppIDData `json:"data,omitempty"`
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponseBody) GetData() *PatchSteeringAppsPrivatePrivateAppIDData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
 type PatchSteeringAppsPrivatePrivateAppIDResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *PatchSteeringAppsPrivatePrivateAppIDResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *PatchSteeringAppsPrivatePrivateAppIDResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetTwoHundredApplicationJSONObject() *PatchSteeringAppsPrivatePrivateAppIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetFourHundredApplicationJSONObject() *PatchSteeringAppsPrivatePrivateAppIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	PrivateAppsResponse *shared.PrivateAppsResponse
+	// Invalid request
+	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
 func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetContentType() string {
@@ -477,4 +98,18 @@ func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetRawResponse() *http.Re
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse() *shared.PrivateAppsResponse {
+	if o == nil {
+		return nil
+	}
+	return o.PrivateAppsResponse
+}
+
+func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.PrivateAppsResponse400
 }

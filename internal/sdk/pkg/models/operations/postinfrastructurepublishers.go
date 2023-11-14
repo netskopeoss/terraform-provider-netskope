@@ -5,77 +5,9 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
-
-type PostInfrastructurePublishersTags struct {
-	TagName *string `default:"tag_name" json:"tag_name"`
-}
-
-func (p PostInfrastructurePublishersTags) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(p, "", false)
-}
-
-func (p *PostInfrastructurePublishersTags) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &p, "", false, false); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (o *PostInfrastructurePublishersTags) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-type PostInfrastructurePublishersRequestBody struct {
-	Lbrokerconnect             *bool                              `default:"false" json:"lbrokerconnect"`
-	Name                       *string                            `default:"publisher_name" json:"name"`
-	PublisherUpgradeProfilesID *int                               `default:"1" json:"publisher_upgrade_profiles_id"`
-	Tags                       []PostInfrastructurePublishersTags `json:"tags,omitempty"`
-}
-
-func (p PostInfrastructurePublishersRequestBody) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(p, "", false)
-}
-
-func (p *PostInfrastructurePublishersRequestBody) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &p, "", false, false); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (o *PostInfrastructurePublishersRequestBody) GetLbrokerconnect() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Lbrokerconnect
-}
-
-func (o *PostInfrastructurePublishersRequestBody) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *PostInfrastructurePublishersRequestBody) GetPublisherUpgradeProfilesID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherUpgradeProfilesID
-}
-
-func (o *PostInfrastructurePublishersRequestBody) GetTags() []PostInfrastructurePublishersTags {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
-}
 
 // PostInfrastructurePublishersQueryParamSilent - flag to skip output except status code
 type PostInfrastructurePublishersQueryParamSilent string
@@ -106,16 +38,16 @@ func (e *PostInfrastructurePublishersQueryParamSilent) UnmarshalJSON(data []byte
 }
 
 type PostInfrastructurePublishersRequest struct {
-	RequestBody PostInfrastructurePublishersRequestBody `request:"mediaType=application/json"`
+	PublisherPostRequest shared.PublisherPostRequest `request:"mediaType=application/json"`
 	// flag to skip output except status code
 	Silent *PostInfrastructurePublishersQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 }
 
-func (o *PostInfrastructurePublishersRequest) GetRequestBody() PostInfrastructurePublishersRequestBody {
+func (o *PostInfrastructurePublishersRequest) GetPublisherPostRequest() shared.PublisherPostRequest {
 	if o == nil {
-		return PostInfrastructurePublishersRequestBody{}
+		return shared.PublisherPostRequest{}
 	}
-	return o.RequestBody
+	return o.PublisherPostRequest
 }
 
 func (o *PostInfrastructurePublishersRequest) GetSilent() *PostInfrastructurePublishersQueryParamSilent {
@@ -125,192 +57,17 @@ func (o *PostInfrastructurePublishersRequest) GetSilent() *PostInfrastructurePub
 	return o.Silent
 }
 
-// PostInfrastructurePublishersNPAPublishersResponseBody - Invalid request
-type PostInfrastructurePublishersNPAPublishersResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PostInfrastructurePublishersNPAPublishersResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PostInfrastructurePublishersNPAPublishersResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type PostInfrastructurePublishersStatus string
-
-const (
-	PostInfrastructurePublishersStatusConnected     PostInfrastructurePublishersStatus = "connected"
-	PostInfrastructurePublishersStatusNotRegistered PostInfrastructurePublishersStatus = "not registered"
-)
-
-func (e PostInfrastructurePublishersStatus) ToPointer() *PostInfrastructurePublishersStatus {
-	return &e
-}
-
-func (e *PostInfrastructurePublishersStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "connected":
-		fallthrough
-	case "not registered":
-		*e = PostInfrastructurePublishersStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PostInfrastructurePublishersStatus: %v", v)
-	}
-}
-
-type PostInfrastructurePublishersNPAPublishersTags struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *PostInfrastructurePublishersNPAPublishersTags) GetTagID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.TagID
-}
-
-func (o *PostInfrastructurePublishersNPAPublishersTags) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-type PostInfrastructurePublishersData struct {
-	Assessment                interface{}                                     `json:"assessment,omitempty"`
-	CommonName                *string                                         `json:"common_name,omitempty"`
-	ID                        *int                                            `json:"id,omitempty"`
-	Lbrokerconnect            *bool                                           `json:"lbrokerconnect,omitempty"`
-	Name                      *string                                         `json:"name,omitempty"`
-	PublisherUpgradeProfileID *int                                            `json:"publisher_upgrade_profile_id,omitempty"`
-	Registered                *bool                                           `json:"registered,omitempty"`
-	Status                    *PostInfrastructurePublishersStatus             `json:"status,omitempty"`
-	StitcherID                *int                                            `json:"stitcher_id,omitempty"`
-	Tags                      []PostInfrastructurePublishersNPAPublishersTags `json:"tags,omitempty"`
-}
-
-func (o *PostInfrastructurePublishersData) GetAssessment() interface{} {
-	if o == nil {
-		return nil
-	}
-	return o.Assessment
-}
-
-func (o *PostInfrastructurePublishersData) GetCommonName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.CommonName
-}
-
-func (o *PostInfrastructurePublishersData) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *PostInfrastructurePublishersData) GetLbrokerconnect() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Lbrokerconnect
-}
-
-func (o *PostInfrastructurePublishersData) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *PostInfrastructurePublishersData) GetPublisherUpgradeProfileID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherUpgradeProfileID
-}
-
-func (o *PostInfrastructurePublishersData) GetRegistered() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Registered
-}
-
-func (o *PostInfrastructurePublishersData) GetStatus() *PostInfrastructurePublishersStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-func (o *PostInfrastructurePublishersData) GetStitcherID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.StitcherID
-}
-
-func (o *PostInfrastructurePublishersData) GetTags() []PostInfrastructurePublishersNPAPublishersTags {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
-}
-
-// PostInfrastructurePublishersResponseBody - successful operation
-type PostInfrastructurePublishersResponseBody struct {
-	Data *PostInfrastructurePublishersData `json:"data,omitempty"`
-}
-
-func (o *PostInfrastructurePublishersResponseBody) GetData() *PostInfrastructurePublishersData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
 type PostInfrastructurePublishersResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *PostInfrastructurePublishersResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *PostInfrastructurePublishersNPAPublishersResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *PostInfrastructurePublishersResponse) GetTwoHundredApplicationJSONObject() *PostInfrastructurePublishersResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *PostInfrastructurePublishersResponse) GetFourHundredApplicationJSONObject() *PostInfrastructurePublishersNPAPublishersResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	PublisherResponse *shared.PublisherResponse
+	// Invalid request
+	PublishersResponse400 *shared.PublishersResponse400
 }
 
 func (o *PostInfrastructurePublishersResponse) GetContentType() string {
@@ -332,4 +89,18 @@ func (o *PostInfrastructurePublishersResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PostInfrastructurePublishersResponse) GetPublisherResponse() *shared.PublisherResponse {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherResponse
+}
+
+func (o *PostInfrastructurePublishersResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.PublishersResponse400
 }

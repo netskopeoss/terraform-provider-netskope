@@ -5,31 +5,31 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPublishersListDataSourceModel) RefreshFromGetResponse(resp *operations.GetInfrastructurePublishersResponseBody) {
+func (r *NPAPublishersListDataSourceModel) RefreshFromGetResponse(resp *shared.PublishersGetResponse) {
 	if resp.Data == nil {
 		r.Data = nil
 	} else {
-		r.Data = &GetInfrastructurePublishersData{}
+		r.Data = &Data{}
 		if len(r.Data.Publishers) > len(resp.Data.Publishers) {
 			r.Data.Publishers = r.Data.Publishers[:len(resp.Data.Publishers)]
 		}
 		for publishersCount, publishersItem := range resp.Data.Publishers {
 			var publishers1 Publisher
 			publishers1.AppsCount = types.Int64Value(publishersItem.AppsCount)
-			if publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment != nil {
-				publishers1.Assessment.Assessment = &GetInfrastructurePublishersNPAPublishersAssessment{}
-				publishers1.Assessment.Assessment.EeeSupport = types.BoolValue(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.EeeSupport)
-				publishers1.Assessment.Assessment.HddFree = types.StringValue(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.HddFree)
-				publishers1.Assessment.Assessment.HddTotal = types.StringValue(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.HddTotal)
-				publishers1.Assessment.Assessment.IPAddress = types.StringValue(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.IPAddress)
-				publishers1.Assessment.Assessment.Latency = types.Int64Value(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.Latency)
-				publishers1.Assessment.Assessment.Version = types.StringValue(publishersItem.Assessment.GetInfrastructurePublishersNPAPublishersAssessment.Version)
+			if publishersItem.Assessment.Assessment != nil {
+				publishers1.Assessment.Assessment = &Assessment{}
+				publishers1.Assessment.Assessment.EeeSupport = types.BoolValue(publishersItem.Assessment.Assessment.EeeSupport)
+				publishers1.Assessment.Assessment.HddFree = types.StringValue(publishersItem.Assessment.Assessment.HddFree)
+				publishers1.Assessment.Assessment.HddTotal = types.StringValue(publishersItem.Assessment.Assessment.HddTotal)
+				publishers1.Assessment.Assessment.IPAddress = types.StringValue(publishersItem.Assessment.Assessment.IPAddress)
+				publishers1.Assessment.Assessment.Latency = types.Int64Value(publishersItem.Assessment.Assessment.Latency)
+				publishers1.Assessment.Assessment.Version = types.StringValue(publishersItem.Assessment.Assessment.Version)
 			}
 			if publishersItem.Assessment.Two != nil {
-				publishers1.Assessment.Two = &Assessment{}
+				publishers1.Assessment.Two = &PublisherResponseAssessment{}
 			}
 			publishers1.CommonName = types.StringValue(publishersItem.CommonName)
 			publishers1.ConnectedApps = nil
@@ -49,8 +49,8 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromGetResponse(resp *operatio
 					publishers1.StitcherID.Integer = types.Int64Null()
 				}
 			}
-			if publishersItem.StitcherID.GetInfrastructurePublishers2 != nil {
-				publishers1.StitcherID.Two = &Assessment{}
+			if publishersItem.StitcherID.Publisher2 != nil {
+				publishers1.StitcherID.Two = &PublisherResponseAssessment{}
 			}
 			publishers1.Tags = nil
 			for _, tagsItem := range publishersItem.Tags {
@@ -59,15 +59,15 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromGetResponse(resp *operatio
 				tags1 = types.StringValue(string(tags1Result))
 				publishers1.Tags = append(publishers1.Tags, tags1)
 			}
-			if publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishersUpgradeFailedReason != nil {
-				publishers1.UpgradeFailedReason.UpgradeFailedReason = &GetInfrastructurePublishersNPAPublishersUpgradeFailedReason{}
-				publishers1.UpgradeFailedReason.UpgradeFailedReason.Detail = types.StringValue(publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishersUpgradeFailedReason.Detail)
-				publishers1.UpgradeFailedReason.UpgradeFailedReason.ErrorCode = types.Int64Value(publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishersUpgradeFailedReason.ErrorCode)
-				publishers1.UpgradeFailedReason.UpgradeFailedReason.Timestamp = types.Int64Value(publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishersUpgradeFailedReason.Timestamp)
-				publishers1.UpgradeFailedReason.UpgradeFailedReason.Version = types.StringValue(publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishersUpgradeFailedReason.Version)
+			if publishersItem.UpgradeFailedReason.UpgradeFailedReason != nil {
+				publishers1.UpgradeFailedReason.UpgradeFailedReason = &UpgradeFailedReason{}
+				publishers1.UpgradeFailedReason.UpgradeFailedReason.Detail = types.StringValue(publishersItem.UpgradeFailedReason.UpgradeFailedReason.Detail)
+				publishers1.UpgradeFailedReason.UpgradeFailedReason.ErrorCode = types.Int64Value(publishersItem.UpgradeFailedReason.UpgradeFailedReason.ErrorCode)
+				publishers1.UpgradeFailedReason.UpgradeFailedReason.Timestamp = types.Int64Value(publishersItem.UpgradeFailedReason.UpgradeFailedReason.Timestamp)
+				publishers1.UpgradeFailedReason.UpgradeFailedReason.Version = types.StringValue(publishersItem.UpgradeFailedReason.UpgradeFailedReason.Version)
 			}
-			if publishersItem.UpgradeFailedReason.GetInfrastructurePublishersNPAPublishers2 != nil {
-				publishers1.UpgradeFailedReason.Two = &Assessment{}
+			if publishersItem.UpgradeFailedReason.PublisherSchemas2 != nil {
+				publishers1.UpgradeFailedReason.Two = &PublisherResponseAssessment{}
 			}
 			publishers1.UpgradeRequest = types.BoolValue(publishersItem.UpgradeRequest)
 			publishers1.UpgradeStatus.Upstat = types.StringValue(publishersItem.UpgradeStatus.Upstat)

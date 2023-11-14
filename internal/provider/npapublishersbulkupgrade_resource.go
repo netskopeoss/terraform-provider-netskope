@@ -34,9 +34,9 @@ type NPAPublishersBulkUpgradeResource struct {
 
 // NPAPublishersBulkUpgradeResourceModel describes the resource data model.
 type NPAPublishersBulkUpgradeResourceModel struct {
-	Data       []PutInfrastructurePublishersBulkData      `tfsdk:"data"`
-	Publishers *PutInfrastructurePublishersBulkPublishers `tfsdk:"publishers"`
-	Status     types.String                               `tfsdk:"status"`
+	Data       []PublisherBulkItem `tfsdk:"data"`
+	Publishers *Publishers         `tfsdk:"publishers"`
+	Status     types.String        `tfsdk:"status"`
 }
 
 func (r *NPAPublishersBulkUpgradeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -213,11 +213,11 @@ func (r *NPAPublishersBulkUpgradeResource) Create(ctx context.Context, req resou
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.PublishersBulkResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromCreateResponse(res.PublishersBulkResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

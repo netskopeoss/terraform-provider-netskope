@@ -4,15 +4,15 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.GetSteeringAppsPrivateResponseBody) {
+func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *shared.PrivateAppsGetResponse) {
 	if len(r.Data) > len(resp.Data) {
 		r.Data = r.Data[:len(resp.Data)]
 	}
 	for dataCount, dataItem := range resp.Data {
-		var data1 GetSteeringAppsPrivateData
+		var data1 PrivateAppsGetResponseData
 		if dataItem.AppID != nil {
 			data1.AppID = types.Int64Value(int64(*dataItem.AppID))
 		} else {
@@ -37,11 +37,21 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 			data1.Protocols = data1.Protocols[:len(dataItem.Protocols)]
 		}
 		for protocolsCount, protocolsItem := range dataItem.Protocols {
-			var protocols1 PostSteeringAppsPrivateResolvedProtocols
+			var protocols1 ProtocolResponseItem
+			if protocolsItem.ID != nil {
+				protocols1.ID = types.Int64Value(int64(*protocolsItem.ID))
+			} else {
+				protocols1.ID = types.Int64Null()
+			}
 			if protocolsItem.Port != nil {
 				protocols1.Port = types.StringValue(*protocolsItem.Port)
 			} else {
 				protocols1.Port = types.StringNull()
+			}
+			if protocolsItem.ServiceID != nil {
+				protocols1.ServiceID = types.Int64Value(int64(*protocolsItem.ServiceID))
+			} else {
+				protocols1.ServiceID = types.Int64Null()
 			}
 			if protocolsItem.Transport != nil {
 				protocols1.Transport = types.StringValue(*protocolsItem.Transport)
@@ -51,7 +61,9 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 			if protocolsCount+1 > len(data1.Protocols) {
 				data1.Protocols = append(data1.Protocols, protocols1)
 			} else {
+				data1.Protocols[protocolsCount].ID = protocols1.ID
 				data1.Protocols[protocolsCount].Port = protocols1.Port
+				data1.Protocols[protocolsCount].ServiceID = protocols1.ServiceID
 				data1.Protocols[protocolsCount].Transport = protocols1.Transport
 			}
 		}
@@ -64,7 +76,7 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 			data1.ServicePublisherAssignments = data1.ServicePublisherAssignments[:len(dataItem.ServicePublisherAssignments)]
 		}
 		for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range dataItem.ServicePublisherAssignments {
-			var servicePublisherAssignments1 PostSteeringAppsPrivateServicePublisherAssignments
+			var servicePublisherAssignments1 ServicePublisherAssignmentItem
 			if servicePublisherAssignmentsItem.Primary != nil {
 				servicePublisherAssignments1.Primary = types.BoolValue(*servicePublisherAssignmentsItem.Primary)
 			} else {
@@ -78,7 +90,7 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 			if servicePublisherAssignmentsItem.Reachability == nil {
 				servicePublisherAssignments1.Reachability = nil
 			} else {
-				servicePublisherAssignments1.Reachability = &PostSteeringAppsPrivateReachability{}
+				servicePublisherAssignments1.Reachability = &Reachability{}
 				if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
 					servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
 				} else {
@@ -113,7 +125,7 @@ func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *operations.
 			data1.Tags = data1.Tags[:len(dataItem.Tags)]
 		}
 		for tagsCount, tagsItem := range dataItem.Tags {
-			var tags1 PostInfrastructurePublishersTags
+			var tags1 TagItem
 			if tagsItem.TagID != nil {
 				tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
 			} else {

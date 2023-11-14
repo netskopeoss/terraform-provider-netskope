@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/sdkerrors"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
 	"io"
 	"net/http"
@@ -30,7 +31,7 @@ func (s *NPAPublisherUpgradeProfiles) Create(ctx context.Context, request operat
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/infrastructure/publisherupgradeprofiles"
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "PublisherUpgradeProfilePostRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -79,24 +80,24 @@ func (s *NPAPublisherUpgradeProfiles) Create(ctx context.Context, request operat
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostInfrastructurePublisherupgradeprofilesResponseBody
+			var out shared.PublisherUpgradeProfileResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PublisherUpgradeProfileResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PostInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody
+			var out shared.FourHundred
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.FourHundred = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -154,19 +155,19 @@ func (s *NPAPublisherUpgradeProfiles) Delete(ctx context.Context, request operat
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.Object = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody
+			var out shared.FourHundred
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.FourHundred = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -220,24 +221,24 @@ func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, request o
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetInfrastructurePublisherupgradeprofilesResponseBody
+			var out shared.PublisherUpgradeProfileGetResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.PublisherUpgradeProfileGetResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.GetInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody
+			var out shared.FourHundred
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.FourHundred = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
@@ -255,7 +256,7 @@ func (s *NPAPublisherUpgradeProfiles) Update(ctx context.Context, request operat
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PublisherUpgradeProfilePutRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -308,24 +309,24 @@ func (s *NPAPublisherUpgradeProfiles) Update(ctx context.Context, request operat
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponseBody
+			var out shared.TwoHundred
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.TwoHundredApplicationJSONObject = &out
+			res.TwoHundred = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDNPAPublisherUpgradeProfilesResponseBody
+			var out shared.FourHundred
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.FourHundredApplicationJSONObject = &out
+			res.FourHundred = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}

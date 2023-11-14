@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -18,187 +19,25 @@ func (o *DeleteSteeringGreTunnelsIDRequest) GetID() int64 {
 	return o.ID
 }
 
-// DeleteSteeringGreTunnelsIDResponse500ResponseBody - Internal server error
-type DeleteSteeringGreTunnelsIDResponse500ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse500ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse500ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// DeleteSteeringGreTunnelsIDResponse429ResponseBody - Too many requests
-type DeleteSteeringGreTunnelsIDResponse429ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse429ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse429ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// DeleteSteeringGreTunnelsIDResponse405ResponseBody - Method not allowed
-type DeleteSteeringGreTunnelsIDResponse405ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse405ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse405ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// DeleteSteeringGreTunnelsIDResponse404ResponseBody - Not found
-type DeleteSteeringGreTunnelsIDResponse404ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse404ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse404ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// DeleteSteeringGreTunnelsIDResponseResponseBody - Access forbidden
-type DeleteSteeringGreTunnelsIDResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// DeleteSteeringGreTunnelsIDResponseBody - Successful operation
-type DeleteSteeringGreTunnelsIDResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
 type DeleteSteeringGreTunnelsIDResponse struct {
-	// Successful operation
-	TwoHundredApplicationJSONObject *DeleteSteeringGreTunnelsIDResponseBody
-	// Access forbidden
-	FourHundredAndThreeApplicationJSONObject *DeleteSteeringGreTunnelsIDResponseResponseBody
-	// Not found
-	FourHundredAndFourApplicationJSONObject *DeleteSteeringGreTunnelsIDResponse404ResponseBody
-	// Method not allowed
-	FourHundredAndFiveApplicationJSONObject *DeleteSteeringGreTunnelsIDResponse405ResponseBody
-	// Too many requests
-	FourHundredAndTwentyNineApplicationJSONObject *DeleteSteeringGreTunnelsIDResponse429ResponseBody
-	// Internal server error
-	FiveHundredApplicationJSONObject *DeleteSteeringGreTunnelsIDResponse500ResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse) GetTwoHundredApplicationJSONObject() *DeleteSteeringGreTunnelsIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse) GetFourHundredAndThreeApplicationJSONObject() *DeleteSteeringGreTunnelsIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndThreeApplicationJSONObject
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse) GetFourHundredAndFourApplicationJSONObject() *DeleteSteeringGreTunnelsIDResponse404ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndFourApplicationJSONObject
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse) GetFourHundredAndFiveApplicationJSONObject() *DeleteSteeringGreTunnelsIDResponse405ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndFiveApplicationJSONObject
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse) GetFourHundredAndTwentyNineApplicationJSONObject() *DeleteSteeringGreTunnelsIDResponse429ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndTwentyNineApplicationJSONObject
-}
-
-func (o *DeleteSteeringGreTunnelsIDResponse) GetFiveHundredApplicationJSONObject() *DeleteSteeringGreTunnelsIDResponse500ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FiveHundredApplicationJSONObject
+	// Successful operation
+	GreResponse200 *shared.GreResponse200
+	// Access forbidden
+	GreResponse403 *shared.GreResponse403
+	// Not found
+	GreResponse404 *shared.GreResponse404
+	// Method not allowed
+	GreResponse405 *shared.GreResponse405
+	// Too many requests
+	GreResponse429 *shared.GreResponse429
+	// Internal server error
+	GreResponse500 *shared.GreResponse500
 }
 
 func (o *DeleteSteeringGreTunnelsIDResponse) GetContentType() string {
@@ -220,4 +59,46 @@ func (o *DeleteSteeringGreTunnelsIDResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *DeleteSteeringGreTunnelsIDResponse) GetGreResponse200() *shared.GreResponse200 {
+	if o == nil {
+		return nil
+	}
+	return o.GreResponse200
+}
+
+func (o *DeleteSteeringGreTunnelsIDResponse) GetGreResponse403() *shared.GreResponse403 {
+	if o == nil {
+		return nil
+	}
+	return o.GreResponse403
+}
+
+func (o *DeleteSteeringGreTunnelsIDResponse) GetGreResponse404() *shared.GreResponse404 {
+	if o == nil {
+		return nil
+	}
+	return o.GreResponse404
+}
+
+func (o *DeleteSteeringGreTunnelsIDResponse) GetGreResponse405() *shared.GreResponse405 {
+	if o == nil {
+		return nil
+	}
+	return o.GreResponse405
+}
+
+func (o *DeleteSteeringGreTunnelsIDResponse) GetGreResponse429() *shared.GreResponse429 {
+	if o == nil {
+		return nil
+	}
+	return o.GreResponse429
+}
+
+func (o *DeleteSteeringGreTunnelsIDResponse) GetGreResponse500() *shared.GreResponse500 {
+	if o == nil {
+		return nil
+	}
+	return o.GreResponse500
 }

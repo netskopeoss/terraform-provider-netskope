@@ -4,35 +4,35 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPolicyGroupResourceModel) ToCreateSDKType() *operations.PostPolicyNpaPolicygroupsRequestBody {
+func (r *NPAPolicyGroupResourceModel) ToCreateSDKType() *shared.NpaPolicygroupRequest {
 	groupName := r.GroupName.ValueString()
 	groupID := r.GroupOrder.GroupID.ValueString()
-	order := operations.PostPolicyNpaPolicygroupsOrder(r.GroupOrder.Order.ValueString())
-	groupOrder := operations.PostPolicyNpaPolicygroupsGroupOrder{
+	order := shared.NpaPolicygroupRequestOrder(r.GroupOrder.Order.ValueString())
+	groupOrder := shared.GroupOrder{
 		GroupID: groupID,
 		Order:   order,
 	}
-	out := operations.PostPolicyNpaPolicygroupsRequestBody{
+	out := shared.NpaPolicygroupRequest{
 		GroupName:  groupName,
 		GroupOrder: groupOrder,
 	}
 	return &out
 }
 
-func (r *NPAPolicyGroupResourceModel) ToGetSDKType() *operations.PostPolicyNpaPolicygroupsRequestBody {
+func (r *NPAPolicyGroupResourceModel) ToGetSDKType() *shared.NpaPolicygroupRequest {
 	out := r.ToCreateSDKType()
 	return out
 }
 
-func (r *NPAPolicyGroupResourceModel) ToDeleteSDKType() *operations.PostPolicyNpaPolicygroupsRequestBody {
+func (r *NPAPolicyGroupResourceModel) ToDeleteSDKType() *shared.NpaPolicygroupRequest {
 	out := r.ToCreateSDKType()
 	return out
 }
 
-func (r *NPAPolicyGroupResourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsIDData) {
+func (r *NPAPolicyGroupResourceModel) RefreshFromGetResponse(resp *shared.NpaPolicygroupResponseItem) {
 	if resp.CanBeEditedDeleted != nil {
 		r.CanBeEditedDeleted = types.StringValue(*resp.CanBeEditedDeleted)
 	} else {
@@ -75,45 +75,6 @@ func (r *NPAPolicyGroupResourceModel) RefreshFromGetResponse(resp *operations.Ge
 	}
 }
 
-func (r *NPAPolicyGroupResourceModel) RefreshFromCreateResponse(resp *operations.PostPolicyNpaPolicygroupsData) {
-	if resp.CanBeEditedDeleted != nil {
-		r.CanBeEditedDeleted = types.StringValue(*resp.CanBeEditedDeleted)
-	} else {
-		r.CanBeEditedDeleted = types.StringNull()
-	}
-	if resp.GroupID != nil {
-		r.GroupID = types.StringValue(*resp.GroupID)
-	} else {
-		r.GroupID = types.StringNull()
-	}
-	if resp.GroupName != nil {
-		r.GroupName = types.StringValue(*resp.GroupName)
-	} else {
-		r.GroupName = types.StringNull()
-	}
-	if resp.GroupPinnedID != nil {
-		r.GroupPinnedID = types.Int64Value(*resp.GroupPinnedID)
-	} else {
-		r.GroupPinnedID = types.Int64Null()
-	}
-	if resp.GroupProdID != nil {
-		r.GroupProdID = types.Int64Value(*resp.GroupProdID)
-	} else {
-		r.GroupProdID = types.Int64Null()
-	}
-	if resp.GroupType != nil {
-		r.GroupType = types.StringValue(*resp.GroupType)
-	} else {
-		r.GroupType = types.StringNull()
-	}
-	if resp.ModifyTime != nil {
-		r.ModifyTime = types.StringValue(*resp.ModifyTime)
-	} else {
-		r.ModifyTime = types.StringNull()
-	}
-	if resp.ModifyType != nil {
-		r.ModifyType = types.StringValue(*resp.ModifyType)
-	} else {
-		r.ModifyType = types.StringNull()
-	}
+func (r *NPAPolicyGroupResourceModel) RefreshFromCreateResponse(resp *shared.NpaPolicygroupResponseItem) {
+	r.RefreshFromGetResponse(resp)
 }

@@ -4,17 +4,17 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPublishersAlertsResourceModel) ToCreateSDKType() *operations.PutInfrastructurePublishersAlertsconfigurationRequestBody {
+func (r *NPAPublishersAlertsResourceModel) ToCreateSDKType() *shared.PublishersAlertPutRequest {
 	var adminUsers []string = nil
 	for _, adminUsersItem := range r.AdminUsers {
 		adminUsers = append(adminUsers, adminUsersItem.ValueString())
 	}
-	var eventTypes []operations.EventTypes = nil
+	var eventTypes []shared.EventTypes = nil
 	for _, eventTypesItem := range r.EventTypes {
-		eventTypes = append(eventTypes, operations.EventTypes(eventTypesItem.ValueString()))
+		eventTypes = append(eventTypes, shared.EventTypes(eventTypesItem.ValueString()))
 	}
 	selectedUsers := new(string)
 	if !r.SelectedUsers.IsUnknown() && !r.SelectedUsers.IsNull() {
@@ -22,7 +22,7 @@ func (r *NPAPublishersAlertsResourceModel) ToCreateSDKType() *operations.PutInfr
 	} else {
 		selectedUsers = nil
 	}
-	out := operations.PutInfrastructurePublishersAlertsconfigurationRequestBody{
+	out := shared.PublishersAlertPutRequest{
 		AdminUsers:    adminUsers,
 		EventTypes:    eventTypes,
 		SelectedUsers: selectedUsers,
@@ -30,7 +30,7 @@ func (r *NPAPublishersAlertsResourceModel) ToCreateSDKType() *operations.PutInfr
 	return &out
 }
 
-func (r *NPAPublishersAlertsResourceModel) RefreshFromCreateResponse(resp *operations.PutInfrastructurePublishersAlertsconfigurationResponseBody) {
+func (r *NPAPublishersAlertsResourceModel) RefreshFromCreateResponse(resp *shared.PublishersAlertPutResponse) {
 	if resp.Status != nil {
 		r.Status = types.StringValue(string(*resp.Status))
 	} else {

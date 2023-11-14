@@ -29,10 +29,10 @@ type NPAPublishersListDataSource struct {
 
 // NPAPublishersListDataSourceModel describes the data model.
 type NPAPublishersListDataSourceModel struct {
-	Data   *GetInfrastructurePublishersData `tfsdk:"data"`
-	Fields types.String                     `tfsdk:"fields"`
-	Status types.String                     `tfsdk:"status"`
-	Total  types.Int64                      `tfsdk:"total"`
+	Data   *Data        `tfsdk:"data"`
+	Fields types.String `tfsdk:"fields"`
+	Status types.String `tfsdk:"status"`
+	Total  types.Int64  `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -248,11 +248,11 @@ func (r *NPAPublishersListDataSource) Read(ctx context.Context, req datasource.R
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil {
+	if res.PublishersGetResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject)
+	data.RefreshFromGetResponse(res.PublishersGetResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

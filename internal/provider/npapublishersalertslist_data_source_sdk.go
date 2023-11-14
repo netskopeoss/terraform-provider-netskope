@@ -4,10 +4,10 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPublishersAlertsListDataSourceModel) RefreshFromGetResponse(resp *operations.GetInfrastructurePublishersAlertsconfigurationData) {
+func (r *NPAPublishersAlertsListDataSourceModel) RefreshFromGetResponse(resp *shared.PublishersAlertGetResponseData) {
 	r.AdminUsers = nil
 	for _, v := range resp.AdminUsers {
 		r.AdminUsers = append(r.AdminUsers, types.StringValue(v))

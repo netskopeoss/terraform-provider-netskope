@@ -3,8 +3,7 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -20,165 +19,24 @@ func (o *GetInfrastructurePublisherupgradeprofilesRequest) GetFields() *string {
 	return o.Fields
 }
 
-// GetInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody - Invalid request
-type GetInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody struct {
-	Message *string `json:"message,omitempty"`
-	Status  *int64  `json:"status,omitempty"`
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody) GetMessage() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Message
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type GetInfrastructurePublisherupgradeprofilesData struct {
-	DockerTag   *string `json:"docker_tag,omitempty"`
-	Enabled     *int    `json:"enabled,omitempty"`
-	Frequency   *string `json:"frequency,omitempty"`
-	ID          *int    `json:"id,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	ReleaseType *string `json:"release_type,omitempty"`
-	Timezone    *string `json:"timezone,omitempty"`
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesData) GetDockerTag() *string {
-	if o == nil {
-		return nil
-	}
-	return o.DockerTag
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesData) GetEnabled() *int {
-	if o == nil {
-		return nil
-	}
-	return o.Enabled
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesData) GetFrequency() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Frequency
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesData) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesData) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesData) GetReleaseType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ReleaseType
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesData) GetTimezone() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Timezone
-}
-
-type GetInfrastructurePublisherupgradeprofilesStatus string
-
-const (
-	GetInfrastructurePublisherupgradeprofilesStatusSuccess  GetInfrastructurePublisherupgradeprofilesStatus = "success"
-	GetInfrastructurePublisherupgradeprofilesStatusNotFound GetInfrastructurePublisherupgradeprofilesStatus = "not found"
-)
-
-func (e GetInfrastructurePublisherupgradeprofilesStatus) ToPointer() *GetInfrastructurePublisherupgradeprofilesStatus {
-	return &e
-}
-
-func (e *GetInfrastructurePublisherupgradeprofilesStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = GetInfrastructurePublisherupgradeprofilesStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for GetInfrastructurePublisherupgradeprofilesStatus: %v", v)
-	}
-}
-
-// GetInfrastructurePublisherupgradeprofilesResponseBody - successful operation
-type GetInfrastructurePublisherupgradeprofilesResponseBody struct {
-	Data   []GetInfrastructurePublisherupgradeprofilesData  `json:"data,omitempty"`
-	Status *GetInfrastructurePublisherupgradeprofilesStatus `json:"status,omitempty"`
-	Total  *int                                             `json:"total,omitempty"`
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesResponseBody) GetData() []GetInfrastructurePublisherupgradeprofilesData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesResponseBody) GetStatus() *GetInfrastructurePublisherupgradeprofilesStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesResponseBody) GetTotal() *int {
-	if o == nil {
-		return nil
-	}
-	return o.Total
-}
-
 type GetInfrastructurePublisherupgradeprofilesResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *GetInfrastructurePublisherupgradeprofilesResponseBody
 	// Invalid request
-	FourHundredApplicationJSONObject *GetInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody
+	FourHundred *shared.FourHundred
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
+	// successful operation
+	PublisherUpgradeProfileGetResponse *shared.PublisherUpgradeProfileGetResponse
 }
 
-func (o *GetInfrastructurePublisherupgradeprofilesResponse) GetTwoHundredApplicationJSONObject() *GetInfrastructurePublisherupgradeprofilesResponseBody {
+func (o *GetInfrastructurePublisherupgradeprofilesResponse) GetFourHundred() *shared.FourHundred {
 	if o == nil {
 		return nil
 	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *GetInfrastructurePublisherupgradeprofilesResponse) GetFourHundredApplicationJSONObject() *GetInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	return o.FourHundred
 }
 
 func (o *GetInfrastructurePublisherupgradeprofilesResponse) GetContentType() string {
@@ -200,4 +58,11 @@ func (o *GetInfrastructurePublisherupgradeprofilesResponse) GetRawResponse() *ht
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *GetInfrastructurePublisherupgradeprofilesResponse) GetPublisherUpgradeProfileGetResponse() *shared.PublisherUpgradeProfileGetResponse {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherUpgradeProfileGetResponse
 }

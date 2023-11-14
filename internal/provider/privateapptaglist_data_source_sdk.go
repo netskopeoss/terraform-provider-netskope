@@ -4,15 +4,15 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *PrivateAppTagListDataSourceModel) RefreshFromGetResponse(resp *operations.GetSteeringAppsPrivateTagsResponseBody) {
+func (r *PrivateAppTagListDataSourceModel) RefreshFromGetResponse(resp *shared.TagResponse) {
 	if len(r.Data) > len(resp.Data) {
 		r.Data = r.Data[:len(resp.Data)]
 	}
 	for dataCount, dataItem := range resp.Data {
-		var data1 PostInfrastructurePublishersTags
+		var data1 TagItem
 		if dataItem.TagID != nil {
 			data1.TagID = types.Int64Value(int64(*dataItem.TagID))
 		} else {

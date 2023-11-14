@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -18,55 +19,21 @@ func (o *DeleteSteeringAppsPrivatePrivateAppIDRequest) GetPrivateAppID() int {
 	return o.PrivateAppID
 }
 
-// DeleteSteeringAppsPrivatePrivateAppIDResponseResponseBody - Invalid request
-type DeleteSteeringAppsPrivatePrivateAppIDResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringAppsPrivatePrivateAppIDResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
 // DeleteSteeringAppsPrivatePrivateAppIDResponseBody - successful operation
 type DeleteSteeringAppsPrivatePrivateAppIDResponseBody struct {
 }
 
 type DeleteSteeringAppsPrivatePrivateAppIDResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *DeleteSteeringAppsPrivatePrivateAppIDResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *DeleteSteeringAppsPrivatePrivateAppIDResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *DeleteSteeringAppsPrivatePrivateAppIDResponse) GetTwoHundredApplicationJSONObject() *DeleteSteeringAppsPrivatePrivateAppIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *DeleteSteeringAppsPrivatePrivateAppIDResponse) GetFourHundredApplicationJSONObject() *DeleteSteeringAppsPrivatePrivateAppIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	Object *DeleteSteeringAppsPrivatePrivateAppIDResponseBody
+	// Invalid request
+	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
 func (o *DeleteSteeringAppsPrivatePrivateAppIDResponse) GetContentType() string {
@@ -88,4 +55,18 @@ func (o *DeleteSteeringAppsPrivatePrivateAppIDResponse) GetRawResponse() *http.R
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *DeleteSteeringAppsPrivatePrivateAppIDResponse) GetObject() *DeleteSteeringAppsPrivatePrivateAppIDResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.Object
+}
+
+func (o *DeleteSteeringAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.PrivateAppsResponse400
 }
