@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -18,187 +19,25 @@ func (o *DeleteSteeringIpsecTunnelsIDRequest) GetID() int64 {
 	return o.ID
 }
 
-// DeleteSteeringIpsecTunnelsIDResponse500ResponseBody - Internal server error
-type DeleteSteeringIpsecTunnelsIDResponse500ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse500ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse500ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// DeleteSteeringIpsecTunnelsIDResponse429ResponseBody - Too many requests
-type DeleteSteeringIpsecTunnelsIDResponse429ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse429ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse429ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// DeleteSteeringIpsecTunnelsIDResponse405ResponseBody - Method not allowed
-type DeleteSteeringIpsecTunnelsIDResponse405ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse405ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse405ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// DeleteSteeringIpsecTunnelsIDResponse404ResponseBody - Not found
-type DeleteSteeringIpsecTunnelsIDResponse404ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse404ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse404ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// DeleteSteeringIpsecTunnelsIDResponseResponseBody - Access forbidden
-type DeleteSteeringIpsecTunnelsIDResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// DeleteSteeringIpsecTunnelsIDResponseBody - Successful operation
-type DeleteSteeringIpsecTunnelsIDResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
 type DeleteSteeringIpsecTunnelsIDResponse struct {
-	// Successful operation
-	TwoHundredApplicationJSONObject *DeleteSteeringIpsecTunnelsIDResponseBody
-	// Access forbidden
-	FourHundredAndThreeApplicationJSONObject *DeleteSteeringIpsecTunnelsIDResponseResponseBody
-	// Not found
-	FourHundredAndFourApplicationJSONObject *DeleteSteeringIpsecTunnelsIDResponse404ResponseBody
-	// Method not allowed
-	FourHundredAndFiveApplicationJSONObject *DeleteSteeringIpsecTunnelsIDResponse405ResponseBody
-	// Too many requests
-	FourHundredAndTwentyNineApplicationJSONObject *DeleteSteeringIpsecTunnelsIDResponse429ResponseBody
-	// Internal server error
-	FiveHundredApplicationJSONObject *DeleteSteeringIpsecTunnelsIDResponse500ResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse) GetTwoHundredApplicationJSONObject() *DeleteSteeringIpsecTunnelsIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse) GetFourHundredAndThreeApplicationJSONObject() *DeleteSteeringIpsecTunnelsIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndThreeApplicationJSONObject
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse) GetFourHundredAndFourApplicationJSONObject() *DeleteSteeringIpsecTunnelsIDResponse404ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndFourApplicationJSONObject
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse) GetFourHundredAndFiveApplicationJSONObject() *DeleteSteeringIpsecTunnelsIDResponse405ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndFiveApplicationJSONObject
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse) GetFourHundredAndTwentyNineApplicationJSONObject() *DeleteSteeringIpsecTunnelsIDResponse429ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndTwentyNineApplicationJSONObject
-}
-
-func (o *DeleteSteeringIpsecTunnelsIDResponse) GetFiveHundredApplicationJSONObject() *DeleteSteeringIpsecTunnelsIDResponse500ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FiveHundredApplicationJSONObject
+	// Successful operation
+	IpsecResponse200 *shared.IpsecResponse200
+	// Access forbidden
+	IpsecResponse403 *shared.IpsecResponse403
+	// Not found
+	IpsecResponse404 *shared.IpsecResponse404
+	// Method not allowed
+	IpsecResponse405 *shared.IpsecResponse405
+	// Too many requests
+	IpsecResponse429 *shared.IpsecResponse429
+	// Internal server error
+	IpsecResponse500 *shared.IpsecResponse500
 }
 
 func (o *DeleteSteeringIpsecTunnelsIDResponse) GetContentType() string {
@@ -220,4 +59,46 @@ func (o *DeleteSteeringIpsecTunnelsIDResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *DeleteSteeringIpsecTunnelsIDResponse) GetIpsecResponse200() *shared.IpsecResponse200 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse200
+}
+
+func (o *DeleteSteeringIpsecTunnelsIDResponse) GetIpsecResponse403() *shared.IpsecResponse403 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse403
+}
+
+func (o *DeleteSteeringIpsecTunnelsIDResponse) GetIpsecResponse404() *shared.IpsecResponse404 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse404
+}
+
+func (o *DeleteSteeringIpsecTunnelsIDResponse) GetIpsecResponse405() *shared.IpsecResponse405 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse405
+}
+
+func (o *DeleteSteeringIpsecTunnelsIDResponse) GetIpsecResponse429() *shared.IpsecResponse429 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse429
+}
+
+func (o *DeleteSteeringIpsecTunnelsIDResponse) GetIpsecResponse500() *shared.IpsecResponse500 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse500
 }

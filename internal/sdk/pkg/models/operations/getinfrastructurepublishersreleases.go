@@ -3,8 +3,7 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -20,125 +19,17 @@ func (o *GetInfrastructurePublishersReleasesRequest) GetFields() *string {
 	return o.Fields
 }
 
-// GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody - Invalid request
-type GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type GetInfrastructurePublishersReleasesData struct {
-	DockerTag *string `json:"docker_tag,omitempty"`
-	Name      *string `json:"name,omitempty"`
-	Version   *string `json:"version,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersReleasesData) GetDockerTag() *string {
-	if o == nil {
-		return nil
-	}
-	return o.DockerTag
-}
-
-func (o *GetInfrastructurePublishersReleasesData) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *GetInfrastructurePublishersReleasesData) GetVersion() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Version
-}
-
-type GetInfrastructurePublishersReleasesStatus string
-
-const (
-	GetInfrastructurePublishersReleasesStatusSuccess  GetInfrastructurePublishersReleasesStatus = "success"
-	GetInfrastructurePublishersReleasesStatusNotFound GetInfrastructurePublishersReleasesStatus = "not found"
-)
-
-func (e GetInfrastructurePublishersReleasesStatus) ToPointer() *GetInfrastructurePublishersReleasesStatus {
-	return &e
-}
-
-func (e *GetInfrastructurePublishersReleasesStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = GetInfrastructurePublishersReleasesStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for GetInfrastructurePublishersReleasesStatus: %v", v)
-	}
-}
-
-// GetInfrastructurePublishersReleasesResponseBody - successful operation
-type GetInfrastructurePublishersReleasesResponseBody struct {
-	Data   []GetInfrastructurePublishersReleasesData  `json:"data,omitempty"`
-	Status *GetInfrastructurePublishersReleasesStatus `json:"status,omitempty"`
-}
-
-func (o *GetInfrastructurePublishersReleasesResponseBody) GetData() []GetInfrastructurePublishersReleasesData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
-func (o *GetInfrastructurePublishersReleasesResponseBody) GetStatus() *GetInfrastructurePublishersReleasesStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
 type GetInfrastructurePublishersReleasesResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *GetInfrastructurePublishersReleasesResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *GetInfrastructurePublishersReleasesResponse) GetTwoHundredApplicationJSONObject() *GetInfrastructurePublishersReleasesResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *GetInfrastructurePublishersReleasesResponse) GetFourHundredApplicationJSONObject() *GetInfrastructurePublishersReleasesNPAPublishersReleasesResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	PublishersReleaseGetResponse *shared.PublishersReleaseGetResponse
+	// Invalid request
+	PublishersResponse400 *shared.PublishersResponse400
 }
 
 func (o *GetInfrastructurePublishersReleasesResponse) GetContentType() string {
@@ -160,4 +51,18 @@ func (o *GetInfrastructurePublishersReleasesResponse) GetRawResponse() *http.Res
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *GetInfrastructurePublishersReleasesResponse) GetPublishersReleaseGetResponse() *shared.PublishersReleaseGetResponse {
+	if o == nil {
+		return nil
+	}
+	return o.PublishersReleaseGetResponse
+}
+
+func (o *GetInfrastructurePublishersReleasesResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.PublishersResponse400
 }

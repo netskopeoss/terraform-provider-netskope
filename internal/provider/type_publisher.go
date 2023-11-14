@@ -5,19 +5,19 @@ package provider
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type Publisher struct {
-	AppsCount                          types.Int64                                    `tfsdk:"apps_count"`
-	Assessment                         GetInfrastructurePublishersAssessment          `tfsdk:"assessment"`
-	CommonName                         types.String                                   `tfsdk:"common_name"`
-	ConnectedApps                      []types.String                                 `tfsdk:"connected_apps"`
-	Lbrokerconnect                     types.Bool                                     `tfsdk:"lbrokerconnect"`
-	PublisherID                        types.Int64                                    `tfsdk:"publisher_id"`
-	PublisherName                      types.String                                   `tfsdk:"publisher_name"`
-	PublisherUpgradeProfilesExternalID types.Int64                                    `tfsdk:"publisher_upgrade_profiles_external_id"`
-	Registered                         types.Bool                                     `tfsdk:"registered"`
-	Status                             types.String                                   `tfsdk:"status"`
-	StitcherID                         StitcherID                                     `tfsdk:"stitcher_id"`
-	Tags                               []types.String                                 `tfsdk:"tags"`
-	UpgradeFailedReason                GetInfrastructurePublishersUpgradeFailedReason `tfsdk:"upgrade_failed_reason"`
-	UpgradeRequest                     types.Bool                                     `tfsdk:"upgrade_request"`
-	UpgradeStatus                      GetInfrastructurePublishersUpgradeStatus       `tfsdk:"upgrade_status"`
+	AppsCount                          types.Int64                  `tfsdk:"apps_count"`
+	Assessment                         PublisherAssessment          `tfsdk:"assessment"`
+	CommonName                         types.String                 `tfsdk:"common_name"`
+	ConnectedApps                      []types.String               `tfsdk:"connected_apps"`
+	Lbrokerconnect                     types.Bool                   `tfsdk:"lbrokerconnect"`
+	PublisherID                        types.Int64                  `tfsdk:"publisher_id"`
+	PublisherName                      types.String                 `tfsdk:"publisher_name"`
+	PublisherUpgradeProfilesExternalID types.Int64                  `tfsdk:"publisher_upgrade_profiles_external_id"`
+	Registered                         types.Bool                   `tfsdk:"registered"`
+	Status                             types.String                 `tfsdk:"status"`
+	StitcherID                         StitcherID                   `tfsdk:"stitcher_id"`
+	Tags                               []types.String               `tfsdk:"tags"`
+	UpgradeFailedReason                PublisherUpgradeFailedReason `tfsdk:"upgrade_failed_reason"`
+	UpgradeRequest                     types.Bool                   `tfsdk:"upgrade_request"`
+	UpgradeStatus                      UpgradeStatus                `tfsdk:"upgrade_status"`
 }

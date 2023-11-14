@@ -4,10 +4,10 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPolicyGroupDataSourceModel) RefreshFromGetResponse(resp *operations.GetPolicyNpaPolicygroupsIDData) {
+func (r *NPAPolicyGroupDataSourceModel) RefreshFromGetResponse(resp *shared.NpaPolicygroupResponseItem) {
 	if resp.CanBeEditedDeleted != nil {
 		r.CanBeEditedDeleted = types.StringValue(*resp.CanBeEditedDeleted)
 	} else {

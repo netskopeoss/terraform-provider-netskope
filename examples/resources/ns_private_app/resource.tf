@@ -22,10 +22,9 @@ resource "ns_private_app" "my_privateapp" {
   real_host = "...my_real_host..."
   tags = [
     {
-      tag_id   = 8
       tag_name = "...my_tag_name..."
     },
   ]
   trust_self_signed_certs = false
-  use_publisher_dns       = true
+  use_publisher_dns       = false
 }

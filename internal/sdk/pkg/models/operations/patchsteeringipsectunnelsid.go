@@ -3,175 +3,15 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
-type PatchSteeringIpsecTunnelsIDXff struct {
-	Enable *bool    `json:"enable,omitempty"`
-	Iplist []string `json:"iplist,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDXff) GetEnable() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Enable
-}
-
-func (o *PatchSteeringIpsecTunnelsIDXff) GetIplist() []string {
-	if o == nil {
-		return nil
-	}
-	return o.Iplist
-}
-
-type PatchSteeringIpsecTunnelsIDOptions struct {
-	Reauth *bool                           `json:"reauth,omitempty"`
-	Rekey  *bool                           `json:"rekey,omitempty"`
-	Xff    *PatchSteeringIpsecTunnelsIDXff `json:"xff,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDOptions) GetReauth() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Reauth
-}
-
-func (o *PatchSteeringIpsecTunnelsIDOptions) GetRekey() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Rekey
-}
-
-func (o *PatchSteeringIpsecTunnelsIDOptions) GetXff() *PatchSteeringIpsecTunnelsIDXff {
-	if o == nil {
-		return nil
-	}
-	return o.Xff
-}
-
-// PatchSteeringIpsecTunnelsIDRequestBody - IPSec tunnel object
-type PatchSteeringIpsecTunnelsIDRequestBody struct {
-	Bandwidth     *int64                              `json:"bandwidth,omitempty"`
-	Enable        *bool                               `json:"enable,omitempty"`
-	Encryption    *string                             `json:"encryption,omitempty"`
-	Notes         *string                             `json:"notes,omitempty"`
-	Options       *PatchSteeringIpsecTunnelsIDOptions `json:"options,omitempty"`
-	Pops          []string                            `json:"pops,omitempty"`
-	Psk           *string                             `json:"psk,omitempty"`
-	Site          *string                             `json:"site,omitempty"`
-	Sourcetype    *string                             `json:"sourcetype,omitempty"`
-	Srcidentity   *string                             `json:"srcidentity,omitempty"`
-	Srcipidentity *string                             `json:"srcipidentity,omitempty"`
-	Template      *string                             `json:"template,omitempty"`
-	Vendor        *string                             `json:"vendor,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetBandwidth() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Bandwidth
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetEnable() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Enable
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetEncryption() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Encryption
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetNotes() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Notes
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetOptions() *PatchSteeringIpsecTunnelsIDOptions {
-	if o == nil {
-		return nil
-	}
-	return o.Options
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetPops() []string {
-	if o == nil {
-		return nil
-	}
-	return o.Pops
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetPsk() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Psk
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetSite() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Site
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetSourcetype() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Sourcetype
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetSrcidentity() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Srcidentity
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetSrcipidentity() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Srcipidentity
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetTemplate() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Template
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequestBody) GetVendor() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Vendor
-}
-
 type PatchSteeringIpsecTunnelsIDRequest struct {
-	// IPSec tunnel object
-	RequestBody PatchSteeringIpsecTunnelsIDRequestBody `request:"mediaType=application/json"`
 	// IPSec tunnel id
 	ID int64 `pathParam:"style=simple,explode=false,name=id"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDRequest) GetRequestBody() PatchSteeringIpsecTunnelsIDRequestBody {
-	if o == nil {
-		return PatchSteeringIpsecTunnelsIDRequestBody{}
-	}
-	return o.RequestBody
+	// IPSec tunnel object
+	IpsecTunnelRequestPatch shared.IpsecTunnelRequestPatch `request:"mediaType=application/json"`
 }
 
 func (o *PatchSteeringIpsecTunnelsIDRequest) GetID() int64 {
@@ -181,444 +21,34 @@ func (o *PatchSteeringIpsecTunnelsIDRequest) GetID() int64 {
 	return o.ID
 }
 
-// PatchSteeringIpsecTunnelsIDResponse500ResponseBody - Internal server error
-type PatchSteeringIpsecTunnelsIDResponse500ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse500ResponseBody) GetResult() *string {
+func (o *PatchSteeringIpsecTunnelsIDRequest) GetIpsecTunnelRequestPatch() shared.IpsecTunnelRequestPatch {
 	if o == nil {
-		return nil
+		return shared.IpsecTunnelRequestPatch{}
 	}
-	return o.Result
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse500ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// PatchSteeringIpsecTunnelsIDResponse429ResponseBody - Too many requests
-type PatchSteeringIpsecTunnelsIDResponse429ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse429ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse429ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// PatchSteeringIpsecTunnelsIDResponse405ResponseBody - Method not allowed
-type PatchSteeringIpsecTunnelsIDResponse405ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse405ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse405ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// PatchSteeringIpsecTunnelsIDResponse404ResponseBody - Not found
-type PatchSteeringIpsecTunnelsIDResponse404ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse404ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse404ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// PatchSteeringIpsecTunnelsIDResponse403ResponseBody - Access forbidden
-type PatchSteeringIpsecTunnelsIDResponse403ResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse403ResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse403ResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-// PatchSteeringIpsecTunnelsIDResponseResponseBody - Invalid request
-type PatchSteeringIpsecTunnelsIDResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type PatchSteeringIpsecTunnelsIDResponseXff struct {
-	Enabled *bool    `json:"enabled,omitempty"`
-	Iplist  []string `json:"iplist,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponseXff) GetEnabled() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Enabled
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponseXff) GetIplist() []string {
-	if o == nil {
-		return nil
-	}
-	return o.Iplist
-}
-
-type PatchSteeringIpsecTunnelsIDResponseOptions struct {
-	Reauth *bool                                   `json:"reauth,omitempty"`
-	Rekey  *bool                                   `json:"rekey,omitempty"`
-	Xff    *PatchSteeringIpsecTunnelsIDResponseXff `json:"xff,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponseOptions) GetReauth() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Reauth
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponseOptions) GetRekey() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Rekey
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponseOptions) GetXff() *PatchSteeringIpsecTunnelsIDResponseXff {
-	if o == nil {
-		return nil
-	}
-	return o.Xff
-}
-
-type PatchSteeringIpsecTunnelsIDPops struct {
-	Gateway    *string `json:"gateway,omitempty"`
-	Name       *string `json:"name,omitempty"`
-	Primary    *bool   `json:"primary,omitempty"`
-	Probeip    *string `json:"probeip,omitempty"`
-	Since      *string `json:"since,omitempty"`
-	Status     *string `json:"status,omitempty"`
-	Throughput *string `json:"throughput,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDPops) GetGateway() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Gateway
-}
-
-func (o *PatchSteeringIpsecTunnelsIDPops) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *PatchSteeringIpsecTunnelsIDPops) GetPrimary() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Primary
-}
-
-func (o *PatchSteeringIpsecTunnelsIDPops) GetProbeip() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Probeip
-}
-
-func (o *PatchSteeringIpsecTunnelsIDPops) GetSince() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Since
-}
-
-func (o *PatchSteeringIpsecTunnelsIDPops) GetStatus() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-func (o *PatchSteeringIpsecTunnelsIDPops) GetThroughput() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Throughput
-}
-
-type PatchSteeringIpsecTunnelsIDData struct {
-	Bandwidth     *int64                                      `json:"bandwidth,omitempty"`
-	Enabled       *bool                                       `json:"enabled,omitempty"`
-	Encryption    *string                                     `json:"encryption,omitempty"`
-	ID            *int64                                      `json:"id,omitempty"`
-	Notes         *string                                     `json:"notes,omitempty"`
-	Options       *PatchSteeringIpsecTunnelsIDResponseOptions `json:"options,omitempty"`
-	Pops          []PatchSteeringIpsecTunnelsIDPops           `json:"pops,omitempty"`
-	Site          *string                                     `json:"site,omitempty"`
-	Sourcetype    *string                                     `json:"sourcetype,omitempty"`
-	Srcidentity   *string                                     `json:"srcidentity,omitempty"`
-	Srcipidentity *string                                     `json:"srcipidentity,omitempty"`
-	Template      *string                                     `json:"template,omitempty"`
-	Vendor        *string                                     `json:"vendor,omitempty"`
-	Version       *int64                                      `json:"version,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetBandwidth() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Bandwidth
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetEnabled() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Enabled
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetEncryption() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Encryption
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetNotes() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Notes
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetOptions() *PatchSteeringIpsecTunnelsIDResponseOptions {
-	if o == nil {
-		return nil
-	}
-	return o.Options
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetPops() []PatchSteeringIpsecTunnelsIDPops {
-	if o == nil {
-		return nil
-	}
-	return o.Pops
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetSite() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Site
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetSourcetype() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Sourcetype
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetSrcidentity() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Srcidentity
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetSrcipidentity() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Srcipidentity
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetTemplate() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Template
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetVendor() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Vendor
-}
-
-func (o *PatchSteeringIpsecTunnelsIDData) GetVersion() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Version
-}
-
-// PatchSteeringIpsecTunnelsIDResponseBody - Successful operation
-type PatchSteeringIpsecTunnelsIDResponseBody struct {
-	Data   []PatchSteeringIpsecTunnelsIDData `json:"data,omitempty"`
-	Result *string                           `json:"result,omitempty"`
-	Status *int64                            `json:"status,omitempty"`
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponseBody) GetData() []PatchSteeringIpsecTunnelsIDData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
+	return o.IpsecTunnelRequestPatch
 }
 
 type PatchSteeringIpsecTunnelsIDResponse struct {
-	// Successful operation
-	TwoHundredApplicationJSONObject *PatchSteeringIpsecTunnelsIDResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *PatchSteeringIpsecTunnelsIDResponseResponseBody
-	// Access forbidden
-	FourHundredAndThreeApplicationJSONObject *PatchSteeringIpsecTunnelsIDResponse403ResponseBody
-	// Not found
-	FourHundredAndFourApplicationJSONObject *PatchSteeringIpsecTunnelsIDResponse404ResponseBody
-	// Method not allowed
-	FourHundredAndFiveApplicationJSONObject *PatchSteeringIpsecTunnelsIDResponse405ResponseBody
-	// Too many requests
-	FourHundredAndTwentyNineApplicationJSONObject *PatchSteeringIpsecTunnelsIDResponse429ResponseBody
-	// Internal server error
-	FiveHundredApplicationJSONObject *PatchSteeringIpsecTunnelsIDResponse500ResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse) GetTwoHundredApplicationJSONObject() *PatchSteeringIpsecTunnelsIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse) GetFourHundredApplicationJSONObject() *PatchSteeringIpsecTunnelsIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse) GetFourHundredAndThreeApplicationJSONObject() *PatchSteeringIpsecTunnelsIDResponse403ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndThreeApplicationJSONObject
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse) GetFourHundredAndFourApplicationJSONObject() *PatchSteeringIpsecTunnelsIDResponse404ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndFourApplicationJSONObject
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse) GetFourHundredAndFiveApplicationJSONObject() *PatchSteeringIpsecTunnelsIDResponse405ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndFiveApplicationJSONObject
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse) GetFourHundredAndTwentyNineApplicationJSONObject() *PatchSteeringIpsecTunnelsIDResponse429ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredAndTwentyNineApplicationJSONObject
-}
-
-func (o *PatchSteeringIpsecTunnelsIDResponse) GetFiveHundredApplicationJSONObject() *PatchSteeringIpsecTunnelsIDResponse500ResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FiveHundredApplicationJSONObject
+	// Successful operation
+	IpsecPatchResponse200 *shared.IpsecPatchResponse200
+	// Invalid request
+	IpsecResponse400 *shared.IpsecResponse400
+	// Access forbidden
+	IpsecResponse403 *shared.IpsecResponse403
+	// Not found
+	IpsecResponse404 *shared.IpsecResponse404
+	// Method not allowed
+	IpsecResponse405 *shared.IpsecResponse405
+	// Too many requests
+	IpsecResponse429 *shared.IpsecResponse429
+	// Internal server error
+	IpsecResponse500 *shared.IpsecResponse500
 }
 
 func (o *PatchSteeringIpsecTunnelsIDResponse) GetContentType() string {
@@ -640,4 +70,53 @@ func (o *PatchSteeringIpsecTunnelsIDResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PatchSteeringIpsecTunnelsIDResponse) GetIpsecPatchResponse200() *shared.IpsecPatchResponse200 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecPatchResponse200
+}
+
+func (o *PatchSteeringIpsecTunnelsIDResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse400
+}
+
+func (o *PatchSteeringIpsecTunnelsIDResponse) GetIpsecResponse403() *shared.IpsecResponse403 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse403
+}
+
+func (o *PatchSteeringIpsecTunnelsIDResponse) GetIpsecResponse404() *shared.IpsecResponse404 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse404
+}
+
+func (o *PatchSteeringIpsecTunnelsIDResponse) GetIpsecResponse405() *shared.IpsecResponse405 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse405
+}
+
+func (o *PatchSteeringIpsecTunnelsIDResponse) GetIpsecResponse429() *shared.IpsecResponse429 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse429
+}
+
+func (o *PatchSteeringIpsecTunnelsIDResponse) GetIpsecResponse500() *shared.IpsecResponse500 {
+	if o == nil {
+		return nil
+	}
+	return o.IpsecResponse500
 }

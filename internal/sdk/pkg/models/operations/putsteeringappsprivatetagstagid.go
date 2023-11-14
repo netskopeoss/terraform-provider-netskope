@@ -3,93 +3,14 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
-type PutSteeringAppsPrivateTagsTagIDPublisherTags struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDPublisherTags) GetTagID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.TagID
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDPublisherTags) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-type PutSteeringAppsPrivateTagsTagIDTags struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDTags) GetTagID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.TagID
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDTags) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-type PutSteeringAppsPrivateTagsTagIDRequestBody struct {
-	ID            *string                                        `json:"id,omitempty"`
-	Ids           []string                                       `json:"ids,omitempty"`
-	PublisherTags []PutSteeringAppsPrivateTagsTagIDPublisherTags `json:"publisher_tags,omitempty"`
-	Tags          []PutSteeringAppsPrivateTagsTagIDTags          `json:"tags,omitempty"`
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDRequestBody) GetID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDRequestBody) GetIds() []string {
-	if o == nil {
-		return nil
-	}
-	return o.Ids
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDRequestBody) GetPublisherTags() []PutSteeringAppsPrivateTagsTagIDPublisherTags {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherTags
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDRequestBody) GetTags() []PutSteeringAppsPrivateTagsTagIDTags {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
-}
-
 type PutSteeringAppsPrivateTagsTagIDRequest struct {
-	RequestBody PutSteeringAppsPrivateTagsTagIDRequestBody `request:"mediaType=application/json"`
 	// tag id
-	TagID int `pathParam:"style=simple,explode=false,name=tag_id"`
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDRequest) GetRequestBody() PutSteeringAppsPrivateTagsTagIDRequestBody {
-	if o == nil {
-		return PutSteeringAppsPrivateTagsTagIDRequestBody{}
-	}
-	return o.RequestBody
+	TagID      int               `pathParam:"style=simple,explode=false,name=tag_id"`
+	TagRequest shared.TagRequest `request:"mediaType=application/json"`
 }
 
 func (o *PutSteeringAppsPrivateTagsTagIDRequest) GetTagID() int {
@@ -99,82 +20,24 @@ func (o *PutSteeringAppsPrivateTagsTagIDRequest) GetTagID() int {
 	return o.TagID
 }
 
-// PutSteeringAppsPrivateTagsTagIDResponseResponseBody - Invalid request
-type PutSteeringAppsPrivateTagsTagIDResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDResponseResponseBody) GetResult() *string {
+func (o *PutSteeringAppsPrivateTagsTagIDRequest) GetTagRequest() shared.TagRequest {
 	if o == nil {
-		return nil
+		return shared.TagRequest{}
 	}
-	return o.Result
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type PutSteeringAppsPrivateTagsTagIDData struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDData) GetTagID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.TagID
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDData) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-// PutSteeringAppsPrivateTagsTagIDResponseBody - successful operation
-type PutSteeringAppsPrivateTagsTagIDResponseBody struct {
-	Data []PutSteeringAppsPrivateTagsTagIDData `json:"data,omitempty"`
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDResponseBody) GetData() []PutSteeringAppsPrivateTagsTagIDData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
+	return o.TagRequest
 }
 
 type PutSteeringAppsPrivateTagsTagIDResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *PutSteeringAppsPrivateTagsTagIDResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *PutSteeringAppsPrivateTagsTagIDResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDResponse) GetTwoHundredApplicationJSONObject() *PutSteeringAppsPrivateTagsTagIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *PutSteeringAppsPrivateTagsTagIDResponse) GetFourHundredApplicationJSONObject() *PutSteeringAppsPrivateTagsTagIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	TagResponse *shared.TagResponse
+	// Invalid request
+	TagResponse400 *shared.TagResponse400
 }
 
 func (o *PutSteeringAppsPrivateTagsTagIDResponse) GetContentType() string {
@@ -196,4 +59,18 @@ func (o *PutSteeringAppsPrivateTagsTagIDResponse) GetRawResponse() *http.Respons
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PutSteeringAppsPrivateTagsTagIDResponse) GetTagResponse() *shared.TagResponse {
+	if o == nil {
+		return nil
+	}
+	return o.TagResponse
+}
+
+func (o *PutSteeringAppsPrivateTagsTagIDResponse) GetTagResponse400() *shared.TagResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.TagResponse400
 }

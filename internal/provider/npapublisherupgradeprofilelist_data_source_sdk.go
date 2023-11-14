@@ -4,15 +4,15 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPublisherUpgradeProfileListDataSourceModel) RefreshFromGetResponse(resp *operations.GetInfrastructurePublisherupgradeprofilesResponseBody) {
+func (r *NPAPublisherUpgradeProfileListDataSourceModel) RefreshFromGetResponse(resp *shared.PublisherUpgradeProfileGetResponse) {
 	if len(r.Data) > len(resp.Data) {
 		r.Data = r.Data[:len(resp.Data)]
 	}
 	for dataCount, dataItem := range resp.Data {
-		var data1 GetInfrastructurePublisherupgradeprofilesData
+		var data1 PublisherUpgradeProfileGetResponseData
 		if dataItem.DockerTag != nil {
 			data1.DockerTag = types.StringValue(*dataItem.DockerTag)
 		} else {

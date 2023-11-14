@@ -13,7 +13,6 @@ features:
     groups: 2.81.2
     ignores: 2.81.1
     nameOverrides: 2.81.1
-    typeOverrides: 2.81.1
     unions: 2.81.5
 terraform:
   version: 0.0.1

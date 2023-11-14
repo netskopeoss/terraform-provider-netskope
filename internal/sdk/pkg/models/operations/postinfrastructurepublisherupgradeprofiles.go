@@ -5,59 +5,9 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
-
-type PostInfrastructurePublisherupgradeprofilesRequestBody struct {
-	DockerTag   *string `json:"docker_tag,omitempty"`
-	Enabled     *int    `json:"enabled,omitempty"`
-	Frequency   *string `json:"frequency,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	ReleaseType *string `json:"release_type,omitempty"`
-	Timezone    *string `json:"timezone,omitempty"`
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesRequestBody) GetDockerTag() *string {
-	if o == nil {
-		return nil
-	}
-	return o.DockerTag
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesRequestBody) GetEnabled() *int {
-	if o == nil {
-		return nil
-	}
-	return o.Enabled
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesRequestBody) GetFrequency() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Frequency
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesRequestBody) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesRequestBody) GetReleaseType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ReleaseType
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesRequestBody) GetTimezone() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Timezone
-}
 
 // PostInfrastructurePublisherupgradeprofilesQueryParamSilent - flag to skip output except status code
 type PostInfrastructurePublisherupgradeprofilesQueryParamSilent string
@@ -88,16 +38,16 @@ func (e *PostInfrastructurePublisherupgradeprofilesQueryParamSilent) UnmarshalJS
 }
 
 type PostInfrastructurePublisherupgradeprofilesRequest struct {
-	RequestBody *PostInfrastructurePublisherupgradeprofilesRequestBody `request:"mediaType=application/json"`
+	PublisherUpgradeProfilePostRequest *shared.PublisherUpgradeProfilePostRequest `request:"mediaType=application/json"`
 	// flag to skip output except status code
 	Silent *PostInfrastructurePublisherupgradeprofilesQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 }
 
-func (o *PostInfrastructurePublisherupgradeprofilesRequest) GetRequestBody() *PostInfrastructurePublisherupgradeprofilesRequestBody {
+func (o *PostInfrastructurePublisherupgradeprofilesRequest) GetPublisherUpgradeProfilePostRequest() *shared.PublisherUpgradeProfilePostRequest {
 	if o == nil {
 		return nil
 	}
-	return o.RequestBody
+	return o.PublisherUpgradeProfilePostRequest
 }
 
 func (o *PostInfrastructurePublisherupgradeprofilesRequest) GetSilent() *PostInfrastructurePublisherupgradeprofilesQueryParamSilent {
@@ -107,122 +57,24 @@ func (o *PostInfrastructurePublisherupgradeprofilesRequest) GetSilent() *PostInf
 	return o.Silent
 }
 
-// PostInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody - Invalid request
-type PostInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody struct {
-	Message *string `json:"message,omitempty"`
-	Status  *int64  `json:"status,omitempty"`
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody) GetMessage() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Message
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type PostInfrastructurePublisherupgradeprofilesData struct {
-	DockerTag   *string `json:"docker_tag,omitempty"`
-	Enabled     *int    `json:"enabled,omitempty"`
-	Frequency   *string `json:"frequency,omitempty"`
-	ID          *int    `json:"id,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	ReleaseType *string `json:"release_type,omitempty"`
-	Timezone    *string `json:"timezone,omitempty"`
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesData) GetDockerTag() *string {
-	if o == nil {
-		return nil
-	}
-	return o.DockerTag
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesData) GetEnabled() *int {
-	if o == nil {
-		return nil
-	}
-	return o.Enabled
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesData) GetFrequency() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Frequency
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesData) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesData) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesData) GetReleaseType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ReleaseType
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesData) GetTimezone() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Timezone
-}
-
-// PostInfrastructurePublisherupgradeprofilesResponseBody - successful operation
-type PostInfrastructurePublisherupgradeprofilesResponseBody struct {
-	Data *PostInfrastructurePublisherupgradeprofilesData `json:"data,omitempty"`
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesResponseBody) GetData() *PostInfrastructurePublisherupgradeprofilesData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
 type PostInfrastructurePublisherupgradeprofilesResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *PostInfrastructurePublisherupgradeprofilesResponseBody
 	// Invalid request
-	FourHundredApplicationJSONObject *PostInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody
+	FourHundred *shared.FourHundred
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
+	// successful operation
+	PublisherUpgradeProfileResponse *shared.PublisherUpgradeProfileResponse
 }
 
-func (o *PostInfrastructurePublisherupgradeprofilesResponse) GetTwoHundredApplicationJSONObject() *PostInfrastructurePublisherupgradeprofilesResponseBody {
+func (o *PostInfrastructurePublisherupgradeprofilesResponse) GetFourHundred() *shared.FourHundred {
 	if o == nil {
 		return nil
 	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *PostInfrastructurePublisherupgradeprofilesResponse) GetFourHundredApplicationJSONObject() *PostInfrastructurePublisherupgradeprofilesNPAPublisherUpgradeProfilesResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	return o.FourHundred
 }
 
 func (o *PostInfrastructurePublisherupgradeprofilesResponse) GetContentType() string {
@@ -244,4 +96,11 @@ func (o *PostInfrastructurePublisherupgradeprofilesResponse) GetRawResponse() *h
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PostInfrastructurePublisherupgradeprofilesResponse) GetPublisherUpgradeProfileResponse() *shared.PublisherUpgradeProfileResponse {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherUpgradeProfileResponse
 }

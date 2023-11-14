@@ -4,15 +4,15 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPublishersAppsListDataSourceModel) RefreshFromGetResponse(resp *operations.GetInfrastructurePublishersPublisherIDAppsResponseBody) {
+func (r *NPAPublishersAppsListDataSourceModel) RefreshFromGetResponse(resp *shared.PrivateAppsResponse) {
 	if len(r.Data) > len(resp.Data) {
 		r.Data = r.Data[:len(resp.Data)]
 	}
 	for dataCount, dataItem := range resp.Data {
-		var data1 GetInfrastructurePublishersPublisherIDAppsData
+		var data1 PrivateAppsResponseData
 		if dataItem.ClientlessAccess != nil {
 			data1.ClientlessAccess = types.BoolValue(*dataItem.ClientlessAccess)
 		} else {
@@ -37,7 +37,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromGetResponse(resp *oper
 			data1.Protocols = data1.Protocols[:len(dataItem.Protocols)]
 		}
 		for protocolsCount, protocolsItem := range dataItem.Protocols {
-			var protocols1 GetInfrastructurePublishersPublisherIDAppsProtocols
+			var protocols1 ProtocolResponseItem
 			if protocolsItem.ID != nil {
 				protocols1.ID = types.Int64Value(int64(*protocolsItem.ID))
 			} else {
@@ -76,7 +76,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromGetResponse(resp *oper
 			data1.ServicePublisherAssignments = data1.ServicePublisherAssignments[:len(dataItem.ServicePublisherAssignments)]
 		}
 		for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range dataItem.ServicePublisherAssignments {
-			var servicePublisherAssignments1 PostSteeringAppsPrivateServicePublisherAssignments
+			var servicePublisherAssignments1 ServicePublisherAssignmentItem
 			if servicePublisherAssignmentsItem.Primary != nil {
 				servicePublisherAssignments1.Primary = types.BoolValue(*servicePublisherAssignmentsItem.Primary)
 			} else {
@@ -90,7 +90,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromGetResponse(resp *oper
 			if servicePublisherAssignmentsItem.Reachability == nil {
 				servicePublisherAssignments1.Reachability = nil
 			} else {
-				servicePublisherAssignments1.Reachability = &PostSteeringAppsPrivateReachability{}
+				servicePublisherAssignments1.Reachability = &Reachability{}
 				if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
 					servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
 				} else {
@@ -125,7 +125,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromGetResponse(resp *oper
 			data1.Tags = data1.Tags[:len(dataItem.Tags)]
 		}
 		for tagsCount, tagsItem := range dataItem.Tags {
-			var tags1 PostInfrastructurePublishersTags
+			var tags1 TagItem
 			if tagsItem.TagID != nil {
 				tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
 			} else {

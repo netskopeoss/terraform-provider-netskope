@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -18,82 +19,17 @@ func (o *GetSteeringAppsPrivateTagsTagIDRequest) GetTagID() int {
 	return o.TagID
 }
 
-// GetSteeringAppsPrivateTagsTagIDResponseResponseBody - Invalid request
-type GetSteeringAppsPrivateTagsTagIDResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *GetSteeringAppsPrivateTagsTagIDResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *GetSteeringAppsPrivateTagsTagIDResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-type GetSteeringAppsPrivateTagsTagIDData struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
-}
-
-func (o *GetSteeringAppsPrivateTagsTagIDData) GetTagID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.TagID
-}
-
-func (o *GetSteeringAppsPrivateTagsTagIDData) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
-}
-
-// GetSteeringAppsPrivateTagsTagIDResponseBody - successful operation
-type GetSteeringAppsPrivateTagsTagIDResponseBody struct {
-	Data []GetSteeringAppsPrivateTagsTagIDData `json:"data,omitempty"`
-}
-
-func (o *GetSteeringAppsPrivateTagsTagIDResponseBody) GetData() []GetSteeringAppsPrivateTagsTagIDData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
 type GetSteeringAppsPrivateTagsTagIDResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *GetSteeringAppsPrivateTagsTagIDResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *GetSteeringAppsPrivateTagsTagIDResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *GetSteeringAppsPrivateTagsTagIDResponse) GetTwoHundredApplicationJSONObject() *GetSteeringAppsPrivateTagsTagIDResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *GetSteeringAppsPrivateTagsTagIDResponse) GetFourHundredApplicationJSONObject() *GetSteeringAppsPrivateTagsTagIDResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	TagResponse *shared.TagResponse
+	// Invalid request
+	TagResponse400 *shared.TagResponse400
 }
 
 func (o *GetSteeringAppsPrivateTagsTagIDResponse) GetContentType() string {
@@ -115,4 +51,18 @@ func (o *GetSteeringAppsPrivateTagsTagIDResponse) GetRawResponse() *http.Respons
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *GetSteeringAppsPrivateTagsTagIDResponse) GetTagResponse() *shared.TagResponse {
+	if o == nil {
+		return nil
+	}
+	return o.TagResponse
+}
+
+func (o *GetSteeringAppsPrivateTagsTagIDResponse) GetTagResponse400() *shared.TagResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.TagResponse400
 }

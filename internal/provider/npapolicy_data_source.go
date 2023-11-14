@@ -29,9 +29,9 @@ type NPAPolicyDataSource struct {
 
 // NPAPolicyDataSourceModel describes the data model.
 type NPAPolicyDataSourceModel struct {
-	RuleData *PostPolicyNpaRulesRuleData `tfsdk:"rule_data"`
-	RuleID   types.String                `tfsdk:"rule_id"`
-	RuleName types.String                `tfsdk:"rule_name"`
+	RuleData *NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleID   types.String       `tfsdk:"rule_id"`
+	RuleName types.String       `tfsdk:"rule_name"`
 }
 
 // Metadata returns the data source type name.
@@ -236,11 +236,11 @@ func (r *NPAPolicyDataSource) Read(ctx context.Context, req datasource.ReadReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundredApplicationJSONObject == nil || res.TwoHundredApplicationJSONObject.Data == nil {
+	if res.Object == nil || res.Object.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.TwoHundredApplicationJSONObject.Data)
+	data.RefreshFromGetResponse(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

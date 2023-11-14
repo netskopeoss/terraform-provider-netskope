@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -15,26 +16,6 @@ func (o *PostSteeringAppsPrivateTagsGetpolicyinuseRequestBody) GetIds() []string
 		return nil
 	}
 	return o.Ids
-}
-
-// PostSteeringAppsPrivateTagsGetpolicyinuseResponseResponseBody - Invalid request
-type PostSteeringAppsPrivateTagsGetpolicyinuseResponseResponseBody struct {
-	Result *string `json:"result,omitempty"`
-	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *PostSteeringAppsPrivateTagsGetpolicyinuseResponseResponseBody) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
-}
-
-func (o *PostSteeringAppsPrivateTagsGetpolicyinuseResponseResponseBody) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 type PostSteeringAppsPrivateTagsGetpolicyinuseData struct {
@@ -61,30 +42,16 @@ func (o *PostSteeringAppsPrivateTagsGetpolicyinuseResponseBody) GetData() []Post
 }
 
 type PostSteeringAppsPrivateTagsGetpolicyinuseResponse struct {
-	// successful operation
-	TwoHundredApplicationJSONObject *PostSteeringAppsPrivateTagsGetpolicyinuseResponseBody
-	// Invalid request
-	FourHundredApplicationJSONObject *PostSteeringAppsPrivateTagsGetpolicyinuseResponseResponseBody
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *PostSteeringAppsPrivateTagsGetpolicyinuseResponse) GetTwoHundredApplicationJSONObject() *PostSteeringAppsPrivateTagsGetpolicyinuseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundredApplicationJSONObject
-}
-
-func (o *PostSteeringAppsPrivateTagsGetpolicyinuseResponse) GetFourHundredApplicationJSONObject() *PostSteeringAppsPrivateTagsGetpolicyinuseResponseResponseBody {
-	if o == nil {
-		return nil
-	}
-	return o.FourHundredApplicationJSONObject
+	// successful operation
+	Object *PostSteeringAppsPrivateTagsGetpolicyinuseResponseBody
+	// Invalid request
+	TagResponse400 *shared.TagResponse400
 }
 
 func (o *PostSteeringAppsPrivateTagsGetpolicyinuseResponse) GetContentType() string {
@@ -106,4 +73,18 @@ func (o *PostSteeringAppsPrivateTagsGetpolicyinuseResponse) GetRawResponse() *ht
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PostSteeringAppsPrivateTagsGetpolicyinuseResponse) GetObject() *PostSteeringAppsPrivateTagsGetpolicyinuseResponseBody {
+	if o == nil {
+		return nil
+	}
+	return o.Object
+}
+
+func (o *PostSteeringAppsPrivateTagsGetpolicyinuseResponse) GetTagResponse400() *shared.TagResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.TagResponse400
 }

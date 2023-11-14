@@ -3,37 +3,35 @@
 package provider
 
 import (
-	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *operations.GetInfrastructurePublishersPublisherIDData) {
+func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *shared.PublisherResponse) {
 	if resp.Assessment == nil {
-		r.Assessment = types.StringNull()
+		r.Assessment = nil
 	} else {
-		assessmentResult, _ := json.Marshal(resp.Assessment)
-		r.Assessment = types.StringValue(string(assessmentResult))
+		r.Assessment = &PublisherResponseAssessment{}
 	}
 	if resp.CommonName != nil {
 		r.CommonName = types.StringValue(*resp.CommonName)
 	} else {
 		r.CommonName = types.StringNull()
 	}
-	if resp.ID != nil {
-		r.ID = types.Int64Value(int64(*resp.ID))
-	} else {
-		r.ID = types.Int64Null()
-	}
 	if resp.Lbrokerconnect != nil {
 		r.Lbrokerconnect = types.BoolValue(*resp.Lbrokerconnect)
 	} else {
 		r.Lbrokerconnect = types.BoolNull()
 	}
-	if resp.Name != nil {
-		r.Name = types.StringValue(*resp.Name)
+	if resp.PublisherID != nil {
+		r.PublisherID = types.Int64Value(int64(*resp.PublisherID))
 	} else {
-		r.Name = types.StringNull()
+		r.PublisherID = types.Int64Null()
+	}
+	if resp.PublisherName != nil {
+		r.PublisherName = types.StringValue(*resp.PublisherName)
+	} else {
+		r.PublisherName = types.StringNull()
 	}
 	if resp.PublisherUpgradeProfileID != nil {
 		r.PublisherUpgradeProfileID = types.Int64Value(int64(*resp.PublisherUpgradeProfileID))
@@ -59,7 +57,7 @@ func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *operations.G
 		r.Tags = r.Tags[:len(resp.Tags)]
 	}
 	for tagsCount, tagsItem := range resp.Tags {
-		var tags1 PostInfrastructurePublishersTags
+		var tags1 TagItem
 		if tagsItem.TagID != nil {
 			tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
 		} else {

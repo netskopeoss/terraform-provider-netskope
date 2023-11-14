@@ -36,7 +36,7 @@ func (p *NsProvider) Metadata(ctx context.Context, req provider.MetadataRequest,
 
 func (p *NsProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: `Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy`,
+		Description: `npa_private_app_tags: NPA Private app tag operations.`,
 		Attributes: map[string]schema.Attribute{
 			"server_url": schema.StringAttribute{
 				MarkdownDescription: "Server URL (defaults to https://{tenant}.goskope.com/api/v2)",
