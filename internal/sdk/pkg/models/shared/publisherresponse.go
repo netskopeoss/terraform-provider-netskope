@@ -7,9 +7,6 @@ import (
 	"fmt"
 )
 
-type PublisherResponseAssessment struct {
-}
-
 type PublisherResponseStatus string
 
 const (
@@ -37,85 +34,96 @@ func (e *PublisherResponseStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PublisherResponse struct {
-	Assessment                *PublisherResponseAssessment `json:"assessment,omitempty"`
-	CommonName                *string                      `json:"common_name,omitempty"`
-	Lbrokerconnect            *bool                        `json:"lbrokerconnect,omitempty"`
-	PublisherID               *int                         `json:"publisher_id,omitempty"`
-	PublisherName             *string                      `json:"publisher_name,omitempty"`
-	PublisherUpgradeProfileID *int                         `json:"publisher_upgrade_profile_id,omitempty"`
-	Registered                *bool                        `json:"registered,omitempty"`
-	Status                    *PublisherResponseStatus     `json:"status,omitempty"`
-	StitcherID                *int                         `json:"stitcher_id,omitempty"`
-	Tags                      []TagItem                    `json:"tags,omitempty"`
+type PublisherResponseData struct {
+	Assessment                interface{}              `json:"assessment,omitempty"`
+	CommonName                *string                  `json:"common_name,omitempty"`
+	ID                        *int                     `json:"id,omitempty"`
+	Lbrokerconnect            *bool                    `json:"lbrokerconnect,omitempty"`
+	Name                      *string                  `json:"name,omitempty"`
+	PublisherUpgradeProfileID *int                     `json:"publisher_upgrade_profile_id,omitempty"`
+	Registered                *bool                    `json:"registered,omitempty"`
+	Status                    *PublisherResponseStatus `json:"status,omitempty"`
+	StitcherID                *int                     `json:"stitcher_id,omitempty"`
+	Tags                      []TagItem                `json:"tags,omitempty"`
 }
 
-func (o *PublisherResponse) GetAssessment() *PublisherResponseAssessment {
+func (o *PublisherResponseData) GetAssessment() interface{} {
 	if o == nil {
 		return nil
 	}
 	return o.Assessment
 }
 
-func (o *PublisherResponse) GetCommonName() *string {
+func (o *PublisherResponseData) GetCommonName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.CommonName
 }
 
-func (o *PublisherResponse) GetLbrokerconnect() *bool {
+func (o *PublisherResponseData) GetID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.ID
+}
+
+func (o *PublisherResponseData) GetLbrokerconnect() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.Lbrokerconnect
 }
 
-func (o *PublisherResponse) GetPublisherID() *int {
+func (o *PublisherResponseData) GetName() *string {
 	if o == nil {
 		return nil
 	}
-	return o.PublisherID
+	return o.Name
 }
 
-func (o *PublisherResponse) GetPublisherName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherName
-}
-
-func (o *PublisherResponse) GetPublisherUpgradeProfileID() *int {
+func (o *PublisherResponseData) GetPublisherUpgradeProfileID() *int {
 	if o == nil {
 		return nil
 	}
 	return o.PublisherUpgradeProfileID
 }
 
-func (o *PublisherResponse) GetRegistered() *bool {
+func (o *PublisherResponseData) GetRegistered() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.Registered
 }
 
-func (o *PublisherResponse) GetStatus() *PublisherResponseStatus {
+func (o *PublisherResponseData) GetStatus() *PublisherResponseStatus {
 	if o == nil {
 		return nil
 	}
 	return o.Status
 }
 
-func (o *PublisherResponse) GetStitcherID() *int {
+func (o *PublisherResponseData) GetStitcherID() *int {
 	if o == nil {
 		return nil
 	}
 	return o.StitcherID
 }
 
-func (o *PublisherResponse) GetTags() []TagItem {
+func (o *PublisherResponseData) GetTags() []TagItem {
 	if o == nil {
 		return nil
 	}
 	return o.Tags
+}
+
+type PublisherResponse struct {
+	Data *PublisherResponseData `json:"data,omitempty"`
+}
+
+func (o *PublisherResponse) GetData() *PublisherResponseData {
+	if o == nil {
+		return nil
+	}
+	return o.Data
 }

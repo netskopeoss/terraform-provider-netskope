@@ -3,6 +3,7 @@
 package provider
 
 import (
+	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
@@ -14,9 +15,9 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToCreateSDKType() *shared.Publ
 	} else {
 		dockerTag = nil
 	}
-	enabled := new(int)
+	enabled := new(bool)
 	if !r.Enabled.IsUnknown() && !r.Enabled.IsNull() {
-		*enabled = int(r.Enabled.ValueInt64())
+		*enabled = r.Enabled.ValueBool()
 	} else {
 		enabled = nil
 	}
@@ -38,6 +39,10 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToCreateSDKType() *shared.Publ
 	} else {
 		releaseType = nil
 	}
+	var required interface{}
+	if !r.Required.IsUnknown() && !r.Required.IsNull() {
+		_ = json.Unmarshal([]byte(r.Required.ValueString()), &required)
+	}
 	timezone := new(string)
 	if !r.Timezone.IsUnknown() && !r.Timezone.IsNull() {
 		*timezone = r.Timezone.ValueString()
@@ -50,6 +55,7 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToCreateSDKType() *shared.Publ
 		Frequency:   frequency,
 		Name:        name,
 		ReleaseType: releaseType,
+		Required:    required,
 		Timezone:    timezone,
 	}
 	return &out
@@ -62,9 +68,9 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToUpdateSDKType() *shared.Publ
 	} else {
 		dockerTag = nil
 	}
-	enabled := new(int)
+	enabled := new(bool)
 	if !r.Enabled.IsUnknown() && !r.Enabled.IsNull() {
-		*enabled = int(r.Enabled.ValueInt64())
+		*enabled = r.Enabled.ValueBool()
 	} else {
 		enabled = nil
 	}
@@ -122,9 +128,9 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromCreateResponse(resp
 		r.DockerTag = types.StringNull()
 	}
 	if resp.Enabled != nil {
-		r.Enabled = types.Int64Value(int64(*resp.Enabled))
+		r.Enabled = types.BoolValue(*resp.Enabled)
 	} else {
-		r.Enabled = types.Int64Null()
+		r.Enabled = types.BoolNull()
 	}
 	if resp.Frequency != nil {
 		r.Frequency = types.StringValue(*resp.Frequency)
@@ -153,6 +159,6 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromCreateResponse(resp
 	}
 }
 
-func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromUpdateResponse(resp *shared.TwoHundred) {
-
+func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromUpdateResponse(resp *shared.PublisherUpgradeProfileResponseData) {
+	r.RefreshFromCreateResponse(resp)
 }

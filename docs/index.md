@@ -3,12 +3,12 @@
 page_title: "ns Provider"
 subcategory: ""
 description: |-
-  Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy
+  npaprivateapp_tags: NPA Private app tag operations.
 ---
 
 # ns Provider
 
-Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy
+npa_private_app_tags: NPA Private app tag operations.
 
 ## Example Usage
 

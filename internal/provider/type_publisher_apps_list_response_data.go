@@ -4,7 +4,7 @@ package provider
 
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
-type PrivateAppsResponseData struct {
+type PublisherAppsListResponseData struct {
 	ClientlessAccess            types.Bool                       `tfsdk:"clientless_access"`
 	Host                        types.String                     `tfsdk:"host"`
 	ID                          types.Int64                      `tfsdk:"id"`

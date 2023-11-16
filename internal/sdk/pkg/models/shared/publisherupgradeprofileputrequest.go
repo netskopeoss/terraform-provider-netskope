@@ -4,7 +4,7 @@ package shared
 
 type PublisherUpgradeProfilePutRequest struct {
 	DockerTag   *string `json:"docker_tag,omitempty"`
-	Enabled     *int    `json:"enabled,omitempty"`
+	Enabled     *bool   `json:"enabled,omitempty"`
 	Frequency   *string `json:"frequency,omitempty"`
 	ID          *int    `json:"id,omitempty"`
 	Name        *string `json:"name,omitempty"`
@@ -19,7 +19,7 @@ func (o *PublisherUpgradeProfilePutRequest) GetDockerTag() *string {
 	return o.DockerTag
 }
 
-func (o *PublisherUpgradeProfilePutRequest) GetEnabled() *int {
+func (o *PublisherUpgradeProfilePutRequest) GetEnabled() *bool {
 	if o == nil {
 		return nil
 	}

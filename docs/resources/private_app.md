@@ -83,7 +83,7 @@ Optional:
 
 Optional:
 
-- `tag_name` (String)
+- `tag_name` (String) Default: "tag_name"
 
 
 <a id="nestedatt--publishers"></a>
@@ -100,7 +100,7 @@ Optional:
 
 Optional:
 
-- `tag_name` (String)
+- `tag_name` (String) Default: "tag_name"
 
 Read-Only:
 
@@ -112,7 +112,9 @@ Read-Only:
 
 Read-Only:
 
+- `id` (Number)
 - `port` (String)
+- `service_id` (Number)
 - `transport` (String)
 
 

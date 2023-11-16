@@ -7,12 +7,12 @@ import (
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPublishersAppsListDataSourceModel) RefreshFromGetResponse(resp *shared.PrivateAppsResponse) {
+func (r *NPAPublishersAppsListDataSourceModel) RefreshFromGetResponse(resp *shared.PublisherAppsListResponse) {
 	if len(r.Data) > len(resp.Data) {
 		r.Data = r.Data[:len(resp.Data)]
 	}
 	for dataCount, dataItem := range resp.Data {
-		var data1 PrivateAppsResponseData
+		var data1 PublisherAppsListResponseData
 		if dataItem.ClientlessAccess != nil {
 			data1.ClientlessAccess = types.BoolValue(*dataItem.ClientlessAccess)
 		} else {

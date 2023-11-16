@@ -29,9 +29,9 @@ type NPAPublishersAppsListDataSource struct {
 
 // NPAPublishersAppsListDataSourceModel describes the data model.
 type NPAPublishersAppsListDataSourceModel struct {
-	Data        []PrivateAppsResponseData `tfsdk:"data"`
-	PublisherID types.Int64               `tfsdk:"publisher_id"`
-	Status      types.String              `tfsdk:"status"`
+	Data        []PublisherAppsListResponseData `tfsdk:"data"`
+	PublisherID types.Int64                     `tfsdk:"publisher_id"`
+	Status      types.String                    `tfsdk:"status"`
 }
 
 // Metadata returns the data source type name.
@@ -205,11 +205,11 @@ func (r *NPAPublishersAppsListDataSource) Read(ctx context.Context, req datasour
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PrivateAppsResponse == nil {
+	if res.PublisherAppsListResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.PrivateAppsResponse)
+	data.RefreshFromGetResponse(res.PublisherAppsListResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

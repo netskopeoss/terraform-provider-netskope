@@ -27,7 +27,7 @@ type GetInfrastructurePublishersPublisherIDAppsResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// successful operation
-	PrivateAppsResponse *shared.PrivateAppsResponse
+	PublisherAppsListResponse *shared.PublisherAppsListResponse
 	// Invalid request
 	PublishersResponse400 *shared.PublishersResponse400
 }
@@ -53,11 +53,11 @@ func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetRawResponse() *h
 	return o.RawResponse
 }
 
-func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetPrivateAppsResponse() *shared.PrivateAppsResponse {
+func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetPublisherAppsListResponse() *shared.PublisherAppsListResponse {
 	if o == nil {
 		return nil
 	}
-	return o.PrivateAppsResponse
+	return o.PublisherAppsListResponse
 }
 
 func (o *GetInfrastructurePublishersPublisherIDAppsResponse) GetPublishersResponse400() *shared.PublishersResponse400 {

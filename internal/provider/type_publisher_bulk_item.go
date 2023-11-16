@@ -5,7 +5,7 @@ package provider
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type PublisherBulkItem struct {
-	Assessment                *PublisherResponseAssessment `tfsdk:"assessment"`
+	Assessment                *PublisherBulkItemAssessment `tfsdk:"assessment"`
 	CommonName                types.String                 `tfsdk:"common_name"`
 	ID                        types.Int64                  `tfsdk:"id"`
 	Lbrokerconnect            types.Bool                   `tfsdk:"lbrokerconnect"`
@@ -15,7 +15,7 @@ type PublisherBulkItem struct {
 	Status                    types.String                 `tfsdk:"status"`
 	StitcherID                types.Int64                  `tfsdk:"stitcher_id"`
 	Tags                      []TagItem                    `tfsdk:"tags"`
-	UpgradeFailedReason       *PublisherResponseAssessment `tfsdk:"upgrade_failed_reason"`
+	UpgradeFailedReason       *PublisherBulkItemAssessment `tfsdk:"upgrade_failed_reason"`
 	UpgradeRequest            types.Bool                   `tfsdk:"upgrade_request"`
-	UpgradeStatus             *PublisherResponseAssessment `tfsdk:"upgrade_status"`
+	UpgradeStatus             *PublisherBulkItemAssessment `tfsdk:"upgrade_status"`
 }

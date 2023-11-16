@@ -23,8 +23,10 @@ spec/merged.yaml: check-speakeasy check-local-oas
 
 netskope.yaml: check-speakeasy check-local-oas spec/merged.yaml
 	cp spec/merged.yaml netskope.yaml
-	#speakeasy overlay apply -s spec/merged.yaml -o ${NETSKOPE_LOCAL_OAS_REPO}/terraform_overlay.yaml > spec/netskope.yaml
+	#speakeasy overlay apply -s spec/merged.yaml -o ${NETSKOPE_LOCAL_OAS_REPO}/terraform_overlay.yaml > spec/netskope.yaml	
 
+install-local: all docs 
+	go build -o terraform-provider-ns && mv terraform-provider-ns /Users/sbrown/go/bin/terraform-provider-ns
 check-speakeasy:
 	@command -v speakeasy >/dev/null 2>&1 || { echo >&2 "speakeasy CLI is not installed. Please install before continuing."; exit 1; }
 
@@ -37,4 +39,5 @@ ifneq ($(wildcard ${NETSKOPE_LOCAL_OAS_REPO}/.*),)
 else
 	@echo "Did not find ${NETSKOPE_LOCAL_OAS_REPO}."
 endif
+
 

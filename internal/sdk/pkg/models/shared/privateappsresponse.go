@@ -2,18 +2,13 @@
 
 package shared
 
-import (
-	"encoding/json"
-	"fmt"
-)
-
 type PrivateAppsResponseData struct {
 	ClientlessAccess            *bool                            `json:"clientless_access,omitempty"`
 	Host                        *string                          `json:"host,omitempty"`
 	ID                          *int                             `json:"id,omitempty"`
 	Name                        *string                          `json:"name,omitempty"`
-	Protocols                   []ProtocolResponseItem           `json:"protocols,omitempty"`
 	RealHost                    *string                          `json:"real_host,omitempty"`
+	ResolvedProtocols           []ProtocolResponseItem           `json:"protocols,omitempty"`
 	ServicePublisherAssignments []ServicePublisherAssignmentItem `json:"service_publisher_assignments,omitempty"`
 	Tags                        []TagItem                        `json:"tags,omitempty"`
 	TrustSelfSignedCerts        *bool                            `json:"trust_self_signed_certs,omitempty"`
@@ -48,18 +43,18 @@ func (o *PrivateAppsResponseData) GetName() *string {
 	return o.Name
 }
 
-func (o *PrivateAppsResponseData) GetProtocols() []ProtocolResponseItem {
-	if o == nil {
-		return nil
-	}
-	return o.Protocols
-}
-
 func (o *PrivateAppsResponseData) GetRealHost() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RealHost
+}
+
+func (o *PrivateAppsResponseData) GetResolvedProtocols() []ProtocolResponseItem {
+	if o == nil {
+		return nil
+	}
+	return o.ResolvedProtocols
 }
 
 func (o *PrivateAppsResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
@@ -90,48 +85,13 @@ func (o *PrivateAppsResponseData) GetUsePublisherDNS() *bool {
 	return o.UsePublisherDNS
 }
 
-type PrivateAppsResponseStatus string
-
-const (
-	PrivateAppsResponseStatusSuccess  PrivateAppsResponseStatus = "success"
-	PrivateAppsResponseStatusNotFound PrivateAppsResponseStatus = "not found"
-)
-
-func (e PrivateAppsResponseStatus) ToPointer() *PrivateAppsResponseStatus {
-	return &e
-}
-
-func (e *PrivateAppsResponseStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = PrivateAppsResponseStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PrivateAppsResponseStatus: %v", v)
-	}
-}
-
 type PrivateAppsResponse struct {
-	Data   []PrivateAppsResponseData  `json:"data,omitempty"`
-	Status *PrivateAppsResponseStatus `json:"status,omitempty"`
+	Data *PrivateAppsResponseData `json:"data,omitempty"`
 }
 
-func (o *PrivateAppsResponse) GetData() []PrivateAppsResponseData {
+func (o *PrivateAppsResponse) GetData() *PrivateAppsResponseData {
 	if o == nil {
 		return nil
 	}
 	return o.Data
-}
-
-func (o *PrivateAppsResponse) GetStatus() *PrivateAppsResponseStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }

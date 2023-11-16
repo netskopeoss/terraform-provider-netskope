@@ -51,7 +51,9 @@ Read-Only:
 
 Read-Only:
 
+- `id` (Number)
 - `port` (String)
+- `service_id` (Number)
 - `transport` (String)
 
 

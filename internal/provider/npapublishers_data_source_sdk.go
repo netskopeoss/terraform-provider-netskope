@@ -3,35 +3,37 @@
 package provider
 
 import (
+	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *shared.PublisherResponse) {
+func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *shared.PublisherResponseData) {
 	if resp.Assessment == nil {
-		r.Assessment = nil
+		r.Assessment = types.StringNull()
 	} else {
-		r.Assessment = &PublisherResponseAssessment{}
+		assessmentResult, _ := json.Marshal(resp.Assessment)
+		r.Assessment = types.StringValue(string(assessmentResult))
 	}
 	if resp.CommonName != nil {
 		r.CommonName = types.StringValue(*resp.CommonName)
 	} else {
 		r.CommonName = types.StringNull()
 	}
+	if resp.ID != nil {
+		r.ID = types.Int64Value(int64(*resp.ID))
+	} else {
+		r.ID = types.Int64Null()
+	}
 	if resp.Lbrokerconnect != nil {
 		r.Lbrokerconnect = types.BoolValue(*resp.Lbrokerconnect)
 	} else {
 		r.Lbrokerconnect = types.BoolNull()
 	}
-	if resp.PublisherID != nil {
-		r.PublisherID = types.Int64Value(int64(*resp.PublisherID))
+	if resp.Name != nil {
+		r.Name = types.StringValue(*resp.Name)
 	} else {
-		r.PublisherID = types.Int64Null()
-	}
-	if resp.PublisherName != nil {
-		r.PublisherName = types.StringValue(*resp.PublisherName)
-	} else {
-		r.PublisherName = types.StringNull()
+		r.Name = types.StringNull()
 	}
 	if resp.PublisherUpgradeProfileID != nil {
 		r.PublisherUpgradeProfileID = types.Int64Value(int64(*resp.PublisherUpgradeProfileID))

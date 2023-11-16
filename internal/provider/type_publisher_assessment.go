@@ -4,5 +4,5 @@ package provider
 
 type PublisherAssessment struct {
 	Assessment *Assessment                  `tfsdk:"assessment"`
-	Two        *PublisherResponseAssessment `tfsdk:"two"`
+	Two        *PublisherBulkItemAssessment `tfsdk:"two"`
 }
