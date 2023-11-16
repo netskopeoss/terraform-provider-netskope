@@ -2,14 +2,6 @@
 
 package provider
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
-
 type PublisherUpgradeProfileGetResponseData struct {
-	DockerTag   types.String `tfsdk:"docker_tag"`
-	Enabled     types.Int64  `tfsdk:"enabled"`
-	Frequency   types.String `tfsdk:"frequency"`
-	ID          types.Int64  `tfsdk:"id"`
-	Name        types.String `tfsdk:"name"`
-	ReleaseType types.String `tfsdk:"release_type"`
-	Timezone    types.String `tfsdk:"timezone"`
+	UpgradeProfiles []UpgradeProfiles `tfsdk:"upgrade_profiles"`
 }

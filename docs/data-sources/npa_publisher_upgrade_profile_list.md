@@ -22,8 +22,7 @@ data "ns_npa_publisher_upgrade_profile_list" "my_npapublisherupgradeprofilelist"
 
 ### Read-Only
 
-- `data` (Attributes List) (see [below for nested schema](#nestedatt--data))
-- `status` (String) must be one of ["success", "not found"]
+- `data` (Attributes) (see [below for nested schema](#nestedatt--data))
 - `total` (Number)
 
 <a id="nestedatt--data"></a>
@@ -31,12 +30,26 @@ data "ns_npa_publisher_upgrade_profile_list" "my_npapublisherupgradeprofilelist"
 
 Read-Only:
 
+- `upgrade_profiles` (Attributes List) (see [below for nested schema](#nestedatt--data--upgrade_profiles))
+
+<a id="nestedatt--data--upgrade_profiles"></a>
+### Nested Schema for `data.upgrade_profiles`
+
+Read-Only:
+
+- `created_at` (String)
 - `docker_tag` (String)
-- `enabled` (Number)
+- `enabled` (Boolean)
+- `external_id` (Number)
 - `frequency` (String)
 - `id` (Number)
 - `name` (String)
+- `next_update_time` (Number)
+- `num_associated_publisher` (Number)
 - `release_type` (String)
 - `timezone` (String)
+- `updated_at` (String)
+- `upgrading_stage` (Number)
+- `will_start` (Boolean)
 
 

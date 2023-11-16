@@ -227,6 +227,7 @@ internal/provider/type_upgrade_status.go
 internal/provider/type_publisher.go
 internal/provider/type_data.go
 internal/provider/type_release_item.go
+internal/provider/type_upgrade_profiles.go
 internal/provider/type_publisher_upgrade_profile_get_response_data.go
 internal/provider/type_npa_policygroup_response_item.go
 internal/provider/type_private_apps_get_response_data.go

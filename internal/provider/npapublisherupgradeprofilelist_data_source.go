@@ -29,9 +29,8 @@ type NPAPublisherUpgradeProfileListDataSource struct {
 
 // NPAPublisherUpgradeProfileListDataSourceModel describes the data model.
 type NPAPublisherUpgradeProfileListDataSourceModel struct {
-	Data   []PublisherUpgradeProfileGetResponseData `tfsdk:"data"`
-	Status types.String                             `tfsdk:"status"`
-	Total  types.Int64                              `tfsdk:"total"`
+	Data  *PublisherUpgradeProfileGetResponseData `tfsdk:"data"`
+	Total types.Int64                             `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -45,37 +44,59 @@ func (r *NPAPublisherUpgradeProfileListDataSource) Schema(ctx context.Context, r
 		MarkdownDescription: "NPAPublisherUpgradeProfileList DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"data": schema.ListNestedAttribute{
+			"data": schema.SingleNestedAttribute{
 				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"docker_tag": schema.StringAttribute{
-							Computed: true,
-						},
-						"enabled": schema.Int64Attribute{
-							Computed: true,
-						},
-						"frequency": schema.StringAttribute{
-							Computed: true,
-						},
-						"id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"name": schema.StringAttribute{
-							Computed: true,
-						},
-						"release_type": schema.StringAttribute{
-							Computed: true,
-						},
-						"timezone": schema.StringAttribute{
-							Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"upgrade_profiles": schema.ListNestedAttribute{
+						Computed: true,
+						NestedObject: schema.NestedAttributeObject{
+							Attributes: map[string]schema.Attribute{
+								"created_at": schema.StringAttribute{
+									Computed: true,
+								},
+								"docker_tag": schema.StringAttribute{
+									Computed: true,
+								},
+								"enabled": schema.BoolAttribute{
+									Computed: true,
+								},
+								"external_id": schema.Int64Attribute{
+									Computed: true,
+								},
+								"frequency": schema.StringAttribute{
+									Computed: true,
+								},
+								"id": schema.Int64Attribute{
+									Computed: true,
+								},
+								"name": schema.StringAttribute{
+									Computed: true,
+								},
+								"next_update_time": schema.Int64Attribute{
+									Computed: true,
+								},
+								"num_associated_publisher": schema.Int64Attribute{
+									Computed: true,
+								},
+								"release_type": schema.StringAttribute{
+									Computed: true,
+								},
+								"timezone": schema.StringAttribute{
+									Computed: true,
+								},
+								"updated_at": schema.StringAttribute{
+									Computed: true,
+								},
+								"upgrading_stage": schema.Int64Attribute{
+									Computed: true,
+								},
+								"will_start": schema.BoolAttribute{
+									Computed: true,
+								},
+							},
 						},
 					},
 				},
-			},
-			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["success", "not found"]`,
 			},
 			"total": schema.Int64Attribute{
 				Computed: true,
