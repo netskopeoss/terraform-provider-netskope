@@ -4,7 +4,7 @@
  - [x] npa_policy
  - [x] npa_policy_group
  - [x] npa_policy_list
- - [] npa_publisher_upgrade_profile_list
+ - [x] npa_publisher_upgrade_profile_list
  - [] npa_publishers
  - [] npa_publishers_alerts_list
  - [] npa_publishers_apps_list

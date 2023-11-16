@@ -7,63 +7,130 @@ import (
 	"fmt"
 )
 
-type PublisherUpgradeProfileGetResponseData struct {
-	DockerTag   *string `json:"docker_tag,omitempty"`
-	Enabled     *int    `json:"enabled,omitempty"`
-	Frequency   *string `json:"frequency,omitempty"`
-	ID          *int    `json:"id,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	ReleaseType *string `json:"release_type,omitempty"`
-	Timezone    *string `json:"timezone,omitempty"`
+type UpgradeProfiles struct {
+	CreatedAt              *string `json:"created_at,omitempty"`
+	DockerTag              *string `json:"docker_tag,omitempty"`
+	Enabled                *bool   `json:"enabled,omitempty"`
+	ExternalID             *int    `json:"external_id,omitempty"`
+	Frequency              *string `json:"frequency,omitempty"`
+	ID                     *int    `json:"id,omitempty"`
+	Name                   *string `json:"name,omitempty"`
+	NextUpdateTime         *int    `json:"next_update_time,omitempty"`
+	NumAssociatedPublisher *int64  `json:"num_associated_publisher,omitempty"`
+	ReleaseType            *string `json:"release_type,omitempty"`
+	Timezone               *string `json:"timezone,omitempty"`
+	UpdatedAt              *string `json:"updated_at,omitempty"`
+	UpgradingStage         *int    `json:"upgrading_stage,omitempty"`
+	WillStart              *bool   `json:"will_start,omitempty"`
 }
 
-func (o *PublisherUpgradeProfileGetResponseData) GetDockerTag() *string {
+func (o *UpgradeProfiles) GetCreatedAt() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CreatedAt
+}
+
+func (o *UpgradeProfiles) GetDockerTag() *string {
 	if o == nil {
 		return nil
 	}
 	return o.DockerTag
 }
 
-func (o *PublisherUpgradeProfileGetResponseData) GetEnabled() *int {
+func (o *UpgradeProfiles) GetEnabled() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.Enabled
 }
 
-func (o *PublisherUpgradeProfileGetResponseData) GetFrequency() *string {
+func (o *UpgradeProfiles) GetExternalID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.ExternalID
+}
+
+func (o *UpgradeProfiles) GetFrequency() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Frequency
 }
 
-func (o *PublisherUpgradeProfileGetResponseData) GetID() *int {
+func (o *UpgradeProfiles) GetID() *int {
 	if o == nil {
 		return nil
 	}
 	return o.ID
 }
 
-func (o *PublisherUpgradeProfileGetResponseData) GetName() *string {
+func (o *UpgradeProfiles) GetName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Name
 }
 
-func (o *PublisherUpgradeProfileGetResponseData) GetReleaseType() *string {
+func (o *UpgradeProfiles) GetNextUpdateTime() *int {
+	if o == nil {
+		return nil
+	}
+	return o.NextUpdateTime
+}
+
+func (o *UpgradeProfiles) GetNumAssociatedPublisher() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.NumAssociatedPublisher
+}
+
+func (o *UpgradeProfiles) GetReleaseType() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ReleaseType
 }
 
-func (o *PublisherUpgradeProfileGetResponseData) GetTimezone() *string {
+func (o *UpgradeProfiles) GetTimezone() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Timezone
+}
+
+func (o *UpgradeProfiles) GetUpdatedAt() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UpdatedAt
+}
+
+func (o *UpgradeProfiles) GetUpgradingStage() *int {
+	if o == nil {
+		return nil
+	}
+	return o.UpgradingStage
+}
+
+func (o *UpgradeProfiles) GetWillStart() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.WillStart
+}
+
+type PublisherUpgradeProfileGetResponseData struct {
+	UpgradeProfiles []UpgradeProfiles `json:"upgrade_profiles,omitempty"`
+}
+
+func (o *PublisherUpgradeProfileGetResponseData) GetUpgradeProfiles() []UpgradeProfiles {
+	if o == nil {
+		return nil
+	}
+	return o.UpgradeProfiles
 }
 
 type PublisherUpgradeProfileGetResponseStatus string
@@ -94,12 +161,12 @@ func (e *PublisherUpgradeProfileGetResponseStatus) UnmarshalJSON(data []byte) er
 }
 
 type PublisherUpgradeProfileGetResponse struct {
-	Data   []PublisherUpgradeProfileGetResponseData  `json:"data,omitempty"`
+	Data   *PublisherUpgradeProfileGetResponseData   `json:"data,omitempty"`
 	Status *PublisherUpgradeProfileGetResponseStatus `json:"status,omitempty"`
 	Total  *int                                      `json:"total,omitempty"`
 }
 
-func (o *PublisherUpgradeProfileGetResponse) GetData() []PublisherUpgradeProfileGetResponseData {
+func (o *PublisherUpgradeProfileGetResponse) GetData() *PublisherUpgradeProfileGetResponseData {
 	if o == nil {
 		return nil
 	}
