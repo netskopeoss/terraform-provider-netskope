@@ -19,133 +19,156 @@ components:
             in: header
             name: Netskope-Api-Token
     schemas:
-        ipsec_tunnel_pop_result_item:
+        gre_tunnel_request_patch:
             type: object
             properties:
-                name:
+                site:
                     type: string
-                gateway:
+                srcipidentity:
                     type: string
-                probeip:
-                    type: string
-                primary:
-                    type: boolean
-                status:
-                    type: string
-                since:
-                    type: string
-                throughput:
-                    type: string
-        ipsec_response_500:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 500
-                result:
-                    type: string
-        Assessment:
-            type: object
-            additionalProperties: false
-            properties:
-                eee_support:
-                    type: boolean
-                hdd_free:
-                    type: string
-                hdd_total:
-                    type: string
-                ip_address:
-                    type: string
-                latency:
-                    type: integer
-                version:
-                    type: string
-            required:
-                - eee_support
-                - hdd_free
-                - hdd_total
-                - ip_address
-                - latency
-                - version
-            title: Assessment
-        "400":
-            type: "object"
-            properties:
-                status:
-                    type: "integer"
-                    example: 400
-                message:
-                    type: "string"
-        publisher_upgrade_profile_bulk_response:
-            type: "object"
-            properties:
-                status:
-                    type: "string"
-                    enum:
-                        - success
-                        - not found
-                data:
-                    type: "array"
-                    items:
-                        $ref: '#/components/schemas/publisher_response'
-                total:
-                    type: "integer"
-                    format: "int32"
-        gre_tunnel_response_200:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 200
-                total:
-                    type: integer
-                    example: 1
-                result:
+                pops:
                     type: array
                     items:
-                        $ref: '#/components/schemas/gre_tunnel_result_item'
-        ipsec_tunnel_response_200:
+                        type: string
+                        example: string
+                    example: string
+                vendor:
+                    type: string
+                template:
+                    type: string
+                sourcetype:
+                    type: string
+                notes:
+                    type: string
+                enable:
+                    type: boolean
+                options:
+                    type: object
+                    properties:
+                        xff:
+                            type: object
+                            properties:
+                                enable:
+                                    type: boolean
+                                iplist:
+                                    type: array
+                                    items:
+                                        type: string
+                                        example: string
+                                    example: string
+        ipsec_response_201:
             type: object
             properties:
                 status:
                     type: integer
-                    example: 200
-                total:
-                    type: integer
-                    example: 1
+                    example: 201
                 result:
+                    type: string
+                data:
                     type: array
                     items:
                         $ref: '#/components/schemas/ipsec_tunnel_result_item'
-        gre_tunnel_pop_result_item:
+        protocol_item:
             type: object
             properties:
+                type:
+                    type: string
+                port:
+                    type: string
+        publisher_bulk_item:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
                 name:
                     type: string
-                gateway:
+                common_name:
                     type: string
-                probeip:
-                    type: string
-                primary:
+                registered:
                     type: boolean
-                usertrafficStatus:
-                    type: string
-                usertrafficLast:
-                    type: string
-                keepaliveStatus:
-                    type: string
-                keepaliveLast:
-                    type: string
-                throughput:
-                    type: string
-        ipsec_response_404:
-            type: object
-            properties:
-                status:
+                lbrokerconnect:
+                    type: boolean
+                assessment:
+                    type: object
+                upgrade_failed_reason:
+                    type: object
+                upgrade_request:
+                    type: boolean
+                upgrade_status:
+                    type: object
+                stitcher_id:
                     type: integer
-                    example: 404
-                result:
+                    format: int32
+                status:
                     type: string
+                    enum:
+                        - connected
+                        - not registered
+                publisher_upgrade_profile_id:
+                    type: integer
+                    format: int32
+                tags:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/tag_item'
+        publisher_bulk_request:
+            type: object
+            x-speakeasy-entity: NPAPublishersBulkUpgrade
+            properties:
+                publishers:
+                    type: object
+                    properties:
+                        id:
+                            type: array
+                            items:
+                                type: string
+                        apply:
+                            type: object
+                            properties:
+                                upgrade_request:
+                                    type: boolean
+                                    default: true
+        publisher_upgrade_profile_bulk_request:
+            type: "object"
+            properties:
+                publishers:
+                    type: "object"
+                    properties:
+                        id:
+                            type: "array"
+                            items:
+                                type: "string"
+                        apply:
+                            type: "object"
+                            properties:
+                                publisher_upgrade_profiles_id:
+                                    type: "string"
+        publisher_upgrade_profile_post_request:
+            type: "object"
+            x-speakeasy-entity: NPAPublisherUpgradeProfile
+            properties:
+                name:
+                    type: "string"
+                frequency:
+                    type: "string"
+                timezone:
+                    type: "string"
+                docker_tag:
+                    type: "string"
+                release_type:
+                    type: "string"
+                enabled:
+                    type: "boolean"
+                required: {}
+        npa_policygroup_response:
+            type: object
+            x-speakeasy-entity: PolicyGroupList
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/npa_policygroup_response_item'
         private_apps_put_request:
             type: object
             x-speakeasy-entity: PrivateApp
@@ -181,23 +204,69 @@ components:
                     type: boolean
                 trust_self_signed_certs:
                     type: boolean
-        publisher_upgrade_profile_post_request:
-            type: "object"
-            x-speakeasy-entity: NPAPublisherUpgradeProfile
+        private_apps_request:
+            type: object
+            x-speakeasy-entity: PrivateApp
             properties:
-                name:
-                    type: "string"
-                frequency:
-                    type: "string"
-                timezone:
-                    type: "string"
-                docker_tag:
-                    type: "string"
-                release_type:
-                    type: "string"
-                enabled:
+                app_name:
+                    type: string
+                host:
+                    type: string
+                real_host:
+                    type: string
+                protocols:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/protocol_item'
+                publishers:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/publisher_item'
+                publisher_tags:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/tag_item_no_id'
+                tags:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/tag_item_no_id'
+                use_publisher_dns:
+                    type: boolean
+                clientless_access:
+                    type: boolean
+                trust_self_signed_certs:
+                    type: boolean
+        upgrade_publisher_response:
+            type: "object"
+            properties:
+                publisher_id:
                     type: "integer"
                     format: "int32"
+                publisher_name:
+                    type: "string"
+                common_name:
+                    type: "string"
+                registered:
+                    type: "boolean"
+                lbrokerconnect:
+                    type: "boolean"
+                assessment:
+                    type: "object"
+                stitcher_id:
+                    type: "integer"
+                    format: "int32"
+                status:
+                    type: "string"
+                    enum:
+                        - connected
+                        - not registered
+                publisher_upgrade_profile_id:
+                    type: "integer"
+                    format: "int32"
+                tags:
+                    type: "array"
+                    items:
+                        $ref: '#/components/schemas/tag_item'
         npa_policy_response_400:
             type: object
             properties:
@@ -206,6 +275,114 @@ components:
                     example: 400
                 result:
                     type: string
+        gre_response_403:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 403
+                result:
+                    type: string
+        gre_tunnel_pop_result_item:
+            type: object
+            properties:
+                name:
+                    type: string
+                gateway:
+                    type: string
+                probeip:
+                    type: string
+                primary:
+                    type: boolean
+                usertrafficStatus:
+                    type: string
+                usertrafficLast:
+                    type: string
+                keepaliveStatus:
+                    type: string
+                keepaliveLast:
+                    type: string
+                throughput:
+                    type: string
+        publishers_alert_put_request:
+            type: object
+            x-speakeasy-entity:
+                - NPAPublishersAlerts
+                - NPAPublishersAlertsList
+            properties:
+                adminUsers:
+                    type: array
+                    items:
+                        type: string
+                        example:
+                            - admin1@abc.com
+                            - admin2@abc.com
+                    example:
+                        - admin1@abc.com
+                        - admin2@abc.com
+                eventTypes:
+                    type: array
+                    items:
+                        type: string
+                        enum:
+                            - UPGRADE_WILL_START
+                            - UPGRADE_STARTED
+                            - UPGRADE_SUCCEEDED
+                            - UPGRADE_FAILED
+                            - CONNECTION_FAILED
+                    minItems: 1
+                    maxItems: 5
+                    example:
+                        - CONNECTION_FAILED
+                        - UPGRADE_STARTED
+                selectedUsers:
+                    type: string
+                    example: abc@xyz.com,def@xyz.com
+        Data:
+            type: object
+            additionalProperties: false
+            properties:
+                publishers:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Publisher'
+            required:
+                - publishers
+            title: Data
+        publishers_bulk_response:
+            type: object
+            x-speakeasy-entity: NPAPublishersBulkUpgrade
+            properties:
+                status:
+                    type: string
+                    enum:
+                        - success
+                        - not found
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/publisher_bulk_item'
+        tag_response:
+            type: object
+            x-speakeasy-entity: PrivateAppTagList
+            properties:
+                status:
+                    x-speakeasy-ignore: true
+                    type: string
+                    enum:
+                        - success
+                        - not found
+                data:
+                    type: array
+                    items:
+                        x-speakeasy-entity: PrivateAppTag
+                        type: object
+                        properties:
+                            tag_id:
+                                type: integer
+                                format: int32
+                            tag_name:
+                                type: string
         tag_request:
             x-speakeasy-entity:
                 - PrivateAppTagList
@@ -226,84 +403,191 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/tag_item'
-        publishers_get_response:
+        publisher_post_request:
             type: object
-            x-speakeasy-entity: NPAPublishersList
+            x-speakeasy-entity: NPAPublishers
             properties:
-                data:
-                    $ref: '#/components/schemas/Data'
-                status:
+                name:
                     type: string
-                total:
+                    default: publisher_name
+                lbrokerconnect:
+                    type: boolean
+                    default: false
+                tags:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/tag_item_no_id'
+                publisher_upgrade_profiles_id:
                     type: integer
                     format: int32
-        publisher_upgrade_profile_response:
-            type: "object"
-            properties:
-                status:
-                    type: "string"
-                    x-speakeasy-ignore: true
-                    enum:
-                        - success
-                        - not found
-                data:
-                    type: "object"
-                    x-speakeasy-entity: NPAPublisherUpgradeProfile
-                    properties:
-                        id:
-                            type: "integer"
-                            format: "int32"
-                        frequency:
-                            type: "string"
-                        timezone:
-                            type: "string"
-                        docker_tag:
-                            type: "string"
-                        release_type:
-                            type: "string"
-                        name:
-                            type: "string"
-                        enabled:
-                            type: "integer"
-                            format: "int32"
-        npa_policygroup_response_item:
+                    default: 1
+            required:
+                - name
+        release_item:
             type: object
-            x-speakeasy-entity: NPAPolicyGroup
             properties:
-                group_id:
+                docker_tag:
                     type: string
-                group_name:
+                name:
                     type: string
-                modify_type:
+                version:
                     type: string
-                modify_time:
-                    type: string
-                can_be_edited_deleted:
-                    type: string
-                group_type:
-                    type: string
-                group_prod_id:
-                    type: integer
-                group_pinned_id:
-                    type: integer
-        gre_response_403:
+        gre_response_405:
             type: object
             properties:
                 status:
                     type: integer
-                    example: 403
+                    example: 405
                 result:
                     type: string
-        ipsec_tunnel_request_patch:
+        gre_response_404:
             type: object
             properties:
-                encryption:
+                status:
+                    type: integer
+                    example: 404
+                result:
                     type: string
+        ipsec_patch_response_200:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 200
+                result:
+                    type: string
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ipsec_tunnel_result_item'
+        ipsec_tunnel_result_item:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 1
                 site:
+                    type: string
+                template:
+                    type: string
+                sourcetype:
+                    type: string
+                notes:
+                    type: string
+                vendor:
+                    type: string
+                encryption:
                     type: string
                 srcidentity:
                     type: string
-                psk:
+                srcipidentity:
+                    type: string
+                pops:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ipsec_tunnel_pop_result_item'
+                enabled:
+                    type: boolean
+                bandwidth:
+                    type: integer
+                    example: 50
+                options:
+                    type: object
+                    properties:
+                        rekey:
+                            type: boolean
+                        reauth:
+                            type: boolean
+                        xff:
+                            type: object
+                            properties:
+                                enabled:
+                                    type: boolean
+                                iplist:
+                                    type: array
+                                    items:
+                                        type: string
+                                        example: string
+                                    example: string
+                version:
+                    type: integer
+                    example: 2
+        gre_response_409:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 409
+                result:
+                    type: string
+        ipsec_response_404:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 404
+                result:
+                    type: string
+        publisher_upgrade_profile_get_response:
+            type: "object"
+            x-speakeasy-entity: NPAPublisherUpgradeProfileList
+            properties:
+                status:
+                    type: "string"
+                    enum:
+                        - success
+                        - not found
+                total:
+                    type: "integer"
+                    format: "int32"
+                data:
+                    type: "array"
+                    items:
+                        type: object
+                        properties:
+                            id:
+                                type: "integer"
+                                format: "int32"
+                            frequency:
+                                type: "string"
+                            timezone:
+                                type: "string"
+                            docker_tag:
+                                type: "string"
+                            release_type:
+                                type: "string"
+                            name:
+                                type: "string"
+                            enabled:
+                                type: "integer"
+                                format: "int32"
+        npa_policygroup_request:
+            type: object
+            x-speakeasy-entity: NPAPolicyGroup
+            required:
+                - group_name
+                - group_order
+            properties:
+                group_name:
+                    type: string
+                group_order:
+                    type: object
+                    required:
+                        - order
+                        - group_id
+                    properties:
+                        order:
+                            type: string
+                            enum:
+                                - before
+                                - after
+                        group_id:
+                            type: string
+                            example: '1'
+        gre_tunnel_request_post:
+            type: object
+            properties:
+                site:
                     type: string
                 srcipidentity:
                     type: string
@@ -313,25 +597,19 @@ components:
                         type: string
                         example: string
                     example: string
-                bandwidth:
-                    type: integer
-                notes:
-                    type: string
                 vendor:
+                    type: string
+                template:
                     type: string
                 sourcetype:
                     type: string
-                template:
+                notes:
                     type: string
                 enable:
                     type: boolean
                 options:
                     type: object
                     properties:
-                        rekey:
-                            type: boolean
-                        reauth:
-                            type: boolean
                         xff:
                             type: object
                             properties:
@@ -343,15 +621,69 @@ components:
                                         type: string
                                         example: string
                                     example: string
-        ipsec_response_403:
+        gre_tunnel_response_200:
             type: object
             properties:
                 status:
                     type: integer
-                    example: 403
+                    example: 200
+                total:
+                    type: integer
+                    example: 1
+                result:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/gre_tunnel_result_item'
+        gre_response_201:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 201
                 result:
                     type: string
-        private_apps_response_400:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/gre_tunnel_result_item'
+        gre_response_429:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 429
+                result:
+                    type: string
+        ipsec_response_409:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 409
+                result:
+                    type: string
+        ipsec_tunnel_response_200:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 200
+                total:
+                    type: integer
+                    example: 1
+                result:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ipsec_tunnel_result_item'
+        ipsec_response_200:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 200
+                result:
+                    type: string
+        tag_response_400:
             type: object
             properties:
                 status:
@@ -359,24 +691,71 @@ components:
                     example: 400
                 result:
                     type: string
-        publisher_item:
+        private_apps_response:
             type: object
             properties:
-                publisher_id:
+                status:
+                    x-speakeasy-ignore: true
                     type: string
-                publisher_name:
-                    type: string
-        Data:
+                    enum:
+                        - success
+                        - not found
+                data:
+                    type: object
+                    x-speakeasy-entity: PrivateApp
+                    properties:
+                        id:
+                            type: integer
+                            format: int32
+                        name:
+                            type: string
+                        use_publisher_dns:
+                            type: boolean
+                        clientless_access:
+                            type: boolean
+                        trust_self_signed_certs:
+                            type: boolean
+                        host:
+                            type: string
+                        real_host:
+                            type: string
+                        protocols:
+                            type: array
+                            x-speakeasy-name-override: "resolved_protocols"
+                            items:
+                                $ref: '#/components/schemas/protocol_response_item'
+                        tags:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/tag_item'
+                        service_publisher_assignments:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/service_publisher_assignment_item'
+        Assessment:
             type: object
             additionalProperties: false
             properties:
-                publishers:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Publisher'
+                eee_support:
+                    type: boolean
+                hdd_free:
+                    type: string
+                hdd_total:
+                    type: string
+                ip_address:
+                    type: string
+                latency:
+                    type: integer
+                version:
+                    type: string
             required:
-                - publishers
-            title: Data
+                - eee_support
+                - hdd_free
+                - hdd_total
+                - ip_address
+                - latency
+                - version
+            title: Assessment
         publishers_alert_get_response:
             type: object
             properties:
@@ -417,21 +796,6 @@ components:
                         selectedUsers:
                             type: string
                             example: abc@xyz.com,def@xyz.com
-        publisher_upgrade_profile_bulk_request:
-            type: "object"
-            properties:
-                publishers:
-                    type: "object"
-                    properties:
-                        id:
-                            type: "array"
-                            items:
-                                type: "string"
-                        apply:
-                            type: "object"
-                            properties:
-                                publisher_upgrade_profiles_id:
-                                    type: "string"
         publishers_response_400:
             type: object
             properties:
@@ -440,26 +804,112 @@ components:
                     example: 400
                 result:
                     type: string
-        publisher_post_request:
+        Publisher:
+            type: object
+            additionalProperties: false
+            properties:
+                apps_count:
+                    type: integer
+                assessment:
+                    anyOf:
+                        - $ref: '#/components/schemas/Assessment'
+                        - type: object
+                common_name:
+                    type: string
+                connected_apps:
+                    anyOf:
+                        - type: array
+                          items:
+                            type: string
+                lbrokerconnect:
+                    type: boolean
+                publisher_id:
+                    type: integer
+                publisher_name:
+                    type: string
+                publisher_upgrade_profiles_external_id:
+                    type: integer
+                registered:
+                    type: boolean
+                status:
+                    type: string
+                stitcher_id:
+                    anyOf:
+                        - type: integer
+                        - type: object
+                tags:
+                    type: array
+                    items: {}
+                upgrade_failed_reason:
+                    anyOf:
+                        - $ref: '#/components/schemas/UpgradeFailedReason'
+                        - type: object
+                upgrade_request:
+                    type: boolean
+                upgrade_status:
+                    $ref: '#/components/schemas/UpgradeStatus'
+            required:
+                - apps_count
+                - assessment
+                - common_name
+                - connected_apps
+                - lbrokerconnect
+                - publisher_id
+                - publisher_name
+                - publisher_upgrade_profiles_external_id
+                - registered
+                - status
+                - stitcher_id
+                - tags
+                - upgrade_failed_reason
+                - upgrade_request
+                - upgrade_status
+            title: Publisher
+        publishers_alert_put_response:
+            type: object
+            properties:
+                status:
+                    type: string
+                    enum:
+                        - success
+                        - not found
+                        - failure
+        protocol_response_item:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                port:
+                    type: string
+                transport:
+                    type: string
+                service_id:
+                    type: integer
+                    format: int32
+        private_apps_response_400:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 400
+                result:
+                    type: string
+        publisher_put_request:
             type: object
             x-speakeasy-entity: NPAPublishers
             properties:
                 name:
                     type: string
-                    default: publisher_name
+                id:
+                    type: integer
+                    format: int32
                 lbrokerconnect:
                     type: boolean
-                    default: false
                 tags:
                     type: array
                     items:
-                        $ref: '#/components/schemas/tag_item_no_id'
-                publisher_upgrade_profiles_id:
-                    type: integer
-                    format: int32
-                    default: 1
-            required:
-                - name
+                        $ref: '#/components/schemas/tag_item'
         gre_tunnel_result_item:
             type: object
             properties:
@@ -501,120 +951,6 @@ components:
                 version:
                     type: integer
                     example: 2
-        ipsec_response_405:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 405
-                result:
-                    type: string
-        ipsec_response_409:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 409
-                result:
-                    type: string
-        tag_response_400:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 400
-                result:
-                    type: string
-        tag_response:
-            type: object
-            x-speakeasy-entity: PrivateAppTagList
-            properties:
-                status:
-                    x-speakeasy-ignore: true
-                    type: string
-                    enum:
-                        - success
-                        - not found
-                data:
-                    type: array
-                    items:
-                        x-speakeasy-entity: PrivateAppTag
-                        type: object
-                        properties:
-                            tag_id:
-                                type: integer
-                                format: int32
-                            tag_name:
-                                type: string
-        service_publisher_assignment_item:
-            type: object
-            properties:
-                publisher_id:
-                    type: integer
-                    format: int32
-                service_id:
-                    type: integer
-                    format: int32
-                primary:
-                    type: boolean
-                reachability:
-                    type: object
-                    properties:
-                        error_code:
-                            type: integer
-                            format: int32
-                        reachable:
-                            type: boolean
-                        error_string:
-                            type: string
-        publisher_response:
-            type: "object"
-            properties:
-                publisher_id:
-                    type: "integer"
-                    format: "int32"
-                publisher_name:
-                    type: "string"
-                common_name:
-                    type: "string"
-                registered:
-                    type: "boolean"
-                lbrokerconnect:
-                    type: "boolean"
-                assessment:
-                    type: "object"
-                stitcher_id:
-                    type: "integer"
-                    format: "int32"
-                status:
-                    type: "string"
-                    enum:
-                        - connected
-                        - not registered
-                publisher_upgrade_profile_id:
-                    type: "integer"
-                    format: "int32"
-                tags:
-                    type: "array"
-                    items:
-                        $ref: '#/components/schemas/tag_item'
-        UpgradeStatus:
-            type: object
-            additionalProperties: false
-            properties:
-                upstat:
-                    type: string
-            required:
-                - upstat
-            title: UpgradeStatus
-        npa_policygroup_response_400:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 400
-                result:
-                    type: string
         ipsec_pop_result_item:
             type: object
             properties:
@@ -667,15 +1003,93 @@ components:
                     type: boolean
                 bandwidth:
                     type: string
-        ipsec_response_400:
+        ipsec_tunnel_request_patch:
+            type: object
+            properties:
+                encryption:
+                    type: string
+                site:
+                    type: string
+                srcidentity:
+                    type: string
+                psk:
+                    type: string
+                srcipidentity:
+                    type: string
+                pops:
+                    type: array
+                    items:
+                        type: string
+                        example: string
+                    example: string
+                bandwidth:
+                    type: integer
+                notes:
+                    type: string
+                vendor:
+                    type: string
+                sourcetype:
+                    type: string
+                template:
+                    type: string
+                enable:
+                    type: boolean
+                options:
+                    type: object
+                    properties:
+                        rekey:
+                            type: boolean
+                        reauth:
+                            type: boolean
+                        xff:
+                            type: object
+                            properties:
+                                enable:
+                                    type: boolean
+                                iplist:
+                                    type: array
+                                    items:
+                                        type: string
+                                        example: string
+                                    example: string
+        "200":
+            type: "object"
+            properties:
+                status:
+                    x-speakeasy-terraform-ignore: true
+                    type: "integer"
+                    example: 200
+                result:
+                    type: "array"
+                    items:
+                        type: "object"
+        gre_patch_response_200:
             type: object
             properties:
                 status:
                     type: integer
-                    example: 400
+                    example: 200
                 result:
                     type: string
-        private_apps_response:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/gre_tunnel_result_item'
+        ipsec_response_403:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 403
+                result:
+                    type: string
+        tag_item_no_id:
+            type: object
+            properties:
+                tag_name:
+                    type: string
+                    default: tag_name
+        publisher_apps_list_response:
             type: object
             x-speakeasy-entity: NPAPublishersAppsList
             properties:
@@ -716,6 +1130,22 @@ components:
                                 type: array
                                 items:
                                     $ref: '#/components/schemas/service_publisher_assignment_item'
+        gre_response_500:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 500
+                result:
+                    type: string
+        ipsec_response_400:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 400
+                result:
+                    type: string
         publishers_release_get_response:
             type: object
             x-speakeasy-entity: NPAPublishersReleasesList
@@ -729,40 +1159,6 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/release_item'
-        publishers_alert_put_request:
-            type: object
-            x-speakeasy-entity:
-                - NPAPublishersAlerts
-                - NPAPublishersAlertsList
-            properties:
-                adminUsers:
-                    type: array
-                    items:
-                        type: string
-                        example:
-                            - admin1@abc.com
-                            - admin2@abc.com
-                    example:
-                        - admin1@abc.com
-                        - admin2@abc.com
-                eventTypes:
-                    type: array
-                    items:
-                        type: string
-                        enum:
-                            - UPGRADE_WILL_START
-                            - UPGRADE_STARTED
-                            - UPGRADE_SUCCEEDED
-                            - UPGRADE_FAILED
-                            - CONNECTION_FAILED
-                    minItems: 1
-                    maxItems: 5
-                    example:
-                        - CONNECTION_FAILED
-                        - UPGRADE_STARTED
-                selectedUsers:
-                    type: string
-                    example: abc@xyz.com,def@xyz.com
         npa_policy_response_item:
             type: object
             x-speakeasy-entity: NPAPolicy
@@ -779,50 +1175,65 @@ components:
                     x-speakeasy-ignore: true
                     type: integer
                     example: 1
-        gre_response_201:
+        gre_pop_response_200:
             type: object
             properties:
                 status:
                     type: integer
-                    example: 201
+                    example: 200
+                total:
+                    type: integer
+                    example: 1
+                result:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/gre_pop_result_item'
+        ipsec_response_429:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 429
                 result:
                     type: string
-                data:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/gre_tunnel_result_item'
-        private_apps_request:
+        ipsec_response_500:
             type: object
-            x-speakeasy-entity: PrivateApp
             properties:
-                app_name:
+                status:
+                    type: integer
+                    example: 500
+                result:
                     type: string
-                host:
+        ipsec_pop_response_200:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    example: 200
+                total:
+                    type: integer
+                    example: 1
+                result:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ipsec_pop_result_item'
+        ipsec_tunnel_pop_result_item:
+            type: object
+            properties:
+                name:
                     type: string
-                real_host:
+                gateway:
                     type: string
-                protocols:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/protocol_item'
-                publishers:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/publisher_item'
-                publisher_tags:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/tag_item_no_id'
-                tags:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/tag_item_no_id'
-                use_publisher_dns:
+                probeip:
+                    type: string
+                primary:
                     type: boolean
-                clientless_access:
-                    type: boolean
-                trust_self_signed_certs:
-                    type: boolean
+                status:
+                    type: string
+                since:
+                    type: string
+                throughput:
+                    type: string
         private_apps_get_response:
             type: object
             x-speakeasy-entity: PrivateAppList
@@ -867,21 +1278,15 @@ components:
                 total:
                     type: integer
                     format: int32
-        publisher_put_request:
+        UpgradeStatus:
             type: object
-            x-speakeasy-entity: NPAPublishers
+            additionalProperties: false
             properties:
-                name:
+                upstat:
                     type: string
-                id:
-                    type: integer
-                    format: int32
-                lbrokerconnect:
-                    type: boolean
-                tags:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/tag_item'
+            required:
+                - upstat
+            title: UpgradeStatus
         publisher_upgrade_profile_put_request:
             type: "object"
             x-speakeasy-entity: NPAPublisherUpgradeProfile
@@ -900,83 +1305,7 @@ components:
                 release_type:
                     type: "string"
                 enabled:
-                    type: "integer"
-                    format: "int32"
-        UpgradeFailedReason:
-            type: object
-            additionalProperties: false
-            properties:
-                detail:
-                    type: string
-                error_code:
-                    type: integer
-                timestamp:
-                    type: integer
-                version:
-                    type: string
-                    format: integer
-            required:
-                - detail
-                - error_code
-                - timestamp
-                - version
-            title: UpgradeFailedReason
-        "200":
-            type: "object"
-            properties:
-                status:
-                    x-speakeasy-terraform-ignore: true
-                    type: "integer"
-                    example: 200
-                result:
-                    type: "array"
-                    items:
-                        type: "object"
-        gre_response_409:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 409
-                result:
-                    type: string
-        gre_response_400:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 400
-                result:
-                    type: string
-        gre_patch_response_200:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 200
-                result:
-                    type: string
-                data:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/gre_tunnel_result_item'
-        gre_response_405:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 405
-                result:
-                    type: string
-        publishers_alert_put_response:
-            type: object
-            properties:
-                status:
-                    type: string
-                    enum:
-                        - success
-                        - not found
-                        - failure
+                    type: "boolean"
         npa_policy_rule_dlp:
             type: array
             items:
@@ -1127,239 +1456,71 @@ components:
                     example: 1
                 dlp_actions:
                     $ref: '#/components/schemas/npa_policy_rule_dlp'
-        npa_policy_request:
+        npa_policygroup_response_400:
             type: object
-            x-speakeasy-entity: NPAPolicy
             properties:
-                rule_name:
+                status:
+                    type: integer
+                    example: 400
+                result:
                     type: string
-                    example: vantest
-                description:
-                    type: string
-                    example: any
-                rule_data:
-                    $ref: '#/components/schemas/npa_policy_rule_data'
-                rule_order:
-                    type: object
-                    properties:
-                        order:
-                            type: string
-                            enum:
-                                - top
-                                - bottom
-                                - before
-                                - after
-                        rule_name:
-                            type: string
-                            example: api-policy-managed
-                        rule_id:
-                            type: string
-                            example: "1"
-                        position:
-                            type: integer
-                            example: 5
-                group_id:
+        publisher_response:
+            type: object
+            properties:
+                status:
                     x-speakeasy-ignore: true
                     type: string
-                    example: '1'
-                group_name:
-                    type: string
-                    example: My policy group
-                enabled:
-                    type: string
-                    example: '1'
-        npa_policygroup_request:
-            type: object
-            x-speakeasy-entity: NPAPolicyGroup
-            required:
-                - group_name
-                - group_order
-            properties:
-                group_name:
-                    type: string
-                group_order:
+                    enum:
+                        - success
+                        - not found
+                data:
                     type: object
-                    required:
-                        - order
-                        - group_id
+                    x-speakeasy-entity: NPAPublishers
                     properties:
-                        order:
+                        id:
+                            type: integer
+                            format: int32
+                        name:
+                            type: string
+                        common_name:
+                            type: string
+                        registered:
+                            type: boolean
+                        lbrokerconnect:
+                            type: boolean
+                        assessment:
+                            x-speakeasy-type-override: any
+                            type: object
+                        stitcher_id:
+                            type: integer
+                            format: int32
+                        status:
                             type: string
                             enum:
-                                - before
-                                - after
-                        group_id:
-                            type: string
-                            example: '1'
-        publisher_bulk_item:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int32
-                name:
-                    type: string
-                common_name:
-                    type: string
-                registered:
-                    type: boolean
-                lbrokerconnect:
-                    type: boolean
-                assessment:
-                    type: object
-                upgrade_failed_reason:
-                    type: object
-                upgrade_request:
-                    type: boolean
-                upgrade_status:
-                    type: object
-                stitcher_id:
-                    type: integer
-                    format: int32
-                status:
-                    type: string
-                    enum:
-                        - connected
-                        - not registered
-                publisher_upgrade_profile_id:
-                    type: integer
-                    format: int32
-                tags:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/tag_item'
-        publisher_upgrade_profile_get_response:
+                                - connected
+                                - not registered
+                        publisher_upgrade_profile_id:
+                            type: integer
+                            format: int32
+                        tags:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/tag_item'
+        publisher_upgrade_profile_bulk_response:
             type: "object"
-            x-speakeasy-entity: NPAPublisherUpgradeProfileList
             properties:
                 status:
                     type: "string"
                     enum:
                         - success
                         - not found
-                total:
-                    type: "integer"
-                    format: "int32"
                 data:
                     type: "array"
                     items:
-                        type: object
-                        properties:
-                            id:
-                                type: "integer"
-                                format: "int32"
-                            frequency:
-                                type: "string"
-                            timezone:
-                                type: "string"
-                            docker_tag:
-                                type: "string"
-                            release_type:
-                                type: "string"
-                            name:
-                                type: "string"
-                            enabled:
-                                type: "integer"
-                                format: "int32"
-        gre_response_200:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 200
-                result:
-                    type: string
-        ipsec_tunnel_result_item:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    example: 1
-                site:
-                    type: string
-                template:
-                    type: string
-                sourcetype:
-                    type: string
-                notes:
-                    type: string
-                vendor:
-                    type: string
-                encryption:
-                    type: string
-                srcidentity:
-                    type: string
-                srcipidentity:
-                    type: string
-                pops:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ipsec_tunnel_pop_result_item'
-                enabled:
-                    type: boolean
-                bandwidth:
-                    type: integer
-                    example: 50
-                options:
-                    type: object
-                    properties:
-                        rekey:
-                            type: boolean
-                        reauth:
-                            type: boolean
-                        xff:
-                            type: object
-                            properties:
-                                enabled:
-                                    type: boolean
-                                iplist:
-                                    type: array
-                                    items:
-                                        type: string
-                                        example: string
-                                    example: string
-                version:
-                    type: integer
-                    example: 2
-        ipsec_response_201:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 201
-                result:
-                    type: string
-                data:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ipsec_tunnel_result_item'
-        tag_item_no_id:
-            type: object
-            properties:
-                tag_name:
-                    type: string
-                    default: tag_name
-        publishers_bulk_response:
-            type: object
-            x-speakeasy-entity: NPAPublishersBulkUpgrade
-            properties:
-                status:
-                    type: string
-                    enum:
-                        - success
-                        - not found
-                data:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/publisher_bulk_item'
-        npa_policy_list_response:
-            x-speakeasy-entity: NPAPolicyList
-            type: object
-            properties:
-                data:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/npa_policy_response_item'
+                        $ref: '#/components/schemas/upgrade_publisher_response'
+                total:
+                    type: "integer"
+                    format: "int32"
         gre_pop_result_item:
             type: object
             properties:
@@ -1379,85 +1540,25 @@ components:
                     type: string
                 acceptingtunnels:
                     type: boolean
-        ipsec_pop_response_200:
+        publishers_get_response:
             type: object
+            x-speakeasy-entity: NPAPublishersList
             properties:
+                data:
+                    $ref: '#/components/schemas/Data'
                 status:
-                    type: integer
-                    example: 200
+                    type: string
                 total:
                     type: integer
-                    example: 1
-                result:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ipsec_pop_result_item'
-        ipsec_patch_response_200:
+                    format: int32
+        ipsec_response_405:
             type: object
             properties:
                 status:
                     type: integer
-                    example: 200
+                    example: 405
                 result:
                     type: string
-                data:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ipsec_tunnel_result_item'
-        publisher_bulk_request:
-            type: object
-            x-speakeasy-entity: NPAPublishersBulkUpgrade
-            properties:
-                publishers:
-                    type: object
-                    properties:
-                        id:
-                            type: array
-                            items:
-                                type: string
-                        apply:
-                            type: object
-                            properties:
-                                upgrade_request:
-                                    type: boolean
-                                    default: true
-        gre_tunnel_request_post:
-            type: object
-            properties:
-                site:
-                    type: string
-                srcipidentity:
-                    type: string
-                pops:
-                    type: array
-                    items:
-                        type: string
-                        example: string
-                    example: string
-                vendor:
-                    type: string
-                template:
-                    type: string
-                sourcetype:
-                    type: string
-                notes:
-                    type: string
-                enable:
-                    type: boolean
-                options:
-                    type: object
-                    properties:
-                        xff:
-                            type: object
-                            properties:
-                                enable:
-                                    type: boolean
-                                iplist:
-                                    type: array
-                                    items:
-                                        type: string
-                                        example: string
-                                    example: string
         ipsec_tunnel_request_post:
             type: object
             properties:
@@ -1507,80 +1608,41 @@ components:
                                         type: string
                                         example: string
                                     example: string
-        ipsec_response_429:
+        npa_policygroup_response_item:
+            type: object
+            x-speakeasy-entity: NPAPolicyGroup
+            properties:
+                group_id:
+                    type: string
+                group_name:
+                    type: string
+                modify_type:
+                    type: string
+                modify_time:
+                    type: string
+                can_be_edited_deleted:
+                    type: string
+                group_type:
+                    type: string
+                group_prod_id:
+                    type: integer
+                group_pinned_id:
+                    type: integer
+        gre_response_400:
             type: object
             properties:
                 status:
                     type: integer
-                    example: 429
+                    example: 400
                 result:
                     type: string
-        ipsec_response_200:
+        publisher_item:
             type: object
             properties:
-                status:
-                    type: integer
-                    example: 200
-                result:
+                publisher_id:
                     type: string
-        npa_policygroup_response:
-            type: object
-            x-speakeasy-entity: PolicyGroupList
-            properties:
-                data:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/npa_policygroup_response_item'
-        gre_pop_response_200:
-            type: object
-            properties:
-                status:
-                    type: integer
-                    example: 200
-                total:
-                    type: integer
-                    example: 1
-                result:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/gre_pop_result_item'
-        gre_tunnel_request_patch:
-            type: object
-            properties:
-                site:
+                publisher_name:
                     type: string
-                srcipidentity:
-                    type: string
-                pops:
-                    type: array
-                    items:
-                        type: string
-                        example: string
-                    example: string
-                vendor:
-                    type: string
-                template:
-                    type: string
-                sourcetype:
-                    type: string
-                notes:
-                    type: string
-                enable:
-                    type: boolean
-                options:
-                    type: object
-                    properties:
-                        xff:
-                            type: object
-                            properties:
-                                enable:
-                                    type: boolean
-                                iplist:
-                                    type: array
-                                    items:
-                                        type: string
-                                        example: string
-                                    example: string
         tag_item:
             type: object
             properties:
@@ -1589,120 +1651,139 @@ components:
                 tag_id:
                     type: integer
                     format: int32
-        protocol_item:
-            type: object
-            properties:
-                type:
-                    type: string
-                port:
-                    type: string
-        protocol_response_item:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int32
-                port:
-                    type: string
-                transport:
-                    type: string
-                service_id:
-                    type: integer
-                    format: int32
-        Publisher:
+        UpgradeFailedReason:
             type: object
             additionalProperties: false
             properties:
-                apps_count:
+                detail:
+                    type: string
+                error_code:
                     type: integer
-                assessment:
-                    anyOf:
-                        - $ref: '#/components/schemas/Assessment'
-                        - type: object
-                common_name:
-                    type: string
-                connected_apps:
-                    anyOf:
-                        - type: array
-                          items:
-                            type: string
-                lbrokerconnect:
-                    type: boolean
-                publisher_id:
+                timestamp:
                     type: integer
-                publisher_name:
-                    type: string
-                publisher_upgrade_profiles_external_id:
-                    type: integer
-                registered:
-                    type: boolean
-                status:
-                    type: string
-                stitcher_id:
-                    anyOf:
-                        - type: integer
-                        - type: object
-                tags:
-                    type: array
-                    items: {}
-                upgrade_failed_reason:
-                    anyOf:
-                        - $ref: '#/components/schemas/UpgradeFailedReason'
-                        - type: object
-                upgrade_request:
-                    type: boolean
-                upgrade_status:
-                    $ref: '#/components/schemas/UpgradeStatus'
-            required:
-                - apps_count
-                - assessment
-                - common_name
-                - connected_apps
-                - lbrokerconnect
-                - publisher_id
-                - publisher_name
-                - publisher_upgrade_profiles_external_id
-                - registered
-                - status
-                - stitcher_id
-                - tags
-                - upgrade_failed_reason
-                - upgrade_request
-                - upgrade_status
-            title: Publisher
-        release_item:
-            type: object
-            properties:
-                docker_tag:
-                    type: string
-                name:
-                    type: string
                 version:
                     type: string
-        gre_response_500:
+                    format: integer
+            required:
+                - detail
+                - error_code
+                - timestamp
+                - version
+            title: UpgradeFailedReason
+        "400":
+            type: "object"
+            properties:
+                status:
+                    type: "integer"
+                    example: 400
+                message:
+                    type: "string"
+        npa_policy_list_response:
+            x-speakeasy-entity: NPAPolicyList
+            type: object
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/npa_policy_response_item'
+        npa_policy_request:
+            type: object
+            x-speakeasy-entity: NPAPolicy
+            properties:
+                rule_name:
+                    type: string
+                    example: vantest
+                description:
+                    type: string
+                    example: any
+                rule_data:
+                    $ref: '#/components/schemas/npa_policy_rule_data'
+                rule_order:
+                    type: object
+                    properties:
+                        order:
+                            type: string
+                            enum:
+                                - top
+                                - bottom
+                                - before
+                                - after
+                        rule_name:
+                            type: string
+                            example: api-policy-managed
+                        rule_id:
+                            type: string
+                            example: "1"
+                        position:
+                            type: integer
+                            example: 5
+                group_id:
+                    x-speakeasy-ignore: true
+                    type: string
+                    example: '1'
+                group_name:
+                    type: string
+                    example: My policy group
+                enabled:
+                    type: string
+                    example: '1'
+        gre_response_200:
             type: object
             properties:
                 status:
                     type: integer
-                    example: 500
+                    example: 200
                 result:
                     type: string
-        gre_response_404:
+        service_publisher_assignment_item:
             type: object
             properties:
-                status:
+                publisher_id:
                     type: integer
-                    example: 404
-                result:
-                    type: string
-        gre_response_429:
-            type: object
+                    format: int32
+                service_id:
+                    type: integer
+                    format: int32
+                primary:
+                    type: boolean
+                reachability:
+                    type: object
+                    properties:
+                        error_code:
+                            type: integer
+                            format: int32
+                        reachable:
+                            type: boolean
+                        error_string:
+                            type: string
+        publisher_upgrade_profile_response:
+            type: "object"
             properties:
                 status:
-                    type: integer
-                    example: 429
-                result:
-                    type: string
+                    type: "string"
+                    x-speakeasy-ignore: true
+                    enum:
+                        - success
+                        - not found
+                data:
+                    type: "object"
+                    x-speakeasy-entity: NPAPublisherUpgradeProfile
+                    properties:
+                        id:
+                            type: "integer"
+                            format: "int32"
+                        frequency:
+                            type: "string"
+                        timezone:
+                            type: "string"
+                        docker_tag:
+                            type: "string"
+                        release_type:
+                            type: "string"
+                        name:
+                            type: "string"
+                        enabled:
+                            type: "boolean"
 paths:
     /steering/apps/private:
         x-netskope-params:
@@ -1910,10 +1991,10 @@ paths:
                                 $ref: '#/components/schemas/private_apps_response_400'
     /steering/apps/private/getpolicyinuse:
         x-netskope-params:
-            apiGroup: npa_apps_private
             serviceConfig: provisioner-pycore-ws
             version: 2
             customerFacing: true
+            apiGroup: npa_apps_private
         post:
             summary: Retrieve number of policy in use for specified private apps
             description: Retrieve number of policy in use for specified private apps
@@ -1957,226 +2038,21 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/private_apps_response_400'
-    /infrastructure/publishers/{publisher_id}/registration_token:
+    /infrastructure/publisherupgradeprofiles/bulk:
         x-netskope-params:
-            apiGroup: npa_publishers
+            version: 2
+            customerFacing: true
+            apiGroup: npa_upgrade_profiles
             serviceConfig: provisioner-pycore-ws
-            version: 2
-            customerFacing: true
-        post:
-            summary: Generate and retrieve a token for publisher registration
-            description: Generate and retrieve a token for publisher registration
-            x-speakeasy-name-override: create
-            x-speakeasy-entity-operation: PublisherToken#create
-            parameters:
-                - name: publisher_id
-                  in: path
-                  required: true
-                  description: publisher id
-                  schema:
-                    type: integer
-                    format: int32
-            x-speakeasy-group: PublisherToken
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    data:
-                                        x-speakeasy-entity: PublisherToken
-                                        type: object
-                                        properties:
-                                            token:
-                                                type: string
-                                        required:
-                                            - token
-                                    status:
-                                        type: string
-                                        x-speakeasy-terraform-ignore: true
-                                        enum:
-                                            - success
-                                            - not found
-                                required:
-                                    - data
-                                    - status
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_response_400'
-    /infrastructure/publishers/{publisher_id}/apps:
-        x-netskope-params:
-            serviceConfig: provisioner-pycore-ws
-            version: 2
-            customerFacing: true
-            apiGroup: npa_publishers
-        get:
-            summary: Get all private apps associated to a publisher
-            description: Get all private apps associated to a publisher
-            x-speakeasy-name-override: list_objects
-            x-speakeasy-entity-operation: NPAPublishersAppsList#read
-            parameters:
-                - name: publisher_id
-                  in: path
-                  required: true
-                  description: publisher id
-                  schema:
-                    type: integer
-                    format: int32
-            x-speakeasy-group: NPAPublishersApps
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/private_apps_response'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_response_400'
-    /steering/ipsec/pops:
-        x-netskope-params:
-            apiGroup: ipsec
-            serviceConfig: steering
-            version: 2
-            customerFacing: true
-        get:
-            summary: Get IPSec points of presence(POPs) list
-            description: API to get list of IPSec POPs. You can filter by parameters. Use one of these parameters at a time. Only lat and long should be used together. All parameters are allowed to use offset and limit in combination.
-            parameters:
-                - name: name
-                  in: query
-                  description: POP name
-                  schema:
-                    type: string
-                - name: region
-                  in: query
-                  description: POP region, requires ISO-3166 region code and return POPs closest to value
-                  schema:
-                    type: string
-                - name: country
-                  in: query
-                  description: POP country, requires ISO-3166 country code and return POPs closest to value
-                  schema:
-                    type: string
-                - name: lat
-                  in: query
-                  description: POP latitude, lat requires long in combination and return POPs closest to value
-                  schema:
-                    type: string
-                - name: long
-                  in: query
-                  description: POP longitude, long requires lat in combination and return POPs closest to value
-                  schema:
-                    type: string
-                - name: ip
-                  in: query
-                  description: POP ipaddress, return POPs closest to value
-                  schema:
-                    type: string
-                - name: capabilities
-                  in: query
-                  description: POP capabilities, return POPs capabilities
-                  schema:
-                    type: string
-                - name: fields
-                  in: query
-                  description: Provide comma separated list of fields to be displayed
-                  schema:
-                    type: string
-                - name: offset
-                  in: query
-                  description: Offset used to shift the output window
-                  schema:
-                    type: integer
-                    default: 0
-                    minimum: 0
-                - name: limit
-                  in: query
-                  description: Max number of POPs to retrieve
-                  schema:
-                    type: integer
-                    default: 100
-                    minimum: 0
-                    maximum: !!float 100
-            responses:
-                "200":
-                    description: Successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_pop_response_200'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_400'
-                "403":
-                    description: Access forbidden
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_403'
-                "405":
-                    description: Method not allowed
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_405'
-                "429":
-                    description: Too many requests
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_429'
-                "500":
-                    description: Internal server error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_500'
-    /infrastructure/publishers/alertsconfiguration:
-        x-netskope-params:
-            apiGroup: npa_publishers
-            serviceConfig: provisioner-pycore-ws
-            version: 2
-            customerFacing: true
-        get:
-            summary: Get list of publisher alerts
-            description: Get list of publisher alerts
-            x-speakeasy-entity-operation: NPAPublishersAlertsList#read
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_alert_get_response'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_response_400'
+        description: "Update the profile of multiple publishers"
         put:
-            summary: Configure publisher alerts
-            description: Configure publisher alerts
-            x-speakeasy-entity-operation: NPAPublishersAlerts#create
+            summary: "Update the profile of multiple publishers "
             parameters:
-                - name: silent
-                  in: query
-                  x-speakeasy-ignore: true
+                - name: "silent"
+                  in: "query"
                   description: "flag to skip output except status code: \n * `1` - Skip response data \n * `0` - Do not skip response data"
                   schema:
-                    type: string
+                    type: "string"
                     enum:
                         - "1"
                         - "0"
@@ -2184,435 +2060,27 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/publishers_alert_put_request'
+                            $ref: '#/components/schemas/publisher_upgrade_profile_bulk_request'
                 required: true
             responses:
                 "200":
-                    description: successful operation
+                    description: "successful operation"
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/publishers_alert_put_response'
+                                $ref: '#/components/schemas/publisher_upgrade_profile_bulk_response'
                 "400":
-                    description: Invalid request
+                    description: "Invalid request"
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/publishers_response_400'
-    /infrastructure/publishers:
-        x-netskope-params:
-            serviceConfig: provisioner-pycore-ws
-            version: 2
-            customerFacing: true
-            apiGroup: npa_publishers
-        get:
-            summary: Get list of publisher objects
-            description: Get list of publisher objects
-            x-speakeasy-name-override: list_objects
-            x-speakeasy-entity-operation: NPAPublishersList#read
-            x-speakeasy-group: NPAPublishers
-            parameters:
-                - name: fields
-                  in: query
-                  description: Return values only from specified fields
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_get_response'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_response_400'
-        post:
-            summary: Create a publisher
-            description: Create a publisher
-            x-speakeasy-name-override: create
-            x-speakeasy-entity-operation: NPAPublishers#create
-            parameters:
-                - name: silent
-                  x-speakeasy-terraform-ignore: true
-                  in: query
-                  description: flag to skip output except status code
-                  schema:
-                    type: string
-                    enum:
-                        - "1"
-                        - "0"
-            x-speakeasy-group: NPAPublishers
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/publisher_post_request'
-                required: true
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publisher_response'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_response_400'
-    /infrastructure/publishers/{publisher_id}:
-        x-netskope-params:
-            version: 2
-            customerFacing: true
-            apiGroup: npa_publishers
-            serviceConfig: provisioner-pycore-ws
-        delete:
-            summary: Delete a publisher
-            description: Delete a publisher based on publisher id
-            x-speakeasy-name-override: delete
-            x-speakeasy-entity-operation: NPAPublishers#delete
-            parameters:
-                - name: publisher_id
-                  in: path
-                  x-speakeasy-match: id
-                  required: true
-                  description: publisher id
-                  schema:
-                    type: integer
-                    format: int32
-            x-speakeasy-group: NPAPublishers
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    status:
-                                        type: string
-                                        enum:
-                                            - success
-                                            - error
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_response_400'
-        put:
-            summary: Update a publisher
-            description: update a publisher based on publisher id
-            x-speakeasy-name-override: update
-            x-speakeasy-entity-operation: NPAPublishers#update
-            parameters:
-                - name: publisher_id
-                  in: path
-                  x-speakeasy-match: id
-                  required: true
-                  description: publisher id
-                  schema:
-                    type: integer
-                    format: int32
-                - name: silent
-                  x-speakeasy-terraform-ignore: true
-                  in: query
-                  description: flag to skip output except status code
-                  schema:
-                    type: string
-                    enum:
-                        - "1"
-                        - "0"
-            x-speakeasy-group: NPAPublishers
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/publisher_put_request'
-                required: true
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publisher_response'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_response_400'
-        patch:
-            summary: Patch a publisher
-            description: patch a publisher based on publisher id
-            parameters:
-                - name: publisher_id
-                  in: path
-                  required: true
-                  description: publisher id
-                  schema:
-                    type: integer
-                    format: int32
-                - name: silent
-                  in: query
-                  description: flag to skip output except status code
-                  schema:
-                    type: string
-                    enum:
-                        - "1"
-                        - "0"
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/publisher_put_request'
-                required: true
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publisher_response'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_response_400'
-        get:
-            summary: Get a publisher
-            description: get a publisher based on publisher id
-            x-speakeasy-name-override: read
-            x-speakeasy-entity-operation: NPAPublishers#read
-            parameters:
-                - name: publisher_id
-                  in: path
-                  x-speakeasy-match: id
-                  required: true
-                  description: publisher id
-                  schema:
-                    type: integer
-                    format: int32
-            x-speakeasy-group: NPAPublishers
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publisher_response'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_response_400'
-    /steering/gre/pops/{id}:
-        x-netskope-params:
-            serviceConfig: steering
-            version: 2
-            customerFacing: true
-            apiGroup: gre
-        get:
-            summary: Get GRE point of presence(POP)
-            description: API to get GRE POP using id.
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  description: POP id
-                  schema:
-                    type: string
-                - name: fields
-                  in: query
-                  description: Provide comma separated list of fields to be displayed
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: Successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_pop_response_200'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_400'
-                "403":
-                    description: Access forbidden
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_403'
-                "404":
-                    description: Not found
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_404'
-                "405":
-                    description: Method not allowed
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_405'
-                "429":
-                    description: Too many requests
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_429'
-                "500":
-                    description: Internal server error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_500'
-    /policy/npa/rules/{id}:
-        x-netskope-params:
-            serviceConfig: provisioner-pycore-ws
-            version: 2
-            customerFacing: true
-            apiGroup: npa_policy
-        delete:
-            summary: Delete a npa policy
-            x-speakeasy-entity-operation: NPAPolicy#delete
-            description: Delete a npa policy with rule id
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  description: npa policy id
-                  x-speakeasy-match: rule_id
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    status:
-                                        x-speakeasy-ignore: true
-                                        type: string
-                                        enum:
-                                            - success
-                                            - error
-                                    data:
-                                        $ref: '#/components/schemas/npa_policy_response_item'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/npa_policy_response_400'
-        patch:
-            summary: Patch a npa policy
-            description: Patch a npa policy based on rule id
-            x-speakeasy-entity-operation: NPAPolicy#update
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  description: policy rule id
-                  x-speakeasy-match: rule_id
-                  schema:
-                    type: string
-                - name: silent
-                  in: query
-                  x-speakeasy-terraform-ignore: true
-                  description: flag to skip output except status code
-                  schema:
-                    type: string
-                    enum:
-                        - "1"
-                        - "0"
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/npa_policy_request'
-                required: true
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    status:
-                                        x-speakeasy-ignore: true
-                                        type: string
-                                        enum:
-                                            - success
-                                            - error
-                                    data:
-                                        $ref: '#/components/schemas/npa_policy_response_item'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/npa_policy_response_400'
-        get:
-            summary: Get a npa policy
-            description: Get a npa policy based on policy rule id
-            x-speakeasy-entity-operation: NPAPolicy#get
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  description: npa policy id
-                  x-speakeasy-match: rule_id
-                  schema:
-                    type: string
-                - name: fields
-                  in: query
-                  x-speakeasy-terraform-ignore: true
-                  description: Return values only from specified fields
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    status:
-                                        x-speakeasy-ignore: true
-                                        type: string
-                                        enum:
-                                            - success
-                                            - error
-                                    data:
-                                        $ref: '#/components/schemas/npa_policy_response_item'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/npa_policy_response_400'
+                                $ref: '#/components/schemas/400'
     /policy/npa/policygroups:
         x-netskope-params:
-            serviceConfig: provisioner-pycore-ws
             version: 2
             customerFacing: true
             apiGroup: npa_policygroup
+            serviceConfig: provisioner-pycore-ws
         get:
             summary: Get list of npa policy groups
             description: Get list of npa policy groups
@@ -2801,31 +2269,124 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/tag_response_400'
-    /infrastructure/publishers/bulk:
+    /infrastructure/publisherupgradeprofiles:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_upgrade_profiles
+        get:
+            summary: "Get list of publisher upgrade profile objects"
+            description: "Get list of publisher upgrade profile objects"
+            x-speakeasy-name-override: list_objects
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfileList#read
+            x-speakeasy-group: NPAPublisherUpgradeProfiles
+            parameters:
+                - name: "fields"
+                  in: "query"
+                  x-speakeasy-terraform-ignore: true
+                  description: "Return values only from specified fields"
+                  schema:
+                    type: "string"
+            responses:
+                "200":
+                    description: "successful operation"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_upgrade_profile_get_response'
+                "400":
+                    description: "Invalid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/400'
+        post:
+            summary: "Create a publisher upgrade profile"
+            description: "Create a publisher upgrade profile"
+            x-speakeasy-name-override: create
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#create
+            parameters:
+                - name: "silent"
+                  in: "query"
+                  x-speakeasy-terraform-ignore: true
+                  description: "flag to skip output except status code"
+                  schema:
+                    type: "string"
+                    enum:
+                        - "1"
+                        - "0"
+            x-speakeasy-group: NPAPublisherUpgradeProfiles
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publisher_upgrade_profile_post_request'
+            responses:
+                "200":
+                    description: "successful operation"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_upgrade_profile_response'
+                "400":
+                    description: "Invalid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/400'
+    /infrastructure/publishers:
         x-netskope-params:
             customerFacing: true
             apiGroup: npa_publishers
             serviceConfig: provisioner-pycore-ws
             version: 2
-        put:
-            summary: Trigger bulk publisher update action
-            description: Trigger bulk publisher update action
-            x-speakeasy-entity-operation: NPAPublishersBulkUpgrade#create
+        get:
+            summary: Get list of publisher objects
+            description: Get list of publisher objects
+            x-speakeasy-name-override: list_objects
+            x-speakeasy-entity-operation: NPAPublishersList#read
+            parameters:
+                - name: fields
+                  in: query
+                  description: Return values only from specified fields
+                  schema:
+                    type: string
+            x-speakeasy-group: NPAPublishers
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_get_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+        post:
+            summary: Create a publisher
+            description: Create a publisher
+            x-speakeasy-name-override: create
+            x-speakeasy-entity-operation: NPAPublishers#create
             parameters:
                 - name: silent
+                  x-speakeasy-terraform-ignore: true
                   in: query
-                  x-speakeasy-ignore: true
                   description: flag to skip output except status code
                   schema:
                     type: string
                     enum:
                         - "1"
                         - "0"
+            x-speakeasy-group: NPAPublishers
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/publisher_bulk_request'
+                            $ref: '#/components/schemas/publisher_post_request'
                 required: true
             responses:
                 "200":
@@ -2833,19 +2394,461 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/publishers_bulk_response'
+                                $ref: '#/components/schemas/publisher_response'
                 "400":
                     description: Invalid request
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/publishers_response_400'
-    /infrastructure/publisherupgradeprofiles/{upgrade_profile_id}:
+    /steering/gre/tunnels:
         x-netskope-params:
+            version: 2
             customerFacing: true
-            apiGroup: npa_upgrade_profiles
+            apiGroup: gre
+            serviceConfig: steering
+        get:
+            summary: Get GRE tunnels list
+            description: API to get list of GRE tunnels. You can filter by parameters. Use one of these parameters at a time. Only offset and limit are allowed in combination with other parameters
+            parameters:
+                - name: site
+                  in: query
+                  description: GRE tunnel site
+                  schema:
+                    type: string
+                - name: srcipidentity
+                  in: query
+                  description: GRE tunnel source ip identity
+                  schema:
+                    type: string
+                - name: pop
+                  in: query
+                  description: GRE tunnel POP name
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  description: GRE tunnel status
+                  schema:
+                    type: string
+                - name: sourcetype
+                  in: query
+                  description: GRE tunnel sourcetype
+                  schema:
+                    type: string
+                - name: sortby
+                  in: query
+                  description: GRE tunnel sortby column
+                  schema:
+                    type: string
+                - name: sortorder
+                  in: query
+                  description: GRE tunnel sortorder asc or desc. Default is asc
+                  schema:
+                    type: string
+                - name: fields
+                  in: query
+                  description: Provide comma separated list of fields to be displayed
+                  schema:
+                    type: string
+                - name: offset
+                  in: query
+                  description: Offset used to shift the window
+                  schema:
+                    type: integer
+                    default: 0
+                    minimum: 0
+                - name: limit
+                  in: query
+                  description: Max number of records to retrieve
+                  schema:
+                    type: integer
+                    default: 100
+                    minimum: 0
+                    maximum: !!float 100
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_tunnel_response_200'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_400'
+                "403":
+                    description: Access forbidden
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_403'
+                "405":
+                    description: Method not allowed
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_405'
+                "429":
+                    description: Too many requests
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_429'
+                "500":
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_500'
+        post:
+            summary: Create GRE tunnel
+            description: API to create new GRE tunnel. You can pass json body with tunnel details.
+            requestBody:
+                description: GRE tunnel object
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/gre_tunnel_request_post'
+            responses:
+                "201":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_201'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_400'
+                "403":
+                    description: Access forbidden
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_403'
+                "405":
+                    description: Method not allowed
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_405'
+                "409":
+                    description: Already exists
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_409'
+                "429":
+                    description: Too many requests
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_429'
+                "500":
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_500'
+    /steering/apps/private/tags:
+        x-netskope-params:
             serviceConfig: provisioner-pycore-ws
             version: 2
+            customerFacing: true
+            apiGroup: npa_private_tag
+        post:
+            summary: create tags for private apps
+            description: Create tags for private apps
+            x-speakeasy-entity-operation: PrivateAppTag#create
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/tag_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tag_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tag_response_400'
+        patch:
+            summary: bulk update tags to associate with specified private apps
+            description: Bulk update tags to associate with specified private apps
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/tag_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tag_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tag_response_400'
+        delete:
+            summary: bulk delete tags for specified private apps
+            description: Bulk delete tags for specified private apps
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/tag_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tag_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tag_response_400'
+        get:
+            summary: 'Get list of private app tags '
+            description: Get list of private app tags
+            x-speakeasy-entity-operation: PrivateAppTagList#read
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tag_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tag_response_400'
+    /infrastructure/publishers/releases:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_publishers
+        get:
+            summary: Get list of publisher release objects
+            description: Get list of publisher release objects
+            x-speakeasy-name-override: list_objects
+            x-speakeasy-entity-operation: NPAPublishersReleasesList#read
+            parameters:
+                - name: fields
+                  in: query
+                  description: Return values only from specified fields
+                  schema:
+                    type: string
+            x-speakeasy-group: NPAPublishersReleases
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_release_get_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+    /steering/gre/pops/{id}:
+        x-netskope-params:
+            version: 2
+            customerFacing: true
+            apiGroup: gre
+            serviceConfig: steering
+        get:
+            summary: Get GRE point of presence(POP)
+            description: API to get GRE POP using id.
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: POP id
+                  schema:
+                    type: string
+                - name: fields
+                  in: query
+                  description: Provide comma separated list of fields to be displayed
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_pop_response_200'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_400'
+                "403":
+                    description: Access forbidden
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_403'
+                "404":
+                    description: Not found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_404'
+                "405":
+                    description: Method not allowed
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_405'
+                "429":
+                    description: Too many requests
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_429'
+                "500":
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/gre_response_500'
+    /steering/ipsec/pops:
+        x-netskope-params:
+            serviceConfig: steering
+            version: 2
+            customerFacing: true
+            apiGroup: ipsec
+        get:
+            summary: Get IPSec points of presence(POPs) list
+            description: API to get list of IPSec POPs. You can filter by parameters. Use one of these parameters at a time. Only lat and long should be used together. All parameters are allowed to use offset and limit in combination.
+            parameters:
+                - name: name
+                  in: query
+                  description: POP name
+                  schema:
+                    type: string
+                - name: region
+                  in: query
+                  description: POP region, requires ISO-3166 region code and return POPs closest to value
+                  schema:
+                    type: string
+                - name: country
+                  in: query
+                  description: POP country, requires ISO-3166 country code and return POPs closest to value
+                  schema:
+                    type: string
+                - name: lat
+                  in: query
+                  description: POP latitude, lat requires long in combination and return POPs closest to value
+                  schema:
+                    type: string
+                - name: long
+                  in: query
+                  description: POP longitude, long requires lat in combination and return POPs closest to value
+                  schema:
+                    type: string
+                - name: ip
+                  in: query
+                  description: POP ipaddress, return POPs closest to value
+                  schema:
+                    type: string
+                - name: capabilities
+                  in: query
+                  description: POP capabilities, return POPs capabilities
+                  schema:
+                    type: string
+                - name: fields
+                  in: query
+                  description: Provide comma separated list of fields to be displayed
+                  schema:
+                    type: string
+                - name: offset
+                  in: query
+                  description: Offset used to shift the output window
+                  schema:
+                    type: integer
+                    default: 0
+                    minimum: 0
+                - name: limit
+                  in: query
+                  description: Max number of POPs to retrieve
+                  schema:
+                    type: integer
+                    default: 100
+                    minimum: 0
+                    maximum: !!float 100
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_pop_response_200'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_400'
+                "403":
+                    description: Access forbidden
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_403'
+                "405":
+                    description: Method not allowed
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_405'
+                "429":
+                    description: Too many requests
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_429'
+                "500":
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_500'
+    /infrastructure/publisherupgradeprofiles/{upgrade_profile_id}:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_upgrade_profiles
         delete:
             summary: "Delete a publisher"
             description: "Delete a publisher upgrade profile based on profile id"
@@ -2916,7 +2919,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/200'
+                                $ref: '#/components/schemas/publisher_upgrade_profile_response'
                 "400":
                     description: "Invalid request"
                     content:
@@ -2947,22 +2950,184 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/400'
-    /steering/ipsec/tunnels/{id}:
+    /infrastructure/publishers/{publisher_id}/apps:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_publishers
+        get:
+            summary: Get all private apps associated to a publisher
+            description: Get all private apps associated to a publisher
+            x-speakeasy-name-override: list_objects
+            x-speakeasy-entity-operation: NPAPublishersAppsList#read
+            parameters:
+                - name: publisher_id
+                  in: path
+                  required: true
+                  description: publisher id
+                  schema:
+                    type: integer
+                    format: int32
+            x-speakeasy-group: NPAPublishersApps
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_apps_list_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+    /policy/npa/rules/{id}:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_policy
+        delete:
+            summary: Delete a npa policy
+            x-speakeasy-entity-operation: NPAPolicy#delete
+            description: Delete a npa policy with rule id
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: npa policy id
+                  x-speakeasy-match: rule_id
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        x-speakeasy-ignore: true
+                                        type: string
+                                        enum:
+                                            - success
+                                            - error
+                                    data:
+                                        $ref: '#/components/schemas/npa_policy_response_item'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/npa_policy_response_400'
+        patch:
+            summary: Patch a npa policy
+            description: Patch a npa policy based on rule id
+            x-speakeasy-entity-operation: NPAPolicy#update
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: policy rule id
+                  x-speakeasy-match: rule_id
+                  schema:
+                    type: string
+                - name: silent
+                  in: query
+                  x-speakeasy-terraform-ignore: true
+                  description: flag to skip output except status code
+                  schema:
+                    type: string
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/npa_policy_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        x-speakeasy-ignore: true
+                                        type: string
+                                        enum:
+                                            - success
+                                            - error
+                                    data:
+                                        $ref: '#/components/schemas/npa_policy_response_item'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/npa_policy_response_400'
+        get:
+            summary: Get a npa policy
+            description: Get a npa policy based on policy rule id
+            x-speakeasy-entity-operation: NPAPolicy#get
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: npa policy id
+                  x-speakeasy-match: rule_id
+                  schema:
+                    type: string
+                - name: fields
+                  in: query
+                  x-speakeasy-terraform-ignore: true
+                  description: Return values only from specified fields
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        x-speakeasy-ignore: true
+                                        type: string
+                                        enum:
+                                            - success
+                                            - error
+                                    data:
+                                        $ref: '#/components/schemas/npa_policy_response_item'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/npa_policy_response_400'
+    /steering/ipsec/pops/{id}:
         x-netskope-params:
             serviceConfig: steering
             version: 2
             customerFacing: true
             apiGroup: ipsec
         get:
-            summary: Get IPSec tunnel
-            description: API to get IPSec tunnel using id.
+            summary: Get IPSec point of presence(POP)
+            description: API to get IPSec POP using id.
             parameters:
                 - name: id
                   in: path
                   required: true
-                  description: IPSec tunnel id
+                  description: POP id
                   schema:
-                    type: integer
+                    type: string
                 - name: fields
                   in: query
                   description: Provide comma separated list of fields to be displayed
@@ -2974,7 +3139,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ipsec_tunnel_response_200'
+                                $ref: '#/components/schemas/ipsec_pop_response_200'
                 "400":
                     description: Invalid request
                     content:
@@ -3011,119 +3176,131 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/ipsec_response_500'
-        patch:
-            summary: Update IPSec tunnel
-            description: API to update IPSec tunnel using id. You can pass json body with fields that needs to be updated.
+    /policy/npa/policygroups/{id}:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_policygroup
+        delete:
+            summary: Delete a npa policy group
+            description: Delete a npa policy group with group id
+            x-speakeasy-entity-operation: NPAPolicyGroup#delete
             parameters:
                 - name: id
                   in: path
                   required: true
-                  description: IPSec tunnel id
+                  x-speakeasy-match: group_id
+                  description: npa policy group id
                   schema:
-                    type: integer
+                    type: string
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        enum:
+                                            - success
+                                            - error
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/npa_policygroup_response_400'
+        patch:
+            summary: Patch a npa policy group
+            description: Patch a npa policy group based on group id
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  x-speakeasy-match: group_id
+                  description: policy group rule id
+                  schema:
+                    type: string
+                - name: silent
+                  in: query
+                  x-speakeasy-terraform-ignore: true
+                  description: flag to skip output except status code
+                  schema:
+                    type: string
+                    enum:
+                        - "1"
+                        - "0"
             requestBody:
-                description: IPSec tunnel object
-                required: true
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/ipsec_tunnel_request_patch'
+                            $ref: '#/components/schemas/npa_policygroup_request'
+                required: true
             responses:
                 "200":
-                    description: Successful operation
+                    description: successful operation
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ipsec_patch_response_200'
+                                type: object
+                                properties:
+                                    status:
+                                        x-speakeasy-ignore: true
+                                        type: string
+                                        enum:
+                                            - success
+                                            - error
+                                    data:
+                                        $ref: '#/components/schemas/npa_policygroup_response_item'
                 "400":
                     description: Invalid request
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ipsec_response_400'
-                "403":
-                    description: Access forbidden
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_403'
-                "404":
-                    description: Not found
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_404'
-                "405":
-                    description: Method not allowed
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_405'
-                "429":
-                    description: Too many requests
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_429'
-                "500":
-                    description: Internal server error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_500'
-        delete:
-            summary: Delete IPSec tunnel
-            description: API to delete IPSec tunnel using id
+                                $ref: '#/components/schemas/npa_policygroup_response_400'
+        get:
+            summary: Get a npa policy group
+            description: Get a npa policy group based on group id
+            x-speakeasy-entity-operation: NPAPolicyGroup#read
             parameters:
                 - name: id
                   in: path
                   required: true
-                  description: IPSec tunnel id
+                  description: npa policy group id
+                  x-speakeasy-match: group_id
                   schema:
-                    type: integer
+                    type: string
             responses:
                 "200":
-                    description: Successful operation
+                    description: successful operation
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ipsec_response_200'
-                "403":
-                    description: Access forbidden
+                                type: object
+                                properties:
+                                    status:
+                                        x-speakeasy-ignore: true
+                                        type: string
+                                        enum:
+                                            - success
+                                            - error
+                                    data:
+                                        $ref: '#/components/schemas/npa_policygroup_response_item'
+                "400":
+                    description: Invalid request
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ipsec_response_403'
-                "404":
-                    description: Not found
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_404'
-                "405":
-                    description: Method not allowed
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_405'
-                "429":
-                    description: Too many requests
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_429'
-                "500":
-                    description: Internal server error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ipsec_response_500'
+                                $ref: '#/components/schemas/npa_policygroup_response_400'
     /steering/ipsec/tunnels:
         x-netskope-params:
+            apiGroup: ipsec
             serviceConfig: steering
             version: 2
             customerFacing: true
-            apiGroup: ipsec
         get:
             summary: Get IPSec tunnels list
             description: API to get list of IPSec tunnels. You can filter by parameters. Use one of these parameters at a time. Only offset and limit are allowed in combination with other parameters
@@ -3278,61 +3455,26 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/ipsec_response_500'
-    /infrastructure/publisherupgradeprofiles/bulk:
+    /infrastructure/publishers/{publisher_id}/registration_token:
         x-netskope-params:
-            customerFacing: true
-            apiGroup: npa_upgrade_profiles
             serviceConfig: provisioner-pycore-ws
             version: 2
-        description: "Update the profile of multiple publishers"
-        put:
-            summary: "Update the profile of multiple publishers "
-            parameters:
-                - name: "silent"
-                  in: "query"
-                  description: "flag to skip output except status code: \n * `1` - Skip response data \n * `0` - Do not skip response data"
-                  schema:
-                    type: "string"
-                    enum:
-                        - "1"
-                        - "0"
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/publisher_upgrade_profile_bulk_request'
-                required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publisher_upgrade_profile_bulk_response'
-                "400":
-                    description: "Invalid request"
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/400'
-    /policy/npa/policygroups/{id}:
-        x-netskope-params:
-            version: 2
             customerFacing: true
-            apiGroup: npa_policygroup
-            serviceConfig: provisioner-pycore-ws
-        delete:
-            summary: Delete a npa policy group
-            description: Delete a npa policy group with group id
-            x-speakeasy-entity-operation: NPAPolicyGroup#delete
+            apiGroup: npa_publishers
+        post:
+            summary: Generate and retrieve a token for publisher registration
+            description: Generate and retrieve a token for publisher registration
+            x-speakeasy-name-override: create
+            x-speakeasy-entity-operation: PublisherToken#create
             parameters:
-                - name: id
+                - name: publisher_id
                   in: path
                   required: true
-                  x-speakeasy-match: group_id
-                  description: npa policy group id
+                  description: publisher id
                   schema:
-                    type: string
+                    type: integer
+                    format: int32
+            x-speakeasy-group: PublisherToken
             responses:
                 "200":
                     description: successful operation
@@ -3341,31 +3483,43 @@ paths:
                             schema:
                                 type: object
                                 properties:
+                                    data:
+                                        x-speakeasy-entity: PublisherToken
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
+                                        required:
+                                            - token
                                     status:
                                         type: string
+                                        x-speakeasy-terraform-ignore: true
                                         enum:
                                             - success
-                                            - error
+                                            - not found
+                                required:
+                                    - data
+                                    - status
                 "400":
                     description: Invalid request
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/npa_policygroup_response_400'
-        patch:
-            summary: Patch a npa policy group
-            description: Patch a npa policy group based on group id
+                                $ref: '#/components/schemas/publishers_response_400'
+    /infrastructure/publishers/bulk:
+        x-netskope-params:
+            customerFacing: true
+            apiGroup: npa_publishers
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+        put:
+            summary: Trigger bulk publisher update action
+            description: Trigger bulk publisher update action
+            x-speakeasy-entity-operation: NPAPublishersBulkUpgrade#create
             parameters:
-                - name: id
-                  in: path
-                  required: true
-                  x-speakeasy-match: group_id
-                  description: policy group rule id
-                  schema:
-                    type: string
                 - name: silent
                   in: query
-                  x-speakeasy-terraform-ignore: true
+                  x-speakeasy-ignore: true
                   description: flag to skip output except status code
                   schema:
                     type: string
@@ -3376,7 +3530,350 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/npa_policygroup_request'
+                            $ref: '#/components/schemas/publisher_bulk_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_bulk_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+    /infrastructure/publishers/{publisher_id}:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_publishers
+        delete:
+            summary: Delete a publisher
+            description: Delete a publisher based on publisher id
+            x-speakeasy-name-override: delete
+            x-speakeasy-entity-operation: NPAPublishers#delete
+            parameters:
+                - name: publisher_id
+                  in: path
+                  x-speakeasy-match: id
+                  required: true
+                  description: publisher id
+                  schema:
+                    type: integer
+                    format: int32
+            x-speakeasy-group: NPAPublishers
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        enum:
+                                            - success
+                                            - error
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+        put:
+            summary: Update a publisher
+            description: update a publisher based on publisher id
+            x-speakeasy-name-override: update
+            x-speakeasy-entity-operation: NPAPublishers#update
+            parameters:
+                - name: publisher_id
+                  in: path
+                  x-speakeasy-match: id
+                  required: true
+                  description: publisher id
+                  schema:
+                    type: integer
+                    format: int32
+                - name: silent
+                  x-speakeasy-terraform-ignore: true
+                  in: query
+                  description: flag to skip output except status code
+                  schema:
+                    type: string
+                    enum:
+                        - "1"
+                        - "0"
+            x-speakeasy-group: NPAPublishers
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publisher_put_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+        patch:
+            summary: Patch a publisher
+            description: patch a publisher based on publisher id
+            parameters:
+                - name: publisher_id
+                  in: path
+                  required: true
+                  description: publisher id
+                  schema:
+                    type: integer
+                    format: int32
+                - name: silent
+                  in: query
+                  description: flag to skip output except status code
+                  schema:
+                    type: string
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publisher_put_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+        get:
+            summary: Get a publisher
+            description: get a publisher based on publisher id
+            x-speakeasy-entity-operation: NPAPublishers#read
+            x-speakeasy-name-override: read
+            parameters:
+                - name: publisher_id
+                  in: path
+                  x-speakeasy-match: id
+                  required: true
+                  description: publisher id
+                  schema:
+                    type: integer
+                    format: int32
+            x-speakeasy-group: NPAPublishers
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+    /steering/apps/private/tags/getpolicyinuse:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_private_tag
+        post:
+            summary: Retrieve number of policy in use for specified tags
+            description: Retrieve number of policy in use for specified tags
+            x-speakeasy-entity-operation: PrivateAppTagPolicyUseList#get
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            x-speakeasy-entity: PrivateAppTagPolicyUseList
+                            type: object
+                            properties:
+                                ids:
+                                    type: array
+                                    items:
+                                        type: string
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                x-speakeasy-entity: PrivateAppTagPolicyUseList
+                                properties:
+                                    status:
+                                        x-speakeasy-ignore: true
+                                        type: string
+                                        enum:
+                                            - success
+                                            - not found
+                                    data:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                token:
+                                                    type: string
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tag_response_400'
+    /infrastructure/publishers/alertsconfiguration:
+        x-netskope-params:
+            version: 2
+            customerFacing: true
+            apiGroup: npa_publishers
+            serviceConfig: provisioner-pycore-ws
+        get:
+            summary: Get list of publisher alerts
+            description: Get list of publisher alerts
+            x-speakeasy-entity-operation: NPAPublishersAlertsList#read
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_alert_get_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+        put:
+            summary: Configure publisher alerts
+            description: Configure publisher alerts
+            x-speakeasy-entity-operation: NPAPublishersAlerts#create
+            parameters:
+                - name: silent
+                  in: query
+                  x-speakeasy-ignore: true
+                  description: "flag to skip output except status code: \n * `1` - Skip response data \n * `0` - Do not skip response data"
+                  schema:
+                    type: string
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publishers_alert_put_request'
+                required: true
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_alert_put_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publishers_response_400'
+    /policy/npa/rules:
+        x-netskope-params:
+            customerFacing: true
+            apiGroup: npa_policy
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+        get:
+            summary: Get list of npa policies
+            x-speakeasy-entity-operation: NPAPolicyList#get
+            description: Get list of npa policies
+            parameters:
+                - name: fields
+                  in: query
+                  x-speakeasy-terraform-ignore: true
+                  description: Return values only from specified fields
+                  schema:
+                    type: string
+                - name: filter
+                  in: query
+                  description: Query string based on query operaters
+                  schema:
+                    type: string
+                - name: limit
+                  in: query
+                  description: Max number of policies to retrieve. Default will be all policies.
+                  schema:
+                    type: integer
+                - name: offset
+                  in: query
+                  description: The offset of the first policy in the list to retrieve.
+                  schema:
+                    type: integer
+                - name: sortby
+                  in: query
+                  description: Sort retrieved policies by specified field. Default is policy id
+                  schema:
+                    type: string
+                - name: sortorder
+                  in: query
+                  description: Sort in either asc or desc order. The default is asc order
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/npa_policy_list_response'
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/npa_policy_response_400'
+        post:
+            summary: Create a npa policy
+            description: Create a policy
+            x-speakeasy-entity-operation: NPAPolicy#create
+            parameters:
+                - name: silent
+                  in: query
+                  x-speakeasy-ignore: true
+                  description: flag to skip output except status code
+                  schema:
+                    type: string
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/npa_policy_request'
                 required: true
             responses:
                 "200":
@@ -3393,47 +3890,13 @@ paths:
                                             - success
                                             - error
                                     data:
-                                        $ref: '#/components/schemas/npa_policygroup_response_item'
+                                        $ref: '#/components/schemas/npa_policy_response_item'
                 "400":
                     description: Invalid request
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/npa_policygroup_response_400'
-        get:
-            summary: Get a npa policy group
-            description: Get a npa policy group based on group id
-            x-speakeasy-entity-operation: NPAPolicyGroup#read
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  description: npa policy group id
-                  x-speakeasy-match: group_id
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    status:
-                                        x-speakeasy-ignore: true
-                                        type: string
-                                        enum:
-                                            - success
-                                            - error
-                                    data:
-                                        $ref: '#/components/schemas/npa_policygroup_response_item'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/npa_policygroup_response_400'
+                                $ref: '#/components/schemas/npa_policy_response_400'
     /steering/gre/pops:
         x-netskope-params:
             serviceConfig: steering
@@ -3702,371 +4165,22 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/gre_response_500'
-    /infrastructure/publishers/releases:
+    /steering/ipsec/tunnels/{id}:
         x-netskope-params:
-            customerFacing: true
-            apiGroup: npa_publishers
-            serviceConfig: provisioner-pycore-ws
-            version: 2
-        get:
-            summary: Get list of publisher release objects
-            description: Get list of publisher release objects
-            x-speakeasy-name-override: list_objects
-            x-speakeasy-entity-operation: NPAPublishersReleasesList#read
-            x-speakeasy-group: NPAPublishersReleases
-            parameters:
-                - name: fields
-                  in: query
-                  description: Return values only from specified fields
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_release_get_response'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publishers_response_400'
-    /infrastructure/publisherupgradeprofiles:
-        x-netskope-params:
-            serviceConfig: provisioner-pycore-ws
-            version: 2
-            customerFacing: true
-            apiGroup: npa_upgrade_profiles
-        get:
-            summary: "Get list of publisher upgrade profile objects"
-            description: "Get list of publisher upgrade profile objects"
-            x-speakeasy-name-override: list_objects
-            x-speakeasy-entity-operation: NPAPublisherUpgradeProfileList#read
-            parameters:
-                - name: "fields"
-                  in: "query"
-                  x-speakeasy-terraform-ignore: true
-                  description: "Return values only from specified fields"
-                  schema:
-                    type: "string"
-            x-speakeasy-group: NPAPublisherUpgradeProfiles
-            responses:
-                "200":
-                    description: "successful operation"
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publisher_upgrade_profile_get_response'
-                "400":
-                    description: "Invalid request"
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/400'
-        post:
-            summary: "Create a publisher upgrade profile"
-            description: "Create a publisher upgrade profile"
-            x-speakeasy-name-override: create
-            x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#create
-            x-speakeasy-group: NPAPublisherUpgradeProfiles
-            parameters:
-                - name: "silent"
-                  in: "query"
-                  x-speakeasy-terraform-ignore: true
-                  description: "flag to skip output except status code"
-                  schema:
-                    type: "string"
-                    enum:
-                        - "1"
-                        - "0"
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/publisher_upgrade_profile_post_request'
-            responses:
-                "200":
-                    description: "successful operation"
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/publisher_upgrade_profile_response'
-                "400":
-                    description: "Invalid request"
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/400'
-    /policy/npa/rules:
-        x-netskope-params:
-            serviceConfig: provisioner-pycore-ws
-            version: 2
-            customerFacing: true
-            apiGroup: npa_policy
-        get:
-            summary: Get list of npa policies
-            x-speakeasy-entity-operation: NPAPolicyList#get
-            description: Get list of npa policies
-            parameters:
-                - name: fields
-                  in: query
-                  x-speakeasy-terraform-ignore: true
-                  description: Return values only from specified fields
-                  schema:
-                    type: string
-                - name: filter
-                  in: query
-                  description: Query string based on query operaters
-                  schema:
-                    type: string
-                - name: limit
-                  in: query
-                  description: Max number of policies to retrieve. Default will be all policies.
-                  schema:
-                    type: integer
-                - name: offset
-                  in: query
-                  description: The offset of the first policy in the list to retrieve.
-                  schema:
-                    type: integer
-                - name: sortby
-                  in: query
-                  description: Sort retrieved policies by specified field. Default is policy id
-                  schema:
-                    type: string
-                - name: sortorder
-                  in: query
-                  description: Sort in either asc or desc order. The default is asc order
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/npa_policy_list_response'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/npa_policy_response_400'
-        post:
-            summary: Create a npa policy
-            description: Create a policy
-            x-speakeasy-entity-operation: NPAPolicy#create
-            parameters:
-                - name: silent
-                  in: query
-                  x-speakeasy-ignore: true
-                  description: flag to skip output except status code
-                  schema:
-                    type: string
-                    enum:
-                        - "1"
-                        - "0"
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/npa_policy_request'
-                required: true
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    status:
-                                        x-speakeasy-ignore: true
-                                        type: string
-                                        enum:
-                                            - success
-                                            - error
-                                    data:
-                                        $ref: '#/components/schemas/npa_policy_response_item'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/npa_policy_response_400'
-    /steering/gre/tunnels:
-        x-netskope-params:
-            customerFacing: true
-            apiGroup: gre
             serviceConfig: steering
             version: 2
-        get:
-            summary: Get GRE tunnels list
-            description: API to get list of GRE tunnels. You can filter by parameters. Use one of these parameters at a time. Only offset and limit are allowed in combination with other parameters
-            parameters:
-                - name: site
-                  in: query
-                  description: GRE tunnel site
-                  schema:
-                    type: string
-                - name: srcipidentity
-                  in: query
-                  description: GRE tunnel source ip identity
-                  schema:
-                    type: string
-                - name: pop
-                  in: query
-                  description: GRE tunnel POP name
-                  schema:
-                    type: string
-                - name: status
-                  in: query
-                  description: GRE tunnel status
-                  schema:
-                    type: string
-                - name: sourcetype
-                  in: query
-                  description: GRE tunnel sourcetype
-                  schema:
-                    type: string
-                - name: sortby
-                  in: query
-                  description: GRE tunnel sortby column
-                  schema:
-                    type: string
-                - name: sortorder
-                  in: query
-                  description: GRE tunnel sortorder asc or desc. Default is asc
-                  schema:
-                    type: string
-                - name: fields
-                  in: query
-                  description: Provide comma separated list of fields to be displayed
-                  schema:
-                    type: string
-                - name: offset
-                  in: query
-                  description: Offset used to shift the window
-                  schema:
-                    type: integer
-                    default: 0
-                    minimum: 0
-                - name: limit
-                  in: query
-                  description: Max number of records to retrieve
-                  schema:
-                    type: integer
-                    default: 100
-                    minimum: 0
-                    maximum: !!float 100
-            responses:
-                "200":
-                    description: Successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_tunnel_response_200'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_400'
-                "403":
-                    description: Access forbidden
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_403'
-                "405":
-                    description: Method not allowed
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_405'
-                "429":
-                    description: Too many requests
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_429'
-                "500":
-                    description: Internal server error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_500'
-        post:
-            summary: Create GRE tunnel
-            description: API to create new GRE tunnel. You can pass json body with tunnel details.
-            requestBody:
-                description: GRE tunnel object
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/gre_tunnel_request_post'
-            responses:
-                "201":
-                    description: Successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_201'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_400'
-                "403":
-                    description: Access forbidden
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_403'
-                "405":
-                    description: Method not allowed
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_405'
-                "409":
-                    description: Already exists
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_409'
-                "429":
-                    description: Too many requests
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_429'
-                "500":
-                    description: Internal server error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/gre_response_500'
-    /steering/ipsec/pops/{id}:
-        x-netskope-params:
+            customerFacing: true
             apiGroup: ipsec
-            serviceConfig: steering
-            version: 2
-            customerFacing: true
         get:
-            summary: Get IPSec point of presence(POP)
-            description: API to get IPSec POP using id.
+            summary: Get IPSec tunnel
+            description: API to get IPSec tunnel using id.
             parameters:
                 - name: id
                   in: path
                   required: true
-                  description: POP id
+                  description: IPSec tunnel id
                   schema:
-                    type: string
+                    type: integer
                 - name: fields
                   in: query
                   description: Provide comma separated list of fields to be displayed
@@ -4078,7 +4192,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ipsec_pop_response_200'
+                                $ref: '#/components/schemas/ipsec_tunnel_response_200'
                 "400":
                     description: Invalid request
                     content:
@@ -4115,143 +4229,110 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/ipsec_response_500'
-    /steering/apps/private/tags/getpolicyinuse:
-        x-netskope-params:
-            serviceConfig: provisioner-pycore-ws
-            version: 2
-            customerFacing: true
-            apiGroup: npa_private_tag
-        post:
-            summary: Retrieve number of policy in use for specified tags
-            description: Retrieve number of policy in use for specified tags
-            x-speakeasy-entity-operation: PrivateAppTagPolicyUseList#get
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            x-speakeasy-entity: PrivateAppTagPolicyUseList
-                            type: object
-                            properties:
-                                ids:
-                                    type: array
-                                    items:
-                                        type: string
-                required: true
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                x-speakeasy-entity: PrivateAppTagPolicyUseList
-                                properties:
-                                    status:
-                                        x-speakeasy-ignore: true
-                                        type: string
-                                        enum:
-                                            - success
-                                            - not found
-                                    data:
-                                        type: array
-                                        items:
-                                            type: object
-                                            properties:
-                                                token:
-                                                    type: string
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/tag_response_400'
-    /steering/apps/private/tags:
-        x-netskope-params:
-            serviceConfig: provisioner-pycore-ws
-            version: 2
-            customerFacing: true
-            apiGroup: npa_private_tag
-        post:
-            summary: create tags for private apps
-            description: Create tags for private apps
-            x-speakeasy-entity-operation: PrivateAppTag#create
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/tag_request'
-                required: true
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/tag_response'
-                "400":
-                    description: Invalid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/tag_response_400'
         patch:
-            summary: bulk update tags to associate with specified private apps
-            description: Bulk update tags to associate with specified private apps
+            summary: Update IPSec tunnel
+            description: API to update IPSec tunnel using id. You can pass json body with fields that needs to be updated.
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: IPSec tunnel id
+                  schema:
+                    type: integer
             requestBody:
+                description: IPSec tunnel object
+                required: true
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/tag_request'
-                required: true
+                            $ref: '#/components/schemas/ipsec_tunnel_request_patch'
             responses:
                 "200":
-                    description: successful operation
+                    description: Successful operation
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/tag_response'
+                                $ref: '#/components/schemas/ipsec_patch_response_200'
                 "400":
                     description: Invalid request
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/tag_response_400'
+                                $ref: '#/components/schemas/ipsec_response_400'
+                "403":
+                    description: Access forbidden
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_403'
+                "404":
+                    description: Not found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_404'
+                "405":
+                    description: Method not allowed
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_405'
+                "429":
+                    description: Too many requests
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_429'
+                "500":
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_500'
         delete:
-            summary: bulk delete tags for specified private apps
-            description: Bulk delete tags for specified private apps
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/tag_request'
-                required: true
+            summary: Delete IPSec tunnel
+            description: API to delete IPSec tunnel using id
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: IPSec tunnel id
+                  schema:
+                    type: integer
             responses:
                 "200":
-                    description: successful operation
+                    description: Successful operation
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/tag_response'
-                "400":
-                    description: Invalid request
+                                $ref: '#/components/schemas/ipsec_response_200'
+                "403":
+                    description: Access forbidden
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/tag_response_400'
-        get:
-            summary: 'Get list of private app tags '
-            description: Get list of private app tags
-            x-speakeasy-entity-operation: PrivateAppTagList#read
-            responses:
-                "200":
-                    description: successful operation
+                                $ref: '#/components/schemas/ipsec_response_403'
+                "404":
+                    description: Not found
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/tag_response'
-                "400":
-                    description: Invalid request
+                                $ref: '#/components/schemas/ipsec_response_404'
+                "405":
+                    description: Method not allowed
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/tag_response_400'
+                                $ref: '#/components/schemas/ipsec_response_405'
+                "429":
+                    description: Too many requests
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_429'
+                "500":
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ipsec_response_500'

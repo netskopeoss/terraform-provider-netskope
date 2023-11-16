@@ -35,12 +35,12 @@ func (e *PublisherUpgradeProfileBulkResponseStatus) UnmarshalJSON(data []byte) e
 }
 
 type PublisherUpgradeProfileBulkResponse struct {
-	Data   []PublisherResponse                        `json:"data,omitempty"`
+	Data   []UpgradePublisherResponse                 `json:"data,omitempty"`
 	Status *PublisherUpgradeProfileBulkResponseStatus `json:"status,omitempty"`
 	Total  *int                                       `json:"total,omitempty"`
 }
 
-func (o *PublisherUpgradeProfileBulkResponse) GetData() []PublisherResponse {
+func (o *PublisherUpgradeProfileBulkResponse) GetData() []UpgradePublisherResponse {
 	if o == nil {
 		return nil
 	}

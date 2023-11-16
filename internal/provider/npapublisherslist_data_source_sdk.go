@@ -29,7 +29,7 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromGetResponse(resp *shared.P
 				publishers1.Assessment.Assessment.Version = types.StringValue(publishersItem.Assessment.Assessment.Version)
 			}
 			if publishersItem.Assessment.Two != nil {
-				publishers1.Assessment.Two = &PublisherResponseAssessment{}
+				publishers1.Assessment.Two = &PublisherBulkItemAssessment{}
 			}
 			publishers1.CommonName = types.StringValue(publishersItem.CommonName)
 			publishers1.ConnectedApps = nil
@@ -50,7 +50,7 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromGetResponse(resp *shared.P
 				}
 			}
 			if publishersItem.StitcherID.Publisher2 != nil {
-				publishers1.StitcherID.Two = &PublisherResponseAssessment{}
+				publishers1.StitcherID.Two = &PublisherBulkItemAssessment{}
 			}
 			publishers1.Tags = nil
 			for _, tagsItem := range publishersItem.Tags {
@@ -67,7 +67,7 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromGetResponse(resp *shared.P
 				publishers1.UpgradeFailedReason.UpgradeFailedReason.Version = types.StringValue(publishersItem.UpgradeFailedReason.UpgradeFailedReason.Version)
 			}
 			if publishersItem.UpgradeFailedReason.PublisherSchemas2 != nil {
-				publishers1.UpgradeFailedReason.Two = &PublisherResponseAssessment{}
+				publishers1.UpgradeFailedReason.Two = &PublisherBulkItemAssessment{}
 			}
 			publishers1.UpgradeRequest = types.BoolValue(publishersItem.UpgradeRequest)
 			publishers1.UpgradeStatus.Upstat = types.StringValue(publishersItem.UpgradeStatus.Upstat)

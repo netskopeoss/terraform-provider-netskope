@@ -10,8 +10,12 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/netskope/terraform-provider-ns/internal/validators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -30,11 +34,12 @@ type NPAPublisherUpgradeProfileResource struct {
 // NPAPublisherUpgradeProfileResourceModel describes the resource data model.
 type NPAPublisherUpgradeProfileResourceModel struct {
 	DockerTag   types.String `tfsdk:"docker_tag"`
-	Enabled     types.Int64  `tfsdk:"enabled"`
+	Enabled     types.Bool   `tfsdk:"enabled"`
 	Frequency   types.String `tfsdk:"frequency"`
 	ID          types.Int64  `tfsdk:"id"`
 	Name        types.String `tfsdk:"name"`
 	ReleaseType types.String `tfsdk:"release_type"`
+	Required    types.String `tfsdk:"required"`
 	Timezone    types.String `tfsdk:"timezone"`
 }
 
@@ -51,7 +56,7 @@ func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req res
 				Computed: true,
 				Optional: true,
 			},
-			"enabled": schema.Int64Attribute{
+			"enabled": schema.BoolAttribute{
 				Computed: true,
 				Optional: true,
 			},
@@ -69,6 +74,16 @@ func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req res
 			"release_type": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
+			},
+			"required": schema.StringAttribute{
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+				Optional:    true,
+				Description: `Parsed as JSON.`,
+				Validators: []validator.String{
+					validators.IsValidJSON(),
+				},
 			},
 			"timezone": schema.StringAttribute{
 				Computed: true,
@@ -199,11 +214,11 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.TwoHundred == nil {
+	if res.PublisherUpgradeProfileResponse == nil || res.PublisherUpgradeProfileResponse.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromUpdateResponse(res.TwoHundred)
+	data.RefreshFromUpdateResponse(res.PublisherUpgradeProfileResponse.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

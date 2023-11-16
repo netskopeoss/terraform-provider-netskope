@@ -19,7 +19,7 @@
  ### Resource Create
 - [x] npa_policy
 - [x] npa_policy_group
-- [] npa_publisher_upgrade_profile
+- [x] npa_publisher_upgrade_profile
 - [x] npa_publishers
 - [] npa_publishers_alerts
 - [] npa_publishers_bulk_upgrade
@@ -30,7 +30,7 @@
  ### Resource Update
 - [x] npa_policy
 - [x] npa_policy_group
-- [] npa_publisher_upgrade_profile
+- [x] npa_publisher_upgrade_profile
 - [x] npa_publishers
 - [] npa_publishers_alerts
 - [] npa_publishers_bulk_upgrade
@@ -40,7 +40,7 @@
  ### Resource Delete
 - [x] npa_policy
 - [x] npa_policy_group
-- [] npa_publisher_upgrade_profile
+- [x] npa_publisher_upgrade_profile
 - [x] npa_publishers
 - [] npa_publishers_alerts
 - [] npa_publishers_bulk_upgrade

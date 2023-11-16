@@ -8,10 +8,8 @@ import (
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
@@ -31,18 +29,20 @@ type PrivateAppResource struct {
 
 // PrivateAppResourceModel describes the resource data model.
 type PrivateAppResourceModel struct {
-	AppName              types.String              `tfsdk:"app_name"`
-	ClientlessAccess     types.Bool                `tfsdk:"clientless_access"`
-	Data                 []PrivateAppsResponseData `tfsdk:"data"`
-	Host                 types.String              `tfsdk:"host"`
-	Protocols            []ProtocolItem            `tfsdk:"protocols"`
-	PublisherTags        []TagItemNoID             `tfsdk:"publisher_tags"`
-	Publishers           []PublisherItem           `tfsdk:"publishers"`
-	RealHost             types.String              `tfsdk:"real_host"`
-	Status               types.String              `tfsdk:"status"`
-	Tags                 []TagItemNoID             `tfsdk:"tags"`
-	TrustSelfSignedCerts types.Bool                `tfsdk:"trust_self_signed_certs"`
-	UsePublisherDNS      types.Bool                `tfsdk:"use_publisher_dns"`
+	AppName                     types.String                     `tfsdk:"app_name"`
+	ClientlessAccess            types.Bool                       `tfsdk:"clientless_access"`
+	Host                        types.String                     `tfsdk:"host"`
+	ID                          types.Int64                      `tfsdk:"id"`
+	Name                        types.String                     `tfsdk:"name"`
+	Protocols                   []ProtocolItem                   `tfsdk:"protocols"`
+	PublisherTags               []TagItemNoID                    `tfsdk:"publisher_tags"`
+	Publishers                  []PublisherItem                  `tfsdk:"publishers"`
+	RealHost                    types.String                     `tfsdk:"real_host"`
+	ResolvedProtocols           []ProtocolResponseItem           `tfsdk:"resolved_protocols"`
+	ServicePublisherAssignments []ServicePublisherAssignmentItem `tfsdk:"service_publisher_assignments"`
+	Tags                        []TagItem                        `tfsdk:"tags"`
+	TrustSelfSignedCerts        types.Bool                       `tfsdk:"trust_self_signed_certs"`
+	UsePublisherDNS             types.Bool                       `tfsdk:"use_publisher_dns"`
 }
 
 func (r *PrivateAppResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -58,100 +58,18 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Optional: true,
 			},
 			"clientless_access": schema.BoolAttribute{
-				Optional: true,
-			},
-			"data": schema.ListNestedAttribute{
 				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"clientless_access": schema.BoolAttribute{
-							Computed: true,
-						},
-						"host": schema.StringAttribute{
-							Computed: true,
-						},
-						"id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"name": schema.StringAttribute{
-							Computed: true,
-						},
-						"protocols": schema.ListNestedAttribute{
-							Computed: true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"id": schema.Int64Attribute{
-										Computed: true,
-									},
-									"port": schema.StringAttribute{
-										Computed: true,
-									},
-									"service_id": schema.Int64Attribute{
-										Computed: true,
-									},
-									"transport": schema.StringAttribute{
-										Computed: true,
-									},
-								},
-							},
-						},
-						"real_host": schema.StringAttribute{
-							Computed: true,
-						},
-						"service_publisher_assignments": schema.ListNestedAttribute{
-							Computed: true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"primary": schema.BoolAttribute{
-										Computed: true,
-									},
-									"publisher_id": schema.Int64Attribute{
-										Computed: true,
-									},
-									"reachability": schema.SingleNestedAttribute{
-										Computed: true,
-										Attributes: map[string]schema.Attribute{
-											"error_code": schema.Int64Attribute{
-												Computed: true,
-											},
-											"error_string": schema.StringAttribute{
-												Computed: true,
-											},
-											"reachable": schema.BoolAttribute{
-												Computed: true,
-											},
-										},
-									},
-									"service_id": schema.Int64Attribute{
-										Computed: true,
-									},
-								},
-							},
-						},
-						"tags": schema.ListNestedAttribute{
-							Computed: true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"tag_id": schema.Int64Attribute{
-										Computed: true,
-									},
-									"tag_name": schema.StringAttribute{
-										Computed: true,
-									},
-								},
-							},
-						},
-						"trust_self_signed_certs": schema.BoolAttribute{
-							Computed: true,
-						},
-						"use_publisher_dns": schema.BoolAttribute{
-							Computed: true,
-						},
-					},
-				},
+				Optional: true,
 			},
 			"host": schema.StringAttribute{
+				Computed: true,
 				Optional: true,
+			},
+			"id": schema.Int64Attribute{
+				Computed: true,
+			},
+			"name": schema.StringAttribute{
+				Computed: true,
 			},
 			"protocols": schema.ListNestedAttribute{
 				Optional: true,
@@ -191,23 +109,68 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"real_host": schema.StringAttribute{
+				Computed: true,
 				Optional: true,
 			},
-			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["success", "not found"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"success",
-						"not found",
-					),
+			"resolved_protocols": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.Int64Attribute{
+							Computed: true,
+						},
+						"port": schema.StringAttribute{
+							Computed: true,
+						},
+						"service_id": schema.Int64Attribute{
+							Computed: true,
+						},
+						"transport": schema.StringAttribute{
+							Computed: true,
+						},
+					},
+				},
+			},
+			"service_publisher_assignments": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"primary": schema.BoolAttribute{
+							Computed: true,
+						},
+						"publisher_id": schema.Int64Attribute{
+							Computed: true,
+						},
+						"reachability": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"error_code": schema.Int64Attribute{
+									Computed: true,
+								},
+								"error_string": schema.StringAttribute{
+									Computed: true,
+								},
+								"reachable": schema.BoolAttribute{
+									Computed: true,
+								},
+							},
+						},
+						"service_id": schema.Int64Attribute{
+							Computed: true,
+						},
+					},
 				},
 			},
 			"tags": schema.ListNestedAttribute{
+				Computed: true,
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
+						"tag_id": schema.Int64Attribute{
+							Computed: true,
+						},
 						"tag_name": schema.StringAttribute{
+							Computed:    true,
 							Optional:    true,
 							Description: `Default: "tag_name"`,
 						},
@@ -215,9 +178,11 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"trust_self_signed_certs": schema.BoolAttribute{
+				Computed: true,
 				Optional: true,
 			},
 			"use_publisher_dns": schema.BoolAttribute{
+				Computed: true,
 				Optional: true,
 			},
 		},
@@ -282,11 +247,11 @@ func (r *PrivateAppResource) Create(ctx context.Context, req resource.CreateRequ
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PrivateAppsResponse == nil {
+	if res.PrivateAppsResponse == nil || res.PrivateAppsResponse.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.PrivateAppsResponse)
+	data.RefreshFromCreateResponse(res.PrivateAppsResponse.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -323,7 +288,7 @@ func (r *PrivateAppResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 
-	privateAppID := int(data.ValueInt64())
+	privateAppID := int(data.ID.ValueInt64())
 	privateAppsPutRequest := *data.ToUpdateSDKType()
 	request := operations.PutSteeringAppsPrivatePrivateAppIDRequest{
 		PrivateAppID:          privateAppID,
@@ -345,11 +310,11 @@ func (r *PrivateAppResource) Update(ctx context.Context, req resource.UpdateRequ
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PrivateAppsResponse == nil {
+	if res.PrivateAppsResponse == nil || res.PrivateAppsResponse.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromUpdateResponse(res.PrivateAppsResponse)
+	data.RefreshFromUpdateResponse(res.PrivateAppsResponse.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -373,7 +338,7 @@ func (r *PrivateAppResource) Delete(ctx context.Context, req resource.DeleteRequ
 		return
 	}
 
-	privateAppID := int(data.ValueInt64())
+	privateAppID := int(data.ID.ValueInt64())
 	request := operations.DeleteSteeringAppsPrivatePrivateAppIDRequest{
 		PrivateAppID: privateAppID,
 	}

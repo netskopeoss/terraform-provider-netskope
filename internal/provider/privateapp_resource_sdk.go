@@ -140,6 +140,12 @@ func (r *PrivateAppResourceModel) ToUpdateSDKType() *shared.PrivateAppsPutReques
 	} else {
 		host = nil
 	}
+	id := new(int)
+	if !r.ID.IsUnknown() && !r.ID.IsNull() {
+		*id = int(r.ID.ValueInt64())
+	} else {
+		id = nil
+	}
 	var protocols []shared.ProtocolItem = nil
 	for _, protocolsItem := range r.Protocols {
 		port := new(string)
@@ -224,6 +230,7 @@ func (r *PrivateAppResourceModel) ToUpdateSDKType() *shared.PrivateAppsPutReques
 		AppName:              appName,
 		ClientlessAccess:     clientlessAccess,
 		Host:                 host,
+		ID:                   id,
 		Protocols:            protocols,
 		PublisherTags:        publisherTags,
 		Publishers:           publishers,
@@ -240,174 +247,149 @@ func (r *PrivateAppResourceModel) ToDeleteSDKType() *shared.PrivateAppsRequest {
 	return out
 }
 
-func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *shared.PrivateAppsResponse) {
-	if len(r.Data) > len(resp.Data) {
-		r.Data = r.Data[:len(resp.Data)]
-	}
-	for dataCount, dataItem := range resp.Data {
-		var data1 PrivateAppsResponseData
-		if dataItem.ClientlessAccess != nil {
-			data1.ClientlessAccess = types.BoolValue(*dataItem.ClientlessAccess)
-		} else {
-			data1.ClientlessAccess = types.BoolNull()
-		}
-		if dataItem.Host != nil {
-			data1.Host = types.StringValue(*dataItem.Host)
-		} else {
-			data1.Host = types.StringNull()
-		}
-		if dataItem.ID != nil {
-			data1.ID = types.Int64Value(int64(*dataItem.ID))
-		} else {
-			data1.ID = types.Int64Null()
-		}
-		if dataItem.Name != nil {
-			data1.Name = types.StringValue(*dataItem.Name)
-		} else {
-			data1.Name = types.StringNull()
-		}
-		if len(data1.Protocols) > len(dataItem.Protocols) {
-			data1.Protocols = data1.Protocols[:len(dataItem.Protocols)]
-		}
-		for protocolsCount, protocolsItem := range dataItem.Protocols {
-			var protocols1 ProtocolResponseItem
-			if protocolsItem.ID != nil {
-				protocols1.ID = types.Int64Value(int64(*protocolsItem.ID))
-			} else {
-				protocols1.ID = types.Int64Null()
-			}
-			if protocolsItem.Port != nil {
-				protocols1.Port = types.StringValue(*protocolsItem.Port)
-			} else {
-				protocols1.Port = types.StringNull()
-			}
-			if protocolsItem.ServiceID != nil {
-				protocols1.ServiceID = types.Int64Value(int64(*protocolsItem.ServiceID))
-			} else {
-				protocols1.ServiceID = types.Int64Null()
-			}
-			if protocolsItem.Transport != nil {
-				protocols1.Transport = types.StringValue(*protocolsItem.Transport)
-			} else {
-				protocols1.Transport = types.StringNull()
-			}
-			if protocolsCount+1 > len(data1.Protocols) {
-				data1.Protocols = append(data1.Protocols, protocols1)
-			} else {
-				data1.Protocols[protocolsCount].ID = protocols1.ID
-				data1.Protocols[protocolsCount].Port = protocols1.Port
-				data1.Protocols[protocolsCount].ServiceID = protocols1.ServiceID
-				data1.Protocols[protocolsCount].Transport = protocols1.Transport
-			}
-		}
-		if dataItem.RealHost != nil {
-			data1.RealHost = types.StringValue(*dataItem.RealHost)
-		} else {
-			data1.RealHost = types.StringNull()
-		}
-		if len(data1.ServicePublisherAssignments) > len(dataItem.ServicePublisherAssignments) {
-			data1.ServicePublisherAssignments = data1.ServicePublisherAssignments[:len(dataItem.ServicePublisherAssignments)]
-		}
-		for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range dataItem.ServicePublisherAssignments {
-			var servicePublisherAssignments1 ServicePublisherAssignmentItem
-			if servicePublisherAssignmentsItem.Primary != nil {
-				servicePublisherAssignments1.Primary = types.BoolValue(*servicePublisherAssignmentsItem.Primary)
-			} else {
-				servicePublisherAssignments1.Primary = types.BoolNull()
-			}
-			if servicePublisherAssignmentsItem.PublisherID != nil {
-				servicePublisherAssignments1.PublisherID = types.Int64Value(int64(*servicePublisherAssignmentsItem.PublisherID))
-			} else {
-				servicePublisherAssignments1.PublisherID = types.Int64Null()
-			}
-			if servicePublisherAssignmentsItem.Reachability == nil {
-				servicePublisherAssignments1.Reachability = nil
-			} else {
-				servicePublisherAssignments1.Reachability = &Reachability{}
-				if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
-					servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
-				} else {
-					servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Null()
-				}
-				if servicePublisherAssignmentsItem.Reachability.ErrorString != nil {
-					servicePublisherAssignments1.Reachability.ErrorString = types.StringValue(*servicePublisherAssignmentsItem.Reachability.ErrorString)
-				} else {
-					servicePublisherAssignments1.Reachability.ErrorString = types.StringNull()
-				}
-				if servicePublisherAssignmentsItem.Reachability.Reachable != nil {
-					servicePublisherAssignments1.Reachability.Reachable = types.BoolValue(*servicePublisherAssignmentsItem.Reachability.Reachable)
-				} else {
-					servicePublisherAssignments1.Reachability.Reachable = types.BoolNull()
-				}
-			}
-			if servicePublisherAssignmentsItem.ServiceID != nil {
-				servicePublisherAssignments1.ServiceID = types.Int64Value(int64(*servicePublisherAssignmentsItem.ServiceID))
-			} else {
-				servicePublisherAssignments1.ServiceID = types.Int64Null()
-			}
-			if servicePublisherAssignmentsCount+1 > len(data1.ServicePublisherAssignments) {
-				data1.ServicePublisherAssignments = append(data1.ServicePublisherAssignments, servicePublisherAssignments1)
-			} else {
-				data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].Primary = servicePublisherAssignments1.Primary
-				data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].PublisherID = servicePublisherAssignments1.PublisherID
-				data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].Reachability = servicePublisherAssignments1.Reachability
-				data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].ServiceID = servicePublisherAssignments1.ServiceID
-			}
-		}
-		if len(data1.Tags) > len(dataItem.Tags) {
-			data1.Tags = data1.Tags[:len(dataItem.Tags)]
-		}
-		for tagsCount, tagsItem := range dataItem.Tags {
-			var tags1 TagItem
-			if tagsItem.TagID != nil {
-				tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
-			} else {
-				tags1.TagID = types.Int64Null()
-			}
-			if tagsItem.TagName != nil {
-				tags1.TagName = types.StringValue(*tagsItem.TagName)
-			} else {
-				tags1.TagName = types.StringNull()
-			}
-			if tagsCount+1 > len(data1.Tags) {
-				data1.Tags = append(data1.Tags, tags1)
-			} else {
-				data1.Tags[tagsCount].TagID = tags1.TagID
-				data1.Tags[tagsCount].TagName = tags1.TagName
-			}
-		}
-		if dataItem.TrustSelfSignedCerts != nil {
-			data1.TrustSelfSignedCerts = types.BoolValue(*dataItem.TrustSelfSignedCerts)
-		} else {
-			data1.TrustSelfSignedCerts = types.BoolNull()
-		}
-		if dataItem.UsePublisherDNS != nil {
-			data1.UsePublisherDNS = types.BoolValue(*dataItem.UsePublisherDNS)
-		} else {
-			data1.UsePublisherDNS = types.BoolNull()
-		}
-		if dataCount+1 > len(r.Data) {
-			r.Data = append(r.Data, data1)
-		} else {
-			r.Data[dataCount].ClientlessAccess = data1.ClientlessAccess
-			r.Data[dataCount].Host = data1.Host
-			r.Data[dataCount].ID = data1.ID
-			r.Data[dataCount].Name = data1.Name
-			r.Data[dataCount].Protocols = data1.Protocols
-			r.Data[dataCount].RealHost = data1.RealHost
-			r.Data[dataCount].ServicePublisherAssignments = data1.ServicePublisherAssignments
-			r.Data[dataCount].Tags = data1.Tags
-			r.Data[dataCount].TrustSelfSignedCerts = data1.TrustSelfSignedCerts
-			r.Data[dataCount].UsePublisherDNS = data1.UsePublisherDNS
-		}
-	}
-	if resp.Status != nil {
-		r.Status = types.StringValue(string(*resp.Status))
+func (r *PrivateAppResourceModel) RefreshFromCreateResponse(resp *shared.PrivateAppsResponseData) {
+	if resp.ClientlessAccess != nil {
+		r.ClientlessAccess = types.BoolValue(*resp.ClientlessAccess)
 	} else {
-		r.Status = types.StringNull()
+		r.ClientlessAccess = types.BoolNull()
+	}
+	if resp.Host != nil {
+		r.Host = types.StringValue(*resp.Host)
+	} else {
+		r.Host = types.StringNull()
+	}
+	if resp.ID != nil {
+		r.ID = types.Int64Value(int64(*resp.ID))
+	} else {
+		r.ID = types.Int64Null()
+	}
+	if resp.Name != nil {
+		r.Name = types.StringValue(*resp.Name)
+	} else {
+		r.Name = types.StringNull()
+	}
+	if resp.RealHost != nil {
+		r.RealHost = types.StringValue(*resp.RealHost)
+	} else {
+		r.RealHost = types.StringNull()
+	}
+	if len(r.ResolvedProtocols) > len(resp.ResolvedProtocols) {
+		r.ResolvedProtocols = r.ResolvedProtocols[:len(resp.ResolvedProtocols)]
+	}
+	for resolvedProtocolsCount, resolvedProtocolsItem := range resp.ResolvedProtocols {
+		var resolvedProtocols1 ProtocolResponseItem
+		if resolvedProtocolsItem.ID != nil {
+			resolvedProtocols1.ID = types.Int64Value(int64(*resolvedProtocolsItem.ID))
+		} else {
+			resolvedProtocols1.ID = types.Int64Null()
+		}
+		if resolvedProtocolsItem.Port != nil {
+			resolvedProtocols1.Port = types.StringValue(*resolvedProtocolsItem.Port)
+		} else {
+			resolvedProtocols1.Port = types.StringNull()
+		}
+		if resolvedProtocolsItem.ServiceID != nil {
+			resolvedProtocols1.ServiceID = types.Int64Value(int64(*resolvedProtocolsItem.ServiceID))
+		} else {
+			resolvedProtocols1.ServiceID = types.Int64Null()
+		}
+		if resolvedProtocolsItem.Transport != nil {
+			resolvedProtocols1.Transport = types.StringValue(*resolvedProtocolsItem.Transport)
+		} else {
+			resolvedProtocols1.Transport = types.StringNull()
+		}
+		if resolvedProtocolsCount+1 > len(r.ResolvedProtocols) {
+			r.ResolvedProtocols = append(r.ResolvedProtocols, resolvedProtocols1)
+		} else {
+			r.ResolvedProtocols[resolvedProtocolsCount].ID = resolvedProtocols1.ID
+			r.ResolvedProtocols[resolvedProtocolsCount].Port = resolvedProtocols1.Port
+			r.ResolvedProtocols[resolvedProtocolsCount].ServiceID = resolvedProtocols1.ServiceID
+			r.ResolvedProtocols[resolvedProtocolsCount].Transport = resolvedProtocols1.Transport
+		}
+	}
+	if len(r.ServicePublisherAssignments) > len(resp.ServicePublisherAssignments) {
+		r.ServicePublisherAssignments = r.ServicePublisherAssignments[:len(resp.ServicePublisherAssignments)]
+	}
+	for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range resp.ServicePublisherAssignments {
+		var servicePublisherAssignments1 ServicePublisherAssignmentItem
+		if servicePublisherAssignmentsItem.Primary != nil {
+			servicePublisherAssignments1.Primary = types.BoolValue(*servicePublisherAssignmentsItem.Primary)
+		} else {
+			servicePublisherAssignments1.Primary = types.BoolNull()
+		}
+		if servicePublisherAssignmentsItem.PublisherID != nil {
+			servicePublisherAssignments1.PublisherID = types.Int64Value(int64(*servicePublisherAssignmentsItem.PublisherID))
+		} else {
+			servicePublisherAssignments1.PublisherID = types.Int64Null()
+		}
+		if servicePublisherAssignmentsItem.Reachability == nil {
+			servicePublisherAssignments1.Reachability = nil
+		} else {
+			servicePublisherAssignments1.Reachability = &Reachability{}
+			if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
+				servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
+			} else {
+				servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Null()
+			}
+			if servicePublisherAssignmentsItem.Reachability.ErrorString != nil {
+				servicePublisherAssignments1.Reachability.ErrorString = types.StringValue(*servicePublisherAssignmentsItem.Reachability.ErrorString)
+			} else {
+				servicePublisherAssignments1.Reachability.ErrorString = types.StringNull()
+			}
+			if servicePublisherAssignmentsItem.Reachability.Reachable != nil {
+				servicePublisherAssignments1.Reachability.Reachable = types.BoolValue(*servicePublisherAssignmentsItem.Reachability.Reachable)
+			} else {
+				servicePublisherAssignments1.Reachability.Reachable = types.BoolNull()
+			}
+		}
+		if servicePublisherAssignmentsItem.ServiceID != nil {
+			servicePublisherAssignments1.ServiceID = types.Int64Value(int64(*servicePublisherAssignmentsItem.ServiceID))
+		} else {
+			servicePublisherAssignments1.ServiceID = types.Int64Null()
+		}
+		if servicePublisherAssignmentsCount+1 > len(r.ServicePublisherAssignments) {
+			r.ServicePublisherAssignments = append(r.ServicePublisherAssignments, servicePublisherAssignments1)
+		} else {
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].Primary = servicePublisherAssignments1.Primary
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].PublisherID = servicePublisherAssignments1.PublisherID
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].Reachability = servicePublisherAssignments1.Reachability
+			r.ServicePublisherAssignments[servicePublisherAssignmentsCount].ServiceID = servicePublisherAssignments1.ServiceID
+		}
+	}
+	if len(r.Tags) > len(resp.Tags) {
+		r.Tags = r.Tags[:len(resp.Tags)]
+	}
+	for tagsCount, tagsItem := range resp.Tags {
+		var tags1 TagItem
+		if tagsItem.TagID != nil {
+			tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
+		} else {
+			tags1.TagID = types.Int64Null()
+		}
+		if tagsItem.TagName != nil {
+			tags1.TagName = types.StringValue(*tagsItem.TagName)
+		} else {
+			tags1.TagName = types.StringNull()
+		}
+		if tagsCount+1 > len(r.Tags) {
+			r.Tags = append(r.Tags, tags1)
+		} else {
+			r.Tags[tagsCount].TagID = tags1.TagID
+			r.Tags[tagsCount].TagName = tags1.TagName
+		}
+	}
+	if resp.TrustSelfSignedCerts != nil {
+		r.TrustSelfSignedCerts = types.BoolValue(*resp.TrustSelfSignedCerts)
+	} else {
+		r.TrustSelfSignedCerts = types.BoolNull()
+	}
+	if resp.UsePublisherDNS != nil {
+		r.UsePublisherDNS = types.BoolValue(*resp.UsePublisherDNS)
+	} else {
+		r.UsePublisherDNS = types.BoolNull()
 	}
 }
 
-func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *shared.PrivateAppsResponse) {
+func (r *PrivateAppResourceModel) RefreshFromUpdateResponse(resp *shared.PrivateAppsResponseData) {
 	r.RefreshFromCreateResponse(resp)
 }

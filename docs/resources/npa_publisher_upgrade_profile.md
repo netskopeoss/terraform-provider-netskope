@@ -15,10 +15,11 @@ NPAPublisherUpgradeProfile Resource
 ```terraform
 resource "ns_npa_publisher_upgrade_profile" "my_npapublisherupgradeprofile" {
   docker_tag   = "...my_docker_tag..."
-  enabled      = 6
+  enabled      = true
   frequency    = "...my_frequency..."
   name         = "Jerald Graham MD"
   release_type = "...my_release_type..."
+  required     = "{ \"see\": \"documentation\" }"
   timezone     = "...my_timezone..."
 }
 ```
@@ -29,10 +30,11 @@ resource "ns_npa_publisher_upgrade_profile" "my_npapublisherupgradeprofile" {
 ### Optional
 
 - `docker_tag` (String)
-- `enabled` (Number)
+- `enabled` (Boolean)
 - `frequency` (String)
 - `name` (String)
 - `release_type` (String)
+- `required` (String) Parsed as JSON.
 - `timezone` (String)
 
 ### Read-Only

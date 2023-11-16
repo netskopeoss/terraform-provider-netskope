@@ -3,12 +3,13 @@
 package shared
 
 type PublisherUpgradeProfilePostRequest struct {
-	DockerTag   *string `json:"docker_tag,omitempty"`
-	Enabled     *int    `json:"enabled,omitempty"`
-	Frequency   *string `json:"frequency,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	ReleaseType *string `json:"release_type,omitempty"`
-	Timezone    *string `json:"timezone,omitempty"`
+	DockerTag   *string     `json:"docker_tag,omitempty"`
+	Enabled     *bool       `json:"enabled,omitempty"`
+	Frequency   *string     `json:"frequency,omitempty"`
+	Name        *string     `json:"name,omitempty"`
+	ReleaseType *string     `json:"release_type,omitempty"`
+	Required    interface{} `json:"required,omitempty"`
+	Timezone    *string     `json:"timezone,omitempty"`
 }
 
 func (o *PublisherUpgradeProfilePostRequest) GetDockerTag() *string {
@@ -18,7 +19,7 @@ func (o *PublisherUpgradeProfilePostRequest) GetDockerTag() *string {
 	return o.DockerTag
 }
 
-func (o *PublisherUpgradeProfilePostRequest) GetEnabled() *int {
+func (o *PublisherUpgradeProfilePostRequest) GetEnabled() *bool {
 	if o == nil {
 		return nil
 	}
@@ -44,6 +45,13 @@ func (o *PublisherUpgradeProfilePostRequest) GetReleaseType() *string {
 		return nil
 	}
 	return o.ReleaseType
+}
+
+func (o *PublisherUpgradeProfilePostRequest) GetRequired() interface{} {
+	if o == nil {
+		return nil
+	}
+	return o.Required
 }
 
 func (o *PublisherUpgradeProfilePostRequest) GetTimezone() *string {

@@ -67,8 +67,6 @@ func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest) GetUp
 }
 
 type PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse struct {
-	// successful operation
-	TwoHundred *shared.TwoHundred
 	// Invalid request
 	FourHundred *shared.FourHundred
 	// HTTP response content type for this operation
@@ -77,13 +75,8 @@ type PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-}
-
-func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetTwoHundred() *shared.TwoHundred {
-	if o == nil {
-		return nil
-	}
-	return o.TwoHundred
+	// successful operation
+	PublisherUpgradeProfileResponse *shared.PublisherUpgradeProfileResponse
 }
 
 func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetFourHundred() *shared.FourHundred {
@@ -112,4 +105,11 @@ func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetR
 		return nil
 	}
 	return o.RawResponse
+}
+
+func (o *PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse) GetPublisherUpgradeProfileResponse() *shared.PublisherUpgradeProfileResponse {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherUpgradeProfileResponse
 }

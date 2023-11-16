@@ -46,7 +46,7 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromCreateResponse(resp *
 		if dataItem.Assessment == nil {
 			data1.Assessment = nil
 		} else {
-			data1.Assessment = &PublisherResponseAssessment{}
+			data1.Assessment = &PublisherBulkItemAssessment{}
 		}
 		if dataItem.CommonName != nil {
 			data1.CommonName = types.StringValue(*dataItem.CommonName)
@@ -113,7 +113,7 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromCreateResponse(resp *
 		if dataItem.UpgradeFailedReason == nil {
 			data1.UpgradeFailedReason = nil
 		} else {
-			data1.UpgradeFailedReason = &PublisherResponseAssessment{}
+			data1.UpgradeFailedReason = &PublisherBulkItemAssessment{}
 		}
 		if dataItem.UpgradeRequest != nil {
 			data1.UpgradeRequest = types.BoolValue(*dataItem.UpgradeRequest)
@@ -123,7 +123,7 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromCreateResponse(resp *
 		if dataItem.UpgradeStatus == nil {
 			data1.UpgradeStatus = nil
 		} else {
-			data1.UpgradeStatus = &PublisherResponseAssessment{}
+			data1.UpgradeStatus = &PublisherBulkItemAssessment{}
 		}
 		if dataCount+1 > len(r.Data) {
 			r.Data = append(r.Data, data1)
