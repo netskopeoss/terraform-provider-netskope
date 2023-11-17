@@ -5,11 +5,12 @@
  - [x] npa_policy_group
  - [x] npa_policy_list
  - [x] npa_publisher_upgrade_profile_list
- - [] npa_publishers
- - [] npa_publishers_alerts_list
- - [] npa_publishers_apps_list
- - [] npa_publishers_list
- - [] npa_publishers_releases_list
+ - [x] ns_npa_publisher_upgrade_profile
+ - [x] npa_publishers
+ - [] ~~npa_publishers_alerts_list~~
+ - [x] npa_publishers_apps_list
+ - [x] npa_publishers_list
+ - [x] npa_publishers_releases_list
  - [x] policy_group_list
  - [-] private_app_list (Need to troubleshoot)
  - [] private_app_tag_list
@@ -21,7 +22,7 @@
 - [x] npa_policy_group
 - [x] npa_publisher_upgrade_profile
 - [x] npa_publishers
-- [] npa_publishers_alerts
+- [] ~~npa_publishers_alerts~~
 - [] npa_publishers_bulk_upgrade
 - [x] private_app
 - [] private_app_tag
@@ -32,7 +33,7 @@
 - [x] npa_policy_group
 - [x] npa_publisher_upgrade_profile
 - [x] npa_publishers
-- [] npa_publishers_alerts
+- [] ~~npa_publishers_alerts~~
 - [] npa_publishers_bulk_upgrade
 - [x] private_app
 - [] private_app_tag
@@ -42,7 +43,7 @@
 - [x] npa_policy_group
 - [x] npa_publisher_upgrade_profile
 - [x] npa_publishers
-- [] npa_publishers_alerts
+- [] ~~npa_publishers_alerts~~
 - [] npa_publishers_bulk_upgrade
 - [x] private_app
 - [] private_app_tag

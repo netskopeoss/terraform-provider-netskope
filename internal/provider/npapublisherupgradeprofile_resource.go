@@ -8,6 +8,7 @@ import (
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -16,6 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/netskope/terraform-provider-ns/internal/validators"
+	"strconv"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -179,7 +181,31 @@ func (r *NPAPublisherUpgradeProfileResource) Read(ctx context.Context, req resou
 		return
 	}
 
-	// Not Implemented; we rely entirely on CREATE API request response
+	upgradeProfileID := int(data.ID.ValueInt64())
+	request := operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest{
+		UpgradeProfileID: upgradeProfileID,
+	}
+	res, err := r.client.NPAPublisherUpgradeProfiles.Read(ctx, request)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
+		return
+	}
+	if res == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
+		return
+	}
+	if res.PublisherUpgradeProfileResponse == nil || res.PublisherUpgradeProfileResponse.Data == nil {
+		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+		return
+	}
+	data.RefreshFromGetResponse(res.PublisherUpgradeProfileResponse.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -266,5 +292,10 @@ func (r *NPAPublisherUpgradeProfileResource) Delete(ctx context.Context, req res
 }
 
 func (r *NPAPublisherUpgradeProfileResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.AddError("Not Implemented", "No available import state operation is available for resource npa_publisher_upgrade_profile.")
+	id, err := strconv.Atoi(req.ID)
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
+	}
+
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), int64(id))...)
 }
