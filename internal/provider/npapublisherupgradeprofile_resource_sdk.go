@@ -61,6 +61,11 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToCreateSDKType() *shared.Publ
 	return &out
 }
 
+func (r *NPAPublisherUpgradeProfileResourceModel) ToGetSDKType() *shared.PublisherUpgradeProfilePostRequest {
+	out := r.ToCreateSDKType()
+	return out
+}
+
 func (r *NPAPublisherUpgradeProfileResourceModel) ToUpdateSDKType() *shared.PublisherUpgradeProfilePutRequest {
 	dockerTag := new(string)
 	if !r.DockerTag.IsUnknown() && !r.DockerTag.IsNull() {
@@ -121,7 +126,7 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToDeleteSDKType() *shared.Publ
 	return out
 }
 
-func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromCreateResponse(resp *shared.PublisherUpgradeProfileResponseData) {
+func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromGetResponse(resp *shared.PublisherUpgradeProfileResponseData) {
 	if resp.DockerTag != nil {
 		r.DockerTag = types.StringValue(*resp.DockerTag)
 	} else {
@@ -159,6 +164,10 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromCreateResponse(resp
 	}
 }
 
+func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromCreateResponse(resp *shared.PublisherUpgradeProfileResponseData) {
+	r.RefreshFromGetResponse(resp)
+}
+
 func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromUpdateResponse(resp *shared.PublisherUpgradeProfileResponseData) {
-	r.RefreshFromCreateResponse(resp)
+	r.RefreshFromGetResponse(resp)
 }

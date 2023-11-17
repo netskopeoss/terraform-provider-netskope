@@ -247,6 +247,76 @@ func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, request o
 	return res, nil
 }
 
+// Read - Get a publisher upgrade profile
+// get a publisher upgrade profile based on publisher upgrade profile id
+func (s *NPAPublisherUpgradeProfiles) Read(ctx context.Context, request operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest) (*operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse, error) {
+	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	url, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publisherupgradeprofiles/{upgrade_profile_id}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
+
+	client := s.sdkConfiguration.SecurityClient
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+
+	rawBody, err := io.ReadAll(httpRes.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading response body: %w", err)
+	}
+	httpRes.Body.Close()
+	httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+		RawResponse: httpRes,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out shared.PublisherUpgradeProfileResponse
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.PublisherUpgradeProfileResponse = &out
+		default:
+			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
+		}
+	case httpRes.StatusCode == 400:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out shared.FourHundred
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.FourHundred = &out
+		default:
+			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
+		}
+	}
+
+	return res, nil
+}
+
 // Update a publisher upgrade profile
 // update a publisher upgrade profile based on publisher upgrade profile id
 func (s *NPAPublisherUpgradeProfiles) Update(ctx context.Context, request operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest) (*operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDResponse, error) {

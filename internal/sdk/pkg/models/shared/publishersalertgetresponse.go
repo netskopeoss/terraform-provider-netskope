@@ -70,36 +70,8 @@ func (o *PublishersAlertGetResponseData) GetSelectedUsers() *string {
 	return o.SelectedUsers
 }
 
-type PublishersAlertGetResponseStatus string
-
-const (
-	PublishersAlertGetResponseStatusSuccess  PublishersAlertGetResponseStatus = "success"
-	PublishersAlertGetResponseStatusNotFound PublishersAlertGetResponseStatus = "not found"
-)
-
-func (e PublishersAlertGetResponseStatus) ToPointer() *PublishersAlertGetResponseStatus {
-	return &e
-}
-
-func (e *PublishersAlertGetResponseStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = PublishersAlertGetResponseStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PublishersAlertGetResponseStatus: %v", v)
-	}
-}
-
 type PublishersAlertGetResponse struct {
-	Data   *PublishersAlertGetResponseData   `json:"data,omitempty"`
-	Status *PublishersAlertGetResponseStatus `json:"status,omitempty"`
+	Data *PublishersAlertGetResponseData `json:"data,omitempty"`
 }
 
 func (o *PublishersAlertGetResponse) GetData() *PublishersAlertGetResponseData {
@@ -107,11 +79,4 @@ func (o *PublishersAlertGetResponse) GetData() *PublishersAlertGetResponseData {
 		return nil
 	}
 	return o.Data
-}
-
-func (o *PublishersAlertGetResponse) GetStatus() *PublishersAlertGetResponseStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
