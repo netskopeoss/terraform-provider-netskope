@@ -12,7 +12,7 @@
  - [x] npa_publishers_list
  - [x] npa_publishers_releases_list
  - [x] policy_group_list
- - [-] private_app_list (Need to troubleshoot)
+ - [-] private_app_list (Partially working need to look closer at the OAS for this object)
  - [] private_app_tag_list
  - [] private_app_tag_policy_use_list
 

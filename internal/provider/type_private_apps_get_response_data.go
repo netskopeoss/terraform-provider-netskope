@@ -5,14 +5,5 @@ package provider
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type PrivateAppsGetResponseData struct {
-	AppID                       types.Int64                      `tfsdk:"app_id"`
-	AppName                     types.String                     `tfsdk:"app_name"`
-	ClientlessAccess            types.Bool                       `tfsdk:"clientless_access"`
-	Host                        types.String                     `tfsdk:"host"`
-	Protocols                   []ProtocolResponseItem           `tfsdk:"protocols"`
-	RealHost                    types.String                     `tfsdk:"real_host"`
-	ServicePublisherAssignments []ServicePublisherAssignmentItem `tfsdk:"service_publisher_assignments"`
-	Tags                        []TagItem                        `tfsdk:"tags"`
-	TrustSelfSignedCerts        types.Bool                       `tfsdk:"trust_self_signed_certs"`
-	UsePublisherDNS             types.Bool                       `tfsdk:"use_publisher_dns"`
+	PrivateApps []types.String `tfsdk:"private_apps"`
 }

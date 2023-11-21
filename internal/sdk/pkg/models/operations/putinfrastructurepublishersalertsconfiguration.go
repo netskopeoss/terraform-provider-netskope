@@ -15,7 +15,7 @@ type PutInfrastructurePublishersAlertsconfigurationResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// successful operation
-	PublishersAlertPutRequest *shared.PublishersAlertPutRequest
+	PublishersAlertGetResponse *shared.PublishersAlertGetResponse
 	// Invalid request
 	PublishersResponse400 *shared.PublishersResponse400
 }
@@ -41,11 +41,11 @@ func (o *PutInfrastructurePublishersAlertsconfigurationResponse) GetRawResponse(
 	return o.RawResponse
 }
 
-func (o *PutInfrastructurePublishersAlertsconfigurationResponse) GetPublishersAlertPutRequest() *shared.PublishersAlertPutRequest {
+func (o *PutInfrastructurePublishersAlertsconfigurationResponse) GetPublishersAlertGetResponse() *shared.PublishersAlertGetResponse {
 	if o == nil {
 		return nil
 	}
-	return o.PublishersAlertPutRequest
+	return o.PublishersAlertGetResponse
 }
 
 func (o *PutInfrastructurePublishersAlertsconfigurationResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
