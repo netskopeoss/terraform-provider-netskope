@@ -8,86 +8,14 @@ import (
 )
 
 type PrivateAppsGetResponseData struct {
-	AppID                       *int                             `json:"app_id,omitempty"`
-	AppName                     *string                          `json:"app_name,omitempty"`
-	ClientlessAccess            *bool                            `json:"clientless_access,omitempty"`
-	Host                        *string                          `json:"host,omitempty"`
-	Protocols                   []ProtocolResponseItem           `json:"protocols,omitempty"`
-	RealHost                    *string                          `json:"real_host,omitempty"`
-	ServicePublisherAssignments []ServicePublisherAssignmentItem `json:"service_publisher_assignments,omitempty"`
-	Tags                        []TagItem                        `json:"tags,omitempty"`
-	TrustSelfSignedCerts        *bool                            `json:"trust_self_signed_certs,omitempty"`
-	UsePublisherDNS             *bool                            `json:"use_publisher_dns,omitempty"`
+	PrivateApps []interface{} `json:"private_apps,omitempty"`
 }
 
-func (o *PrivateAppsGetResponseData) GetAppID() *int {
+func (o *PrivateAppsGetResponseData) GetPrivateApps() []interface{} {
 	if o == nil {
 		return nil
 	}
-	return o.AppID
-}
-
-func (o *PrivateAppsGetResponseData) GetAppName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.AppName
-}
-
-func (o *PrivateAppsGetResponseData) GetClientlessAccess() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.ClientlessAccess
-}
-
-func (o *PrivateAppsGetResponseData) GetHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Host
-}
-
-func (o *PrivateAppsGetResponseData) GetProtocols() []ProtocolResponseItem {
-	if o == nil {
-		return nil
-	}
-	return o.Protocols
-}
-
-func (o *PrivateAppsGetResponseData) GetRealHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.RealHost
-}
-
-func (o *PrivateAppsGetResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
-	if o == nil {
-		return nil
-	}
-	return o.ServicePublisherAssignments
-}
-
-func (o *PrivateAppsGetResponseData) GetTags() []TagItem {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
-}
-
-func (o *PrivateAppsGetResponseData) GetTrustSelfSignedCerts() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.TrustSelfSignedCerts
-}
-
-func (o *PrivateAppsGetResponseData) GetUsePublisherDNS() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.UsePublisherDNS
+	return o.PrivateApps
 }
 
 type Status string
@@ -118,12 +46,12 @@ func (e *Status) UnmarshalJSON(data []byte) error {
 }
 
 type PrivateAppsGetResponse struct {
-	Data   []PrivateAppsGetResponseData `json:"data,omitempty"`
-	Status *Status                      `json:"status,omitempty"`
-	Total  *int                         `json:"total,omitempty"`
+	Data   *PrivateAppsGetResponseData `json:"data,omitempty"`
+	Status *Status                     `json:"status,omitempty"`
+	Total  *int                        `json:"total,omitempty"`
 }
 
-func (o *PrivateAppsGetResponse) GetData() []PrivateAppsGetResponseData {
+func (o *PrivateAppsGetResponse) GetData() *PrivateAppsGetResponseData {
 	if o == nil {
 		return nil
 	}

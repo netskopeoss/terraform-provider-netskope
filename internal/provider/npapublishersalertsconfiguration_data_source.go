@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -15,57 +14,52 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &PrivateAppListDataSource{}
-var _ datasource.DataSourceWithConfigure = &PrivateAppListDataSource{}
+var _ datasource.DataSource = &NPAPublishersAlertsConfigurationDataSource{}
+var _ datasource.DataSourceWithConfigure = &NPAPublishersAlertsConfigurationDataSource{}
 
-func NewPrivateAppListDataSource() datasource.DataSource {
-	return &PrivateAppListDataSource{}
+func NewNPAPublishersAlertsConfigurationDataSource() datasource.DataSource {
+	return &NPAPublishersAlertsConfigurationDataSource{}
 }
 
-// PrivateAppListDataSource is the data source implementation.
-type PrivateAppListDataSource struct {
+// NPAPublishersAlertsConfigurationDataSource is the data source implementation.
+type NPAPublishersAlertsConfigurationDataSource struct {
 	client *sdk.SDK
 }
 
-// PrivateAppListDataSourceModel describes the data model.
-type PrivateAppListDataSourceModel struct {
-	Data   *PrivateAppsGetResponseData `tfsdk:"data"`
-	Fields types.String                `tfsdk:"fields"`
-	Total  types.Int64                 `tfsdk:"total"`
+// NPAPublishersAlertsConfigurationDataSourceModel describes the data model.
+type NPAPublishersAlertsConfigurationDataSourceModel struct {
+	AdminUsers    []types.String `tfsdk:"admin_users"`
+	EventTypes    []types.String `tfsdk:"event_types"`
+	SelectedUsers types.String   `tfsdk:"selected_users"`
 }
 
 // Metadata returns the data source type name.
-func (r *PrivateAppListDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_private_app_list"
+func (r *NPAPublishersAlertsConfigurationDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_npa_publishers_alerts_configuration"
 }
 
 // Schema defines the schema for the data source.
-func (r *PrivateAppListDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (r *NPAPublishersAlertsConfigurationDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "PrivateAppList DataSource",
+		MarkdownDescription: "NPAPublishersAlertsConfiguration DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"data": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"private_apps": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-				},
+			"admin_users": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
 			},
-			"fields": schema.StringAttribute{
-				Optional:    true,
-				Description: `Return values only from specified fields`,
+			"event_types": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
 			},
-			"total": schema.Int64Attribute{
+			"selected_users": schema.StringAttribute{
 				Computed: true,
 			},
 		},
 	}
 }
 
-func (r *PrivateAppListDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (r *NPAPublishersAlertsConfigurationDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -85,8 +79,8 @@ func (r *PrivateAppListDataSource) Configure(ctx context.Context, req datasource
 	r.client = client
 }
 
-func (r *PrivateAppListDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data *PrivateAppListDataSourceModel
+func (r *NPAPublishersAlertsConfigurationDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data *NPAPublishersAlertsConfigurationDataSourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &item)...)
@@ -103,16 +97,7 @@ func (r *PrivateAppListDataSource) Read(ctx context.Context, req datasource.Read
 		return
 	}
 
-	fields := new(string)
-	if !data.Fields.IsUnknown() && !data.Fields.IsNull() {
-		*fields = data.Fields.ValueString()
-	} else {
-		fields = nil
-	}
-	request := operations.GetSteeringAppsPrivateRequest{
-		Fields: fields,
-	}
-	res, err := r.client.GetSteeringAppsPrivate(ctx, request)
+	res, err := r.client.GetInfrastructurePublishersAlertsconfiguration(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -128,11 +113,11 @@ func (r *PrivateAppListDataSource) Read(ctx context.Context, req datasource.Read
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PrivateAppsGetResponse == nil {
+	if res.PublishersAlertGetResponse == nil || res.PublishersAlertGetResponse.Data == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.PrivateAppsGetResponse)
+	data.RefreshFromGetResponse(res.PublishersAlertGetResponse.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

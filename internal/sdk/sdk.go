@@ -165,8 +165,8 @@ func New(opts ...SDKOption) *SDK {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.192.6",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.192.6 1.0.0 ns",
+			GenVersion:        "2.194.1",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.194.1 1.0.0 ns",
 			ServerDefaults: []map[string]string{
 				{
 					"tenant": "demo",
@@ -4009,12 +4009,12 @@ func (s *SDK) PutInfrastructurePublishersAlertsconfiguration(ctx context.Context
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(contentType, `application/json`):
-			var out shared.PublishersAlertPutRequest
+			var out shared.PublishersAlertGetResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.PublishersAlertPutRequest = &out
+			res.PublishersAlertGetResponse = &out
 		default:
 			return nil, sdkerrors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", contentType), httpRes.StatusCode, string(rawBody), httpRes)
 		}
