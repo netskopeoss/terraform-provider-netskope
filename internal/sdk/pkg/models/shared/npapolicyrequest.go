@@ -42,9 +42,9 @@ func (e *Order) UnmarshalJSON(data []byte) error {
 
 type RuleOrder struct {
 	Order    *Order  `json:"order,omitempty"`
-	Position *int64  `json:"position,omitempty"`
-	RuleID   *string `json:"rule_id,omitempty"`
 	RuleName *string `json:"rule_name,omitempty"`
+	RuleID   *string `json:"rule_id,omitempty"`
+	Position *int64  `json:"position,omitempty"`
 }
 
 func (o *RuleOrder) GetOrder() *Order {
@@ -54,11 +54,11 @@ func (o *RuleOrder) GetOrder() *Order {
 	return o.Order
 }
 
-func (o *RuleOrder) GetPosition() *int64 {
+func (o *RuleOrder) GetRuleName() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Position
+	return o.RuleName
 }
 
 func (o *RuleOrder) GetRuleID() *string {
@@ -68,48 +68,20 @@ func (o *RuleOrder) GetRuleID() *string {
 	return o.RuleID
 }
 
-func (o *RuleOrder) GetRuleName() *string {
+func (o *RuleOrder) GetPosition() *int64 {
 	if o == nil {
 		return nil
 	}
-	return o.RuleName
+	return o.Position
 }
 
 type NpaPolicyRequest struct {
-	Description *string            `json:"description,omitempty"`
-	Enabled     *string            `json:"enabled,omitempty"`
-	GroupName   *string            `json:"group_name,omitempty"`
-	RuleData    *NpaPolicyRuleData `json:"rule_data,omitempty"`
 	RuleName    *string            `json:"rule_name,omitempty"`
+	Description *string            `json:"description,omitempty"`
+	RuleData    *NpaPolicyRuleData `json:"rule_data,omitempty"`
 	RuleOrder   *RuleOrder         `json:"rule_order,omitempty"`
-}
-
-func (o *NpaPolicyRequest) GetDescription() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Description
-}
-
-func (o *NpaPolicyRequest) GetEnabled() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Enabled
-}
-
-func (o *NpaPolicyRequest) GetGroupName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupName
-}
-
-func (o *NpaPolicyRequest) GetRuleData() *NpaPolicyRuleData {
-	if o == nil {
-		return nil
-	}
-	return o.RuleData
+	GroupName   *string            `json:"group_name,omitempty"`
+	Enabled     *string            `json:"enabled,omitempty"`
 }
 
 func (o *NpaPolicyRequest) GetRuleName() *string {
@@ -119,9 +91,37 @@ func (o *NpaPolicyRequest) GetRuleName() *string {
 	return o.RuleName
 }
 
+func (o *NpaPolicyRequest) GetDescription() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Description
+}
+
+func (o *NpaPolicyRequest) GetRuleData() *NpaPolicyRuleData {
+	if o == nil {
+		return nil
+	}
+	return o.RuleData
+}
+
 func (o *NpaPolicyRequest) GetRuleOrder() *RuleOrder {
 	if o == nil {
 		return nil
 	}
 	return o.RuleOrder
+}
+
+func (o *NpaPolicyRequest) GetGroupName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.GroupName
+}
+
+func (o *NpaPolicyRequest) GetEnabled() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Enabled
 }

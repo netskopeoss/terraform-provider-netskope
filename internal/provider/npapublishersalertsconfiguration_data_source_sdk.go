@@ -4,21 +4,19 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPublishersAlertsConfigurationDataSourceModel) RefreshFromGetResponse(resp *shared.PublishersAlertGetResponseData) {
-	r.AdminUsers = nil
-	for _, v := range resp.AdminUsers {
-		r.AdminUsers = append(r.AdminUsers, types.StringValue(v))
-	}
-	r.EventTypes = nil
-	for _, v := range resp.EventTypes {
-		r.EventTypes = append(r.EventTypes, types.StringValue(string(v)))
-	}
-	if resp.SelectedUsers != nil {
-		r.SelectedUsers = types.StringValue(*resp.SelectedUsers)
-	} else {
-		r.SelectedUsers = types.StringNull()
+func (r *NPAPublishersAlertsConfigurationDataSourceModel) RefreshFromSharedPublishersAlertGetResponseData(resp *shared.PublishersAlertGetResponseData) {
+	if resp != nil {
+		r.AdminUsers = nil
+		for _, v := range resp.AdminUsers {
+			r.AdminUsers = append(r.AdminUsers, types.StringValue(v))
+		}
+		r.EventTypes = nil
+		for _, v := range resp.EventTypes {
+			r.EventTypes = append(r.EventTypes, types.StringValue(string(v)))
+		}
+		r.SelectedUsers = types.StringPointerValue(resp.SelectedUsers)
 	}
 }

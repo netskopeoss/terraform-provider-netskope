@@ -4,7 +4,7 @@ package shared
 
 import (
 	"errors"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/utils"
 )
 
 type Two struct {
@@ -73,19 +73,19 @@ func (u PublisherAssessment) MarshalJSON() ([]byte, error) {
 	return nil, errors.New("could not marshal union type: all fields are null")
 }
 
-type Publisher2 struct {
+type StitcherID2 struct {
 }
 
 type StitcherIDType string
 
 const (
-	StitcherIDTypeInteger    StitcherIDType = "integer"
-	StitcherIDTypePublisher2 StitcherIDType = "Publisher_2"
+	StitcherIDTypeInteger     StitcherIDType = "integer"
+	StitcherIDTypeStitcherID2 StitcherIDType = "stitcher_id_2"
 )
 
 type StitcherID struct {
-	Integer    *int64
-	Publisher2 *Publisher2
+	Integer     *int64
+	StitcherID2 *StitcherID2
 
 	Type StitcherIDType
 }
@@ -99,21 +99,21 @@ func CreateStitcherIDInteger(integer int64) StitcherID {
 	}
 }
 
-func CreateStitcherIDPublisher2(publisher2 Publisher2) StitcherID {
-	typ := StitcherIDTypePublisher2
+func CreateStitcherIDStitcherID2(stitcherID2 StitcherID2) StitcherID {
+	typ := StitcherIDTypeStitcherID2
 
 	return StitcherID{
-		Publisher2: &publisher2,
-		Type:       typ,
+		StitcherID2: &stitcherID2,
+		Type:        typ,
 	}
 }
 
 func (u *StitcherID) UnmarshalJSON(data []byte) error {
 
-	publisher2 := new(Publisher2)
-	if err := utils.UnmarshalJSON(data, &publisher2, "", true, true); err == nil {
-		u.Publisher2 = publisher2
-		u.Type = StitcherIDTypePublisher2
+	stitcherID2 := new(StitcherID2)
+	if err := utils.UnmarshalJSON(data, &stitcherID2, "", true, true); err == nil {
+		u.StitcherID2 = stitcherID2
+		u.Type = StitcherIDTypeStitcherID2
 		return nil
 	}
 
@@ -132,26 +132,26 @@ func (u StitcherID) MarshalJSON() ([]byte, error) {
 		return utils.MarshalJSON(u.Integer, "", true)
 	}
 
-	if u.Publisher2 != nil {
-		return utils.MarshalJSON(u.Publisher2, "", true)
+	if u.StitcherID2 != nil {
+		return utils.MarshalJSON(u.StitcherID2, "", true)
 	}
 
 	return nil, errors.New("could not marshal union type: all fields are null")
 }
 
-type PublisherSchemas2 struct {
+type UpgradeFailedReason2 struct {
 }
 
 type PublisherUpgradeFailedReasonType string
 
 const (
-	PublisherUpgradeFailedReasonTypeUpgradeFailedReason PublisherUpgradeFailedReasonType = "UpgradeFailedReason"
-	PublisherUpgradeFailedReasonTypePublisherSchemas2   PublisherUpgradeFailedReasonType = "Publisher_Schemas_2"
+	PublisherUpgradeFailedReasonTypeUpgradeFailedReason  PublisherUpgradeFailedReasonType = "UpgradeFailedReason"
+	PublisherUpgradeFailedReasonTypeUpgradeFailedReason2 PublisherUpgradeFailedReasonType = "upgrade_failed_reason_2"
 )
 
 type PublisherUpgradeFailedReason struct {
-	UpgradeFailedReason *UpgradeFailedReason
-	PublisherSchemas2   *PublisherSchemas2
+	UpgradeFailedReason  *UpgradeFailedReason
+	UpgradeFailedReason2 *UpgradeFailedReason2
 
 	Type PublisherUpgradeFailedReasonType
 }
@@ -165,21 +165,21 @@ func CreatePublisherUpgradeFailedReasonUpgradeFailedReason(upgradeFailedReason U
 	}
 }
 
-func CreatePublisherUpgradeFailedReasonPublisherSchemas2(publisherSchemas2 PublisherSchemas2) PublisherUpgradeFailedReason {
-	typ := PublisherUpgradeFailedReasonTypePublisherSchemas2
+func CreatePublisherUpgradeFailedReasonUpgradeFailedReason2(upgradeFailedReason2 UpgradeFailedReason2) PublisherUpgradeFailedReason {
+	typ := PublisherUpgradeFailedReasonTypeUpgradeFailedReason2
 
 	return PublisherUpgradeFailedReason{
-		PublisherSchemas2: &publisherSchemas2,
-		Type:              typ,
+		UpgradeFailedReason2: &upgradeFailedReason2,
+		Type:                 typ,
 	}
 }
 
 func (u *PublisherUpgradeFailedReason) UnmarshalJSON(data []byte) error {
 
-	publisherSchemas2 := new(PublisherSchemas2)
-	if err := utils.UnmarshalJSON(data, &publisherSchemas2, "", true, true); err == nil {
-		u.PublisherSchemas2 = publisherSchemas2
-		u.Type = PublisherUpgradeFailedReasonTypePublisherSchemas2
+	upgradeFailedReason2 := new(UpgradeFailedReason2)
+	if err := utils.UnmarshalJSON(data, &upgradeFailedReason2, "", true, true); err == nil {
+		u.UpgradeFailedReason2 = upgradeFailedReason2
+		u.Type = PublisherUpgradeFailedReasonTypeUpgradeFailedReason2
 		return nil
 	}
 
@@ -198,8 +198,8 @@ func (u PublisherUpgradeFailedReason) MarshalJSON() ([]byte, error) {
 		return utils.MarshalJSON(u.UpgradeFailedReason, "", true)
 	}
 
-	if u.PublisherSchemas2 != nil {
-		return utils.MarshalJSON(u.PublisherSchemas2, "", true)
+	if u.UpgradeFailedReason2 != nil {
+		return utils.MarshalJSON(u.UpgradeFailedReason2, "", true)
 	}
 
 	return nil, errors.New("could not marshal union type: all fields are null")

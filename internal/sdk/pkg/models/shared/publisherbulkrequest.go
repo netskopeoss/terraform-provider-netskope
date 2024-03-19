@@ -3,7 +3,7 @@
 package shared
 
 import (
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/utils"
 )
 
 type Apply struct {
@@ -29,15 +29,8 @@ func (o *Apply) GetUpgradeRequest() *bool {
 }
 
 type Publishers struct {
-	Apply *Apply   `json:"apply,omitempty"`
 	ID    []string `json:"id,omitempty"`
-}
-
-func (o *Publishers) GetApply() *Apply {
-	if o == nil {
-		return nil
-	}
-	return o.Apply
+	Apply *Apply   `json:"apply,omitempty"`
 }
 
 func (o *Publishers) GetID() []string {
@@ -45,6 +38,13 @@ func (o *Publishers) GetID() []string {
 		return nil
 	}
 	return o.ID
+}
+
+func (o *Publishers) GetApply() *Apply {
+	if o == nil {
+		return nil
+	}
+	return o.Apply
 }
 
 type PublisherBulkRequest struct {

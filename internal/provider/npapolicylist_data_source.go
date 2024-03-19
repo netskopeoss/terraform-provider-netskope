@@ -5,13 +5,12 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -24,7 +23,7 @@ func NewNPAPolicyListDataSource() datasource.DataSource {
 
 // NPAPolicyListDataSource is the data source implementation.
 type NPAPolicyListDataSource struct {
-	client *sdk.SDK
+	client *sdk.TerraformProviderNs
 }
 
 // NPAPolicyListDataSourceModel describes the data model.
@@ -113,14 +112,6 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 									Computed:    true,
 									ElementType: types.StringType,
 								},
-								"private_app_tag_ids": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
-								"private_app_tags": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
 								"private_apps": schema.ListAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
@@ -150,6 +141,14 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 										},
 									},
 								},
+								"private_app_tag_ids": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"private_app_tags": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
 								"show_dlp_profile_action_table": schema.BoolAttribute{
 									Computed: true,
 								},
@@ -161,13 +160,13 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 									Computed:    true,
 									ElementType: types.StringType,
 								},
-								"user_type": schema.StringAttribute{
-									Computed:    true,
-									Description: `must be one of ["user"]`,
-								},
 								"users": schema.ListAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
+								},
+								"user_type": schema.StringAttribute{
+									Computed:    true,
+									Description: `must be one of ["user"]`,
 								},
 								"version": schema.Int64Attribute{
 									Computed: true,
@@ -213,12 +212,12 @@ func (r *NPAPolicyListDataSource) Configure(ctx context.Context, req datasource.
 		return
 	}
 
-	client, ok := req.ProviderData.(*sdk.SDK)
+	client, ok := req.ProviderData.(*sdk.TerraformProviderNs)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *sdk.SDK, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *sdk.TerraformProviderNs, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -302,7 +301,7 @@ func (r *NPAPolicyListDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.NpaPolicyListResponse)
+	data.RefreshFromSharedNpaPolicyListResponse(res.NpaPolicyListResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

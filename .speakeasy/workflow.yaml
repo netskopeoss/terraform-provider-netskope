@@ -1,0 +1,13 @@
+workflowVersion: 1.0.0
+sources:
+    openapi:
+        inputs:
+            - location: /Users/justinadrian/speakeasy/netskope-apiv2-oas/base_oas.yaml
+            - location: /Users/justinadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_publisher.yaml
+            - location: /Users/justinadrian/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policy.yaml
+        overlays:
+            - location: /Users/justinadrian/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
+targets:
+    first-target:
+        target: terraform
+        source: openapi

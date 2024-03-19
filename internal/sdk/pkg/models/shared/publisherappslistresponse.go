@@ -7,31 +7,44 @@ import (
 	"fmt"
 )
 
+type Status string
+
+const (
+	StatusSuccess  Status = "success"
+	StatusNotFound Status = "not found"
+)
+
+func (e Status) ToPointer() *Status {
+	return &e
+}
+
+func (e *Status) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "success":
+		fallthrough
+	case "not found":
+		*e = Status(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for Status: %v", v)
+	}
+}
+
 type PublisherAppsListResponseData struct {
-	ClientlessAccess            *bool                            `json:"clientless_access,omitempty"`
-	Host                        *string                          `json:"host,omitempty"`
 	ID                          *int                             `json:"id,omitempty"`
 	Name                        *string                          `json:"name,omitempty"`
-	Protocols                   []ProtocolResponseItem           `json:"protocols,omitempty"`
-	RealHost                    *string                          `json:"real_host,omitempty"`
-	ServicePublisherAssignments []ServicePublisherAssignmentItem `json:"service_publisher_assignments,omitempty"`
-	Tags                        []TagItem                        `json:"tags,omitempty"`
-	TrustSelfSignedCerts        *bool                            `json:"trust_self_signed_certs,omitempty"`
 	UsePublisherDNS             *bool                            `json:"use_publisher_dns,omitempty"`
-}
-
-func (o *PublisherAppsListResponseData) GetClientlessAccess() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.ClientlessAccess
-}
-
-func (o *PublisherAppsListResponseData) GetHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Host
+	ClientlessAccess            *bool                            `json:"clientless_access,omitempty"`
+	TrustSelfSignedCerts        *bool                            `json:"trust_self_signed_certs,omitempty"`
+	Host                        *string                          `json:"host,omitempty"`
+	RealHost                    *string                          `json:"real_host,omitempty"`
+	Protocols                   []ProtocolResponseItem           `json:"protocols,omitempty"`
+	Tags                        []TagItem                        `json:"tags,omitempty"`
+	ServicePublisherAssignments []ServicePublisherAssignmentItem `json:"service_publisher_assignments,omitempty"`
 }
 
 func (o *PublisherAppsListResponseData) GetID() *int {
@@ -48,32 +61,18 @@ func (o *PublisherAppsListResponseData) GetName() *string {
 	return o.Name
 }
 
-func (o *PublisherAppsListResponseData) GetProtocols() []ProtocolResponseItem {
+func (o *PublisherAppsListResponseData) GetUsePublisherDNS() *bool {
 	if o == nil {
 		return nil
 	}
-	return o.Protocols
+	return o.UsePublisherDNS
 }
 
-func (o *PublisherAppsListResponseData) GetRealHost() *string {
+func (o *PublisherAppsListResponseData) GetClientlessAccess() *bool {
 	if o == nil {
 		return nil
 	}
-	return o.RealHost
-}
-
-func (o *PublisherAppsListResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
-	if o == nil {
-		return nil
-	}
-	return o.ServicePublisherAssignments
-}
-
-func (o *PublisherAppsListResponseData) GetTags() []TagItem {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
+	return o.ClientlessAccess
 }
 
 func (o *PublisherAppsListResponseData) GetTrustSelfSignedCerts() *bool {
@@ -83,43 +82,51 @@ func (o *PublisherAppsListResponseData) GetTrustSelfSignedCerts() *bool {
 	return o.TrustSelfSignedCerts
 }
 
-func (o *PublisherAppsListResponseData) GetUsePublisherDNS() *bool {
+func (o *PublisherAppsListResponseData) GetHost() *string {
 	if o == nil {
 		return nil
 	}
-	return o.UsePublisherDNS
+	return o.Host
 }
 
-type PublisherAppsListResponseStatus string
-
-const (
-	PublisherAppsListResponseStatusSuccess  PublisherAppsListResponseStatus = "success"
-	PublisherAppsListResponseStatusNotFound PublisherAppsListResponseStatus = "not found"
-)
-
-func (e PublisherAppsListResponseStatus) ToPointer() *PublisherAppsListResponseStatus {
-	return &e
-}
-
-func (e *PublisherAppsListResponseStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = PublisherAppsListResponseStatus(v)
+func (o *PublisherAppsListResponseData) GetRealHost() *string {
+	if o == nil {
 		return nil
-	default:
-		return fmt.Errorf("invalid value for PublisherAppsListResponseStatus: %v", v)
 	}
+	return o.RealHost
+}
+
+func (o *PublisherAppsListResponseData) GetProtocols() []ProtocolResponseItem {
+	if o == nil {
+		return nil
+	}
+	return o.Protocols
+}
+
+func (o *PublisherAppsListResponseData) GetTags() []TagItem {
+	if o == nil {
+		return nil
+	}
+	return o.Tags
+}
+
+func (o *PublisherAppsListResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
+	if o == nil {
+		return nil
+	}
+	return o.ServicePublisherAssignments
 }
 
 type PublisherAppsListResponse struct {
-	Data   []PublisherAppsListResponseData  `json:"data,omitempty"`
-	Status *PublisherAppsListResponseStatus `json:"status,omitempty"`
+	Status *Status                         `json:"status,omitempty"`
+	Data   []PublisherAppsListResponseData `json:"data,omitempty"`
+}
+
+func (o *PublisherAppsListResponse) GetStatus() *Status {
+	if o == nil {
+		return nil
+	}
+	return o.Status
 }
 
 func (o *PublisherAppsListResponse) GetData() []PublisherAppsListResponseData {
@@ -127,11 +134,4 @@ func (o *PublisherAppsListResponse) GetData() []PublisherAppsListResponseData {
 		return nil
 	}
 	return o.Data
-}
-
-func (o *PublisherAppsListResponse) GetStatus() *PublisherAppsListResponseStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }

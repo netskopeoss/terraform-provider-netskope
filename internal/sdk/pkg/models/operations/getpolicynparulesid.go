@@ -3,22 +3,15 @@
 package operations
 
 import (
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
 type GetPolicyNpaRulesIDRequest struct {
-	// Return values only from specified fields
-	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 	// npa policy id
 	ID string `pathParam:"style=simple,explode=false,name=id"`
-}
-
-func (o *GetPolicyNpaRulesIDRequest) GetFields() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Fields
+	// Return values only from specified fields
+	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 }
 
 func (o *GetPolicyNpaRulesIDRequest) GetID() string {
@@ -26,6 +19,13 @@ func (o *GetPolicyNpaRulesIDRequest) GetID() string {
 		return ""
 	}
 	return o.ID
+}
+
+func (o *GetPolicyNpaRulesIDRequest) GetFields() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Fields
 }
 
 // GetPolicyNpaRulesIDResponseBody - successful operation
@@ -47,10 +47,10 @@ type GetPolicyNpaRulesIDResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// Invalid request
-	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 	// successful operation
 	Object *GetPolicyNpaRulesIDResponseBody
+	// Invalid request
+	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
 
 func (o *GetPolicyNpaRulesIDResponse) GetContentType() string {
@@ -74,16 +74,16 @@ func (o *GetPolicyNpaRulesIDResponse) GetRawResponse() *http.Response {
 	return o.RawResponse
 }
 
-func (o *GetPolicyNpaRulesIDResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
-	if o == nil {
-		return nil
-	}
-	return o.NpaPolicyResponse400
-}
-
 func (o *GetPolicyNpaRulesIDResponse) GetObject() *GetPolicyNpaRulesIDResponseBody {
 	if o == nil {
 		return nil
 	}
 	return o.Object
+}
+
+func (o *GetPolicyNpaRulesIDResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.NpaPolicyResponse400
 }

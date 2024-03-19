@@ -5,11 +5,10 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
@@ -17,6 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -29,7 +29,7 @@ func NewNPAPublishersBulkUpgradeResource() resource.Resource {
 
 // NPAPublishersBulkUpgradeResource defines the resource implementation.
 type NPAPublishersBulkUpgradeResource struct {
-	client *sdk.SDK
+	client *sdk.TerraformProviderNs
 }
 
 // NPAPublishersBulkUpgradeResourceModel describes the resource data model.
@@ -116,33 +116,38 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 			},
 			"publishers": schema.SingleNestedAttribute{
 				PlanModifiers: []planmodifier.Object{
-					objectplanmodifier.RequiresReplace(),
+					objectplanmodifier.RequiresReplaceIfConfigured(),
 				},
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
 					"apply": schema.SingleNestedAttribute{
 						PlanModifiers: []planmodifier.Object{
-							objectplanmodifier.RequiresReplace(),
+							objectplanmodifier.RequiresReplaceIfConfigured(),
 						},
 						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"upgrade_request": schema.BoolAttribute{
+								Computed: true,
 								PlanModifiers: []planmodifier.Bool{
-									boolplanmodifier.RequiresReplace(),
+									boolplanmodifier.RequiresReplaceIfConfigured(),
 								},
 								Optional:    true,
-								Description: `Default: true`,
+								Default:     booldefault.StaticBool(true),
+								Description: `Requires replacement if changed. ; Default: true`,
 							},
 						},
+						Description: `Requires replacement if changed. `,
 					},
 					"id": schema.ListAttribute{
 						PlanModifiers: []planmodifier.List{
-							listplanmodifier.RequiresReplace(),
+							listplanmodifier.RequiresReplaceIfConfigured(),
 						},
 						Optional:    true,
 						ElementType: types.StringType,
+						Description: `Requires replacement if changed. `,
 					},
 				},
+				Description: `Requires replacement if changed. `,
 			},
 			"status": schema.StringAttribute{
 				Computed:    true,
@@ -164,12 +169,12 @@ func (r *NPAPublishersBulkUpgradeResource) Configure(ctx context.Context, req re
 		return
 	}
 
-	client, ok := req.ProviderData.(*sdk.SDK)
+	client, ok := req.ProviderData.(*sdk.TerraformProviderNs)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *sdk.SDK, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *sdk.TerraformProviderNs, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -180,14 +185,14 @@ func (r *NPAPublishersBulkUpgradeResource) Configure(ctx context.Context, req re
 
 func (r *NPAPublishersBulkUpgradeResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data *NPAPublishersBulkUpgradeResourceModel
-	var item types.Object
+	var plan types.Object
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &item)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	resp.Diagnostics.Append(item.As(ctx, &data, basetypes.ObjectAsOptions{
+	resp.Diagnostics.Append(plan.As(ctx, &data, basetypes.ObjectAsOptions{
 		UnhandledNullAsEmpty:    true,
 		UnhandledUnknownAsEmpty: true,
 	})...)
@@ -196,7 +201,7 @@ func (r *NPAPublishersBulkUpgradeResource) Create(ctx context.Context, req resou
 		return
 	}
 
-	request := *data.ToCreateSDKType()
+	request := *data.ToSharedPublisherBulkRequest()
 	res, err := r.client.PutInfrastructurePublishersBulk(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -217,7 +222,8 @@ func (r *NPAPublishersBulkUpgradeResource) Create(ctx context.Context, req resou
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.PublishersBulkResponse)
+	data.RefreshFromSharedPublishersBulkResponse(res.PublishersBulkResponse)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -249,6 +255,13 @@ func (r *NPAPublishersBulkUpgradeResource) Read(ctx context.Context, req resourc
 
 func (r *NPAPublishersBulkUpgradeResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data *NPAPublishersBulkUpgradeResourceModel
+	var plan types.Object
+
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	merge(ctx, req, resp, &data)
 	if resp.Diagnostics.HasError() {
 		return

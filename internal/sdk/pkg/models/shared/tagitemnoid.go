@@ -3,7 +3,7 @@
 package shared
 
 import (
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/utils"
 )
 
 type TagItemNoID struct {

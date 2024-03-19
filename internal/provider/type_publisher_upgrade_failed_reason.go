@@ -3,6 +3,6 @@
 package provider
 
 type PublisherUpgradeFailedReason struct {
-	UpgradeFailedReason *UpgradeFailedReason         `tfsdk:"upgrade_failed_reason"`
 	Two                 *PublisherBulkItemAssessment `tfsdk:"two"`
+	UpgradeFailedReason *UpgradeFailedReason         `tfsdk:"upgrade_failed_reason"`
 }

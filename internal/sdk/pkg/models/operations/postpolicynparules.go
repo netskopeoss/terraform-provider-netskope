@@ -3,7 +3,7 @@
 package operations
 
 import (
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -26,10 +26,10 @@ type PostPolicyNpaRulesResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// Invalid request
-	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 	// successful operation
 	Object *PostPolicyNpaRulesResponseBody
+	// Invalid request
+	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
 
 func (o *PostPolicyNpaRulesResponse) GetContentType() string {
@@ -53,16 +53,16 @@ func (o *PostPolicyNpaRulesResponse) GetRawResponse() *http.Response {
 	return o.RawResponse
 }
 
-func (o *PostPolicyNpaRulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
-	if o == nil {
-		return nil
-	}
-	return o.NpaPolicyResponse400
-}
-
 func (o *PostPolicyNpaRulesResponse) GetObject() *PostPolicyNpaRulesResponseBody {
 	if o == nil {
 		return nil
 	}
 	return o.Object
+}
+
+func (o *PostPolicyNpaRulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.NpaPolicyResponse400
 }

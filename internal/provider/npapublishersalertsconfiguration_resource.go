@@ -5,12 +5,13 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -23,7 +24,7 @@ func NewNPAPublishersAlertsConfigurationResource() resource.Resource {
 
 // NPAPublishersAlertsConfigurationResource defines the resource implementation.
 type NPAPublishersAlertsConfigurationResource struct {
-	client *sdk.SDK
+	client *sdk.TerraformProviderNs
 }
 
 // NPAPublishersAlertsConfigurationResourceModel describes the resource data model.
@@ -51,6 +52,9 @@ func (r *NPAPublishersAlertsConfigurationResource) Schema(ctx context.Context, r
 				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
+				Validators: []validator.List{
+					listvalidator.SizeAtLeast(1),
+				},
 			},
 			"selected_users": schema.StringAttribute{
 				Computed: true,
@@ -66,12 +70,12 @@ func (r *NPAPublishersAlertsConfigurationResource) Configure(ctx context.Context
 		return
 	}
 
-	client, ok := req.ProviderData.(*sdk.SDK)
+	client, ok := req.ProviderData.(*sdk.TerraformProviderNs)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *sdk.SDK, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *sdk.TerraformProviderNs, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -82,14 +86,14 @@ func (r *NPAPublishersAlertsConfigurationResource) Configure(ctx context.Context
 
 func (r *NPAPublishersAlertsConfigurationResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data *NPAPublishersAlertsConfigurationResourceModel
-	var item types.Object
+	var plan types.Object
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &item)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	resp.Diagnostics.Append(item.As(ctx, &data, basetypes.ObjectAsOptions{
+	resp.Diagnostics.Append(plan.As(ctx, &data, basetypes.ObjectAsOptions{
 		UnhandledNullAsEmpty:    true,
 		UnhandledUnknownAsEmpty: true,
 	})...)
@@ -98,7 +102,7 @@ func (r *NPAPublishersAlertsConfigurationResource) Create(ctx context.Context, r
 		return
 	}
 
-	request := *data.ToCreateSDKType()
+	request := *data.ToSharedPublishersAlertPutRequest()
 	res, err := r.client.PutInfrastructurePublishersAlertsconfiguration(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -115,11 +119,12 @@ func (r *NPAPublishersAlertsConfigurationResource) Create(ctx context.Context, r
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PublishersAlertGetResponse == nil || res.PublishersAlertGetResponse.Data == nil {
+	if res.PublishersAlertGetResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.PublishersAlertGetResponse.Data)
+	data.RefreshFromSharedPublishersAlertGetResponseData(res.PublishersAlertGetResponse.Data)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -159,11 +164,11 @@ func (r *NPAPublishersAlertsConfigurationResource) Read(ctx context.Context, req
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PublishersAlertGetResponse == nil || res.PublishersAlertGetResponse.Data == nil {
+	if res.PublishersAlertGetResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.PublishersAlertGetResponse.Data)
+	data.RefreshFromSharedPublishersAlertGetResponseData(res.PublishersAlertGetResponse.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -171,12 +176,19 @@ func (r *NPAPublishersAlertsConfigurationResource) Read(ctx context.Context, req
 
 func (r *NPAPublishersAlertsConfigurationResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data *NPAPublishersAlertsConfigurationResourceModel
+	var plan types.Object
+
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	merge(ctx, req, resp, &data)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	request := *data.ToUpdateSDKType()
+	request := *data.ToSharedPublishersAlertPutRequest()
 	res, err := r.client.PutInfrastructurePublishersAlertsconfiguration(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -193,11 +205,12 @@ func (r *NPAPublishersAlertsConfigurationResource) Update(ctx context.Context, r
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PublishersAlertGetResponse == nil || res.PublishersAlertGetResponse.Data == nil {
+	if res.PublishersAlertGetResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromUpdateResponse(res.PublishersAlertGetResponse.Data)
+	data.RefreshFromSharedPublishersAlertGetResponseData(res.PublishersAlertGetResponse.Data)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
