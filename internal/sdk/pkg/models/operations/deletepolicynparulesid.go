@@ -3,7 +3,7 @@
 package operations
 
 import (
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -38,10 +38,10 @@ type DeletePolicyNpaRulesIDResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// Invalid request
-	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 	// successful operation
 	Object *DeletePolicyNpaRulesIDResponseBody
+	// Invalid request
+	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
 
 func (o *DeletePolicyNpaRulesIDResponse) GetContentType() string {
@@ -65,16 +65,16 @@ func (o *DeletePolicyNpaRulesIDResponse) GetRawResponse() *http.Response {
 	return o.RawResponse
 }
 
-func (o *DeletePolicyNpaRulesIDResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
-	if o == nil {
-		return nil
-	}
-	return o.NpaPolicyResponse400
-}
-
 func (o *DeletePolicyNpaRulesIDResponse) GetObject() *DeletePolicyNpaRulesIDResponseBody {
 	if o == nil {
 		return nil
 	}
 	return o.Object
+}
+
+func (o *DeletePolicyNpaRulesIDResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.NpaPolicyResponse400
 }

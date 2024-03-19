@@ -5,23 +5,23 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
-// PostInfrastructurePublishersQueryParamSilent - flag to skip output except status code
-type PostInfrastructurePublishersQueryParamSilent string
+// Silent - flag to skip output except status code
+type Silent string
 
 const (
-	PostInfrastructurePublishersQueryParamSilentOne  PostInfrastructurePublishersQueryParamSilent = "1"
-	PostInfrastructurePublishersQueryParamSilentZero PostInfrastructurePublishersQueryParamSilent = "0"
+	SilentOne  Silent = "1"
+	SilentZero Silent = "0"
 )
 
-func (e PostInfrastructurePublishersQueryParamSilent) ToPointer() *PostInfrastructurePublishersQueryParamSilent {
+func (e Silent) ToPointer() *Silent {
 	return &e
 }
 
-func (e *PostInfrastructurePublishersQueryParamSilent) UnmarshalJSON(data []byte) error {
+func (e *Silent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -30,17 +30,24 @@ func (e *PostInfrastructurePublishersQueryParamSilent) UnmarshalJSON(data []byte
 	case "1":
 		fallthrough
 	case "0":
-		*e = PostInfrastructurePublishersQueryParamSilent(v)
+		*e = Silent(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PostInfrastructurePublishersQueryParamSilent: %v", v)
+		return fmt.Errorf("invalid value for Silent: %v", v)
 	}
 }
 
 type PostInfrastructurePublishersRequest struct {
-	PublisherPostRequest shared.PublisherPostRequest `request:"mediaType=application/json"`
 	// flag to skip output except status code
-	Silent *PostInfrastructurePublishersQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
+	Silent               *Silent                     `queryParam:"style=form,explode=true,name=silent"`
+	PublisherPostRequest shared.PublisherPostRequest `request:"mediaType=application/json"`
+}
+
+func (o *PostInfrastructurePublishersRequest) GetSilent() *Silent {
+	if o == nil {
+		return nil
+	}
+	return o.Silent
 }
 
 func (o *PostInfrastructurePublishersRequest) GetPublisherPostRequest() shared.PublisherPostRequest {
@@ -48,13 +55,6 @@ func (o *PostInfrastructurePublishersRequest) GetPublisherPostRequest() shared.P
 		return shared.PublisherPostRequest{}
 	}
 	return o.PublisherPostRequest
-}
-
-func (o *PostInfrastructurePublishersRequest) GetSilent() *PostInfrastructurePublishersQueryParamSilent {
-	if o == nil {
-		return nil
-	}
-	return o.Silent
 }
 
 type PostInfrastructurePublishersResponse struct {

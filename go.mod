@@ -1,6 +1,6 @@
-module github.com/netskope/terraform-provider-ns
+module github.com/speakeasy/terraform-provider-terraform
 
-go 1.18
+go 1.20
 
 require (
 	github.com/cenkalti/backoff/v4 v4.2.0

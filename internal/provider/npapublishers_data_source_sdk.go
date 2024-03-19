@@ -5,76 +5,58 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
 )
 
-func (r *NPAPublishersDataSourceModel) RefreshFromGetResponse(resp *shared.PublisherResponseData) {
-	if resp.Assessment == nil {
-		r.Assessment = types.StringNull()
-	} else {
-		assessmentResult, _ := json.Marshal(resp.Assessment)
-		r.Assessment = types.StringValue(string(assessmentResult))
-	}
-	if resp.CommonName != nil {
-		r.CommonName = types.StringValue(*resp.CommonName)
-	} else {
-		r.CommonName = types.StringNull()
-	}
-	if resp.ID != nil {
-		r.ID = types.Int64Value(int64(*resp.ID))
-	} else {
-		r.ID = types.Int64Null()
-	}
-	if resp.Lbrokerconnect != nil {
-		r.Lbrokerconnect = types.BoolValue(*resp.Lbrokerconnect)
-	} else {
-		r.Lbrokerconnect = types.BoolNull()
-	}
-	if resp.Name != nil {
-		r.Name = types.StringValue(*resp.Name)
-	} else {
-		r.Name = types.StringNull()
-	}
-	if resp.PublisherUpgradeProfileID != nil {
-		r.PublisherUpgradeProfileID = types.Int64Value(int64(*resp.PublisherUpgradeProfileID))
-	} else {
-		r.PublisherUpgradeProfileID = types.Int64Null()
-	}
-	if resp.Registered != nil {
-		r.Registered = types.BoolValue(*resp.Registered)
-	} else {
-		r.Registered = types.BoolNull()
-	}
-	if resp.Status != nil {
-		r.Status = types.StringValue(string(*resp.Status))
-	} else {
-		r.Status = types.StringNull()
-	}
-	if resp.StitcherID != nil {
-		r.StitcherID = types.Int64Value(int64(*resp.StitcherID))
-	} else {
-		r.StitcherID = types.Int64Null()
-	}
-	if len(r.Tags) > len(resp.Tags) {
-		r.Tags = r.Tags[:len(resp.Tags)]
-	}
-	for tagsCount, tagsItem := range resp.Tags {
-		var tags1 TagItem
-		if tagsItem.TagID != nil {
-			tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
+func (r *NPAPublishersDataSourceModel) RefreshFromSharedPublisherResponseData(resp *shared.PublisherResponseData) {
+	if resp != nil {
+		if resp.Assessment == nil {
+			r.Assessment = types.StringNull()
 		} else {
-			tags1.TagID = types.Int64Null()
+			assessmentResult, _ := json.Marshal(resp.Assessment)
+			r.Assessment = types.StringValue(string(assessmentResult))
 		}
-		if tagsItem.TagName != nil {
-			tags1.TagName = types.StringValue(*tagsItem.TagName)
+		r.CommonName = types.StringPointerValue(resp.CommonName)
+		if resp.ID != nil {
+			r.ID = types.Int64Value(int64(*resp.ID))
 		} else {
-			tags1.TagName = types.StringNull()
+			r.ID = types.Int64Null()
 		}
-		if tagsCount+1 > len(r.Tags) {
-			r.Tags = append(r.Tags, tags1)
+		r.Lbrokerconnect = types.BoolPointerValue(resp.Lbrokerconnect)
+		r.Name = types.StringPointerValue(resp.Name)
+		if resp.PublisherUpgradeProfileID != nil {
+			r.PublisherUpgradeProfileID = types.Int64Value(int64(*resp.PublisherUpgradeProfileID))
 		} else {
-			r.Tags[tagsCount].TagID = tags1.TagID
-			r.Tags[tagsCount].TagName = tags1.TagName
+			r.PublisherUpgradeProfileID = types.Int64Null()
+		}
+		r.Registered = types.BoolPointerValue(resp.Registered)
+		if resp.Status != nil {
+			r.Status = types.StringValue(string(*resp.Status))
+		} else {
+			r.Status = types.StringNull()
+		}
+		if resp.StitcherID != nil {
+			r.StitcherID = types.Int64Value(int64(*resp.StitcherID))
+		} else {
+			r.StitcherID = types.Int64Null()
+		}
+		if len(r.Tags) > len(resp.Tags) {
+			r.Tags = r.Tags[:len(resp.Tags)]
+		}
+		for tagsCount, tagsItem := range resp.Tags {
+			var tags1 TagItem
+			if tagsItem.TagID != nil {
+				tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
+			} else {
+				tags1.TagID = types.Int64Null()
+			}
+			tags1.TagName = types.StringPointerValue(tagsItem.TagName)
+			if tagsCount+1 > len(r.Tags) {
+				r.Tags = append(r.Tags, tags1)
+			} else {
+				r.Tags[tagsCount].TagID = tags1.TagID
+				r.Tags[tagsCount].TagName = tags1.TagName
+			}
 		}
 	}
 }

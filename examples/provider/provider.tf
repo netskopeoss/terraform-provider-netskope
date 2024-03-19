@@ -1,12 +1,12 @@
 terraform {
   required_providers {
-    ns = {
-      source  = "netskope/ns"
-      version = "0.0.1"
+    terraform = {
+      source  = "speakeasy/terraform"
+      version = "0.0.2"
     }
   }
 }
 
-provider "ns" {
+provider "terraform" {
   # Configuration options
 }

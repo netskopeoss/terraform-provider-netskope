@@ -5,23 +5,23 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
-// PutInfrastructurePublishersPublisherIDQueryParamSilent - flag to skip output except status code
-type PutInfrastructurePublishersPublisherIDQueryParamSilent string
+// QueryParamSilent - flag to skip output except status code
+type QueryParamSilent string
 
 const (
-	PutInfrastructurePublishersPublisherIDQueryParamSilentOne  PutInfrastructurePublishersPublisherIDQueryParamSilent = "1"
-	PutInfrastructurePublishersPublisherIDQueryParamSilentZero PutInfrastructurePublishersPublisherIDQueryParamSilent = "0"
+	QueryParamSilentOne  QueryParamSilent = "1"
+	QueryParamSilentZero QueryParamSilent = "0"
 )
 
-func (e PutInfrastructurePublishersPublisherIDQueryParamSilent) ToPointer() *PutInfrastructurePublishersPublisherIDQueryParamSilent {
+func (e QueryParamSilent) ToPointer() *QueryParamSilent {
 	return &e
 }
 
-func (e *PutInfrastructurePublishersPublisherIDQueryParamSilent) UnmarshalJSON(data []byte) error {
+func (e *QueryParamSilent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -30,19 +30,19 @@ func (e *PutInfrastructurePublishersPublisherIDQueryParamSilent) UnmarshalJSON(d
 	case "1":
 		fallthrough
 	case "0":
-		*e = PutInfrastructurePublishersPublisherIDQueryParamSilent(v)
+		*e = QueryParamSilent(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PutInfrastructurePublishersPublisherIDQueryParamSilent: %v", v)
+		return fmt.Errorf("invalid value for QueryParamSilent: %v", v)
 	}
 }
 
 type PutInfrastructurePublishersPublisherIDRequest struct {
 	// publisher id
-	PublisherID         int                        `pathParam:"style=simple,explode=false,name=publisher_id"`
-	PublisherPutRequest shared.PublisherPutRequest `request:"mediaType=application/json"`
+	PublisherID int `pathParam:"style=simple,explode=false,name=publisher_id"`
 	// flag to skip output except status code
-	Silent *PutInfrastructurePublishersPublisherIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
+	Silent              *QueryParamSilent          `queryParam:"style=form,explode=true,name=silent"`
+	PublisherPutRequest shared.PublisherPutRequest `request:"mediaType=application/json"`
 }
 
 func (o *PutInfrastructurePublishersPublisherIDRequest) GetPublisherID() int {
@@ -52,18 +52,18 @@ func (o *PutInfrastructurePublishersPublisherIDRequest) GetPublisherID() int {
 	return o.PublisherID
 }
 
+func (o *PutInfrastructurePublishersPublisherIDRequest) GetSilent() *QueryParamSilent {
+	if o == nil {
+		return nil
+	}
+	return o.Silent
+}
+
 func (o *PutInfrastructurePublishersPublisherIDRequest) GetPublisherPutRequest() shared.PublisherPutRequest {
 	if o == nil {
 		return shared.PublisherPutRequest{}
 	}
 	return o.PublisherPutRequest
-}
-
-func (o *PutInfrastructurePublishersPublisherIDRequest) GetSilent() *PutInfrastructurePublishersPublisherIDQueryParamSilent {
-	if o == nil {
-		return nil
-	}
-	return o.Silent
 }
 
 type PutInfrastructurePublishersPublisherIDResponse struct {

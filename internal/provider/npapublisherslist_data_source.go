@@ -5,13 +5,12 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -24,7 +23,7 @@ func NewNPAPublishersListDataSource() datasource.DataSource {
 
 // NPAPublishersListDataSource is the data source implementation.
 type NPAPublishersListDataSource struct {
-	client *sdk.SDK
+	client *sdk.TerraformProviderNs
 }
 
 // NPAPublishersListDataSourceModel describes the data model.
@@ -59,6 +58,10 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 								"assessment": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
+										"two": schema.SingleNestedAttribute{
+											Computed:   true,
+											Attributes: map[string]schema.Attribute{},
+										},
 										"assessment": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
@@ -81,10 +84,6 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 													Computed: true,
 												},
 											},
-										},
-										"two": schema.SingleNestedAttribute{
-											Computed:   true,
-											Attributes: map[string]schema.Attribute{},
 										},
 									},
 								},
@@ -132,6 +131,10 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 								"upgrade_failed_reason": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
+										"two": schema.SingleNestedAttribute{
+											Computed:   true,
+											Attributes: map[string]schema.Attribute{},
+										},
 										"upgrade_failed_reason": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
@@ -148,10 +151,6 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 													Computed: true,
 												},
 											},
-										},
-										"two": schema.SingleNestedAttribute{
-											Computed:   true,
-											Attributes: map[string]schema.Attribute{},
 										},
 									},
 								},
@@ -191,12 +190,12 @@ func (r *NPAPublishersListDataSource) Configure(ctx context.Context, req datasou
 		return
 	}
 
-	client, ok := req.ProviderData.(*sdk.SDK)
+	client, ok := req.ProviderData.(*sdk.TerraformProviderNs)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *sdk.SDK, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *sdk.TerraformProviderNs, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -252,7 +251,7 @@ func (r *NPAPublishersListDataSource) Read(ctx context.Context, req datasource.R
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.PublishersGetResponse)
+	data.RefreshFromSharedPublishersGetResponse(res.PublishersGetResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

@@ -3,14 +3,14 @@
 package shared
 
 import (
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/utils"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/utils"
 )
 
 type PublisherPostRequest struct {
-	Lbrokerconnect             *bool         `default:"false" json:"lbrokerconnect"`
 	Name                       *string       `default:"publisher_name" json:"name"`
-	PublisherUpgradeProfilesID *int          `default:"1" json:"publisher_upgrade_profiles_id"`
+	Lbrokerconnect             *bool         `default:"false" json:"lbrokerconnect"`
 	Tags                       []TagItemNoID `json:"tags,omitempty"`
+	PublisherUpgradeProfilesID *int          `default:"1" json:"publisher_upgrade_profiles_id"`
 }
 
 func (p PublisherPostRequest) MarshalJSON() ([]byte, error) {
@@ -24,13 +24,6 @@ func (p *PublisherPostRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *PublisherPostRequest) GetLbrokerconnect() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Lbrokerconnect
-}
-
 func (o *PublisherPostRequest) GetName() *string {
 	if o == nil {
 		return nil
@@ -38,11 +31,11 @@ func (o *PublisherPostRequest) GetName() *string {
 	return o.Name
 }
 
-func (o *PublisherPostRequest) GetPublisherUpgradeProfilesID() *int {
+func (o *PublisherPostRequest) GetLbrokerconnect() *bool {
 	if o == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfilesID
+	return o.Lbrokerconnect
 }
 
 func (o *PublisherPostRequest) GetTags() []TagItemNoID {
@@ -50,4 +43,11 @@ func (o *PublisherPostRequest) GetTags() []TagItemNoID {
 		return nil
 	}
 	return o.Tags
+}
+
+func (o *PublisherPostRequest) GetPublisherUpgradeProfilesID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherUpgradeProfilesID
 }

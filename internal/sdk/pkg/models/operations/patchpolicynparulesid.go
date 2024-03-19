@@ -5,7 +5,7 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -39,10 +39,10 @@ func (e *PatchPolicyNpaRulesIDQueryParamSilent) UnmarshalJSON(data []byte) error
 
 type PatchPolicyNpaRulesIDRequest struct {
 	// policy rule id
-	ID               string                  `pathParam:"style=simple,explode=false,name=id"`
-	NpaPolicyRequest shared.NpaPolicyRequest `request:"mediaType=application/json"`
+	ID string `pathParam:"style=simple,explode=false,name=id"`
 	// flag to skip output except status code
-	Silent *PatchPolicyNpaRulesIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
+	Silent           *PatchPolicyNpaRulesIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
+	NpaPolicyRequest shared.NpaPolicyRequest                `request:"mediaType=application/json"`
 }
 
 func (o *PatchPolicyNpaRulesIDRequest) GetID() string {
@@ -52,18 +52,18 @@ func (o *PatchPolicyNpaRulesIDRequest) GetID() string {
 	return o.ID
 }
 
-func (o *PatchPolicyNpaRulesIDRequest) GetNpaPolicyRequest() shared.NpaPolicyRequest {
-	if o == nil {
-		return shared.NpaPolicyRequest{}
-	}
-	return o.NpaPolicyRequest
-}
-
 func (o *PatchPolicyNpaRulesIDRequest) GetSilent() *PatchPolicyNpaRulesIDQueryParamSilent {
 	if o == nil {
 		return nil
 	}
 	return o.Silent
+}
+
+func (o *PatchPolicyNpaRulesIDRequest) GetNpaPolicyRequest() shared.NpaPolicyRequest {
+	if o == nil {
+		return shared.NpaPolicyRequest{}
+	}
+	return o.NpaPolicyRequest
 }
 
 // PatchPolicyNpaRulesIDResponseBody - successful operation
@@ -85,10 +85,10 @@ type PatchPolicyNpaRulesIDResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// Invalid request
-	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 	// successful operation
 	Object *PatchPolicyNpaRulesIDResponseBody
+	// Invalid request
+	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
 
 func (o *PatchPolicyNpaRulesIDResponse) GetContentType() string {
@@ -112,16 +112,16 @@ func (o *PatchPolicyNpaRulesIDResponse) GetRawResponse() *http.Response {
 	return o.RawResponse
 }
 
-func (o *PatchPolicyNpaRulesIDResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
-	if o == nil {
-		return nil
-	}
-	return o.NpaPolicyResponse400
-}
-
 func (o *PatchPolicyNpaRulesIDResponse) GetObject() *PatchPolicyNpaRulesIDResponseBody {
 	if o == nil {
 		return nil
 	}
 	return o.Object
+}
+
+func (o *PatchPolicyNpaRulesIDResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
+	if o == nil {
+		return nil
+	}
+	return o.NpaPolicyResponse400
 }

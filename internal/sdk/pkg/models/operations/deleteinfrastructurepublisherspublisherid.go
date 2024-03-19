@@ -5,7 +5,7 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -21,18 +21,18 @@ func (o *DeleteInfrastructurePublishersPublisherIDRequest) GetPublisherID() int 
 	return o.PublisherID
 }
 
-type DeleteInfrastructurePublishersPublisherIDStatus string
+type Status string
 
 const (
-	DeleteInfrastructurePublishersPublisherIDStatusSuccess DeleteInfrastructurePublishersPublisherIDStatus = "success"
-	DeleteInfrastructurePublishersPublisherIDStatusError   DeleteInfrastructurePublishersPublisherIDStatus = "error"
+	StatusSuccess Status = "success"
+	StatusError   Status = "error"
 )
 
-func (e DeleteInfrastructurePublishersPublisherIDStatus) ToPointer() *DeleteInfrastructurePublishersPublisherIDStatus {
+func (e Status) ToPointer() *Status {
 	return &e
 }
 
-func (e *DeleteInfrastructurePublishersPublisherIDStatus) UnmarshalJSON(data []byte) error {
+func (e *Status) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -41,19 +41,19 @@ func (e *DeleteInfrastructurePublishersPublisherIDStatus) UnmarshalJSON(data []b
 	case "success":
 		fallthrough
 	case "error":
-		*e = DeleteInfrastructurePublishersPublisherIDStatus(v)
+		*e = Status(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for DeleteInfrastructurePublishersPublisherIDStatus: %v", v)
+		return fmt.Errorf("invalid value for Status: %v", v)
 	}
 }
 
 // DeleteInfrastructurePublishersPublisherIDResponseBody - successful operation
 type DeleteInfrastructurePublishersPublisherIDResponseBody struct {
-	Status *DeleteInfrastructurePublishersPublisherIDStatus `json:"status,omitempty"`
+	Status *Status `json:"status,omitempty"`
 }
 
-func (o *DeleteInfrastructurePublishersPublisherIDResponseBody) GetStatus() *DeleteInfrastructurePublishersPublisherIDStatus {
+func (o *DeleteInfrastructurePublishersPublisherIDResponseBody) GetStatus() *Status {
 	if o == nil {
 		return nil
 	}

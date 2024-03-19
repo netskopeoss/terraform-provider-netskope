@@ -5,7 +5,7 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
 	"net/http"
 )
 
@@ -21,11 +21,11 @@ func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenRequest) GetPub
 	return o.PublisherID
 }
 
-type PostInfrastructurePublishersPublisherIDRegistrationTokenData struct {
+type Data struct {
 	Token string `json:"token"`
 }
 
-func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenData) GetToken() string {
+func (o *Data) GetToken() string {
 	if o == nil {
 		return ""
 	}
@@ -61,13 +61,13 @@ func (e *PostInfrastructurePublishersPublisherIDRegistrationTokenStatus) Unmarsh
 
 // PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody - successful operation
 type PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody struct {
-	Data   PostInfrastructurePublishersPublisherIDRegistrationTokenData   `json:"data"`
+	Data   Data                                                           `json:"data"`
 	Status PostInfrastructurePublishersPublisherIDRegistrationTokenStatus `json:"status"`
 }
 
-func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody) GetData() PostInfrastructurePublishersPublisherIDRegistrationTokenData {
+func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody) GetData() Data {
 	if o == nil {
-		return PostInfrastructurePublishersPublisherIDRegistrationTokenData{}
+		return Data{}
 	}
 	return o.Data
 }

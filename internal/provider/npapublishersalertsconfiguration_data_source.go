@@ -5,12 +5,11 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -23,7 +22,7 @@ func NewNPAPublishersAlertsConfigurationDataSource() datasource.DataSource {
 
 // NPAPublishersAlertsConfigurationDataSource is the data source implementation.
 type NPAPublishersAlertsConfigurationDataSource struct {
-	client *sdk.SDK
+	client *sdk.TerraformProviderNs
 }
 
 // NPAPublishersAlertsConfigurationDataSourceModel describes the data model.
@@ -65,12 +64,12 @@ func (r *NPAPublishersAlertsConfigurationDataSource) Configure(ctx context.Conte
 		return
 	}
 
-	client, ok := req.ProviderData.(*sdk.SDK)
+	client, ok := req.ProviderData.(*sdk.TerraformProviderNs)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *sdk.SDK, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *sdk.TerraformProviderNs, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -113,11 +112,11 @@ func (r *NPAPublishersAlertsConfigurationDataSource) Read(ctx context.Context, r
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PublishersAlertGetResponse == nil || res.PublishersAlertGetResponse.Data == nil {
+	if res.PublishersAlertGetResponse == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.PublishersAlertGetResponse.Data)
+	data.RefreshFromSharedPublishersAlertGetResponseData(res.PublishersAlertGetResponse.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
