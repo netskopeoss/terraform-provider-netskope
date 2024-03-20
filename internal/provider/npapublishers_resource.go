@@ -123,10 +123,8 @@ func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaR
 							Computed: true,
 						},
 						"tag_name": schema.StringAttribute{
-							Computed:    true,
-							Optional:    true,
-							Default:     stringdefault.StaticString("tag_name"),
-							Description: `Default: "tag_name"`,
+							Computed: true,
+							Optional: true,
 						},
 					},
 				},

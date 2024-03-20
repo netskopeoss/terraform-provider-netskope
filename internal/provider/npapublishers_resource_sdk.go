@@ -122,21 +122,21 @@ func (r *NPAPublishersResourceModel) ToSharedPublisherPutRequest() *shared.Publi
 	}
 	var tags []shared.TagItem = nil
 	for _, tagsItem := range r.Tags {
-		tagID := new(int)
-		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
-			*tagID = int(tagsItem.TagID.ValueInt64())
-		} else {
-			tagID = nil
-		}
 		tagName := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
 			*tagName = tagsItem.TagName.ValueString()
 		} else {
 			tagName = nil
 		}
+		tagID := new(int)
+		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
+			*tagID = int(tagsItem.TagID.ValueInt64())
+		} else {
+			tagID = nil
+		}
 		tags = append(tags, shared.TagItem{
-			TagID:   tagID,
 			TagName: tagName,
+			TagID:   tagID,
 		})
 	}
 	out := shared.PublisherPutRequest{
