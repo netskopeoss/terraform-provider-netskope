@@ -21,18 +21,18 @@ func (o *DeleteInfrastructurePublishersPublisherIDRequest) GetPublisherID() int 
 	return o.PublisherID
 }
 
-type Status string
+type DeleteInfrastructurePublishersPublisherIDStatus string
 
 const (
-	StatusSuccess Status = "success"
-	StatusError   Status = "error"
+	DeleteInfrastructurePublishersPublisherIDStatusSuccess DeleteInfrastructurePublishersPublisherIDStatus = "success"
+	DeleteInfrastructurePublishersPublisherIDStatusError   DeleteInfrastructurePublishersPublisherIDStatus = "error"
 )
 
-func (e Status) ToPointer() *Status {
+func (e DeleteInfrastructurePublishersPublisherIDStatus) ToPointer() *DeleteInfrastructurePublishersPublisherIDStatus {
 	return &e
 }
 
-func (e *Status) UnmarshalJSON(data []byte) error {
+func (e *DeleteInfrastructurePublishersPublisherIDStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -41,19 +41,19 @@ func (e *Status) UnmarshalJSON(data []byte) error {
 	case "success":
 		fallthrough
 	case "error":
-		*e = Status(v)
+		*e = DeleteInfrastructurePublishersPublisherIDStatus(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for Status: %v", v)
+		return fmt.Errorf("invalid value for DeleteInfrastructurePublishersPublisherIDStatus: %v", v)
 	}
 }
 
 // DeleteInfrastructurePublishersPublisherIDResponseBody - successful operation
 type DeleteInfrastructurePublishersPublisherIDResponseBody struct {
-	Status *Status `json:"status,omitempty"`
+	Status *DeleteInfrastructurePublishersPublisherIDStatus `json:"status,omitempty"`
 }
 
-func (o *DeleteInfrastructurePublishersPublisherIDResponseBody) GetStatus() *Status {
+func (o *DeleteInfrastructurePublishersPublisherIDResponseBody) GetStatus() *DeleteInfrastructurePublishersPublisherIDStatus {
 	if o == nil {
 		return nil
 	}

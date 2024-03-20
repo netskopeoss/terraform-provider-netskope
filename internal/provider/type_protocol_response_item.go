@@ -5,8 +5,6 @@ package provider
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type ProtocolResponseItem struct {
-	ID        types.Int64  `tfsdk:"id"`
 	Port      types.String `tfsdk:"port"`
-	ServiceID types.Int64  `tfsdk:"service_id"`
 	Transport types.String `tfsdk:"transport"`
 }

@@ -119,7 +119,7 @@ func (r *PublisherTokenResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsData(res.Object.Data)
+	data.RefreshFromOperationsPostInfrastructurePublishersPublisherIDRegistrationTokenData(res.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state

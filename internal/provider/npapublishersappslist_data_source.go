@@ -64,13 +64,7 @@ func (r *NPAPublishersAppsListDataSource) Schema(ctx context.Context, req dataso
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
-									"id": schema.Int64Attribute{
-										Computed: true,
-									},
 									"port": schema.StringAttribute{
-										Computed: true,
-									},
-									"service_id": schema.Int64Attribute{
 										Computed: true,
 									},
 									"transport": schema.StringAttribute{

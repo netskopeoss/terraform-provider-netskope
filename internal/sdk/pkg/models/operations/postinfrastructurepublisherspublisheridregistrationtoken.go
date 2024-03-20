@@ -21,11 +21,11 @@ func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenRequest) GetPub
 	return o.PublisherID
 }
 
-type Data struct {
+type PostInfrastructurePublishersPublisherIDRegistrationTokenData struct {
 	Token string `json:"token"`
 }
 
-func (o *Data) GetToken() string {
+func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenData) GetToken() string {
 	if o == nil {
 		return ""
 	}
@@ -61,13 +61,13 @@ func (e *PostInfrastructurePublishersPublisherIDRegistrationTokenStatus) Unmarsh
 
 // PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody - successful operation
 type PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody struct {
-	Data   Data                                                           `json:"data"`
+	Data   PostInfrastructurePublishersPublisherIDRegistrationTokenData   `json:"data"`
 	Status PostInfrastructurePublishersPublisherIDRegistrationTokenStatus `json:"status"`
 }
 
-func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody) GetData() Data {
+func (o *PostInfrastructurePublishersPublisherIDRegistrationTokenResponseBody) GetData() PostInfrastructurePublishersPublisherIDRegistrationTokenData {
 	if o == nil {
-		return Data{}
+		return PostInfrastructurePublishersPublisherIDRegistrationTokenData{}
 	}
 	return o.Data
 }
