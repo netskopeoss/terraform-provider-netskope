@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -113,7 +113,7 @@ func (r *NPAPublisherUpgradeProfileDataSource) Read(ctx context.Context, req dat
 	}
 
 	upgradeProfileID := int(data.ID.ValueInt64())
-	request := operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest{
+	request := operations.GetNPAPublisherUpgradeProfilesRequest{
 		UpgradeProfileID: upgradeProfileID,
 	}
 	res, err := r.client.NPAPublisherUpgradeProfiles.Read(ctx, request)

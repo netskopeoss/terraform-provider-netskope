@@ -5,7 +5,7 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfilePostRequest() *shared.PublisherUpgradeProfilePostRequest {

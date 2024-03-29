@@ -5,7 +5,8 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetResponse(resp *shared.PublishersGetResponse) {
@@ -13,18 +14,18 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 		if resp.Data == nil {
 			r.Data = nil
 		} else {
-			r.Data = &Data{}
+			r.Data = &tfTypes.Data{}
 			if len(r.Data.Publishers) > len(resp.Data.Publishers) {
 				r.Data.Publishers = r.Data.Publishers[:len(resp.Data.Publishers)]
 			}
 			for publishersCount, publishersItem := range resp.Data.Publishers {
-				var publishers1 Publisher
+				var publishers1 tfTypes.Publisher
 				publishers1.AppsCount = types.Int64Value(publishersItem.AppsCount)
 				if publishersItem.Assessment.Two != nil {
-					publishers1.Assessment.Two = &PublisherBulkItemAssessment{}
+					publishers1.Assessment.Two = &tfTypes.PublisherBulkItemAssessment{}
 				}
 				if publishersItem.Assessment.Assessment != nil {
-					publishers1.Assessment.Assessment = &Assessment{}
+					publishers1.Assessment.Assessment = &tfTypes.Assessment{}
 					publishers1.Assessment.Assessment.EeeSupport = types.BoolValue(publishersItem.Assessment.Assessment.EeeSupport)
 					publishers1.Assessment.Assessment.HddFree = types.StringValue(publishersItem.Assessment.Assessment.HddFree)
 					publishers1.Assessment.Assessment.HddTotal = types.StringValue(publishersItem.Assessment.Assessment.HddTotal)
@@ -33,7 +34,7 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 					publishers1.Assessment.Assessment.Version = types.StringValue(publishersItem.Assessment.Assessment.Version)
 				}
 				publishers1.CommonName = types.StringValue(publishersItem.CommonName)
-				publishers1.ConnectedApps = nil
+				publishers1.ConnectedApps = []types.String{}
 				for _, v := range publishersItem.ConnectedApps {
 					publishers1.ConnectedApps = append(publishers1.ConnectedApps, types.StringValue(v))
 				}
@@ -43,12 +44,7 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 				publishers1.PublisherUpgradeProfilesExternalID = types.Int64Value(publishersItem.PublisherUpgradeProfilesExternalID)
 				publishers1.Registered = types.BoolValue(publishersItem.Registered)
 				publishers1.Status = types.StringValue(publishersItem.Status)
-				if publishersItem.StitcherID.Integer != nil {
-					publishers1.StitcherID.Integer = types.Int64PointerValue(publishersItem.StitcherID.Integer)
-				}
-				if publishersItem.StitcherID.StitcherID2 != nil {
-					publishers1.StitcherID.Two = &PublisherBulkItemAssessment{}
-				}
+				publishers1.StitcherID = types.Int64Value(publishersItem.StitcherID)
 				publishers1.Tags = nil
 				for _, tagsItem := range publishersItem.Tags {
 					var tags1 types.String
@@ -57,10 +53,10 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 					publishers1.Tags = append(publishers1.Tags, tags1)
 				}
 				if publishersItem.UpgradeFailedReason.UpgradeFailedReason2 != nil {
-					publishers1.UpgradeFailedReason.Two = &PublisherBulkItemAssessment{}
+					publishers1.UpgradeFailedReason.Two = &tfTypes.PublisherBulkItemAssessment{}
 				}
 				if publishersItem.UpgradeFailedReason.UpgradeFailedReason != nil {
-					publishers1.UpgradeFailedReason.UpgradeFailedReason = &UpgradeFailedReason{}
+					publishers1.UpgradeFailedReason.UpgradeFailedReason = &tfTypes.UpgradeFailedReason{}
 					publishers1.UpgradeFailedReason.UpgradeFailedReason.Detail = types.StringValue(publishersItem.UpgradeFailedReason.UpgradeFailedReason.Detail)
 					publishers1.UpgradeFailedReason.UpgradeFailedReason.ErrorCode = types.Int64Value(publishersItem.UpgradeFailedReason.UpgradeFailedReason.ErrorCode)
 					publishers1.UpgradeFailedReason.UpgradeFailedReason.Timestamp = types.Int64Value(publishersItem.UpgradeFailedReason.UpgradeFailedReason.Timestamp)

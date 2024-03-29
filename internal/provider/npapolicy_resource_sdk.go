@@ -4,7 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyRequest {
@@ -261,8 +262,8 @@ func (r *NPAPolicyResourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *sh
 		if resp.RuleData == nil {
 			r.RuleData = nil
 		} else {
-			r.RuleData = &NpaPolicyRuleData{}
-			r.RuleData.AccessMethod = nil
+			r.RuleData = &tfTypes.NpaPolicyRuleData{}
+			r.RuleData.AccessMethod = []types.String{}
 			for _, v := range resp.RuleData.AccessMethod {
 				r.RuleData.AccessMethod = append(r.RuleData.AccessMethod, types.StringValue(v))
 			}
@@ -273,8 +274,8 @@ func (r *NPAPolicyResourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *sh
 				r.RuleData.DlpActions = r.RuleData.DlpActions[:len(resp.RuleData.DlpActions)]
 			}
 			for dlpActionsCount, dlpActionsItem := range resp.RuleData.DlpActions {
-				var dlpActions1 NpaPolicyRuleDlp
-				dlpActions1.Actions = nil
+				var dlpActions1 tfTypes.NpaPolicyRuleDlp
+				dlpActions1.Actions = []types.String{}
 				for _, v := range dlpActionsItem.Actions {
 					dlpActions1.Actions = append(dlpActions1.Actions, types.StringValue(string(v)))
 				}
@@ -291,18 +292,18 @@ func (r *NPAPolicyResourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *sh
 			if resp.RuleData.MatchCriteriaAction == nil {
 				r.RuleData.MatchCriteriaAction = nil
 			} else {
-				r.RuleData.MatchCriteriaAction = &MatchCriteriaAction{}
+				r.RuleData.MatchCriteriaAction = &tfTypes.MatchCriteriaAction{}
 				if resp.RuleData.MatchCriteriaAction.ActionName != nil {
 					r.RuleData.MatchCriteriaAction.ActionName = types.StringValue(string(*resp.RuleData.MatchCriteriaAction.ActionName))
 				} else {
 					r.RuleData.MatchCriteriaAction.ActionName = types.StringNull()
 				}
 			}
-			r.RuleData.NetLocationObj = nil
+			r.RuleData.NetLocationObj = []types.String{}
 			for _, v := range resp.RuleData.NetLocationObj {
 				r.RuleData.NetLocationObj = append(r.RuleData.NetLocationObj, types.StringValue(v))
 			}
-			r.RuleData.OrganizationUnits = nil
+			r.RuleData.OrganizationUnits = []types.String{}
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
 			}
@@ -311,11 +312,11 @@ func (r *NPAPolicyResourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *sh
 			} else {
 				r.RuleData.PolicyType = types.StringNull()
 			}
-			r.RuleData.PrivateAppIds = nil
+			r.RuleData.PrivateAppIds = []types.String{}
 			for _, v := range resp.RuleData.PrivateAppIds {
 				r.RuleData.PrivateAppIds = append(r.RuleData.PrivateAppIds, types.StringValue(v))
 			}
-			r.RuleData.PrivateApps = nil
+			r.RuleData.PrivateApps = []types.String{}
 			for _, v := range resp.RuleData.PrivateApps {
 				r.RuleData.PrivateApps = append(r.RuleData.PrivateApps, types.StringValue(v))
 			}
@@ -323,15 +324,15 @@ func (r *NPAPolicyResourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *sh
 				r.RuleData.PrivateAppsWithActivities = r.RuleData.PrivateAppsWithActivities[:len(resp.RuleData.PrivateAppsWithActivities)]
 			}
 			for privateAppsWithActivitiesCount, privateAppsWithActivitiesItem := range resp.RuleData.PrivateAppsWithActivities {
-				var privateAppsWithActivities1 PrivateAppsWithActivities
+				var privateAppsWithActivities1 tfTypes.PrivateAppsWithActivities
 				for activitiesCount, activitiesItem := range privateAppsWithActivitiesItem.Activities {
-					var activities1 Activities
+					var activities1 tfTypes.Activities
 					if activitiesItem.Activity != nil {
 						activities1.Activity = types.StringValue(string(*activitiesItem.Activity))
 					} else {
 						activities1.Activity = types.StringNull()
 					}
-					activities1.ListOfConstraints = nil
+					activities1.ListOfConstraints = []types.String{}
 					for _, v := range activitiesItem.ListOfConstraints {
 						activities1.ListOfConstraints = append(activities1.ListOfConstraints, types.StringValue(v))
 					}
@@ -350,24 +351,24 @@ func (r *NPAPolicyResourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *sh
 					r.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppName = privateAppsWithActivities1.AppName
 				}
 			}
-			r.RuleData.PrivateAppTagIds = nil
+			r.RuleData.PrivateAppTagIds = []types.String{}
 			for _, v := range resp.RuleData.PrivateAppTagIds {
 				r.RuleData.PrivateAppTagIds = append(r.RuleData.PrivateAppTagIds, types.StringValue(v))
 			}
-			r.RuleData.PrivateAppTags = nil
+			r.RuleData.PrivateAppTags = []types.String{}
 			for _, v := range resp.RuleData.PrivateAppTags {
 				r.RuleData.PrivateAppTags = append(r.RuleData.PrivateAppTags, types.StringValue(v))
 			}
 			r.RuleData.ShowDlpProfileActionTable = types.BoolPointerValue(resp.RuleData.ShowDlpProfileActionTable)
-			r.RuleData.SrcCountries = nil
+			r.RuleData.SrcCountries = []types.String{}
 			for _, v := range resp.RuleData.SrcCountries {
 				r.RuleData.SrcCountries = append(r.RuleData.SrcCountries, types.StringValue(v))
 			}
-			r.RuleData.UserGroups = nil
+			r.RuleData.UserGroups = []types.String{}
 			for _, v := range resp.RuleData.UserGroups {
 				r.RuleData.UserGroups = append(r.RuleData.UserGroups, types.StringValue(v))
 			}
-			r.RuleData.Users = nil
+			r.RuleData.Users = []types.String{}
 			for _, v := range resp.RuleData.Users {
 				r.RuleData.Users = append(r.RuleData.Users, types.StringValue(v))
 			}

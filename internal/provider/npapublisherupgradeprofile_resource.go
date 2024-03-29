@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 	"github.com/speakeasy/terraform-provider-terraform/internal/validators"
 	"strconv"
 )
@@ -134,7 +134,7 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 	}
 
 	publisherUpgradeProfilePostRequest := data.ToSharedPublisherUpgradeProfilePostRequest()
-	request := operations.PostInfrastructurePublisherupgradeprofilesRequest{
+	request := operations.CreateNPAPublisherUpradeProfilesRequest{
 		PublisherUpgradeProfilePostRequest: publisherUpgradeProfilePostRequest,
 	}
 	res, err := r.client.NPAPublisherUpgradeProfiles.Create(ctx, request)
@@ -160,7 +160,7 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 	data.RefreshFromSharedPublisherUpgradeProfileResponseData(res.PublisherUpgradeProfileResponse.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	upgradeProfileID := int(data.ID.ValueInt64())
-	request1 := operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest{
+	request1 := operations.GetNPAPublisherUpgradeProfilesRequest{
 		UpgradeProfileID: upgradeProfileID,
 	}
 	res1, err := r.client.NPAPublisherUpgradeProfiles.Read(ctx, request1)
@@ -209,7 +209,7 @@ func (r *NPAPublisherUpgradeProfileResource) Read(ctx context.Context, req resou
 	}
 
 	upgradeProfileID := int(data.ID.ValueInt64())
-	request := operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest{
+	request := operations.GetNPAPublisherUpgradeProfilesRequest{
 		UpgradeProfileID: upgradeProfileID,
 	}
 	res, err := r.client.NPAPublisherUpgradeProfiles.Read(ctx, request)
@@ -254,7 +254,7 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 
 	upgradeProfileID := int(data.ID.ValueInt64())
 	publisherUpgradeProfilePutRequest := *data.ToSharedPublisherUpgradeProfilePutRequest()
-	request := operations.PutInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest{
+	request := operations.ReplaceNPAPublisherUpgradeProfilesRequest{
 		UpgradeProfileID:                  upgradeProfileID,
 		PublisherUpgradeProfilePutRequest: publisherUpgradeProfilePutRequest,
 	}
@@ -281,7 +281,7 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 	data.RefreshFromSharedPublisherUpgradeProfileResponseData(res.PublisherUpgradeProfileResponse.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	upgradeProfileId1 := int(data.ID.ValueInt64())
-	request1 := operations.GetInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest{
+	request1 := operations.GetNPAPublisherUpgradeProfilesRequest{
 		UpgradeProfileID: upgradeProfileId1,
 	}
 	res1, err := r.client.NPAPublisherUpgradeProfiles.Read(ctx, request1)
@@ -330,7 +330,7 @@ func (r *NPAPublisherUpgradeProfileResource) Delete(ctx context.Context, req res
 	}
 
 	upgradeProfileID := int(data.ID.ValueInt64())
-	request := operations.DeleteInfrastructurePublisherupgradeprofilesUpgradeProfileIDRequest{
+	request := operations.DeleteNPAPubliserUpgradeProfilesRequest{
 		UpgradeProfileID: upgradeProfileID,
 	}
 	res, err := r.client.NPAPublisherUpgradeProfiles.Delete(ctx, request)

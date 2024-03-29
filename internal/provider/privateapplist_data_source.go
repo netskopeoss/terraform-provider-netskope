@@ -9,8 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,9 +29,9 @@ type PrivateAppListDataSource struct {
 
 // PrivateAppListDataSourceModel describes the data model.
 type PrivateAppListDataSourceModel struct {
-	Data   *PrivateAppsGetResponseData `tfsdk:"data"`
-	Fields types.String                `tfsdk:"fields"`
-	Total  types.Int64                 `tfsdk:"total"`
+	Data   *tfTypes.PrivateAppsGetResponseData `tfsdk:"data"`
+	Fields types.String                        `tfsdk:"fields"`
+	Total  types.Int64                         `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -108,10 +109,10 @@ func (r *PrivateAppListDataSource) Read(ctx context.Context, req datasource.Read
 	} else {
 		fields = nil
 	}
-	request := operations.GetSteeringAppsPrivateRequest{
+	request := operations.GetNPAAppsRequest{
 		Fields: fields,
 	}
-	res, err := r.client.GetSteeringAppsPrivate(ctx, request)
+	res, err := r.client.GetNPAApps(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

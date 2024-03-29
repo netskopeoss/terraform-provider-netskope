@@ -4,7 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *PrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.PrivateAppsRequest {
@@ -136,7 +137,7 @@ func (r *PrivateAppResourceModel) RefreshFromSharedPrivateAppsResponseData(resp 
 			r.ResolvedProtocols = r.ResolvedProtocols[:len(resp.ResolvedProtocols)]
 		}
 		for resolvedProtocolsCount, resolvedProtocolsItem := range resp.ResolvedProtocols {
-			var resolvedProtocols1 ProtocolResponseItem
+			var resolvedProtocols1 tfTypes.ProtocolResponseItem
 			resolvedProtocols1.Port = types.StringPointerValue(resolvedProtocolsItem.Port)
 			resolvedProtocols1.Transport = types.StringPointerValue(resolvedProtocolsItem.Transport)
 			if resolvedProtocolsCount+1 > len(r.ResolvedProtocols) {
@@ -150,7 +151,7 @@ func (r *PrivateAppResourceModel) RefreshFromSharedPrivateAppsResponseData(resp 
 			r.ServicePublisherAssignments = r.ServicePublisherAssignments[:len(resp.ServicePublisherAssignments)]
 		}
 		for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range resp.ServicePublisherAssignments {
-			var servicePublisherAssignments1 ServicePublisherAssignmentItem
+			var servicePublisherAssignments1 tfTypes.ServicePublisherAssignmentItem
 			servicePublisherAssignments1.Primary = types.BoolPointerValue(servicePublisherAssignmentsItem.Primary)
 			if servicePublisherAssignmentsItem.PublisherID != nil {
 				servicePublisherAssignments1.PublisherID = types.Int64Value(int64(*servicePublisherAssignmentsItem.PublisherID))
@@ -160,7 +161,7 @@ func (r *PrivateAppResourceModel) RefreshFromSharedPrivateAppsResponseData(resp 
 			if servicePublisherAssignmentsItem.Reachability == nil {
 				servicePublisherAssignments1.Reachability = nil
 			} else {
-				servicePublisherAssignments1.Reachability = &Reachability{}
+				servicePublisherAssignments1.Reachability = &tfTypes.Reachability{}
 				if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
 					servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
 				} else {
@@ -187,7 +188,7 @@ func (r *PrivateAppResourceModel) RefreshFromSharedPrivateAppsResponseData(resp 
 			r.Tags = r.Tags[:len(resp.Tags)]
 		}
 		for tagsCount, tagsItem := range resp.Tags {
-			var tags1 TagItem
+			var tags1 tfTypes.TagItem
 			if tagsItem.TagID != nil {
 				tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
 			} else {

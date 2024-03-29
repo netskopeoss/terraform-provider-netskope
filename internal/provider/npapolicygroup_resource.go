@@ -16,8 +16,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_stringplanmodifier "github.com/speakeasy/terraform-provider-terraform/internal/planmodifiers/stringplanmodifier"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -35,15 +36,15 @@ type NPAPolicyGroupResource struct {
 
 // NPAPolicyGroupResourceModel describes the resource data model.
 type NPAPolicyGroupResourceModel struct {
-	CanBeEditedDeleted types.String `tfsdk:"can_be_edited_deleted"`
-	GroupID            types.String `tfsdk:"group_id"`
-	GroupName          types.String `tfsdk:"group_name"`
-	GroupOrder         GroupOrder   `tfsdk:"group_order"`
-	GroupPinnedID      types.Int64  `tfsdk:"group_pinned_id"`
-	GroupProdID        types.Int64  `tfsdk:"group_prod_id"`
-	GroupType          types.String `tfsdk:"group_type"`
-	ModifyTime         types.String `tfsdk:"modify_time"`
-	ModifyType         types.String `tfsdk:"modify_type"`
+	CanBeEditedDeleted types.String       `tfsdk:"can_be_edited_deleted"`
+	GroupID            types.String       `tfsdk:"group_id"`
+	GroupName          types.String       `tfsdk:"group_name"`
+	GroupOrder         tfTypes.GroupOrder `tfsdk:"group_order"`
+	GroupPinnedID      types.Int64        `tfsdk:"group_pinned_id"`
+	GroupProdID        types.Int64        `tfsdk:"group_prod_id"`
+	GroupType          types.String       `tfsdk:"group_type"`
+	ModifyTime         types.String       `tfsdk:"modify_time"`
+	ModifyType         types.String       `tfsdk:"modify_type"`
 }
 
 func (r *NPAPolicyGroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -157,10 +158,10 @@ func (r *NPAPolicyGroupResource) Create(ctx context.Context, req resource.Create
 	}
 
 	npaPolicygroupRequest := *data.ToSharedNpaPolicygroupRequest()
-	request := operations.PostPolicyNpaPolicygroupsRequest{
+	request := operations.CreateNPAPolicyGroupsRequest{
 		NpaPolicygroupRequest: npaPolicygroupRequest,
 	}
-	res, err := r.client.PostPolicyNpaPolicygroups(ctx, request)
+	res, err := r.client.CreateNPAPolicyGroups(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -183,10 +184,10 @@ func (r *NPAPolicyGroupResource) Create(ctx context.Context, req resource.Create
 	data.RefreshFromSharedNpaPolicygroupResponseItem(res.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	id := data.GroupID.ValueString()
-	request1 := operations.GetPolicyNpaPolicygroupsIDRequest{
+	request1 := operations.GetNPAPolicyGroupsByIDRequest{
 		ID: id,
 	}
-	res1, err := r.client.GetPolicyNpaPolicygroupsID(ctx, request1)
+	res1, err := r.client.GetNPAPolicyGroupsByID(ctx, request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -232,10 +233,10 @@ func (r *NPAPolicyGroupResource) Read(ctx context.Context, req resource.ReadRequ
 	}
 
 	id := data.GroupID.ValueString()
-	request := operations.GetPolicyNpaPolicygroupsIDRequest{
+	request := operations.GetNPAPolicyGroupsByIDRequest{
 		ID: id,
 	}
-	res, err := r.client.GetPolicyNpaPolicygroupsID(ctx, request)
+	res, err := r.client.GetNPAPolicyGroupsByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -300,10 +301,10 @@ func (r *NPAPolicyGroupResource) Delete(ctx context.Context, req resource.Delete
 	}
 
 	id := data.GroupID.ValueString()
-	request := operations.DeletePolicyNpaPolicygroupsIDRequest{
+	request := operations.DeleteNPAPolicyGroupsRequest{
 		ID: id,
 	}
-	res, err := r.client.DeletePolicyNpaPolicygroupsID(ctx, request)
+	res, err := r.client.DeleteNPAPolicyGroups(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

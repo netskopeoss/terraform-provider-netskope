@@ -9,8 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,9 +29,9 @@ type NPAPublishersAppsListDataSource struct {
 
 // NPAPublishersAppsListDataSourceModel describes the data model.
 type NPAPublishersAppsListDataSourceModel struct {
-	Data        []PublisherAppsListResponseData `tfsdk:"data"`
-	PublisherID types.Int64                     `tfsdk:"publisher_id"`
-	Status      types.String                    `tfsdk:"status"`
+	Data        []tfTypes.PublisherAppsListResponseData `tfsdk:"data"`
+	PublisherID types.Int64                             `tfsdk:"publisher_id"`
+	Status      types.String                            `tfsdk:"status"`
 }
 
 // Metadata returns the data source type name.
@@ -179,7 +180,7 @@ func (r *NPAPublishersAppsListDataSource) Read(ctx context.Context, req datasour
 	}
 
 	publisherID := int(data.PublisherID.ValueInt64())
-	request := operations.GetInfrastructurePublishersPublisherIDAppsRequest{
+	request := operations.GetNPAPublisherAppsRequest{
 		PublisherID: publisherID,
 	}
 	res, err := r.client.NPAPublishersApps.ListObjects(ctx, request)

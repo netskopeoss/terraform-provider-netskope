@@ -103,7 +103,7 @@ func (r *NPAPublishersAlertsConfigurationResource) Create(ctx context.Context, r
 	}
 
 	request := *data.ToSharedPublishersAlertPutRequest()
-	res, err := r.client.PutInfrastructurePublishersAlertsconfiguration(ctx, request)
+	res, err := r.client.ConfigureNPAPublisherAlerts(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -148,7 +148,7 @@ func (r *NPAPublishersAlertsConfigurationResource) Read(ctx context.Context, req
 		return
 	}
 
-	res, err := r.client.GetInfrastructurePublishersAlertsconfiguration(ctx)
+	res, err := r.client.GetNPAPublisherAlerts(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -189,7 +189,7 @@ func (r *NPAPublishersAlertsConfigurationResource) Update(ctx context.Context, r
 	}
 
 	request := *data.ToSharedPublishersAlertPutRequest()
-	res, err := r.client.PutInfrastructurePublishersAlertsconfiguration(ctx, request)
+	res, err := r.client.ConfigureNPAPublisherAlerts(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

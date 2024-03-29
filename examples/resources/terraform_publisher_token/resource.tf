@@ -1,3 +1,3 @@
 resource "terraform_publisher_token" "my_publishertoken" {
-  publisher_id = 8
+  publisher_id = 4
 }

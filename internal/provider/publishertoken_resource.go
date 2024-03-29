@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -96,7 +96,7 @@ func (r *PublisherTokenResource) Create(ctx context.Context, req resource.Create
 	}
 
 	publisherID := int(data.PublisherID.ValueInt64())
-	request := operations.PostInfrastructurePublishersPublisherIDRegistrationTokenRequest{
+	request := operations.GenerateNPAPublisherTokenRequest{
 		PublisherID: publisherID,
 	}
 	res, err := r.client.PublisherToken.Create(ctx, request)
@@ -119,7 +119,7 @@ func (r *PublisherTokenResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsPostInfrastructurePublishersPublisherIDRegistrationTokenData(res.Object.Data)
+	data.RefreshFromOperationsGenerateNPAPublisherTokenData(res.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state

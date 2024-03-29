@@ -9,8 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,12 +29,12 @@ type NPAPolicyListDataSource struct {
 
 // NPAPolicyListDataSourceModel describes the data model.
 type NPAPolicyListDataSourceModel struct {
-	Data      []NpaPolicyResponseItem `tfsdk:"data"`
-	Filter    types.String            `tfsdk:"filter"`
-	Limit     types.Int64             `tfsdk:"limit"`
-	Offset    types.Int64             `tfsdk:"offset"`
-	Sortby    types.String            `tfsdk:"sortby"`
-	Sortorder types.String            `tfsdk:"sortorder"`
+	Data      []tfTypes.NpaPolicyResponseItem `tfsdk:"data"`
+	Filter    types.String                    `tfsdk:"filter"`
+	Limit     types.Int64                     `tfsdk:"limit"`
+	Offset    types.Int64                     `tfsdk:"offset"`
+	Sortby    types.String                    `tfsdk:"sortby"`
+	Sortorder types.String                    `tfsdk:"sortorder"`
 }
 
 // Metadata returns the data source type name.
@@ -274,14 +275,14 @@ func (r *NPAPolicyListDataSource) Read(ctx context.Context, req datasource.ReadR
 	} else {
 		sortorder = nil
 	}
-	request := operations.GetPolicyNpaRulesRequest{
+	request := operations.GetNPAPolicyRulesRequest{
 		Filter:    filter,
 		Limit:     limit,
 		Offset:    offset,
 		Sortby:    sortby,
 		Sortorder: sortorder,
 	}
-	res, err := r.client.GetPolicyNpaRules(ctx, request)
+	res, err := r.client.GetNPAPolicyRules(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

@@ -13,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
 )
 
@@ -31,12 +32,12 @@ type PrivateAppTagResource struct {
 
 // PrivateAppTagResourceModel describes the resource data model.
 type PrivateAppTagResourceModel struct {
-	ID            types.String   `tfsdk:"id"`
-	Ids           []types.String `tfsdk:"ids"`
-	PublisherTags []TagItem      `tfsdk:"publisher_tags"`
-	TagID         types.Int64    `tfsdk:"tag_id"`
-	TagName       types.String   `tfsdk:"tag_name"`
-	Tags          []TagItem      `tfsdk:"tags"`
+	ID            types.String      `tfsdk:"id"`
+	Ids           []types.String    `tfsdk:"ids"`
+	PublisherTags []tfTypes.TagItem `tfsdk:"publisher_tags"`
+	TagID         types.Int64       `tfsdk:"tag_id"`
+	TagName       types.String      `tfsdk:"tag_name"`
+	Tags          []tfTypes.TagItem `tfsdk:"tags"`
 }
 
 func (r *PrivateAppTagResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -162,7 +163,7 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 	}
 
 	request := *data.ToSharedTagRequest()
-	res, err := r.client.PostSteeringAppsPrivateTags(ctx, request)
+	res, err := r.client.CreateNPATags(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

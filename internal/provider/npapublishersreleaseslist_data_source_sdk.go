@@ -4,7 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *NPAPublishersReleasesListDataSourceModel) RefreshFromSharedPublishersReleaseGetResponse(resp *shared.PublishersReleaseGetResponse) {
@@ -13,7 +14,7 @@ func (r *NPAPublishersReleasesListDataSourceModel) RefreshFromSharedPublishersRe
 			r.Data = r.Data[:len(resp.Data)]
 		}
 		for dataCount, dataItem := range resp.Data {
-			var data1 ReleaseItem
+			var data1 tfTypes.ReleaseItem
 			data1.DockerTag = types.StringPointerValue(dataItem.DockerTag)
 			data1.Name = types.StringPointerValue(dataItem.Name)
 			data1.Version = types.StringPointerValue(dataItem.Version)

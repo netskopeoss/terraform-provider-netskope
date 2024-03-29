@@ -4,7 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *shared.PublisherBulkRequest {
@@ -43,11 +44,11 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkR
 			r.Data = r.Data[:len(resp.Data)]
 		}
 		for dataCount, dataItem := range resp.Data {
-			var data1 PublisherBulkItem
+			var data1 tfTypes.PublisherBulkItem
 			if dataItem.Assessment == nil {
 				data1.Assessment = nil
 			} else {
-				data1.Assessment = &PublisherBulkItemAssessment{}
+				data1.Assessment = &tfTypes.PublisherBulkItemAssessment{}
 			}
 			data1.CommonName = types.StringPointerValue(dataItem.CommonName)
 			if dataItem.ID != nil {
@@ -74,7 +75,7 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkR
 				data1.StitcherID = types.Int64Null()
 			}
 			for tagsCount, tagsItem := range dataItem.Tags {
-				var tags1 TagItem
+				var tags1 tfTypes.TagItem
 				if tagsItem.TagID != nil {
 					tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
 				} else {
@@ -91,13 +92,13 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkR
 			if dataItem.UpgradeFailedReason == nil {
 				data1.UpgradeFailedReason = nil
 			} else {
-				data1.UpgradeFailedReason = &PublisherBulkItemAssessment{}
+				data1.UpgradeFailedReason = &tfTypes.PublisherBulkItemAssessment{}
 			}
 			data1.UpgradeRequest = types.BoolPointerValue(dataItem.UpgradeRequest)
 			if dataItem.UpgradeStatus == nil {
 				data1.UpgradeStatus = nil
 			} else {
-				data1.UpgradeStatus = &PublisherBulkItemAssessment{}
+				data1.UpgradeStatus = &tfTypes.PublisherBulkItemAssessment{}
 			}
 			if dataCount+1 > len(r.Data) {
 				r.Data = append(r.Data, data1)

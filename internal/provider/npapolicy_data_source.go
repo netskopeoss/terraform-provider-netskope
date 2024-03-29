@@ -9,8 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,9 +29,9 @@ type NPAPolicyDataSource struct {
 
 // NPAPolicyDataSourceModel describes the data model.
 type NPAPolicyDataSourceModel struct {
-	RuleData *NpaPolicyRuleData `tfsdk:"rule_data"`
-	RuleID   types.String       `tfsdk:"rule_id"`
-	RuleName types.String       `tfsdk:"rule_name"`
+	RuleData *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleID   types.String               `tfsdk:"rule_id"`
+	RuleName types.String               `tfsdk:"rule_name"`
 }
 
 // Metadata returns the data source type name.
@@ -216,10 +217,10 @@ func (r *NPAPolicyDataSource) Read(ctx context.Context, req datasource.ReadReque
 	}
 
 	id := data.RuleID.ValueString()
-	request := operations.GetPolicyNpaRulesIDRequest{
+	request := operations.GetNPAPolicyRulesByIDRequest{
 		ID: id,
 	}
-	res, err := r.client.GetPolicyNpaRulesID(ctx, request)
+	res, err := r.client.GetNPAPolicyRulesByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

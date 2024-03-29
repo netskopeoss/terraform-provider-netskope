@@ -5,7 +5,8 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *PrivateAppListDataSourceModel) RefreshFromSharedPrivateAppsGetResponse(resp *shared.PrivateAppsGetResponse) {
@@ -13,7 +14,7 @@ func (r *PrivateAppListDataSourceModel) RefreshFromSharedPrivateAppsGetResponse(
 		if resp.Data == nil {
 			r.Data = nil
 		} else {
-			r.Data = &PrivateAppsGetResponseData{}
+			r.Data = &tfTypes.PrivateAppsGetResponseData{}
 			r.Data.PrivateApps = nil
 			for _, privateAppsItem := range resp.Data.PrivateApps {
 				var privateApps1 types.String

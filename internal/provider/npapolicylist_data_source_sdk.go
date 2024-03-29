@@ -4,7 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *NPAPolicyListDataSourceModel) RefreshFromSharedNpaPolicyListResponse(resp *shared.NpaPolicyListResponse) {
@@ -13,12 +14,12 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromSharedNpaPolicyListResponse(re
 			r.Data = r.Data[:len(resp.Data)]
 		}
 		for dataCount, dataItem := range resp.Data {
-			var data1 NpaPolicyResponseItem
+			var data1 tfTypes.NpaPolicyResponseItem
 			if dataItem.RuleData == nil {
 				data1.RuleData = nil
 			} else {
-				data1.RuleData = &NpaPolicyRuleData{}
-				data1.RuleData.AccessMethod = nil
+				data1.RuleData = &tfTypes.NpaPolicyRuleData{}
+				data1.RuleData.AccessMethod = []types.String{}
 				for _, v := range dataItem.RuleData.AccessMethod {
 					data1.RuleData.AccessMethod = append(data1.RuleData.AccessMethod, types.StringValue(v))
 				}
@@ -26,8 +27,8 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromSharedNpaPolicyListResponse(re
 				data1.RuleData.BNegateSrcCountries = types.BoolPointerValue(dataItem.RuleData.BNegateSrcCountries)
 				data1.RuleData.Classification = types.StringPointerValue(dataItem.RuleData.Classification)
 				for dlpActionsCount, dlpActionsItem := range dataItem.RuleData.DlpActions {
-					var dlpActions1 NpaPolicyRuleDlp
-					dlpActions1.Actions = nil
+					var dlpActions1 tfTypes.NpaPolicyRuleDlp
+					dlpActions1.Actions = []types.String{}
 					for _, v := range dlpActionsItem.Actions {
 						dlpActions1.Actions = append(dlpActions1.Actions, types.StringValue(string(v)))
 					}
@@ -44,18 +45,18 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromSharedNpaPolicyListResponse(re
 				if dataItem.RuleData.MatchCriteriaAction == nil {
 					data1.RuleData.MatchCriteriaAction = nil
 				} else {
-					data1.RuleData.MatchCriteriaAction = &MatchCriteriaAction{}
+					data1.RuleData.MatchCriteriaAction = &tfTypes.MatchCriteriaAction{}
 					if dataItem.RuleData.MatchCriteriaAction.ActionName != nil {
 						data1.RuleData.MatchCriteriaAction.ActionName = types.StringValue(string(*dataItem.RuleData.MatchCriteriaAction.ActionName))
 					} else {
 						data1.RuleData.MatchCriteriaAction.ActionName = types.StringNull()
 					}
 				}
-				data1.RuleData.NetLocationObj = nil
+				data1.RuleData.NetLocationObj = []types.String{}
 				for _, v := range dataItem.RuleData.NetLocationObj {
 					data1.RuleData.NetLocationObj = append(data1.RuleData.NetLocationObj, types.StringValue(v))
 				}
-				data1.RuleData.OrganizationUnits = nil
+				data1.RuleData.OrganizationUnits = []types.String{}
 				for _, v := range dataItem.RuleData.OrganizationUnits {
 					data1.RuleData.OrganizationUnits = append(data1.RuleData.OrganizationUnits, types.StringValue(v))
 				}
@@ -64,24 +65,24 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromSharedNpaPolicyListResponse(re
 				} else {
 					data1.RuleData.PolicyType = types.StringNull()
 				}
-				data1.RuleData.PrivateAppIds = nil
+				data1.RuleData.PrivateAppIds = []types.String{}
 				for _, v := range dataItem.RuleData.PrivateAppIds {
 					data1.RuleData.PrivateAppIds = append(data1.RuleData.PrivateAppIds, types.StringValue(v))
 				}
-				data1.RuleData.PrivateApps = nil
+				data1.RuleData.PrivateApps = []types.String{}
 				for _, v := range dataItem.RuleData.PrivateApps {
 					data1.RuleData.PrivateApps = append(data1.RuleData.PrivateApps, types.StringValue(v))
 				}
 				for privateAppsWithActivitiesCount, privateAppsWithActivitiesItem := range dataItem.RuleData.PrivateAppsWithActivities {
-					var privateAppsWithActivities1 PrivateAppsWithActivities
+					var privateAppsWithActivities1 tfTypes.PrivateAppsWithActivities
 					for activitiesCount, activitiesItem := range privateAppsWithActivitiesItem.Activities {
-						var activities1 Activities
+						var activities1 tfTypes.Activities
 						if activitiesItem.Activity != nil {
 							activities1.Activity = types.StringValue(string(*activitiesItem.Activity))
 						} else {
 							activities1.Activity = types.StringNull()
 						}
-						activities1.ListOfConstraints = nil
+						activities1.ListOfConstraints = []types.String{}
 						for _, v := range activitiesItem.ListOfConstraints {
 							activities1.ListOfConstraints = append(activities1.ListOfConstraints, types.StringValue(v))
 						}
@@ -100,24 +101,24 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromSharedNpaPolicyListResponse(re
 						data1.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppName = privateAppsWithActivities1.AppName
 					}
 				}
-				data1.RuleData.PrivateAppTagIds = nil
+				data1.RuleData.PrivateAppTagIds = []types.String{}
 				for _, v := range dataItem.RuleData.PrivateAppTagIds {
 					data1.RuleData.PrivateAppTagIds = append(data1.RuleData.PrivateAppTagIds, types.StringValue(v))
 				}
-				data1.RuleData.PrivateAppTags = nil
+				data1.RuleData.PrivateAppTags = []types.String{}
 				for _, v := range dataItem.RuleData.PrivateAppTags {
 					data1.RuleData.PrivateAppTags = append(data1.RuleData.PrivateAppTags, types.StringValue(v))
 				}
 				data1.RuleData.ShowDlpProfileActionTable = types.BoolPointerValue(dataItem.RuleData.ShowDlpProfileActionTable)
-				data1.RuleData.SrcCountries = nil
+				data1.RuleData.SrcCountries = []types.String{}
 				for _, v := range dataItem.RuleData.SrcCountries {
 					data1.RuleData.SrcCountries = append(data1.RuleData.SrcCountries, types.StringValue(v))
 				}
-				data1.RuleData.UserGroups = nil
+				data1.RuleData.UserGroups = []types.String{}
 				for _, v := range dataItem.RuleData.UserGroups {
 					data1.RuleData.UserGroups = append(data1.RuleData.UserGroups, types.StringValue(v))
 				}
-				data1.RuleData.Users = nil
+				data1.RuleData.Users = []types.String{}
 				for _, v := range dataItem.RuleData.Users {
 					data1.RuleData.Users = append(data1.RuleData.Users, types.StringValue(v))
 				}

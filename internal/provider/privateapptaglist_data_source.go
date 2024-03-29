@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
 )
 
@@ -27,7 +28,7 @@ type PrivateAppTagListDataSource struct {
 
 // PrivateAppTagListDataSourceModel describes the data model.
 type PrivateAppTagListDataSourceModel struct {
-	Data []TagItem `tfsdk:"data"`
+	Data []tfTypes.TagItem `tfsdk:"data"`
 }
 
 // Metadata returns the data source type name.
@@ -96,7 +97,7 @@ func (r *PrivateAppTagListDataSource) Read(ctx context.Context, req datasource.R
 		return
 	}
 
-	res, err := r.client.GetSteeringAppsPrivateTags(ctx)
+	res, err := r.client.GetNPATags(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

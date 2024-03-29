@@ -17,8 +17,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 	"github.com/speakeasy/terraform-provider-terraform/internal/validators"
 	"strconv"
 )
@@ -38,17 +39,17 @@ type NPAPublishersResource struct {
 
 // NPAPublishersResourceModel describes the resource data model.
 type NPAPublishersResourceModel struct {
-	Assessment                 types.String `tfsdk:"assessment"`
-	CommonName                 types.String `tfsdk:"common_name"`
-	ID                         types.Int64  `tfsdk:"id"`
-	Lbrokerconnect             types.Bool   `tfsdk:"lbrokerconnect"`
-	Name                       types.String `tfsdk:"name"`
-	PublisherUpgradeProfileID  types.Int64  `tfsdk:"publisher_upgrade_profile_id"`
-	PublisherUpgradeProfilesID types.Int64  `tfsdk:"publisher_upgrade_profiles_id"`
-	Registered                 types.Bool   `tfsdk:"registered"`
-	Status                     types.String `tfsdk:"status"`
-	StitcherID                 types.Int64  `tfsdk:"stitcher_id"`
-	Tags                       []TagItem    `tfsdk:"tags"`
+	Assessment                 types.String      `tfsdk:"assessment"`
+	CommonName                 types.String      `tfsdk:"common_name"`
+	ID                         types.Int64       `tfsdk:"id"`
+	Lbrokerconnect             types.Bool        `tfsdk:"lbrokerconnect"`
+	Name                       types.String      `tfsdk:"name"`
+	PublisherUpgradeProfileID  types.Int64       `tfsdk:"publisher_upgrade_profile_id"`
+	PublisherUpgradeProfilesID types.Int64       `tfsdk:"publisher_upgrade_profiles_id"`
+	Registered                 types.Bool        `tfsdk:"registered"`
+	Status                     types.String      `tfsdk:"status"`
+	StitcherID                 types.Int64       `tfsdk:"stitcher_id"`
+	Tags                       []tfTypes.TagItem `tfsdk:"tags"`
 }
 
 func (r *NPAPublishersResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -172,7 +173,7 @@ func (r *NPAPublishersResource) Create(ctx context.Context, req resource.CreateR
 	}
 
 	publisherPostRequest := *data.ToSharedPublisherPostRequest()
-	request := operations.PostInfrastructurePublishersRequest{
+	request := operations.CreateNPApublishersRequest{
 		PublisherPostRequest: publisherPostRequest,
 	}
 	res, err := r.client.NPAPublishers.Create(ctx, request)
@@ -198,7 +199,7 @@ func (r *NPAPublishersResource) Create(ctx context.Context, req resource.CreateR
 	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	publisherID := int(data.ID.ValueInt64())
-	request1 := operations.GetInfrastructurePublishersPublisherIDRequest{
+	request1 := operations.GetNPAPublisherByIDRequest{
 		PublisherID: publisherID,
 	}
 	res1, err := r.client.NPAPublishers.Read(ctx, request1)
@@ -247,7 +248,7 @@ func (r *NPAPublishersResource) Read(ctx context.Context, req resource.ReadReque
 	}
 
 	publisherID := int(data.ID.ValueInt64())
-	request := operations.GetInfrastructurePublishersPublisherIDRequest{
+	request := operations.GetNPAPublisherByIDRequest{
 		PublisherID: publisherID,
 	}
 	res, err := r.client.NPAPublishers.Read(ctx, request)
@@ -292,7 +293,7 @@ func (r *NPAPublishersResource) Update(ctx context.Context, req resource.UpdateR
 
 	publisherID := int(data.ID.ValueInt64())
 	publisherPutRequest := *data.ToSharedPublisherPutRequest()
-	request := operations.PutInfrastructurePublishersPublisherIDRequest{
+	request := operations.ReplaceNPAPublisherByIDRequest{
 		PublisherID:         publisherID,
 		PublisherPutRequest: publisherPutRequest,
 	}
@@ -319,7 +320,7 @@ func (r *NPAPublishersResource) Update(ctx context.Context, req resource.UpdateR
 	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	publisherId1 := int(data.ID.ValueInt64())
-	request1 := operations.GetInfrastructurePublishersPublisherIDRequest{
+	request1 := operations.GetNPAPublisherByIDRequest{
 		PublisherID: publisherId1,
 	}
 	res1, err := r.client.NPAPublishers.Read(ctx, request1)
@@ -368,7 +369,7 @@ func (r *NPAPublishersResource) Delete(ctx context.Context, req resource.DeleteR
 	}
 
 	publisherID := int(data.ID.ValueInt64())
-	request := operations.DeleteInfrastructurePublishersPublisherIDRequest{
+	request := operations.DeleteNPAPublishersRequest{
 		PublisherID: publisherID,
 	}
 	res, err := r.client.NPAPublishers.Delete(ctx, request)

@@ -1,3 +1,3 @@
 data "terraform_npa_publishers_apps_list" "my_npapublishersappslist" {
-  publisher_id = 6
+  publisher_id = 0
 }

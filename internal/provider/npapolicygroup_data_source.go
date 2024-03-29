@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -117,10 +117,10 @@ func (r *NPAPolicyGroupDataSource) Read(ctx context.Context, req datasource.Read
 	}
 
 	id := data.GroupID.ValueString()
-	request := operations.GetPolicyNpaPolicygroupsIDRequest{
+	request := operations.GetNPAPolicyGroupsByIDRequest{
 		ID: id,
 	}
-	res, err := r.client.GetPolicyNpaPolicygroupsID(ctx, request)
+	res, err := r.client.GetNPAPolicyGroupsByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

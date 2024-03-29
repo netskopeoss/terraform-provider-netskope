@@ -9,8 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,16 +29,16 @@ type NPAPublishersDataSource struct {
 
 // NPAPublishersDataSourceModel describes the data model.
 type NPAPublishersDataSourceModel struct {
-	Assessment                types.String `tfsdk:"assessment"`
-	CommonName                types.String `tfsdk:"common_name"`
-	ID                        types.Int64  `tfsdk:"id"`
-	Lbrokerconnect            types.Bool   `tfsdk:"lbrokerconnect"`
-	Name                      types.String `tfsdk:"name"`
-	PublisherUpgradeProfileID types.Int64  `tfsdk:"publisher_upgrade_profile_id"`
-	Registered                types.Bool   `tfsdk:"registered"`
-	Status                    types.String `tfsdk:"status"`
-	StitcherID                types.Int64  `tfsdk:"stitcher_id"`
-	Tags                      []TagItem    `tfsdk:"tags"`
+	Assessment                types.String      `tfsdk:"assessment"`
+	CommonName                types.String      `tfsdk:"common_name"`
+	ID                        types.Int64       `tfsdk:"id"`
+	Lbrokerconnect            types.Bool        `tfsdk:"lbrokerconnect"`
+	Name                      types.String      `tfsdk:"name"`
+	PublisherUpgradeProfileID types.Int64       `tfsdk:"publisher_upgrade_profile_id"`
+	Registered                types.Bool        `tfsdk:"registered"`
+	Status                    types.String      `tfsdk:"status"`
+	StitcherID                types.Int64       `tfsdk:"stitcher_id"`
+	Tags                      []tfTypes.TagItem `tfsdk:"tags"`
 }
 
 // Metadata returns the data source type name.
@@ -137,7 +138,7 @@ func (r *NPAPublishersDataSource) Read(ctx context.Context, req datasource.ReadR
 	}
 
 	publisherID := int(data.ID.ValueInt64())
-	request := operations.GetInfrastructurePublishersPublisherIDRequest{
+	request := operations.GetNPAPublisherByIDRequest{
 		PublisherID: publisherID,
 	}
 	res, err := r.client.NPAPublishers.Read(ctx, request)

@@ -12,8 +12,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -31,13 +32,13 @@ type NPAPolicyResource struct {
 
 // NPAPolicyResourceModel describes the resource data model.
 type NPAPolicyResourceModel struct {
-	Description types.String       `tfsdk:"description"`
-	Enabled     types.String       `tfsdk:"enabled"`
-	GroupName   types.String       `tfsdk:"group_name"`
-	RuleData    *NpaPolicyRuleData `tfsdk:"rule_data"`
-	RuleName    types.String       `tfsdk:"rule_name"`
-	RuleOrder   *RuleOrder         `tfsdk:"rule_order"`
-	RuleID      types.String       `tfsdk:"rule_id"`
+	Description types.String               `tfsdk:"description"`
+	Enabled     types.String               `tfsdk:"enabled"`
+	GroupName   types.String               `tfsdk:"group_name"`
+	RuleData    *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleName    types.String               `tfsdk:"rule_name"`
+	RuleOrder   *tfTypes.RuleOrder         `tfsdk:"rule_order"`
+	RuleID      types.String               `tfsdk:"rule_id"`
 }
 
 func (r *NPAPolicyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -308,7 +309,7 @@ func (r *NPAPolicyResource) Create(ctx context.Context, req resource.CreateReque
 	}
 
 	request := *data.ToSharedNpaPolicyRequest()
-	res, err := r.client.PostPolicyNpaRules(ctx, request)
+	res, err := r.client.CreateNPAPolicyRules(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -331,10 +332,10 @@ func (r *NPAPolicyResource) Create(ctx context.Context, req resource.CreateReque
 	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	id := data.RuleID.ValueString()
-	request1 := operations.GetPolicyNpaRulesIDRequest{
+	request1 := operations.GetNPAPolicyRulesByIDRequest{
 		ID: id,
 	}
-	res1, err := r.client.GetPolicyNpaRulesID(ctx, request1)
+	res1, err := r.client.GetNPAPolicyRulesByID(ctx, request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -380,10 +381,10 @@ func (r *NPAPolicyResource) Read(ctx context.Context, req resource.ReadRequest, 
 	}
 
 	id := data.RuleID.ValueString()
-	request := operations.GetPolicyNpaRulesIDRequest{
+	request := operations.GetNPAPolicyRulesByIDRequest{
 		ID: id,
 	}
-	res, err := r.client.GetPolicyNpaRulesID(ctx, request)
+	res, err := r.client.GetNPAPolicyRulesByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -425,11 +426,11 @@ func (r *NPAPolicyResource) Update(ctx context.Context, req resource.UpdateReque
 
 	id := data.RuleID.ValueString()
 	npaPolicyRequest := *data.ToSharedNpaPolicyRequest()
-	request := operations.PatchPolicyNpaRulesIDRequest{
+	request := operations.PatchNPAPolicyRulesByIDRequest{
 		ID:               id,
 		NpaPolicyRequest: npaPolicyRequest,
 	}
-	res, err := r.client.PatchPolicyNpaRulesID(ctx, request)
+	res, err := r.client.PatchNPAPolicyRulesByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -452,10 +453,10 @@ func (r *NPAPolicyResource) Update(ctx context.Context, req resource.UpdateReque
 	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	id1 := data.RuleID.ValueString()
-	request1 := operations.GetPolicyNpaRulesIDRequest{
+	request1 := operations.GetNPAPolicyRulesByIDRequest{
 		ID: id1,
 	}
-	res1, err := r.client.GetPolicyNpaRulesID(ctx, request1)
+	res1, err := r.client.GetNPAPolicyRulesByID(ctx, request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -501,10 +502,10 @@ func (r *NPAPolicyResource) Delete(ctx context.Context, req resource.DeleteReque
 	}
 
 	id := data.RuleID.ValueString()
-	request := operations.DeletePolicyNpaRulesIDRequest{
+	request := operations.DeleteNPAPolicyRulesRequest{
 		ID: id,
 	}
-	res, err := r.client.DeletePolicyNpaRulesID(ctx, request)
+	res, err := r.client.DeleteNPAPolicyRules(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
