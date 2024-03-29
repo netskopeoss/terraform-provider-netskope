@@ -16,6 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
 )
 
@@ -34,9 +35,9 @@ type NPAPublishersBulkUpgradeResource struct {
 
 // NPAPublishersBulkUpgradeResourceModel describes the resource data model.
 type NPAPublishersBulkUpgradeResourceModel struct {
-	Data       []PublisherBulkItem `tfsdk:"data"`
-	Publishers *Publishers         `tfsdk:"publishers"`
-	Status     types.String        `tfsdk:"status"`
+	Data       []tfTypes.PublisherBulkItem `tfsdk:"data"`
+	Publishers *tfTypes.Publishers         `tfsdk:"publishers"`
+	Status     types.String                `tfsdk:"status"`
 }
 
 func (r *NPAPublishersBulkUpgradeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -202,7 +203,7 @@ func (r *NPAPublishersBulkUpgradeResource) Create(ctx context.Context, req resou
 	}
 
 	request := *data.ToSharedPublisherBulkRequest()
-	res, err := r.client.PutInfrastructurePublishersBulk(ctx, request)
+	res, err := r.client.TriggerNPAPublisherUpdate(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

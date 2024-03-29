@@ -4,27 +4,28 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
-func (r *PrivateAppTagPolicyUseListDataSourceModel) ToOperationsPostSteeringAppsPrivateTagsGetpolicyinuseRequestBody() *operations.PostSteeringAppsPrivateTagsGetpolicyinuseRequestBody {
+func (r *PrivateAppTagPolicyUseListDataSourceModel) ToOperationsRetrieveNPAPoliciesInUseRequestBody() *operations.RetrieveNPAPoliciesInUseRequestBody {
 	var ids []string = nil
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
 	}
-	out := operations.PostSteeringAppsPrivateTagsGetpolicyinuseRequestBody{
+	out := operations.RetrieveNPAPoliciesInUseRequestBody{
 		Ids: ids,
 	}
 	return &out
 }
 
-func (r *PrivateAppTagPolicyUseListDataSourceModel) RefreshFromOperationsPostSteeringAppsPrivateTagsGetpolicyinuseResponseBody(resp *operations.PostSteeringAppsPrivateTagsGetpolicyinuseResponseBody) {
+func (r *PrivateAppTagPolicyUseListDataSourceModel) RefreshFromOperationsRetrieveNPAPoliciesInUseResponseBody(resp *operations.RetrieveNPAPoliciesInUseResponseBody) {
 	if resp != nil {
 		if len(r.Data) > len(resp.Data) {
 			r.Data = r.Data[:len(resp.Data)]
 		}
 		for dataCount, dataItem := range resp.Data {
-			var data1 PostSteeringAppsPrivateTagsGetpolicyinuseData
+			var data1 tfTypes.RetrieveNPAPoliciesInUseData
 			data1.Token = types.StringPointerValue(dataItem.Token)
 			if dataCount+1 > len(r.Data) {
 				r.Data = append(r.Data, data1)

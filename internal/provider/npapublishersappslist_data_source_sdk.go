@@ -4,7 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsListResponse(resp *shared.PublisherAppsListResponse) {
@@ -13,7 +14,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 			r.Data = r.Data[:len(resp.Data)]
 		}
 		for dataCount, dataItem := range resp.Data {
-			var data1 PublisherAppsListResponseData
+			var data1 tfTypes.PublisherAppsListResponseData
 			data1.ClientlessAccess = types.BoolPointerValue(dataItem.ClientlessAccess)
 			data1.Host = types.StringPointerValue(dataItem.Host)
 			if dataItem.ID != nil {
@@ -23,7 +24,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 			}
 			data1.Name = types.StringPointerValue(dataItem.Name)
 			for protocolsCount, protocolsItem := range dataItem.Protocols {
-				var protocols1 ProtocolResponseItem
+				var protocols1 tfTypes.ProtocolResponseItem
 				protocols1.Port = types.StringPointerValue(protocolsItem.Port)
 				protocols1.Transport = types.StringPointerValue(protocolsItem.Transport)
 				if protocolsCount+1 > len(data1.Protocols) {
@@ -35,7 +36,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 			}
 			data1.RealHost = types.StringPointerValue(dataItem.RealHost)
 			for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range dataItem.ServicePublisherAssignments {
-				var servicePublisherAssignments1 ServicePublisherAssignmentItem
+				var servicePublisherAssignments1 tfTypes.ServicePublisherAssignmentItem
 				servicePublisherAssignments1.Primary = types.BoolPointerValue(servicePublisherAssignmentsItem.Primary)
 				if servicePublisherAssignmentsItem.PublisherID != nil {
 					servicePublisherAssignments1.PublisherID = types.Int64Value(int64(*servicePublisherAssignmentsItem.PublisherID))
@@ -45,7 +46,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 				if servicePublisherAssignmentsItem.Reachability == nil {
 					servicePublisherAssignments1.Reachability = nil
 				} else {
-					servicePublisherAssignments1.Reachability = &Reachability{}
+					servicePublisherAssignments1.Reachability = &tfTypes.Reachability{}
 					if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
 						servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
 					} else {
@@ -69,7 +70,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 				}
 			}
 			for tagsCount, tagsItem := range dataItem.Tags {
-				var tags1 TagItem
+				var tags1 tfTypes.TagItem
 				if tagsItem.TagID != nil {
 					tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
 				} else {

@@ -4,7 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *NPAPublisherUpgradeProfileListDataSourceModel) RefreshFromSharedPublisherUpgradeProfileGetResponse(resp *shared.PublisherUpgradeProfileGetResponse) {
@@ -12,12 +13,12 @@ func (r *NPAPublisherUpgradeProfileListDataSourceModel) RefreshFromSharedPublish
 		if resp.Data == nil {
 			r.Data = nil
 		} else {
-			r.Data = &PublisherUpgradeProfileGetResponseData{}
+			r.Data = &tfTypes.PublisherUpgradeProfileGetResponseData{}
 			if len(r.Data.UpgradeProfiles) > len(resp.Data.UpgradeProfiles) {
 				r.Data.UpgradeProfiles = r.Data.UpgradeProfiles[:len(resp.Data.UpgradeProfiles)]
 			}
 			for upgradeProfilesCount, upgradeProfilesItem := range resp.Data.UpgradeProfiles {
-				var upgradeProfiles1 UpgradeProfiles
+				var upgradeProfiles1 tfTypes.UpgradeProfiles
 				upgradeProfiles1.CreatedAt = types.StringPointerValue(upgradeProfilesItem.CreatedAt)
 				upgradeProfiles1.DockerTag = types.StringPointerValue(upgradeProfilesItem.DockerTag)
 				upgradeProfiles1.Enabled = types.BoolPointerValue(upgradeProfilesItem.Enabled)

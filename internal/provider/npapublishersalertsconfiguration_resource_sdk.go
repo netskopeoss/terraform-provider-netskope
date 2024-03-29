@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *NPAPublishersAlertsConfigurationResourceModel) ToSharedPublishersAlertPutRequest() *shared.PublishersAlertPutRequest {
@@ -32,11 +32,11 @@ func (r *NPAPublishersAlertsConfigurationResourceModel) ToSharedPublishersAlertP
 
 func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromSharedPublishersAlertGetResponseData(resp *shared.PublishersAlertGetResponseData) {
 	if resp != nil {
-		r.AdminUsers = nil
+		r.AdminUsers = []types.String{}
 		for _, v := range resp.AdminUsers {
 			r.AdminUsers = append(r.AdminUsers, types.StringValue(v))
 		}
-		r.EventTypes = nil
+		r.EventTypes = []types.String{}
 		for _, v := range resp.EventTypes {
 			r.EventTypes = append(r.EventTypes, types.StringValue(string(v)))
 		}

@@ -5,7 +5,8 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *NPAPublishersDataSourceModel) RefreshFromSharedPublisherResponseData(resp *shared.PublisherResponseData) {
@@ -44,7 +45,7 @@ func (r *NPAPublishersDataSourceModel) RefreshFromSharedPublisherResponseData(re
 			r.Tags = r.Tags[:len(resp.Tags)]
 		}
 		for tagsCount, tagsItem := range resp.Tags {
-			var tags1 TagItem
+			var tags1 tfTypes.TagItem
 			if tagsItem.TagID != nil {
 				tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
 			} else {

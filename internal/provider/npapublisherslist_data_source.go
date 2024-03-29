@@ -9,8 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,10 +29,10 @@ type NPAPublishersListDataSource struct {
 
 // NPAPublishersListDataSourceModel describes the data model.
 type NPAPublishersListDataSourceModel struct {
-	Data   *Data        `tfsdk:"data"`
-	Fields types.String `tfsdk:"fields"`
-	Status types.String `tfsdk:"status"`
-	Total  types.Int64  `tfsdk:"total"`
+	Data   *tfTypes.Data `tfsdk:"data"`
+	Fields types.String  `tfsdk:"fields"`
+	Status types.String  `tfsdk:"status"`
+	Total  types.Int64   `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -112,17 +113,8 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 								"status": schema.StringAttribute{
 									Computed: true,
 								},
-								"stitcher_id": schema.SingleNestedAttribute{
+								"stitcher_id": schema.Int64Attribute{
 									Computed: true,
-									Attributes: map[string]schema.Attribute{
-										"integer": schema.Int64Attribute{
-											Computed: true,
-										},
-										"two": schema.SingleNestedAttribute{
-											Computed:   true,
-											Attributes: map[string]schema.Attribute{},
-										},
-									},
 								},
 								"tags": schema.ListAttribute{
 									Computed:    true,
@@ -228,7 +220,7 @@ func (r *NPAPublishersListDataSource) Read(ctx context.Context, req datasource.R
 	} else {
 		fields = nil
 	}
-	request := operations.GetInfrastructurePublishersRequest{
+	request := operations.GetNPAPublishersRequest{
 		Fields: fields,
 	}
 	res, err := r.client.NPAPublishers.ListObjects(ctx, request)

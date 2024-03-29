@@ -9,8 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,20 +29,20 @@ type PrivateAppResource struct {
 
 // PrivateAppResourceModel describes the resource data model.
 type PrivateAppResourceModel struct {
-	AppName                     types.String                     `tfsdk:"app_name"`
-	ClientlessAccess            types.Bool                       `tfsdk:"clientless_access"`
-	Host                        types.String                     `tfsdk:"host"`
-	ID                          types.Int64                      `tfsdk:"id"`
-	Name                        types.String                     `tfsdk:"name"`
-	Protocols                   []ProtocolItem                   `tfsdk:"protocols"`
-	Publishers                  []PublisherItem                  `tfsdk:"publishers"`
-	PublisherTags               []TagItemNoID                    `tfsdk:"publisher_tags"`
-	RealHost                    types.String                     `tfsdk:"real_host"`
-	ResolvedProtocols           []ProtocolResponseItem           `tfsdk:"resolved_protocols"`
-	ServicePublisherAssignments []ServicePublisherAssignmentItem `tfsdk:"service_publisher_assignments"`
-	Tags                        []TagItem                        `tfsdk:"tags"`
-	TrustSelfSignedCerts        types.Bool                       `tfsdk:"trust_self_signed_certs"`
-	UsePublisherDNS             types.Bool                       `tfsdk:"use_publisher_dns"`
+	AppName                     types.String                             `tfsdk:"app_name"`
+	ClientlessAccess            types.Bool                               `tfsdk:"clientless_access"`
+	Host                        types.String                             `tfsdk:"host"`
+	ID                          types.Int64                              `tfsdk:"id"`
+	Name                        types.String                             `tfsdk:"name"`
+	Protocols                   []tfTypes.ProtocolItem                   `tfsdk:"protocols"`
+	Publishers                  []tfTypes.PublisherItem                  `tfsdk:"publishers"`
+	PublisherTags               []tfTypes.TagItemNoID                    `tfsdk:"publisher_tags"`
+	RealHost                    types.String                             `tfsdk:"real_host"`
+	ResolvedProtocols           []tfTypes.ProtocolResponseItem           `tfsdk:"resolved_protocols"`
+	ServicePublisherAssignments []tfTypes.ServicePublisherAssignmentItem `tfsdk:"service_publisher_assignments"`
+	Tags                        []tfTypes.TagItem                        `tfsdk:"tags"`
+	TrustSelfSignedCerts        types.Bool                               `tfsdk:"trust_self_signed_certs"`
+	UsePublisherDNS             types.Bool                               `tfsdk:"use_publisher_dns"`
 }
 
 func (r *PrivateAppResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -220,10 +221,10 @@ func (r *PrivateAppResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 
 	privateAppsRequest := *data.ToSharedPrivateAppsRequest()
-	request := operations.PostSteeringAppsPrivateRequest{
+	request := operations.CreateNPAAppsRequest{
 		PrivateAppsRequest: privateAppsRequest,
 	}
-	res, err := r.client.PostSteeringAppsPrivate(ctx, request)
+	res, err := r.client.CreateNPAApps(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -290,11 +291,11 @@ func (r *PrivateAppResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	privateAppID := int(data.ID.ValueInt64())
 	privateAppsPutRequest := *data.ToSharedPrivateAppsPutRequest()
-	request := operations.PutSteeringAppsPrivatePrivateAppIDRequest{
+	request := operations.ReplaceNPAAppsByIDRequest{
 		PrivateAppID:          privateAppID,
 		PrivateAppsPutRequest: privateAppsPutRequest,
 	}
-	res, err := r.client.PutSteeringAppsPrivatePrivateAppID(ctx, request)
+	res, err := r.client.ReplaceNPAAppsByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -340,10 +341,10 @@ func (r *PrivateAppResource) Delete(ctx context.Context, req resource.DeleteRequ
 	}
 
 	privateAppID := int(data.ID.ValueInt64())
-	request := operations.DeleteSteeringAppsPrivatePrivateAppIDRequest{
+	request := operations.DeleteNPAAppsRequest{
 		PrivateAppID: privateAppID,
 	}
-	res, err := r.client.DeleteSteeringAppsPrivatePrivateAppID(ctx, request)
+	res, err := r.client.DeleteNPAApps(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

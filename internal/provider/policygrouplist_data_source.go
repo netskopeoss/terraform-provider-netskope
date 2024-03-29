@@ -9,8 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,12 +29,12 @@ type PolicyGroupListDataSource struct {
 
 // PolicyGroupListDataSourceModel describes the data model.
 type PolicyGroupListDataSourceModel struct {
-	Data      []NpaPolicygroupResponseItem `tfsdk:"data"`
-	Filter    types.String                 `tfsdk:"filter"`
-	Limit     types.Int64                  `tfsdk:"limit"`
-	Offset    types.Int64                  `tfsdk:"offset"`
-	Sortby    types.String                 `tfsdk:"sortby"`
-	Sortorder types.String                 `tfsdk:"sortorder"`
+	Data      []tfTypes.NpaPolicygroupResponseItem `tfsdk:"data"`
+	Filter    types.String                         `tfsdk:"filter"`
+	Limit     types.Int64                          `tfsdk:"limit"`
+	Offset    types.Int64                          `tfsdk:"offset"`
+	Sortby    types.String                         `tfsdk:"sortby"`
+	Sortorder types.String                         `tfsdk:"sortorder"`
 }
 
 // Metadata returns the data source type name.
@@ -170,14 +171,14 @@ func (r *PolicyGroupListDataSource) Read(ctx context.Context, req datasource.Rea
 	} else {
 		sortorder = nil
 	}
-	request := operations.GetPolicyNpaPolicygroupsRequest{
+	request := operations.GetNPAPolicyGroupsRequest{
 		Filter:    filter,
 		Limit:     limit,
 		Offset:    offset,
 		Sortby:    sortby,
 		Sortorder: sortorder,
 	}
-	res, err := r.client.GetPolicyNpaPolicygroups(ctx, request)
+	res, err := r.client.GetNPAPolicyGroups(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

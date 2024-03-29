@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 	"net/http"
 )
 
@@ -93,6 +93,8 @@ func (p *TerraformProvider) Resources(ctx context.Context) []func() resource.Res
 		NewPrivateAppResource,
 		NewPrivateAppTagResource,
 		NewPublisherTokenResource,
+		NewSCIMGroupsResource,
+		NewSCIMUserResource,
 	}
 }
 
@@ -112,6 +114,9 @@ func (p *TerraformProvider) DataSources(ctx context.Context) []func() datasource
 		NewPrivateAppListDataSource,
 		NewPrivateAppTagListDataSource,
 		NewPrivateAppTagPolicyUseListDataSource,
+		NewSCIMGroupsDataSource,
+		NewSCIMGroupsByIDDataSource,
+		NewSCIMUserDataSource,
 	}
 }
 

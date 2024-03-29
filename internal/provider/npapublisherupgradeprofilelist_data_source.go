@@ -9,8 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,8 +29,8 @@ type NPAPublisherUpgradeProfileListDataSource struct {
 
 // NPAPublisherUpgradeProfileListDataSourceModel describes the data model.
 type NPAPublisherUpgradeProfileListDataSourceModel struct {
-	Data  *PublisherUpgradeProfileGetResponseData `tfsdk:"data"`
-	Total types.Int64                             `tfsdk:"total"`
+	Data  *tfTypes.PublisherUpgradeProfileGetResponseData `tfsdk:"data"`
+	Total types.Int64                                     `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -142,7 +143,7 @@ func (r *NPAPublisherUpgradeProfileListDataSource) Read(ctx context.Context, req
 		return
 	}
 
-	request := operations.GetInfrastructurePublisherupgradeprofilesRequest{}
+	request := operations.GetPublisherUpgradeProfilesRequest{}
 	res, err := r.client.NPAPublisherUpgradeProfiles.ListObjects(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())

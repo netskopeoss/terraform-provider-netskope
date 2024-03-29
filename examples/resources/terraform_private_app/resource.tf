@@ -1,6 +1,6 @@
 resource "terraform_private_app" "my_privateapp" {
   app_name          = "...my_app_name..."
-  clientless_access = true
+  clientless_access = false
   host              = "...my_host..."
   protocols = [
     {
@@ -21,5 +21,5 @@ resource "terraform_private_app" "my_privateapp" {
   ]
   real_host               = "...my_real_host..."
   trust_self_signed_certs = true
-  use_publisher_dns       = true
+  use_publisher_dns       = false
 }

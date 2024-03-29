@@ -11,9 +11,12 @@ sources:
             - location: /Users/justinadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/npa_private_tag.yaml
             - location: /Users/justinadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/gre.yaml
             - location: /Users/justinadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/ipsec.yaml
+            - location: /Users/justinadrian/speakeasy/netskope-apiv2-oas/endpoints/scim/scim-apis.yaml
         overlays:
             - location: /Users/justinadrian/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
 targets:
     first-target:
         target: terraform
         source: openapi
+        codeSamples:
+            output: code_snip.yaml

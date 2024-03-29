@@ -4,7 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *PolicyGroupListDataSourceModel) RefreshFromSharedNpaPolicygroupResponse(resp *shared.NpaPolicygroupResponse) {
@@ -13,7 +14,7 @@ func (r *PolicyGroupListDataSourceModel) RefreshFromSharedNpaPolicygroupResponse
 			r.Data = r.Data[:len(resp.Data)]
 		}
 		for dataCount, dataItem := range resp.Data {
-			var data1 NpaPolicygroupResponseItem
+			var data1 tfTypes.NpaPolicygroupResponseItem
 			data1.CanBeEditedDeleted = types.StringPointerValue(dataItem.CanBeEditedDeleted)
 			data1.GroupID = types.StringPointerValue(dataItem.GroupID)
 			data1.GroupName = types.StringPointerValue(dataItem.GroupName)

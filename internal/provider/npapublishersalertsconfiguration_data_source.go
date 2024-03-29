@@ -96,7 +96,7 @@ func (r *NPAPublishersAlertsConfigurationDataSource) Read(ctx context.Context, r
 		return
 	}
 
-	res, err := r.client.GetInfrastructurePublishersAlertsconfiguration(ctx)
+	res, err := r.client.GetNPAPublisherAlerts(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

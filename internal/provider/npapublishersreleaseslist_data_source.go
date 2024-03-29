@@ -9,8 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,9 +29,9 @@ type NPAPublishersReleasesListDataSource struct {
 
 // NPAPublishersReleasesListDataSourceModel describes the data model.
 type NPAPublishersReleasesListDataSourceModel struct {
-	Data   []ReleaseItem `tfsdk:"data"`
-	Fields types.String  `tfsdk:"fields"`
-	Status types.String  `tfsdk:"status"`
+	Data   []tfTypes.ReleaseItem `tfsdk:"data"`
+	Fields types.String          `tfsdk:"fields"`
+	Status types.String          `tfsdk:"status"`
 }
 
 // Metadata returns the data source type name.
@@ -116,7 +117,7 @@ func (r *NPAPublishersReleasesListDataSource) Read(ctx context.Context, req data
 	} else {
 		fields = nil
 	}
-	request := operations.GetInfrastructurePublishersReleasesRequest{
+	request := operations.GetNPAPublisherObjectsRequest{
 		Fields: fields,
 	}
 	res, err := r.client.NPAPublishersReleases.ListObjects(ctx, request)

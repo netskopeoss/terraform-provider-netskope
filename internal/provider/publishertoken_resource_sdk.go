@@ -4,9 +4,9 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/operations"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
-func (r *PublisherTokenResourceModel) RefreshFromOperationsPostInfrastructurePublishersPublisherIDRegistrationTokenData(resp operations.PostInfrastructurePublishersPublisherIDRegistrationTokenData) {
+func (r *PublisherTokenResourceModel) RefreshFromOperationsGenerateNPAPublisherTokenData(resp operations.GenerateNPAPublisherTokenData) {
 	r.Token = types.StringValue(resp.Token)
 }

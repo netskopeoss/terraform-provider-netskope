@@ -4,7 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
 func (r *PrivateAppTagListDataSourceModel) RefreshFromSharedTagResponse(resp *shared.TagResponse) {
@@ -13,7 +14,7 @@ func (r *PrivateAppTagListDataSourceModel) RefreshFromSharedTagResponse(resp *sh
 			r.Data = r.Data[:len(resp.Data)]
 		}
 		for dataCount, dataItem := range resp.Data {
-			var data1 TagItem
+			var data1 tfTypes.TagItem
 			if dataItem.TagID != nil {
 				data1.TagID = types.Int64Value(int64(*dataItem.TagID))
 			} else {
