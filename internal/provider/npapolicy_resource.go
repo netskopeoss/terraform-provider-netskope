@@ -5,8 +5,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -14,7 +12,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -27,18 +27,18 @@ func NewNPAPolicyResource() resource.Resource {
 
 // NPAPolicyResource defines the resource implementation.
 type NPAPolicyResource struct {
-	client *sdk.SDK
+	client *sdk.TerraformProviderNs
 }
 
 // NPAPolicyResourceModel describes the resource data model.
 type NPAPolicyResourceModel struct {
-	Description types.String       `tfsdk:"description"`
-	Enabled     types.String       `tfsdk:"enabled"`
-	GroupName   types.String       `tfsdk:"group_name"`
-	RuleData    *NpaPolicyRuleData `tfsdk:"rule_data"`
-	RuleID      types.String       `tfsdk:"rule_id"`
-	RuleName    types.String       `tfsdk:"rule_name"`
-	RuleOrder   *RuleOrder         `tfsdk:"rule_order"`
+	Description types.String               `tfsdk:"description"`
+	Enabled     types.String               `tfsdk:"enabled"`
+	GroupName   types.String               `tfsdk:"group_name"`
+	RuleData    *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleID      types.String               `tfsdk:"rule_id"`
+	RuleName    types.String               `tfsdk:"rule_name"`
+	RuleOrder   *tfTypes.RuleOrder         `tfsdk:"rule_order"`
 }
 
 func (r *NPAPolicyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -48,7 +48,6 @@ func (r *NPAPolicyResource) Metadata(ctx context.Context, req resource.MetadataR
 func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "NPAPolicy Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"description": schema.StringAttribute{
 				Optional: true,
@@ -233,7 +232,8 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"rule_id": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: `npa policy id`,
 			},
 			"rule_name": schema.StringAttribute{
 				Computed: true,
@@ -275,12 +275,12 @@ func (r *NPAPolicyResource) Configure(ctx context.Context, req resource.Configur
 		return
 	}
 
-	client, ok := req.ProviderData.(*sdk.SDK)
+	client, ok := req.ProviderData.(*sdk.TerraformProviderNs)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *sdk.SDK, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *sdk.TerraformProviderNs, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -291,14 +291,14 @@ func (r *NPAPolicyResource) Configure(ctx context.Context, req resource.Configur
 
 func (r *NPAPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data *NPAPolicyResourceModel
-	var item types.Object
+	var plan types.Object
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &item)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	resp.Diagnostics.Append(item.As(ctx, &data, basetypes.ObjectAsOptions{
+	resp.Diagnostics.Append(plan.As(ctx, &data, basetypes.ObjectAsOptions{
 		UnhandledNullAsEmpty:    true,
 		UnhandledUnknownAsEmpty: true,
 	})...)
@@ -307,8 +307,8 @@ func (r *NPAPolicyResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 
-	request := *data.ToCreateSDKType()
-	res, err := r.client.PostPolicyNpaRules(ctx, request)
+	request := *data.ToSharedNpaPolicyRequest()
+	res, err := r.client.CreateNPAPolicyRules(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -324,11 +324,38 @@ func (r *NPAPolicyResource) Create(ctx context.Context, req resource.CreateReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Object == nil || res.Object.Data == nil {
+	if res.Object == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.Object.Data)
+	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	id := data.RuleID.ValueString()
+	request1 := operations.GetNPAPolicyRulesByIDRequest{
+		ID: id,
+	}
+	res1, err := r.client.GetNPAPolicyRulesByID(ctx, request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if res1.Object == nil {
+		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+		return
+	}
+	data.RefreshFromSharedNpaPolicyResponseItem(res1.Object.Data)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -353,10 +380,10 @@ func (r *NPAPolicyResource) Read(ctx context.Context, req resource.ReadRequest, 
 	}
 
 	id := data.RuleID.ValueString()
-	request := operations.GetPolicyNpaRulesIDRequest{
+	request := operations.GetNPAPolicyRulesByIDRequest{
 		ID: id,
 	}
-	res, err := r.client.GetPolicyNpaRulesID(ctx, request)
+	res, err := r.client.GetNPAPolicyRulesByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -368,15 +395,19 @@ func (r *NPAPolicyResource) Read(ctx context.Context, req resource.ReadRequest, 
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Object == nil || res.Object.Data == nil {
+	if res.Object == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.Object.Data)
+	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -384,18 +415,25 @@ func (r *NPAPolicyResource) Read(ctx context.Context, req resource.ReadRequest, 
 
 func (r *NPAPolicyResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data *NPAPolicyResourceModel
+	var plan types.Object
+
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	merge(ctx, req, resp, &data)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	id := data.RuleID.ValueString()
-	npaPolicyRequest := *data.ToUpdateSDKType()
-	request := operations.PatchPolicyNpaRulesIDRequest{
+	npaPolicyRequest := *data.ToSharedNpaPolicyRequest()
+	request := operations.PatchNPAPolicyRulesByIDRequest{
 		ID:               id,
 		NpaPolicyRequest: npaPolicyRequest,
 	}
-	res, err := r.client.PatchPolicyNpaRulesID(ctx, request)
+	res, err := r.client.PatchNPAPolicyRulesByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -411,11 +449,38 @@ func (r *NPAPolicyResource) Update(ctx context.Context, req resource.UpdateReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Object == nil || res.Object.Data == nil {
+	if res.Object == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromUpdateResponse(res.Object.Data)
+	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	id1 := data.RuleID.ValueString()
+	request1 := operations.GetNPAPolicyRulesByIDRequest{
+		ID: id1,
+	}
+	res1, err := r.client.GetNPAPolicyRulesByID(ctx, request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if res1.Object == nil {
+		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+		return
+	}
+	data.RefreshFromSharedNpaPolicyResponseItem(res1.Object.Data)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -440,10 +505,10 @@ func (r *NPAPolicyResource) Delete(ctx context.Context, req resource.DeleteReque
 	}
 
 	id := data.RuleID.ValueString()
-	request := operations.DeletePolicyNpaRulesIDRequest{
+	request := operations.DeleteNPAPolicyRulesRequest{
 		ID: id,
 	}
-	res, err := r.client.DeletePolicyNpaRulesID(ctx, request)
+	res, err := r.client.DeleteNPAPolicyRules(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

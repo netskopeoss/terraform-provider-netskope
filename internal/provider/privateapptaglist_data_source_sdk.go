@@ -4,30 +4,29 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *PrivateAppTagListDataSourceModel) RefreshFromGetResponse(resp *shared.TagResponse) {
-	if len(r.Data) > len(resp.Data) {
-		r.Data = r.Data[:len(resp.Data)]
-	}
-	for dataCount, dataItem := range resp.Data {
-		var data1 TagItem
-		if dataItem.TagID != nil {
-			data1.TagID = types.Int64Value(int64(*dataItem.TagID))
-		} else {
-			data1.TagID = types.Int64Null()
+func (r *PrivateAppTagListDataSourceModel) RefreshFromSharedTagResponse(resp *shared.TagResponse) {
+	if resp != nil {
+		if len(r.Data) > len(resp.Data) {
+			r.Data = r.Data[:len(resp.Data)]
 		}
-		if dataItem.TagName != nil {
-			data1.TagName = types.StringValue(*dataItem.TagName)
-		} else {
-			data1.TagName = types.StringNull()
-		}
-		if dataCount+1 > len(r.Data) {
-			r.Data = append(r.Data, data1)
-		} else {
-			r.Data[dataCount].TagID = data1.TagID
-			r.Data[dataCount].TagName = data1.TagName
+		for dataCount, dataItem := range resp.Data {
+			var data1 tfTypes.TagItem
+			if dataItem.TagID != nil {
+				data1.TagID = types.Int64Value(int64(*dataItem.TagID))
+			} else {
+				data1.TagID = types.Int64Null()
+			}
+			data1.TagName = types.StringPointerValue(dataItem.TagName)
+			if dataCount+1 > len(r.Data) {
+				r.Data = append(r.Data, data1)
+			} else {
+				r.Data[dataCount].TagID = data1.TagID
+				r.Data[dataCount].TagName = data1.TagName
+			}
 		}
 	}
 }

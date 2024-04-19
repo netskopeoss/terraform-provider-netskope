@@ -5,12 +5,12 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -23,13 +23,13 @@ func NewPrivateAppTagPolicyUseListDataSource() datasource.DataSource {
 
 // PrivateAppTagPolicyUseListDataSource is the data source implementation.
 type PrivateAppTagPolicyUseListDataSource struct {
-	client *sdk.SDK
+	client *sdk.TerraformProviderNs
 }
 
 // PrivateAppTagPolicyUseListDataSourceModel describes the data model.
 type PrivateAppTagPolicyUseListDataSourceModel struct {
-	Data []PostSteeringAppsPrivateTagsGetpolicyinuseData `tfsdk:"data"`
-	Ids  []types.String                                  `tfsdk:"ids"`
+	Data []tfTypes.RetrieveNPAPoliciesInUseData `tfsdk:"data"`
+	Ids  []types.String                         `tfsdk:"ids"`
 }
 
 // Metadata returns the data source type name.
@@ -67,12 +67,12 @@ func (r *PrivateAppTagPolicyUseListDataSource) Configure(ctx context.Context, re
 		return
 	}
 
-	client, ok := req.ProviderData.(*sdk.SDK)
+	client, ok := req.ProviderData.(*sdk.TerraformProviderNs)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *sdk.SDK, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *sdk.TerraformProviderNs, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -99,8 +99,8 @@ func (r *PrivateAppTagPolicyUseListDataSource) Read(ctx context.Context, req dat
 		return
 	}
 
-	request := *data.ToGetSDKType()
-	res, err := r.client.PostSteeringAppsPrivateTagsGetpolicyinuse(ctx, request)
+	request := *data.ToOperationsRetrieveNPAPoliciesInUseRequestBody()
+	res, err := r.client.RetrieveNPAPoliciesInUse(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -112,6 +112,10 @@ func (r *PrivateAppTagPolicyUseListDataSource) Read(ctx context.Context, req dat
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -120,7 +124,7 @@ func (r *PrivateAppTagPolicyUseListDataSource) Read(ctx context.Context, req dat
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.Object)
+	data.RefreshFromOperationsRetrieveNPAPoliciesInUseResponseBody(res.Object)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

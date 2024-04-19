@@ -5,25 +5,28 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *PrivateAppListDataSourceModel) RefreshFromGetResponse(resp *shared.PrivateAppsGetResponse) {
-	if resp.Data == nil {
-		r.Data = nil
-	} else {
-		r.Data = &PrivateAppsGetResponseData{}
-		r.Data.PrivateApps = nil
-		for _, privateAppsItem := range resp.Data.PrivateApps {
-			var privateApps1 types.String
-			privateApps1Result, _ := json.Marshal(privateAppsItem)
-			privateApps1 = types.StringValue(string(privateApps1Result))
-			r.Data.PrivateApps = append(r.Data.PrivateApps, privateApps1)
+func (r *PrivateAppListDataSourceModel) RefreshFromSharedPrivateAppsGetResponse(resp *shared.PrivateAppsGetResponse) {
+	if resp != nil {
+		if resp.Data == nil {
+			r.Data = nil
+		} else {
+			r.Data = &tfTypes.PrivateAppsGetResponseData{}
+			r.Data.PrivateApps = nil
+			for _, privateAppsItem := range resp.Data.PrivateApps {
+				var privateApps1 types.String
+				privateApps1Result, _ := json.Marshal(privateAppsItem)
+				privateApps1 = types.StringValue(string(privateApps1Result))
+				r.Data.PrivateApps = append(r.Data.PrivateApps, privateApps1)
+			}
 		}
-	}
-	if resp.Total != nil {
-		r.Total = types.Int64Value(int64(*resp.Total))
-	} else {
-		r.Total = types.Int64Null()
+		if resp.Total != nil {
+			r.Total = types.Int64Value(int64(*resp.Total))
+		} else {
+			r.Total = types.Int64Null()
+		}
 	}
 }

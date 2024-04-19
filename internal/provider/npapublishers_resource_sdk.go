@@ -5,29 +5,24 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *NPAPublishersResourceModel) ToCreateSDKType() *shared.PublisherPostRequest {
-	lbrokerconnect := new(bool)
-	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
-		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
-	} else {
-		lbrokerconnect = nil
-	}
+func (r *NPAPublishersResourceModel) ToSharedPublisherPostRequest() *shared.PublisherPostRequest {
 	name := new(string)
 	if !r.Name.IsUnknown() && !r.Name.IsNull() {
 		*name = r.Name.ValueString()
 	} else {
 		name = nil
 	}
-	publisherUpgradeProfilesID := new(int)
-	if !r.PublisherUpgradeProfilesID.IsUnknown() && !r.PublisherUpgradeProfilesID.IsNull() {
-		*publisherUpgradeProfilesID = int(r.PublisherUpgradeProfilesID.ValueInt64())
+	lbrokerconnect := new(bool)
+	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
+		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
 	} else {
-		publisherUpgradeProfilesID = nil
+		lbrokerconnect = nil
 	}
-	var tags []shared.TagItemNoID = nil
+	var tags []shared.TagItemNoID = []shared.TagItemNoID{}
 	for _, tagsItem := range r.Tags {
 		tagName := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
@@ -39,21 +34,81 @@ func (r *NPAPublishersResourceModel) ToCreateSDKType() *shared.PublisherPostRequ
 			TagName: tagName,
 		})
 	}
+	publisherUpgradeProfilesID := new(int)
+	if !r.PublisherUpgradeProfilesID.IsUnknown() && !r.PublisherUpgradeProfilesID.IsNull() {
+		*publisherUpgradeProfilesID = int(r.PublisherUpgradeProfilesID.ValueInt64())
+	} else {
+		publisherUpgradeProfilesID = nil
+	}
 	out := shared.PublisherPostRequest{
-		Lbrokerconnect:             lbrokerconnect,
 		Name:                       name,
-		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
+		Lbrokerconnect:             lbrokerconnect,
 		Tags:                       tags,
+		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
 	}
 	return &out
 }
 
-func (r *NPAPublishersResourceModel) ToGetSDKType() *shared.PublisherPostRequest {
-	out := r.ToCreateSDKType()
-	return out
+func (r *NPAPublishersResourceModel) RefreshFromSharedPublisherResponseData(resp *shared.PublisherResponseData) {
+	if resp != nil {
+		if resp.Assessment == nil {
+			r.Assessment = types.StringNull()
+		} else {
+			assessmentResult, _ := json.Marshal(resp.Assessment)
+			r.Assessment = types.StringValue(string(assessmentResult))
+		}
+		r.CommonName = types.StringPointerValue(resp.CommonName)
+		if resp.ID != nil {
+			r.ID = types.Int64Value(int64(*resp.ID))
+		} else {
+			r.ID = types.Int64Null()
+		}
+		r.Lbrokerconnect = types.BoolPointerValue(resp.Lbrokerconnect)
+		r.Name = types.StringPointerValue(resp.Name)
+		if resp.PublisherUpgradeProfileID != nil {
+			r.PublisherUpgradeProfileID = types.Int64Value(int64(*resp.PublisherUpgradeProfileID))
+		} else {
+			r.PublisherUpgradeProfileID = types.Int64Null()
+		}
+		r.Registered = types.BoolPointerValue(resp.Registered)
+		if resp.Status != nil {
+			r.Status = types.StringValue(string(*resp.Status))
+		} else {
+			r.Status = types.StringNull()
+		}
+		if resp.StitcherID != nil {
+			r.StitcherID = types.Int64Value(int64(*resp.StitcherID))
+		} else {
+			r.StitcherID = types.Int64Null()
+		}
+		if len(r.Tags) > len(resp.Tags) {
+			r.Tags = r.Tags[:len(resp.Tags)]
+		}
+		for tagsCount, tagsItem := range resp.Tags {
+			var tags1 tfTypes.TagItem
+			if tagsItem.TagID != nil {
+				tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
+			} else {
+				tags1.TagID = types.Int64Null()
+			}
+			tags1.TagName = types.StringPointerValue(tagsItem.TagName)
+			if tagsCount+1 > len(r.Tags) {
+				r.Tags = append(r.Tags, tags1)
+			} else {
+				r.Tags[tagsCount].TagID = tags1.TagID
+				r.Tags[tagsCount].TagName = tags1.TagName
+			}
+		}
+	}
 }
 
-func (r *NPAPublishersResourceModel) ToUpdateSDKType() *shared.PublisherPutRequest {
+func (r *NPAPublishersResourceModel) ToSharedPublisherPutRequest() *shared.PublisherPutRequest {
+	name := new(string)
+	if !r.Name.IsUnknown() && !r.Name.IsNull() {
+		*name = r.Name.ValueString()
+	} else {
+		name = nil
+	}
 	id := new(int)
 	if !r.ID.IsUnknown() && !r.ID.IsNull() {
 		*id = int(r.ID.ValueInt64())
@@ -66,120 +121,30 @@ func (r *NPAPublishersResourceModel) ToUpdateSDKType() *shared.PublisherPutReque
 	} else {
 		lbrokerconnect = nil
 	}
-	name := new(string)
-	if !r.Name.IsUnknown() && !r.Name.IsNull() {
-		*name = r.Name.ValueString()
-	} else {
-		name = nil
-	}
-	var tags []shared.TagItem = nil
+	var tags []shared.TagItem = []shared.TagItem{}
 	for _, tagsItem := range r.Tags {
-		tagID := new(int)
-		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
-			*tagID = int(tagsItem.TagID.ValueInt64())
-		} else {
-			tagID = nil
-		}
 		tagName := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
 			*tagName = tagsItem.TagName.ValueString()
 		} else {
 			tagName = nil
 		}
+		tagID := new(int)
+		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
+			*tagID = int(tagsItem.TagID.ValueInt64())
+		} else {
+			tagID = nil
+		}
 		tags = append(tags, shared.TagItem{
-			TagID:   tagID,
 			TagName: tagName,
+			TagID:   tagID,
 		})
 	}
 	out := shared.PublisherPutRequest{
+		Name:           name,
 		ID:             id,
 		Lbrokerconnect: lbrokerconnect,
-		Name:           name,
 		Tags:           tags,
 	}
 	return &out
-}
-
-func (r *NPAPublishersResourceModel) ToDeleteSDKType() *shared.PublisherPostRequest {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *NPAPublishersResourceModel) RefreshFromGetResponse(resp *shared.PublisherResponseData) {
-	if resp.Assessment == nil {
-		r.Assessment = types.StringNull()
-	} else {
-		assessmentResult, _ := json.Marshal(resp.Assessment)
-		r.Assessment = types.StringValue(string(assessmentResult))
-	}
-	if resp.CommonName != nil {
-		r.CommonName = types.StringValue(*resp.CommonName)
-	} else {
-		r.CommonName = types.StringNull()
-	}
-	if resp.ID != nil {
-		r.ID = types.Int64Value(int64(*resp.ID))
-	} else {
-		r.ID = types.Int64Null()
-	}
-	if resp.Lbrokerconnect != nil {
-		r.Lbrokerconnect = types.BoolValue(*resp.Lbrokerconnect)
-	} else {
-		r.Lbrokerconnect = types.BoolNull()
-	}
-	if resp.Name != nil {
-		r.Name = types.StringValue(*resp.Name)
-	} else {
-		r.Name = types.StringNull()
-	}
-	if resp.PublisherUpgradeProfileID != nil {
-		r.PublisherUpgradeProfileID = types.Int64Value(int64(*resp.PublisherUpgradeProfileID))
-	} else {
-		r.PublisherUpgradeProfileID = types.Int64Null()
-	}
-	if resp.Registered != nil {
-		r.Registered = types.BoolValue(*resp.Registered)
-	} else {
-		r.Registered = types.BoolNull()
-	}
-	if resp.Status != nil {
-		r.Status = types.StringValue(string(*resp.Status))
-	} else {
-		r.Status = types.StringNull()
-	}
-	if resp.StitcherID != nil {
-		r.StitcherID = types.Int64Value(int64(*resp.StitcherID))
-	} else {
-		r.StitcherID = types.Int64Null()
-	}
-	if len(r.Tags) > len(resp.Tags) {
-		r.Tags = r.Tags[:len(resp.Tags)]
-	}
-	for tagsCount, tagsItem := range resp.Tags {
-		var tags1 TagItem
-		if tagsItem.TagID != nil {
-			tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
-		} else {
-			tags1.TagID = types.Int64Null()
-		}
-		if tagsItem.TagName != nil {
-			tags1.TagName = types.StringValue(*tagsItem.TagName)
-		} else {
-			tags1.TagName = types.StringNull()
-		}
-		if tagsCount+1 > len(r.Tags) {
-			r.Tags = append(r.Tags, tags1)
-		} else {
-			r.Tags[tagsCount].TagID = tags1.TagID
-			r.Tags[tagsCount].TagName = tags1.TagName
-		}
-	}
-}
-
-func (r *NPAPublishersResourceModel) RefreshFromCreateResponse(resp *shared.PublisherResponseData) {
-	r.RefreshFromGetResponse(resp)
-}
-
-func (r *NPAPublishersResourceModel) RefreshFromUpdateResponse(resp *shared.PublisherResponseData) {
-	r.RefreshFromGetResponse(resp)
 }

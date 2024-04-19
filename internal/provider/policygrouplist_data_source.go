@@ -5,13 +5,13 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -24,17 +24,17 @@ func NewPolicyGroupListDataSource() datasource.DataSource {
 
 // PolicyGroupListDataSource is the data source implementation.
 type PolicyGroupListDataSource struct {
-	client *sdk.SDK
+	client *sdk.TerraformProviderNs
 }
 
 // PolicyGroupListDataSourceModel describes the data model.
 type PolicyGroupListDataSourceModel struct {
-	Data      []NpaPolicygroupResponseItem `tfsdk:"data"`
-	Filter    types.String                 `tfsdk:"filter"`
-	Limit     types.Int64                  `tfsdk:"limit"`
-	Offset    types.Int64                  `tfsdk:"offset"`
-	Sortby    types.String                 `tfsdk:"sortby"`
-	Sortorder types.String                 `tfsdk:"sortorder"`
+	Data      []tfTypes.NpaPolicygroupResponseItem `tfsdk:"data"`
+	Filter    types.String                         `tfsdk:"filter"`
+	Limit     types.Int64                          `tfsdk:"limit"`
+	Offset    types.Int64                          `tfsdk:"offset"`
+	Sortby    types.String                         `tfsdk:"sortby"`
+	Sortorder types.String                         `tfsdk:"sortorder"`
 }
 
 // Metadata returns the data source type name.
@@ -109,12 +109,12 @@ func (r *PolicyGroupListDataSource) Configure(ctx context.Context, req datasourc
 		return
 	}
 
-	client, ok := req.ProviderData.(*sdk.SDK)
+	client, ok := req.ProviderData.(*sdk.TerraformProviderNs)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *sdk.SDK, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *sdk.TerraformProviderNs, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -171,14 +171,14 @@ func (r *PolicyGroupListDataSource) Read(ctx context.Context, req datasource.Rea
 	} else {
 		sortorder = nil
 	}
-	request := operations.GetPolicyNpaPolicygroupsRequest{
+	request := operations.GetNPAPolicyGroupsRequest{
 		Filter:    filter,
 		Limit:     limit,
 		Offset:    offset,
 		Sortby:    sortby,
 		Sortorder: sortorder,
 	}
-	res, err := r.client.GetPolicyNpaPolicygroups(ctx, request)
+	res, err := r.client.GetNPAPolicyGroups(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -190,6 +190,10 @@ func (r *PolicyGroupListDataSource) Read(ctx context.Context, req datasource.Rea
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -198,7 +202,7 @@ func (r *PolicyGroupListDataSource) Read(ctx context.Context, req datasource.Rea
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.NpaPolicygroupResponse)
+	data.RefreshFromSharedNpaPolicygroupResponse(res.NpaPolicygroupResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

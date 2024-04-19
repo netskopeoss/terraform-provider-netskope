@@ -4,15 +4,15 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *NPAPublishersAlertsConfigurationResourceModel) ToCreateSDKType() *shared.PublishersAlertPutRequest {
-	var adminUsers []string = nil
+func (r *NPAPublishersAlertsConfigurationResourceModel) ToSharedPublishersAlertPutRequest() *shared.PublishersAlertPutRequest {
+	var adminUsers []string = []string{}
 	for _, adminUsersItem := range r.AdminUsers {
 		adminUsers = append(adminUsers, adminUsersItem.ValueString())
 	}
-	var eventTypes []shared.EventTypes = nil
+	var eventTypes []shared.EventTypes = []shared.EventTypes{}
 	for _, eventTypesItem := range r.EventTypes {
 		eventTypes = append(eventTypes, shared.EventTypes(eventTypesItem.ValueString()))
 	}
@@ -30,31 +30,16 @@ func (r *NPAPublishersAlertsConfigurationResourceModel) ToCreateSDKType() *share
 	return &out
 }
 
-func (r *NPAPublishersAlertsConfigurationResourceModel) ToUpdateSDKType() *shared.PublishersAlertPutRequest {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromGetResponse(resp *shared.PublishersAlertGetResponseData) {
-	r.AdminUsers = nil
-	for _, v := range resp.AdminUsers {
-		r.AdminUsers = append(r.AdminUsers, types.StringValue(v))
+func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromSharedPublishersAlertGetResponseData(resp *shared.PublishersAlertGetResponseData) {
+	if resp != nil {
+		r.AdminUsers = []types.String{}
+		for _, v := range resp.AdminUsers {
+			r.AdminUsers = append(r.AdminUsers, types.StringValue(v))
+		}
+		r.EventTypes = []types.String{}
+		for _, v := range resp.EventTypes {
+			r.EventTypes = append(r.EventTypes, types.StringValue(string(v)))
+		}
+		r.SelectedUsers = types.StringPointerValue(resp.SelectedUsers)
 	}
-	r.EventTypes = nil
-	for _, v := range resp.EventTypes {
-		r.EventTypes = append(r.EventTypes, types.StringValue(string(v)))
-	}
-	if resp.SelectedUsers != nil {
-		r.SelectedUsers = types.StringValue(*resp.SelectedUsers)
-	} else {
-		r.SelectedUsers = types.StringNull()
-	}
-}
-
-func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromCreateResponse(resp *shared.PublishersAlertGetResponseData) {
-	r.RefreshFromGetResponse(resp)
-}
-
-func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromUpdateResponse(resp *shared.PublishersAlertGetResponseData) {
-	r.RefreshFromGetResponse(resp)
 }
