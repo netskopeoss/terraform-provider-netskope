@@ -8,11 +8,11 @@ import (
 )
 
 func (r *NPAPublishersAlertsConfigurationResourceModel) ToSharedPublishersAlertPutRequest() *shared.PublishersAlertPutRequest {
-	var adminUsers []string = nil
+	var adminUsers []string = []string{}
 	for _, adminUsersItem := range r.AdminUsers {
 		adminUsers = append(adminUsers, adminUsersItem.ValueString())
 	}
-	var eventTypes []shared.EventTypes = nil
+	var eventTypes []shared.EventTypes = []shared.EventTypes{}
 	for _, eventTypesItem := range r.EventTypes {
 		eventTypes = append(eventTypes, shared.EventTypes(eventTypesItem.ValueString()))
 	}

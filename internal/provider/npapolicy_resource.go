@@ -36,9 +36,9 @@ type NPAPolicyResourceModel struct {
 	Enabled     types.String               `tfsdk:"enabled"`
 	GroupName   types.String               `tfsdk:"group_name"`
 	RuleData    *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleID      types.String               `tfsdk:"rule_id"`
 	RuleName    types.String               `tfsdk:"rule_name"`
 	RuleOrder   *tfTypes.RuleOrder         `tfsdk:"rule_order"`
-	RuleID      types.String               `tfsdk:"rule_id"`
 }
 
 func (r *NPAPolicyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -48,7 +48,6 @@ func (r *NPAPolicyResource) Metadata(ctx context.Context, req resource.MetadataR
 func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "NPAPolicy Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"description": schema.StringAttribute{
 				Optional: true,
@@ -232,6 +231,10 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 					},
 				},
 			},
+			"rule_id": schema.StringAttribute{
+				Computed:    true,
+				Description: `npa policy id`,
+			},
 			"rule_name": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
@@ -261,10 +264,6 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 						Optional: true,
 					},
 				},
-			},
-			"rule_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `npa policy id`,
 			},
 		},
 	}
@@ -394,6 +393,10 @@ func (r *NPAPolicyResource) Read(ctx context.Context, req resource.ReadRequest, 
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

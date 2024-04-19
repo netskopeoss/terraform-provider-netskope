@@ -23,15 +23,15 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 	}
 	var ruleData *shared.NpaPolicyRuleData
 	if r.RuleData != nil {
-		var users []string = nil
+		var users []string = []string{}
 		for _, usersItem := range r.RuleData.Users {
 			users = append(users, usersItem.ValueString())
 		}
-		var userGroups []string = nil
+		var userGroups []string = []string{}
 		for _, userGroupsItem := range r.RuleData.UserGroups {
 			userGroups = append(userGroups, userGroupsItem.ValueString())
 		}
-		var organizationUnits []string = nil
+		var organizationUnits []string = []string{}
 		for _, organizationUnitsItem := range r.RuleData.OrganizationUnits {
 			organizationUnits = append(organizationUnits, organizationUnitsItem.ValueString())
 		}
@@ -41,7 +41,7 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 		} else {
 			userType = nil
 		}
-		var accessMethod []string = nil
+		var accessMethod []string = []string{}
 		for _, accessMethodItem := range r.RuleData.AccessMethod {
 			accessMethod = append(accessMethod, accessMethodItem.ValueString())
 		}
@@ -51,23 +51,23 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 		} else {
 			policyType = nil
 		}
-		var privateApps []string = nil
+		var privateApps []string = []string{}
 		for _, privateAppsItem := range r.RuleData.PrivateApps {
 			privateApps = append(privateApps, privateAppsItem.ValueString())
 		}
-		var privateAppIds []string = nil
+		var privateAppIds []string = []string{}
 		for _, privateAppIdsItem := range r.RuleData.PrivateAppIds {
 			privateAppIds = append(privateAppIds, privateAppIdsItem.ValueString())
 		}
-		var privateAppTags []string = nil
+		var privateAppTags []string = []string{}
 		for _, privateAppTagsItem := range r.RuleData.PrivateAppTags {
 			privateAppTags = append(privateAppTags, privateAppTagsItem.ValueString())
 		}
-		var privateAppTagIds []string = nil
+		var privateAppTagIds []string = []string{}
 		for _, privateAppTagIdsItem := range r.RuleData.PrivateAppTagIds {
 			privateAppTagIds = append(privateAppTagIds, privateAppTagIdsItem.ValueString())
 		}
-		var privateAppsWithActivities []shared.PrivateAppsWithActivities = nil
+		var privateAppsWithActivities []shared.PrivateAppsWithActivities = []shared.PrivateAppsWithActivities{}
 		for _, privateAppsWithActivitiesItem := range r.RuleData.PrivateAppsWithActivities {
 			appName := new(string)
 			if !privateAppsWithActivitiesItem.AppName.IsUnknown() && !privateAppsWithActivitiesItem.AppName.IsNull() {
@@ -75,7 +75,7 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 			} else {
 				appName = nil
 			}
-			var activities []shared.Activities = nil
+			var activities []shared.Activities = []shared.Activities{}
 			for _, activitiesItem := range privateAppsWithActivitiesItem.Activities {
 				activity := new(shared.Activity)
 				if !activitiesItem.Activity.IsUnknown() && !activitiesItem.Activity.IsNull() {
@@ -83,7 +83,7 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 				} else {
 					activity = nil
 				}
-				var listOfConstraints []string = nil
+				var listOfConstraints []string = []string{}
 				for _, listOfConstraintsItem := range activitiesItem.ListOfConstraints {
 					listOfConstraints = append(listOfConstraints, listOfConstraintsItem.ValueString())
 				}
@@ -127,7 +127,7 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 		} else {
 			externalDlp = nil
 		}
-		var netLocationObj []string = nil
+		var netLocationObj []string = []string{}
 		for _, netLocationObjItem := range r.RuleData.NetLocationObj {
 			netLocationObj = append(netLocationObj, netLocationObjItem.ValueString())
 		}
@@ -137,7 +137,7 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 		} else {
 			bNegateNetLocation = nil
 		}
-		var srcCountries []string = nil
+		var srcCountries []string = []string{}
 		for _, srcCountriesItem := range r.RuleData.SrcCountries {
 			srcCountries = append(srcCountries, srcCountriesItem.ValueString())
 		}
@@ -159,7 +159,7 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 		} else {
 			version = nil
 		}
-		var dlpActions []shared.NpaPolicyRuleDlp = nil
+		var dlpActions []shared.NpaPolicyRuleDlp = []shared.NpaPolicyRuleDlp{}
 		for _, dlpActionsItem := range r.RuleData.DlpActions {
 			dlpProfile := new(string)
 			if !dlpActionsItem.DlpProfile.IsUnknown() && !dlpActionsItem.DlpProfile.IsNull() {
@@ -167,7 +167,7 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 			} else {
 				dlpProfile = nil
 			}
-			var actions []shared.Actions = nil
+			var actions []shared.Actions = []shared.Actions{}
 			for _, actionsItem := range dlpActionsItem.Actions {
 				actions = append(actions, shared.Actions(actionsItem.ValueString()))
 			}

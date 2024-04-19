@@ -50,7 +50,6 @@ func (r *SCIMUserResource) Metadata(ctx context.Context, req resource.MetadataRe
 func (r *SCIMUserResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "SCIMUser Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"active": schema.BoolAttribute{
 				Computed: true,
@@ -262,6 +261,10 @@ func (r *SCIMUserResource) Read(ctx context.Context, req resource.ReadRequest, r
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

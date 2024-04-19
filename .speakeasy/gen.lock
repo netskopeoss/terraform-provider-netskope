@@ -1,23 +1,23 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: 8550aa786ab80b14b96e7cd246369585
+  docChecksum: c0c7bd0d6d845ab3a43660205a684cd6
   docVersion: 2.0.0
-  speakeasyVersion: 1.220.0
-  generationVersion: 2.286.7
-  releaseVersion: 0.2.2
-  configChecksum: f71bf187ba4b699689e55adddfe629ce
+  speakeasyVersion: 1.264.1
+  generationVersion: 2.312.0
+  releaseVersion: 0.3.0
+  configChecksum: ee343df04823d6938af17f679dd4624f
 features:
   terraform:
     constsAndDefaults: 0.1.4
-    core: 3.11.5
+    core: 3.18.3
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
     groups: 2.81.2
     ignores: 2.81.1
-    nameOverrides: 2.81.1
+    nameOverrides: 2.81.2
     typeOverrides: 2.81.1
-    unions: 2.81.10
+    unions: 2.81.12
 generatedFiles:
   - internal/sdk/npapublishers.go
   - internal/sdk/publishertoken.go
@@ -108,8 +108,8 @@ generatedFiles:
   - internal/sdk/models/operations/deletescimusers.go
   - internal/sdk/models/operations/createscimgroups.go
   - internal/sdk/models/operations/getscimgroups.go
-  - internal/sdk/models/operations/putscimgroupsbyid.go
   - internal/sdk/models/operations/getscimgroupsbyid.go
+  - internal/sdk/models/operations/patchscimusersbyid.go
   - internal/sdk/models/operations/deletescimusersbyid.go
   - internal/sdk/models/shared/fourhundred.go
   - internal/sdk/models/shared/publishersresponse400.go
@@ -257,8 +257,8 @@ generatedFiles:
   - internal/provider/types/apply.go
   - internal/provider/types/publishers.go
   - internal/provider/types/protocol_item.go
-  - internal/provider/types/publisher_item.go
   - internal/provider/types/tag_item_no_id.go
+  - internal/provider/types/publisher_item.go
   - internal/provider/types/protocol_response_item.go
   - internal/provider/types/reachability.go
   - internal/provider/types/service_publisher_assignment_item.go

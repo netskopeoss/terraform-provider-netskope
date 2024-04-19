@@ -59,7 +59,6 @@ func (r *NPAPublishersResource) Metadata(ctx context.Context, req resource.Metad
 func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "NPAPublishers Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"assessment": schema.StringAttribute{
 				Computed:    true,
@@ -124,8 +123,10 @@ func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaR
 							Computed: true,
 						},
 						"tag_name": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
+							Computed:    true,
+							Optional:    true,
+							Default:     stringdefault.StaticString("tag_name"),
+							Description: `Default: "tag_name"`,
 						},
 					},
 				},
@@ -261,6 +262,10 @@ func (r *NPAPublishersResource) Read(ctx context.Context, req resource.ReadReque
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

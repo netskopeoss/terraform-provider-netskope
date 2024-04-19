@@ -51,7 +51,6 @@ func (r *NPAPublisherUpgradeProfileResource) Metadata(ctx context.Context, req r
 func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "NPAPublisherUpgradeProfile Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"docker_tag": schema.StringAttribute{
 				Computed: true,
@@ -222,6 +221,10 @@ func (r *NPAPublisherUpgradeProfileResource) Read(ctx context.Context, req resou
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {
