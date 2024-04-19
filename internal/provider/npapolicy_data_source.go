@@ -5,13 +5,13 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -24,14 +24,14 @@ func NewNPAPolicyDataSource() datasource.DataSource {
 
 // NPAPolicyDataSource is the data source implementation.
 type NPAPolicyDataSource struct {
-	client *sdk.SDK
+	client *sdk.TerraformProviderNs
 }
 
 // NPAPolicyDataSourceModel describes the data model.
 type NPAPolicyDataSourceModel struct {
-	RuleData *NpaPolicyRuleData `tfsdk:"rule_data"`
-	RuleID   types.String       `tfsdk:"rule_id"`
-	RuleName types.String       `tfsdk:"rule_name"`
+	RuleData *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleID   types.String               `tfsdk:"rule_id"`
+	RuleName types.String               `tfsdk:"rule_name"`
 }
 
 // Metadata returns the data source type name.
@@ -106,14 +106,6 @@ func (r *NPAPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						Computed:    true,
 						ElementType: types.StringType,
 					},
-					"private_app_tag_ids": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"private_app_tags": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
 					"private_apps": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
@@ -143,6 +135,14 @@ func (r *NPAPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							},
 						},
 					},
+					"private_app_tag_ids": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"private_app_tags": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
 					"show_dlp_profile_action_table": schema.BoolAttribute{
 						Computed: true,
 					},
@@ -154,13 +154,13 @@ func (r *NPAPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						Computed:    true,
 						ElementType: types.StringType,
 					},
-					"user_type": schema.StringAttribute{
-						Computed:    true,
-						Description: `must be one of ["user"]`,
-					},
 					"users": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
+					},
+					"user_type": schema.StringAttribute{
+						Computed:    true,
+						Description: `must be one of ["user"]`,
 					},
 					"version": schema.Int64Attribute{
 						Computed: true,
@@ -184,12 +184,12 @@ func (r *NPAPolicyDataSource) Configure(ctx context.Context, req datasource.Conf
 		return
 	}
 
-	client, ok := req.ProviderData.(*sdk.SDK)
+	client, ok := req.ProviderData.(*sdk.TerraformProviderNs)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *sdk.SDK, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *sdk.TerraformProviderNs, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -217,10 +217,10 @@ func (r *NPAPolicyDataSource) Read(ctx context.Context, req datasource.ReadReque
 	}
 
 	id := data.RuleID.ValueString()
-	request := operations.GetPolicyNpaRulesIDRequest{
+	request := operations.GetNPAPolicyRulesByIDRequest{
 		ID: id,
 	}
-	res, err := r.client.GetPolicyNpaRulesID(ctx, request)
+	res, err := r.client.GetNPAPolicyRulesByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -232,15 +232,19 @@ func (r *NPAPolicyDataSource) Read(ctx context.Context, req datasource.ReadReque
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Object == nil || res.Object.Data == nil {
+	if res.Object == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.Object.Data)
+	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

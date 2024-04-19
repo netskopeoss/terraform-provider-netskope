@@ -4,66 +4,37 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *PolicyGroupListDataSourceModel) RefreshFromGetResponse(resp *shared.NpaPolicygroupResponse) {
-	if len(r.Data) > len(resp.Data) {
-		r.Data = r.Data[:len(resp.Data)]
-	}
-	for dataCount, dataItem := range resp.Data {
-		var data1 NpaPolicygroupResponseItem
-		if dataItem.CanBeEditedDeleted != nil {
-			data1.CanBeEditedDeleted = types.StringValue(*dataItem.CanBeEditedDeleted)
-		} else {
-			data1.CanBeEditedDeleted = types.StringNull()
+func (r *PolicyGroupListDataSourceModel) RefreshFromSharedNpaPolicygroupResponse(resp *shared.NpaPolicygroupResponse) {
+	if resp != nil {
+		if len(r.Data) > len(resp.Data) {
+			r.Data = r.Data[:len(resp.Data)]
 		}
-		if dataItem.GroupID != nil {
-			data1.GroupID = types.StringValue(*dataItem.GroupID)
-		} else {
-			data1.GroupID = types.StringNull()
-		}
-		if dataItem.GroupName != nil {
-			data1.GroupName = types.StringValue(*dataItem.GroupName)
-		} else {
-			data1.GroupName = types.StringNull()
-		}
-		if dataItem.GroupPinnedID != nil {
-			data1.GroupPinnedID = types.Int64Value(*dataItem.GroupPinnedID)
-		} else {
-			data1.GroupPinnedID = types.Int64Null()
-		}
-		if dataItem.GroupProdID != nil {
-			data1.GroupProdID = types.Int64Value(*dataItem.GroupProdID)
-		} else {
-			data1.GroupProdID = types.Int64Null()
-		}
-		if dataItem.GroupType != nil {
-			data1.GroupType = types.StringValue(*dataItem.GroupType)
-		} else {
-			data1.GroupType = types.StringNull()
-		}
-		if dataItem.ModifyTime != nil {
-			data1.ModifyTime = types.StringValue(*dataItem.ModifyTime)
-		} else {
-			data1.ModifyTime = types.StringNull()
-		}
-		if dataItem.ModifyType != nil {
-			data1.ModifyType = types.StringValue(*dataItem.ModifyType)
-		} else {
-			data1.ModifyType = types.StringNull()
-		}
-		if dataCount+1 > len(r.Data) {
-			r.Data = append(r.Data, data1)
-		} else {
-			r.Data[dataCount].CanBeEditedDeleted = data1.CanBeEditedDeleted
-			r.Data[dataCount].GroupID = data1.GroupID
-			r.Data[dataCount].GroupName = data1.GroupName
-			r.Data[dataCount].GroupPinnedID = data1.GroupPinnedID
-			r.Data[dataCount].GroupProdID = data1.GroupProdID
-			r.Data[dataCount].GroupType = data1.GroupType
-			r.Data[dataCount].ModifyTime = data1.ModifyTime
-			r.Data[dataCount].ModifyType = data1.ModifyType
+		for dataCount, dataItem := range resp.Data {
+			var data1 tfTypes.NpaPolicygroupResponseItem
+			data1.CanBeEditedDeleted = types.StringPointerValue(dataItem.CanBeEditedDeleted)
+			data1.GroupID = types.StringPointerValue(dataItem.GroupID)
+			data1.GroupName = types.StringPointerValue(dataItem.GroupName)
+			data1.GroupPinnedID = types.Int64PointerValue(dataItem.GroupPinnedID)
+			data1.GroupProdID = types.Int64PointerValue(dataItem.GroupProdID)
+			data1.GroupType = types.StringPointerValue(dataItem.GroupType)
+			data1.ModifyTime = types.StringPointerValue(dataItem.ModifyTime)
+			data1.ModifyType = types.StringPointerValue(dataItem.ModifyType)
+			if dataCount+1 > len(r.Data) {
+				r.Data = append(r.Data, data1)
+			} else {
+				r.Data[dataCount].CanBeEditedDeleted = data1.CanBeEditedDeleted
+				r.Data[dataCount].GroupID = data1.GroupID
+				r.Data[dataCount].GroupName = data1.GroupName
+				r.Data[dataCount].GroupPinnedID = data1.GroupPinnedID
+				r.Data[dataCount].GroupProdID = data1.GroupProdID
+				r.Data[dataCount].GroupType = data1.GroupType
+				r.Data[dataCount].ModifyTime = data1.ModifyTime
+				r.Data[dataCount].ModifyType = data1.ModifyType
+			}
 		}
 	}
 }

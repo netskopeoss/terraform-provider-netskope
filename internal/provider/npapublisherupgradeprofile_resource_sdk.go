@@ -5,43 +5,21 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *NPAPublisherUpgradeProfileResourceModel) ToCreateSDKType() *shared.PublisherUpgradeProfilePostRequest {
-	dockerTag := new(string)
-	if !r.DockerTag.IsUnknown() && !r.DockerTag.IsNull() {
-		*dockerTag = r.DockerTag.ValueString()
-	} else {
-		dockerTag = nil
-	}
-	enabled := new(bool)
-	if !r.Enabled.IsUnknown() && !r.Enabled.IsNull() {
-		*enabled = r.Enabled.ValueBool()
-	} else {
-		enabled = nil
-	}
-	frequency := new(string)
-	if !r.Frequency.IsUnknown() && !r.Frequency.IsNull() {
-		*frequency = r.Frequency.ValueString()
-	} else {
-		frequency = nil
-	}
+func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfilePostRequest() *shared.PublisherUpgradeProfilePostRequest {
 	name := new(string)
 	if !r.Name.IsUnknown() && !r.Name.IsNull() {
 		*name = r.Name.ValueString()
 	} else {
 		name = nil
 	}
-	releaseType := new(string)
-	if !r.ReleaseType.IsUnknown() && !r.ReleaseType.IsNull() {
-		*releaseType = r.ReleaseType.ValueString()
+	frequency := new(string)
+	if !r.Frequency.IsUnknown() && !r.Frequency.IsNull() {
+		*frequency = r.Frequency.ValueString()
 	} else {
-		releaseType = nil
-	}
-	var required interface{}
-	if !r.Required.IsUnknown() && !r.Required.IsNull() {
-		_ = json.Unmarshal([]byte(r.Required.ValueString()), &required)
+		frequency = nil
 	}
 	timezone := new(string)
 	if !r.Timezone.IsUnknown() && !r.Timezone.IsNull() {
@@ -49,29 +27,17 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToCreateSDKType() *shared.Publ
 	} else {
 		timezone = nil
 	}
-	out := shared.PublisherUpgradeProfilePostRequest{
-		DockerTag:   dockerTag,
-		Enabled:     enabled,
-		Frequency:   frequency,
-		Name:        name,
-		ReleaseType: releaseType,
-		Required:    required,
-		Timezone:    timezone,
-	}
-	return &out
-}
-
-func (r *NPAPublisherUpgradeProfileResourceModel) ToGetSDKType() *shared.PublisherUpgradeProfilePostRequest {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *NPAPublisherUpgradeProfileResourceModel) ToUpdateSDKType() *shared.PublisherUpgradeProfilePutRequest {
 	dockerTag := new(string)
 	if !r.DockerTag.IsUnknown() && !r.DockerTag.IsNull() {
 		*dockerTag = r.DockerTag.ValueString()
 	} else {
 		dockerTag = nil
+	}
+	releaseType := new(string)
+	if !r.ReleaseType.IsUnknown() && !r.ReleaseType.IsNull() {
+		*releaseType = r.ReleaseType.ValueString()
+	} else {
+		releaseType = nil
 	}
 	enabled := new(bool)
 	if !r.Enabled.IsUnknown() && !r.Enabled.IsNull() {
@@ -79,11 +45,44 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToUpdateSDKType() *shared.Publ
 	} else {
 		enabled = nil
 	}
-	frequency := new(string)
-	if !r.Frequency.IsUnknown() && !r.Frequency.IsNull() {
-		*frequency = r.Frequency.ValueString()
+	var required interface{}
+	if !r.Required.IsUnknown() && !r.Required.IsNull() {
+		_ = json.Unmarshal([]byte(r.Required.ValueString()), &required)
+	}
+	out := shared.PublisherUpgradeProfilePostRequest{
+		Name:        name,
+		Frequency:   frequency,
+		Timezone:    timezone,
+		DockerTag:   dockerTag,
+		ReleaseType: releaseType,
+		Enabled:     enabled,
+		Required:    required,
+	}
+	return &out
+}
+
+func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgradeProfileResponseData(resp *shared.PublisherUpgradeProfileResponseData) {
+	if resp != nil {
+		r.DockerTag = types.StringPointerValue(resp.DockerTag)
+		r.Enabled = types.BoolPointerValue(resp.Enabled)
+		r.Frequency = types.StringPointerValue(resp.Frequency)
+		if resp.ID != nil {
+			r.ID = types.Int64Value(int64(*resp.ID))
+		} else {
+			r.ID = types.Int64Null()
+		}
+		r.Name = types.StringPointerValue(resp.Name)
+		r.ReleaseType = types.StringPointerValue(resp.ReleaseType)
+		r.Timezone = types.StringPointerValue(resp.Timezone)
+	}
+}
+
+func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfilePutRequest() *shared.PublisherUpgradeProfilePutRequest {
+	name := new(string)
+	if !r.Name.IsUnknown() && !r.Name.IsNull() {
+		*name = r.Name.ValueString()
 	} else {
-		frequency = nil
+		name = nil
 	}
 	id := new(int)
 	if !r.ID.IsUnknown() && !r.ID.IsNull() {
@@ -91,17 +90,11 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToUpdateSDKType() *shared.Publ
 	} else {
 		id = nil
 	}
-	name := new(string)
-	if !r.Name.IsUnknown() && !r.Name.IsNull() {
-		*name = r.Name.ValueString()
+	frequency := new(string)
+	if !r.Frequency.IsUnknown() && !r.Frequency.IsNull() {
+		*frequency = r.Frequency.ValueString()
 	} else {
-		name = nil
-	}
-	releaseType := new(string)
-	if !r.ReleaseType.IsUnknown() && !r.ReleaseType.IsNull() {
-		*releaseType = r.ReleaseType.ValueString()
-	} else {
-		releaseType = nil
+		frequency = nil
 	}
 	timezone := new(string)
 	if !r.Timezone.IsUnknown() && !r.Timezone.IsNull() {
@@ -109,65 +102,32 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToUpdateSDKType() *shared.Publ
 	} else {
 		timezone = nil
 	}
+	dockerTag := new(string)
+	if !r.DockerTag.IsUnknown() && !r.DockerTag.IsNull() {
+		*dockerTag = r.DockerTag.ValueString()
+	} else {
+		dockerTag = nil
+	}
+	releaseType := new(string)
+	if !r.ReleaseType.IsUnknown() && !r.ReleaseType.IsNull() {
+		*releaseType = r.ReleaseType.ValueString()
+	} else {
+		releaseType = nil
+	}
+	enabled := new(bool)
+	if !r.Enabled.IsUnknown() && !r.Enabled.IsNull() {
+		*enabled = r.Enabled.ValueBool()
+	} else {
+		enabled = nil
+	}
 	out := shared.PublisherUpgradeProfilePutRequest{
-		DockerTag:   dockerTag,
-		Enabled:     enabled,
-		Frequency:   frequency,
-		ID:          id,
 		Name:        name,
-		ReleaseType: releaseType,
+		ID:          id,
+		Frequency:   frequency,
 		Timezone:    timezone,
+		DockerTag:   dockerTag,
+		ReleaseType: releaseType,
+		Enabled:     enabled,
 	}
 	return &out
-}
-
-func (r *NPAPublisherUpgradeProfileResourceModel) ToDeleteSDKType() *shared.PublisherUpgradeProfilePostRequest {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromGetResponse(resp *shared.PublisherUpgradeProfileResponseData) {
-	if resp.DockerTag != nil {
-		r.DockerTag = types.StringValue(*resp.DockerTag)
-	} else {
-		r.DockerTag = types.StringNull()
-	}
-	if resp.Enabled != nil {
-		r.Enabled = types.BoolValue(*resp.Enabled)
-	} else {
-		r.Enabled = types.BoolNull()
-	}
-	if resp.Frequency != nil {
-		r.Frequency = types.StringValue(*resp.Frequency)
-	} else {
-		r.Frequency = types.StringNull()
-	}
-	if resp.ID != nil {
-		r.ID = types.Int64Value(int64(*resp.ID))
-	} else {
-		r.ID = types.Int64Null()
-	}
-	if resp.Name != nil {
-		r.Name = types.StringValue(*resp.Name)
-	} else {
-		r.Name = types.StringNull()
-	}
-	if resp.ReleaseType != nil {
-		r.ReleaseType = types.StringValue(*resp.ReleaseType)
-	} else {
-		r.ReleaseType = types.StringNull()
-	}
-	if resp.Timezone != nil {
-		r.Timezone = types.StringValue(*resp.Timezone)
-	} else {
-		r.Timezone = types.StringNull()
-	}
-}
-
-func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromCreateResponse(resp *shared.PublisherUpgradeProfileResponseData) {
-	r.RefreshFromGetResponse(resp)
-}
-
-func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromUpdateResponse(resp *shared.PublisherUpgradeProfileResponseData) {
-	r.RefreshFromGetResponse(resp)
 }

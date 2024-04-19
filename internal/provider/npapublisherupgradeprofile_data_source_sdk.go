@@ -4,43 +4,21 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *NPAPublisherUpgradeProfileDataSourceModel) RefreshFromGetResponse(resp *shared.PublisherUpgradeProfileResponseData) {
-	if resp.DockerTag != nil {
-		r.DockerTag = types.StringValue(*resp.DockerTag)
-	} else {
-		r.DockerTag = types.StringNull()
-	}
-	if resp.Enabled != nil {
-		r.Enabled = types.BoolValue(*resp.Enabled)
-	} else {
-		r.Enabled = types.BoolNull()
-	}
-	if resp.Frequency != nil {
-		r.Frequency = types.StringValue(*resp.Frequency)
-	} else {
-		r.Frequency = types.StringNull()
-	}
-	if resp.ID != nil {
-		r.ID = types.Int64Value(int64(*resp.ID))
-	} else {
-		r.ID = types.Int64Null()
-	}
-	if resp.Name != nil {
-		r.Name = types.StringValue(*resp.Name)
-	} else {
-		r.Name = types.StringNull()
-	}
-	if resp.ReleaseType != nil {
-		r.ReleaseType = types.StringValue(*resp.ReleaseType)
-	} else {
-		r.ReleaseType = types.StringNull()
-	}
-	if resp.Timezone != nil {
-		r.Timezone = types.StringValue(*resp.Timezone)
-	} else {
-		r.Timezone = types.StringNull()
+func (r *NPAPublisherUpgradeProfileDataSourceModel) RefreshFromSharedPublisherUpgradeProfileResponseData(resp *shared.PublisherUpgradeProfileResponseData) {
+	if resp != nil {
+		r.DockerTag = types.StringPointerValue(resp.DockerTag)
+		r.Enabled = types.BoolPointerValue(resp.Enabled)
+		r.Frequency = types.StringPointerValue(resp.Frequency)
+		if resp.ID != nil {
+			r.ID = types.Int64Value(int64(*resp.ID))
+		} else {
+			r.ID = types.Int64Null()
+		}
+		r.Name = types.StringPointerValue(resp.Name)
+		r.ReleaseType = types.StringPointerValue(resp.ReleaseType)
+		r.Timezone = types.StringPointerValue(resp.Timezone)
 	}
 }

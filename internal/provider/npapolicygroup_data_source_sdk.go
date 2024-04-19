@@ -4,48 +4,18 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *NPAPolicyGroupDataSourceModel) RefreshFromGetResponse(resp *shared.NpaPolicygroupResponseItem) {
-	if resp.CanBeEditedDeleted != nil {
-		r.CanBeEditedDeleted = types.StringValue(*resp.CanBeEditedDeleted)
-	} else {
-		r.CanBeEditedDeleted = types.StringNull()
-	}
-	if resp.GroupID != nil {
-		r.GroupID = types.StringValue(*resp.GroupID)
-	} else {
-		r.GroupID = types.StringNull()
-	}
-	if resp.GroupName != nil {
-		r.GroupName = types.StringValue(*resp.GroupName)
-	} else {
-		r.GroupName = types.StringNull()
-	}
-	if resp.GroupPinnedID != nil {
-		r.GroupPinnedID = types.Int64Value(*resp.GroupPinnedID)
-	} else {
-		r.GroupPinnedID = types.Int64Null()
-	}
-	if resp.GroupProdID != nil {
-		r.GroupProdID = types.Int64Value(*resp.GroupProdID)
-	} else {
-		r.GroupProdID = types.Int64Null()
-	}
-	if resp.GroupType != nil {
-		r.GroupType = types.StringValue(*resp.GroupType)
-	} else {
-		r.GroupType = types.StringNull()
-	}
-	if resp.ModifyTime != nil {
-		r.ModifyTime = types.StringValue(*resp.ModifyTime)
-	} else {
-		r.ModifyTime = types.StringNull()
-	}
-	if resp.ModifyType != nil {
-		r.ModifyType = types.StringValue(*resp.ModifyType)
-	} else {
-		r.ModifyType = types.StringNull()
+func (r *NPAPolicyGroupDataSourceModel) RefreshFromSharedNpaPolicygroupResponseItem(resp *shared.NpaPolicygroupResponseItem) {
+	if resp != nil {
+		r.CanBeEditedDeleted = types.StringPointerValue(resp.CanBeEditedDeleted)
+		r.GroupID = types.StringPointerValue(resp.GroupID)
+		r.GroupName = types.StringPointerValue(resp.GroupName)
+		r.GroupPinnedID = types.Int64PointerValue(resp.GroupPinnedID)
+		r.GroupProdID = types.Int64PointerValue(resp.GroupProdID)
+		r.GroupType = types.StringPointerValue(resp.GroupType)
+		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
+		r.ModifyType = types.StringPointerValue(resp.ModifyType)
 	}
 }

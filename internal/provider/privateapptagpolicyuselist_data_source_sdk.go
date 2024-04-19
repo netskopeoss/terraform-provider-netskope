@@ -4,35 +4,34 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
-func (r *PrivateAppTagPolicyUseListDataSourceModel) ToGetSDKType() *operations.PostSteeringAppsPrivateTagsGetpolicyinuseRequestBody {
-	var ids []string = nil
+func (r *PrivateAppTagPolicyUseListDataSourceModel) ToOperationsRetrieveNPAPoliciesInUseRequestBody() *operations.RetrieveNPAPoliciesInUseRequestBody {
+	var ids []string = []string{}
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
 	}
-	out := operations.PostSteeringAppsPrivateTagsGetpolicyinuseRequestBody{
+	out := operations.RetrieveNPAPoliciesInUseRequestBody{
 		Ids: ids,
 	}
 	return &out
 }
 
-func (r *PrivateAppTagPolicyUseListDataSourceModel) RefreshFromGetResponse(resp *operations.PostSteeringAppsPrivateTagsGetpolicyinuseResponseBody) {
-	if len(r.Data) > len(resp.Data) {
-		r.Data = r.Data[:len(resp.Data)]
-	}
-	for dataCount, dataItem := range resp.Data {
-		var data1 PostSteeringAppsPrivateTagsGetpolicyinuseData
-		if dataItem.Token != nil {
-			data1.Token = types.StringValue(*dataItem.Token)
-		} else {
-			data1.Token = types.StringNull()
+func (r *PrivateAppTagPolicyUseListDataSourceModel) RefreshFromOperationsRetrieveNPAPoliciesInUseResponseBody(resp *operations.RetrieveNPAPoliciesInUseResponseBody) {
+	if resp != nil {
+		if len(r.Data) > len(resp.Data) {
+			r.Data = r.Data[:len(resp.Data)]
 		}
-		if dataCount+1 > len(r.Data) {
-			r.Data = append(r.Data, data1)
-		} else {
-			r.Data[dataCount].Token = data1.Token
+		for dataCount, dataItem := range resp.Data {
+			var data1 tfTypes.RetrieveNPAPoliciesInUseData
+			data1.Token = types.StringPointerValue(dataItem.Token)
+			if dataCount+1 > len(r.Data) {
+				r.Data = append(r.Data, data1)
+			} else {
+				r.Data[dataCount].Token = data1.Token
+			}
 		}
 	}
 }

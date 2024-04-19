@@ -5,9 +5,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/operations"
-
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -18,6 +15,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	speakeasy_stringplanmodifier "github.com/speakeasy/terraform-provider-terraform/internal/planmodifiers/stringplanmodifier"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -30,20 +31,20 @@ func NewNPAPolicyGroupResource() resource.Resource {
 
 // NPAPolicyGroupResource defines the resource implementation.
 type NPAPolicyGroupResource struct {
-	client *sdk.SDK
+	client *sdk.TerraformProviderNs
 }
 
 // NPAPolicyGroupResourceModel describes the resource data model.
 type NPAPolicyGroupResourceModel struct {
-	CanBeEditedDeleted types.String `tfsdk:"can_be_edited_deleted"`
-	GroupID            types.String `tfsdk:"group_id"`
-	GroupName          types.String `tfsdk:"group_name"`
-	GroupOrder         GroupOrder   `tfsdk:"group_order"`
-	GroupPinnedID      types.Int64  `tfsdk:"group_pinned_id"`
-	GroupProdID        types.Int64  `tfsdk:"group_prod_id"`
-	GroupType          types.String `tfsdk:"group_type"`
-	ModifyTime         types.String `tfsdk:"modify_time"`
-	ModifyType         types.String `tfsdk:"modify_type"`
+	CanBeEditedDeleted types.String       `tfsdk:"can_be_edited_deleted"`
+	GroupID            types.String       `tfsdk:"group_id"`
+	GroupName          types.String       `tfsdk:"group_name"`
+	GroupOrder         tfTypes.GroupOrder `tfsdk:"group_order"`
+	GroupPinnedID      types.Int64        `tfsdk:"group_pinned_id"`
+	GroupProdID        types.Int64        `tfsdk:"group_prod_id"`
+	GroupType          types.String       `tfsdk:"group_type"`
+	ModifyTime         types.String       `tfsdk:"modify_time"`
+	ModifyType         types.String       `tfsdk:"modify_type"`
 }
 
 func (r *NPAPolicyGroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -53,39 +54,41 @@ func (r *NPAPolicyGroupResource) Metadata(ctx context.Context, req resource.Meta
 func (r *NPAPolicyGroupResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "NPAPolicyGroup Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"can_be_edited_deleted": schema.StringAttribute{
 				Computed: true,
 			},
 			"group_id": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: `npa policy group id`,
 			},
 			"group_name": schema.StringAttribute{
-				Computed: true,
 				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Optional: true,
+				Required:    true,
+				Description: `Requires replacement if changed. `,
 			},
 			"group_order": schema.SingleNestedAttribute{
 				PlanModifiers: []planmodifier.Object{
-					objectplanmodifier.RequiresReplace(),
+					objectplanmodifier.RequiresReplaceIfConfigured(),
 				},
 				Required: true,
 				Attributes: map[string]schema.Attribute{
 					"group_id": schema.StringAttribute{
 						PlanModifiers: []planmodifier.String{
-							stringplanmodifier.RequiresReplace(),
+							stringplanmodifier.RequiresReplaceIfConfigured(),
 						},
-						Required: true,
+						Required:    true,
+						Description: `Requires replacement if changed. `,
 					},
 					"order": schema.StringAttribute{
 						PlanModifiers: []planmodifier.String{
-							stringplanmodifier.RequiresReplace(),
+							stringplanmodifier.RequiresReplaceIfConfigured(),
 						},
 						Required:    true,
-						Description: `must be one of ["before", "after"]`,
+						Description: `Requires replacement if changed. ; must be one of ["before", "after"]`,
 						Validators: []validator.String{
 							stringvalidator.OneOf(
 								"before",
@@ -94,6 +97,7 @@ func (r *NPAPolicyGroupResource) Schema(ctx context.Context, req resource.Schema
 						},
 					},
 				},
+				Description: `Requires replacement if changed. `,
 			},
 			"group_pinned_id": schema.Int64Attribute{
 				Computed: true,
@@ -120,12 +124,12 @@ func (r *NPAPolicyGroupResource) Configure(ctx context.Context, req resource.Con
 		return
 	}
 
-	client, ok := req.ProviderData.(*sdk.SDK)
+	client, ok := req.ProviderData.(*sdk.TerraformProviderNs)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *sdk.SDK, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *sdk.TerraformProviderNs, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -136,14 +140,14 @@ func (r *NPAPolicyGroupResource) Configure(ctx context.Context, req resource.Con
 
 func (r *NPAPolicyGroupResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data *NPAPolicyGroupResourceModel
-	var item types.Object
+	var plan types.Object
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &item)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	resp.Diagnostics.Append(item.As(ctx, &data, basetypes.ObjectAsOptions{
+	resp.Diagnostics.Append(plan.As(ctx, &data, basetypes.ObjectAsOptions{
 		UnhandledNullAsEmpty:    true,
 		UnhandledUnknownAsEmpty: true,
 	})...)
@@ -152,11 +156,11 @@ func (r *NPAPolicyGroupResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	npaPolicygroupRequest := *data.ToCreateSDKType()
-	request := operations.PostPolicyNpaPolicygroupsRequest{
+	npaPolicygroupRequest := *data.ToSharedNpaPolicygroupRequest()
+	request := operations.CreateNPAPolicyGroupsRequest{
 		NpaPolicygroupRequest: npaPolicygroupRequest,
 	}
-	res, err := r.client.PostPolicyNpaPolicygroups(ctx, request)
+	res, err := r.client.CreateNPAPolicyGroups(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -172,11 +176,38 @@ func (r *NPAPolicyGroupResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Object == nil || res.Object.Data == nil {
+	if res.Object == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.Object.Data)
+	data.RefreshFromSharedNpaPolicygroupResponseItem(res.Object.Data)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	id := data.GroupID.ValueString()
+	request1 := operations.GetNPAPolicyGroupsByIDRequest{
+		ID: id,
+	}
+	res1, err := r.client.GetNPAPolicyGroupsByID(ctx, request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if res1.Object == nil {
+		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+		return
+	}
+	data.RefreshFromSharedNpaPolicygroupResponseItem(res1.Object.Data)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -201,10 +232,10 @@ func (r *NPAPolicyGroupResource) Read(ctx context.Context, req resource.ReadRequ
 	}
 
 	id := data.GroupID.ValueString()
-	request := operations.GetPolicyNpaPolicygroupsIDRequest{
+	request := operations.GetNPAPolicyGroupsByIDRequest{
 		ID: id,
 	}
-	res, err := r.client.GetPolicyNpaPolicygroupsID(ctx, request)
+	res, err := r.client.GetNPAPolicyGroupsByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -216,15 +247,19 @@ func (r *NPAPolicyGroupResource) Read(ctx context.Context, req resource.ReadRequ
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Object == nil || res.Object.Data == nil {
+	if res.Object == nil {
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.Object.Data)
+	data.RefreshFromSharedNpaPolicygroupResponseItem(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -232,6 +267,13 @@ func (r *NPAPolicyGroupResource) Read(ctx context.Context, req resource.ReadRequ
 
 func (r *NPAPolicyGroupResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data *NPAPolicyGroupResourceModel
+	var plan types.Object
+
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	merge(ctx, req, resp, &data)
 	if resp.Diagnostics.HasError() {
 		return
@@ -262,10 +304,10 @@ func (r *NPAPolicyGroupResource) Delete(ctx context.Context, req resource.Delete
 	}
 
 	id := data.GroupID.ValueString()
-	request := operations.DeletePolicyNpaPolicygroupsIDRequest{
+	request := operations.DeleteNPAPolicyGroupsRequest{
 		ID: id,
 	}
-	res, err := r.client.DeletePolicyNpaPolicygroupsID(ctx, request)
+	res, err := r.client.DeleteNPAPolicyGroups(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

@@ -4,41 +4,32 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *NPAPublishersReleasesListDataSourceModel) RefreshFromGetResponse(resp *shared.PublishersReleaseGetResponse) {
-	if len(r.Data) > len(resp.Data) {
-		r.Data = r.Data[:len(resp.Data)]
-	}
-	for dataCount, dataItem := range resp.Data {
-		var data1 ReleaseItem
-		if dataItem.DockerTag != nil {
-			data1.DockerTag = types.StringValue(*dataItem.DockerTag)
-		} else {
-			data1.DockerTag = types.StringNull()
+func (r *NPAPublishersReleasesListDataSourceModel) RefreshFromSharedPublishersReleaseGetResponse(resp *shared.PublishersReleaseGetResponse) {
+	if resp != nil {
+		if len(r.Data) > len(resp.Data) {
+			r.Data = r.Data[:len(resp.Data)]
 		}
-		if dataItem.Name != nil {
-			data1.Name = types.StringValue(*dataItem.Name)
-		} else {
-			data1.Name = types.StringNull()
+		for dataCount, dataItem := range resp.Data {
+			var data1 tfTypes.ReleaseItem
+			data1.DockerTag = types.StringPointerValue(dataItem.DockerTag)
+			data1.Name = types.StringPointerValue(dataItem.Name)
+			data1.Version = types.StringPointerValue(dataItem.Version)
+			if dataCount+1 > len(r.Data) {
+				r.Data = append(r.Data, data1)
+			} else {
+				r.Data[dataCount].DockerTag = data1.DockerTag
+				r.Data[dataCount].Name = data1.Name
+				r.Data[dataCount].Version = data1.Version
+			}
 		}
-		if dataItem.Version != nil {
-			data1.Version = types.StringValue(*dataItem.Version)
+		if resp.Status != nil {
+			r.Status = types.StringValue(string(*resp.Status))
 		} else {
-			data1.Version = types.StringNull()
+			r.Status = types.StringNull()
 		}
-		if dataCount+1 > len(r.Data) {
-			r.Data = append(r.Data, data1)
-		} else {
-			r.Data[dataCount].DockerTag = data1.DockerTag
-			r.Data[dataCount].Name = data1.Name
-			r.Data[dataCount].Version = data1.Version
-		}
-	}
-	if resp.Status != nil {
-		r.Status = types.StringValue(string(*resp.Status))
-	} else {
-		r.Status = types.StringNull()
 	}
 }

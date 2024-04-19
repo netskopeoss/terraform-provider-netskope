@@ -5,8 +5,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
@@ -15,6 +13,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -27,16 +27,17 @@ func NewPrivateAppTagResource() resource.Resource {
 
 // PrivateAppTagResource defines the resource implementation.
 type PrivateAppTagResource struct {
-	client *sdk.SDK
+	client *sdk.TerraformProviderNs
 }
 
 // PrivateAppTagResourceModel describes the resource data model.
 type PrivateAppTagResourceModel struct {
-	Data          []TagItem      `tfsdk:"data"`
-	ID            types.String   `tfsdk:"id"`
-	Ids           []types.String `tfsdk:"ids"`
-	PublisherTags []TagItem      `tfsdk:"publisher_tags"`
-	Tags          []TagItem      `tfsdk:"tags"`
+	ID            types.String      `tfsdk:"id"`
+	Ids           []types.String    `tfsdk:"ids"`
+	PublisherTags []tfTypes.TagItem `tfsdk:"publisher_tags"`
+	TagID         types.Int64       `tfsdk:"tag_id"`
+	TagName       types.String      `tfsdk:"tag_name"`
+	Tags          []tfTypes.TagItem `tfsdk:"tags"`
 }
 
 func (r *PrivateAppTagResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -46,77 +47,77 @@ func (r *PrivateAppTagResource) Metadata(ctx context.Context, req resource.Metad
 func (r *PrivateAppTagResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "PrivateAppTag Resource",
-
 		Attributes: map[string]schema.Attribute{
-			"data": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"tag_id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"tag_name": schema.StringAttribute{
-							Computed: true,
-						},
-					},
-				},
-			},
 			"id": schema.StringAttribute{
 				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
+					stringplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Optional: true,
+				Optional:    true,
+				Description: `Requires replacement if changed. `,
 			},
 			"ids": schema.ListAttribute{
 				PlanModifiers: []planmodifier.List{
-					listplanmodifier.RequiresReplace(),
+					listplanmodifier.RequiresReplaceIfConfigured(),
 				},
 				Optional:    true,
 				ElementType: types.StringType,
+				Description: `Requires replacement if changed. `,
 			},
 			"publisher_tags": schema.ListNestedAttribute{
 				PlanModifiers: []planmodifier.List{
-					listplanmodifier.RequiresReplace(),
+					listplanmodifier.RequiresReplaceIfConfigured(),
 				},
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"tag_id": schema.Int64Attribute{
 							PlanModifiers: []planmodifier.Int64{
-								int64planmodifier.RequiresReplace(),
+								int64planmodifier.RequiresReplaceIfConfigured(),
 							},
-							Optional: true,
+							Optional:    true,
+							Description: `Requires replacement if changed. `,
 						},
 						"tag_name": schema.StringAttribute{
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.RequiresReplace(),
+								stringplanmodifier.RequiresReplaceIfConfigured(),
 							},
-							Optional: true,
+							Optional:    true,
+							Description: `Requires replacement if changed. `,
 						},
 					},
 				},
+				Description: `Requires replacement if changed. `,
+			},
+			"tag_id": schema.Int64Attribute{
+				Computed: true,
+			},
+			"tag_name": schema.StringAttribute{
+				Computed: true,
 			},
 			"tags": schema.ListNestedAttribute{
 				PlanModifiers: []planmodifier.List{
-					listplanmodifier.RequiresReplace(),
+					listplanmodifier.RequiresReplaceIfConfigured(),
 				},
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"tag_id": schema.Int64Attribute{
 							PlanModifiers: []planmodifier.Int64{
-								int64planmodifier.RequiresReplace(),
+								int64planmodifier.RequiresReplaceIfConfigured(),
 							},
-							Optional: true,
+							Optional:    true,
+							Description: `Requires replacement if changed. `,
 						},
 						"tag_name": schema.StringAttribute{
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.RequiresReplace(),
+								stringplanmodifier.RequiresReplaceIfConfigured(),
 							},
-							Optional: true,
+							Optional:    true,
+							Description: `Requires replacement if changed. `,
 						},
 					},
 				},
+				Description: `Requires replacement if changed. `,
 			},
 		},
 	}
@@ -128,12 +129,12 @@ func (r *PrivateAppTagResource) Configure(ctx context.Context, req resource.Conf
 		return
 	}
 
-	client, ok := req.ProviderData.(*sdk.SDK)
+	client, ok := req.ProviderData.(*sdk.TerraformProviderNs)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *sdk.SDK, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *sdk.TerraformProviderNs, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -144,14 +145,14 @@ func (r *PrivateAppTagResource) Configure(ctx context.Context, req resource.Conf
 
 func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data *PrivateAppTagResourceModel
-	var item types.Object
+	var plan types.Object
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &item)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	resp.Diagnostics.Append(item.As(ctx, &data, basetypes.ObjectAsOptions{
+	resp.Diagnostics.Append(plan.As(ctx, &data, basetypes.ObjectAsOptions{
 		UnhandledNullAsEmpty:    true,
 		UnhandledUnknownAsEmpty: true,
 	})...)
@@ -160,8 +161,8 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
-	request := *data.ToCreateSDKType()
-	res, err := r.client.PostSteeringAppsPrivateTags(ctx, request)
+	request := *data.ToSharedTagRequest()
+	res, err := r.client.CreateNPATags(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -181,7 +182,8 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.TagResponse)
+	data.RefreshFromSharedTagResponseData(res.TagResponse.Data[0])
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -213,6 +215,13 @@ func (r *PrivateAppTagResource) Read(ctx context.Context, req resource.ReadReque
 
 func (r *PrivateAppTagResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data *PrivateAppTagResourceModel
+	var plan types.Object
+
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	merge(ctx, req, resp, &data)
 	if resp.Diagnostics.HasError() {
 		return

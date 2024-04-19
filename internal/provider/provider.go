@@ -4,39 +4,39 @@ package provider
 
 import (
 	"context"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
+	"net/http"
 )
 
-var _ provider.Provider = &NsProvider{}
+var _ provider.Provider = &TerraformProvider{}
 
-type NsProvider struct {
+type TerraformProvider struct {
 	// version is set to the provider version on release, "dev" when the
 	// provider is built and ran locally, and "test" when running acceptance
 	// testing.
 	version string
 }
 
-// NsProviderModel describes the provider data model.
-type NsProviderModel struct {
+// TerraformProviderModel describes the provider data model.
+type TerraformProviderModel struct {
 	ServerURL types.String `tfsdk:"server_url"`
 	APIKey    types.String `tfsdk:"api_key"`
 }
 
-func (p *NsProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "ns"
+func (p *TerraformProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "terraform"
 	resp.Version = p.version
 }
 
-func (p *NsProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *TerraformProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: `npa_private_app_tags: NPA Private app tag operations.`,
+		Description: `Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy`,
 		Attributes: map[string]schema.Attribute{
 			"server_url": schema.StringAttribute{
 				MarkdownDescription: "Server URL (defaults to https://{tenant}.goskope.com/api/v2)",
@@ -51,8 +51,8 @@ func (p *NsProvider) Schema(ctx context.Context, req provider.SchemaRequest, res
 	}
 }
 
-func (p *NsProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
-	var data NsProviderModel
+func (p *TerraformProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	var data TerraformProviderModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
@@ -74,6 +74,7 @@ func (p *NsProvider) Configure(ctx context.Context, req provider.ConfigureReques
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(ServerURL),
 		sdk.WithSecurity(security),
+		sdk.WithClient(http.DefaultClient),
 	}
 	client := sdk.New(opts...)
 
@@ -81,7 +82,7 @@ func (p *NsProvider) Configure(ctx context.Context, req provider.ConfigureReques
 	resp.ResourceData = client
 }
 
-func (p *NsProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *TerraformProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewNPAPolicyResource,
 		NewNPAPolicyGroupResource,
@@ -92,10 +93,12 @@ func (p *NsProvider) Resources(ctx context.Context) []func() resource.Resource {
 		NewPrivateAppResource,
 		NewPrivateAppTagResource,
 		NewPublisherTokenResource,
+		NewSCIMGroupsResource,
+		NewSCIMUserResource,
 	}
 }
 
-func (p *NsProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+func (p *TerraformProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewNPAPolicyDataSource,
 		NewNPAPolicyGroupDataSource,
@@ -111,12 +114,15 @@ func (p *NsProvider) DataSources(ctx context.Context) []func() datasource.DataSo
 		NewPrivateAppListDataSource,
 		NewPrivateAppTagListDataSource,
 		NewPrivateAppTagPolicyUseListDataSource,
+		NewSCIMGroupsDataSource,
+		NewSCIMGroupsByIDDataSource,
+		NewSCIMUserDataSource,
 	}
 }
 
 func New(version string) func() provider.Provider {
 	return func() provider.Provider {
-		return &NsProvider{
+		return &TerraformProvider{
 			version: version,
 		}
 	}

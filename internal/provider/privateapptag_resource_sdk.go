@@ -4,88 +4,72 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/pkg/models/shared"
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *PrivateAppTagResourceModel) ToCreateSDKType() *shared.TagRequest {
+func (r *PrivateAppTagResourceModel) ToSharedTagRequest() *shared.TagRequest {
 	id := new(string)
 	if !r.ID.IsUnknown() && !r.ID.IsNull() {
 		*id = r.ID.ValueString()
 	} else {
 		id = nil
 	}
-	var ids []string = nil
+	var ids []string = []string{}
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
 	}
-	var publisherTags []shared.TagItem = nil
-	for _, publisherTagsItem := range r.PublisherTags {
-		tagID := new(int)
-		if !publisherTagsItem.TagID.IsUnknown() && !publisherTagsItem.TagID.IsNull() {
-			*tagID = int(publisherTagsItem.TagID.ValueInt64())
-		} else {
-			tagID = nil
-		}
+	var tags []shared.TagItem = []shared.TagItem{}
+	for _, tagsItem := range r.Tags {
 		tagName := new(string)
-		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {
-			*tagName = publisherTagsItem.TagName.ValueString()
+		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
+			*tagName = tagsItem.TagName.ValueString()
 		} else {
 			tagName = nil
 		}
-		publisherTags = append(publisherTags, shared.TagItem{
-			TagID:   tagID,
+		tagID := new(int)
+		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
+			*tagID = int(tagsItem.TagID.ValueInt64())
+		} else {
+			tagID = nil
+		}
+		tags = append(tags, shared.TagItem{
 			TagName: tagName,
+			TagID:   tagID,
 		})
 	}
-	var tags []shared.TagItem = nil
-	for _, tagsItem := range r.Tags {
-		tagId1 := new(int)
-		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
-			*tagId1 = int(tagsItem.TagID.ValueInt64())
-		} else {
-			tagId1 = nil
-		}
+	var publisherTags []shared.TagItem = []shared.TagItem{}
+	for _, publisherTagsItem := range r.PublisherTags {
 		tagName1 := new(string)
-		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
-			*tagName1 = tagsItem.TagName.ValueString()
+		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {
+			*tagName1 = publisherTagsItem.TagName.ValueString()
 		} else {
 			tagName1 = nil
 		}
-		tags = append(tags, shared.TagItem{
-			TagID:   tagId1,
+		tagId1 := new(int)
+		if !publisherTagsItem.TagID.IsUnknown() && !publisherTagsItem.TagID.IsNull() {
+			*tagId1 = int(publisherTagsItem.TagID.ValueInt64())
+		} else {
+			tagId1 = nil
+		}
+		publisherTags = append(publisherTags, shared.TagItem{
 			TagName: tagName1,
+			TagID:   tagId1,
 		})
 	}
 	out := shared.TagRequest{
 		ID:            id,
 		Ids:           ids,
-		PublisherTags: publisherTags,
 		Tags:          tags,
+		PublisherTags: publisherTags,
 	}
 	return &out
 }
 
-func (r *PrivateAppTagResourceModel) RefreshFromCreateResponse(resp *shared.TagResponse) {
-	if len(r.Data) > len(resp.Data) {
-		r.Data = r.Data[:len(resp.Data)]
+func (r *PrivateAppTagResourceModel) RefreshFromSharedTagResponseData(resp shared.TagResponseData) {
+	if resp.TagID != nil {
+		r.TagID = types.Int64Value(int64(*resp.TagID))
+	} else {
+		r.TagID = types.Int64Null()
 	}
-	for dataCount, dataItem := range resp.Data {
-		var data1 TagItem
-		if dataItem.TagID != nil {
-			data1.TagID = types.Int64Value(int64(*dataItem.TagID))
-		} else {
-			data1.TagID = types.Int64Null()
-		}
-		if dataItem.TagName != nil {
-			data1.TagName = types.StringValue(*dataItem.TagName)
-		} else {
-			data1.TagName = types.StringNull()
-		}
-		if dataCount+1 > len(r.Data) {
-			r.Data = append(r.Data, data1)
-		} else {
-			r.Data[dataCount].TagID = data1.TagID
-			r.Data[dataCount].TagName = data1.TagName
-		}
-	}
+	r.TagName = types.StringPointerValue(resp.TagName)
 }

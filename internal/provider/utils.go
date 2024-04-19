@@ -10,14 +10,16 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfReflect "github.com/netskope/terraform-provider-ns/internal/provider/reflect"
+	tfReflect "github.com/speakeasy/terraform-provider-terraform/internal/provider/reflect"
 	"net/http"
 	"net/http/httputil"
 	"reflect"
 )
 
 func debugResponse(response *http.Response) string {
+	if v := response.Request.Header.Get("Netskope-Api-Token"); v != "" {
+		response.Request.Header.Set("Netskope-Api-Token", "(sensitive)")
+	}
 	dumpReq, err := httputil.DumpRequest(response.Request, true)
 	if err != nil {
 		dumpReq, err = httputil.DumpRequest(response.Request, false)
@@ -60,25 +62,32 @@ func merge(ctx context.Context, req resource.UpdateRequest, resp *resource.Updat
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	resp.Diagnostics.Append(state.As(ctx, target, basetypes.ObjectAsOptions{
-		UnhandledNullAsEmpty:    true,
-		UnhandledUnknownAsEmpty: true,
-	})...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	// we need a tftypes.Value for this Object to be able to use it with
-	// our reflection code
-	obj := types.ObjectType{AttrTypes: plan.AttributeTypes(ctx)}
-	val, err := plan.ToTerraformValue(ctx)
+	val, err := state.ToTerraformValue(ctx)
 	if err != nil {
 		resp.Diagnostics.Append(diag.NewErrorDiagnostic("Object Conversion Error", "An unexpected error was encountered trying to convert object. This is always an error in the provider. Please report the following to the provider developer:\n\n"+err.Error()))
 		return
 	}
-	resp.Diagnostics.Append(tfReflect.Into(ctx, obj, val, target, tfReflect.Options{
+	resp.Diagnostics.Append(tfReflect.Into(ctx, types.ObjectType{AttrTypes: state.AttributeTypes(ctx)}, val, target, tfReflect.Options{
 		UnhandledNullAsEmpty:    true,
 		UnhandledUnknownAsEmpty: true,
+	}, path.Empty())...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	refreshPlan(ctx, plan, target, resp.Diagnostics)
+}
+
+func refreshPlan(ctx context.Context, plan types.Object, target interface{}, diagnostics diag.Diagnostics) {
+	obj := types.ObjectType{AttrTypes: plan.AttributeTypes(ctx)}
+	val, err := plan.ToTerraformValue(ctx)
+	if err != nil {
+		diagnostics.Append(diag.NewErrorDiagnostic("Object Conversion Error", "An unexpected error was encountered trying to convert object. This is always an error in the provider. Please report the following to the provider developer:\n\n"+err.Error()))
+		return
+	}
+	diagnostics.Append(tfReflect.Into(ctx, obj, val, target, tfReflect.Options{
+		UnhandledNullAsEmpty:    true,
+		UnhandledUnknownAsEmpty: true,
+		SourceType:              tfReflect.SourceTypePlan,
 	}, path.Empty())...)
 }
