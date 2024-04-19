@@ -9,7 +9,7 @@ import (
 )
 
 func (r *SCIMUserResourceModel) ToOperationsCreateSCIMUsersRequestBody() *operations.CreateSCIMUsersRequestBody {
-	var schemas []operations.Schemas = nil
+	var schemas []operations.Schemas = []operations.Schemas{}
 	for _, schemasItem := range r.Schemas {
 		schemas = append(schemas, operations.Schemas(schemasItem.ValueString()))
 	}
@@ -44,7 +44,7 @@ func (r *SCIMUserResourceModel) ToOperationsCreateSCIMUsersRequestBody() *operat
 	} else {
 		active = nil
 	}
-	var emails []operations.Emails = nil
+	var emails []operations.Emails = []operations.Emails{}
 	for _, emailsItem := range r.Emails {
 		value := new(string)
 		if !emailsItem.Value.IsUnknown() && !emailsItem.Value.IsNull() {
@@ -173,7 +173,7 @@ func (r *SCIMUserResourceModel) RefreshFromOperationsGetSCIMUsersByIDResponseBod
 }
 
 func (r *SCIMUserResourceModel) ToOperationsPutSCIMUsersByIDRequestBody() *operations.PutSCIMUsersByIDRequestBody {
-	var schemas []operations.PutSCIMUsersByIDSchemas = nil
+	var schemas []operations.PutSCIMUsersByIDSchemas = []operations.PutSCIMUsersByIDSchemas{}
 	for _, schemasItem := range r.Schemas {
 		schemas = append(schemas, operations.PutSCIMUsersByIDSchemas(schemasItem.ValueString()))
 	}
@@ -208,7 +208,7 @@ func (r *SCIMUserResourceModel) ToOperationsPutSCIMUsersByIDRequestBody() *opera
 	} else {
 		active = nil
 	}
-	var emails []operations.PutSCIMUsersByIDEmails = nil
+	var emails []operations.PutSCIMUsersByIDEmails = []operations.PutSCIMUsersByIDEmails{}
 	for _, emailsItem := range r.Emails {
 		value := new(string)
 		if !emailsItem.Value.IsUnknown() && !emailsItem.Value.IsNull() {

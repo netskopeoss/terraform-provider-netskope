@@ -14,11 +14,11 @@ func (r *PrivateAppTagResourceModel) ToSharedTagRequest() *shared.TagRequest {
 	} else {
 		id = nil
 	}
-	var ids []string = nil
+	var ids []string = []string{}
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
 	}
-	var tags []shared.TagItem = nil
+	var tags []shared.TagItem = []shared.TagItem{}
 	for _, tagsItem := range r.Tags {
 		tagName := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
@@ -37,7 +37,7 @@ func (r *PrivateAppTagResourceModel) ToSharedTagRequest() *shared.TagRequest {
 			TagID:   tagID,
 		})
 	}
-	var publisherTags []shared.TagItem = nil
+	var publisherTags []shared.TagItem = []shared.TagItem{}
 	for _, publisherTagsItem := range r.PublisherTags {
 		tagName1 := new(string)
 		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {

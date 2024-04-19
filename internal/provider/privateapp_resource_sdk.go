@@ -27,7 +27,7 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.PrivateAp
 	} else {
 		realHost = nil
 	}
-	var protocols []shared.ProtocolItem = nil
+	var protocols []shared.ProtocolItem = []shared.ProtocolItem{}
 	for _, protocolsItem := range r.Protocols {
 		typeVar := new(string)
 		if !protocolsItem.Type.IsUnknown() && !protocolsItem.Type.IsNull() {
@@ -46,7 +46,7 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.PrivateAp
 			Port: port,
 		})
 	}
-	var publishers []shared.PublisherItem = nil
+	var publishers []shared.PublisherItem = []shared.PublisherItem{}
 	for _, publishersItem := range r.Publishers {
 		publisherID := new(string)
 		if !publishersItem.PublisherID.IsUnknown() && !publishersItem.PublisherID.IsNull() {
@@ -65,7 +65,7 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.PrivateAp
 			PublisherName: publisherName,
 		})
 	}
-	var publisherTags []shared.TagItemNoID = nil
+	var publisherTags []shared.TagItemNoID = []shared.TagItemNoID{}
 	for _, publisherTagsItem := range r.PublisherTags {
 		tagName := new(string)
 		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {
@@ -77,7 +77,7 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.PrivateAp
 			TagName: tagName,
 		})
 	}
-	var tags []shared.TagItemNoID = nil
+	var tags []shared.TagItemNoID = []shared.TagItemNoID{}
 	for _, tagsItem := range r.Tags {
 		tagName1 := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
@@ -138,12 +138,24 @@ func (r *PrivateAppResourceModel) RefreshFromSharedPrivateAppsResponseData(resp 
 		}
 		for resolvedProtocolsCount, resolvedProtocolsItem := range resp.ResolvedProtocols {
 			var resolvedProtocols1 tfTypes.ProtocolResponseItem
+			if resolvedProtocolsItem.ID != nil {
+				resolvedProtocols1.ID = types.Int64Value(int64(*resolvedProtocolsItem.ID))
+			} else {
+				resolvedProtocols1.ID = types.Int64Null()
+			}
 			resolvedProtocols1.Port = types.StringPointerValue(resolvedProtocolsItem.Port)
+			if resolvedProtocolsItem.ServiceID != nil {
+				resolvedProtocols1.ServiceID = types.Int64Value(int64(*resolvedProtocolsItem.ServiceID))
+			} else {
+				resolvedProtocols1.ServiceID = types.Int64Null()
+			}
 			resolvedProtocols1.Transport = types.StringPointerValue(resolvedProtocolsItem.Transport)
 			if resolvedProtocolsCount+1 > len(r.ResolvedProtocols) {
 				r.ResolvedProtocols = append(r.ResolvedProtocols, resolvedProtocols1)
 			} else {
+				r.ResolvedProtocols[resolvedProtocolsCount].ID = resolvedProtocols1.ID
 				r.ResolvedProtocols[resolvedProtocolsCount].Port = resolvedProtocols1.Port
+				r.ResolvedProtocols[resolvedProtocolsCount].ServiceID = resolvedProtocols1.ServiceID
 				r.ResolvedProtocols[resolvedProtocolsCount].Transport = resolvedProtocols1.Transport
 			}
 		}
@@ -232,7 +244,7 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsPutRequest() *shared.Privat
 	} else {
 		realHost = nil
 	}
-	var protocols []shared.ProtocolItem = nil
+	var protocols []shared.ProtocolItem = []shared.ProtocolItem{}
 	for _, protocolsItem := range r.Protocols {
 		typeVar := new(string)
 		if !protocolsItem.Type.IsUnknown() && !protocolsItem.Type.IsNull() {
@@ -251,7 +263,7 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsPutRequest() *shared.Privat
 			Port: port,
 		})
 	}
-	var publishers []shared.PublisherItem = nil
+	var publishers []shared.PublisherItem = []shared.PublisherItem{}
 	for _, publishersItem := range r.Publishers {
 		publisherID := new(string)
 		if !publishersItem.PublisherID.IsUnknown() && !publishersItem.PublisherID.IsNull() {
@@ -270,7 +282,7 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsPutRequest() *shared.Privat
 			PublisherName: publisherName,
 		})
 	}
-	var publisherTags []shared.TagItemNoID = nil
+	var publisherTags []shared.TagItemNoID = []shared.TagItemNoID{}
 	for _, publisherTagsItem := range r.PublisherTags {
 		tagName := new(string)
 		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {
@@ -282,7 +294,7 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsPutRequest() *shared.Privat
 			TagName: tagName,
 		})
 	}
-	var tags []shared.TagItemNoID = nil
+	var tags []shared.TagItemNoID = []shared.TagItemNoID{}
 	for _, tagsItem := range r.Tags {
 		tagName1 := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {

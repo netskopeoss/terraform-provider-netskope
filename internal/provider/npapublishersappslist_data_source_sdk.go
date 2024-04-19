@@ -25,12 +25,24 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 			data1.Name = types.StringPointerValue(dataItem.Name)
 			for protocolsCount, protocolsItem := range dataItem.Protocols {
 				var protocols1 tfTypes.ProtocolResponseItem
+				if protocolsItem.ID != nil {
+					protocols1.ID = types.Int64Value(int64(*protocolsItem.ID))
+				} else {
+					protocols1.ID = types.Int64Null()
+				}
 				protocols1.Port = types.StringPointerValue(protocolsItem.Port)
+				if protocolsItem.ServiceID != nil {
+					protocols1.ServiceID = types.Int64Value(int64(*protocolsItem.ServiceID))
+				} else {
+					protocols1.ServiceID = types.Int64Null()
+				}
 				protocols1.Transport = types.StringPointerValue(protocolsItem.Transport)
 				if protocolsCount+1 > len(data1.Protocols) {
 					data1.Protocols = append(data1.Protocols, protocols1)
 				} else {
+					data1.Protocols[protocolsCount].ID = protocols1.ID
 					data1.Protocols[protocolsCount].Port = protocols1.Port
+					data1.Protocols[protocolsCount].ServiceID = protocols1.ServiceID
 					data1.Protocols[protocolsCount].Transport = protocols1.Transport
 				}
 			}

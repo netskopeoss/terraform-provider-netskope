@@ -41,7 +41,6 @@ func (r *NPAPublishersAlertsConfigurationResource) Metadata(ctx context.Context,
 func (r *NPAPublishersAlertsConfigurationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "NPAPublishersAlertsConfiguration Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"admin_users": schema.ListAttribute{
 				Computed:    true,
@@ -158,6 +157,10 @@ func (r *NPAPublishersAlertsConfigurationResource) Read(ctx context.Context, req
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

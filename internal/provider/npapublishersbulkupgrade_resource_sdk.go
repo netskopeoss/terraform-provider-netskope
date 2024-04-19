@@ -11,7 +11,7 @@ import (
 func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *shared.PublisherBulkRequest {
 	var publishers *shared.Publishers
 	if r.Publishers != nil {
-		var id []string = nil
+		var id []string = []string{}
 		for _, idItem := range r.Publishers.ID {
 			id = append(id, idItem.ValueString())
 		}

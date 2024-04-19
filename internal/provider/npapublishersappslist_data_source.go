@@ -65,7 +65,13 @@ func (r *NPAPublishersAppsListDataSource) Schema(ctx context.Context, req dataso
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
+									"id": schema.Int64Attribute{
+										Computed: true,
+									},
 									"port": schema.StringAttribute{
+										Computed: true,
+									},
+									"service_id": schema.Int64Attribute{
 										Computed: true,
 									},
 									"transport": schema.StringAttribute{
@@ -193,6 +199,10 @@ func (r *NPAPublishersAppsListDataSource) Read(ctx context.Context, req datasour
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

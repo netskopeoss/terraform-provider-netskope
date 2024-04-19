@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
@@ -35,8 +36,8 @@ type PrivateAppResourceModel struct {
 	ID                          types.Int64                              `tfsdk:"id"`
 	Name                        types.String                             `tfsdk:"name"`
 	Protocols                   []tfTypes.ProtocolItem                   `tfsdk:"protocols"`
-	Publishers                  []tfTypes.PublisherItem                  `tfsdk:"publishers"`
 	PublisherTags               []tfTypes.TagItemNoID                    `tfsdk:"publisher_tags"`
+	Publishers                  []tfTypes.PublisherItem                  `tfsdk:"publishers"`
 	RealHost                    types.String                             `tfsdk:"real_host"`
 	ResolvedProtocols           []tfTypes.ProtocolResponseItem           `tfsdk:"resolved_protocols"`
 	ServicePublisherAssignments []tfTypes.ServicePublisherAssignmentItem `tfsdk:"service_publisher_assignments"`
@@ -52,7 +53,6 @@ func (r *PrivateAppResource) Metadata(ctx context.Context, req resource.Metadata
 func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "PrivateApp Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"app_name": schema.StringAttribute{
 				Optional: true,
@@ -85,6 +85,19 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 					},
 				},
 			},
+			"publisher_tags": schema.ListNestedAttribute{
+				Optional: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"tag_name": schema.StringAttribute{
+							Computed:    true,
+							Optional:    true,
+							Default:     stringdefault.StaticString("tag_name"),
+							Description: `Default: "tag_name"`,
+						},
+					},
+				},
+			},
 			"publishers": schema.ListNestedAttribute{
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
@@ -98,16 +111,6 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 					},
 				},
 			},
-			"publisher_tags": schema.ListNestedAttribute{
-				Optional: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"tag_name": schema.StringAttribute{
-							Optional: true,
-						},
-					},
-				},
-			},
 			"real_host": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
@@ -116,7 +119,13 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
+						"id": schema.Int64Attribute{
+							Computed: true,
+						},
 						"port": schema.StringAttribute{
+							Computed: true,
+						},
+						"service_id": schema.Int64Attribute{
 							Computed: true,
 						},
 						"transport": schema.StringAttribute{
@@ -164,8 +173,10 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Computed: true,
 						},
 						"tag_name": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
+							Computed:    true,
+							Optional:    true,
+							Default:     stringdefault.StaticString("tag_name"),
+							Description: `Default: "tag_name"`,
 						},
 					},
 				},

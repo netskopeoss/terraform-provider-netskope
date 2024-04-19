@@ -9,7 +9,7 @@ import (
 )
 
 func (r *SCIMGroupsResourceModel) ToOperationsCreateSCIMGroupsRequestBody() *operations.CreateSCIMGroupsRequestBody {
-	var schemas []operations.CreateSCIMGroupsSchemas = nil
+	var schemas []operations.CreateSCIMGroupsSchemas = []operations.CreateSCIMGroupsSchemas{}
 	for _, schemasItem := range r.Schemas {
 		schemas = append(schemas, operations.CreateSCIMGroupsSchemas(schemasItem.ValueString()))
 	}
@@ -19,7 +19,7 @@ func (r *SCIMGroupsResourceModel) ToOperationsCreateSCIMGroupsRequestBody() *ope
 	} else {
 		displayName = nil
 	}
-	var members []operations.Members = nil
+	var members []operations.Members = []operations.Members{}
 	for _, membersItem := range r.Members {
 		value := new(string)
 		if !membersItem.Value.IsUnknown() && !membersItem.Value.IsNull() {
@@ -120,4 +120,15 @@ func (r *SCIMGroupsResourceModel) RefreshFromOperationsGetSCIMGroupsResponseBody
 		r.StartIndex = types.Int64PointerValue(resp.StartIndex)
 		r.TotalResults = types.Int64PointerValue(resp.TotalResults)
 	}
+}
+
+func (r *SCIMGroupsResourceModel) ToOperationsPatchSCIMUsersByIDRequestBody() *operations.PatchSCIMUsersByIDRequestBody {
+	var schemas []operations.PatchSCIMUsersByIDSchemas = []operations.PatchSCIMUsersByIDSchemas{}
+	for _, schemasItem := range r.Schemas {
+		schemas = append(schemas, operations.PatchSCIMUsersByIDSchemas(schemasItem.ValueString()))
+	}
+	out := operations.PatchSCIMUsersByIDRequestBody{
+		Schemas: schemas,
+	}
+	return &out
 }

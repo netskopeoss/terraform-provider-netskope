@@ -58,7 +58,6 @@ func (r *SCIMGroupsResource) Metadata(ctx context.Context, req resource.Metadata
 func (r *SCIMGroupsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "SCIMGroups Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"display_name": schema.StringAttribute{
 				Computed: true,
@@ -147,14 +146,10 @@ func (r *SCIMGroupsResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"schemas": schema.ListAttribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.List{
-					listplanmodifier.RequiresReplaceIfConfigured(),
-					speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-				},
+				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
-				Description: `schema of the resource. Requires replacement if changed. `,
+				Description: `schema of the resource`,
 			},
 			"start_index": schema.Int64Attribute{
 				Computed: true,
@@ -322,6 +317,10 @@ func (r *SCIMGroupsResource) Read(ctx context.Context, req resource.ReadRequest,
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -350,7 +349,64 @@ func (r *SCIMGroupsResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 
-	// Not Implemented; all attributes marked as RequiresReplace
+	id := data.ID.ValueString()
+	requestBody := data.ToOperationsPatchSCIMUsersByIDRequestBody()
+	request := operations.PatchSCIMUsersByIDRequest{
+		ID:          id,
+		RequestBody: requestBody,
+	}
+	res, err := r.client.ScimGroups.PatchSCIMUsersByID(ctx, request)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
+		return
+	}
+	if res == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode != 204 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
+		return
+	}
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	var filter *string
+	startIndex := new(int64)
+	if !data.StartIndex.IsUnknown() && !data.StartIndex.IsNull() {
+		*startIndex = data.StartIndex.ValueInt64()
+	} else {
+		startIndex = nil
+	}
+	var count *int64
+	request1 := operations.GetSCIMGroupsRequest{
+		Filter:     filter,
+		StartIndex: startIndex,
+		Count:      count,
+	}
+	res1, err := r.client.ScimGroups.GetSCIMGroups(ctx, request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if res1.TwoHundredApplicationJSONObject == nil {
+		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+		return
+	}
+	data.RefreshFromOperationsGetSCIMGroupsResponseBody(res1.TwoHundredApplicationJSONObject)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

@@ -2,8 +2,23 @@
 
 package shared
 
+import (
+	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/internal/utils"
+)
+
 type TagItemNoID struct {
-	TagName *string `json:"tag_name,omitempty"`
+	TagName *string `default:"tag_name" json:"tag_name"`
+}
+
+func (t TagItemNoID) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(t, "", false)
+}
+
+func (t *TagItemNoID) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &t, "", false, false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *TagItemNoID) GetTagName() *string {

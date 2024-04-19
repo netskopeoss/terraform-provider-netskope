@@ -22,7 +22,7 @@ func (r *NPAPublishersResourceModel) ToSharedPublisherPostRequest() *shared.Publ
 	} else {
 		lbrokerconnect = nil
 	}
-	var tags []shared.TagItemNoID = nil
+	var tags []shared.TagItemNoID = []shared.TagItemNoID{}
 	for _, tagsItem := range r.Tags {
 		tagName := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
@@ -121,7 +121,7 @@ func (r *NPAPublishersResourceModel) ToSharedPublisherPutRequest() *shared.Publi
 	} else {
 		lbrokerconnect = nil
 	}
-	var tags []shared.TagItem = nil
+	var tags []shared.TagItem = []shared.TagItem{}
 	for _, tagsItem := range r.Tags {
 		tagName := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {

@@ -3,8 +3,17 @@
 package shared
 
 type ProtocolResponseItem struct {
+	ID        *int    `json:"id,omitempty"`
 	Port      *string `json:"port,omitempty"`
 	Transport *string `json:"transport,omitempty"`
+	ServiceID *int    `json:"service_id,omitempty"`
+}
+
+func (o *ProtocolResponseItem) GetID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.ID
 }
 
 func (o *ProtocolResponseItem) GetPort() *string {
@@ -19,4 +28,11 @@ func (o *ProtocolResponseItem) GetTransport() *string {
 		return nil
 	}
 	return o.Transport
+}
+
+func (o *ProtocolResponseItem) GetServiceID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.ServiceID
 }

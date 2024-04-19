@@ -9,7 +9,7 @@ import (
 )
 
 func (r *PrivateAppTagPolicyUseListDataSourceModel) ToOperationsRetrieveNPAPoliciesInUseRequestBody() *operations.RetrieveNPAPoliciesInUseRequestBody {
-	var ids []string = nil
+	var ids []string = []string{}
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
 	}

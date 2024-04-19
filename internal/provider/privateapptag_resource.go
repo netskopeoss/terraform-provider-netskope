@@ -47,7 +47,6 @@ func (r *PrivateAppTagResource) Metadata(ctx context.Context, req resource.Metad
 func (r *PrivateAppTagResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "PrivateAppTag Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				PlanModifiers: []planmodifier.String{
