@@ -10,6 +10,7 @@ import (
 
 func (r *NPAPolicyListDataSourceModel) RefreshFromSharedNpaPolicyListResponse(resp *shared.NpaPolicyListResponse) {
 	if resp != nil {
+		r.Data = []tfTypes.NpaPolicyResponseItem{}
 		if len(r.Data) > len(resp.Data) {
 			r.Data = r.Data[:len(resp.Data)]
 		}
@@ -26,6 +27,7 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromSharedNpaPolicyListResponse(re
 				data1.RuleData.BNegateNetLocation = types.BoolPointerValue(dataItem.RuleData.BNegateNetLocation)
 				data1.RuleData.BNegateSrcCountries = types.BoolPointerValue(dataItem.RuleData.BNegateSrcCountries)
 				data1.RuleData.Classification = types.StringPointerValue(dataItem.RuleData.Classification)
+				data1.RuleData.DlpActions = []tfTypes.NpaPolicyRuleDlp{}
 				for dlpActionsCount, dlpActionsItem := range dataItem.RuleData.DlpActions {
 					var dlpActions1 tfTypes.NpaPolicyRuleDlp
 					dlpActions1.Actions = []types.String{}
@@ -73,8 +75,10 @@ func (r *NPAPolicyListDataSourceModel) RefreshFromSharedNpaPolicyListResponse(re
 				for _, v := range dataItem.RuleData.PrivateApps {
 					data1.RuleData.PrivateApps = append(data1.RuleData.PrivateApps, types.StringValue(v))
 				}
+				data1.RuleData.PrivateAppsWithActivities = []tfTypes.PrivateAppsWithActivities{}
 				for privateAppsWithActivitiesCount, privateAppsWithActivitiesItem := range dataItem.RuleData.PrivateAppsWithActivities {
 					var privateAppsWithActivities1 tfTypes.PrivateAppsWithActivities
+					privateAppsWithActivities1.Activities = []tfTypes.Activities{}
 					for activitiesCount, activitiesItem := range privateAppsWithActivitiesItem.Activities {
 						var activities1 tfTypes.Activities
 						if activitiesItem.Activity != nil {

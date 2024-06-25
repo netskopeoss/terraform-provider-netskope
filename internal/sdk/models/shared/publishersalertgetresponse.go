@@ -20,7 +20,6 @@ const (
 func (e PublishersAlertGetResponseEventTypes) ToPointer() *PublishersAlertGetResponseEventTypes {
 	return &e
 }
-
 func (e *PublishersAlertGetResponseEventTypes) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {

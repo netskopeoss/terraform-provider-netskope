@@ -66,8 +66,7 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Optional: true,
 			},
 			"id": schema.Int64Attribute{
-				Computed:    true,
-				Description: `private apps id`,
+				Computed: true,
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
@@ -251,8 +250,8 @@ func (r *PrivateAppResource) Create(ctx context.Context, req resource.CreateRequ
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PrivateAppsResponse == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.PrivateAppsResponse != nil && res.PrivateAppsResponse.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedPrivateAppsResponseData(res.PrivateAppsResponse.Data)
@@ -322,8 +321,8 @@ func (r *PrivateAppResource) Update(ctx context.Context, req resource.UpdateRequ
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PrivateAppsResponse == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.PrivateAppsResponse != nil && res.PrivateAppsResponse.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedPrivateAppsResponseData(res.PrivateAppsResponse.Data)

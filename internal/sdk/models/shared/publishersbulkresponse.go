@@ -17,7 +17,6 @@ const (
 func (e PublishersBulkResponseStatus) ToPointer() *PublishersBulkResponseStatus {
 	return &e
 }
-
 func (e *PublishersBulkResponseStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
@@ -35,15 +34,8 @@ func (e *PublishersBulkResponseStatus) UnmarshalJSON(data []byte) error {
 }
 
 type PublishersBulkResponse struct {
-	Status *PublishersBulkResponseStatus `json:"status,omitempty"`
 	Data   []PublisherBulkItem           `json:"data,omitempty"`
-}
-
-func (o *PublishersBulkResponse) GetStatus() *PublishersBulkResponseStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
+	Status *PublishersBulkResponseStatus `json:"status,omitempty"`
 }
 
 func (o *PublishersBulkResponse) GetData() []PublisherBulkItem {
@@ -51,4 +43,11 @@ func (o *PublishersBulkResponse) GetData() []PublisherBulkItem {
 		return nil
 	}
 	return o.Data
+}
+
+func (o *PublishersBulkResponse) GetStatus() *PublishersBulkResponseStatus {
+	if o == nil {
+		return nil
+	}
+	return o.Status
 }

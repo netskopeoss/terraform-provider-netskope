@@ -17,7 +17,6 @@ const (
 func (e PublisherUpgradeProfileBulkResponseStatus) ToPointer() *PublisherUpgradeProfileBulkResponseStatus {
 	return &e
 }
-
 func (e *PublisherUpgradeProfileBulkResponseStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
@@ -35,16 +34,9 @@ func (e *PublisherUpgradeProfileBulkResponseStatus) UnmarshalJSON(data []byte) e
 }
 
 type PublisherUpgradeProfileBulkResponse struct {
-	Status *PublisherUpgradeProfileBulkResponseStatus `json:"status,omitempty"`
 	Data   []UpgradePublisherResponse                 `json:"data,omitempty"`
+	Status *PublisherUpgradeProfileBulkResponseStatus `json:"status,omitempty"`
 	Total  *int                                       `json:"total,omitempty"`
-}
-
-func (o *PublisherUpgradeProfileBulkResponse) GetStatus() *PublisherUpgradeProfileBulkResponseStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 func (o *PublisherUpgradeProfileBulkResponse) GetData() []UpgradePublisherResponse {
@@ -52,6 +44,13 @@ func (o *PublisherUpgradeProfileBulkResponse) GetData() []UpgradePublisherRespon
 		return nil
 	}
 	return o.Data
+}
+
+func (o *PublisherUpgradeProfileBulkResponse) GetStatus() *PublisherUpgradeProfileBulkResponseStatus {
+	if o == nil {
+		return nil
+	}
+	return o.Status
 }
 
 func (o *PublisherUpgradeProfileBulkResponse) GetTotal() *int {

@@ -7,33 +7,6 @@ import (
 	"fmt"
 )
 
-type PublisherUpgradeProfileGetResponseStatus string
-
-const (
-	PublisherUpgradeProfileGetResponseStatusSuccess  PublisherUpgradeProfileGetResponseStatus = "success"
-	PublisherUpgradeProfileGetResponseStatusNotFound PublisherUpgradeProfileGetResponseStatus = "not found"
-)
-
-func (e PublisherUpgradeProfileGetResponseStatus) ToPointer() *PublisherUpgradeProfileGetResponseStatus {
-	return &e
-}
-
-func (e *PublisherUpgradeProfileGetResponseStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = PublisherUpgradeProfileGetResponseStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PublisherUpgradeProfileGetResponseStatus: %v", v)
-	}
-}
-
 type UpgradeProfiles struct {
 	CreatedAt              *string `json:"created_at,omitempty"`
 	DockerTag              *string `json:"docker_tag,omitempty"`
@@ -160,10 +133,43 @@ func (o *PublisherUpgradeProfileGetResponseData) GetUpgradeProfiles() []UpgradeP
 	return o.UpgradeProfiles
 }
 
+type PublisherUpgradeProfileGetResponseStatus string
+
+const (
+	PublisherUpgradeProfileGetResponseStatusSuccess  PublisherUpgradeProfileGetResponseStatus = "success"
+	PublisherUpgradeProfileGetResponseStatusNotFound PublisherUpgradeProfileGetResponseStatus = "not found"
+)
+
+func (e PublisherUpgradeProfileGetResponseStatus) ToPointer() *PublisherUpgradeProfileGetResponseStatus {
+	return &e
+}
+func (e *PublisherUpgradeProfileGetResponseStatus) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "success":
+		fallthrough
+	case "not found":
+		*e = PublisherUpgradeProfileGetResponseStatus(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for PublisherUpgradeProfileGetResponseStatus: %v", v)
+	}
+}
+
 type PublisherUpgradeProfileGetResponse struct {
+	Data   *PublisherUpgradeProfileGetResponseData   `json:"data,omitempty"`
 	Status *PublisherUpgradeProfileGetResponseStatus `json:"status,omitempty"`
 	Total  *int                                      `json:"total,omitempty"`
-	Data   *PublisherUpgradeProfileGetResponseData   `json:"data,omitempty"`
+}
+
+func (o *PublisherUpgradeProfileGetResponse) GetData() *PublisherUpgradeProfileGetResponseData {
+	if o == nil {
+		return nil
+	}
+	return o.Data
 }
 
 func (o *PublisherUpgradeProfileGetResponse) GetStatus() *PublisherUpgradeProfileGetResponseStatus {
@@ -178,11 +184,4 @@ func (o *PublisherUpgradeProfileGetResponse) GetTotal() *int {
 		return nil
 	}
 	return o.Total
-}
-
-func (o *PublisherUpgradeProfileGetResponse) GetData() *PublisherUpgradeProfileGetResponseData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
 }

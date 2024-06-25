@@ -59,8 +59,7 @@ func (r *NPAPolicyGroupResource) Schema(ctx context.Context, req resource.Schema
 				Computed: true,
 			},
 			"group_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `npa policy group id`,
+				Computed: true,
 			},
 			"group_name": schema.StringAttribute{
 				PlanModifiers: []planmodifier.String{
@@ -176,8 +175,8 @@ func (r *NPAPolicyGroupResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.Object != nil && res.Object.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedNpaPolicygroupResponseItem(res.Object.Data)
@@ -202,8 +201,8 @@ func (r *NPAPolicyGroupResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+	if !(res1.Object != nil && res1.Object.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
 	data.RefreshFromSharedNpaPolicygroupResponseItem(res1.Object.Data)
@@ -255,8 +254,8 @@ func (r *NPAPolicyGroupResource) Read(ctx context.Context, req resource.ReadRequ
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.Object != nil && res.Object.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedNpaPolicygroupResponseItem(res.Object.Data)
@@ -327,5 +326,5 @@ func (r *NPAPolicyGroupResource) Delete(ctx context.Context, req resource.Delete
 }
 
 func (r *NPAPolicyGroupResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), req.ID)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id").AtName("group_id"), req.ID)...)
 }

@@ -20,7 +20,6 @@ const (
 func (e Actions) ToPointer() *Actions {
 	return &e
 }
-
 func (e *Actions) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
@@ -44,15 +43,8 @@ func (e *Actions) UnmarshalJSON(data []byte) error {
 }
 
 type NpaPolicyRuleDlp struct {
-	DlpProfile *string   `json:"dlp_profile,omitempty"`
 	Actions    []Actions `json:"actions,omitempty"`
-}
-
-func (o *NpaPolicyRuleDlp) GetDlpProfile() *string {
-	if o == nil {
-		return nil
-	}
-	return o.DlpProfile
+	DlpProfile *string   `json:"dlp_profile,omitempty"`
 }
 
 func (o *NpaPolicyRuleDlp) GetActions() []Actions {
@@ -60,4 +52,11 @@ func (o *NpaPolicyRuleDlp) GetActions() []Actions {
 		return nil
 	}
 	return o.Actions
+}
+
+func (o *NpaPolicyRuleDlp) GetDlpProfile() *string {
+	if o == nil {
+		return nil
+	}
+	return o.DlpProfile
 }

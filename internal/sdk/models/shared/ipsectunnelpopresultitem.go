@@ -3,20 +3,13 @@
 package shared
 
 type IpsecTunnelPopResultItem struct {
-	Name       *string `json:"name,omitempty"`
 	Gateway    *string `json:"gateway,omitempty"`
-	Probeip    *string `json:"probeip,omitempty"`
+	Name       *string `json:"name,omitempty"`
 	Primary    *bool   `json:"primary,omitempty"`
-	Status     *string `json:"status,omitempty"`
+	Probeip    *string `json:"probeip,omitempty"`
 	Since      *string `json:"since,omitempty"`
+	Status     *string `json:"status,omitempty"`
 	Throughput *string `json:"throughput,omitempty"`
-}
-
-func (o *IpsecTunnelPopResultItem) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
 }
 
 func (o *IpsecTunnelPopResultItem) GetGateway() *string {
@@ -26,11 +19,11 @@ func (o *IpsecTunnelPopResultItem) GetGateway() *string {
 	return o.Gateway
 }
 
-func (o *IpsecTunnelPopResultItem) GetProbeip() *string {
+func (o *IpsecTunnelPopResultItem) GetName() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Probeip
+	return o.Name
 }
 
 func (o *IpsecTunnelPopResultItem) GetPrimary() *bool {
@@ -40,11 +33,11 @@ func (o *IpsecTunnelPopResultItem) GetPrimary() *bool {
 	return o.Primary
 }
 
-func (o *IpsecTunnelPopResultItem) GetStatus() *string {
+func (o *IpsecTunnelPopResultItem) GetProbeip() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Status
+	return o.Probeip
 }
 
 func (o *IpsecTunnelPopResultItem) GetSince() *string {
@@ -52,6 +45,13 @@ func (o *IpsecTunnelPopResultItem) GetSince() *string {
 		return nil
 	}
 	return o.Since
+}
+
+func (o *IpsecTunnelPopResultItem) GetStatus() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Status
 }
 
 func (o *IpsecTunnelPopResultItem) GetThroughput() *string {

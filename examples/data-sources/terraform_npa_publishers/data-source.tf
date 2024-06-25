@@ -1,3 +1,3 @@
 data "terraform_npa_publishers" "my_npapublishers" {
-  id = 3
+  publisher_id = 6
 }

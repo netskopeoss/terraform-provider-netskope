@@ -93,8 +93,6 @@ func (p *TerraformProvider) Resources(ctx context.Context) []func() resource.Res
 		NewPrivateAppResource,
 		NewPrivateAppTagResource,
 		NewPublisherTokenResource,
-		NewSCIMGroupsResource,
-		NewSCIMUserResource,
 	}
 }
 
@@ -114,9 +112,6 @@ func (p *TerraformProvider) DataSources(ctx context.Context) []func() datasource
 		NewPrivateAppListDataSource,
 		NewPrivateAppTagListDataSource,
 		NewPrivateAppTagPolicyUseListDataSource,
-		NewSCIMGroupsDataSource,
-		NewSCIMGroupsByIDDataSource,
-		NewSCIMUserDataSource,
 	}
 }
 

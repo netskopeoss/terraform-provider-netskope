@@ -3,33 +3,12 @@
 package shared
 
 type Phase1 struct {
-	Ikeversion     *string `json:"ikeversion,omitempty"`
-	Encryptionalgo *string `json:"encryptionalgo,omitempty"`
-	Integrityalgo  *string `json:"integrityalgo,omitempty"`
 	Dhgroup        *string `json:"dhgroup,omitempty"`
-	Salifetime     *string `json:"salifetime,omitempty"`
 	Dpd            *bool   `json:"dpd,omitempty"`
-}
-
-func (o *Phase1) GetIkeversion() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Ikeversion
-}
-
-func (o *Phase1) GetEncryptionalgo() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Encryptionalgo
-}
-
-func (o *Phase1) GetIntegrityalgo() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Integrityalgo
+	Encryptionalgo *string `json:"encryptionalgo,omitempty"`
+	Ikeversion     *string `json:"ikeversion,omitempty"`
+	Integrityalgo  *string `json:"integrityalgo,omitempty"`
+	Salifetime     *string `json:"salifetime,omitempty"`
 }
 
 func (o *Phase1) GetDhgroup() *string {
@@ -39,13 +18,6 @@ func (o *Phase1) GetDhgroup() *string {
 	return o.Dhgroup
 }
 
-func (o *Phase1) GetSalifetime() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Salifetime
-}
-
 func (o *Phase1) GetDpd() *bool {
 	if o == nil {
 		return nil
@@ -53,12 +25,47 @@ func (o *Phase1) GetDpd() *bool {
 	return o.Dpd
 }
 
+func (o *Phase1) GetEncryptionalgo() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Encryptionalgo
+}
+
+func (o *Phase1) GetIkeversion() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Ikeversion
+}
+
+func (o *Phase1) GetIntegrityalgo() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Integrityalgo
+}
+
+func (o *Phase1) GetSalifetime() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Salifetime
+}
+
 type Phase2 struct {
+	Dhgroup        *string `json:"dhgroup,omitempty"`
 	Encryptionalgo *string `json:"encryptionalgo,omitempty"`
 	Integrityalgo  *string `json:"integrityalgo,omitempty"`
-	Dhgroup        *string `json:"dhgroup,omitempty"`
-	Salifetime     *string `json:"salifetime,omitempty"`
 	Pfs            *bool   `json:"pfs,omitempty"`
+	Salifetime     *string `json:"salifetime,omitempty"`
+}
+
+func (o *Phase2) GetDhgroup() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Dhgroup
 }
 
 func (o *Phase2) GetEncryptionalgo() *string {
@@ -75,11 +82,11 @@ func (o *Phase2) GetIntegrityalgo() *string {
 	return o.Integrityalgo
 }
 
-func (o *Phase2) GetDhgroup() *string {
+func (o *Phase2) GetPfs() *bool {
 	if o == nil {
 		return nil
 	}
-	return o.Dhgroup
+	return o.Pfs
 }
 
 func (o *Phase2) GetSalifetime() *string {
@@ -87,13 +94,6 @@ func (o *Phase2) GetSalifetime() *string {
 		return nil
 	}
 	return o.Salifetime
-}
-
-func (o *Phase2) GetPfs() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Pfs
 }
 
 type IpsecPopResultItemOptions struct {
@@ -116,72 +116,16 @@ func (o *IpsecPopResultItemOptions) GetPhase2() *Phase2 {
 }
 
 type IpsecPopResultItem struct {
-	ID               *string                    `json:"id,omitempty"`
-	Name             *string                    `json:"name,omitempty"`
-	Region           *string                    `json:"region,omitempty"`
-	Location         *string                    `json:"location,omitempty"`
-	Gateway          *string                    `json:"gateway,omitempty"`
-	Probeip          *string                    `json:"probeip,omitempty"`
-	Options          *IpsecPopResultItemOptions `json:"options,omitempty"`
-	Distance         *string                    `json:"distance,omitempty"`
 	Acceptingtunnels *bool                      `json:"acceptingtunnels,omitempty"`
 	Bandwidth        *string                    `json:"bandwidth,omitempty"`
-}
-
-func (o *IpsecPopResultItem) GetID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *IpsecPopResultItem) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *IpsecPopResultItem) GetRegion() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Region
-}
-
-func (o *IpsecPopResultItem) GetLocation() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Location
-}
-
-func (o *IpsecPopResultItem) GetGateway() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Gateway
-}
-
-func (o *IpsecPopResultItem) GetProbeip() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Probeip
-}
-
-func (o *IpsecPopResultItem) GetOptions() *IpsecPopResultItemOptions {
-	if o == nil {
-		return nil
-	}
-	return o.Options
-}
-
-func (o *IpsecPopResultItem) GetDistance() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Distance
+	Distance         *string                    `json:"distance,omitempty"`
+	Gateway          *string                    `json:"gateway,omitempty"`
+	ID               *string                    `json:"id,omitempty"`
+	Location         *string                    `json:"location,omitempty"`
+	Name             *string                    `json:"name,omitempty"`
+	Options          *IpsecPopResultItemOptions `json:"options,omitempty"`
+	Probeip          *string                    `json:"probeip,omitempty"`
+	Region           *string                    `json:"region,omitempty"`
 }
 
 func (o *IpsecPopResultItem) GetAcceptingtunnels() *bool {
@@ -196,4 +140,60 @@ func (o *IpsecPopResultItem) GetBandwidth() *string {
 		return nil
 	}
 	return o.Bandwidth
+}
+
+func (o *IpsecPopResultItem) GetDistance() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Distance
+}
+
+func (o *IpsecPopResultItem) GetGateway() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Gateway
+}
+
+func (o *IpsecPopResultItem) GetID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ID
+}
+
+func (o *IpsecPopResultItem) GetLocation() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Location
+}
+
+func (o *IpsecPopResultItem) GetName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Name
+}
+
+func (o *IpsecPopResultItem) GetOptions() *IpsecPopResultItemOptions {
+	if o == nil {
+		return nil
+	}
+	return o.Options
+}
+
+func (o *IpsecPopResultItem) GetProbeip() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Probeip
+}
+
+func (o *IpsecPopResultItem) GetRegion() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Region
 }

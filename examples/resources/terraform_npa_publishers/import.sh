@@ -1,0 +1,1 @@
+terraform import terraform_npa_publishers.my_terraform_npa_publishers "0"

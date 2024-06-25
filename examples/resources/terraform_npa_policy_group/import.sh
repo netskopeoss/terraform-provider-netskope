@@ -1,0 +1,1 @@
+terraform import terraform_npa_policy_group.my_terraform_npa_policy_group ""

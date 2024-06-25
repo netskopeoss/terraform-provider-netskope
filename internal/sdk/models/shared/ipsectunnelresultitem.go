@@ -22,16 +22,9 @@ func (o *IpsecTunnelResultItemXff) GetIplist() []string {
 }
 
 type IpsecTunnelResultItemOptions struct {
-	Rekey  *bool                     `json:"rekey,omitempty"`
 	Reauth *bool                     `json:"reauth,omitempty"`
+	Rekey  *bool                     `json:"rekey,omitempty"`
 	Xff    *IpsecTunnelResultItemXff `json:"xff,omitempty"`
-}
-
-func (o *IpsecTunnelResultItemOptions) GetRekey() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Rekey
 }
 
 func (o *IpsecTunnelResultItemOptions) GetReauth() *bool {
@@ -39,6 +32,13 @@ func (o *IpsecTunnelResultItemOptions) GetReauth() *bool {
 		return nil
 	}
 	return o.Reauth
+}
+
+func (o *IpsecTunnelResultItemOptions) GetRekey() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Rekey
 }
 
 func (o *IpsecTunnelResultItemOptions) GetXff() *IpsecTunnelResultItemXff {
@@ -49,20 +49,41 @@ func (o *IpsecTunnelResultItemOptions) GetXff() *IpsecTunnelResultItemXff {
 }
 
 type IpsecTunnelResultItem struct {
-	ID            *int64                        `json:"id,omitempty"`
-	Site          *string                       `json:"site,omitempty"`
-	Template      *string                       `json:"template,omitempty"`
-	Sourcetype    *string                       `json:"sourcetype,omitempty"`
-	Notes         *string                       `json:"notes,omitempty"`
-	Vendor        *string                       `json:"vendor,omitempty"`
+	Bandwidth     *int64                        `json:"bandwidth,omitempty"`
+	Enabled       *bool                         `json:"enabled,omitempty"`
 	Encryption    *string                       `json:"encryption,omitempty"`
+	ID            *int64                        `json:"id,omitempty"`
+	Notes         *string                       `json:"notes,omitempty"`
+	Options       *IpsecTunnelResultItemOptions `json:"options,omitempty"`
+	Pops          []IpsecTunnelPopResultItem    `json:"pops,omitempty"`
+	Site          *string                       `json:"site,omitempty"`
+	Sourcetype    *string                       `json:"sourcetype,omitempty"`
 	Srcidentity   *string                       `json:"srcidentity,omitempty"`
 	Srcipidentity *string                       `json:"srcipidentity,omitempty"`
-	Pops          []IpsecTunnelPopResultItem    `json:"pops,omitempty"`
-	Enabled       *bool                         `json:"enabled,omitempty"`
-	Bandwidth     *int64                        `json:"bandwidth,omitempty"`
-	Options       *IpsecTunnelResultItemOptions `json:"options,omitempty"`
+	Template      *string                       `json:"template,omitempty"`
+	Vendor        *string                       `json:"vendor,omitempty"`
 	Version       *int64                        `json:"version,omitempty"`
+}
+
+func (o *IpsecTunnelResultItem) GetBandwidth() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.Bandwidth
+}
+
+func (o *IpsecTunnelResultItem) GetEnabled() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Enabled
+}
+
+func (o *IpsecTunnelResultItem) GetEncryption() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Encryption
 }
 
 func (o *IpsecTunnelResultItem) GetID() *int64 {
@@ -72,27 +93,6 @@ func (o *IpsecTunnelResultItem) GetID() *int64 {
 	return o.ID
 }
 
-func (o *IpsecTunnelResultItem) GetSite() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Site
-}
-
-func (o *IpsecTunnelResultItem) GetTemplate() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Template
-}
-
-func (o *IpsecTunnelResultItem) GetSourcetype() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Sourcetype
-}
-
 func (o *IpsecTunnelResultItem) GetNotes() *string {
 	if o == nil {
 		return nil
@@ -100,18 +100,32 @@ func (o *IpsecTunnelResultItem) GetNotes() *string {
 	return o.Notes
 }
 
-func (o *IpsecTunnelResultItem) GetVendor() *string {
+func (o *IpsecTunnelResultItem) GetOptions() *IpsecTunnelResultItemOptions {
 	if o == nil {
 		return nil
 	}
-	return o.Vendor
+	return o.Options
 }
 
-func (o *IpsecTunnelResultItem) GetEncryption() *string {
+func (o *IpsecTunnelResultItem) GetPops() []IpsecTunnelPopResultItem {
 	if o == nil {
 		return nil
 	}
-	return o.Encryption
+	return o.Pops
+}
+
+func (o *IpsecTunnelResultItem) GetSite() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Site
+}
+
+func (o *IpsecTunnelResultItem) GetSourcetype() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Sourcetype
 }
 
 func (o *IpsecTunnelResultItem) GetSrcidentity() *string {
@@ -128,32 +142,18 @@ func (o *IpsecTunnelResultItem) GetSrcipidentity() *string {
 	return o.Srcipidentity
 }
 
-func (o *IpsecTunnelResultItem) GetPops() []IpsecTunnelPopResultItem {
+func (o *IpsecTunnelResultItem) GetTemplate() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Pops
+	return o.Template
 }
 
-func (o *IpsecTunnelResultItem) GetEnabled() *bool {
+func (o *IpsecTunnelResultItem) GetVendor() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Enabled
-}
-
-func (o *IpsecTunnelResultItem) GetBandwidth() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Bandwidth
-}
-
-func (o *IpsecTunnelResultItem) GetOptions() *IpsecTunnelResultItemOptions {
-	if o == nil {
-		return nil
-	}
-	return o.Options
+	return o.Vendor
 }
 
 func (o *IpsecTunnelResultItem) GetVersion() *int64 {

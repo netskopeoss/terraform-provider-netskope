@@ -9,35 +9,11 @@ import (
 )
 
 func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfilePostRequest() *shared.PublisherUpgradeProfilePostRequest {
-	name := new(string)
-	if !r.Name.IsUnknown() && !r.Name.IsNull() {
-		*name = r.Name.ValueString()
-	} else {
-		name = nil
-	}
-	frequency := new(string)
-	if !r.Frequency.IsUnknown() && !r.Frequency.IsNull() {
-		*frequency = r.Frequency.ValueString()
-	} else {
-		frequency = nil
-	}
-	timezone := new(string)
-	if !r.Timezone.IsUnknown() && !r.Timezone.IsNull() {
-		*timezone = r.Timezone.ValueString()
-	} else {
-		timezone = nil
-	}
 	dockerTag := new(string)
 	if !r.DockerTag.IsUnknown() && !r.DockerTag.IsNull() {
 		*dockerTag = r.DockerTag.ValueString()
 	} else {
 		dockerTag = nil
-	}
-	releaseType := new(string)
-	if !r.ReleaseType.IsUnknown() && !r.ReleaseType.IsNull() {
-		*releaseType = r.ReleaseType.ValueString()
-	} else {
-		releaseType = nil
 	}
 	enabled := new(bool)
 	if !r.Enabled.IsUnknown() && !r.Enabled.IsNull() {
@@ -45,18 +21,42 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfil
 	} else {
 		enabled = nil
 	}
+	frequency := new(string)
+	if !r.Frequency.IsUnknown() && !r.Frequency.IsNull() {
+		*frequency = r.Frequency.ValueString()
+	} else {
+		frequency = nil
+	}
+	name := new(string)
+	if !r.Name.IsUnknown() && !r.Name.IsNull() {
+		*name = r.Name.ValueString()
+	} else {
+		name = nil
+	}
+	releaseType := new(string)
+	if !r.ReleaseType.IsUnknown() && !r.ReleaseType.IsNull() {
+		*releaseType = r.ReleaseType.ValueString()
+	} else {
+		releaseType = nil
+	}
 	var required interface{}
 	if !r.Required.IsUnknown() && !r.Required.IsNull() {
 		_ = json.Unmarshal([]byte(r.Required.ValueString()), &required)
 	}
+	timezone := new(string)
+	if !r.Timezone.IsUnknown() && !r.Timezone.IsNull() {
+		*timezone = r.Timezone.ValueString()
+	} else {
+		timezone = nil
+	}
 	out := shared.PublisherUpgradeProfilePostRequest{
-		Name:        name,
-		Frequency:   frequency,
-		Timezone:    timezone,
 		DockerTag:   dockerTag,
-		ReleaseType: releaseType,
 		Enabled:     enabled,
+		Frequency:   frequency,
+		Name:        name,
+		ReleaseType: releaseType,
 		Required:    required,
+		Timezone:    timezone,
 	}
 	return &out
 }
@@ -78,41 +78,11 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgr
 }
 
 func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfilePutRequest() *shared.PublisherUpgradeProfilePutRequest {
-	name := new(string)
-	if !r.Name.IsUnknown() && !r.Name.IsNull() {
-		*name = r.Name.ValueString()
-	} else {
-		name = nil
-	}
-	id := new(int)
-	if !r.ID.IsUnknown() && !r.ID.IsNull() {
-		*id = int(r.ID.ValueInt64())
-	} else {
-		id = nil
-	}
-	frequency := new(string)
-	if !r.Frequency.IsUnknown() && !r.Frequency.IsNull() {
-		*frequency = r.Frequency.ValueString()
-	} else {
-		frequency = nil
-	}
-	timezone := new(string)
-	if !r.Timezone.IsUnknown() && !r.Timezone.IsNull() {
-		*timezone = r.Timezone.ValueString()
-	} else {
-		timezone = nil
-	}
 	dockerTag := new(string)
 	if !r.DockerTag.IsUnknown() && !r.DockerTag.IsNull() {
 		*dockerTag = r.DockerTag.ValueString()
 	} else {
 		dockerTag = nil
-	}
-	releaseType := new(string)
-	if !r.ReleaseType.IsUnknown() && !r.ReleaseType.IsNull() {
-		*releaseType = r.ReleaseType.ValueString()
-	} else {
-		releaseType = nil
 	}
 	enabled := new(bool)
 	if !r.Enabled.IsUnknown() && !r.Enabled.IsNull() {
@@ -120,14 +90,44 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfil
 	} else {
 		enabled = nil
 	}
+	frequency := new(string)
+	if !r.Frequency.IsUnknown() && !r.Frequency.IsNull() {
+		*frequency = r.Frequency.ValueString()
+	} else {
+		frequency = nil
+	}
+	id := new(int)
+	if !r.ID.IsUnknown() && !r.ID.IsNull() {
+		*id = int(r.ID.ValueInt64())
+	} else {
+		id = nil
+	}
+	name := new(string)
+	if !r.Name.IsUnknown() && !r.Name.IsNull() {
+		*name = r.Name.ValueString()
+	} else {
+		name = nil
+	}
+	releaseType := new(string)
+	if !r.ReleaseType.IsUnknown() && !r.ReleaseType.IsNull() {
+		*releaseType = r.ReleaseType.ValueString()
+	} else {
+		releaseType = nil
+	}
+	timezone := new(string)
+	if !r.Timezone.IsUnknown() && !r.Timezone.IsNull() {
+		*timezone = r.Timezone.ValueString()
+	} else {
+		timezone = nil
+	}
 	out := shared.PublisherUpgradeProfilePutRequest{
-		Name:        name,
-		ID:          id,
-		Frequency:   frequency,
-		Timezone:    timezone,
 		DockerTag:   dockerTag,
-		ReleaseType: releaseType,
 		Enabled:     enabled,
+		Frequency:   frequency,
+		ID:          id,
+		Name:        name,
+		ReleaseType: releaseType,
+		Timezone:    timezone,
 	}
 	return &out
 }

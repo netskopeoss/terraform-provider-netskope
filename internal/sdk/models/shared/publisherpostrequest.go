@@ -7,10 +7,10 @@ import (
 )
 
 type PublisherPostRequest struct {
-	Name                       *string       `default:"publisher_name" json:"name"`
 	Lbrokerconnect             *bool         `default:"false" json:"lbrokerconnect"`
-	Tags                       []TagItemNoID `json:"tags,omitempty"`
+	Name                       *string       `default:"publisher_name" json:"name"`
 	PublisherUpgradeProfilesID *int          `default:"1" json:"publisher_upgrade_profiles_id"`
+	Tags                       []TagItemNoID `json:"tags,omitempty"`
 }
 
 func (p PublisherPostRequest) MarshalJSON() ([]byte, error) {
@@ -24,13 +24,6 @@ func (p *PublisherPostRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *PublisherPostRequest) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
 func (o *PublisherPostRequest) GetLbrokerconnect() *bool {
 	if o == nil {
 		return nil
@@ -38,11 +31,11 @@ func (o *PublisherPostRequest) GetLbrokerconnect() *bool {
 	return o.Lbrokerconnect
 }
 
-func (o *PublisherPostRequest) GetTags() []TagItemNoID {
+func (o *PublisherPostRequest) GetName() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Tags
+	return o.Name
 }
 
 func (o *PublisherPostRequest) GetPublisherUpgradeProfilesID() *int {
@@ -50,4 +43,11 @@ func (o *PublisherPostRequest) GetPublisherUpgradeProfilesID() *int {
 		return nil
 	}
 	return o.PublisherUpgradeProfilesID
+}
+
+func (o *PublisherPostRequest) GetTags() []TagItemNoID {
+	if o == nil {
+		return nil
+	}
+	return o.Tags
 }

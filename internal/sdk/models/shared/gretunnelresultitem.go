@@ -33,73 +33,17 @@ func (o *Options) GetXff() *Xff {
 }
 
 type GreTunnelResultItem struct {
-	ID            *int64                   `json:"id,omitempty"`
-	Site          *string                  `json:"site,omitempty"`
-	Vendor        *string                  `json:"vendor,omitempty"`
-	Template      *string                  `json:"template,omitempty"`
-	Sourcetype    *string                  `json:"sourcetype,omitempty"`
-	Notes         *string                  `json:"notes,omitempty"`
-	Srcipidentity *string                  `json:"srcipidentity,omitempty"`
-	Pops          []GreTunnelPopResultItem `json:"pops,omitempty"`
 	Enabled       *bool                    `json:"enabled,omitempty"`
+	ID            *int64                   `json:"id,omitempty"`
+	Notes         *string                  `json:"notes,omitempty"`
 	Options       *Options                 `json:"options,omitempty"`
+	Pops          []GreTunnelPopResultItem `json:"pops,omitempty"`
+	Site          *string                  `json:"site,omitempty"`
+	Sourcetype    *string                  `json:"sourcetype,omitempty"`
+	Srcipidentity *string                  `json:"srcipidentity,omitempty"`
+	Template      *string                  `json:"template,omitempty"`
+	Vendor        *string                  `json:"vendor,omitempty"`
 	Version       *int64                   `json:"version,omitempty"`
-}
-
-func (o *GreTunnelResultItem) GetID() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *GreTunnelResultItem) GetSite() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Site
-}
-
-func (o *GreTunnelResultItem) GetVendor() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Vendor
-}
-
-func (o *GreTunnelResultItem) GetTemplate() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Template
-}
-
-func (o *GreTunnelResultItem) GetSourcetype() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Sourcetype
-}
-
-func (o *GreTunnelResultItem) GetNotes() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Notes
-}
-
-func (o *GreTunnelResultItem) GetSrcipidentity() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Srcipidentity
-}
-
-func (o *GreTunnelResultItem) GetPops() []GreTunnelPopResultItem {
-	if o == nil {
-		return nil
-	}
-	return o.Pops
 }
 
 func (o *GreTunnelResultItem) GetEnabled() *bool {
@@ -109,11 +53,67 @@ func (o *GreTunnelResultItem) GetEnabled() *bool {
 	return o.Enabled
 }
 
+func (o *GreTunnelResultItem) GetID() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.ID
+}
+
+func (o *GreTunnelResultItem) GetNotes() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Notes
+}
+
 func (o *GreTunnelResultItem) GetOptions() *Options {
 	if o == nil {
 		return nil
 	}
 	return o.Options
+}
+
+func (o *GreTunnelResultItem) GetPops() []GreTunnelPopResultItem {
+	if o == nil {
+		return nil
+	}
+	return o.Pops
+}
+
+func (o *GreTunnelResultItem) GetSite() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Site
+}
+
+func (o *GreTunnelResultItem) GetSourcetype() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Sourcetype
+}
+
+func (o *GreTunnelResultItem) GetSrcipidentity() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Srcipidentity
+}
+
+func (o *GreTunnelResultItem) GetTemplate() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Template
+}
+
+func (o *GreTunnelResultItem) GetVendor() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Vendor
 }
 
 func (o *GreTunnelResultItem) GetVersion() *int64 {

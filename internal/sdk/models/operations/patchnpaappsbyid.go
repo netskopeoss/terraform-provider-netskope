@@ -20,7 +20,6 @@ const (
 func (e PatchNPAAppsByIDQueryParamSilent) ToPointer() *PatchNPAAppsByIDQueryParamSilent {
 	return &e
 }
-
 func (e *PatchNPAAppsByIDQueryParamSilent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {

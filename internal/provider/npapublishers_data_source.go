@@ -60,8 +60,7 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 				Computed: true,
 			},
 			"id": schema.Int64Attribute{
-				Required:    true,
-				Description: `publisher id`,
+				Computed: true,
 			},
 			"lbrokerconnect": schema.BoolAttribute{
 				Computed: true,
@@ -161,8 +160,8 @@ func (r *NPAPublishersDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PublisherResponse == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.PublisherResponse != nil && res.PublisherResponse.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)

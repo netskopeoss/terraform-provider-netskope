@@ -3,16 +3,16 @@
 package shared
 
 type GrePatchResponse200 struct {
-	Status *int64                `json:"status,omitempty"`
-	Result *string               `json:"result,omitempty"`
 	Data   []GreTunnelResultItem `json:"data,omitempty"`
+	Result *string               `json:"result,omitempty"`
+	Status *int64                `json:"status,omitempty"`
 }
 
-func (o *GrePatchResponse200) GetStatus() *int64 {
+func (o *GrePatchResponse200) GetData() []GreTunnelResultItem {
 	if o == nil {
 		return nil
 	}
-	return o.Status
+	return o.Data
 }
 
 func (o *GrePatchResponse200) GetResult() *string {
@@ -22,9 +22,9 @@ func (o *GrePatchResponse200) GetResult() *string {
 	return o.Result
 }
 
-func (o *GrePatchResponse200) GetData() []GreTunnelResultItem {
+func (o *GrePatchResponse200) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
-	return o.Data
+	return o.Status
 }

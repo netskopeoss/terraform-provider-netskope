@@ -7,6 +7,17 @@ import (
 	"fmt"
 )
 
+type PrivateAppsGetResponseData struct {
+	PrivateApps []any `json:"private_apps,omitempty"`
+}
+
+func (o *PrivateAppsGetResponseData) GetPrivateApps() []any {
+	if o == nil {
+		return nil
+	}
+	return o.PrivateApps
+}
+
 type PrivateAppsGetResponseStatus string
 
 const (
@@ -17,7 +28,6 @@ const (
 func (e PrivateAppsGetResponseStatus) ToPointer() *PrivateAppsGetResponseStatus {
 	return &e
 }
-
 func (e *PrivateAppsGetResponseStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
@@ -34,28 +44,10 @@ func (e *PrivateAppsGetResponseStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PrivateAppsGetResponseData struct {
-	PrivateApps []interface{} `json:"private_apps,omitempty"`
-}
-
-func (o *PrivateAppsGetResponseData) GetPrivateApps() []interface{} {
-	if o == nil {
-		return nil
-	}
-	return o.PrivateApps
-}
-
 type PrivateAppsGetResponse struct {
-	Status *PrivateAppsGetResponseStatus `json:"status,omitempty"`
 	Data   *PrivateAppsGetResponseData   `json:"data,omitempty"`
+	Status *PrivateAppsGetResponseStatus `json:"status,omitempty"`
 	Total  *int                          `json:"total,omitempty"`
-}
-
-func (o *PrivateAppsGetResponse) GetStatus() *PrivateAppsGetResponseStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 func (o *PrivateAppsGetResponse) GetData() *PrivateAppsGetResponseData {
@@ -63,6 +55,13 @@ func (o *PrivateAppsGetResponse) GetData() *PrivateAppsGetResponseData {
 		return nil
 	}
 	return o.Data
+}
+
+func (o *PrivateAppsGetResponse) GetStatus() *PrivateAppsGetResponseStatus {
+	if o == nil {
+		return nil
+	}
+	return o.Status
 }
 
 func (o *PrivateAppsGetResponse) GetTotal() *int {

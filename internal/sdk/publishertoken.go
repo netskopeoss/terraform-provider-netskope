@@ -124,4 +124,5 @@ func (s *PublisherToken) Create(ctx context.Context, request operations.Generate
 	}
 
 	return res, nil
+
 }

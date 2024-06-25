@@ -4,15 +4,15 @@ package shared
 
 type PrivateAppsRequest struct {
 	AppName              *string         `json:"app_name,omitempty"`
-	Host                 *string         `json:"host,omitempty"`
-	RealHost             *string         `json:"real_host,omitempty"`
-	Protocols            []ProtocolItem  `json:"protocols,omitempty"`
-	Publishers           []PublisherItem `json:"publishers,omitempty"`
-	PublisherTags        []TagItemNoID   `json:"publisher_tags,omitempty"`
-	Tags                 []TagItemNoID   `json:"tags,omitempty"`
-	UsePublisherDNS      *bool           `json:"use_publisher_dns,omitempty"`
 	ClientlessAccess     *bool           `json:"clientless_access,omitempty"`
+	Host                 *string         `json:"host,omitempty"`
+	Protocols            []ProtocolItem  `json:"protocols,omitempty"`
+	PublisherTags        []TagItemNoID   `json:"publisher_tags,omitempty"`
+	Publishers           []PublisherItem `json:"publishers,omitempty"`
+	RealHost             *string         `json:"real_host,omitempty"`
+	Tags                 []TagItemNoID   `json:"tags,omitempty"`
 	TrustSelfSignedCerts *bool           `json:"trust_self_signed_certs,omitempty"`
+	UsePublisherDNS      *bool           `json:"use_publisher_dns,omitempty"`
 }
 
 func (o *PrivateAppsRequest) GetAppName() *string {
@@ -22,18 +22,18 @@ func (o *PrivateAppsRequest) GetAppName() *string {
 	return o.AppName
 }
 
+func (o *PrivateAppsRequest) GetClientlessAccess() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.ClientlessAccess
+}
+
 func (o *PrivateAppsRequest) GetHost() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Host
-}
-
-func (o *PrivateAppsRequest) GetRealHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.RealHost
 }
 
 func (o *PrivateAppsRequest) GetProtocols() []ProtocolItem {
@@ -43,6 +43,13 @@ func (o *PrivateAppsRequest) GetProtocols() []ProtocolItem {
 	return o.Protocols
 }
 
+func (o *PrivateAppsRequest) GetPublisherTags() []TagItemNoID {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherTags
+}
+
 func (o *PrivateAppsRequest) GetPublishers() []PublisherItem {
 	if o == nil {
 		return nil
@@ -50,11 +57,11 @@ func (o *PrivateAppsRequest) GetPublishers() []PublisherItem {
 	return o.Publishers
 }
 
-func (o *PrivateAppsRequest) GetPublisherTags() []TagItemNoID {
+func (o *PrivateAppsRequest) GetRealHost() *string {
 	if o == nil {
 		return nil
 	}
-	return o.PublisherTags
+	return o.RealHost
 }
 
 func (o *PrivateAppsRequest) GetTags() []TagItemNoID {
@@ -64,23 +71,16 @@ func (o *PrivateAppsRequest) GetTags() []TagItemNoID {
 	return o.Tags
 }
 
-func (o *PrivateAppsRequest) GetUsePublisherDNS() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.UsePublisherDNS
-}
-
-func (o *PrivateAppsRequest) GetClientlessAccess() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.ClientlessAccess
-}
-
 func (o *PrivateAppsRequest) GetTrustSelfSignedCerts() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.TrustSelfSignedCerts
+}
+
+func (o *PrivateAppsRequest) GetUsePublisherDNS() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.UsePublisherDNS
 }

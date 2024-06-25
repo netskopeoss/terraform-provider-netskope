@@ -20,7 +20,6 @@ const (
 func (e ReplaceNPAPublisherUpgradeProfilesQueryParamSilent) ToPointer() *ReplaceNPAPublisherUpgradeProfilesQueryParamSilent {
 	return &e
 }
-
 func (e *ReplaceNPAPublisherUpgradeProfilesQueryParamSilent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {

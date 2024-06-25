@@ -3,41 +3,13 @@
 package shared
 
 type PublisherUpgradeProfilePutRequest struct {
-	Name        *string `json:"name,omitempty"`
-	ID          *int    `json:"id,omitempty"`
-	Frequency   *string `json:"frequency,omitempty"`
-	Timezone    *string `json:"timezone,omitempty"`
 	DockerTag   *string `json:"docker_tag,omitempty"`
-	ReleaseType *string `json:"release_type,omitempty"`
 	Enabled     *bool   `json:"enabled,omitempty"`
-}
-
-func (o *PublisherUpgradeProfilePutRequest) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *PublisherUpgradeProfilePutRequest) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *PublisherUpgradeProfilePutRequest) GetFrequency() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Frequency
-}
-
-func (o *PublisherUpgradeProfilePutRequest) GetTimezone() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Timezone
+	Frequency   *string `json:"frequency,omitempty"`
+	ID          *int    `json:"id,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	ReleaseType *string `json:"release_type,omitempty"`
+	Timezone    *string `json:"timezone,omitempty"`
 }
 
 func (o *PublisherUpgradeProfilePutRequest) GetDockerTag() *string {
@@ -47,6 +19,34 @@ func (o *PublisherUpgradeProfilePutRequest) GetDockerTag() *string {
 	return o.DockerTag
 }
 
+func (o *PublisherUpgradeProfilePutRequest) GetEnabled() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Enabled
+}
+
+func (o *PublisherUpgradeProfilePutRequest) GetFrequency() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Frequency
+}
+
+func (o *PublisherUpgradeProfilePutRequest) GetID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.ID
+}
+
+func (o *PublisherUpgradeProfilePutRequest) GetName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Name
+}
+
 func (o *PublisherUpgradeProfilePutRequest) GetReleaseType() *string {
 	if o == nil {
 		return nil
@@ -54,9 +54,9 @@ func (o *PublisherUpgradeProfilePutRequest) GetReleaseType() *string {
 	return o.ReleaseType
 }
 
-func (o *PublisherUpgradeProfilePutRequest) GetEnabled() *bool {
+func (o *PublisherUpgradeProfilePutRequest) GetTimezone() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Enabled
+	return o.Timezone
 }

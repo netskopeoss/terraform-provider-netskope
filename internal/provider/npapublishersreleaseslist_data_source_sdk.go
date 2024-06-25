@@ -10,6 +10,7 @@ import (
 
 func (r *NPAPublishersReleasesListDataSourceModel) RefreshFromSharedPublishersReleaseGetResponse(resp *shared.PublishersReleaseGetResponse) {
 	if resp != nil {
+		r.Data = []tfTypes.ReleaseItem{}
 		if len(r.Data) > len(resp.Data) {
 			r.Data = r.Data[:len(resp.Data)]
 		}

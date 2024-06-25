@@ -15,6 +15,7 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 			r.Data = nil
 		} else {
 			r.Data = &tfTypes.Data{}
+			r.Data.Publishers = []tfTypes.Publisher{}
 			if len(r.Data.Publishers) > len(resp.Data.Publishers) {
 				r.Data.Publishers = r.Data.Publishers[:len(resp.Data.Publishers)]
 			}

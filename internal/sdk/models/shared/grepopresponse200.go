@@ -3,9 +3,16 @@
 package shared
 
 type GrePopResponse200 struct {
+	Result []GrePopResultItem `json:"result,omitempty"`
 	Status *int64             `json:"status,omitempty"`
 	Total  *int64             `json:"total,omitempty"`
-	Result []GrePopResultItem `json:"result,omitempty"`
+}
+
+func (o *GrePopResponse200) GetResult() []GrePopResultItem {
+	if o == nil {
+		return nil
+	}
+	return o.Result
 }
 
 func (o *GrePopResponse200) GetStatus() *int64 {
@@ -20,11 +27,4 @@ func (o *GrePopResponse200) GetTotal() *int64 {
 		return nil
 	}
 	return o.Total
-}
-
-func (o *GrePopResponse200) GetResult() []GrePopResultItem {
-	if o == nil {
-		return nil
-	}
-	return o.Result
 }

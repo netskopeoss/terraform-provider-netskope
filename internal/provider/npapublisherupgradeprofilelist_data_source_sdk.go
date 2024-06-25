@@ -14,6 +14,7 @@ func (r *NPAPublisherUpgradeProfileListDataSourceModel) RefreshFromSharedPublish
 			r.Data = nil
 		} else {
 			r.Data = &tfTypes.PublisherUpgradeProfileGetResponseData{}
+			r.Data.UpgradeProfiles = []tfTypes.UpgradeProfiles{}
 			if len(r.Data.UpgradeProfiles) > len(resp.Data.UpgradeProfiles) {
 				r.Data.UpgradeProfiles = r.Data.UpgradeProfiles[:len(resp.Data.UpgradeProfiles)]
 			}

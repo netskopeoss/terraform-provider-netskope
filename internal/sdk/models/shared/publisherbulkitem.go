@@ -10,12 +10,6 @@ import (
 type PublisherBulkItemAssessment struct {
 }
 
-type PublisherBulkItemUpgradeFailedReason struct {
-}
-
-type PublisherBulkItemUpgradeStatus struct {
-}
-
 type PublisherBulkItemStatus string
 
 const (
@@ -26,7 +20,6 @@ const (
 func (e PublisherBulkItemStatus) ToPointer() *PublisherBulkItemStatus {
 	return &e
 }
-
 func (e *PublisherBulkItemStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
@@ -43,34 +36,33 @@ func (e *PublisherBulkItemStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
+type PublisherBulkItemUpgradeFailedReason struct {
+}
+
+type PublisherBulkItemUpgradeStatus struct {
+}
+
 type PublisherBulkItem struct {
-	ID                        *int                                  `json:"id,omitempty"`
-	Name                      *string                               `json:"name,omitempty"`
-	CommonName                *string                               `json:"common_name,omitempty"`
-	Registered                *bool                                 `json:"registered,omitempty"`
-	Lbrokerconnect            *bool                                 `json:"lbrokerconnect,omitempty"`
 	Assessment                *PublisherBulkItemAssessment          `json:"assessment,omitempty"`
+	CommonName                *string                               `json:"common_name,omitempty"`
+	ID                        *int                                  `json:"id,omitempty"`
+	Lbrokerconnect            *bool                                 `json:"lbrokerconnect,omitempty"`
+	Name                      *string                               `json:"name,omitempty"`
+	PublisherUpgradeProfileID *int                                  `json:"publisher_upgrade_profile_id,omitempty"`
+	Registered                *bool                                 `json:"registered,omitempty"`
+	Status                    *PublisherBulkItemStatus              `json:"status,omitempty"`
+	StitcherID                *int                                  `json:"stitcher_id,omitempty"`
+	Tags                      []TagItem                             `json:"tags,omitempty"`
 	UpgradeFailedReason       *PublisherBulkItemUpgradeFailedReason `json:"upgrade_failed_reason,omitempty"`
 	UpgradeRequest            *bool                                 `json:"upgrade_request,omitempty"`
 	UpgradeStatus             *PublisherBulkItemUpgradeStatus       `json:"upgrade_status,omitempty"`
-	StitcherID                *int                                  `json:"stitcher_id,omitempty"`
-	Status                    *PublisherBulkItemStatus              `json:"status,omitempty"`
-	PublisherUpgradeProfileID *int                                  `json:"publisher_upgrade_profile_id,omitempty"`
-	Tags                      []TagItem                             `json:"tags,omitempty"`
 }
 
-func (o *PublisherBulkItem) GetID() *int {
+func (o *PublisherBulkItem) GetAssessment() *PublisherBulkItemAssessment {
 	if o == nil {
 		return nil
 	}
-	return o.ID
-}
-
-func (o *PublisherBulkItem) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
+	return o.Assessment
 }
 
 func (o *PublisherBulkItem) GetCommonName() *string {
@@ -80,11 +72,11 @@ func (o *PublisherBulkItem) GetCommonName() *string {
 	return o.CommonName
 }
 
-func (o *PublisherBulkItem) GetRegistered() *bool {
+func (o *PublisherBulkItem) GetID() *int {
 	if o == nil {
 		return nil
 	}
-	return o.Registered
+	return o.ID
 }
 
 func (o *PublisherBulkItem) GetLbrokerconnect() *bool {
@@ -94,11 +86,46 @@ func (o *PublisherBulkItem) GetLbrokerconnect() *bool {
 	return o.Lbrokerconnect
 }
 
-func (o *PublisherBulkItem) GetAssessment() *PublisherBulkItemAssessment {
+func (o *PublisherBulkItem) GetName() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Assessment
+	return o.Name
+}
+
+func (o *PublisherBulkItem) GetPublisherUpgradeProfileID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherUpgradeProfileID
+}
+
+func (o *PublisherBulkItem) GetRegistered() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Registered
+}
+
+func (o *PublisherBulkItem) GetStatus() *PublisherBulkItemStatus {
+	if o == nil {
+		return nil
+	}
+	return o.Status
+}
+
+func (o *PublisherBulkItem) GetStitcherID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.StitcherID
+}
+
+func (o *PublisherBulkItem) GetTags() []TagItem {
+	if o == nil {
+		return nil
+	}
+	return o.Tags
 }
 
 func (o *PublisherBulkItem) GetUpgradeFailedReason() *PublisherBulkItemUpgradeFailedReason {
@@ -120,32 +147,4 @@ func (o *PublisherBulkItem) GetUpgradeStatus() *PublisherBulkItemUpgradeStatus {
 		return nil
 	}
 	return o.UpgradeStatus
-}
-
-func (o *PublisherBulkItem) GetStitcherID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.StitcherID
-}
-
-func (o *PublisherBulkItem) GetStatus() *PublisherBulkItemStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
-func (o *PublisherBulkItem) GetPublisherUpgradeProfileID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherUpgradeProfileID
-}
-
-func (o *PublisherBulkItem) GetTags() []TagItem {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
 }

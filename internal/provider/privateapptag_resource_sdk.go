@@ -18,54 +18,54 @@ func (r *PrivateAppTagResourceModel) ToSharedTagRequest() *shared.TagRequest {
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
 	}
-	var tags []shared.TagItem = []shared.TagItem{}
-	for _, tagsItem := range r.Tags {
-		tagName := new(string)
-		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
-			*tagName = tagsItem.TagName.ValueString()
-		} else {
-			tagName = nil
-		}
+	var publisherTags []shared.TagItem = []shared.TagItem{}
+	for _, publisherTagsItem := range r.PublisherTags {
 		tagID := new(int)
-		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
-			*tagID = int(tagsItem.TagID.ValueInt64())
+		if !publisherTagsItem.TagID.IsUnknown() && !publisherTagsItem.TagID.IsNull() {
+			*tagID = int(publisherTagsItem.TagID.ValueInt64())
 		} else {
 			tagID = nil
 		}
-		tags = append(tags, shared.TagItem{
-			TagName: tagName,
+		tagName := new(string)
+		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {
+			*tagName = publisherTagsItem.TagName.ValueString()
+		} else {
+			tagName = nil
+		}
+		publisherTags = append(publisherTags, shared.TagItem{
 			TagID:   tagID,
+			TagName: tagName,
 		})
 	}
-	var publisherTags []shared.TagItem = []shared.TagItem{}
-	for _, publisherTagsItem := range r.PublisherTags {
-		tagName1 := new(string)
-		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {
-			*tagName1 = publisherTagsItem.TagName.ValueString()
-		} else {
-			tagName1 = nil
-		}
+	var tags []shared.TagItem = []shared.TagItem{}
+	for _, tagsItem := range r.Tags {
 		tagId1 := new(int)
-		if !publisherTagsItem.TagID.IsUnknown() && !publisherTagsItem.TagID.IsNull() {
-			*tagId1 = int(publisherTagsItem.TagID.ValueInt64())
+		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
+			*tagId1 = int(tagsItem.TagID.ValueInt64())
 		} else {
 			tagId1 = nil
 		}
-		publisherTags = append(publisherTags, shared.TagItem{
-			TagName: tagName1,
+		tagName1 := new(string)
+		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
+			*tagName1 = tagsItem.TagName.ValueString()
+		} else {
+			tagName1 = nil
+		}
+		tags = append(tags, shared.TagItem{
 			TagID:   tagId1,
+			TagName: tagName1,
 		})
 	}
 	out := shared.TagRequest{
 		ID:            id,
 		Ids:           ids,
-		Tags:          tags,
 		PublisherTags: publisherTags,
+		Tags:          tags,
 	}
 	return &out
 }
 
-func (r *PrivateAppTagResourceModel) RefreshFromSharedTagResponseData(resp shared.TagResponseData) {
+func (r *PrivateAppTagResourceModel) RefreshFromSharedTagResponseData(resp *shared.TagResponseData) {
 	if resp.TagID != nil {
 		r.TagID = types.Int64Value(int64(*resp.TagID))
 	} else {

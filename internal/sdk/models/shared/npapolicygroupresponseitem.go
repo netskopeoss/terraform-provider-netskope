@@ -3,14 +3,21 @@
 package shared
 
 type NpaPolicygroupResponseItem struct {
+	CanBeEditedDeleted *string `json:"can_be_edited_deleted,omitempty"`
 	GroupID            *string `json:"group_id,omitempty"`
 	GroupName          *string `json:"group_name,omitempty"`
-	ModifyType         *string `json:"modify_type,omitempty"`
-	ModifyTime         *string `json:"modify_time,omitempty"`
-	CanBeEditedDeleted *string `json:"can_be_edited_deleted,omitempty"`
-	GroupType          *string `json:"group_type,omitempty"`
-	GroupProdID        *int64  `json:"group_prod_id,omitempty"`
 	GroupPinnedID      *int64  `json:"group_pinned_id,omitempty"`
+	GroupProdID        *int64  `json:"group_prod_id,omitempty"`
+	GroupType          *string `json:"group_type,omitempty"`
+	ModifyTime         *string `json:"modify_time,omitempty"`
+	ModifyType         *string `json:"modify_type,omitempty"`
+}
+
+func (o *NpaPolicygroupResponseItem) GetCanBeEditedDeleted() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CanBeEditedDeleted
 }
 
 func (o *NpaPolicygroupResponseItem) GetGroupID() *string {
@@ -27,32 +34,11 @@ func (o *NpaPolicygroupResponseItem) GetGroupName() *string {
 	return o.GroupName
 }
 
-func (o *NpaPolicygroupResponseItem) GetModifyType() *string {
+func (o *NpaPolicygroupResponseItem) GetGroupPinnedID() *int64 {
 	if o == nil {
 		return nil
 	}
-	return o.ModifyType
-}
-
-func (o *NpaPolicygroupResponseItem) GetModifyTime() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ModifyTime
-}
-
-func (o *NpaPolicygroupResponseItem) GetCanBeEditedDeleted() *string {
-	if o == nil {
-		return nil
-	}
-	return o.CanBeEditedDeleted
-}
-
-func (o *NpaPolicygroupResponseItem) GetGroupType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupType
+	return o.GroupPinnedID
 }
 
 func (o *NpaPolicygroupResponseItem) GetGroupProdID() *int64 {
@@ -62,9 +48,23 @@ func (o *NpaPolicygroupResponseItem) GetGroupProdID() *int64 {
 	return o.GroupProdID
 }
 
-func (o *NpaPolicygroupResponseItem) GetGroupPinnedID() *int64 {
+func (o *NpaPolicygroupResponseItem) GetGroupType() *string {
 	if o == nil {
 		return nil
 	}
-	return o.GroupPinnedID
+	return o.GroupType
+}
+
+func (o *NpaPolicygroupResponseItem) GetModifyTime() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ModifyTime
+}
+
+func (o *NpaPolicygroupResponseItem) GetModifyType() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ModifyType
 }

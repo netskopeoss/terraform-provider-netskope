@@ -3,9 +3,16 @@
 package shared
 
 type IpsecPopResponse200 struct {
+	Result []IpsecPopResultItem `json:"result,omitempty"`
 	Status *int64               `json:"status,omitempty"`
 	Total  *int64               `json:"total,omitempty"`
-	Result []IpsecPopResultItem `json:"result,omitempty"`
+}
+
+func (o *IpsecPopResponse200) GetResult() []IpsecPopResultItem {
+	if o == nil {
+		return nil
+	}
+	return o.Result
 }
 
 func (o *IpsecPopResponse200) GetStatus() *int64 {
@@ -20,11 +27,4 @@ func (o *IpsecPopResponse200) GetTotal() *int64 {
 		return nil
 	}
 	return o.Total
-}
-
-func (o *IpsecPopResponse200) GetResult() []IpsecPopResultItem {
-	if o == nil {
-		return nil
-	}
-	return o.Result
 }

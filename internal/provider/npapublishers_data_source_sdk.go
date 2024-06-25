@@ -41,6 +41,7 @@ func (r *NPAPublishersDataSourceModel) RefreshFromSharedPublisherResponseData(re
 		} else {
 			r.StitcherID = types.Int64Null()
 		}
+		r.Tags = []tfTypes.TagItem{}
 		if len(r.Tags) > len(resp.Tags) {
 			r.Tags = r.Tags[:len(resp.Tags)]
 		}
