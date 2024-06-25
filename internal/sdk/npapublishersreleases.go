@@ -129,4 +129,5 @@ func (s *NPAPublishersReleases) ListObjects(ctx context.Context, request operati
 	}
 
 	return res, nil
+
 }

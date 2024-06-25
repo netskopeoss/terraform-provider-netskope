@@ -33,64 +33,15 @@ func (o *GreTunnelRequestPatchOptions) GetXff() *GreTunnelRequestPatchXff {
 }
 
 type GreTunnelRequestPatch struct {
-	Site          *string                       `json:"site,omitempty"`
-	Srcipidentity *string                       `json:"srcipidentity,omitempty"`
-	Pops          []string                      `json:"pops,omitempty"`
-	Vendor        *string                       `json:"vendor,omitempty"`
-	Template      *string                       `json:"template,omitempty"`
-	Sourcetype    *string                       `json:"sourcetype,omitempty"`
-	Notes         *string                       `json:"notes,omitempty"`
 	Enable        *bool                         `json:"enable,omitempty"`
+	Notes         *string                       `json:"notes,omitempty"`
 	Options       *GreTunnelRequestPatchOptions `json:"options,omitempty"`
-}
-
-func (o *GreTunnelRequestPatch) GetSite() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Site
-}
-
-func (o *GreTunnelRequestPatch) GetSrcipidentity() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Srcipidentity
-}
-
-func (o *GreTunnelRequestPatch) GetPops() []string {
-	if o == nil {
-		return nil
-	}
-	return o.Pops
-}
-
-func (o *GreTunnelRequestPatch) GetVendor() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Vendor
-}
-
-func (o *GreTunnelRequestPatch) GetTemplate() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Template
-}
-
-func (o *GreTunnelRequestPatch) GetSourcetype() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Sourcetype
-}
-
-func (o *GreTunnelRequestPatch) GetNotes() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Notes
+	Pops          []string                      `json:"pops,omitempty"`
+	Site          *string                       `json:"site,omitempty"`
+	Sourcetype    *string                       `json:"sourcetype,omitempty"`
+	Srcipidentity *string                       `json:"srcipidentity,omitempty"`
+	Template      *string                       `json:"template,omitempty"`
+	Vendor        *string                       `json:"vendor,omitempty"`
 }
 
 func (o *GreTunnelRequestPatch) GetEnable() *bool {
@@ -100,9 +51,58 @@ func (o *GreTunnelRequestPatch) GetEnable() *bool {
 	return o.Enable
 }
 
+func (o *GreTunnelRequestPatch) GetNotes() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Notes
+}
+
 func (o *GreTunnelRequestPatch) GetOptions() *GreTunnelRequestPatchOptions {
 	if o == nil {
 		return nil
 	}
 	return o.Options
+}
+
+func (o *GreTunnelRequestPatch) GetPops() []string {
+	if o == nil {
+		return nil
+	}
+	return o.Pops
+}
+
+func (o *GreTunnelRequestPatch) GetSite() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Site
+}
+
+func (o *GreTunnelRequestPatch) GetSourcetype() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Sourcetype
+}
+
+func (o *GreTunnelRequestPatch) GetSrcipidentity() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Srcipidentity
+}
+
+func (o *GreTunnelRequestPatch) GetTemplate() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Template
+}
+
+func (o *GreTunnelRequestPatch) GetVendor() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Vendor
 }

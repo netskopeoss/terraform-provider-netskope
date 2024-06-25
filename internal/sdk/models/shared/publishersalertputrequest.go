@@ -20,7 +20,6 @@ const (
 func (e EventTypes) ToPointer() *EventTypes {
 	return &e
 }
-
 func (e *EventTypes) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {

@@ -53,8 +53,7 @@ func (r *NPAPolicyGroupDataSource) Schema(ctx context.Context, req datasource.Sc
 				Computed: true,
 			},
 			"group_id": schema.StringAttribute{
-				Required:    true,
-				Description: `npa policy group id`,
+				Computed: true,
 			},
 			"group_name": schema.StringAttribute{
 				Computed: true,
@@ -140,8 +139,8 @@ func (r *NPAPolicyGroupDataSource) Read(ctx context.Context, req datasource.Read
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.Object != nil && res.Object.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedNpaPolicygroupResponseItem(res.Object.Data)

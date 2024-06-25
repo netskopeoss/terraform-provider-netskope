@@ -116,8 +116,8 @@ func (r *NPAPublishersAlertsConfigurationDataSource) Read(ctx context.Context, r
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PublishersAlertGetResponse == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.PublishersAlertGetResponse != nil && res.PublishersAlertGetResponse.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedPublishersAlertGetResponseData(res.PublishersAlertGetResponse.Data)

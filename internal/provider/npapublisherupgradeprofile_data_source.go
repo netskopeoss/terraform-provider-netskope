@@ -58,8 +58,7 @@ func (r *NPAPublisherUpgradeProfileDataSource) Schema(ctx context.Context, req d
 				Computed: true,
 			},
 			"id": schema.Int64Attribute{
-				Required:    true,
-				Description: `publisher upgrade profile id`,
+				Computed: true,
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
@@ -136,8 +135,8 @@ func (r *NPAPublisherUpgradeProfileDataSource) Read(ctx context.Context, req dat
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PublisherUpgradeProfileResponse == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.PublisherUpgradeProfileResponse != nil && res.PublisherUpgradeProfileResponse.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedPublisherUpgradeProfileResponseData(res.PublisherUpgradeProfileResponse.Data)

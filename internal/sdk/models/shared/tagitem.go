@@ -3,15 +3,8 @@
 package shared
 
 type TagItem struct {
-	TagName *string `json:"tag_name,omitempty"`
 	TagID   *int    `json:"tag_id,omitempty"`
-}
-
-func (o *TagItem) GetTagName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagName
+	TagName *string `json:"tag_name,omitempty"`
 }
 
 func (o *TagItem) GetTagID() *int {
@@ -19,4 +12,11 @@ func (o *TagItem) GetTagID() *int {
 		return nil
 	}
 	return o.TagID
+}
+
+func (o *TagItem) GetTagName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.TagName
 }

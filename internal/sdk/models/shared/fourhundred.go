@@ -3,15 +3,8 @@
 package shared
 
 type FourHundred struct {
-	Status  *int64  `json:"status,omitempty"`
 	Message *string `json:"message,omitempty"`
-}
-
-func (o *FourHundred) GetStatus() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Status
+	Status  *int64  `json:"status,omitempty"`
 }
 
 func (o *FourHundred) GetMessage() *string {
@@ -19,4 +12,11 @@ func (o *FourHundred) GetMessage() *string {
 		return nil
 	}
 	return o.Message
+}
+
+func (o *FourHundred) GetStatus() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.Status
 }

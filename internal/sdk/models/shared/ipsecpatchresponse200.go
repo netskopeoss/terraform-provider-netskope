@@ -3,16 +3,16 @@
 package shared
 
 type IpsecPatchResponse200 struct {
-	Status *int64                  `json:"status,omitempty"`
-	Result *string                 `json:"result,omitempty"`
 	Data   []IpsecTunnelResultItem `json:"data,omitempty"`
+	Result *string                 `json:"result,omitempty"`
+	Status *int64                  `json:"status,omitempty"`
 }
 
-func (o *IpsecPatchResponse200) GetStatus() *int64 {
+func (o *IpsecPatchResponse200) GetData() []IpsecTunnelResultItem {
 	if o == nil {
 		return nil
 	}
-	return o.Status
+	return o.Data
 }
 
 func (o *IpsecPatchResponse200) GetResult() *string {
@@ -22,9 +22,9 @@ func (o *IpsecPatchResponse200) GetResult() *string {
 	return o.Result
 }
 
-func (o *IpsecPatchResponse200) GetData() []IpsecTunnelResultItem {
+func (o *IpsecPatchResponse200) GetStatus() *int64 {
 	if o == nil {
 		return nil
 	}
-	return o.Data
+	return o.Status
 }

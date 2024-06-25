@@ -14,15 +14,8 @@ func (o *PublisherUpgradeProfileBulkRequestApply) GetPublisherUpgradeProfilesID(
 }
 
 type PublisherUpgradeProfileBulkRequestPublishers struct {
-	ID    []string                                 `json:"id,omitempty"`
 	Apply *PublisherUpgradeProfileBulkRequestApply `json:"apply,omitempty"`
-}
-
-func (o *PublisherUpgradeProfileBulkRequestPublishers) GetID() []string {
-	if o == nil {
-		return nil
-	}
-	return o.ID
+	ID    []string                                 `json:"id,omitempty"`
 }
 
 func (o *PublisherUpgradeProfileBulkRequestPublishers) GetApply() *PublisherUpgradeProfileBulkRequestApply {
@@ -30,6 +23,13 @@ func (o *PublisherUpgradeProfileBulkRequestPublishers) GetApply() *PublisherUpgr
 		return nil
 	}
 	return o.Apply
+}
+
+func (o *PublisherUpgradeProfileBulkRequestPublishers) GetID() []string {
+	if o == nil {
+		return nil
+	}
+	return o.ID
 }
 
 type PublisherUpgradeProfileBulkRequest struct {

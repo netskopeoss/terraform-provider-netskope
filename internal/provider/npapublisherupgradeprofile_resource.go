@@ -65,8 +65,7 @@ func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req res
 				Optional: true,
 			},
 			"id": schema.Int64Attribute{
-				Computed:    true,
-				Description: `publisher upgrade profile id`,
+				Computed: true,
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
@@ -152,8 +151,8 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PublisherUpgradeProfileResponse == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.PublisherUpgradeProfileResponse != nil && res.PublisherUpgradeProfileResponse.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedPublisherUpgradeProfileResponseData(res.PublisherUpgradeProfileResponse.Data)
@@ -178,8 +177,8 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.PublisherUpgradeProfileResponse == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+	if !(res1.PublisherUpgradeProfileResponse != nil && res1.PublisherUpgradeProfileResponse.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
 	data.RefreshFromSharedPublisherUpgradeProfileResponseData(res1.PublisherUpgradeProfileResponse.Data)
@@ -231,8 +230,8 @@ func (r *NPAPublisherUpgradeProfileResource) Read(ctx context.Context, req resou
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PublisherUpgradeProfileResponse == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.PublisherUpgradeProfileResponse != nil && res.PublisherUpgradeProfileResponse.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedPublisherUpgradeProfileResponseData(res.PublisherUpgradeProfileResponse.Data)
@@ -277,8 +276,8 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PublisherUpgradeProfileResponse == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.PublisherUpgradeProfileResponse != nil && res.PublisherUpgradeProfileResponse.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedPublisherUpgradeProfileResponseData(res.PublisherUpgradeProfileResponse.Data)
@@ -303,8 +302,8 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.PublisherUpgradeProfileResponse == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+	if !(res1.PublisherUpgradeProfileResponse != nil && res1.PublisherUpgradeProfileResponse.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
 	data.RefreshFromSharedPublisherUpgradeProfileResponseData(res1.PublisherUpgradeProfileResponse.Data)
@@ -356,10 +355,10 @@ func (r *NPAPublisherUpgradeProfileResource) Delete(ctx context.Context, req res
 }
 
 func (r *NPAPublisherUpgradeProfileResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	id2, err := strconv.Atoi(req.ID)
+	idID, err := strconv.Atoi(req.ID)
 	if err != nil {
 		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
 	}
 
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), int64(id2))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id").AtName("id"), int64(idID))...)
 }

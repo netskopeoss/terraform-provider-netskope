@@ -9,11 +9,11 @@ import (
 
 func (r *NPAPolicyGroupResourceModel) ToSharedNpaPolicygroupRequest() *shared.NpaPolicygroupRequest {
 	groupName := r.GroupName.ValueString()
-	order := shared.NpaPolicygroupRequestOrder(r.GroupOrder.Order.ValueString())
 	groupID := r.GroupOrder.GroupID.ValueString()
+	order := shared.Order(r.GroupOrder.Order.ValueString())
 	groupOrder := shared.GroupOrder{
-		Order:   order,
 		GroupID: groupID,
+		Order:   order,
 	}
 	out := shared.NpaPolicygroupRequest{
 		GroupName:  groupName,

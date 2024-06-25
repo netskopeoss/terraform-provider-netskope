@@ -1,31 +1,30 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: c0c7bd0d6d845ab3a43660205a684cd6
-  docVersion: 2.0.0
-  speakeasyVersion: 1.264.1
-  generationVersion: 2.312.0
-  releaseVersion: 0.0.1
-  configChecksum: 81d4a21f19ec8dc4366ab298fa197cfe
+  docChecksum: f8e83f340ea7f4afe846c058f25129ea
+  docVersion: 1.0.0
+  speakeasyVersion: 1.315.2
+  generationVersion: 2.352.0
+  releaseVersion: 0.4.0
+  configChecksum: 11ce406019bda276fea2424f32f979e3
 features:
   terraform:
+    additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.4
-    core: 3.18.3
+    core: 3.22.0
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
     groups: 2.81.2
     ignores: 2.81.1
     nameOverrides: 2.81.2
     typeOverrides: 2.81.1
-    unions: 2.81.12
+    unions: 2.81.15
 generatedFiles:
   - internal/sdk/npapublishers.go
-  - internal/sdk/publishertoken.go
   - internal/sdk/npapublishersapps.go
+  - internal/sdk/publishertoken.go
   - internal/sdk/npapublishersreleases.go
   - internal/sdk/npapublisherupgradeprofiles.go
-  - internal/sdk/scimusers.go
-  - internal/sdk/scimgroups.go
   - internal/sdk/terraformproviderns.go
   - internal/sdk/models/errors/sdkerror.go
   - internal/sdk/types/bigint.go
@@ -44,96 +43,85 @@ generatedFiles:
   - internal/sdk/internal/utils/security.go
   - internal/sdk/internal/utils/utils.go
   - internal/sdk/models/operations/updatenpapublisherbyid.go
-  - internal/sdk/models/operations/triggernpapublisherupdate.go
   - internal/sdk/models/operations/getnpapublisheralerts.go
   - internal/sdk/models/operations/configurenpapublisheralerts.go
+  - internal/sdk/models/operations/triggernpapublisherupdate.go
   - internal/sdk/models/operations/updatenpapublisherprofilesbulk.go
-  - internal/sdk/models/operations/getnpapolicyrules.go
-  - internal/sdk/models/operations/createnpapolicyrules.go
-  - internal/sdk/models/operations/deletenpapolicyrules.go
-  - internal/sdk/models/operations/patchnpapolicyrulesbyid.go
-  - internal/sdk/models/operations/getnpapolicyrulesbyid.go
   - internal/sdk/models/operations/getnpapolicygroups.go
   - internal/sdk/models/operations/createnpapolicygroups.go
   - internal/sdk/models/operations/deletenpapolicygroups.go
-  - internal/sdk/models/operations/patchnpapolicygroupsbyid.go
   - internal/sdk/models/operations/getnpapolicygroupsbyid.go
+  - internal/sdk/models/operations/patchnpapolicygroupsbyid.go
+  - internal/sdk/models/operations/getnpapolicyrules.go
+  - internal/sdk/models/operations/createnpapolicyrules.go
+  - internal/sdk/models/operations/deletenpapolicyrules.go
+  - internal/sdk/models/operations/getnpapolicyrulesbyid.go
+  - internal/sdk/models/operations/patchnpapolicyrulesbyid.go
   - internal/sdk/models/operations/getnpaapps.go
   - internal/sdk/models/operations/createnpaapps.go
   - internal/sdk/models/operations/deletenpaapps.go
-  - internal/sdk/models/operations/replacenpaappsbyid.go
-  - internal/sdk/models/operations/patchnpaappsbyid.go
   - internal/sdk/models/operations/getnpaappsbyid.go
+  - internal/sdk/models/operations/patchnpaappsbyid.go
+  - internal/sdk/models/operations/replacenpaappsbyid.go
   - internal/sdk/models/operations/querynpapolicyinuse.go
-  - internal/sdk/models/operations/createnpatags.go
-  - internal/sdk/models/operations/patchnpatags.go
   - internal/sdk/models/operations/deletenpatags.go
   - internal/sdk/models/operations/getnpatags.go
+  - internal/sdk/models/operations/patchnpatags.go
+  - internal/sdk/models/operations/createnpatags.go
+  - internal/sdk/models/operations/deletenpatagsbyid.go
   - internal/sdk/models/operations/getnpatagsbyid.go
   - internal/sdk/models/operations/replacenpatagsbyid.go
-  - internal/sdk/models/operations/deletenpatagsbyid.go
   - internal/sdk/models/operations/retrievenpapoliciesinuse.go
   - internal/sdk/models/operations/getgrepops.go
   - internal/sdk/models/operations/getgrepopsbyid.go
   - internal/sdk/models/operations/getgretunnels.go
   - internal/sdk/models/operations/creategretunnels.go
+  - internal/sdk/models/operations/deletegretunnels.go
   - internal/sdk/models/operations/getgretunnelsbyid.go
   - internal/sdk/models/operations/patchgretunnelsbyid.go
-  - internal/sdk/models/operations/deletegretunnels.go
   - internal/sdk/models/operations/getipsecpops.go
   - internal/sdk/models/operations/getipsecpopsbyid.go
   - internal/sdk/models/operations/getipsectunnels.go
   - internal/sdk/models/operations/createipsectunnels.go
+  - internal/sdk/models/operations/deleteipsectunnels.go
   - internal/sdk/models/operations/getipsectunnelsbyid.go
   - internal/sdk/models/operations/patchipsectunnelsbyid.go
-  - internal/sdk/models/operations/deleteipsectunnels.go
   - internal/sdk/models/operations/getnpapublishers.go
   - internal/sdk/models/operations/createnpapublishers.go
   - internal/sdk/models/operations/deletenpapublishers.go
-  - internal/sdk/models/operations/replacenpapublisherbyid.go
   - internal/sdk/models/operations/getnpapublisherbyid.go
-  - internal/sdk/models/operations/generatenpapublishertoken.go
+  - internal/sdk/models/operations/replacenpapublisherbyid.go
   - internal/sdk/models/operations/getnpapublisherapps.go
+  - internal/sdk/models/operations/generatenpapublishertoken.go
   - internal/sdk/models/operations/getnpapublisherobjects.go
   - internal/sdk/models/operations/getpublisherupgradeprofiles.go
   - internal/sdk/models/operations/createnpapublisherupradeprofiles.go
   - internal/sdk/models/operations/deletenpapubliserupgradeprofiles.go
-  - internal/sdk/models/operations/replacenpapublisherupgradeprofiles.go
   - internal/sdk/models/operations/getnpapublisherupgradeprofiles.go
-  - internal/sdk/models/operations/createscimusers.go
-  - internal/sdk/models/operations/getscimusers.go
-  - internal/sdk/models/operations/putscimusersbyid.go
-  - internal/sdk/models/operations/getscimusersbyid.go
-  - internal/sdk/models/operations/updatescimusersbyid.go
-  - internal/sdk/models/operations/deletescimusers.go
-  - internal/sdk/models/operations/createscimgroups.go
-  - internal/sdk/models/operations/getscimgroups.go
-  - internal/sdk/models/operations/getscimgroupsbyid.go
-  - internal/sdk/models/operations/patchscimusersbyid.go
-  - internal/sdk/models/operations/deletescimusersbyid.go
+  - internal/sdk/models/operations/replacenpapublisherupgradeprofiles.go
   - internal/sdk/models/shared/fourhundred.go
   - internal/sdk/models/shared/publishersresponse400.go
   - internal/sdk/models/shared/publisherresponse.go
   - internal/sdk/models/shared/tagitem.go
   - internal/sdk/models/shared/publisherputrequest.go
+  - internal/sdk/models/shared/publishersalertgetresponse.go
+  - internal/sdk/models/shared/publishersalertputrequest.go
   - internal/sdk/models/shared/publishersbulkresponse.go
   - internal/sdk/models/shared/publisherbulkitem.go
   - internal/sdk/models/shared/publisherbulkrequest.go
-  - internal/sdk/models/shared/publishersalertgetresponse.go
-  - internal/sdk/models/shared/publishersalertputrequest.go
   - internal/sdk/models/shared/publisherupgradeprofilebulkresponse.go
   - internal/sdk/models/shared/upgradepublisherresponse.go
   - internal/sdk/models/shared/publisherupgradeprofilebulkrequest.go
+  - internal/sdk/models/shared/npapolicygroupresponse400.go
+  - internal/sdk/models/shared/npapolicygroupresponse.go
+  - internal/sdk/models/shared/npapolicygroupresponseitem.go
+  - internal/sdk/models/shared/npapolicygrouprequest.go
   - internal/sdk/models/shared/npapolicyresponse400.go
   - internal/sdk/models/shared/npapolicylistresponse.go
   - internal/sdk/models/shared/npapolicyresponseitem.go
   - internal/sdk/models/shared/npapolicyruledata.go
   - internal/sdk/models/shared/npapolicyruledlp.go
   - internal/sdk/models/shared/npapolicyrequest.go
-  - internal/sdk/models/shared/npapolicygroupresponse400.go
-  - internal/sdk/models/shared/npapolicygroupresponse.go
-  - internal/sdk/models/shared/npapolicygroupresponseitem.go
-  - internal/sdk/models/shared/npapolicygrouprequest.go
   - internal/sdk/models/shared/privateappsresponse400.go
   - internal/sdk/models/shared/privateappsgetresponse.go
   - internal/sdk/models/shared/privateappsresponse.go
@@ -161,9 +149,9 @@ generatedFiles:
   - internal/sdk/models/shared/greresponse409.go
   - internal/sdk/models/shared/greresponse201.go
   - internal/sdk/models/shared/gretunnelrequestpost.go
+  - internal/sdk/models/shared/greresponse200.go
   - internal/sdk/models/shared/grepatchresponse200.go
   - internal/sdk/models/shared/gretunnelrequestpatch.go
-  - internal/sdk/models/shared/greresponse200.go
   - internal/sdk/models/shared/ipsecresponse500.go
   - internal/sdk/models/shared/ipsecresponse429.go
   - internal/sdk/models/shared/ipsecresponse405.go
@@ -178,9 +166,9 @@ generatedFiles:
   - internal/sdk/models/shared/ipsecresponse409.go
   - internal/sdk/models/shared/ipsecresponse201.go
   - internal/sdk/models/shared/ipsectunnelrequestpost.go
+  - internal/sdk/models/shared/ipsecresponse200.go
   - internal/sdk/models/shared/ipsecpatchresponse200.go
   - internal/sdk/models/shared/ipsectunnelrequestpatch.go
-  - internal/sdk/models/shared/ipsecresponse200.go
   - internal/sdk/models/shared/publishersgetresponse.go
   - internal/sdk/models/shared/data.go
   - internal/sdk/models/shared/publisher.go
@@ -262,11 +250,6 @@ generatedFiles:
   - internal/provider/types/protocol_response_item.go
   - internal/provider/types/reachability.go
   - internal/provider/types/service_publisher_assignment_item.go
-  - internal/provider/types/members.go
-  - internal/provider/types/create_scim_groups_meta.go
-  - internal/provider/types/get_scim_groups_resources.go
-  - internal/provider/types/emails.go
-  - internal/provider/types/name.go
   - internal/provider/types/npa_policy_response_item.go
   - internal/provider/types/publisher_apps_list_response_data.go
   - internal/provider/types/assessment.go
@@ -285,12 +268,15 @@ generatedFiles:
   - USAGE.md
   - internal/provider/provider.go
   - examples/provider/provider.tf
+  - examples/resources/terraform_npa_policy/import.sh
   - internal/provider/npapolicy_resource.go
   - internal/provider/npapolicy_resource_sdk.go
   - examples/resources/terraform_npa_policy/resource.tf
+  - examples/resources/terraform_npa_policy_group/import.sh
   - internal/provider/npapolicygroup_resource.go
   - internal/provider/npapolicygroup_resource_sdk.go
   - examples/resources/terraform_npa_policy_group/resource.tf
+  - examples/resources/terraform_npa_publishers/import.sh
   - internal/provider/npapublishers_resource.go
   - internal/provider/npapublishers_resource_sdk.go
   - examples/resources/terraform_npa_publishers/resource.tf
@@ -300,6 +286,7 @@ generatedFiles:
   - internal/provider/npapublishersbulkupgrade_resource.go
   - internal/provider/npapublishersbulkupgrade_resource_sdk.go
   - examples/resources/terraform_npa_publishers_bulk_upgrade/resource.tf
+  - examples/resources/terraform_npa_publisher_upgrade_profile/import.sh
   - internal/provider/npapublisherupgradeprofile_resource.go
   - internal/provider/npapublisherupgradeprofile_resource_sdk.go
   - examples/resources/terraform_npa_publisher_upgrade_profile/resource.tf
@@ -312,12 +299,6 @@ generatedFiles:
   - internal/provider/publishertoken_resource.go
   - internal/provider/publishertoken_resource_sdk.go
   - examples/resources/terraform_publisher_token/resource.tf
-  - internal/provider/scimgroups_resource.go
-  - internal/provider/scimgroups_resource_sdk.go
-  - examples/resources/terraform_scim_groups/resource.tf
-  - internal/provider/scimuser_resource.go
-  - internal/provider/scimuser_resource_sdk.go
-  - examples/resources/terraform_scim_user/resource.tf
   - internal/provider/npapolicy_data_source.go
   - internal/provider/npapolicy_data_source_sdk.go
   - examples/data-sources/terraform_npa_policy/data-source.tf
@@ -360,13 +341,4 @@ generatedFiles:
   - internal/provider/privateapptagpolicyuselist_data_source.go
   - internal/provider/privateapptagpolicyuselist_data_source_sdk.go
   - examples/data-sources/terraform_private_app_tag_policy_use_list/data-source.tf
-  - internal/provider/scimgroups_data_source.go
-  - internal/provider/scimgroups_data_source_sdk.go
-  - examples/data-sources/terraform_scim_groups/data-source.tf
-  - internal/provider/scimgroupsbyid_data_source.go
-  - internal/provider/scimgroupsbyid_data_source_sdk.go
-  - examples/data-sources/terraform_scim_groups_by_id/data-source.tf
-  - internal/provider/scimuser_data_source.go
-  - internal/provider/scimuser_data_source_sdk.go
-  - examples/data-sources/terraform_scim_user/data-source.tf
   - .gitattributes

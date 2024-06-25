@@ -3,9 +3,16 @@
 package shared
 
 type GreTunnelResponse200 struct {
+	Result []GreTunnelResultItem `json:"result,omitempty"`
 	Status *int64                `json:"status,omitempty"`
 	Total  *int64                `json:"total,omitempty"`
-	Result []GreTunnelResultItem `json:"result,omitempty"`
+}
+
+func (o *GreTunnelResponse200) GetResult() []GreTunnelResultItem {
+	if o == nil {
+		return nil
+	}
+	return o.Result
 }
 
 func (o *GreTunnelResponse200) GetStatus() *int64 {
@@ -20,11 +27,4 @@ func (o *GreTunnelResponse200) GetTotal() *int64 {
 		return nil
 	}
 	return o.Total
-}
-
-func (o *GreTunnelResponse200) GetResult() []GreTunnelResultItem {
-	if o == nil {
-		return nil
-	}
-	return o.Result
 }

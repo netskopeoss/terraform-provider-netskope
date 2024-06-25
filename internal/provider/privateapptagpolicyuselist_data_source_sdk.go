@@ -21,6 +21,7 @@ func (r *PrivateAppTagPolicyUseListDataSourceModel) ToOperationsRetrieveNPAPolic
 
 func (r *PrivateAppTagPolicyUseListDataSourceModel) RefreshFromOperationsRetrieveNPAPoliciesInUseResponseBody(resp *operations.RetrieveNPAPoliciesInUseResponseBody) {
 	if resp != nil {
+		r.Data = []tfTypes.RetrieveNPAPoliciesInUseData{}
 		if len(r.Data) > len(resp.Data) {
 			r.Data = r.Data[:len(resp.Data)]
 		}

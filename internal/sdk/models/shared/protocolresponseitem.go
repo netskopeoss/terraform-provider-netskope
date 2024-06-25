@@ -5,8 +5,8 @@ package shared
 type ProtocolResponseItem struct {
 	ID        *int    `json:"id,omitempty"`
 	Port      *string `json:"port,omitempty"`
-	Transport *string `json:"transport,omitempty"`
 	ServiceID *int    `json:"service_id,omitempty"`
+	Transport *string `json:"transport,omitempty"`
 }
 
 func (o *ProtocolResponseItem) GetID() *int {
@@ -23,16 +23,16 @@ func (o *ProtocolResponseItem) GetPort() *string {
 	return o.Port
 }
 
-func (o *ProtocolResponseItem) GetTransport() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Transport
-}
-
 func (o *ProtocolResponseItem) GetServiceID() *int {
 	if o == nil {
 		return nil
 	}
 	return o.ServiceID
+}
+
+func (o *ProtocolResponseItem) GetTransport() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Transport
 }

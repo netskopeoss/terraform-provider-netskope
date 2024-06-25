@@ -31,7 +31,6 @@ const (
 func (e DeleteNPAPubliserUpgradeProfilesStatus) ToPointer() *DeleteNPAPubliserUpgradeProfilesStatus {
 	return &e
 }
-
 func (e *DeleteNPAPubliserUpgradeProfilesStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {

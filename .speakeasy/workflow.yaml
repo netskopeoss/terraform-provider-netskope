@@ -12,9 +12,10 @@ sources:
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/npa_private_tag.yaml
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/gre.yaml
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/ipsec.yaml
-            - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/scim/scim-apis.yaml
         overlays:
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
+        registry:
+            location: registry.speakeasyapi.dev/api_dev_ns/api-dev-ns/openapi
 targets:
     first-target:
         target: terraform

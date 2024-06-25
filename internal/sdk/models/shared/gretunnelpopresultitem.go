@@ -3,22 +3,15 @@
 package shared
 
 type GreTunnelPopResultItem struct {
-	Name              *string `json:"name,omitempty"`
 	Gateway           *string `json:"gateway,omitempty"`
-	Probeip           *string `json:"probeip,omitempty"`
-	Primary           *bool   `json:"primary,omitempty"`
-	UsertrafficStatus *string `json:"usertrafficStatus,omitempty"`
-	UsertrafficLast   *string `json:"usertrafficLast,omitempty"`
-	KeepaliveStatus   *string `json:"keepaliveStatus,omitempty"`
 	KeepaliveLast     *string `json:"keepaliveLast,omitempty"`
+	KeepaliveStatus   *string `json:"keepaliveStatus,omitempty"`
+	Name              *string `json:"name,omitempty"`
+	Primary           *bool   `json:"primary,omitempty"`
+	Probeip           *string `json:"probeip,omitempty"`
 	Throughput        *string `json:"throughput,omitempty"`
-}
-
-func (o *GreTunnelPopResultItem) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
+	UsertrafficLast   *string `json:"usertrafficLast,omitempty"`
+	UsertrafficStatus *string `json:"usertrafficStatus,omitempty"`
 }
 
 func (o *GreTunnelPopResultItem) GetGateway() *string {
@@ -28,32 +21,11 @@ func (o *GreTunnelPopResultItem) GetGateway() *string {
 	return o.Gateway
 }
 
-func (o *GreTunnelPopResultItem) GetProbeip() *string {
+func (o *GreTunnelPopResultItem) GetKeepaliveLast() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Probeip
-}
-
-func (o *GreTunnelPopResultItem) GetPrimary() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Primary
-}
-
-func (o *GreTunnelPopResultItem) GetUsertrafficStatus() *string {
-	if o == nil {
-		return nil
-	}
-	return o.UsertrafficStatus
-}
-
-func (o *GreTunnelPopResultItem) GetUsertrafficLast() *string {
-	if o == nil {
-		return nil
-	}
-	return o.UsertrafficLast
+	return o.KeepaliveLast
 }
 
 func (o *GreTunnelPopResultItem) GetKeepaliveStatus() *string {
@@ -63,11 +35,25 @@ func (o *GreTunnelPopResultItem) GetKeepaliveStatus() *string {
 	return o.KeepaliveStatus
 }
 
-func (o *GreTunnelPopResultItem) GetKeepaliveLast() *string {
+func (o *GreTunnelPopResultItem) GetName() *string {
 	if o == nil {
 		return nil
 	}
-	return o.KeepaliveLast
+	return o.Name
+}
+
+func (o *GreTunnelPopResultItem) GetPrimary() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Primary
+}
+
+func (o *GreTunnelPopResultItem) GetProbeip() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Probeip
 }
 
 func (o *GreTunnelPopResultItem) GetThroughput() *string {
@@ -75,4 +61,18 @@ func (o *GreTunnelPopResultItem) GetThroughput() *string {
 		return nil
 	}
 	return o.Throughput
+}
+
+func (o *GreTunnelPopResultItem) GetUsertrafficLast() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UsertrafficLast
+}
+
+func (o *GreTunnelPopResultItem) GetUsertrafficStatus() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UsertrafficStatus
 }

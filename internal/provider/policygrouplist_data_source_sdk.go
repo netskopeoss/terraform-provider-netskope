@@ -10,6 +10,7 @@ import (
 
 func (r *PolicyGroupListDataSourceModel) RefreshFromSharedNpaPolicygroupResponse(resp *shared.NpaPolicygroupResponse) {
 	if resp != nil {
+		r.Data = []tfTypes.NpaPolicygroupResponseItem{}
 		if len(r.Data) > len(resp.Data) {
 			r.Data = r.Data[:len(resp.Data)]
 		}

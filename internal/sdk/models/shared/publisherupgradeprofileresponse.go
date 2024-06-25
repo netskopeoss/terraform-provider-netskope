@@ -3,34 +3,13 @@
 package shared
 
 type PublisherUpgradeProfileResponseData struct {
-	ID          *int    `json:"id,omitempty"`
-	Frequency   *string `json:"frequency,omitempty"`
-	Timezone    *string `json:"timezone,omitempty"`
 	DockerTag   *string `json:"docker_tag,omitempty"`
-	ReleaseType *string `json:"release_type,omitempty"`
-	Name        *string `json:"name,omitempty"`
 	Enabled     *bool   `json:"enabled,omitempty"`
-}
-
-func (o *PublisherUpgradeProfileResponseData) GetID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.ID
-}
-
-func (o *PublisherUpgradeProfileResponseData) GetFrequency() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Frequency
-}
-
-func (o *PublisherUpgradeProfileResponseData) GetTimezone() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Timezone
+	Frequency   *string `json:"frequency,omitempty"`
+	ID          *int    `json:"id,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	ReleaseType *string `json:"release_type,omitempty"`
+	Timezone    *string `json:"timezone,omitempty"`
 }
 
 func (o *PublisherUpgradeProfileResponseData) GetDockerTag() *string {
@@ -40,11 +19,25 @@ func (o *PublisherUpgradeProfileResponseData) GetDockerTag() *string {
 	return o.DockerTag
 }
 
-func (o *PublisherUpgradeProfileResponseData) GetReleaseType() *string {
+func (o *PublisherUpgradeProfileResponseData) GetEnabled() *bool {
 	if o == nil {
 		return nil
 	}
-	return o.ReleaseType
+	return o.Enabled
+}
+
+func (o *PublisherUpgradeProfileResponseData) GetFrequency() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Frequency
+}
+
+func (o *PublisherUpgradeProfileResponseData) GetID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.ID
 }
 
 func (o *PublisherUpgradeProfileResponseData) GetName() *string {
@@ -54,11 +47,18 @@ func (o *PublisherUpgradeProfileResponseData) GetName() *string {
 	return o.Name
 }
 
-func (o *PublisherUpgradeProfileResponseData) GetEnabled() *bool {
+func (o *PublisherUpgradeProfileResponseData) GetReleaseType() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Enabled
+	return o.ReleaseType
+}
+
+func (o *PublisherUpgradeProfileResponseData) GetTimezone() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Timezone
 }
 
 type PublisherUpgradeProfileResponse struct {

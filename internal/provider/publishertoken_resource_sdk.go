@@ -7,6 +7,6 @@ import (
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
 )
 
-func (r *PublisherTokenResourceModel) RefreshFromOperationsGenerateNPAPublisherTokenData(resp operations.GenerateNPAPublisherTokenData) {
+func (r *PublisherTokenResourceModel) RefreshFromOperationsGenerateNPAPublisherTokenData(resp *operations.GenerateNPAPublisherTokenData) {
 	r.Token = types.StringValue(resp.Token)
 }

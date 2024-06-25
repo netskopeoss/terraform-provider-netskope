@@ -11,10 +11,6 @@ import (
 func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *shared.PublisherBulkRequest {
 	var publishers *shared.Publishers
 	if r.Publishers != nil {
-		var id []string = []string{}
-		for _, idItem := range r.Publishers.ID {
-			id = append(id, idItem.ValueString())
-		}
 		var apply *shared.Apply
 		if r.Publishers.Apply != nil {
 			upgradeRequest := new(bool)
@@ -27,9 +23,13 @@ func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *
 				UpgradeRequest: upgradeRequest,
 			}
 		}
+		var id []string = []string{}
+		for _, idItem := range r.Publishers.ID {
+			id = append(id, idItem.ValueString())
+		}
 		publishers = &shared.Publishers{
-			ID:    id,
 			Apply: apply,
+			ID:    id,
 		}
 	}
 	out := shared.PublisherBulkRequest{
@@ -40,6 +40,7 @@ func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *
 
 func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkResponse(resp *shared.PublishersBulkResponse) {
 	if resp != nil {
+		r.Data = []tfTypes.PublisherBulkItem{}
 		if len(r.Data) > len(resp.Data) {
 			r.Data = r.Data[:len(resp.Data)]
 		}
@@ -74,6 +75,7 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkR
 			} else {
 				data1.StitcherID = types.Int64Null()
 			}
+			data1.Tags = []tfTypes.TagItem{}
 			for tagsCount, tagsItem := range dataItem.Tags {
 				var tags1 tfTypes.TagItem
 				if tagsItem.TagID != nil {

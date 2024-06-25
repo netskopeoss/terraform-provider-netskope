@@ -10,6 +10,7 @@ import (
 
 func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsListResponse(resp *shared.PublisherAppsListResponse) {
 	if resp != nil {
+		r.Data = []tfTypes.PublisherAppsListResponseData{}
 		if len(r.Data) > len(resp.Data) {
 			r.Data = r.Data[:len(resp.Data)]
 		}
@@ -23,6 +24,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 				data1.ID = types.Int64Null()
 			}
 			data1.Name = types.StringPointerValue(dataItem.Name)
+			data1.Protocols = []tfTypes.ProtocolResponseItem{}
 			for protocolsCount, protocolsItem := range dataItem.Protocols {
 				var protocols1 tfTypes.ProtocolResponseItem
 				if protocolsItem.ID != nil {
@@ -47,6 +49,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 				}
 			}
 			data1.RealHost = types.StringPointerValue(dataItem.RealHost)
+			data1.ServicePublisherAssignments = []tfTypes.ServicePublisherAssignmentItem{}
 			for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range dataItem.ServicePublisherAssignments {
 				var servicePublisherAssignments1 tfTypes.ServicePublisherAssignmentItem
 				servicePublisherAssignments1.Primary = types.BoolPointerValue(servicePublisherAssignmentsItem.Primary)
@@ -81,6 +84,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].ServiceID = servicePublisherAssignments1.ServiceID
 				}
 			}
+			data1.Tags = []tfTypes.TagItem{}
 			for tagsCount, tagsItem := range dataItem.Tags {
 				var tags1 tfTypes.TagItem
 				if tagsItem.TagID != nil {

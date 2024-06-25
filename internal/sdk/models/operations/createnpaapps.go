@@ -20,7 +20,6 @@ const (
 func (e CreateNPAAppsQueryParamSilent) ToPointer() *CreateNPAAppsQueryParamSilent {
 	return &e
 }
-
 func (e *CreateNPAAppsQueryParamSilent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {

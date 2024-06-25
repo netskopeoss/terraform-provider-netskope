@@ -10,6 +10,7 @@ import (
 
 func (r *PrivateAppTagListDataSourceModel) RefreshFromSharedTagResponse(resp *shared.TagResponse) {
 	if resp != nil {
+		r.Data = []tfTypes.TagItem{}
 		if len(r.Data) > len(resp.Data) {
 			r.Data = r.Data[:len(resp.Data)]
 		}

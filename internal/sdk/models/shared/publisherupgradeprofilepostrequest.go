@@ -3,34 +3,13 @@
 package shared
 
 type PublisherUpgradeProfilePostRequest struct {
-	Name        *string     `json:"name,omitempty"`
-	Frequency   *string     `json:"frequency,omitempty"`
-	Timezone    *string     `json:"timezone,omitempty"`
-	DockerTag   *string     `json:"docker_tag,omitempty"`
-	ReleaseType *string     `json:"release_type,omitempty"`
-	Enabled     *bool       `json:"enabled,omitempty"`
-	Required    interface{} `json:"required,omitempty"`
-}
-
-func (o *PublisherUpgradeProfilePostRequest) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
-}
-
-func (o *PublisherUpgradeProfilePostRequest) GetFrequency() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Frequency
-}
-
-func (o *PublisherUpgradeProfilePostRequest) GetTimezone() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Timezone
+	DockerTag   *string `json:"docker_tag,omitempty"`
+	Enabled     *bool   `json:"enabled,omitempty"`
+	Frequency   *string `json:"frequency,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	ReleaseType *string `json:"release_type,omitempty"`
+	Required    any     `json:"required,omitempty"`
+	Timezone    *string `json:"timezone,omitempty"`
 }
 
 func (o *PublisherUpgradeProfilePostRequest) GetDockerTag() *string {
@@ -40,13 +19,6 @@ func (o *PublisherUpgradeProfilePostRequest) GetDockerTag() *string {
 	return o.DockerTag
 }
 
-func (o *PublisherUpgradeProfilePostRequest) GetReleaseType() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ReleaseType
-}
-
 func (o *PublisherUpgradeProfilePostRequest) GetEnabled() *bool {
 	if o == nil {
 		return nil
@@ -54,9 +26,37 @@ func (o *PublisherUpgradeProfilePostRequest) GetEnabled() *bool {
 	return o.Enabled
 }
 
-func (o *PublisherUpgradeProfilePostRequest) GetRequired() interface{} {
+func (o *PublisherUpgradeProfilePostRequest) GetFrequency() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Frequency
+}
+
+func (o *PublisherUpgradeProfilePostRequest) GetName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Name
+}
+
+func (o *PublisherUpgradeProfilePostRequest) GetReleaseType() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ReleaseType
+}
+
+func (o *PublisherUpgradeProfilePostRequest) GetRequired() any {
 	if o == nil {
 		return nil
 	}
 	return o.Required
+}
+
+func (o *PublisherUpgradeProfilePostRequest) GetTimezone() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Timezone
 }

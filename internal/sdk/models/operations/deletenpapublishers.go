@@ -31,7 +31,6 @@ const (
 func (e DeleteNPAPublishersStatus) ToPointer() *DeleteNPAPublishersStatus {
 	return &e
 }
-
 func (e *DeleteNPAPublishersStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
