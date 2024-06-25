@@ -13,34 +13,34 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &NPAPublishersAlertsConfigurationDataSource{}
-var _ datasource.DataSourceWithConfigure = &NPAPublishersAlertsConfigurationDataSource{}
+var _ datasource.DataSource = &NPAPublishersAlertsConfigurationListDataSource{}
+var _ datasource.DataSourceWithConfigure = &NPAPublishersAlertsConfigurationListDataSource{}
 
-func NewNPAPublishersAlertsConfigurationDataSource() datasource.DataSource {
-	return &NPAPublishersAlertsConfigurationDataSource{}
+func NewNPAPublishersAlertsConfigurationListDataSource() datasource.DataSource {
+	return &NPAPublishersAlertsConfigurationListDataSource{}
 }
 
-// NPAPublishersAlertsConfigurationDataSource is the data source implementation.
-type NPAPublishersAlertsConfigurationDataSource struct {
+// NPAPublishersAlertsConfigurationListDataSource is the data source implementation.
+type NPAPublishersAlertsConfigurationListDataSource struct {
 	client *sdk.TerraformProviderNs
 }
 
-// NPAPublishersAlertsConfigurationDataSourceModel describes the data model.
-type NPAPublishersAlertsConfigurationDataSourceModel struct {
+// NPAPublishersAlertsConfigurationListDataSourceModel describes the data model.
+type NPAPublishersAlertsConfigurationListDataSourceModel struct {
 	AdminUsers    []types.String `tfsdk:"admin_users"`
 	EventTypes    []types.String `tfsdk:"event_types"`
 	SelectedUsers types.String   `tfsdk:"selected_users"`
 }
 
 // Metadata returns the data source type name.
-func (r *NPAPublishersAlertsConfigurationDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_npa_publishers_alerts_configuration"
+func (r *NPAPublishersAlertsConfigurationListDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_npa_publishers_alerts_configuration_list"
 }
 
 // Schema defines the schema for the data source.
-func (r *NPAPublishersAlertsConfigurationDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (r *NPAPublishersAlertsConfigurationListDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "NPAPublishersAlertsConfiguration DataSource",
+		MarkdownDescription: "NPAPublishersAlertsConfigurationList DataSource",
 
 		Attributes: map[string]schema.Attribute{
 			"admin_users": schema.ListAttribute{
@@ -58,7 +58,7 @@ func (r *NPAPublishersAlertsConfigurationDataSource) Schema(ctx context.Context,
 	}
 }
 
-func (r *NPAPublishersAlertsConfigurationDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (r *NPAPublishersAlertsConfigurationListDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -78,8 +78,8 @@ func (r *NPAPublishersAlertsConfigurationDataSource) Configure(ctx context.Conte
 	r.client = client
 }
 
-func (r *NPAPublishersAlertsConfigurationDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data *NPAPublishersAlertsConfigurationDataSourceModel
+func (r *NPAPublishersAlertsConfigurationListDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data *NPAPublishersAlertsConfigurationListDataSourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &item)...)

@@ -1,8 +1,8 @@
 resource "terraform_private_app" "my_privateapp" {
   app_name          = "...my_app_name..."
-  clientless_access = false
+  clientless_access = true
   host              = "...my_host..."
-  private_app_id    = 1
+  private_app_id    = 0
   protocols = [
     {
       port = "...my_port..."
@@ -21,6 +21,6 @@ resource "terraform_private_app" "my_privateapp" {
     },
   ]
   real_host               = "...my_real_host..."
-  trust_self_signed_certs = true
+  trust_self_signed_certs = false
   use_publisher_dns       = true
 }

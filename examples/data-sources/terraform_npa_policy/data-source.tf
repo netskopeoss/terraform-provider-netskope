@@ -1,3 +1,3 @@
 data "terraform_npa_policy" "my_npapolicy" {
-  id = "b1dcee81-ace1-4324-bd6f-53f9abe25fc2"
+  id = "c165fbb0-6576-492c-8ba0-d6eab1777d8a"
 }

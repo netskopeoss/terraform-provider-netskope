@@ -1,17 +1,18 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: f8e83f340ea7f4afe846c058f25129ea
+  docChecksum: 8455624daf62d7271ddfa638e4371663
   docVersion: 1.0.0
-  speakeasyVersion: 1.315.2
+  speakeasyVersion: 1.316.0
   generationVersion: 2.352.0
-  releaseVersion: 0.4.0
-  configChecksum: 11ce406019bda276fea2424f32f979e3
+  releaseVersion: 0.5.1
+  configChecksum: 5ee298b7de31a7aae23a6fcb7c54e2e8
 features:
   terraform:
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.4
     core: 3.22.0
+    examples: 2.81.5
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
     groups: 2.81.2
@@ -72,20 +73,6 @@ generatedFiles:
   - internal/sdk/models/operations/getnpatagsbyid.go
   - internal/sdk/models/operations/replacenpatagsbyid.go
   - internal/sdk/models/operations/retrievenpapoliciesinuse.go
-  - internal/sdk/models/operations/getgrepops.go
-  - internal/sdk/models/operations/getgrepopsbyid.go
-  - internal/sdk/models/operations/getgretunnels.go
-  - internal/sdk/models/operations/creategretunnels.go
-  - internal/sdk/models/operations/deletegretunnels.go
-  - internal/sdk/models/operations/getgretunnelsbyid.go
-  - internal/sdk/models/operations/patchgretunnelsbyid.go
-  - internal/sdk/models/operations/getipsecpops.go
-  - internal/sdk/models/operations/getipsecpopsbyid.go
-  - internal/sdk/models/operations/getipsectunnels.go
-  - internal/sdk/models/operations/createipsectunnels.go
-  - internal/sdk/models/operations/deleteipsectunnels.go
-  - internal/sdk/models/operations/getipsectunnelsbyid.go
-  - internal/sdk/models/operations/patchipsectunnelsbyid.go
   - internal/sdk/models/operations/getnpapublishers.go
   - internal/sdk/models/operations/createnpapublishers.go
   - internal/sdk/models/operations/deletenpapublishers.go
@@ -135,40 +122,6 @@ generatedFiles:
   - internal/sdk/models/shared/tagresponse400.go
   - internal/sdk/models/shared/tagresponse.go
   - internal/sdk/models/shared/tagrequest.go
-  - internal/sdk/models/shared/greresponse500.go
-  - internal/sdk/models/shared/greresponse429.go
-  - internal/sdk/models/shared/greresponse405.go
-  - internal/sdk/models/shared/greresponse403.go
-  - internal/sdk/models/shared/greresponse400.go
-  - internal/sdk/models/shared/grepopresponse200.go
-  - internal/sdk/models/shared/grepopresultitem.go
-  - internal/sdk/models/shared/greresponse404.go
-  - internal/sdk/models/shared/gretunnelresponse200.go
-  - internal/sdk/models/shared/gretunnelresultitem.go
-  - internal/sdk/models/shared/gretunnelpopresultitem.go
-  - internal/sdk/models/shared/greresponse409.go
-  - internal/sdk/models/shared/greresponse201.go
-  - internal/sdk/models/shared/gretunnelrequestpost.go
-  - internal/sdk/models/shared/greresponse200.go
-  - internal/sdk/models/shared/grepatchresponse200.go
-  - internal/sdk/models/shared/gretunnelrequestpatch.go
-  - internal/sdk/models/shared/ipsecresponse500.go
-  - internal/sdk/models/shared/ipsecresponse429.go
-  - internal/sdk/models/shared/ipsecresponse405.go
-  - internal/sdk/models/shared/ipsecresponse403.go
-  - internal/sdk/models/shared/ipsecresponse400.go
-  - internal/sdk/models/shared/ipsecpopresponse200.go
-  - internal/sdk/models/shared/ipsecpopresultitem.go
-  - internal/sdk/models/shared/ipsecresponse404.go
-  - internal/sdk/models/shared/ipsectunnelresponse200.go
-  - internal/sdk/models/shared/ipsectunnelresultitem.go
-  - internal/sdk/models/shared/ipsectunnelpopresultitem.go
-  - internal/sdk/models/shared/ipsecresponse409.go
-  - internal/sdk/models/shared/ipsecresponse201.go
-  - internal/sdk/models/shared/ipsectunnelrequestpost.go
-  - internal/sdk/models/shared/ipsecresponse200.go
-  - internal/sdk/models/shared/ipsecpatchresponse200.go
-  - internal/sdk/models/shared/ipsectunnelrequestpatch.go
   - internal/sdk/models/shared/publishersgetresponse.go
   - internal/sdk/models/shared/data.go
   - internal/sdk/models/shared/publisher.go
@@ -240,6 +193,7 @@ generatedFiles:
   - internal/provider/types/rule_order.go
   - internal/provider/types/group_order.go
   - internal/provider/types/tag_item.go
+  - internal/provider/types/publishers_alert_get_response_data.go
   - internal/provider/types/publisher_bulk_item_assessment.go
   - internal/provider/types/publisher_bulk_item.go
   - internal/provider/types/apply.go
@@ -280,9 +234,9 @@ generatedFiles:
   - internal/provider/npapublishers_resource.go
   - internal/provider/npapublishers_resource_sdk.go
   - examples/resources/terraform_npa_publishers/resource.tf
-  - internal/provider/npapublishersalertsconfiguration_resource.go
-  - internal/provider/npapublishersalertsconfiguration_resource_sdk.go
-  - examples/resources/terraform_npa_publishers_alerts_configuration/resource.tf
+  - internal/provider/npapublishersalertsconfigurationupdate_resource.go
+  - internal/provider/npapublishersalertsconfigurationupdate_resource_sdk.go
+  - examples/resources/terraform_npa_publishers_alerts_configuration_update/resource.tf
   - internal/provider/npapublishersbulkupgrade_resource.go
   - internal/provider/npapublishersbulkupgrade_resource_sdk.go
   - examples/resources/terraform_npa_publishers_bulk_upgrade/resource.tf
@@ -311,9 +265,9 @@ generatedFiles:
   - internal/provider/npapublishers_data_source.go
   - internal/provider/npapublishers_data_source_sdk.go
   - examples/data-sources/terraform_npa_publishers/data-source.tf
-  - internal/provider/npapublishersalertsconfiguration_data_source.go
-  - internal/provider/npapublishersalertsconfiguration_data_source_sdk.go
-  - examples/data-sources/terraform_npa_publishers_alerts_configuration/data-source.tf
+  - internal/provider/npapublishersalertsconfigurationlist_data_source.go
+  - internal/provider/npapublishersalertsconfigurationlist_data_source_sdk.go
+  - examples/data-sources/terraform_npa_publishers_alerts_configuration_list/data-source.tf
   - internal/provider/npapublishersappslist_data_source.go
   - internal/provider/npapublishersappslist_data_source_sdk.go
   - examples/data-sources/terraform_npa_publishers_apps_list/data-source.tf
