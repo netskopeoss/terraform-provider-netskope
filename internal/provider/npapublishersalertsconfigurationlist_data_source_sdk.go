@@ -7,7 +7,7 @@ import (
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *NPAPublishersAlertsConfigurationDataSourceModel) RefreshFromSharedPublishersAlertGetResponseData(resp *shared.PublishersAlertGetResponseData) {
+func (r *NPAPublishersAlertsConfigurationListDataSourceModel) RefreshFromSharedPublishersAlertGetResponseData(resp *shared.PublishersAlertGetResponseData) {
 	if resp != nil {
 		r.AdminUsers = []types.String{}
 		for _, v := range resp.AdminUsers {

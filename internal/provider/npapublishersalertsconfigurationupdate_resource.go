@@ -11,59 +11,75 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &NPAPublishersAlertsConfigurationResource{}
-var _ resource.ResourceWithImportState = &NPAPublishersAlertsConfigurationResource{}
+var _ resource.Resource = &NPAPublishersAlertsConfigurationUpdateResource{}
+var _ resource.ResourceWithImportState = &NPAPublishersAlertsConfigurationUpdateResource{}
 
-func NewNPAPublishersAlertsConfigurationResource() resource.Resource {
-	return &NPAPublishersAlertsConfigurationResource{}
+func NewNPAPublishersAlertsConfigurationUpdateResource() resource.Resource {
+	return &NPAPublishersAlertsConfigurationUpdateResource{}
 }
 
-// NPAPublishersAlertsConfigurationResource defines the resource implementation.
-type NPAPublishersAlertsConfigurationResource struct {
+// NPAPublishersAlertsConfigurationUpdateResource defines the resource implementation.
+type NPAPublishersAlertsConfigurationUpdateResource struct {
 	client *sdk.TerraformProviderNs
 }
 
-// NPAPublishersAlertsConfigurationResourceModel describes the resource data model.
-type NPAPublishersAlertsConfigurationResourceModel struct {
-	AdminUsers    []types.String `tfsdk:"admin_users"`
-	EventTypes    []types.String `tfsdk:"event_types"`
-	SelectedUsers types.String   `tfsdk:"selected_users"`
+// NPAPublishersAlertsConfigurationUpdateResourceModel describes the resource data model.
+type NPAPublishersAlertsConfigurationUpdateResourceModel struct {
+	AdminUsers    []types.String                          `tfsdk:"admin_users"`
+	Data          *tfTypes.PublishersAlertGetResponseData `tfsdk:"data"`
+	EventTypes    []types.String                          `tfsdk:"event_types"`
+	SelectedUsers types.String                            `tfsdk:"selected_users"`
 }
 
-func (r *NPAPublishersAlertsConfigurationResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_npa_publishers_alerts_configuration"
+func (r *NPAPublishersAlertsConfigurationUpdateResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_npa_publishers_alerts_configuration_update"
 }
 
-func (r *NPAPublishersAlertsConfigurationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NPAPublishersAlertsConfigurationUpdateResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "NPAPublishersAlertsConfiguration Resource",
+		MarkdownDescription: "NPAPublishersAlertsConfigurationUpdate Resource",
 		Attributes: map[string]schema.Attribute{
 			"admin_users": schema.ListAttribute{
-				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
 			},
+			"data": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"admin_users": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"event_types": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"selected_users": schema.StringAttribute{
+						Computed: true,
+					},
+				},
+			},
 			"event_types": schema.ListAttribute{
-				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
 				Validators: []validator.List{
 					listvalidator.SizeAtLeast(1),
+					listvalidator.SizeAtMost(5),
 				},
 			},
 			"selected_users": schema.StringAttribute{
-				Computed: true,
 				Optional: true,
 			},
 		},
 	}
 }
 
-func (r *NPAPublishersAlertsConfigurationResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *NPAPublishersAlertsConfigurationUpdateResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -83,8 +99,8 @@ func (r *NPAPublishersAlertsConfigurationResource) Configure(ctx context.Context
 	r.client = client
 }
 
-func (r *NPAPublishersAlertsConfigurationResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data *NPAPublishersAlertsConfigurationResourceModel
+func (r *NPAPublishersAlertsConfigurationUpdateResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data *NPAPublishersAlertsConfigurationUpdateResourceModel
 	var plan types.Object
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -118,19 +134,19 @@ func (r *NPAPublishersAlertsConfigurationResource) Create(ctx context.Context, r
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublishersAlertGetResponse != nil && res.PublishersAlertGetResponse.Data != nil) {
+	if !(res.PublishersAlertGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublishersAlertGetResponseData(res.PublishersAlertGetResponse.Data)
+	data.RefreshFromSharedPublishersAlertGetResponse(res.PublishersAlertGetResponse)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *NPAPublishersAlertsConfigurationResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data *NPAPublishersAlertsConfigurationResourceModel
+func (r *NPAPublishersAlertsConfigurationUpdateResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data *NPAPublishersAlertsConfigurationUpdateResourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &item)...)
@@ -147,38 +163,14 @@ func (r *NPAPublishersAlertsConfigurationResource) Read(ctx context.Context, req
 		return
 	}
 
-	res, err := r.client.GetNPAPublisherAlerts(ctx)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
-		}
-		return
-	}
-	if res == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
-	if res.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
-		return
-	}
-	if !(res.PublishersAlertGetResponse != nil && res.PublishersAlertGetResponse.Data != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
-		return
-	}
-	data.RefreshFromSharedPublishersAlertGetResponseData(res.PublishersAlertGetResponse.Data)
+	// Not Implemented; we rely entirely on CREATE API request response
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *NPAPublishersAlertsConfigurationResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data *NPAPublishersAlertsConfigurationResourceModel
+func (r *NPAPublishersAlertsConfigurationUpdateResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data *NPAPublishersAlertsConfigurationUpdateResourceModel
 	var plan types.Object
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -208,19 +200,19 @@ func (r *NPAPublishersAlertsConfigurationResource) Update(ctx context.Context, r
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublishersAlertGetResponse != nil && res.PublishersAlertGetResponse.Data != nil) {
+	if !(res.PublishersAlertGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublishersAlertGetResponseData(res.PublishersAlertGetResponse.Data)
+	data.RefreshFromSharedPublishersAlertGetResponse(res.PublishersAlertGetResponse)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *NPAPublishersAlertsConfigurationResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data *NPAPublishersAlertsConfigurationResourceModel
+func (r *NPAPublishersAlertsConfigurationUpdateResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data *NPAPublishersAlertsConfigurationUpdateResourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &item)...)
@@ -240,6 +232,6 @@ func (r *NPAPublishersAlertsConfigurationResource) Delete(ctx context.Context, r
 	// Not Implemented; entity does not have a configured DELETE operation
 }
 
-func (r *NPAPublishersAlertsConfigurationResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.AddError("Not Implemented", "No available import state operation is available for resource npa_publishers_alerts_configuration.")
+func (r *NPAPublishersAlertsConfigurationUpdateResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	resp.Diagnostics.AddError("Not Implemented", "No available import state operation is available for resource npa_publishers_alerts_configuration_update.")
 }

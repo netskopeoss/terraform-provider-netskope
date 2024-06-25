@@ -32,12 +32,11 @@ type PrivateAppTagResource struct {
 
 // PrivateAppTagResourceModel describes the resource data model.
 type PrivateAppTagResourceModel struct {
-	ID            types.String      `tfsdk:"id"`
-	Ids           []types.String    `tfsdk:"ids"`
-	PublisherTags []tfTypes.TagItem `tfsdk:"publisher_tags"`
-	TagID         types.Int64       `tfsdk:"tag_id"`
-	TagName       types.String      `tfsdk:"tag_name"`
-	Tags          []tfTypes.TagItem `tfsdk:"tags"`
+	ID      types.String      `tfsdk:"id"`
+	Ids     []types.String    `tfsdk:"ids"`
+	TagID   types.Int64       `tfsdk:"tag_id"`
+	TagName types.String      `tfsdk:"tag_name"`
+	Tags    []tfTypes.TagItem `tfsdk:"tags"`
 }
 
 func (r *PrivateAppTagResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -61,31 +60,6 @@ func (r *PrivateAppTagResource) Schema(ctx context.Context, req resource.SchemaR
 				},
 				Optional:    true,
 				ElementType: types.StringType,
-				Description: `Requires replacement if changed. `,
-			},
-			"publisher_tags": schema.ListNestedAttribute{
-				PlanModifiers: []planmodifier.List{
-					listplanmodifier.RequiresReplaceIfConfigured(),
-				},
-				Optional: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"tag_id": schema.Int64Attribute{
-							PlanModifiers: []planmodifier.Int64{
-								int64planmodifier.RequiresReplaceIfConfigured(),
-							},
-							Optional:    true,
-							Description: `Requires replacement if changed. `,
-						},
-						"tag_name": schema.StringAttribute{
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.RequiresReplaceIfConfigured(),
-							},
-							Optional:    true,
-							Description: `Requires replacement if changed. `,
-						},
-					},
-				},
 				Description: `Requires replacement if changed. `,
 			},
 			"tag_id": schema.Int64Attribute{

@@ -4,10 +4,11 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
 	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
 )
 
-func (r *NPAPublishersAlertsConfigurationResourceModel) ToSharedPublishersAlertPutRequest() *shared.PublishersAlertPutRequest {
+func (r *NPAPublishersAlertsConfigurationUpdateResourceModel) ToSharedPublishersAlertPutRequest() *shared.PublishersAlertPutRequest {
 	var adminUsers []string = []string{}
 	for _, adminUsersItem := range r.AdminUsers {
 		adminUsers = append(adminUsers, adminUsersItem.ValueString())
@@ -30,16 +31,21 @@ func (r *NPAPublishersAlertsConfigurationResourceModel) ToSharedPublishersAlertP
 	return &out
 }
 
-func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromSharedPublishersAlertGetResponseData(resp *shared.PublishersAlertGetResponseData) {
+func (r *NPAPublishersAlertsConfigurationUpdateResourceModel) RefreshFromSharedPublishersAlertGetResponse(resp *shared.PublishersAlertGetResponse) {
 	if resp != nil {
-		r.AdminUsers = []types.String{}
-		for _, v := range resp.AdminUsers {
-			r.AdminUsers = append(r.AdminUsers, types.StringValue(v))
+		if resp.Data == nil {
+			r.Data = nil
+		} else {
+			r.Data = &tfTypes.PublishersAlertGetResponseData{}
+			r.Data.AdminUsers = []types.String{}
+			for _, v := range resp.Data.AdminUsers {
+				r.Data.AdminUsers = append(r.Data.AdminUsers, types.StringValue(v))
+			}
+			r.Data.EventTypes = []types.String{}
+			for _, v := range resp.Data.EventTypes {
+				r.Data.EventTypes = append(r.Data.EventTypes, types.StringValue(string(v)))
+			}
+			r.Data.SelectedUsers = types.StringPointerValue(resp.Data.SelectedUsers)
 		}
-		r.EventTypes = []types.String{}
-		for _, v := range resp.EventTypes {
-			r.EventTypes = append(r.EventTypes, types.StringValue(string(v)))
-		}
-		r.SelectedUsers = types.StringPointerValue(resp.SelectedUsers)
 	}
 }
