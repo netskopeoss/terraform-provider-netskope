@@ -57,14 +57,14 @@ To install this provider, copy and paste this code into your Terraform configura
 ```hcl
 terraform {
   required_providers {
-    terraform = {
-      source  = "speakeasy/terraform"
-      version = "0.5.1"
+    ns = {
+      source  = "netskope/ns"
+      version = "0.5.16"
     }
   }
 }
 
-provider "terraform" {
+provider "ns" {
   # Configuration options
 }
 ```

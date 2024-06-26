@@ -4,7 +4,7 @@ package listplanmodifier
 
 import (
 	"context"
-	"github.com/speakeasy/terraform-provider-terraform/internal/planmodifiers/utils"
+	"github.com/netskope/terraform-provider-ns/internal/planmodifiers/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 )

@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: 8455624daf62d7271ddfa638e4371663
+  docChecksum: a9b58c58321086719e8b5f98a5ab46d2
   docVersion: 1.0.0
-  speakeasyVersion: 1.316.0
-  generationVersion: 2.352.0
-  releaseVersion: 0.5.1
-  configChecksum: 5ee298b7de31a7aae23a6fcb7c54e2e8
+  speakeasyVersion: 1.320.0
+  generationVersion: 2.354.1
+  releaseVersion: 0.5.16
+  configChecksum: a745f8fede31b273205a64a802b448b4
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -65,7 +65,6 @@ generatedFiles:
   - internal/sdk/models/operations/patchnpaappsbyid.go
   - internal/sdk/models/operations/replacenpaappsbyid.go
   - internal/sdk/models/operations/querynpapolicyinuse.go
-  - internal/sdk/models/operations/deletenpatags.go
   - internal/sdk/models/operations/getnpatags.go
   - internal/sdk/models/operations/patchnpatags.go
   - internal/sdk/models/operations/createnpatags.go
@@ -218,81 +217,82 @@ generatedFiles:
   - internal/provider/types/publisher_upgrade_profile_get_response_data.go
   - internal/provider/types/npa_policygroup_response_item.go
   - internal/provider/types/private_apps_get_response_data.go
+  - internal/provider/types/tag_response_data.go
   - internal/provider/types/retrieve_npa_policies_in_use_data.go
   - USAGE.md
   - internal/provider/provider.go
   - examples/provider/provider.tf
-  - examples/resources/terraform_npa_policy/import.sh
+  - examples/resources/ns_npa_policy/import.sh
   - internal/provider/npapolicy_resource.go
   - internal/provider/npapolicy_resource_sdk.go
-  - examples/resources/terraform_npa_policy/resource.tf
-  - examples/resources/terraform_npa_policy_group/import.sh
+  - examples/resources/ns_npa_policy/resource.tf
+  - examples/resources/ns_npa_policy_group/import.sh
   - internal/provider/npapolicygroup_resource.go
   - internal/provider/npapolicygroup_resource_sdk.go
-  - examples/resources/terraform_npa_policy_group/resource.tf
-  - examples/resources/terraform_npa_publishers/import.sh
+  - examples/resources/ns_npa_policy_group/resource.tf
+  - examples/resources/ns_npa_publishers/import.sh
   - internal/provider/npapublishers_resource.go
   - internal/provider/npapublishers_resource_sdk.go
-  - examples/resources/terraform_npa_publishers/resource.tf
+  - examples/resources/ns_npa_publishers/resource.tf
   - internal/provider/npapublishersalertsconfigurationupdate_resource.go
   - internal/provider/npapublishersalertsconfigurationupdate_resource_sdk.go
-  - examples/resources/terraform_npa_publishers_alerts_configuration_update/resource.tf
+  - examples/resources/ns_npa_publishers_alerts_configuration_update/resource.tf
   - internal/provider/npapublishersbulkupgrade_resource.go
   - internal/provider/npapublishersbulkupgrade_resource_sdk.go
-  - examples/resources/terraform_npa_publishers_bulk_upgrade/resource.tf
-  - examples/resources/terraform_npa_publisher_upgrade_profile/import.sh
+  - examples/resources/ns_npa_publishers_bulk_upgrade/resource.tf
+  - examples/resources/ns_npa_publisher_upgrade_profile/import.sh
   - internal/provider/npapublisherupgradeprofile_resource.go
   - internal/provider/npapublisherupgradeprofile_resource_sdk.go
-  - examples/resources/terraform_npa_publisher_upgrade_profile/resource.tf
+  - examples/resources/ns_npa_publisher_upgrade_profile/resource.tf
   - internal/provider/privateapp_resource.go
   - internal/provider/privateapp_resource_sdk.go
-  - examples/resources/terraform_private_app/resource.tf
+  - examples/resources/ns_private_app/resource.tf
   - internal/provider/privateapptag_resource.go
   - internal/provider/privateapptag_resource_sdk.go
-  - examples/resources/terraform_private_app_tag/resource.tf
+  - examples/resources/ns_private_app_tag/resource.tf
   - internal/provider/publishertoken_resource.go
   - internal/provider/publishertoken_resource_sdk.go
-  - examples/resources/terraform_publisher_token/resource.tf
+  - examples/resources/ns_publisher_token/resource.tf
   - internal/provider/npapolicy_data_source.go
   - internal/provider/npapolicy_data_source_sdk.go
-  - examples/data-sources/terraform_npa_policy/data-source.tf
+  - examples/data-sources/ns_npa_policy/data-source.tf
   - internal/provider/npapolicygroup_data_source.go
   - internal/provider/npapolicygroup_data_source_sdk.go
-  - examples/data-sources/terraform_npa_policy_group/data-source.tf
+  - examples/data-sources/ns_npa_policy_group/data-source.tf
   - internal/provider/npapolicylist_data_source.go
   - internal/provider/npapolicylist_data_source_sdk.go
-  - examples/data-sources/terraform_npa_policy_list/data-source.tf
+  - examples/data-sources/ns_npa_policy_list/data-source.tf
   - internal/provider/npapublishers_data_source.go
   - internal/provider/npapublishers_data_source_sdk.go
-  - examples/data-sources/terraform_npa_publishers/data-source.tf
+  - examples/data-sources/ns_npa_publishers/data-source.tf
   - internal/provider/npapublishersalertsconfigurationlist_data_source.go
   - internal/provider/npapublishersalertsconfigurationlist_data_source_sdk.go
-  - examples/data-sources/terraform_npa_publishers_alerts_configuration_list/data-source.tf
+  - examples/data-sources/ns_npa_publishers_alerts_configuration_list/data-source.tf
   - internal/provider/npapublishersappslist_data_source.go
   - internal/provider/npapublishersappslist_data_source_sdk.go
-  - examples/data-sources/terraform_npa_publishers_apps_list/data-source.tf
+  - examples/data-sources/ns_npa_publishers_apps_list/data-source.tf
   - internal/provider/npapublisherslist_data_source.go
   - internal/provider/npapublisherslist_data_source_sdk.go
-  - examples/data-sources/terraform_npa_publishers_list/data-source.tf
+  - examples/data-sources/ns_npa_publishers_list/data-source.tf
   - internal/provider/npapublishersreleaseslist_data_source.go
   - internal/provider/npapublishersreleaseslist_data_source_sdk.go
-  - examples/data-sources/terraform_npa_publishers_releases_list/data-source.tf
+  - examples/data-sources/ns_npa_publishers_releases_list/data-source.tf
   - internal/provider/npapublisherupgradeprofile_data_source.go
   - internal/provider/npapublisherupgradeprofile_data_source_sdk.go
-  - examples/data-sources/terraform_npa_publisher_upgrade_profile/data-source.tf
+  - examples/data-sources/ns_npa_publisher_upgrade_profile/data-source.tf
   - internal/provider/npapublisherupgradeprofilelist_data_source.go
   - internal/provider/npapublisherupgradeprofilelist_data_source_sdk.go
-  - examples/data-sources/terraform_npa_publisher_upgrade_profile_list/data-source.tf
+  - examples/data-sources/ns_npa_publisher_upgrade_profile_list/data-source.tf
   - internal/provider/policygrouplist_data_source.go
   - internal/provider/policygrouplist_data_source_sdk.go
-  - examples/data-sources/terraform_policy_group_list/data-source.tf
+  - examples/data-sources/ns_policy_group_list/data-source.tf
   - internal/provider/privateapplist_data_source.go
   - internal/provider/privateapplist_data_source_sdk.go
-  - examples/data-sources/terraform_private_app_list/data-source.tf
+  - examples/data-sources/ns_private_app_list/data-source.tf
   - internal/provider/privateapptaglist_data_source.go
   - internal/provider/privateapptaglist_data_source_sdk.go
-  - examples/data-sources/terraform_private_app_tag_list/data-source.tf
+  - examples/data-sources/ns_private_app_tag_list/data-source.tf
   - internal/provider/privateapptagpolicyuselist_data_source.go
   - internal/provider/privateapptagpolicyuselist_data_source_sdk.go
-  - examples/data-sources/terraform_private_app_tag_policy_use_list/data-source.tf
+  - examples/data-sources/ns_private_app_tag_policy_use_list/data-source.tf
   - .gitattributes

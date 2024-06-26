@@ -1,4 +1,4 @@
-module github.com/speakeasy/terraform-provider-terraform
+module github.com/netskope/terraform-provider-ns
 
 go 1.21
 

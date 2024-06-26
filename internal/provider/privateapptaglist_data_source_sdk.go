@@ -4,29 +4,34 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
+	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
 func (r *PrivateAppTagListDataSourceModel) RefreshFromSharedTagResponse(resp *shared.TagResponse) {
 	if resp != nil {
-		r.Data = []tfTypes.TagItem{}
-		if len(r.Data) > len(resp.Data) {
-			r.Data = r.Data[:len(resp.Data)]
-		}
-		for dataCount, dataItem := range resp.Data {
-			var data1 tfTypes.TagItem
-			if dataItem.TagID != nil {
-				data1.TagID = types.Int64Value(int64(*dataItem.TagID))
-			} else {
-				data1.TagID = types.Int64Null()
+		if resp.Data == nil {
+			r.Data = nil
+		} else {
+			r.Data = &tfTypes.TagResponseData{}
+			r.Data.Tags = []tfTypes.TagItem{}
+			if len(r.Data.Tags) > len(resp.Data.Tags) {
+				r.Data.Tags = r.Data.Tags[:len(resp.Data.Tags)]
 			}
-			data1.TagName = types.StringPointerValue(dataItem.TagName)
-			if dataCount+1 > len(r.Data) {
-				r.Data = append(r.Data, data1)
-			} else {
-				r.Data[dataCount].TagID = data1.TagID
-				r.Data[dataCount].TagName = data1.TagName
+			for tagsCount, tagsItem := range resp.Data.Tags {
+				var tags1 tfTypes.TagItem
+				if tagsItem.TagID != nil {
+					tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
+				} else {
+					tags1.TagID = types.Int64Null()
+				}
+				tags1.TagName = types.StringPointerValue(tagsItem.TagName)
+				if tagsCount+1 > len(r.Data.Tags) {
+					r.Data.Tags = append(r.Data.Tags, tags1)
+				} else {
+					r.Data.Tags[tagsCount].TagID = tags1.TagID
+					r.Data.Tags[tagsCount].TagName = tags1.TagName
+				}
 			}
 		}
 	}

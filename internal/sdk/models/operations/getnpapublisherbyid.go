@@ -3,7 +3,7 @@
 package operations
 
 import (
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 	"net/http"
 )
 

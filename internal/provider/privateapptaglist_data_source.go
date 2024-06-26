@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
+	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,7 +28,7 @@ type PrivateAppTagListDataSource struct {
 
 // PrivateAppTagListDataSourceModel describes the data model.
 type PrivateAppTagListDataSourceModel struct {
-	Data []tfTypes.TagItem `tfsdk:"data"`
+	Data *tfTypes.TagResponseData `tfsdk:"data"`
 }
 
 // Metadata returns the data source type name.
@@ -42,15 +42,20 @@ func (r *PrivateAppTagListDataSource) Schema(ctx context.Context, req datasource
 		MarkdownDescription: "PrivateAppTagList DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"data": schema.ListNestedAttribute{
+			"data": schema.SingleNestedAttribute{
 				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"tag_id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"tag_name": schema.StringAttribute{
-							Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"tags": schema.ListNestedAttribute{
+						Computed: true,
+						NestedObject: schema.NestedAttributeObject{
+							Attributes: map[string]schema.Attribute{
+								"tag_id": schema.Int64Attribute{
+									Computed: true,
+								},
+								"tag_name": schema.StringAttribute{
+									Computed: true,
+								},
+							},
 						},
 					},
 				},

@@ -9,32 +9,32 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 	"net/http"
 )
 
-var _ provider.Provider = &TerraformProvider{}
+var _ provider.Provider = &NsProvider{}
 
-type TerraformProvider struct {
+type NsProvider struct {
 	// version is set to the provider version on release, "dev" when the
 	// provider is built and ran locally, and "test" when running acceptance
 	// testing.
 	version string
 }
 
-// TerraformProviderModel describes the provider data model.
-type TerraformProviderModel struct {
+// NsProviderModel describes the provider data model.
+type NsProviderModel struct {
 	ServerURL types.String `tfsdk:"server_url"`
 	APIKey    types.String `tfsdk:"api_key"`
 }
 
-func (p *TerraformProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "terraform"
+func (p *NsProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "ns"
 	resp.Version = p.version
 }
 
-func (p *TerraformProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *NsProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description: `Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy`,
 		Attributes: map[string]schema.Attribute{
@@ -51,8 +51,8 @@ func (p *TerraformProvider) Schema(ctx context.Context, req provider.SchemaReque
 	}
 }
 
-func (p *TerraformProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
-	var data TerraformProviderModel
+func (p *NsProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	var data NsProviderModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
@@ -82,7 +82,7 @@ func (p *TerraformProvider) Configure(ctx context.Context, req provider.Configur
 	resp.ResourceData = client
 }
 
-func (p *TerraformProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *NsProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewNPAPolicyResource,
 		NewNPAPolicyGroupResource,
@@ -96,7 +96,7 @@ func (p *TerraformProvider) Resources(ctx context.Context) []func() resource.Res
 	}
 }
 
-func (p *TerraformProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+func (p *NsProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewNPAPolicyDataSource,
 		NewNPAPolicyGroupDataSource,
@@ -117,7 +117,7 @@ func (p *TerraformProvider) DataSources(ctx context.Context) []func() datasource
 
 func New(version string) func() provider.Provider {
 	return func() provider.Provider {
-		return &TerraformProvider{
+		return &NsProvider{
 			version: version,
 		}
 	}

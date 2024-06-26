@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/shared"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
 func (r *PrivateAppTagResourceModel) ToSharedTagRequest() *shared.TagRequest {
@@ -45,7 +45,7 @@ func (r *PrivateAppTagResourceModel) ToSharedTagRequest() *shared.TagRequest {
 	return &out
 }
 
-func (r *PrivateAppTagResourceModel) RefreshFromSharedTagResponseData(resp *shared.TagResponseData) {
+func (r *PrivateAppTagResourceModel) RefreshFromSharedTags(resp *shared.Tags) {
 	if resp.TagID != nil {
 		r.TagID = types.Int64Value(int64(*resp.TagID))
 	} else {
