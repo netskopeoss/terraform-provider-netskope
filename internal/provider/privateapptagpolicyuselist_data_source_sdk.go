@@ -4,8 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/models/operations"
+	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 func (r *PrivateAppTagPolicyUseListDataSourceModel) ToOperationsRetrieveNPAPoliciesInUseRequestBody() *operations.RetrieveNPAPoliciesInUseRequestBody {

@@ -5,7 +5,7 @@ package shared
 import (
 	"errors"
 	"fmt"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk/internal/utils"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/utils"
 )
 
 type Two struct {

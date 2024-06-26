@@ -13,8 +13,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/speakeasy/terraform-provider-terraform/internal/provider/types"
-	"github.com/speakeasy/terraform-provider-terraform/internal/sdk"
+	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
+	"github.com/netskope/terraform-provider-ns/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -152,11 +152,11 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.TagResponse != nil && res.TagResponse.Data != nil && len(res.TagResponse.Data) > 0) {
+	if !(res.TagResponse != nil && res.TagResponse.Data != nil && res.TagResponse.Data.Tags != nil && len(res.TagResponse.Data.Tags) > 0) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedTagResponseData(&res.TagResponse.Data[0])
+	data.RefreshFromSharedTags(&res.TagResponse.Data.Tags[0])
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state

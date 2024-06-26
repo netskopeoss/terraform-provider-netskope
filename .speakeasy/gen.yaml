@@ -12,12 +12,12 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: true
 terraform:
-  version: 0.5.1
+  version: 0.5.16
   additionalDataSources: []
   additionalDependencies: {}
   additionalResources: []
   allowUnknownFieldsInWeakUnions: false
-  author: speakeasy
+  author: netskope
   environmentVariables: []
   imports:
     option: openapi
@@ -29,4 +29,4 @@ terraform:
       webhooks: webhooks
   inputModelSuffix: input
   outputModelSuffix: output
-  packageName: terraform
+  packageName: ns

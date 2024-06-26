@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfReflect "github.com/speakeasy/terraform-provider-terraform/internal/provider/reflect"
+	tfReflect "github.com/netskope/terraform-provider-ns/internal/provider/reflect"
 	"net/http"
 	"net/http/httputil"
 	"reflect"
