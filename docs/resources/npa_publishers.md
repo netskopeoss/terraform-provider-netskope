@@ -15,8 +15,8 @@ NPAPublishers Resource
 ```terraform
 resource "ns_npa_publishers" "my_npapublishers" {
   lbrokerconnect                = true
-  name                          = "Beulah Deckow"
-  publisher_id                  = 9
+  name                          = "Derrick Emard"
+  publisher_id                  = 7
   publisher_upgrade_profiles_id = 4
 }
 ```
