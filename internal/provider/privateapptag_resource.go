@@ -29,7 +29,6 @@ type PrivateAppTagResource struct {
 
 // PrivateAppTagResourceModel describes the resource data model.
 type PrivateAppTagResourceModel struct {
-	ID      types.String      `tfsdk:"id"`
 	Ids     []types.String    `tfsdk:"ids"`
 	TagID   types.Int64       `tfsdk:"tag_id"`
 	TagName types.String      `tfsdk:"tag_name"`
@@ -44,9 +43,6 @@ func (r *PrivateAppTagResource) Schema(ctx context.Context, req resource.SchemaR
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "PrivateAppTag Resource",
 		Attributes: map[string]schema.Attribute{
-			"id": schema.StringAttribute{
-				Optional: true,
-			},
 			"ids": schema.ListAttribute{
 				Optional:    true,
 				ElementType: types.StringType,

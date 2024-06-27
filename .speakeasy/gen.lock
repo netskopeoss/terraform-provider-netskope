@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: 0c6f9bd03834fe2d79924903e68b336e
+  docChecksum: 244065760edb2b7a79705d50f2c0a8c5
   docVersion: 1.0.0
   speakeasyVersion: 1.321.0
   generationVersion: 2.354.2
-  releaseVersion: 0.6.2
-  configChecksum: 741cad34d38eed8dc92b06cb5e1df278
+  releaseVersion: 0.6.3
+  configChecksum: e1400f2ac0d66e14ac423219e5c9a413
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -66,7 +66,6 @@ generatedFiles:
   - internal/sdk/models/operations/patchnpatags.go
   - internal/sdk/models/operations/deletenpatagsbyid.go
   - internal/sdk/models/operations/getnpatagsbyid.go
-  - internal/sdk/models/operations/retrievenpapoliciesinuse.go
   - internal/sdk/models/operations/getnpapublishers.go
   - internal/sdk/models/operations/createnpapublishers.go
   - internal/sdk/models/operations/deletenpapublishers.go
@@ -198,7 +197,6 @@ generatedFiles:
   - internal/provider/types/npa_policygroup_response_item.go
   - internal/provider/types/private_apps_get_response_data.go
   - internal/provider/types/tag_response_data.go
-  - internal/provider/types/retrieve_npa_policies_in_use_data.go
   - USAGE.md
   - internal/provider/provider.go
   - examples/provider/provider.tf
@@ -262,7 +260,4 @@ generatedFiles:
   - internal/provider/privateapptaglist_data_source.go
   - internal/provider/privateapptaglist_data_source_sdk.go
   - examples/data-sources/ns_private_app_tag_list/data-source.tf
-  - internal/provider/privateapptagpolicyuselist_data_source.go
-  - internal/provider/privateapptagpolicyuselist_data_source_sdk.go
-  - examples/data-sources/ns_private_app_tag_policy_use_list/data-source.tf
   - .gitattributes

@@ -8,12 +8,6 @@ import (
 )
 
 func (r *PrivateAppTagResourceModel) ToSharedTagRequest() *shared.TagRequest {
-	id := new(string)
-	if !r.ID.IsUnknown() && !r.ID.IsNull() {
-		*id = r.ID.ValueString()
-	} else {
-		id = nil
-	}
 	var ids []string = []string{}
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
@@ -38,7 +32,6 @@ func (r *PrivateAppTagResourceModel) ToSharedTagRequest() *shared.TagRequest {
 		})
 	}
 	out := shared.TagRequest{
-		ID:   id,
 		Ids:  ids,
 		Tags: tags,
 	}
