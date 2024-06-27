@@ -1,17 +1,17 @@
-speakeasyVersion: 1.320.0
+speakeasyVersion: 1.321.0
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:cde497875465651ee24a1d5a3025327914a8f7819c8c6b57964b301846252ad8
-        sourceBlobDigest: sha256:a97e5ebf47287ed0989cabd6bf71cd5af5011b7fa6a3b164c659a8c474a7a478
+        sourceRevisionDigest: sha256:e57b0615d20c9e18132f511f3908e808c8a4678171fb2d55a97d672e541ccec2
+        sourceBlobDigest: sha256:d36fd336e7f1d6e6caecf50bab24024b5b037228cfdef43cfe594f460fa95616
         tags:
             - latest
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:cde497875465651ee24a1d5a3025327914a8f7819c8c6b57964b301846252ad8
-        sourceBlobDigest: sha256:a97e5ebf47287ed0989cabd6bf71cd5af5011b7fa6a3b164c659a8c474a7a478
+        sourceRevisionDigest: sha256:e57b0615d20c9e18132f511f3908e808c8a4678171fb2d55a97d672e541ccec2
+        sourceBlobDigest: sha256:d36fd336e7f1d6e6caecf50bab24024b5b037228cfdef43cfe594f460fa95616
         outLocation: /Users/jadrian/speakeasy/terraform-provider-ns
 workflow:
     workflowVersion: 1.0.0
@@ -21,7 +21,6 @@ workflow:
             inputs:
                 - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/base_oas.yaml
                 - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_publisher.yaml
-                - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_upgrade_profiles.yaml
                 - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policy.yaml
                 - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policygroup.yaml
                 - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/npa_apps_private.yaml

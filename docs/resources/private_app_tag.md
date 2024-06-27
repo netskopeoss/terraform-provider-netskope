@@ -14,13 +14,13 @@ PrivateAppTag Resource
 
 ```terraform
 resource "ns_private_app_tag" "my_privateapptag" {
-  id = "ae755bc5-86df-4fb0-9c98-0090946a7d0e"
+  id = "45fd14d0-1266-4e09-8614-b3fa83666602"
   ids = [
     "...",
   ]
   tags = [
     {
-      tag_id   = 9
+      tag_id   = 1
       tag_name = "...my_tag_name..."
     },
   ]
@@ -32,13 +32,13 @@ resource "ns_private_app_tag" "my_privateapptag" {
 
 ### Optional
 
-- `id` (String) Requires replacement if changed.
-- `ids` (List of String) Requires replacement if changed.
-- `tags` (Attributes List) Requires replacement if changed. (see [below for nested schema](#nestedatt--tags))
+- `ids` (List of String)
+- `tags` (Attributes List) (see [below for nested schema](#nestedatt--tags))
 
 ### Read-Only
 
-- `tag_id` (Number)
+- `id` (String) The ID of this resource.
+- `tag_id` (Number) tag id
 - `tag_name` (String)
 
 <a id="nestedatt--tags"></a>
@@ -46,7 +46,7 @@ resource "ns_private_app_tag" "my_privateapptag" {
 
 Optional:
 
-- `tag_id` (Number) Requires replacement if changed.
-- `tag_name` (String) Requires replacement if changed.
+- `tag_id` (Number)
+- `tag_name` (String)
 
 

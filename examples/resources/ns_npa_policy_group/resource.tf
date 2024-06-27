@@ -2,7 +2,7 @@ resource "ns_npa_policy_group" "my_npapolicygroup" {
   group_name = "...my_group_name..."
   group_order = {
     group_id = "1"
-    order    = "after"
+    order    = "before"
   }
-  id = "8aa9a6a4-428b-49ff-b8a8-dc814445216f"
+  id = "ca75d546-2042-4ad5-926c-75d642b6450a"
 }

@@ -1,1 +1,0 @@
-terraform import ns_npa_publisher_upgrade_profile.my_ns_npa_publisher_upgrade_profile "0"

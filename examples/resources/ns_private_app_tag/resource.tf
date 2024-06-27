@@ -1,11 +1,11 @@
 resource "ns_private_app_tag" "my_privateapptag" {
-  id = "ae755bc5-86df-4fb0-9c98-0090946a7d0e"
+  id = "45fd14d0-1266-4e09-8614-b3fa83666602"
   ids = [
     "...",
   ]
   tags = [
     {
-      tag_id   = 9
+      tag_id   = 1
       tag_name = "...my_tag_name..."
     },
   ]

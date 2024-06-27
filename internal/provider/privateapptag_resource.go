@@ -7,14 +7,11 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -48,50 +45,31 @@ func (r *PrivateAppTagResource) Schema(ctx context.Context, req resource.SchemaR
 		MarkdownDescription: "PrivateAppTag Resource",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplaceIfConfigured(),
-				},
-				Optional:    true,
-				Description: `Requires replacement if changed. `,
+				Optional: true,
 			},
 			"ids": schema.ListAttribute{
-				PlanModifiers: []planmodifier.List{
-					listplanmodifier.RequiresReplaceIfConfigured(),
-				},
 				Optional:    true,
 				ElementType: types.StringType,
-				Description: `Requires replacement if changed. `,
 			},
 			"tag_id": schema.Int64Attribute{
-				Computed: true,
+				Computed:    true,
+				Description: `tag id`,
 			},
 			"tag_name": schema.StringAttribute{
 				Computed: true,
 			},
 			"tags": schema.ListNestedAttribute{
-				PlanModifiers: []planmodifier.List{
-					listplanmodifier.RequiresReplaceIfConfigured(),
-				},
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"tag_id": schema.Int64Attribute{
-							PlanModifiers: []planmodifier.Int64{
-								int64planmodifier.RequiresReplaceIfConfigured(),
-							},
-							Optional:    true,
-							Description: `Requires replacement if changed. `,
+							Optional: true,
 						},
 						"tag_name": schema.StringAttribute{
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.RequiresReplaceIfConfigured(),
-							},
-							Optional:    true,
-							Description: `Requires replacement if changed. `,
+							Optional: true,
 						},
 					},
 				},
-				Description: `Requires replacement if changed. `,
 			},
 		},
 	}
@@ -136,7 +114,7 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 	}
 
 	request := *data.ToSharedTagRequest()
-	res, err := r.client.CreateNPATags(ctx, request)
+	res, err := r.client.PatchNPATags(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -201,7 +179,29 @@ func (r *PrivateAppTagResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 
-	// Not Implemented; all attributes marked as RequiresReplace
+	request := *data.ToSharedTagRequest()
+	res, err := r.client.PatchNPATags(ctx, request)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
+		return
+	}
+	if res == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
+		return
+	}
+	if !(res.TagResponse != nil && res.TagResponse.Data != nil && res.TagResponse.Data.Tags != nil && len(res.TagResponse.Data.Tags) > 0) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
+		return
+	}
+	data.RefreshFromSharedTags(&res.TagResponse.Data.Tags[0])
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -225,7 +225,29 @@ func (r *PrivateAppTagResource) Delete(ctx context.Context, req resource.DeleteR
 		return
 	}
 
-	// Not Implemented; entity does not have a configured DELETE operation
+	tagID := int(data.TagID.ValueInt64())
+	tagRequest := *data.ToSharedTagRequest()
+	request := operations.DeleteNPATagsByIDRequest{
+		TagID:      tagID,
+		TagRequest: tagRequest,
+	}
+	res, err := r.client.DeleteNPATagsByID(ctx, request)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
+		return
+	}
+	if res == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
+		return
+	}
+
 }
 
 func (r *PrivateAppTagResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {

@@ -1,3 +1,3 @@
 data "ns_npa_policy" "my_npapolicy" {
-  id = "c165fbb0-6576-492c-8ba0-d6eab1777d8a"
+  id = "2d9023b6-b1dc-4ee8-9ace-1324fd6f53f9"
 }
