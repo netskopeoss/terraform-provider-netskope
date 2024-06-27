@@ -3,16 +3,8 @@
 package shared
 
 type TagRequest struct {
-	ID   *string   `json:"id,omitempty"`
 	Ids  []string  `json:"ids,omitempty"`
 	Tags []TagItem `json:"tags,omitempty"`
-}
-
-func (o *TagRequest) GetID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ID
 }
 
 func (o *TagRequest) GetIds() []string {

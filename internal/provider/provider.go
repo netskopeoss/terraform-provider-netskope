@@ -108,7 +108,6 @@ func (p *NsProvider) DataSources(ctx context.Context) []func() datasource.DataSo
 		NewPolicyGroupListDataSource,
 		NewPrivateAppListDataSource,
 		NewPrivateAppTagListDataSource,
-		NewPrivateAppTagPolicyUseListDataSource,
 	}
 }
 
