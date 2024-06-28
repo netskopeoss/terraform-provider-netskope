@@ -9,7 +9,31 @@ import (
 	"math/big"
 )
 
-func (r *PrivateAppTagResourceModel) RefreshFromSharedTagPatchResponse(resp *shared.TagPatchResponse) {
+func (r *PrivateAppTagCreateResourceModel) ToSharedTagRequest() *shared.TagRequest {
+	var ids []string = []string{}
+	for _, idsItem := range r.Ids {
+		ids = append(ids, idsItem.ValueString())
+	}
+	var tags []shared.Tags = []shared.Tags{}
+	for _, tagsItem := range r.Tags {
+		tagName := new(string)
+		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
+			*tagName = tagsItem.TagName.ValueString()
+		} else {
+			tagName = nil
+		}
+		tags = append(tags, shared.Tags{
+			TagName: tagName,
+		})
+	}
+	out := shared.TagRequest{
+		Ids:  ids,
+		Tags: tags,
+	}
+	return &out
+}
+
+func (r *PrivateAppTagCreateResourceModel) RefreshFromSharedTagPatchResponse(resp *shared.TagPatchResponse) {
 	if resp != nil {
 		r.Data = []tfTypes.TagPatchResponseData{}
 		if len(r.Data) > len(resp.Data) {

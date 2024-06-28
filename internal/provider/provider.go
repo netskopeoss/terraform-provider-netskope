@@ -90,7 +90,7 @@ func (p *NsProvider) Resources(ctx context.Context) []func() resource.Resource {
 		NewNPAPublishersAlertsConfigurationUpdateResource,
 		NewNPAPublishersBulkUpgradeResource,
 		NewPrivateAppResource,
-		NewPrivateAppTagResource,
+		NewPrivateAppTagCreateResource,
 		NewPublisherTokenResource,
 	}
 }
