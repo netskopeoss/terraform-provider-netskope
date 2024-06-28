@@ -2,19 +2,19 @@
 
 package shared
 
-type Tags struct {
+type TagResponseTags struct {
 	TagID   *int    `json:"tag_id,omitempty"`
 	TagName *string `json:"tag_name,omitempty"`
 }
 
-func (o *Tags) GetTagID() *int {
+func (o *TagResponseTags) GetTagID() *int {
 	if o == nil {
 		return nil
 	}
 	return o.TagID
 }
 
-func (o *Tags) GetTagName() *string {
+func (o *TagResponseTags) GetTagName() *string {
 	if o == nil {
 		return nil
 	}
@@ -22,10 +22,10 @@ func (o *Tags) GetTagName() *string {
 }
 
 type TagResponseData struct {
-	Tags []Tags `json:"tags,omitempty"`
+	Tags []TagResponseTags `json:"tags,omitempty"`
 }
 
-func (o *TagResponseData) GetTags() []Tags {
+func (o *TagResponseData) GetTags() []TagResponseTags {
 	if o == nil {
 		return nil
 	}

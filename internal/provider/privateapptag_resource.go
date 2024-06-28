@@ -29,10 +29,10 @@ type PrivateAppTagResource struct {
 
 // PrivateAppTagResourceModel describes the resource data model.
 type PrivateAppTagResourceModel struct {
-	Ids     []types.String    `tfsdk:"ids"`
-	TagID   types.Int64       `tfsdk:"tag_id"`
-	TagName types.String      `tfsdk:"tag_name"`
-	Tags    []tfTypes.TagItem `tfsdk:"tags"`
+	Data  []tfTypes.TagPatchResponseData `tfsdk:"data"`
+	Ids   []types.String                 `tfsdk:"ids"`
+	TagID types.Int64                    `tfsdk:"tag_id"`
+	Tags  []tfTypes.TagItemNoID          `tfsdk:"tags"`
 }
 
 func (r *PrivateAppTagResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -43,24 +43,38 @@ func (r *PrivateAppTagResource) Schema(ctx context.Context, req resource.SchemaR
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "PrivateAppTag Resource",
 		Attributes: map[string]schema.Attribute{
+			"data": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"tags": schema.ListNestedAttribute{
+							Computed: true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.NumberAttribute{
+										Computed: true,
+									},
+									"name": schema.StringAttribute{
+										Computed: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"ids": schema.ListAttribute{
 				Optional:    true,
 				ElementType: types.StringType,
 			},
 			"tag_id": schema.Int64Attribute{
-				Computed:    true,
+				Required:    true,
 				Description: `tag id`,
-			},
-			"tag_name": schema.StringAttribute{
-				Computed: true,
 			},
 			"tags": schema.ListNestedAttribute{
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"tag_id": schema.Int64Attribute{
-							Optional: true,
-						},
 						"tag_name": schema.StringAttribute{
 							Optional: true,
 						},
@@ -126,11 +140,11 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.TagResponse != nil && res.TagResponse.Data != nil && res.TagResponse.Data.Tags != nil && len(res.TagResponse.Data.Tags) > 0) {
+	if !(res.TagPatchResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedTags(&res.TagResponse.Data.Tags[0])
+	data.RefreshFromSharedTagPatchResponse(res.TagPatchResponse)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -192,11 +206,11 @@ func (r *PrivateAppTagResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.TagResponse != nil && res.TagResponse.Data != nil && res.TagResponse.Data.Tags != nil && len(res.TagResponse.Data.Tags) > 0) {
+	if !(res.TagPatchResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedTags(&res.TagResponse.Data.Tags[0])
+	data.RefreshFromSharedTagPatchResponse(res.TagPatchResponse)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state

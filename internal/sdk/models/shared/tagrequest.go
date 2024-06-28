@@ -2,9 +2,20 @@
 
 package shared
 
+type Tags struct {
+	TagName *string `json:"tag_name,omitempty"`
+}
+
+func (o *Tags) GetTagName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.TagName
+}
+
 type TagRequest struct {
-	Ids  []string  `json:"ids,omitempty"`
-	Tags []TagItem `json:"tags,omitempty"`
+	Ids  []string `json:"ids,omitempty"`
+	Tags []Tags   `json:"tags,omitempty"`
 }
 
 func (o *TagRequest) GetIds() []string {
@@ -14,7 +25,7 @@ func (o *TagRequest) GetIds() []string {
 	return o.Ids
 }
 
-func (o *TagRequest) GetTags() []TagItem {
+func (o *TagRequest) GetTags() []Tags {
 	if o == nil {
 		return nil
 	}

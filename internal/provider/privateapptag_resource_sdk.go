@@ -4,7 +4,9 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
+	"math/big"
 )
 
 func (r *PrivateAppTagResourceModel) ToSharedTagRequest() *shared.TagRequest {
@@ -12,22 +14,15 @@ func (r *PrivateAppTagResourceModel) ToSharedTagRequest() *shared.TagRequest {
 	for _, idsItem := range r.Ids {
 		ids = append(ids, idsItem.ValueString())
 	}
-	var tags []shared.TagItem = []shared.TagItem{}
+	var tags []shared.Tags = []shared.Tags{}
 	for _, tagsItem := range r.Tags {
-		tagID := new(int)
-		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
-			*tagID = int(tagsItem.TagID.ValueInt64())
-		} else {
-			tagID = nil
-		}
 		tagName := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
 			*tagName = tagsItem.TagName.ValueString()
 		} else {
 			tagName = nil
 		}
-		tags = append(tags, shared.TagItem{
-			TagID:   tagID,
+		tags = append(tags, shared.Tags{
 			TagName: tagName,
 		})
 	}
@@ -38,11 +33,35 @@ func (r *PrivateAppTagResourceModel) ToSharedTagRequest() *shared.TagRequest {
 	return &out
 }
 
-func (r *PrivateAppTagResourceModel) RefreshFromSharedTags(resp *shared.Tags) {
-	if resp.TagID != nil {
-		r.TagID = types.Int64Value(int64(*resp.TagID))
-	} else {
-		r.TagID = types.Int64Null()
+func (r *PrivateAppTagResourceModel) RefreshFromSharedTagPatchResponse(resp *shared.TagPatchResponse) {
+	if resp != nil {
+		r.Data = []tfTypes.TagPatchResponseData{}
+		if len(r.Data) > len(resp.Data) {
+			r.Data = r.Data[:len(resp.Data)]
+		}
+		for dataCount, dataItem := range resp.Data {
+			var data1 tfTypes.TagPatchResponseData
+			data1.Tags = []tfTypes.TagPatchResponseTags{}
+			for tagsCount, tagsItem := range dataItem.Tags {
+				var tags1 tfTypes.TagPatchResponseTags
+				if tagsItem.ID != nil {
+					tags1.ID = types.NumberValue(big.NewFloat(float64(*tagsItem.ID)))
+				} else {
+					tags1.ID = types.NumberNull()
+				}
+				tags1.Name = types.StringPointerValue(tagsItem.Name)
+				if tagsCount+1 > len(data1.Tags) {
+					data1.Tags = append(data1.Tags, tags1)
+				} else {
+					data1.Tags[tagsCount].ID = tags1.ID
+					data1.Tags[tagsCount].Name = tags1.Name
+				}
+			}
+			if dataCount+1 > len(r.Data) {
+				r.Data = append(r.Data, data1)
+			} else {
+				r.Data[dataCount].Tags = data1.Tags
+			}
+		}
 	}
-	r.TagName = types.StringPointerValue(resp.TagName)
 }
