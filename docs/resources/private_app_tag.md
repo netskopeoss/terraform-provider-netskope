@@ -17,12 +17,8 @@ resource "ns_private_app_tag" "my_privateapptag" {
   ids = [
     "...",
   ]
-  tag_id = 3
-  tags = [
-    {
-      tag_name = "...my_tag_name..."
-    },
-  ]
+  tag_id   = 3
+  tag_name = "...my_tag_name..."
 }
 ```
 
@@ -36,19 +32,11 @@ resource "ns_private_app_tag" "my_privateapptag" {
 ### Optional
 
 - `ids` (List of String)
-- `tags` (Attributes List) (see [below for nested schema](#nestedatt--tags))
+- `tag_name` (String)
 
 ### Read-Only
 
 - `data` (Attributes List) (see [below for nested schema](#nestedatt--data))
-
-<a id="nestedatt--tags"></a>
-### Nested Schema for `tags`
-
-Optional:
-
-- `tag_name` (String)
-
 
 <a id="nestedatt--data"></a>
 ### Nested Schema for `data`
