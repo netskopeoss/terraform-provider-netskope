@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: 587412da56e4a3059b69c2cb23fa8d01
+  docChecksum: e818df8180c0c515777ce6919b94dd9e
   docVersion: 1.0.0
   speakeasyVersion: 1.322.3
   generationVersion: 2.354.2
-  releaseVersion: 0.6.14
-  configChecksum: 7124159e432f1eb30757ef249c9d8cc7
+  releaseVersion: 0.6.15
+  configChecksum: a60623edfec2d550827b83f6aaa9dd5b
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -180,13 +180,13 @@ generatedFiles:
   - internal/provider/types/apply.go
   - internal/provider/types/publishers.go
   - internal/provider/types/protocol_item.go
-  - internal/provider/types/tag_item_no_id.go
   - internal/provider/types/publisher_item.go
   - internal/provider/types/protocol_response_item.go
   - internal/provider/types/reachability.go
   - internal/provider/types/service_publisher_assignment_item.go
   - internal/provider/types/tag_patch_response_tags.go
   - internal/provider/types/tag_patch_response_data.go
+  - internal/provider/types/tags.go
   - internal/provider/types/npa_policy_response_item.go
   - internal/provider/types/publisher_apps_list_response_data.go
   - internal/provider/types/assessment.go

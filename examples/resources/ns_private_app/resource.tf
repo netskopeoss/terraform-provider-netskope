@@ -9,11 +9,6 @@ resource "ns_private_app" "my_privateapp" {
       type = "...my_type..."
     },
   ]
-  publisher_tags = [
-    {
-      tag_name = "...my_tag_name..."
-    },
-  ]
   publishers = [
     {
       publisher_id   = "...my_publisher_id..."

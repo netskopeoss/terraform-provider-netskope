@@ -46,18 +46,6 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.PrivateAp
 			Type: typeVar,
 		})
 	}
-	var publisherTags []shared.TagItemNoID = []shared.TagItemNoID{}
-	for _, publisherTagsItem := range r.PublisherTags {
-		tagName := new(string)
-		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {
-			*tagName = publisherTagsItem.TagName.ValueString()
-		} else {
-			tagName = nil
-		}
-		publisherTags = append(publisherTags, shared.TagItemNoID{
-			TagName: tagName,
-		})
-	}
 	var publishers []shared.PublisherItem = []shared.PublisherItem{}
 	for _, publishersItem := range r.Publishers {
 		publisherID := new(string)
@@ -85,14 +73,14 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.PrivateAp
 	}
 	var tags []shared.TagItemNoID = []shared.TagItemNoID{}
 	for _, tagsItem := range r.Tags {
-		tagName1 := new(string)
+		tagName := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
-			*tagName1 = tagsItem.TagName.ValueString()
+			*tagName = tagsItem.TagName.ValueString()
 		} else {
-			tagName1 = nil
+			tagName = nil
 		}
 		tags = append(tags, shared.TagItemNoID{
-			TagName: tagName1,
+			TagName: tagName,
 		})
 	}
 	trustSelfSignedCerts := new(bool)
@@ -112,7 +100,6 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.PrivateAp
 		ClientlessAccess:     clientlessAccess,
 		Host:                 host,
 		Protocols:            protocols,
-		PublisherTags:        publisherTags,
 		Publishers:           publishers,
 		RealHost:             realHost,
 		Tags:                 tags,
@@ -266,18 +253,6 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsPutRequest() *shared.Privat
 			Type: typeVar,
 		})
 	}
-	var publisherTags []shared.TagItemNoID = []shared.TagItemNoID{}
-	for _, publisherTagsItem := range r.PublisherTags {
-		tagName := new(string)
-		if !publisherTagsItem.TagName.IsUnknown() && !publisherTagsItem.TagName.IsNull() {
-			*tagName = publisherTagsItem.TagName.ValueString()
-		} else {
-			tagName = nil
-		}
-		publisherTags = append(publisherTags, shared.TagItemNoID{
-			TagName: tagName,
-		})
-	}
 	var publishers []shared.PublisherItem = []shared.PublisherItem{}
 	for _, publishersItem := range r.Publishers {
 		publisherID := new(string)
@@ -305,14 +280,14 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsPutRequest() *shared.Privat
 	}
 	var tags []shared.TagItemNoID = []shared.TagItemNoID{}
 	for _, tagsItem := range r.Tags {
-		tagName1 := new(string)
+		tagName := new(string)
 		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
-			*tagName1 = tagsItem.TagName.ValueString()
+			*tagName = tagsItem.TagName.ValueString()
 		} else {
-			tagName1 = nil
+			tagName = nil
 		}
 		tags = append(tags, shared.TagItemNoID{
-			TagName: tagName1,
+			TagName: tagName,
 		})
 	}
 	trustSelfSignedCerts := new(bool)
@@ -333,7 +308,6 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsPutRequest() *shared.Privat
 		Host:                 host,
 		ID:                   id,
 		Protocols:            protocols,
-		PublisherTags:        publisherTags,
 		Publishers:           publishers,
 		RealHost:             realHost,
 		Tags:                 tags,

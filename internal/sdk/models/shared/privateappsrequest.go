@@ -7,7 +7,6 @@ type PrivateAppsRequest struct {
 	ClientlessAccess     *bool           `json:"clientless_access,omitempty"`
 	Host                 *string         `json:"host,omitempty"`
 	Protocols            []ProtocolItem  `json:"protocols,omitempty"`
-	PublisherTags        []TagItemNoID   `json:"publisher_tags,omitempty"`
 	Publishers           []PublisherItem `json:"publishers,omitempty"`
 	RealHost             *string         `json:"real_host,omitempty"`
 	Tags                 []TagItemNoID   `json:"tags,omitempty"`
@@ -41,13 +40,6 @@ func (o *PrivateAppsRequest) GetProtocols() []ProtocolItem {
 		return nil
 	}
 	return o.Protocols
-}
-
-func (o *PrivateAppsRequest) GetPublisherTags() []TagItemNoID {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherTags
 }
 
 func (o *PrivateAppsRequest) GetPublishers() []PublisherItem {

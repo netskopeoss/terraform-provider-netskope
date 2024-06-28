@@ -30,7 +30,7 @@ type PrivateAppTagCreateResource struct {
 type PrivateAppTagCreateResourceModel struct {
 	Data []tfTypes.TagPatchResponseData `tfsdk:"data"`
 	Ids  []types.String                 `tfsdk:"ids"`
-	Tags []tfTypes.TagItemNoID          `tfsdk:"tags"`
+	Tags []tfTypes.Tags                 `tfsdk:"tags"`
 }
 
 func (r *PrivateAppTagCreateResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
