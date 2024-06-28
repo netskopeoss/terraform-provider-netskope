@@ -12,6 +12,8 @@ import (
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
+	"math/big"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -29,10 +31,10 @@ type PrivateAppTagResource struct {
 
 // PrivateAppTagResourceModel describes the resource data model.
 type PrivateAppTagResourceModel struct {
-	Data  []tfTypes.TagPatchResponseData `tfsdk:"data"`
-	Ids   []types.String                 `tfsdk:"ids"`
-	TagID types.Int64                    `tfsdk:"tag_id"`
-	Tags  []tfTypes.TagItemNoID          `tfsdk:"tags"`
+	Data    []tfTypes.TagPatchResponseData `tfsdk:"data"`
+	Ids     []types.String                 `tfsdk:"ids"`
+	TagID   types.Int64                    `tfsdk:"tag_id"`
+	TagName types.String                   `tfsdk:"tag_name"`
 }
 
 func (r *PrivateAppTagResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -71,15 +73,8 @@ func (r *PrivateAppTagResource) Schema(ctx context.Context, req resource.SchemaR
 				Required:    true,
 				Description: `tag id`,
 			},
-			"tags": schema.ListNestedAttribute{
+			"tag_name": schema.StringAttribute{
 				Optional: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"tag_name": schema.StringAttribute{
-							Optional: true,
-						},
-					},
-				},
 			},
 		},
 	}
@@ -123,7 +118,24 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
-	request := *data.ToSharedTagRequest()
+	var ids []string = []string{}
+	for _, idsItem := range data.Ids {
+		ids = append(ids, idsItem.ValueString())
+	}
+	tagName := new(string)
+	if !data.TagName.IsUnknown() && !data.TagName.IsNull() {
+		*tagName = data.TagName.ValueString()
+	} else {
+		tagName = nil
+	}
+	singleton := shared.Tags{
+		TagName: tagName,
+	}
+	tags := []shared.Tags{singleton}
+	request := shared.TagRequest{
+		Ids:  ids,
+		Tags: tags,
+	}
 	res, err := r.client.PatchNPATags(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -144,7 +156,36 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedTagPatchResponse(res.TagPatchResponse)
+	if res.TagPatchResponse != nil {
+		data.Data = []tfTypes.TagPatchResponseData{}
+		if len(data.Data) > len(res.TagPatchResponse.Data) {
+			data.Data = data.Data[:len(res.TagPatchResponse.Data)]
+		}
+		for dataCount, dataItem := range res.TagPatchResponse.Data {
+			var data1 tfTypes.TagPatchResponseData
+			data1.Tags = []tfTypes.TagPatchResponseTags{}
+			for tagsCount, tagsItem := range dataItem.Tags {
+				var tags2 tfTypes.TagPatchResponseTags
+				if tagsItem.ID != nil {
+					tags2.ID = types.NumberValue(big.NewFloat(float64(*tagsItem.ID)))
+				} else {
+					tags2.ID = types.NumberNull()
+				}
+				tags2.Name = types.StringPointerValue(tagsItem.Name)
+				if tagsCount+1 > len(data1.Tags) {
+					data1.Tags = append(data1.Tags, tags2)
+				} else {
+					data1.Tags[tagsCount].ID = tags2.ID
+					data1.Tags[tagsCount].Name = tags2.Name
+				}
+			}
+			if dataCount+1 > len(data.Data) {
+				data.Data = append(data.Data, data1)
+			} else {
+				data.Data[dataCount].Tags = data1.Tags
+			}
+		}
+	}
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -189,7 +230,24 @@ func (r *PrivateAppTagResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 
-	request := *data.ToSharedTagRequest()
+	var ids []string = []string{}
+	for _, idsItem := range data.Ids {
+		ids = append(ids, idsItem.ValueString())
+	}
+	tagName := new(string)
+	if !data.TagName.IsUnknown() && !data.TagName.IsNull() {
+		*tagName = data.TagName.ValueString()
+	} else {
+		tagName = nil
+	}
+	singleton := shared.Tags{
+		TagName: tagName,
+	}
+	tags := []shared.Tags{singleton}
+	request := shared.TagRequest{
+		Ids:  ids,
+		Tags: tags,
+	}
 	res, err := r.client.PatchNPATags(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -210,7 +268,36 @@ func (r *PrivateAppTagResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedTagPatchResponse(res.TagPatchResponse)
+	if res.TagPatchResponse != nil {
+		data.Data = []tfTypes.TagPatchResponseData{}
+		if len(data.Data) > len(res.TagPatchResponse.Data) {
+			data.Data = data.Data[:len(res.TagPatchResponse.Data)]
+		}
+		for dataCount, dataItem := range res.TagPatchResponse.Data {
+			var data1 tfTypes.TagPatchResponseData
+			data1.Tags = []tfTypes.TagPatchResponseTags{}
+			for tagsCount, tagsItem := range dataItem.Tags {
+				var tags2 tfTypes.TagPatchResponseTags
+				if tagsItem.ID != nil {
+					tags2.ID = types.NumberValue(big.NewFloat(float64(*tagsItem.ID)))
+				} else {
+					tags2.ID = types.NumberNull()
+				}
+				tags2.Name = types.StringPointerValue(tagsItem.Name)
+				if tagsCount+1 > len(data1.Tags) {
+					data1.Tags = append(data1.Tags, tags2)
+				} else {
+					data1.Tags[tagsCount].ID = tags2.ID
+					data1.Tags[tagsCount].Name = tags2.Name
+				}
+			}
+			if dataCount+1 > len(data.Data) {
+				data.Data = append(data.Data, data1)
+			} else {
+				data.Data[dataCount].Tags = data1.Tags
+			}
+		}
+	}
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -236,10 +323,8 @@ func (r *PrivateAppTagResource) Delete(ctx context.Context, req resource.DeleteR
 	}
 
 	tagID := int(data.TagID.ValueInt64())
-	tagRequest := *data.ToSharedTagRequest()
 	request := operations.DeleteNPATagsByIDRequest{
-		TagID:      tagID,
-		TagRequest: tagRequest,
+		TagID: tagID,
 	}
 	res, err := r.client.DeleteNPATagsByID(ctx, request)
 	if err != nil {

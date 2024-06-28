@@ -9,8 +9,7 @@ import (
 
 type DeleteNPATagsByIDRequest struct {
 	// tag id
-	TagID      int               `pathParam:"style=simple,explode=false,name=tag_id"`
-	TagRequest shared.TagRequest `request:"mediaType=application/json"`
+	TagID int `pathParam:"style=simple,explode=false,name=tag_id"`
 }
 
 func (o *DeleteNPATagsByIDRequest) GetTagID() int {
@@ -18,13 +17,6 @@ func (o *DeleteNPATagsByIDRequest) GetTagID() int {
 		return 0
 	}
 	return o.TagID
-}
-
-func (o *DeleteNPATagsByIDRequest) GetTagRequest() shared.TagRequest {
-	if o == nil {
-		return shared.TagRequest{}
-	}
-	return o.TagRequest
 }
 
 // DeleteNPATagsByIDResponseBody - successful operation
