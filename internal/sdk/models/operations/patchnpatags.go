@@ -15,7 +15,7 @@ type PatchNPATagsResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// successful operation
-	TagResponse *shared.TagResponse
+	TagPatchResponse *shared.TagPatchResponse
 	// Invalid request
 	TagResponse400 *shared.TagResponse400
 }
@@ -41,11 +41,11 @@ func (o *PatchNPATagsResponse) GetRawResponse() *http.Response {
 	return o.RawResponse
 }
 
-func (o *PatchNPATagsResponse) GetTagResponse() *shared.TagResponse {
+func (o *PatchNPATagsResponse) GetTagPatchResponse() *shared.TagPatchResponse {
 	if o == nil {
 		return nil
 	}
-	return o.TagResponse
+	return o.TagPatchResponse
 }
 
 func (o *PatchNPATagsResponse) GetTagResponse400() *shared.TagResponse400 {
