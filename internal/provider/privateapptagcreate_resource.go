@@ -49,10 +49,10 @@ func (r *PrivateAppTagCreateResource) Schema(ctx context.Context, req resource.S
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
-									"id": schema.NumberAttribute{
+									"name": schema.StringAttribute{
 										Computed: true,
 									},
-									"name": schema.StringAttribute{
+									"tag_id": schema.NumberAttribute{
 										Computed: true,
 									},
 								},

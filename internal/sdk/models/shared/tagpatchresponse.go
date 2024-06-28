@@ -3,15 +3,15 @@
 package shared
 
 type TagPatchResponseTags struct {
-	ID   *float64 `json:"id,omitempty"`
-	Name *string  `json:"name,omitempty"`
+	TagID *float64 `json:"external_id,omitempty"`
+	Name  *string  `json:"name,omitempty"`
 }
 
-func (o *TagPatchResponseTags) GetID() *float64 {
+func (o *TagPatchResponseTags) GetTagID() *float64 {
 	if o == nil {
 		return nil
 	}
-	return o.ID
+	return o.TagID
 }
 
 func (o *TagPatchResponseTags) GetName() *string {
