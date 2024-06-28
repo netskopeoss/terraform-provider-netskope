@@ -36,7 +36,6 @@ type PrivateAppResourceModel struct {
 	ID                          types.Int64                              `tfsdk:"id"`
 	Name                        types.String                             `tfsdk:"name"`
 	Protocols                   []tfTypes.ProtocolItem                   `tfsdk:"protocols"`
-	PublisherTags               []tfTypes.TagItemNoID                    `tfsdk:"publisher_tags"`
 	Publishers                  []tfTypes.PublisherItem                  `tfsdk:"publishers"`
 	RealHost                    types.String                             `tfsdk:"real_host"`
 	ResolvedProtocols           []tfTypes.ProtocolResponseItem           `tfsdk:"resolved_protocols"`
@@ -80,19 +79,6 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 						},
 						"type": schema.StringAttribute{
 							Optional: true,
-						},
-					},
-				},
-			},
-			"publisher_tags": schema.ListNestedAttribute{
-				Optional: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"tag_name": schema.StringAttribute{
-							Computed:    true,
-							Optional:    true,
-							Default:     stringdefault.StaticString("tag_name"),
-							Description: `Default: "tag_name"`,
 						},
 					},
 				},

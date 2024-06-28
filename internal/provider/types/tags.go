@@ -4,6 +4,6 @@ package types
 
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
-type TagItemNoID struct {
+type Tags struct {
 	TagName types.String `tfsdk:"tag_name"`
 }

@@ -24,11 +24,6 @@ resource "ns_private_app" "my_privateapp" {
       type = "...my_type..."
     },
   ]
-  publisher_tags = [
-    {
-      tag_name = "...my_tag_name..."
-    },
-  ]
   publishers = [
     {
       publisher_id   = "...my_publisher_id..."
@@ -50,7 +45,6 @@ resource "ns_private_app" "my_privateapp" {
 - `clientless_access` (Boolean)
 - `host` (String)
 - `protocols` (Attributes List) (see [below for nested schema](#nestedatt--protocols))
-- `publisher_tags` (Attributes List) (see [below for nested schema](#nestedatt--publisher_tags))
 - `publishers` (Attributes List) (see [below for nested schema](#nestedatt--publishers))
 - `real_host` (String)
 - `tags` (Attributes List) (see [below for nested schema](#nestedatt--tags))
@@ -71,14 +65,6 @@ Optional:
 
 - `port` (String)
 - `type` (String)
-
-
-<a id="nestedatt--publisher_tags"></a>
-### Nested Schema for `publisher_tags`
-
-Optional:
-
-- `tag_name` (String) Default: "tag_name"
 
 
 <a id="nestedatt--publishers"></a>
