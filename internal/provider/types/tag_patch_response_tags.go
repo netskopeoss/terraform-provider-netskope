@@ -5,6 +5,6 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type TagPatchResponseTags struct {
-	Name  types.String `tfsdk:"name"`
-	TagID types.Number `tfsdk:"tag_id"`
+	ExternalID types.Number `tfsdk:"external_id"`
+	TagName    types.String `tfsdk:"tag_name"`
 }

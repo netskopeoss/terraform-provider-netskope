@@ -14,7 +14,7 @@ NPAPolicy DataSource
 
 ```terraform
 data "ns_npa_policy" "my_npapolicy" {
-  id = "5fd14d01-266e-4098-a14b-3fa836666022"
+  id = "fd14d012-66e0-4986-94b3-fa8366660226"
 }
 ```
 
