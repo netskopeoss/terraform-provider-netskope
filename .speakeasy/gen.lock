@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: d31afa9a5645abaa7f9945e99f4ef98f
+  docChecksum: 9cebadb0324e11ef865e462fef56f839
   docVersion: 1.0.0
   speakeasyVersion: 1.322.3
   generationVersion: 2.354.2
-  releaseVersion: 0.6.9
-  configChecksum: 1136e8320baf7bcdbed7ebb71067df06
+  releaseVersion: 0.6.11
+  configChecksum: 898f1a4bcdd473507f923e3040e85523
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -224,9 +224,9 @@ generatedFiles:
   - internal/provider/privateapp_resource.go
   - internal/provider/privateapp_resource_sdk.go
   - examples/resources/ns_private_app/resource.tf
-  - internal/provider/privateapptag_resource.go
-  - internal/provider/privateapptag_resource_sdk.go
-  - examples/resources/ns_private_app_tag/resource.tf
+  - internal/provider/privateapptagcreate_resource.go
+  - internal/provider/privateapptagcreate_resource_sdk.go
+  - examples/resources/ns_private_app_tag_create/resource.tf
   - internal/provider/publishertoken_resource.go
   - internal/provider/publishertoken_resource_sdk.go
   - examples/resources/ns_publisher_token/resource.tf
