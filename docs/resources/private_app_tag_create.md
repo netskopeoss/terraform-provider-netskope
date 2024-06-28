@@ -57,7 +57,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (Number)
 - `name` (String)
+- `tag_id` (Number)
 
 

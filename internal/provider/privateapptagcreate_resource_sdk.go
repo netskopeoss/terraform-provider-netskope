@@ -44,17 +44,17 @@ func (r *PrivateAppTagCreateResourceModel) RefreshFromSharedTagPatchResponse(res
 			data1.Tags = []tfTypes.TagPatchResponseTags{}
 			for tagsCount, tagsItem := range dataItem.Tags {
 				var tags1 tfTypes.TagPatchResponseTags
-				if tagsItem.ID != nil {
-					tags1.ID = types.NumberValue(big.NewFloat(float64(*tagsItem.ID)))
-				} else {
-					tags1.ID = types.NumberNull()
-				}
 				tags1.Name = types.StringPointerValue(tagsItem.Name)
+				if tagsItem.TagID != nil {
+					tags1.TagID = types.NumberValue(big.NewFloat(float64(*tagsItem.TagID)))
+				} else {
+					tags1.TagID = types.NumberNull()
+				}
 				if tagsCount+1 > len(data1.Tags) {
 					data1.Tags = append(data1.Tags, tags1)
 				} else {
-					data1.Tags[tagsCount].ID = tags1.ID
 					data1.Tags[tagsCount].Name = tags1.Name
+					data1.Tags[tagsCount].TagID = tags1.TagID
 				}
 			}
 			if dataCount+1 > len(r.Data) {
