@@ -1,7 +1,7 @@
 data "ns_npa_policy_list" "my_npapolicylist" {
   filter    = "...my_filter..."
-  limit     = 6
-  offset    = 7
+  limit     = 4
+  offset    = 1
   sortby    = "...my_sortby..."
   sortorder = "...my_sortorder..."
 }
