@@ -15,8 +15,8 @@ PolicyGroupList DataSource
 ```terraform
 data "ns_policy_group_list" "my_policygrouplist" {
   filter    = "...my_filter..."
-  limit     = 1
-  offset    = 3
+  limit     = 0
+  offset    = 1
   sortby    = "...my_sortby..."
   sortorder = "...my_sortorder..."
 }
@@ -43,12 +43,7 @@ data "ns_policy_group_list" "my_policygrouplist" {
 Read-Only:
 
 - `can_be_edited_deleted` (String)
-- `group_id` (String)
 - `group_name` (String)
-- `group_pinned_id` (Number)
-- `group_prod_id` (Number)
-- `group_type` (String)
-- `modify_time` (String)
-- `modify_type` (String)
+- `id` (String)
 
 

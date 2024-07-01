@@ -55,25 +55,10 @@ func (r *PolicyGroupListDataSource) Schema(ctx context.Context, req datasource.S
 						"can_be_edited_deleted": schema.StringAttribute{
 							Computed: true,
 						},
-						"group_id": schema.StringAttribute{
-							Computed: true,
-						},
 						"group_name": schema.StringAttribute{
 							Computed: true,
 						},
-						"group_pinned_id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"group_prod_id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"group_type": schema.StringAttribute{
-							Computed: true,
-						},
-						"modify_time": schema.StringAttribute{
-							Computed: true,
-						},
-						"modify_type": schema.StringAttribute{
+						"id": schema.StringAttribute{
 							Computed: true,
 						},
 					},

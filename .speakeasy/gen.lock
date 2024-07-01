@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: 4899ffabb3e460ac2bc084033205b2da
+  docChecksum: f84043d8734e2024482dadc83bb15cd5
   docVersion: 1.0.0
-  speakeasyVersion: 1.322.3
-  generationVersion: 2.354.2
-  releaseVersion: 0.6.38
-  configChecksum: a449f6678ceb5f86e907b06c9c96d168
+  speakeasyVersion: 1.322.4
+  generationVersion: 2.355.2
+  releaseVersion: 0.6.43
+  configChecksum: bd9ae704d84192435274f4fb4fee9721
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -86,6 +86,7 @@ generatedFiles:
   - internal/sdk/models/shared/npapolicygroupresponse.go
   - internal/sdk/models/shared/npapolicygroupresponseitem.go
   - internal/sdk/models/shared/npapolicygrouprequest.go
+  - internal/sdk/models/shared/npapolicygrouppatchrequest.go
   - internal/sdk/models/shared/npapolicyresponse400.go
   - internal/sdk/models/shared/npapolicylistresponse.go
   - internal/sdk/models/shared/npapolicyresponseitem.go

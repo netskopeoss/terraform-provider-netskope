@@ -19,7 +19,6 @@ resource "ns_npa_policy_group" "my_npapolicygroup" {
     group_id = "1"
     order    = "before"
   }
-  id = "ca75d546-2042-4ad5-926c-75d642b6450a"
 }
 ```
 
@@ -28,26 +27,21 @@ resource "ns_npa_policy_group" "my_npapolicygroup" {
 
 ### Required
 
-- `group_name` (String) Requires replacement if changed.
-- `group_order` (Attributes) Requires replacement if changed. (see [below for nested schema](#nestedatt--group_order))
+- `group_name` (String)
+- `group_order` (Attributes) (see [below for nested schema](#nestedatt--group_order))
 
 ### Read-Only
 
 - `can_be_edited_deleted` (String)
-- `group_id` (String)
-- `group_pinned_id` (Number)
-- `group_prod_id` (Number)
-- `group_type` (String)
-- `modify_time` (String)
-- `modify_type` (String)
+- `id` (String) npa policy group id
 
 <a id="nestedatt--group_order"></a>
 ### Nested Schema for `group_order`
 
 Required:
 
-- `group_id` (String) Requires replacement if changed.
-- `order` (String) Requires replacement if changed. ; must be one of ["before", "after"]
+- `group_id` (String)
+- `order` (String) must be one of ["before", "after"]
 
 ## Import
 

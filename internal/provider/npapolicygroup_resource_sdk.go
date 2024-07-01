@@ -25,12 +25,38 @@ func (r *NPAPolicyGroupResourceModel) ToSharedNpaPolicygroupRequest() *shared.Np
 func (r *NPAPolicyGroupResourceModel) RefreshFromSharedNpaPolicygroupResponseItem(resp *shared.NpaPolicygroupResponseItem) {
 	if resp != nil {
 		r.CanBeEditedDeleted = types.StringPointerValue(resp.CanBeEditedDeleted)
-		r.GroupID = types.StringPointerValue(resp.GroupID)
 		r.GroupName = types.StringPointerValue(resp.GroupName)
-		r.GroupPinnedID = types.Int64PointerValue(resp.GroupPinnedID)
-		r.GroupProdID = types.Int64PointerValue(resp.GroupProdID)
-		r.GroupType = types.StringPointerValue(resp.GroupType)
-		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
-		r.ModifyType = types.StringPointerValue(resp.ModifyType)
+		r.ID = types.StringPointerValue(resp.ID)
 	}
+}
+
+func (r *NPAPolicyGroupResourceModel) ToSharedNpaPolicygroupPatchRequest() *shared.NpaPolicygroupPatchRequest {
+	groupName := new(string)
+	if !r.GroupName.IsUnknown() && !r.GroupName.IsNull() {
+		*groupName = r.GroupName.ValueString()
+	} else {
+		groupName = nil
+	}
+	var groupOrder *shared.NpaPolicygroupPatchRequestGroupOrder
+	groupID := new(string)
+	if !r.GroupOrder.GroupID.IsUnknown() && !r.GroupOrder.GroupID.IsNull() {
+		*groupID = r.GroupOrder.GroupID.ValueString()
+	} else {
+		groupID = nil
+	}
+	order := new(shared.NpaPolicygroupPatchRequestOrder)
+	if !r.GroupOrder.Order.IsUnknown() && !r.GroupOrder.Order.IsNull() {
+		*order = shared.NpaPolicygroupPatchRequestOrder(r.GroupOrder.Order.ValueString())
+	} else {
+		order = nil
+	}
+	groupOrder = &shared.NpaPolicygroupPatchRequestGroupOrder{
+		GroupID: groupID,
+		Order:   order,
+	}
+	out := shared.NpaPolicygroupPatchRequest{
+		GroupName:  groupName,
+		GroupOrder: groupOrder,
+	}
+	return &out
 }

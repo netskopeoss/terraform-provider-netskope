@@ -40,8 +40,8 @@ type PatchNPAPolicyGroupsByIDRequest struct {
 	// policy group rule id
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 	// flag to skip output except status code
-	Silent                *PatchNPAPolicyGroupsByIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
-	NpaPolicygroupRequest shared.NpaPolicygroupRequest              `request:"mediaType=application/json"`
+	Silent                     *PatchNPAPolicyGroupsByIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
+	NpaPolicygroupPatchRequest shared.NpaPolicygroupPatchRequest         `request:"mediaType=application/json"`
 }
 
 func (o *PatchNPAPolicyGroupsByIDRequest) GetID() string {
@@ -58,11 +58,11 @@ func (o *PatchNPAPolicyGroupsByIDRequest) GetSilent() *PatchNPAPolicyGroupsByIDQ
 	return o.Silent
 }
 
-func (o *PatchNPAPolicyGroupsByIDRequest) GetNpaPolicygroupRequest() shared.NpaPolicygroupRequest {
+func (o *PatchNPAPolicyGroupsByIDRequest) GetNpaPolicygroupPatchRequest() shared.NpaPolicygroupPatchRequest {
 	if o == nil {
-		return shared.NpaPolicygroupRequest{}
+		return shared.NpaPolicygroupPatchRequest{}
 	}
-	return o.NpaPolicygroupRequest
+	return o.NpaPolicygroupPatchRequest
 }
 
 // PatchNPAPolicyGroupsByIDResponseBody - successful operation

@@ -29,13 +29,8 @@ type NPAPolicyGroupDataSource struct {
 // NPAPolicyGroupDataSourceModel describes the data model.
 type NPAPolicyGroupDataSourceModel struct {
 	CanBeEditedDeleted types.String `tfsdk:"can_be_edited_deleted"`
-	GroupID            types.String `tfsdk:"group_id"`
 	GroupName          types.String `tfsdk:"group_name"`
-	GroupPinnedID      types.Int64  `tfsdk:"group_pinned_id"`
-	GroupProdID        types.Int64  `tfsdk:"group_prod_id"`
-	GroupType          types.String `tfsdk:"group_type"`
-	ModifyTime         types.String `tfsdk:"modify_time"`
-	ModifyType         types.String `tfsdk:"modify_type"`
+	ID                 types.String `tfsdk:"id"`
 }
 
 // Metadata returns the data source type name.
@@ -52,26 +47,12 @@ func (r *NPAPolicyGroupDataSource) Schema(ctx context.Context, req datasource.Sc
 			"can_be_edited_deleted": schema.StringAttribute{
 				Computed: true,
 			},
-			"group_id": schema.StringAttribute{
-				Computed: true,
-			},
 			"group_name": schema.StringAttribute{
 				Computed: true,
 			},
-			"group_pinned_id": schema.Int64Attribute{
-				Computed: true,
-			},
-			"group_prod_id": schema.Int64Attribute{
-				Computed: true,
-			},
-			"group_type": schema.StringAttribute{
-				Computed: true,
-			},
-			"modify_time": schema.StringAttribute{
-				Computed: true,
-			},
-			"modify_type": schema.StringAttribute{
-				Computed: true,
+			"id": schema.StringAttribute{
+				Required:    true,
+				Description: `npa policy group id`,
 			},
 		},
 	}
@@ -115,7 +96,7 @@ func (r *NPAPolicyGroupDataSource) Read(ctx context.Context, req datasource.Read
 		return
 	}
 
-	id := data.GroupID.ValueString()
+	id := data.ID.ValueString()
 	request := operations.GetNPAPolicyGroupsByIDRequest{
 		ID: id,
 	}

@@ -10,12 +10,7 @@ import (
 func (r *NPAPolicyGroupDataSourceModel) RefreshFromSharedNpaPolicygroupResponseItem(resp *shared.NpaPolicygroupResponseItem) {
 	if resp != nil {
 		r.CanBeEditedDeleted = types.StringPointerValue(resp.CanBeEditedDeleted)
-		r.GroupID = types.StringPointerValue(resp.GroupID)
 		r.GroupName = types.StringPointerValue(resp.GroupName)
-		r.GroupPinnedID = types.Int64PointerValue(resp.GroupPinnedID)
-		r.GroupProdID = types.Int64PointerValue(resp.GroupProdID)
-		r.GroupType = types.StringPointerValue(resp.GroupType)
-		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
-		r.ModifyType = types.StringPointerValue(resp.ModifyType)
+		r.ID = types.StringPointerValue(resp.ID)
 	}
 }

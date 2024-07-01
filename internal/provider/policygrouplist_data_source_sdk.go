@@ -17,24 +17,14 @@ func (r *PolicyGroupListDataSourceModel) RefreshFromSharedNpaPolicygroupResponse
 		for dataCount, dataItem := range resp.Data {
 			var data1 tfTypes.NpaPolicygroupResponseItem
 			data1.CanBeEditedDeleted = types.StringPointerValue(dataItem.CanBeEditedDeleted)
-			data1.GroupID = types.StringPointerValue(dataItem.GroupID)
 			data1.GroupName = types.StringPointerValue(dataItem.GroupName)
-			data1.GroupPinnedID = types.Int64PointerValue(dataItem.GroupPinnedID)
-			data1.GroupProdID = types.Int64PointerValue(dataItem.GroupProdID)
-			data1.GroupType = types.StringPointerValue(dataItem.GroupType)
-			data1.ModifyTime = types.StringPointerValue(dataItem.ModifyTime)
-			data1.ModifyType = types.StringPointerValue(dataItem.ModifyType)
+			data1.ID = types.StringPointerValue(dataItem.ID)
 			if dataCount+1 > len(r.Data) {
 				r.Data = append(r.Data, data1)
 			} else {
 				r.Data[dataCount].CanBeEditedDeleted = data1.CanBeEditedDeleted
-				r.Data[dataCount].GroupID = data1.GroupID
 				r.Data[dataCount].GroupName = data1.GroupName
-				r.Data[dataCount].GroupPinnedID = data1.GroupPinnedID
-				r.Data[dataCount].GroupProdID = data1.GroupProdID
-				r.Data[dataCount].GroupType = data1.GroupType
-				r.Data[dataCount].ModifyTime = data1.ModifyTime
-				r.Data[dataCount].ModifyType = data1.ModifyType
+				r.Data[dataCount].ID = data1.ID
 			}
 		}
 	}
