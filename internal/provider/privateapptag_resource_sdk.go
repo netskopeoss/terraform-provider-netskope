@@ -4,40 +4,14 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
-	"math/big"
 )
 
-func (r *PrivateAppTagResourceModel) RefreshFromSharedTagPatchResponse(resp *shared.TagPatchResponse) {
-	if resp != nil {
-		r.Data = []tfTypes.TagPatchResponseData{}
-		if len(r.Data) > len(resp.Data) {
-			r.Data = r.Data[:len(resp.Data)]
-		}
-		for dataCount, dataItem := range resp.Data {
-			var data1 tfTypes.TagPatchResponseData
-			data1.Tags = []tfTypes.TagPatchResponseTags{}
-			for tagsCount, tagsItem := range dataItem.Tags {
-				var tags1 tfTypes.TagPatchResponseTags
-				if tagsItem.ExternalID != nil {
-					tags1.ExternalID = types.NumberValue(big.NewFloat(float64(*tagsItem.ExternalID)))
-				} else {
-					tags1.ExternalID = types.NumberNull()
-				}
-				tags1.TagName = types.StringPointerValue(tagsItem.TagName)
-				if tagsCount+1 > len(data1.Tags) {
-					data1.Tags = append(data1.Tags, tags1)
-				} else {
-					data1.Tags[tagsCount].ExternalID = tags1.ExternalID
-					data1.Tags[tagsCount].TagName = tags1.TagName
-				}
-			}
-			if dataCount+1 > len(r.Data) {
-				r.Data = append(r.Data, data1)
-			} else {
-				r.Data[dataCount].Tags = data1.Tags
-			}
-		}
+func (r *PrivateAppTagResourceModel) RefreshFromSharedTagPatchResponseTags(resp *shared.TagPatchResponseTags) {
+	if resp.TagID != nil {
+		r.TagID = types.Int64Value(int64(*resp.TagID))
+	} else {
+		r.TagID = types.Int64Null()
 	}
+	r.TagName = types.StringPointerValue(resp.TagName)
 }
