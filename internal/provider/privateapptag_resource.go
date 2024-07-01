@@ -12,11 +12,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
+	speakeasy_stringplanmodifier "github.com/netskope/terraform-provider-ns/internal/planmodifiers/stringplanmodifier"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
-	"math/big"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -34,10 +33,9 @@ type PrivateAppTagResource struct {
 
 // PrivateAppTagResourceModel describes the resource data model.
 type PrivateAppTagResourceModel struct {
-	Data    []tfTypes.TagPatchResponseData `tfsdk:"data"`
-	Ids     []types.String                 `tfsdk:"ids"`
-	TagID   types.Int64                    `tfsdk:"tag_id"`
-	TagName types.String                   `tfsdk:"tag_name"`
+	Ids     []types.String `tfsdk:"ids"`
+	TagID   types.Int64    `tfsdk:"tag_id"`
+	TagName types.String   `tfsdk:"tag_name"`
 }
 
 func (r *PrivateAppTagResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -48,26 +46,6 @@ func (r *PrivateAppTagResource) Schema(ctx context.Context, req resource.SchemaR
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "PrivateAppTag Resource",
 		Attributes: map[string]schema.Attribute{
-			"data": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"tags": schema.ListNestedAttribute{
-							Computed: true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"external_id": schema.NumberAttribute{
-										Computed: true,
-									},
-									"tag_name": schema.StringAttribute{
-										Computed: true,
-									},
-								},
-							},
-						},
-					},
-				},
-			},
 			"ids": schema.ListAttribute{
 				PlanModifiers: []planmodifier.List{
 					listplanmodifier.RequiresReplaceIfConfigured(),
@@ -77,12 +55,14 @@ func (r *PrivateAppTagResource) Schema(ctx context.Context, req resource.SchemaR
 				Description: `Requires replacement if changed. `,
 			},
 			"tag_id": schema.Int64Attribute{
-				Required:    true,
+				Computed:    true,
 				Description: `tag id`,
 			},
 			"tag_name": schema.StringAttribute{
+				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Optional:    true,
 				Description: `Requires replacement if changed. `,
@@ -163,40 +143,16 @@ func (r *PrivateAppTagResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.TagPatchResponse != nil) {
+	if !(res.TagPatchResponse != nil && res.TagPatchResponse.Data != nil && len(res.TagPatchResponse.Data) > 0 && res.TagPatchResponse.Data[0].Tags != nil && len(res.TagPatchResponse.Data[0].Tags) > 0) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	if res.TagPatchResponse != nil {
-		data.Data = []tfTypes.TagPatchResponseData{}
-		if len(data.Data) > len(res.TagPatchResponse.Data) {
-			data.Data = data.Data[:len(res.TagPatchResponse.Data)]
-		}
-		for dataCount, dataItem := range res.TagPatchResponse.Data {
-			var data1 tfTypes.TagPatchResponseData
-			data1.Tags = []tfTypes.TagPatchResponseTags{}
-			for tagsCount, tagsItem := range dataItem.Tags {
-				var tags2 tfTypes.TagPatchResponseTags
-				if tagsItem.ExternalID != nil {
-					tags2.ExternalID = types.NumberValue(big.NewFloat(float64(*tagsItem.ExternalID)))
-				} else {
-					tags2.ExternalID = types.NumberNull()
-				}
-				tags2.TagName = types.StringPointerValue(tagsItem.TagName)
-				if tagsCount+1 > len(data1.Tags) {
-					data1.Tags = append(data1.Tags, tags2)
-				} else {
-					data1.Tags[tagsCount].ExternalID = tags2.ExternalID
-					data1.Tags[tagsCount].TagName = tags2.TagName
-				}
-			}
-			if dataCount+1 > len(data.Data) {
-				data.Data = append(data.Data, data1)
-			} else {
-				data.Data[dataCount].Tags = data1.Tags
-			}
-		}
+	if res.TagPatchResponse.Data[0].Tags[0].TagID != nil {
+		data.TagID = types.Int64Value(int64(*res.TagPatchResponse.Data[0].Tags[0].TagID))
+	} else {
+		data.TagID = types.Int64Null()
 	}
+	data.TagName = types.StringPointerValue(res.TagPatchResponse.Data[0].Tags[0].TagName)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
