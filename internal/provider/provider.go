@@ -98,7 +98,6 @@ func (p *NsProvider) Resources(ctx context.Context) []func() resource.Resource {
 func (p *NsProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewNPAPolicyDataSource,
-		NewNPAPolicyGroupDataSource,
 		NewNPAPolicyListDataSource,
 		NewNPAPublishersDataSource,
 		NewNPAPublishersAlertsConfigurationListDataSource,

@@ -396,10 +396,10 @@ func (r *NPAPublishersResource) Delete(ctx context.Context, req resource.DeleteR
 }
 
 func (r *NPAPublishersResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	idID, err := strconv.Atoi(req.ID)
+	id, err := strconv.Atoi(req.ID)
 	if err != nil {
 		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
 	}
 
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id").AtName("id"), int64(idID))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), int64(id))...)
 }

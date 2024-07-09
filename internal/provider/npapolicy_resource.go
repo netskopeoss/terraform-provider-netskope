@@ -32,13 +32,12 @@ type NPAPolicyResource struct {
 
 // NPAPolicyResourceModel describes the resource data model.
 type NPAPolicyResourceModel struct {
-	Description types.String               `tfsdk:"description"`
-	Enabled     types.String               `tfsdk:"enabled"`
-	GroupName   types.String               `tfsdk:"group_name"`
-	RuleData    *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
-	RuleID      types.String               `tfsdk:"rule_id"`
-	RuleName    types.String               `tfsdk:"rule_name"`
-	RuleOrder   *tfTypes.RuleOrder         `tfsdk:"rule_order"`
+	Enabled   types.String               `tfsdk:"enabled"`
+	GroupName types.String               `tfsdk:"group_name"`
+	RuleData  *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleID    types.String               `tfsdk:"rule_id"`
+	RuleName  types.String               `tfsdk:"rule_name"`
+	RuleOrder *tfTypes.RuleOrder         `tfsdk:"rule_order"`
 }
 
 func (r *NPAPolicyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -49,9 +48,6 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "NPAPolicy Resource",
 		Attributes: map[string]schema.Attribute{
-			"description": schema.StringAttribute{
-				Optional: true,
-			},
 			"enabled": schema.StringAttribute{
 				Optional: true,
 			},
@@ -75,7 +71,12 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 						Computed: true,
 						Optional: true,
 					},
-					"classification": schema.StringAttribute{
+					"classification": schema.ListAttribute{
+						Computed:    true,
+						Optional:    true,
+						ElementType: types.StringType,
+					},
+					"description": schema.StringAttribute{
 						Computed: true,
 						Optional: true,
 					},
@@ -84,10 +85,17 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{
-								"actions": schema.ListAttribute{
-									Computed:    true,
-									Optional:    true,
-									ElementType: types.StringType,
+								"actions": schema.ListNestedAttribute{
+									Computed: true,
+									Optional: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"action_name": schema.StringAttribute{
+												Computed: true,
+												Optional: true,
+											},
+										},
+									},
 								},
 								"dlp_profile": schema.StringAttribute{
 									Computed: true,
@@ -95,6 +103,11 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 								},
 							},
 						},
+					},
+					"dlp_profile": schema.ListAttribute{
+						Computed:    true,
+						Optional:    true,
+						ElementType: types.StringType,
 					},
 					"external_dlp": schema.BoolAttribute{
 						Computed: true,
@@ -119,6 +132,10 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 									),
 								},
 							},
+							"template": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+							},
 						},
 					},
 					"net_location_obj": schema.ListAttribute{
@@ -127,6 +144,11 @@ func (r *NPAPolicyResource) Schema(ctx context.Context, req resource.SchemaReque
 						ElementType: types.StringType,
 					},
 					"organization_units": schema.ListAttribute{
+						Computed:    true,
+						Optional:    true,
+						ElementType: types.StringType,
+					},
+					"os": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,
@@ -527,5 +549,5 @@ func (r *NPAPolicyResource) Delete(ctx context.Context, req resource.DeleteReque
 }
 
 func (r *NPAPolicyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("rule_id").AtName("rule_id"), req.ID)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("rule_id"), req.ID)...)
 }

@@ -43,10 +43,4 @@ Required:
 - `group_id` (String)
 - `order` (String) must be one of ["before", "after"]
 
-## Import
 
-Import is supported using the following syntax:
-
-```shell
-terraform import ns_npa_policy_group.my_ns_npa_policy_group ""
-```

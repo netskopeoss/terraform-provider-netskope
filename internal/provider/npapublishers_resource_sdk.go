@@ -10,23 +10,17 @@ import (
 )
 
 func (r *NPAPublishersResourceModel) ToSharedPublisherPostRequest() *shared.PublisherPostRequest {
-	lbrokerconnect := new(bool)
-	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
-		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
-	} else {
-		lbrokerconnect = nil
-	}
 	name := new(string)
 	if !r.Name.IsUnknown() && !r.Name.IsNull() {
 		*name = r.Name.ValueString()
 	} else {
 		name = nil
 	}
-	publisherUpgradeProfilesID := new(int)
-	if !r.PublisherUpgradeProfilesID.IsUnknown() && !r.PublisherUpgradeProfilesID.IsNull() {
-		*publisherUpgradeProfilesID = int(r.PublisherUpgradeProfilesID.ValueInt64())
+	lbrokerconnect := new(bool)
+	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
+		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
 	} else {
-		publisherUpgradeProfilesID = nil
+		lbrokerconnect = nil
 	}
 	var tags []shared.TagItemNoID = []shared.TagItemNoID{}
 	for _, tagsItem := range r.Tags {
@@ -40,11 +34,17 @@ func (r *NPAPublishersResourceModel) ToSharedPublisherPostRequest() *shared.Publ
 			TagName: tagName,
 		})
 	}
+	publisherUpgradeProfilesID := new(int)
+	if !r.PublisherUpgradeProfilesID.IsUnknown() && !r.PublisherUpgradeProfilesID.IsNull() {
+		*publisherUpgradeProfilesID = int(r.PublisherUpgradeProfilesID.ValueInt64())
+	} else {
+		publisherUpgradeProfilesID = nil
+	}
 	out := shared.PublisherPostRequest{
-		Lbrokerconnect:             lbrokerconnect,
 		Name:                       name,
-		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
+		Lbrokerconnect:             lbrokerconnect,
 		Tags:                       tags,
+		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
 	}
 	return &out
 }
@@ -104,6 +104,12 @@ func (r *NPAPublishersResourceModel) RefreshFromSharedPublisherResponseData(resp
 }
 
 func (r *NPAPublishersResourceModel) ToSharedPublisherPutRequest() *shared.PublisherPutRequest {
+	name := new(string)
+	if !r.Name.IsUnknown() && !r.Name.IsNull() {
+		*name = r.Name.ValueString()
+	} else {
+		name = nil
+	}
 	id := new(int)
 	if !r.ID.IsUnknown() && !r.ID.IsNull() {
 		*id = int(r.ID.ValueInt64())
@@ -115,12 +121,6 @@ func (r *NPAPublishersResourceModel) ToSharedPublisherPutRequest() *shared.Publi
 		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
 	} else {
 		lbrokerconnect = nil
-	}
-	name := new(string)
-	if !r.Name.IsUnknown() && !r.Name.IsNull() {
-		*name = r.Name.ValueString()
-	} else {
-		name = nil
 	}
 	var tags []shared.TagItem = []shared.TagItem{}
 	for _, tagsItem := range r.Tags {
@@ -142,9 +142,9 @@ func (r *NPAPublishersResourceModel) ToSharedPublisherPutRequest() *shared.Publi
 		})
 	}
 	out := shared.PublisherPutRequest{
+		Name:           name,
 		ID:             id,
 		Lbrokerconnect: lbrokerconnect,
-		Name:           name,
 		Tags:           tags,
 	}
 	return &out

@@ -9,18 +9,18 @@ import (
 	"net/http"
 )
 
-// ReplaceNPAPublisherByIDQueryParamSilent - flag to skip output except status code
-type ReplaceNPAPublisherByIDQueryParamSilent string
+// QueryParamSilent - flag to skip output except status code
+type QueryParamSilent string
 
 const (
-	ReplaceNPAPublisherByIDQueryParamSilentOne  ReplaceNPAPublisherByIDQueryParamSilent = "1"
-	ReplaceNPAPublisherByIDQueryParamSilentZero ReplaceNPAPublisherByIDQueryParamSilent = "0"
+	QueryParamSilentOne  QueryParamSilent = "1"
+	QueryParamSilentZero QueryParamSilent = "0"
 )
 
-func (e ReplaceNPAPublisherByIDQueryParamSilent) ToPointer() *ReplaceNPAPublisherByIDQueryParamSilent {
+func (e QueryParamSilent) ToPointer() *QueryParamSilent {
 	return &e
 }
-func (e *ReplaceNPAPublisherByIDQueryParamSilent) UnmarshalJSON(data []byte) error {
+func (e *QueryParamSilent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -29,10 +29,10 @@ func (e *ReplaceNPAPublisherByIDQueryParamSilent) UnmarshalJSON(data []byte) err
 	case "1":
 		fallthrough
 	case "0":
-		*e = ReplaceNPAPublisherByIDQueryParamSilent(v)
+		*e = QueryParamSilent(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for ReplaceNPAPublisherByIDQueryParamSilent: %v", v)
+		return fmt.Errorf("invalid value for QueryParamSilent: %v", v)
 	}
 }
 
@@ -40,8 +40,8 @@ type ReplaceNPAPublisherByIDRequest struct {
 	// publisher id
 	PublisherID int `pathParam:"style=simple,explode=false,name=publisher_id"`
 	// flag to skip output except status code
-	Silent              *ReplaceNPAPublisherByIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
-	PublisherPutRequest shared.PublisherPutRequest               `request:"mediaType=application/json"`
+	Silent              *QueryParamSilent          `queryParam:"style=form,explode=true,name=silent"`
+	PublisherPutRequest shared.PublisherPutRequest `request:"mediaType=application/json"`
 }
 
 func (o *ReplaceNPAPublisherByIDRequest) GetPublisherID() int {
@@ -51,7 +51,7 @@ func (o *ReplaceNPAPublisherByIDRequest) GetPublisherID() int {
 	return o.PublisherID
 }
 
-func (o *ReplaceNPAPublisherByIDRequest) GetSilent() *ReplaceNPAPublisherByIDQueryParamSilent {
+func (o *ReplaceNPAPublisherByIDRequest) GetSilent() *QueryParamSilent {
 	if o == nil {
 		return nil
 	}
