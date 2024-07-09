@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
@@ -35,6 +37,7 @@ type PrivateAppResourceModel struct {
 	Host                        types.String                             `tfsdk:"host"`
 	ID                          types.Int64                              `tfsdk:"id"`
 	Name                        types.String                             `tfsdk:"name"`
+	PrivateAppProtocol          types.String                             `tfsdk:"private_app_protocol"`
 	Protocols                   []tfTypes.ProtocolItem                   `tfsdk:"protocols"`
 	Publishers                  []tfTypes.PublisherItem                  `tfsdk:"publishers"`
 	RealHost                    types.String                             `tfsdk:"real_host"`
@@ -69,6 +72,13 @@ func (r *PrivateAppResource) Schema(ctx context.Context, req resource.SchemaRequ
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
+			},
+			"private_app_protocol": schema.StringAttribute{
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+				},
+				Optional:    true,
+				Description: `Requires replacement if changed. `,
 			},
 			"protocols": schema.ListNestedAttribute{
 				Optional: true,

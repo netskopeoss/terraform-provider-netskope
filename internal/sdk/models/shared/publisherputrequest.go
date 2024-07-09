@@ -3,10 +3,17 @@
 package shared
 
 type PublisherPutRequest struct {
+	Name           *string   `json:"name,omitempty"`
 	ID             *int      `json:"id,omitempty"`
 	Lbrokerconnect *bool     `json:"lbrokerconnect,omitempty"`
-	Name           *string   `json:"name,omitempty"`
 	Tags           []TagItem `json:"tags,omitempty"`
+}
+
+func (o *PublisherPutRequest) GetName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Name
 }
 
 func (o *PublisherPutRequest) GetID() *int {
@@ -21,13 +28,6 @@ func (o *PublisherPutRequest) GetLbrokerconnect() *bool {
 		return nil
 	}
 	return o.Lbrokerconnect
-}
-
-func (o *PublisherPutRequest) GetName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Name
 }
 
 func (o *PublisherPutRequest) GetTags() []TagItem {

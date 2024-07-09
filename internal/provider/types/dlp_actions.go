@@ -4,7 +4,7 @@ package types
 
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
-type MatchCriteriaAction struct {
-	ActionName types.String `tfsdk:"action_name"`
-	Template   types.String `tfsdk:"template"`
+type DlpActions struct {
+	Actions    []Actions    `tfsdk:"actions"`
+	DlpProfile types.String `tfsdk:"dlp_profile"`
 }

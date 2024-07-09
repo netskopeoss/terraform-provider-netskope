@@ -9,96 +9,41 @@ import (
 )
 
 func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyRequest {
-	description := new(string)
-	if !r.Description.IsUnknown() && !r.Description.IsNull() {
-		*description = r.Description.ValueString()
+	ruleName := new(string)
+	if !r.RuleName.IsUnknown() && !r.RuleName.IsNull() {
+		*ruleName = r.RuleName.ValueString()
 	} else {
-		description = nil
-	}
-	enabled := new(string)
-	if !r.Enabled.IsUnknown() && !r.Enabled.IsNull() {
-		*enabled = r.Enabled.ValueString()
-	} else {
-		enabled = nil
-	}
-	groupName := new(string)
-	if !r.GroupName.IsUnknown() && !r.GroupName.IsNull() {
-		*groupName = r.GroupName.ValueString()
-	} else {
-		groupName = nil
+		ruleName = nil
 	}
 	var ruleData *shared.NpaPolicyRuleData
 	if r.RuleData != nil {
-		var accessMethod []string = []string{}
-		for _, accessMethodItem := range r.RuleData.AccessMethod {
-			accessMethod = append(accessMethod, accessMethodItem.ValueString())
-		}
-		bNegateNetLocation := new(bool)
-		if !r.RuleData.BNegateNetLocation.IsUnknown() && !r.RuleData.BNegateNetLocation.IsNull() {
-			*bNegateNetLocation = r.RuleData.BNegateNetLocation.ValueBool()
+		description := new(string)
+		if !r.RuleData.Description.IsUnknown() && !r.RuleData.Description.IsNull() {
+			*description = r.RuleData.Description.ValueString()
 		} else {
-			bNegateNetLocation = nil
+			description = nil
 		}
-		bNegateSrcCountries := new(bool)
-		if !r.RuleData.BNegateSrcCountries.IsUnknown() && !r.RuleData.BNegateSrcCountries.IsNull() {
-			*bNegateSrcCountries = r.RuleData.BNegateSrcCountries.ValueBool()
-		} else {
-			bNegateSrcCountries = nil
+		var users []string = []string{}
+		for _, usersItem := range r.RuleData.Users {
+			users = append(users, usersItem.ValueString())
 		}
-		classification := new(string)
-		if !r.RuleData.Classification.IsUnknown() && !r.RuleData.Classification.IsNull() {
-			*classification = r.RuleData.Classification.ValueString()
-		} else {
-			classification = nil
-		}
-		var dlpActions []shared.NpaPolicyRuleDlp = []shared.NpaPolicyRuleDlp{}
-		for _, dlpActionsItem := range r.RuleData.DlpActions {
-			var actions []shared.Actions = []shared.Actions{}
-			for _, actionsItem := range dlpActionsItem.Actions {
-				actions = append(actions, shared.Actions(actionsItem.ValueString()))
-			}
-			dlpProfile := new(string)
-			if !dlpActionsItem.DlpProfile.IsUnknown() && !dlpActionsItem.DlpProfile.IsNull() {
-				*dlpProfile = dlpActionsItem.DlpProfile.ValueString()
-			} else {
-				dlpProfile = nil
-			}
-			dlpActions = append(dlpActions, shared.NpaPolicyRuleDlp{
-				Actions:    actions,
-				DlpProfile: dlpProfile,
-			})
-		}
-		externalDlp := new(bool)
-		if !r.RuleData.ExternalDlp.IsUnknown() && !r.RuleData.ExternalDlp.IsNull() {
-			*externalDlp = r.RuleData.ExternalDlp.ValueBool()
-		} else {
-			externalDlp = nil
-		}
-		jsonVersion := new(int64)
-		if !r.RuleData.JSONVersion.IsUnknown() && !r.RuleData.JSONVersion.IsNull() {
-			*jsonVersion = r.RuleData.JSONVersion.ValueInt64()
-		} else {
-			jsonVersion = nil
-		}
-		var matchCriteriaAction *shared.MatchCriteriaAction
-		if r.RuleData.MatchCriteriaAction != nil {
-			actionName := new(shared.ActionName)
-			if !r.RuleData.MatchCriteriaAction.ActionName.IsUnknown() && !r.RuleData.MatchCriteriaAction.ActionName.IsNull() {
-				*actionName = shared.ActionName(r.RuleData.MatchCriteriaAction.ActionName.ValueString())
-			} else {
-				actionName = nil
-			}
-			matchCriteriaAction = &shared.MatchCriteriaAction{
-				ActionName: actionName,
-			}
-		}
-		var netLocationObj []string = []string{}
-		for _, netLocationObjItem := range r.RuleData.NetLocationObj {
-			netLocationObj = append(netLocationObj, netLocationObjItem.ValueString())
+		var userGroups []string = []string{}
+		for _, userGroupsItem := range r.RuleData.UserGroups {
+			userGroups = append(userGroups, userGroupsItem.ValueString())
 		}
 		var organizationUnits []string = []string{}
 		for _, organizationUnitsItem := range r.RuleData.OrganizationUnits {
 			organizationUnits = append(organizationUnits, organizationUnitsItem.ValueString())
+		}
+		userType := new(shared.UserType)
+		if !r.RuleData.UserType.IsUnknown() && !r.RuleData.UserType.IsNull() {
+			*userType = shared.UserType(r.RuleData.UserType.ValueString())
+		} else {
+			userType = nil
+		}
+		var accessMethod []string = []string{}
+		for _, accessMethodItem := range r.RuleData.AccessMethod {
+			accessMethod = append(accessMethod, accessMethodItem.ValueString())
 		}
 		policyType := new(shared.PolicyType)
 		if !r.RuleData.PolicyType.IsUnknown() && !r.RuleData.PolicyType.IsNull() {
@@ -106,24 +51,30 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 		} else {
 			policyType = nil
 		}
+		var privateApps []string = []string{}
+		for _, privateAppsItem := range r.RuleData.PrivateApps {
+			privateApps = append(privateApps, privateAppsItem.ValueString())
+		}
 		var privateAppIds []string = []string{}
 		for _, privateAppIdsItem := range r.RuleData.PrivateAppIds {
 			privateAppIds = append(privateAppIds, privateAppIdsItem.ValueString())
-		}
-		var privateAppTagIds []string = []string{}
-		for _, privateAppTagIdsItem := range r.RuleData.PrivateAppTagIds {
-			privateAppTagIds = append(privateAppTagIds, privateAppTagIdsItem.ValueString())
 		}
 		var privateAppTags []string = []string{}
 		for _, privateAppTagsItem := range r.RuleData.PrivateAppTags {
 			privateAppTags = append(privateAppTags, privateAppTagsItem.ValueString())
 		}
-		var privateApps []string = []string{}
-		for _, privateAppsItem := range r.RuleData.PrivateApps {
-			privateApps = append(privateApps, privateAppsItem.ValueString())
+		var privateAppTagIds []string = []string{}
+		for _, privateAppTagIdsItem := range r.RuleData.PrivateAppTagIds {
+			privateAppTagIds = append(privateAppTagIds, privateAppTagIdsItem.ValueString())
 		}
 		var privateAppsWithActivities []shared.PrivateAppsWithActivities = []shared.PrivateAppsWithActivities{}
 		for _, privateAppsWithActivitiesItem := range r.RuleData.PrivateAppsWithActivities {
+			appName := new(string)
+			if !privateAppsWithActivitiesItem.AppName.IsUnknown() && !privateAppsWithActivitiesItem.AppName.IsNull() {
+				*appName = privateAppsWithActivitiesItem.AppName.ValueString()
+			} else {
+				appName = nil
+			}
 			var activities []shared.Activities = []shared.Activities{}
 			for _, activitiesItem := range privateAppsWithActivitiesItem.Activities {
 				activity := new(shared.Activity)
@@ -141,16 +92,37 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 					ListOfConstraints: listOfConstraints,
 				})
 			}
-			appName := new(string)
-			if !privateAppsWithActivitiesItem.AppName.IsUnknown() && !privateAppsWithActivitiesItem.AppName.IsNull() {
-				*appName = privateAppsWithActivitiesItem.AppName.ValueString()
-			} else {
-				appName = nil
-			}
 			privateAppsWithActivities = append(privateAppsWithActivities, shared.PrivateAppsWithActivities{
-				Activities: activities,
 				AppName:    appName,
+				Activities: activities,
 			})
+		}
+		var matchCriteriaAction *shared.MatchCriteriaAction
+		if r.RuleData.MatchCriteriaAction != nil {
+			actionName := new(shared.ActionName)
+			if !r.RuleData.MatchCriteriaAction.ActionName.IsUnknown() && !r.RuleData.MatchCriteriaAction.ActionName.IsNull() {
+				*actionName = shared.ActionName(r.RuleData.MatchCriteriaAction.ActionName.ValueString())
+			} else {
+				actionName = nil
+			}
+			template := new(string)
+			if !r.RuleData.MatchCriteriaAction.Template.IsUnknown() && !r.RuleData.MatchCriteriaAction.Template.IsNull() {
+				*template = r.RuleData.MatchCriteriaAction.Template.ValueString()
+			} else {
+				template = nil
+			}
+			matchCriteriaAction = &shared.MatchCriteriaAction{
+				ActionName: actionName,
+				Template:   template,
+			}
+		}
+		var os []string = []string{}
+		for _, osItem := range r.RuleData.Os {
+			os = append(os, osItem.ValueString())
+		}
+		var classification []shared.Classification = []shared.Classification{}
+		for _, classificationItem := range r.RuleData.Classification {
+			classification = append(classification, shared.Classification(classificationItem.ValueString()))
 		}
 		showDlpProfileActionTable := new(bool)
 		if !r.RuleData.ShowDlpProfileActionTable.IsUnknown() && !r.RuleData.ShowDlpProfileActionTable.IsNull() {
@@ -158,23 +130,37 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 		} else {
 			showDlpProfileActionTable = nil
 		}
+		externalDlp := new(bool)
+		if !r.RuleData.ExternalDlp.IsUnknown() && !r.RuleData.ExternalDlp.IsNull() {
+			*externalDlp = r.RuleData.ExternalDlp.ValueBool()
+		} else {
+			externalDlp = nil
+		}
+		var netLocationObj []string = []string{}
+		for _, netLocationObjItem := range r.RuleData.NetLocationObj {
+			netLocationObj = append(netLocationObj, netLocationObjItem.ValueString())
+		}
+		bNegateNetLocation := new(bool)
+		if !r.RuleData.BNegateNetLocation.IsUnknown() && !r.RuleData.BNegateNetLocation.IsNull() {
+			*bNegateNetLocation = r.RuleData.BNegateNetLocation.ValueBool()
+		} else {
+			bNegateNetLocation = nil
+		}
 		var srcCountries []string = []string{}
 		for _, srcCountriesItem := range r.RuleData.SrcCountries {
 			srcCountries = append(srcCountries, srcCountriesItem.ValueString())
 		}
-		var userGroups []string = []string{}
-		for _, userGroupsItem := range r.RuleData.UserGroups {
-			userGroups = append(userGroups, userGroupsItem.ValueString())
-		}
-		userType := new(shared.UserType)
-		if !r.RuleData.UserType.IsUnknown() && !r.RuleData.UserType.IsNull() {
-			*userType = shared.UserType(r.RuleData.UserType.ValueString())
+		bNegateSrcCountries := new(bool)
+		if !r.RuleData.BNegateSrcCountries.IsUnknown() && !r.RuleData.BNegateSrcCountries.IsNull() {
+			*bNegateSrcCountries = r.RuleData.BNegateSrcCountries.ValueBool()
 		} else {
-			userType = nil
+			bNegateSrcCountries = nil
 		}
-		var users []string = []string{}
-		for _, usersItem := range r.RuleData.Users {
-			users = append(users, usersItem.ValueString())
+		jsonVersion := new(int64)
+		if !r.RuleData.JSONVersion.IsUnknown() && !r.RuleData.JSONVersion.IsNull() {
+			*jsonVersion = r.RuleData.JSONVersion.ValueInt64()
+		} else {
+			jsonVersion = nil
 		}
 		version := new(int64)
 		if !r.RuleData.Version.IsUnknown() && !r.RuleData.Version.IsNull() {
@@ -182,56 +168,70 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 		} else {
 			version = nil
 		}
-		ruleData = &shared.NpaPolicyRuleData{
-			AccessMethod:              accessMethod,
-			BNegateNetLocation:        bNegateNetLocation,
-			BNegateSrcCountries:       bNegateSrcCountries,
-			Classification:            classification,
-			DlpActions:                dlpActions,
-			ExternalDlp:               externalDlp,
-			JSONVersion:               jsonVersion,
-			MatchCriteriaAction:       matchCriteriaAction,
-			NetLocationObj:            netLocationObj,
-			OrganizationUnits:         organizationUnits,
-			PolicyType:                policyType,
-			PrivateAppIds:             privateAppIds,
-			PrivateAppTagIds:          privateAppTagIds,
-			PrivateAppTags:            privateAppTags,
-			PrivateApps:               privateApps,
-			PrivateAppsWithActivities: privateAppsWithActivities,
-			ShowDlpProfileActionTable: showDlpProfileActionTable,
-			SrcCountries:              srcCountries,
-			UserGroups:                userGroups,
-			UserType:                  userType,
-			Users:                     users,
-			Version:                   version,
+		var dlpActions []shared.DlpActions = []shared.DlpActions{}
+		for _, dlpActionsItem := range r.RuleData.DlpActions {
+			var actions []shared.Actions = []shared.Actions{}
+			for _, actionsItem := range dlpActionsItem.Actions {
+				actionName1 := new(string)
+				if !actionsItem.ActionName.IsUnknown() && !actionsItem.ActionName.IsNull() {
+					*actionName1 = actionsItem.ActionName.ValueString()
+				} else {
+					actionName1 = nil
+				}
+				actions = append(actions, shared.Actions{
+					ActionName: actionName1,
+				})
+			}
+			dlpProfile := new(string)
+			if !dlpActionsItem.DlpProfile.IsUnknown() && !dlpActionsItem.DlpProfile.IsNull() {
+				*dlpProfile = dlpActionsItem.DlpProfile.ValueString()
+			} else {
+				dlpProfile = nil
+			}
+			dlpActions = append(dlpActions, shared.DlpActions{
+				Actions:    actions,
+				DlpProfile: dlpProfile,
+			})
 		}
-	}
-	ruleName := new(string)
-	if !r.RuleName.IsUnknown() && !r.RuleName.IsNull() {
-		*ruleName = r.RuleName.ValueString()
-	} else {
-		ruleName = nil
+		var dlpProfile1 []string = []string{}
+		for _, dlpProfileItem := range r.RuleData.DlpProfile {
+			dlpProfile1 = append(dlpProfile1, dlpProfileItem.ValueString())
+		}
+		ruleData = &shared.NpaPolicyRuleData{
+			Description:               description,
+			Users:                     users,
+			UserGroups:                userGroups,
+			OrganizationUnits:         organizationUnits,
+			UserType:                  userType,
+			AccessMethod:              accessMethod,
+			PolicyType:                policyType,
+			PrivateApps:               privateApps,
+			PrivateAppIds:             privateAppIds,
+			PrivateAppTags:            privateAppTags,
+			PrivateAppTagIds:          privateAppTagIds,
+			PrivateAppsWithActivities: privateAppsWithActivities,
+			MatchCriteriaAction:       matchCriteriaAction,
+			Os:                        os,
+			Classification:            classification,
+			ShowDlpProfileActionTable: showDlpProfileActionTable,
+			ExternalDlp:               externalDlp,
+			NetLocationObj:            netLocationObj,
+			BNegateNetLocation:        bNegateNetLocation,
+			SrcCountries:              srcCountries,
+			BNegateSrcCountries:       bNegateSrcCountries,
+			JSONVersion:               jsonVersion,
+			Version:                   version,
+			DlpActions:                dlpActions,
+			DlpProfile:                dlpProfile1,
+		}
 	}
 	var ruleOrder *shared.RuleOrder
 	if r.RuleOrder != nil {
-		order := new(shared.NpaPolicyRequestOrder)
+		order := new(shared.Order)
 		if !r.RuleOrder.Order.IsUnknown() && !r.RuleOrder.Order.IsNull() {
-			*order = shared.NpaPolicyRequestOrder(r.RuleOrder.Order.ValueString())
+			*order = shared.Order(r.RuleOrder.Order.ValueString())
 		} else {
 			order = nil
-		}
-		position := new(int64)
-		if !r.RuleOrder.Position.IsUnknown() && !r.RuleOrder.Position.IsNull() {
-			*position = r.RuleOrder.Position.ValueInt64()
-		} else {
-			position = nil
-		}
-		ruleID := new(string)
-		if !r.RuleOrder.RuleID.IsUnknown() && !r.RuleOrder.RuleID.IsNull() {
-			*ruleID = r.RuleOrder.RuleID.ValueString()
-		} else {
-			ruleID = nil
 		}
 		ruleName1 := new(string)
 		if !r.RuleOrder.RuleName.IsUnknown() && !r.RuleOrder.RuleName.IsNull() {
@@ -239,20 +239,43 @@ func (r *NPAPolicyResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyReq
 		} else {
 			ruleName1 = nil
 		}
+		ruleID := new(string)
+		if !r.RuleOrder.RuleID.IsUnknown() && !r.RuleOrder.RuleID.IsNull() {
+			*ruleID = r.RuleOrder.RuleID.ValueString()
+		} else {
+			ruleID = nil
+		}
+		position := new(int64)
+		if !r.RuleOrder.Position.IsUnknown() && !r.RuleOrder.Position.IsNull() {
+			*position = r.RuleOrder.Position.ValueInt64()
+		} else {
+			position = nil
+		}
 		ruleOrder = &shared.RuleOrder{
 			Order:    order,
-			Position: position,
-			RuleID:   ruleID,
 			RuleName: ruleName1,
+			RuleID:   ruleID,
+			Position: position,
 		}
 	}
+	groupName := new(string)
+	if !r.GroupName.IsUnknown() && !r.GroupName.IsNull() {
+		*groupName = r.GroupName.ValueString()
+	} else {
+		groupName = nil
+	}
+	enabled := new(string)
+	if !r.Enabled.IsUnknown() && !r.Enabled.IsNull() {
+		*enabled = r.Enabled.ValueString()
+	} else {
+		enabled = nil
+	}
 	out := shared.NpaPolicyRequest{
-		Description: description,
-		Enabled:     enabled,
-		GroupName:   groupName,
-		RuleData:    ruleData,
-		RuleName:    ruleName,
-		RuleOrder:   ruleOrder,
+		RuleName:  ruleName,
+		RuleData:  ruleData,
+		RuleOrder: ruleOrder,
+		GroupName: groupName,
+		Enabled:   enabled,
 	}
 	return &out
 }
@@ -269,16 +292,26 @@ func (r *NPAPolicyResourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *sh
 			}
 			r.RuleData.BNegateNetLocation = types.BoolPointerValue(resp.RuleData.BNegateNetLocation)
 			r.RuleData.BNegateSrcCountries = types.BoolPointerValue(resp.RuleData.BNegateSrcCountries)
-			r.RuleData.Classification = types.StringPointerValue(resp.RuleData.Classification)
-			r.RuleData.DlpActions = []tfTypes.NpaPolicyRuleDlp{}
+			r.RuleData.Classification = []types.String{}
+			for _, v := range resp.RuleData.Classification {
+				r.RuleData.Classification = append(r.RuleData.Classification, types.StringValue(string(v)))
+			}
+			r.RuleData.Description = types.StringPointerValue(resp.RuleData.Description)
+			r.RuleData.DlpActions = []tfTypes.DlpActions{}
 			if len(r.RuleData.DlpActions) > len(resp.RuleData.DlpActions) {
 				r.RuleData.DlpActions = r.RuleData.DlpActions[:len(resp.RuleData.DlpActions)]
 			}
 			for dlpActionsCount, dlpActionsItem := range resp.RuleData.DlpActions {
-				var dlpActions1 tfTypes.NpaPolicyRuleDlp
-				dlpActions1.Actions = []types.String{}
-				for _, v := range dlpActionsItem.Actions {
-					dlpActions1.Actions = append(dlpActions1.Actions, types.StringValue(string(v)))
+				var dlpActions1 tfTypes.DlpActions
+				dlpActions1.Actions = []tfTypes.Actions{}
+				for actionsCount, actionsItem := range dlpActionsItem.Actions {
+					var actions1 tfTypes.Actions
+					actions1.ActionName = types.StringPointerValue(actionsItem.ActionName)
+					if actionsCount+1 > len(dlpActions1.Actions) {
+						dlpActions1.Actions = append(dlpActions1.Actions, actions1)
+					} else {
+						dlpActions1.Actions[actionsCount].ActionName = actions1.ActionName
+					}
 				}
 				dlpActions1.DlpProfile = types.StringPointerValue(dlpActionsItem.DlpProfile)
 				if dlpActionsCount+1 > len(r.RuleData.DlpActions) {
@@ -287,6 +320,10 @@ func (r *NPAPolicyResourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *sh
 					r.RuleData.DlpActions[dlpActionsCount].Actions = dlpActions1.Actions
 					r.RuleData.DlpActions[dlpActionsCount].DlpProfile = dlpActions1.DlpProfile
 				}
+			}
+			r.RuleData.DlpProfile = []types.String{}
+			for _, v := range resp.RuleData.DlpProfile {
+				r.RuleData.DlpProfile = append(r.RuleData.DlpProfile, types.StringValue(v))
 			}
 			r.RuleData.ExternalDlp = types.BoolPointerValue(resp.RuleData.ExternalDlp)
 			r.RuleData.JSONVersion = types.Int64PointerValue(resp.RuleData.JSONVersion)
@@ -299,6 +336,7 @@ func (r *NPAPolicyResourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *sh
 				} else {
 					r.RuleData.MatchCriteriaAction.ActionName = types.StringNull()
 				}
+				r.RuleData.MatchCriteriaAction.Template = types.StringPointerValue(resp.RuleData.MatchCriteriaAction.Template)
 			}
 			r.RuleData.NetLocationObj = []types.String{}
 			for _, v := range resp.RuleData.NetLocationObj {
@@ -307,6 +345,10 @@ func (r *NPAPolicyResourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *sh
 			r.RuleData.OrganizationUnits = []types.String{}
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
+			}
+			r.RuleData.Os = []types.String{}
+			for _, v := range resp.RuleData.Os {
+				r.RuleData.Os = append(r.RuleData.Os, types.StringValue(v))
 			}
 			if resp.RuleData.PolicyType != nil {
 				r.RuleData.PolicyType = types.StringValue(string(*resp.RuleData.PolicyType))

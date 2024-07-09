@@ -3,16 +3,9 @@
 package shared
 
 type NpaPolicygroupResponseItem struct {
-	CanBeEditedDeleted *string `json:"can_be_edited_deleted,omitempty"`
 	ID                 *string `json:"group_id,omitempty"`
 	GroupName          *string `json:"group_name,omitempty"`
-}
-
-func (o *NpaPolicygroupResponseItem) GetCanBeEditedDeleted() *string {
-	if o == nil {
-		return nil
-	}
-	return o.CanBeEditedDeleted
+	CanBeEditedDeleted *string `json:"can_be_edited_deleted,omitempty"`
 }
 
 func (o *NpaPolicygroupResponseItem) GetID() *string {
@@ -27,4 +20,11 @@ func (o *NpaPolicygroupResponseItem) GetGroupName() *string {
 		return nil
 	}
 	return o.GroupName
+}
+
+func (o *NpaPolicygroupResponseItem) GetCanBeEditedDeleted() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CanBeEditedDeleted
 }

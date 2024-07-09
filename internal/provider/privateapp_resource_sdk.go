@@ -15,35 +15,41 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.PrivateAp
 	} else {
 		appName = nil
 	}
-	clientlessAccess := new(bool)
-	if !r.ClientlessAccess.IsUnknown() && !r.ClientlessAccess.IsNull() {
-		*clientlessAccess = r.ClientlessAccess.ValueBool()
-	} else {
-		clientlessAccess = nil
-	}
 	host := new(string)
 	if !r.Host.IsUnknown() && !r.Host.IsNull() {
 		*host = r.Host.ValueString()
 	} else {
 		host = nil
 	}
+	realHost := new(string)
+	if !r.RealHost.IsUnknown() && !r.RealHost.IsNull() {
+		*realHost = r.RealHost.ValueString()
+	} else {
+		realHost = nil
+	}
+	privateAppProtocol := new(string)
+	if !r.PrivateAppProtocol.IsUnknown() && !r.PrivateAppProtocol.IsNull() {
+		*privateAppProtocol = r.PrivateAppProtocol.ValueString()
+	} else {
+		privateAppProtocol = nil
+	}
 	var protocols []shared.ProtocolItem = []shared.ProtocolItem{}
 	for _, protocolsItem := range r.Protocols {
-		port := new(string)
-		if !protocolsItem.Port.IsUnknown() && !protocolsItem.Port.IsNull() {
-			*port = protocolsItem.Port.ValueString()
-		} else {
-			port = nil
-		}
 		typeVar := new(string)
 		if !protocolsItem.Type.IsUnknown() && !protocolsItem.Type.IsNull() {
 			*typeVar = protocolsItem.Type.ValueString()
 		} else {
 			typeVar = nil
 		}
+		port := new(string)
+		if !protocolsItem.Port.IsUnknown() && !protocolsItem.Port.IsNull() {
+			*port = protocolsItem.Port.ValueString()
+		} else {
+			port = nil
+		}
 		protocols = append(protocols, shared.ProtocolItem{
-			Port: port,
 			Type: typeVar,
+			Port: port,
 		})
 	}
 	var publishers []shared.PublisherItem = []shared.PublisherItem{}
@@ -65,12 +71,6 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.PrivateAp
 			PublisherName: publisherName,
 		})
 	}
-	realHost := new(string)
-	if !r.RealHost.IsUnknown() && !r.RealHost.IsNull() {
-		*realHost = r.RealHost.ValueString()
-	} else {
-		realHost = nil
-	}
 	var tags []shared.TagItemNoID = []shared.TagItemNoID{}
 	for _, tagsItem := range r.Tags {
 		tagName := new(string)
@@ -83,28 +83,35 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.PrivateAp
 			TagName: tagName,
 		})
 	}
-	trustSelfSignedCerts := new(bool)
-	if !r.TrustSelfSignedCerts.IsUnknown() && !r.TrustSelfSignedCerts.IsNull() {
-		*trustSelfSignedCerts = r.TrustSelfSignedCerts.ValueBool()
-	} else {
-		trustSelfSignedCerts = nil
-	}
 	usePublisherDNS := new(bool)
 	if !r.UsePublisherDNS.IsUnknown() && !r.UsePublisherDNS.IsNull() {
 		*usePublisherDNS = r.UsePublisherDNS.ValueBool()
 	} else {
 		usePublisherDNS = nil
 	}
+	clientlessAccess := new(bool)
+	if !r.ClientlessAccess.IsUnknown() && !r.ClientlessAccess.IsNull() {
+		*clientlessAccess = r.ClientlessAccess.ValueBool()
+	} else {
+		clientlessAccess = nil
+	}
+	trustSelfSignedCerts := new(bool)
+	if !r.TrustSelfSignedCerts.IsUnknown() && !r.TrustSelfSignedCerts.IsNull() {
+		*trustSelfSignedCerts = r.TrustSelfSignedCerts.ValueBool()
+	} else {
+		trustSelfSignedCerts = nil
+	}
 	out := shared.PrivateAppsRequest{
 		AppName:              appName,
-		ClientlessAccess:     clientlessAccess,
 		Host:                 host,
+		RealHost:             realHost,
+		PrivateAppProtocol:   privateAppProtocol,
 		Protocols:            protocols,
 		Publishers:           publishers,
-		RealHost:             realHost,
 		Tags:                 tags,
-		TrustSelfSignedCerts: trustSelfSignedCerts,
 		UsePublisherDNS:      usePublisherDNS,
+		ClientlessAccess:     clientlessAccess,
+		TrustSelfSignedCerts: trustSelfSignedCerts,
 	}
 	return &out
 }
@@ -210,17 +217,17 @@ func (r *PrivateAppResourceModel) RefreshFromSharedPrivateAppsResponseData(resp 
 }
 
 func (r *PrivateAppResourceModel) ToSharedPrivateAppsPutRequest() *shared.PrivateAppsPutRequest {
+	id := new(int)
+	if !r.ID.IsUnknown() && !r.ID.IsNull() {
+		*id = int(r.ID.ValueInt64())
+	} else {
+		id = nil
+	}
 	appName := new(string)
 	if !r.AppName.IsUnknown() && !r.AppName.IsNull() {
 		*appName = r.AppName.ValueString()
 	} else {
 		appName = nil
-	}
-	clientlessAccess := new(bool)
-	if !r.ClientlessAccess.IsUnknown() && !r.ClientlessAccess.IsNull() {
-		*clientlessAccess = r.ClientlessAccess.ValueBool()
-	} else {
-		clientlessAccess = nil
 	}
 	host := new(string)
 	if !r.Host.IsUnknown() && !r.Host.IsNull() {
@@ -228,29 +235,29 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsPutRequest() *shared.Privat
 	} else {
 		host = nil
 	}
-	id := new(int)
-	if !r.ID.IsUnknown() && !r.ID.IsNull() {
-		*id = int(r.ID.ValueInt64())
+	realHost := new(string)
+	if !r.RealHost.IsUnknown() && !r.RealHost.IsNull() {
+		*realHost = r.RealHost.ValueString()
 	} else {
-		id = nil
+		realHost = nil
 	}
 	var protocols []shared.ProtocolItem = []shared.ProtocolItem{}
 	for _, protocolsItem := range r.Protocols {
-		port := new(string)
-		if !protocolsItem.Port.IsUnknown() && !protocolsItem.Port.IsNull() {
-			*port = protocolsItem.Port.ValueString()
-		} else {
-			port = nil
-		}
 		typeVar := new(string)
 		if !protocolsItem.Type.IsUnknown() && !protocolsItem.Type.IsNull() {
 			*typeVar = protocolsItem.Type.ValueString()
 		} else {
 			typeVar = nil
 		}
+		port := new(string)
+		if !protocolsItem.Port.IsUnknown() && !protocolsItem.Port.IsNull() {
+			*port = protocolsItem.Port.ValueString()
+		} else {
+			port = nil
+		}
 		protocols = append(protocols, shared.ProtocolItem{
-			Port: port,
 			Type: typeVar,
+			Port: port,
 		})
 	}
 	var publishers []shared.PublisherItem = []shared.PublisherItem{}
@@ -272,12 +279,6 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsPutRequest() *shared.Privat
 			PublisherName: publisherName,
 		})
 	}
-	realHost := new(string)
-	if !r.RealHost.IsUnknown() && !r.RealHost.IsNull() {
-		*realHost = r.RealHost.ValueString()
-	} else {
-		realHost = nil
-	}
 	var tags []shared.TagItemNoID = []shared.TagItemNoID{}
 	for _, tagsItem := range r.Tags {
 		tagName := new(string)
@@ -290,29 +291,35 @@ func (r *PrivateAppResourceModel) ToSharedPrivateAppsPutRequest() *shared.Privat
 			TagName: tagName,
 		})
 	}
-	trustSelfSignedCerts := new(bool)
-	if !r.TrustSelfSignedCerts.IsUnknown() && !r.TrustSelfSignedCerts.IsNull() {
-		*trustSelfSignedCerts = r.TrustSelfSignedCerts.ValueBool()
-	} else {
-		trustSelfSignedCerts = nil
-	}
 	usePublisherDNS := new(bool)
 	if !r.UsePublisherDNS.IsUnknown() && !r.UsePublisherDNS.IsNull() {
 		*usePublisherDNS = r.UsePublisherDNS.ValueBool()
 	} else {
 		usePublisherDNS = nil
 	}
+	clientlessAccess := new(bool)
+	if !r.ClientlessAccess.IsUnknown() && !r.ClientlessAccess.IsNull() {
+		*clientlessAccess = r.ClientlessAccess.ValueBool()
+	} else {
+		clientlessAccess = nil
+	}
+	trustSelfSignedCerts := new(bool)
+	if !r.TrustSelfSignedCerts.IsUnknown() && !r.TrustSelfSignedCerts.IsNull() {
+		*trustSelfSignedCerts = r.TrustSelfSignedCerts.ValueBool()
+	} else {
+		trustSelfSignedCerts = nil
+	}
 	out := shared.PrivateAppsPutRequest{
-		AppName:              appName,
-		ClientlessAccess:     clientlessAccess,
-		Host:                 host,
 		ID:                   id,
+		AppName:              appName,
+		Host:                 host,
+		RealHost:             realHost,
 		Protocols:            protocols,
 		Publishers:           publishers,
-		RealHost:             realHost,
 		Tags:                 tags,
-		TrustSelfSignedCerts: trustSelfSignedCerts,
 		UsePublisherDNS:      usePublisherDNS,
+		ClientlessAccess:     clientlessAccess,
+		TrustSelfSignedCerts: trustSelfSignedCerts,
 	}
 	return &out
 }

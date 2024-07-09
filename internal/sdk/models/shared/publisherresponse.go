@@ -34,30 +34,16 @@ func (e *PublisherResponseStatus) UnmarshalJSON(data []byte) error {
 }
 
 type PublisherResponseData struct {
-	Assessment                any                      `json:"assessment,omitempty"`
-	CommonName                *string                  `json:"common_name,omitempty"`
 	ID                        *int                     `json:"id,omitempty"`
-	Lbrokerconnect            *bool                    `json:"lbrokerconnect,omitempty"`
 	Name                      *string                  `json:"name,omitempty"`
-	PublisherUpgradeProfileID *int                     `json:"publisher_upgrade_profile_id,omitempty"`
+	CommonName                *string                  `json:"common_name,omitempty"`
 	Registered                *bool                    `json:"registered,omitempty"`
-	Status                    *PublisherResponseStatus `json:"status,omitempty"`
+	Lbrokerconnect            *bool                    `json:"lbrokerconnect,omitempty"`
+	Assessment                any                      `json:"assessment,omitempty"`
 	StitcherID                *int                     `json:"stitcher_id,omitempty"`
+	Status                    *PublisherResponseStatus `json:"status,omitempty"`
+	PublisherUpgradeProfileID *int                     `json:"publisher_upgrade_profile_id,omitempty"`
 	Tags                      []TagItem                `json:"tags,omitempty"`
-}
-
-func (o *PublisherResponseData) GetAssessment() any {
-	if o == nil {
-		return nil
-	}
-	return o.Assessment
-}
-
-func (o *PublisherResponseData) GetCommonName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.CommonName
 }
 
 func (o *PublisherResponseData) GetID() *int {
@@ -67,13 +53,6 @@ func (o *PublisherResponseData) GetID() *int {
 	return o.ID
 }
 
-func (o *PublisherResponseData) GetLbrokerconnect() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Lbrokerconnect
-}
-
 func (o *PublisherResponseData) GetName() *string {
 	if o == nil {
 		return nil
@@ -81,11 +60,11 @@ func (o *PublisherResponseData) GetName() *string {
 	return o.Name
 }
 
-func (o *PublisherResponseData) GetPublisherUpgradeProfileID() *int {
+func (o *PublisherResponseData) GetCommonName() *string {
 	if o == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfileID
+	return o.CommonName
 }
 
 func (o *PublisherResponseData) GetRegistered() *bool {
@@ -95,11 +74,18 @@ func (o *PublisherResponseData) GetRegistered() *bool {
 	return o.Registered
 }
 
-func (o *PublisherResponseData) GetStatus() *PublisherResponseStatus {
+func (o *PublisherResponseData) GetLbrokerconnect() *bool {
 	if o == nil {
 		return nil
 	}
-	return o.Status
+	return o.Lbrokerconnect
+}
+
+func (o *PublisherResponseData) GetAssessment() any {
+	if o == nil {
+		return nil
+	}
+	return o.Assessment
 }
 
 func (o *PublisherResponseData) GetStitcherID() *int {
@@ -107,6 +93,20 @@ func (o *PublisherResponseData) GetStitcherID() *int {
 		return nil
 	}
 	return o.StitcherID
+}
+
+func (o *PublisherResponseData) GetStatus() *PublisherResponseStatus {
+	if o == nil {
+		return nil
+	}
+	return o.Status
+}
+
+func (o *PublisherResponseData) GetPublisherUpgradeProfileID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherUpgradeProfileID
 }
 
 func (o *PublisherResponseData) GetTags() []TagItem {

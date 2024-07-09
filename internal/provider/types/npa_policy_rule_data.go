@@ -8,13 +8,16 @@ type NpaPolicyRuleData struct {
 	AccessMethod              []types.String              `tfsdk:"access_method"`
 	BNegateNetLocation        types.Bool                  `tfsdk:"b_negate_net_location"`
 	BNegateSrcCountries       types.Bool                  `tfsdk:"b_negate_src_countries"`
-	Classification            types.String                `tfsdk:"classification"`
-	DlpActions                []NpaPolicyRuleDlp          `tfsdk:"dlp_actions"`
+	Classification            []types.String              `tfsdk:"classification"`
+	Description               types.String                `tfsdk:"description"`
+	DlpActions                []DlpActions                `tfsdk:"dlp_actions"`
+	DlpProfile                []types.String              `tfsdk:"dlp_profile"`
 	ExternalDlp               types.Bool                  `tfsdk:"external_dlp"`
 	JSONVersion               types.Int64                 `tfsdk:"json_version"`
 	MatchCriteriaAction       *MatchCriteriaAction        `tfsdk:"match_criteria_action"`
 	NetLocationObj            []types.String              `tfsdk:"net_location_obj"`
 	OrganizationUnits         []types.String              `tfsdk:"organization_units"`
+	Os                        []types.String              `tfsdk:"os"`
 	PolicyType                types.String                `tfsdk:"policy_type"`
 	PrivateAppIds             []types.String              `tfsdk:"private_app_ids"`
 	PrivateApps               []types.String              `tfsdk:"private_apps"`

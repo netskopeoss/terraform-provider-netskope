@@ -20,16 +20,26 @@ func (r *NPAPolicyDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *
 			}
 			r.RuleData.BNegateNetLocation = types.BoolPointerValue(resp.RuleData.BNegateNetLocation)
 			r.RuleData.BNegateSrcCountries = types.BoolPointerValue(resp.RuleData.BNegateSrcCountries)
-			r.RuleData.Classification = types.StringPointerValue(resp.RuleData.Classification)
-			r.RuleData.DlpActions = []tfTypes.NpaPolicyRuleDlp{}
+			r.RuleData.Classification = []types.String{}
+			for _, v := range resp.RuleData.Classification {
+				r.RuleData.Classification = append(r.RuleData.Classification, types.StringValue(string(v)))
+			}
+			r.RuleData.Description = types.StringPointerValue(resp.RuleData.Description)
+			r.RuleData.DlpActions = []tfTypes.DlpActions{}
 			if len(r.RuleData.DlpActions) > len(resp.RuleData.DlpActions) {
 				r.RuleData.DlpActions = r.RuleData.DlpActions[:len(resp.RuleData.DlpActions)]
 			}
 			for dlpActionsCount, dlpActionsItem := range resp.RuleData.DlpActions {
-				var dlpActions1 tfTypes.NpaPolicyRuleDlp
-				dlpActions1.Actions = []types.String{}
-				for _, v := range dlpActionsItem.Actions {
-					dlpActions1.Actions = append(dlpActions1.Actions, types.StringValue(string(v)))
+				var dlpActions1 tfTypes.DlpActions
+				dlpActions1.Actions = []tfTypes.Actions{}
+				for actionsCount, actionsItem := range dlpActionsItem.Actions {
+					var actions1 tfTypes.Actions
+					actions1.ActionName = types.StringPointerValue(actionsItem.ActionName)
+					if actionsCount+1 > len(dlpActions1.Actions) {
+						dlpActions1.Actions = append(dlpActions1.Actions, actions1)
+					} else {
+						dlpActions1.Actions[actionsCount].ActionName = actions1.ActionName
+					}
 				}
 				dlpActions1.DlpProfile = types.StringPointerValue(dlpActionsItem.DlpProfile)
 				if dlpActionsCount+1 > len(r.RuleData.DlpActions) {
@@ -38,6 +48,10 @@ func (r *NPAPolicyDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *
 					r.RuleData.DlpActions[dlpActionsCount].Actions = dlpActions1.Actions
 					r.RuleData.DlpActions[dlpActionsCount].DlpProfile = dlpActions1.DlpProfile
 				}
+			}
+			r.RuleData.DlpProfile = []types.String{}
+			for _, v := range resp.RuleData.DlpProfile {
+				r.RuleData.DlpProfile = append(r.RuleData.DlpProfile, types.StringValue(v))
 			}
 			r.RuleData.ExternalDlp = types.BoolPointerValue(resp.RuleData.ExternalDlp)
 			r.RuleData.JSONVersion = types.Int64PointerValue(resp.RuleData.JSONVersion)
@@ -50,6 +64,7 @@ func (r *NPAPolicyDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *
 				} else {
 					r.RuleData.MatchCriteriaAction.ActionName = types.StringNull()
 				}
+				r.RuleData.MatchCriteriaAction.Template = types.StringPointerValue(resp.RuleData.MatchCriteriaAction.Template)
 			}
 			r.RuleData.NetLocationObj = []types.String{}
 			for _, v := range resp.RuleData.NetLocationObj {
@@ -58,6 +73,10 @@ func (r *NPAPolicyDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *
 			r.RuleData.OrganizationUnits = []types.String{}
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
+			}
+			r.RuleData.Os = []types.String{}
+			for _, v := range resp.RuleData.Os {
+				r.RuleData.Os = append(r.RuleData.Os, types.StringValue(v))
 			}
 			if resp.RuleData.PolicyType != nil {
 				r.RuleData.PolicyType = types.StringValue(string(*resp.RuleData.PolicyType))

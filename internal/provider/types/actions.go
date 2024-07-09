@@ -4,7 +4,6 @@ package types
 
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
-type NpaPolicyRuleDlp struct {
-	Actions    []types.String `tfsdk:"actions"`
-	DlpProfile types.String   `tfsdk:"dlp_profile"`
+type Actions struct {
+	ActionName types.String `tfsdk:"action_name"`
 }

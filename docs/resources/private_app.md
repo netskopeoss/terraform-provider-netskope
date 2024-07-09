@@ -14,10 +14,11 @@ PrivateApp Resource
 
 ```terraform
 resource "ns_private_app" "my_privateapp" {
-  app_name          = "...my_app_name..."
-  clientless_access = false
-  host              = "...my_host..."
-  private_app_id    = 1
+  app_name             = "...my_app_name..."
+  clientless_access    = false
+  host                 = "...my_host..."
+  private_app_id       = 1
+  private_app_protocol = "...my_private_app_protocol..."
   protocols = [
     {
       port = "...my_port..."
@@ -44,6 +45,7 @@ resource "ns_private_app" "my_privateapp" {
 - `app_name` (String)
 - `clientless_access` (Boolean)
 - `host` (String)
+- `private_app_protocol` (String) Requires replacement if changed.
 - `protocols` (Attributes List) (see [below for nested schema](#nestedatt--protocols))
 - `publishers` (Attributes List) (see [below for nested schema](#nestedatt--publishers))
 - `real_host` (String)

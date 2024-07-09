@@ -3,15 +3,8 @@
 package shared
 
 type NpaPolicyResponse400 struct {
-	Result *string `json:"result,omitempty"`
 	Status *int64  `json:"status,omitempty"`
-}
-
-func (o *NpaPolicyResponse400) GetResult() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Result
+	Result *string `json:"result,omitempty"`
 }
 
 func (o *NpaPolicyResponse400) GetStatus() *int64 {
@@ -19,4 +12,11 @@ func (o *NpaPolicyResponse400) GetStatus() *int64 {
 		return nil
 	}
 	return o.Status
+}
+
+func (o *NpaPolicyResponse400) GetResult() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Result
 }

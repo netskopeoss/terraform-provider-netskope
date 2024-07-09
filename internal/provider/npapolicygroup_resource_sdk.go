@@ -9,11 +9,11 @@ import (
 
 func (r *NPAPolicyGroupResourceModel) ToSharedNpaPolicygroupRequest() *shared.NpaPolicygroupRequest {
 	groupName := r.GroupName.ValueString()
+	order := shared.NpaPolicygroupRequestOrder(r.GroupOrder.Order.ValueString())
 	groupID := r.GroupOrder.GroupID.ValueString()
-	order := shared.Order(r.GroupOrder.Order.ValueString())
 	groupOrder := shared.GroupOrder{
-		GroupID: groupID,
 		Order:   order,
+		GroupID: groupID,
 	}
 	out := shared.NpaPolicygroupRequest{
 		GroupName:  groupName,
@@ -38,21 +38,21 @@ func (r *NPAPolicyGroupResourceModel) ToSharedNpaPolicygroupPatchRequest() *shar
 		groupName = nil
 	}
 	var groupOrder *shared.NpaPolicygroupPatchRequestGroupOrder
-	groupID := new(string)
-	if !r.GroupOrder.GroupID.IsUnknown() && !r.GroupOrder.GroupID.IsNull() {
-		*groupID = r.GroupOrder.GroupID.ValueString()
-	} else {
-		groupID = nil
-	}
 	order := new(shared.NpaPolicygroupPatchRequestOrder)
 	if !r.GroupOrder.Order.IsUnknown() && !r.GroupOrder.Order.IsNull() {
 		*order = shared.NpaPolicygroupPatchRequestOrder(r.GroupOrder.Order.ValueString())
 	} else {
 		order = nil
 	}
+	groupID := new(string)
+	if !r.GroupOrder.GroupID.IsUnknown() && !r.GroupOrder.GroupID.IsNull() {
+		*groupID = r.GroupOrder.GroupID.ValueString()
+	} else {
+		groupID = nil
+	}
 	groupOrder = &shared.NpaPolicygroupPatchRequestGroupOrder{
-		GroupID: groupID,
 		Order:   order,
+		GroupID: groupID,
 	}
 	out := shared.NpaPolicygroupPatchRequest{
 		GroupName:  groupName,

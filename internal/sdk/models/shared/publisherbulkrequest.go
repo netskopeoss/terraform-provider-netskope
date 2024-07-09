@@ -29,15 +29,8 @@ func (o *Apply) GetUpgradeRequest() *bool {
 }
 
 type Publishers struct {
-	Apply *Apply   `json:"apply,omitempty"`
 	ID    []string `json:"id,omitempty"`
-}
-
-func (o *Publishers) GetApply() *Apply {
-	if o == nil {
-		return nil
-	}
-	return o.Apply
+	Apply *Apply   `json:"apply,omitempty"`
 }
 
 func (o *Publishers) GetID() []string {
@@ -45,6 +38,13 @@ func (o *Publishers) GetID() []string {
 		return nil
 	}
 	return o.ID
+}
+
+func (o *Publishers) GetApply() *Apply {
+	if o == nil {
+		return nil
+	}
+	return o.Apply
 }
 
 type PublisherBulkRequest struct {

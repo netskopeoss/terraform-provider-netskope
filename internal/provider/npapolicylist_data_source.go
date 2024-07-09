@@ -65,22 +65,36 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 								"b_negate_src_countries": schema.BoolAttribute{
 									Computed: true,
 								},
-								"classification": schema.StringAttribute{
+								"classification": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"description": schema.StringAttribute{
 									Computed: true,
 								},
 								"dlp_actions": schema.ListNestedAttribute{
 									Computed: true,
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: map[string]schema.Attribute{
-											"actions": schema.ListAttribute{
-												Computed:    true,
-												ElementType: types.StringType,
+											"actions": schema.ListNestedAttribute{
+												Computed: true,
+												NestedObject: schema.NestedAttributeObject{
+													Attributes: map[string]schema.Attribute{
+														"action_name": schema.StringAttribute{
+															Computed: true,
+														},
+													},
+												},
 											},
 											"dlp_profile": schema.StringAttribute{
 												Computed: true,
 											},
 										},
 									},
+								},
+								"dlp_profile": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
 								},
 								"external_dlp": schema.BoolAttribute{
 									Computed: true,
@@ -95,6 +109,9 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 											Computed:    true,
 											Description: `must be one of ["allow", "block"]`,
 										},
+										"template": schema.StringAttribute{
+											Computed: true,
+										},
 									},
 								},
 								"net_location_obj": schema.ListAttribute{
@@ -102,6 +119,10 @@ func (r *NPAPolicyListDataSource) Schema(ctx context.Context, req datasource.Sch
 									ElementType: types.StringType,
 								},
 								"organization_units": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"os": schema.ListAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
 								},

@@ -11,6 +11,10 @@ import (
 func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *shared.PublisherBulkRequest {
 	var publishers *shared.Publishers
 	if r.Publishers != nil {
+		var id []string = []string{}
+		for _, idItem := range r.Publishers.ID {
+			id = append(id, idItem.ValueString())
+		}
 		var apply *shared.Apply
 		if r.Publishers.Apply != nil {
 			upgradeRequest := new(bool)
@@ -23,13 +27,9 @@ func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *
 				UpgradeRequest: upgradeRequest,
 			}
 		}
-		var id []string = []string{}
-		for _, idItem := range r.Publishers.ID {
-			id = append(id, idItem.ValueString())
-		}
 		publishers = &shared.Publishers{
-			Apply: apply,
 			ID:    id,
+			Apply: apply,
 		}
 	}
 	out := shared.PublisherBulkRequest{

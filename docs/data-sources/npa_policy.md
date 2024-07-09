@@ -35,13 +35,16 @@ Read-Only:
 - `access_method` (List of String)
 - `b_negate_net_location` (Boolean)
 - `b_negate_src_countries` (Boolean)
-- `classification` (String)
+- `classification` (List of String)
+- `description` (String)
 - `dlp_actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--dlp_actions))
+- `dlp_profile` (List of String)
 - `external_dlp` (Boolean)
 - `json_version` (Number)
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
 - `net_location_obj` (List of String)
 - `organization_units` (List of String)
+- `os` (List of String)
 - `policy_type` (String) must be one of ["private-app"]
 - `private_app_ids` (List of String)
 - `private_app_tag_ids` (List of String)
@@ -60,8 +63,16 @@ Read-Only:
 
 Read-Only:
 
-- `actions` (List of String)
+- `actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--dlp_actions--actions))
 - `dlp_profile` (String)
+
+<a id="nestedatt--rule_data--dlp_actions--actions"></a>
+### Nested Schema for `rule_data.dlp_actions.actions`
+
+Read-Only:
+
+- `action_name` (String)
+
 
 
 <a id="nestedatt--rule_data--match_criteria_action"></a>
@@ -70,6 +81,7 @@ Read-Only:
 Read-Only:
 
 - `action_name` (String) must be one of ["allow", "block"]
+- `template` (String)
 
 
 <a id="nestedatt--rule_data--private_apps_with_activities"></a>

@@ -7,17 +7,17 @@ import (
 	"fmt"
 )
 
-type Order string
+type NpaPolicygroupRequestOrder string
 
 const (
-	OrderBefore Order = "before"
-	OrderAfter  Order = "after"
+	NpaPolicygroupRequestOrderBefore NpaPolicygroupRequestOrder = "before"
+	NpaPolicygroupRequestOrderAfter  NpaPolicygroupRequestOrder = "after"
 )
 
-func (e Order) ToPointer() *Order {
+func (e NpaPolicygroupRequestOrder) ToPointer() *NpaPolicygroupRequestOrder {
 	return &e
 }
-func (e *Order) UnmarshalJSON(data []byte) error {
+func (e *NpaPolicygroupRequestOrder) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -26,16 +26,23 @@ func (e *Order) UnmarshalJSON(data []byte) error {
 	case "before":
 		fallthrough
 	case "after":
-		*e = Order(v)
+		*e = NpaPolicygroupRequestOrder(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for Order: %v", v)
+		return fmt.Errorf("invalid value for NpaPolicygroupRequestOrder: %v", v)
 	}
 }
 
 type GroupOrder struct {
-	GroupID string `json:"group_id"`
-	Order   Order  `json:"order"`
+	Order   NpaPolicygroupRequestOrder `json:"order"`
+	GroupID string                     `json:"group_id"`
+}
+
+func (o *GroupOrder) GetOrder() NpaPolicygroupRequestOrder {
+	if o == nil {
+		return NpaPolicygroupRequestOrder("")
+	}
+	return o.Order
 }
 
 func (o *GroupOrder) GetGroupID() string {
@@ -43,13 +50,6 @@ func (o *GroupOrder) GetGroupID() string {
 		return ""
 	}
 	return o.GroupID
-}
-
-func (o *GroupOrder) GetOrder() Order {
-	if o == nil {
-		return Order("")
-	}
-	return o.Order
 }
 
 type NpaPolicygroupRequest struct {
