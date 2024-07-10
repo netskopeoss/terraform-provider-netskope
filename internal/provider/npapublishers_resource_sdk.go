@@ -65,20 +65,15 @@ func (r *NPAPublishersResourceModel) RefreshFromSharedPublisherResponseData(resp
 	}
 }
 
-func (r *NPAPublishersResourceModel) ToSharedPublisherPutRequest() *shared.PublisherPutRequest {
-	name := new(string)
-	if !r.Name.IsUnknown() && !r.Name.IsNull() {
-		*name = r.Name.ValueString()
-	} else {
-		name = nil
-	}
+func (r *NPAPublishersResourceModel) ToSharedPublisherPatchRequest() *shared.PublisherPatchRequest {
+	name := r.Name.ValueString()
 	lbrokerconnect := new(bool)
 	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
 		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
 	} else {
 		lbrokerconnect = nil
 	}
-	out := shared.PublisherPutRequest{
+	out := shared.PublisherPatchRequest{
 		Name:           name,
 		Lbrokerconnect: lbrokerconnect,
 	}
