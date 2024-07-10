@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: 8dbb1c46ca870fd418e56a9b756c58ee
+  docChecksum: 38e32bf118dc4b2a9a54824f233de908
   docVersion: 1.0.0
   speakeasyVersion: 1.330.0
   generationVersion: 2.361.10
-  releaseVersion: 0.7.29
-  configChecksum: 7ea00f9a1737d69f581a68976886450f
+  releaseVersion: 0.7.61
+  configChecksum: 36e80972f98b3c9d7a8335f41b7be6d2
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -75,7 +75,6 @@ generatedFiles:
   - internal/sdk/models/operations/getnpapublisherobjects.go
   - internal/sdk/models/shared/publishersresponse400.go
   - internal/sdk/models/shared/publisherresponse.go
-  - internal/sdk/models/shared/tagitem.go
   - internal/sdk/models/shared/publisherputrequest.go
   - internal/sdk/models/shared/publishersbulkresponse.go
   - internal/sdk/models/shared/publisherbulkitem.go
@@ -96,6 +95,7 @@ generatedFiles:
   - internal/sdk/models/shared/privateappsgetresponse.go
   - internal/sdk/models/shared/privateappsresponse.go
   - internal/sdk/models/shared/servicepublisherassignmentitem.go
+  - internal/sdk/models/shared/tagitem.go
   - internal/sdk/models/shared/protocolresponseitem.go
   - internal/sdk/models/shared/privateappsrequest.go
   - internal/sdk/models/shared/tagitemnoid.go
@@ -173,7 +173,6 @@ generatedFiles:
   - internal/provider/types/npa_policy_rule_data.go
   - internal/provider/types/rule_order.go
   - internal/provider/types/group_order.go
-  - internal/provider/types/tag_item.go
   - internal/provider/types/publishers_alert_get_response_data.go
   - internal/provider/types/publisher_bulk_item_assessment.go
   - internal/provider/types/publisher_bulk_item.go
@@ -184,6 +183,7 @@ generatedFiles:
   - internal/provider/types/protocol_response_item.go
   - internal/provider/types/reachability.go
   - internal/provider/types/service_publisher_assignment_item.go
+  - internal/provider/types/tag_item.go
   - internal/provider/types/npa_policy_response_item.go
   - internal/provider/types/publisher_apps_list_response_data.go
   - internal/provider/types/assessment.go

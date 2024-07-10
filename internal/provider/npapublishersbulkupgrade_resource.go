@@ -87,19 +87,6 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 						"stitcher_id": schema.Int64Attribute{
 							Computed: true,
 						},
-						"tags": schema.ListNestedAttribute{
-							Computed: true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"tag_id": schema.Int64Attribute{
-										Computed: true,
-									},
-									"tag_name": schema.StringAttribute{
-										Computed: true,
-									},
-								},
-							},
-						},
 						"upgrade_failed_reason": schema.SingleNestedAttribute{
 							Computed:   true,
 							Attributes: map[string]schema.Attribute{},

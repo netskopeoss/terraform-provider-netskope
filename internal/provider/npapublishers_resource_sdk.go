@@ -5,34 +5,16 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
 func (r *NPAPublishersResourceModel) ToSharedPublisherPostRequest() *shared.PublisherPostRequest {
-	name := new(string)
-	if !r.Name.IsUnknown() && !r.Name.IsNull() {
-		*name = r.Name.ValueString()
-	} else {
-		name = nil
-	}
+	name := r.Name.ValueString()
 	lbrokerconnect := new(bool)
 	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
 		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
 	} else {
 		lbrokerconnect = nil
-	}
-	var tags []shared.TagItemNoID = []shared.TagItemNoID{}
-	for _, tagsItem := range r.Tags {
-		tagName := new(string)
-		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
-			*tagName = tagsItem.TagName.ValueString()
-		} else {
-			tagName = nil
-		}
-		tags = append(tags, shared.TagItemNoID{
-			TagName: tagName,
-		})
 	}
 	publisherUpgradeProfilesID := new(int)
 	if !r.PublisherUpgradeProfilesID.IsUnknown() && !r.PublisherUpgradeProfilesID.IsNull() {
@@ -43,7 +25,6 @@ func (r *NPAPublishersResourceModel) ToSharedPublisherPostRequest() *shared.Publ
 	out := shared.PublisherPostRequest{
 		Name:                       name,
 		Lbrokerconnect:             lbrokerconnect,
-		Tags:                       tags,
 		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
 	}
 	return &out
@@ -58,13 +39,13 @@ func (r *NPAPublishersResourceModel) RefreshFromSharedPublisherResponseData(resp
 			r.Assessment = types.StringValue(string(assessmentResult))
 		}
 		r.CommonName = types.StringPointerValue(resp.CommonName)
-		if resp.ID != nil {
-			r.ID = types.Int64Value(int64(*resp.ID))
-		} else {
-			r.ID = types.Int64Null()
-		}
 		r.Lbrokerconnect = types.BoolPointerValue(resp.Lbrokerconnect)
 		r.Name = types.StringPointerValue(resp.Name)
+		if resp.PublisherID != nil {
+			r.PublisherID = types.Int64Value(int64(*resp.PublisherID))
+		} else {
+			r.PublisherID = types.Int64Null()
+		}
 		if resp.PublisherUpgradeProfileID != nil {
 			r.PublisherUpgradeProfileID = types.Int64Value(int64(*resp.PublisherUpgradeProfileID))
 		} else {
@@ -81,25 +62,6 @@ func (r *NPAPublishersResourceModel) RefreshFromSharedPublisherResponseData(resp
 		} else {
 			r.StitcherID = types.Int64Null()
 		}
-		r.Tags = []tfTypes.TagItem{}
-		if len(r.Tags) > len(resp.Tags) {
-			r.Tags = r.Tags[:len(resp.Tags)]
-		}
-		for tagsCount, tagsItem := range resp.Tags {
-			var tags1 tfTypes.TagItem
-			if tagsItem.TagID != nil {
-				tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
-			} else {
-				tags1.TagID = types.Int64Null()
-			}
-			tags1.TagName = types.StringPointerValue(tagsItem.TagName)
-			if tagsCount+1 > len(r.Tags) {
-				r.Tags = append(r.Tags, tags1)
-			} else {
-				r.Tags[tagsCount].TagID = tags1.TagID
-				r.Tags[tagsCount].TagName = tags1.TagName
-			}
-		}
 	}
 }
 
@@ -110,42 +72,15 @@ func (r *NPAPublishersResourceModel) ToSharedPublisherPutRequest() *shared.Publi
 	} else {
 		name = nil
 	}
-	id := new(int)
-	if !r.ID.IsUnknown() && !r.ID.IsNull() {
-		*id = int(r.ID.ValueInt64())
-	} else {
-		id = nil
-	}
 	lbrokerconnect := new(bool)
 	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
 		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
 	} else {
 		lbrokerconnect = nil
 	}
-	var tags []shared.TagItem = []shared.TagItem{}
-	for _, tagsItem := range r.Tags {
-		tagID := new(int)
-		if !tagsItem.TagID.IsUnknown() && !tagsItem.TagID.IsNull() {
-			*tagID = int(tagsItem.TagID.ValueInt64())
-		} else {
-			tagID = nil
-		}
-		tagName := new(string)
-		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
-			*tagName = tagsItem.TagName.ValueString()
-		} else {
-			tagName = nil
-		}
-		tags = append(tags, shared.TagItem{
-			TagID:   tagID,
-			TagName: tagName,
-		})
-	}
 	out := shared.PublisherPutRequest{
 		Name:           name,
-		ID:             id,
 		Lbrokerconnect: lbrokerconnect,
-		Tags:           tags,
 	}
 	return &out
 }

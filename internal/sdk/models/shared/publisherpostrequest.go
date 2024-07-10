@@ -6,11 +6,14 @@ import (
 	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/utils"
 )
 
+// PublisherPostRequest - The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
 type PublisherPostRequest struct {
-	Name                       *string       `default:"publisher_name" json:"name"`
-	Lbrokerconnect             *bool         `default:"false" json:"lbrokerconnect"`
-	Tags                       []TagItemNoID `json:"tags,omitempty"`
-	PublisherUpgradeProfilesID *int          `default:"1" json:"publisher_upgrade_profiles_id"`
+	Name                       string `json:"name"`
+	Lbrokerconnect             *bool  `default:"false" json:"lbrokerconnect"`
+	PublisherUpgradeProfilesID *int   `default:"1" json:"publisher_upgrade_profiles_id"`
 }
 
 func (p PublisherPostRequest) MarshalJSON() ([]byte, error) {
@@ -24,9 +27,9 @@ func (p *PublisherPostRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *PublisherPostRequest) GetName() *string {
+func (o *PublisherPostRequest) GetName() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.Name
 }
@@ -36,13 +39,6 @@ func (o *PublisherPostRequest) GetLbrokerconnect() *bool {
 		return nil
 	}
 	return o.Lbrokerconnect
-}
-
-func (o *PublisherPostRequest) GetTags() []TagItemNoID {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
 }
 
 func (o *PublisherPostRequest) GetPublisherUpgradeProfilesID() *int {

@@ -68,22 +68,12 @@ Read-Only:
 - `registered` (Boolean)
 - `status` (String) must be one of ["connected", "not registered"]
 - `stitcher_id` (Number)
-- `tags` (Attributes List) (see [below for nested schema](#nestedatt--data--tags))
 - `upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--data--upgrade_failed_reason))
 - `upgrade_request` (Boolean)
 - `upgrade_status` (Attributes) (see [below for nested schema](#nestedatt--data--upgrade_status))
 
 <a id="nestedatt--data--assessment"></a>
 ### Nested Schema for `data.assessment`
-
-
-<a id="nestedatt--data--tags"></a>
-### Nested Schema for `data.tags`
-
-Read-Only:
-
-- `tag_id` (Number)
-- `tag_name` (String)
 
 
 <a id="nestedatt--data--upgrade_failed_reason"></a>

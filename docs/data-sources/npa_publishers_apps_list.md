@@ -14,7 +14,7 @@ NPAPublishersAppsList DataSource
 
 ```terraform
 data "ns_npa_publishers_apps_list" "my_npapublishersappslist" {
-  publisher_id = 1
+  publisher_id = 9
 }
 ```
 
@@ -42,7 +42,6 @@ Read-Only:
 - `protocols` (Attributes List) (see [below for nested schema](#nestedatt--data--protocols))
 - `real_host` (String)
 - `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--data--service_publisher_assignments))
-- `tags` (Attributes List) (see [below for nested schema](#nestedatt--data--tags))
 - `trust_self_signed_certs` (Boolean)
 - `use_publisher_dns` (Boolean)
 
@@ -75,15 +74,5 @@ Read-Only:
 - `error_code` (Number)
 - `error_string` (String)
 - `reachable` (Boolean)
-
-
-
-<a id="nestedatt--data--tags"></a>
-### Nested Schema for `data.tags`
-
-Read-Only:
-
-- `tag_id` (Number)
-- `tag_name` (String)
 
 

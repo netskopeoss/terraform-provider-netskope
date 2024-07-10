@@ -5,7 +5,6 @@ package provider
 import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
@@ -18,13 +17,13 @@ func (r *NPAPublishersDataSourceModel) RefreshFromSharedPublisherResponseData(re
 			r.Assessment = types.StringValue(string(assessmentResult))
 		}
 		r.CommonName = types.StringPointerValue(resp.CommonName)
-		if resp.ID != nil {
-			r.ID = types.Int64Value(int64(*resp.ID))
-		} else {
-			r.ID = types.Int64Null()
-		}
 		r.Lbrokerconnect = types.BoolPointerValue(resp.Lbrokerconnect)
 		r.Name = types.StringPointerValue(resp.Name)
+		if resp.PublisherID != nil {
+			r.PublisherID = types.Int64Value(int64(*resp.PublisherID))
+		} else {
+			r.PublisherID = types.Int64Null()
+		}
 		if resp.PublisherUpgradeProfileID != nil {
 			r.PublisherUpgradeProfileID = types.Int64Value(int64(*resp.PublisherUpgradeProfileID))
 		} else {
@@ -40,25 +39,6 @@ func (r *NPAPublishersDataSourceModel) RefreshFromSharedPublisherResponseData(re
 			r.StitcherID = types.Int64Value(int64(*resp.StitcherID))
 		} else {
 			r.StitcherID = types.Int64Null()
-		}
-		r.Tags = []tfTypes.TagItem{}
-		if len(r.Tags) > len(resp.Tags) {
-			r.Tags = r.Tags[:len(resp.Tags)]
-		}
-		for tagsCount, tagsItem := range resp.Tags {
-			var tags1 tfTypes.TagItem
-			if tagsItem.TagID != nil {
-				tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
-			} else {
-				tags1.TagID = types.Int64Null()
-			}
-			tags1.TagName = types.StringPointerValue(tagsItem.TagName)
-			if tagsCount+1 > len(r.Tags) {
-				r.Tags = append(r.Tags, tags1)
-			} else {
-				r.Tags[tagsCount].TagID = tags1.TagID
-				r.Tags[tagsCount].TagName = tags1.TagName
-			}
 		}
 	}
 }

@@ -14,7 +14,6 @@ type PublisherBulkItem struct {
 	Registered                types.Bool                   `tfsdk:"registered"`
 	Status                    types.String                 `tfsdk:"status"`
 	StitcherID                types.Int64                  `tfsdk:"stitcher_id"`
-	Tags                      []TagItem                    `tfsdk:"tags"`
 	UpgradeFailedReason       *PublisherBulkItemAssessment `tfsdk:"upgrade_failed_reason"`
 	UpgradeRequest            types.Bool                   `tfsdk:"upgrade_request"`
 	UpgradeStatus             *PublisherBulkItemAssessment `tfsdk:"upgrade_status"`

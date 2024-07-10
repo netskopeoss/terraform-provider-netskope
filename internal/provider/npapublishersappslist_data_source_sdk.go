@@ -84,22 +84,6 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].ServiceID = servicePublisherAssignments1.ServiceID
 				}
 			}
-			data1.Tags = []tfTypes.TagItem{}
-			for tagsCount, tagsItem := range dataItem.Tags {
-				var tags1 tfTypes.TagItem
-				if tagsItem.TagID != nil {
-					tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
-				} else {
-					tags1.TagID = types.Int64Null()
-				}
-				tags1.TagName = types.StringPointerValue(tagsItem.TagName)
-				if tagsCount+1 > len(data1.Tags) {
-					data1.Tags = append(data1.Tags, tags1)
-				} else {
-					data1.Tags[tagsCount].TagID = tags1.TagID
-					data1.Tags[tagsCount].TagName = tags1.TagName
-				}
-			}
 			data1.TrustSelfSignedCerts = types.BoolPointerValue(dataItem.TrustSelfSignedCerts)
 			data1.UsePublisherDNS = types.BoolPointerValue(dataItem.UsePublisherDNS)
 			if dataCount+1 > len(r.Data) {
@@ -112,7 +96,6 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 				r.Data[dataCount].Protocols = data1.Protocols
 				r.Data[dataCount].RealHost = data1.RealHost
 				r.Data[dataCount].ServicePublisherAssignments = data1.ServicePublisherAssignments
-				r.Data[dataCount].Tags = data1.Tags
 				r.Data[dataCount].TrustSelfSignedCerts = data1.TrustSelfSignedCerts
 				r.Data[dataCount].UsePublisherDNS = data1.UsePublisherDNS
 			}

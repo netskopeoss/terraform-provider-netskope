@@ -42,7 +42,6 @@ type PublisherAppsListResponseData struct {
 	Host                        *string                          `json:"host,omitempty"`
 	RealHost                    *string                          `json:"real_host,omitempty"`
 	Protocols                   []ProtocolResponseItem           `json:"protocols,omitempty"`
-	Tags                        []TagItem                        `json:"tags,omitempty"`
 	ServicePublisherAssignments []ServicePublisherAssignmentItem `json:"service_publisher_assignments,omitempty"`
 }
 
@@ -100,13 +99,6 @@ func (o *PublisherAppsListResponseData) GetProtocols() []ProtocolResponseItem {
 		return nil
 	}
 	return o.Protocols
-}
-
-func (o *PublisherAppsListResponseData) GetTags() []TagItem {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
 }
 
 func (o *PublisherAppsListResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {

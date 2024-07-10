@@ -34,7 +34,7 @@ func (e *PublisherResponseStatus) UnmarshalJSON(data []byte) error {
 }
 
 type PublisherResponseData struct {
-	ID                        *int                     `json:"id,omitempty"`
+	PublisherID               *int                     `json:"id,omitempty"`
 	Name                      *string                  `json:"name,omitempty"`
 	CommonName                *string                  `json:"common_name,omitempty"`
 	Registered                *bool                    `json:"registered,omitempty"`
@@ -43,14 +43,13 @@ type PublisherResponseData struct {
 	StitcherID                *int                     `json:"stitcher_id,omitempty"`
 	Status                    *PublisherResponseStatus `json:"status,omitempty"`
 	PublisherUpgradeProfileID *int                     `json:"publisher_upgrade_profile_id,omitempty"`
-	Tags                      []TagItem                `json:"tags,omitempty"`
 }
 
-func (o *PublisherResponseData) GetID() *int {
+func (o *PublisherResponseData) GetPublisherID() *int {
 	if o == nil {
 		return nil
 	}
-	return o.ID
+	return o.PublisherID
 }
 
 func (o *PublisherResponseData) GetName() *string {
@@ -107,13 +106,6 @@ func (o *PublisherResponseData) GetPublisherUpgradeProfileID() *int {
 		return nil
 	}
 	return o.PublisherUpgradeProfileID
-}
-
-func (o *PublisherResponseData) GetTags() []TagItem {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
 }
 
 type PublisherResponse struct {

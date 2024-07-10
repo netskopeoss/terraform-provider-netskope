@@ -13,11 +13,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 	"github.com/netskope/terraform-provider-ns/internal/validators"
@@ -39,17 +37,16 @@ type NPAPublishersResource struct {
 
 // NPAPublishersResourceModel describes the resource data model.
 type NPAPublishersResourceModel struct {
-	Assessment                 types.String      `tfsdk:"assessment"`
-	CommonName                 types.String      `tfsdk:"common_name"`
-	ID                         types.Int64       `tfsdk:"id"`
-	Lbrokerconnect             types.Bool        `tfsdk:"lbrokerconnect"`
-	Name                       types.String      `tfsdk:"name"`
-	PublisherUpgradeProfileID  types.Int64       `tfsdk:"publisher_upgrade_profile_id"`
-	PublisherUpgradeProfilesID types.Int64       `tfsdk:"publisher_upgrade_profiles_id"`
-	Registered                 types.Bool        `tfsdk:"registered"`
-	Status                     types.String      `tfsdk:"status"`
-	StitcherID                 types.Int64       `tfsdk:"stitcher_id"`
-	Tags                       []tfTypes.TagItem `tfsdk:"tags"`
+	Assessment                 types.String `tfsdk:"assessment"`
+	CommonName                 types.String `tfsdk:"common_name"`
+	Lbrokerconnect             types.Bool   `tfsdk:"lbrokerconnect"`
+	Name                       types.String `tfsdk:"name"`
+	PublisherID                types.Int64  `tfsdk:"publisher_id"`
+	PublisherUpgradeProfileID  types.Int64  `tfsdk:"publisher_upgrade_profile_id"`
+	PublisherUpgradeProfilesID types.Int64  `tfsdk:"publisher_upgrade_profiles_id"`
+	Registered                 types.Bool   `tfsdk:"registered"`
+	Status                     types.String `tfsdk:"status"`
+	StitcherID                 types.Int64  `tfsdk:"stitcher_id"`
 }
 
 func (r *NPAPublishersResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -70,9 +67,6 @@ func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaR
 			"common_name": schema.StringAttribute{
 				Computed: true,
 			},
-			"id": schema.Int64Attribute{
-				Computed: true,
-			},
 			"lbrokerconnect": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
@@ -80,10 +74,11 @@ func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaR
 				Description: `Default: false`,
 			},
 			"name": schema.StringAttribute{
+				Required: true,
+			},
+			"publisher_id": schema.Int64Attribute{
 				Computed:    true,
-				Optional:    true,
-				Default:     stringdefault.StaticString("publisher_name"),
-				Description: `Default: "publisher_name"`,
+				Description: `publisher id`,
 			},
 			"publisher_upgrade_profile_id": schema.Int64Attribute{
 				Computed: true,
@@ -112,23 +107,6 @@ func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaR
 			},
 			"stitcher_id": schema.Int64Attribute{
 				Computed: true,
-			},
-			"tags": schema.ListNestedAttribute{
-				Computed: true,
-				Optional: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"tag_id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"tag_name": schema.StringAttribute{
-							Computed:    true,
-							Optional:    true,
-							Default:     stringdefault.StaticString("tag_name"),
-							Description: `Default: "tag_name"`,
-						},
-					},
-				},
 			},
 		},
 	}
@@ -198,7 +176,7 @@ func (r *NPAPublishersResource) Create(ctx context.Context, req resource.CreateR
 	}
 	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	publisherID := int(data.ID.ValueInt64())
+	publisherID := int(data.PublisherID.ValueInt64())
 	request1 := operations.GetNPAPublisherByIDRequest{
 		PublisherID: publisherID,
 	}
@@ -247,7 +225,7 @@ func (r *NPAPublishersResource) Read(ctx context.Context, req resource.ReadReque
 		return
 	}
 
-	publisherID := int(data.ID.ValueInt64())
+	publisherID := int(data.PublisherID.ValueInt64())
 	request := operations.GetNPAPublisherByIDRequest{
 		PublisherID: publisherID,
 	}
@@ -295,7 +273,7 @@ func (r *NPAPublishersResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 
-	publisherID := int(data.ID.ValueInt64())
+	publisherID := int(data.PublisherID.ValueInt64())
 	publisherPutRequest := *data.ToSharedPublisherPutRequest()
 	request := operations.ReplaceNPAPublisherByIDRequest{
 		PublisherID:         publisherID,
@@ -323,7 +301,7 @@ func (r *NPAPublishersResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	publisherId1 := int(data.ID.ValueInt64())
+	publisherId1 := int(data.PublisherID.ValueInt64())
 	request1 := operations.GetNPAPublisherByIDRequest{
 		PublisherID: publisherId1,
 	}
@@ -372,7 +350,7 @@ func (r *NPAPublishersResource) Delete(ctx context.Context, req resource.DeleteR
 		return
 	}
 
-	publisherID := int(data.ID.ValueInt64())
+	publisherID := int(data.PublisherID.ValueInt64())
 	request := operations.DeleteNPAPublishersRequest{
 		PublisherID: publisherID,
 	}
@@ -396,10 +374,10 @@ func (r *NPAPublishersResource) Delete(ctx context.Context, req resource.DeleteR
 }
 
 func (r *NPAPublishersResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	id, err := strconv.Atoi(req.ID)
+	publisherID, err := strconv.Atoi(req.ID)
 	if err != nil {
 		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
 	}
 
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), int64(id))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("publisher_id"), int64(publisherID))...)
 }

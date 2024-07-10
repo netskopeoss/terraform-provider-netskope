@@ -54,7 +54,6 @@ Read-Only:
 - `registered` (Boolean)
 - `status` (String)
 - `stitcher_id` (Number)
-- `tags` (List of String)
 - `upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--upgrade_failed_reason))
 - `upgrade_request` (Boolean)
 - `upgrade_status` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--upgrade_status))
