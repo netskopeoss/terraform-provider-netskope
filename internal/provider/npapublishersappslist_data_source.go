@@ -49,22 +49,41 @@ func (r *NPAPublishersAppsListDataSource) Schema(ctx context.Context, req dataso
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
+						"allow_unauthenticated_cors": schema.BoolAttribute{
+							Computed: true,
+						},
+						"app_option": schema.SingleNestedAttribute{
+							Computed:   true,
+							Attributes: map[string]schema.Attribute{},
+						},
 						"clientless_access": schema.BoolAttribute{
+							Computed: true,
+						},
+						"external_id": schema.Int64Attribute{
 							Computed: true,
 						},
 						"host": schema.StringAttribute{
 							Computed: true,
 						},
-						"id": schema.Int64Attribute{
+						"id": schema.NumberAttribute{
+							Computed: true,
+						},
+						"is_user_portal_app": schema.BoolAttribute{
 							Computed: true,
 						},
 						"name": schema.StringAttribute{
+							Computed: true,
+						},
+						"private_app_protocol": schema.StringAttribute{
 							Computed: true,
 						},
 						"protocols": schema.ListNestedAttribute{
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
+									"created_at": schema.StringAttribute{
+										Computed: true,
+									},
 									"id": schema.Int64Attribute{
 										Computed: true,
 									},
@@ -77,6 +96,20 @@ func (r *NPAPublishersAppsListDataSource) Schema(ctx context.Context, req dataso
 									"transport": schema.StringAttribute{
 										Computed: true,
 									},
+									"updated_at": schema.StringAttribute{
+										Computed: true,
+									},
+								},
+							},
+						},
+						"public_host": schema.StringAttribute{
+							Computed: true,
+						},
+						"reachability": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"reachable": schema.BoolAttribute{
+									Computed: true,
 								},
 							},
 						},
@@ -90,28 +123,23 @@ func (r *NPAPublishersAppsListDataSource) Schema(ctx context.Context, req dataso
 									"primary": schema.BoolAttribute{
 										Computed: true,
 									},
-									"publisher_id": schema.Int64Attribute{
+									"publisher_external_id": schema.NumberAttribute{
 										Computed: true,
 									},
-									"reachability": schema.SingleNestedAttribute{
+									"publisher_name": schema.StringAttribute{
 										Computed: true,
-										Attributes: map[string]schema.Attribute{
-											"error_code": schema.Int64Attribute{
-												Computed: true,
-											},
-											"error_string": schema.StringAttribute{
-												Computed: true,
-											},
-											"reachable": schema.BoolAttribute{
-												Computed: true,
-											},
-										},
 									},
-									"service_id": schema.Int64Attribute{
+									"reachability": schema.BoolAttribute{
+										Computed: true,
+									},
+									"service_external_id": schema.NumberAttribute{
 										Computed: true,
 									},
 								},
 							},
+						},
+						"supplement_dns_for_osx": schema.BoolAttribute{
+							Computed: true,
 						},
 						"trust_self_signed_certs": schema.BoolAttribute{
 							Computed: true,

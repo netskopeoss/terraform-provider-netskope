@@ -1,3 +1,3 @@
 resource "ns_publisher_token" "my_publishertoken" {
-  publisher_id = 10
+  publisher_id = 1
 }

@@ -33,37 +33,146 @@ func (e *Status) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PublisherAppsListResponseData struct {
-	ID                          *int                             `json:"id,omitempty"`
-	Name                        *string                          `json:"name,omitempty"`
-	UsePublisherDNS             *bool                            `json:"use_publisher_dns,omitempty"`
-	ClientlessAccess            *bool                            `json:"clientless_access,omitempty"`
-	TrustSelfSignedCerts        *bool                            `json:"trust_self_signed_certs,omitempty"`
-	Host                        *string                          `json:"host,omitempty"`
-	RealHost                    *string                          `json:"real_host,omitempty"`
-	Protocols                   []ProtocolResponseItem           `json:"protocols,omitempty"`
-	ServicePublisherAssignments []ServicePublisherAssignmentItem `json:"service_publisher_assignments,omitempty"`
+type AppOption struct {
 }
 
-func (o *PublisherAppsListResponseData) GetID() *int {
+type Protocols struct {
+	CreatedAt *string `json:"created_at,omitempty"`
+	ID        *int    `json:"id,omitempty"`
+	Port      *string `json:"port,omitempty"`
+	ServiceID *int    `json:"service_id,omitempty"`
+	Transport *string `json:"transport,omitempty"`
+	UpdatedAt *string `json:"updated_at,omitempty"`
+}
+
+func (o *Protocols) GetCreatedAt() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CreatedAt
+}
+
+func (o *Protocols) GetID() *int {
 	if o == nil {
 		return nil
 	}
 	return o.ID
 }
 
-func (o *PublisherAppsListResponseData) GetName() *string {
+func (o *Protocols) GetPort() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Name
+	return o.Port
 }
 
-func (o *PublisherAppsListResponseData) GetUsePublisherDNS() *bool {
+func (o *Protocols) GetServiceID() *int {
 	if o == nil {
 		return nil
 	}
-	return o.UsePublisherDNS
+	return o.ServiceID
+}
+
+func (o *Protocols) GetTransport() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Transport
+}
+
+func (o *Protocols) GetUpdatedAt() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UpdatedAt
+}
+
+type PublisherAppsListResponseReachability struct {
+	Reachable *bool `json:"reachable,omitempty"`
+}
+
+func (o *PublisherAppsListResponseReachability) GetReachable() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Reachable
+}
+
+type ServicePublisherAssignments struct {
+	Primary             *bool    `json:"primary,omitempty"`
+	PublisherExternalID *float64 `json:"publisher_external_id,omitempty"`
+	PublisherName       *string  `json:"publisher_name,omitempty"`
+	Reachability        *bool    `json:"reachability,omitempty"`
+	ServiceExternalID   *float64 `json:"service_external_id,omitempty"`
+}
+
+func (o *ServicePublisherAssignments) GetPrimary() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Primary
+}
+
+func (o *ServicePublisherAssignments) GetPublisherExternalID() *float64 {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherExternalID
+}
+
+func (o *ServicePublisherAssignments) GetPublisherName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherName
+}
+
+func (o *ServicePublisherAssignments) GetReachability() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Reachability
+}
+
+func (o *ServicePublisherAssignments) GetServiceExternalID() *float64 {
+	if o == nil {
+		return nil
+	}
+	return o.ServiceExternalID
+}
+
+type PublisherAppsListResponseData struct {
+	AllowUnauthenticatedCors    *bool                                  `json:"allow_unauthenticated_cors,omitempty"`
+	AppOption                   *AppOption                             `json:"app_option,omitempty"`
+	ClientlessAccess            *bool                                  `json:"clientless_access,omitempty"`
+	ExternalID                  *int                                   `json:"external_id,omitempty"`
+	Host                        *string                                `json:"host,omitempty"`
+	ID                          *float64                               `json:"id,omitempty"`
+	IsUserPortalApp             *bool                                  `json:"is_user_portal_app,omitempty"`
+	Name                        *string                                `json:"name,omitempty"`
+	PrivateAppProtocol          *string                                `json:"private_app_protocol,omitempty"`
+	Protocols                   []Protocols                            `json:"protocols,omitempty"`
+	PublicHost                  *string                                `json:"public_host,omitempty"`
+	Reachability                *PublisherAppsListResponseReachability `json:"reachability,omitempty"`
+	RealHost                    *string                                `json:"real_host,omitempty"`
+	ServicePublisherAssignments []ServicePublisherAssignments          `json:"service_publisher_assignments,omitempty"`
+	SupplementDNSForOsx         *bool                                  `json:"supplement_dns_for_osx,omitempty"`
+	TrustSelfSignedCerts        *bool                                  `json:"trust_self_signed_certs,omitempty"`
+	UsePublisherDNS             *bool                                  `json:"use_publisher_dns,omitempty"`
+}
+
+func (o *PublisherAppsListResponseData) GetAllowUnauthenticatedCors() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.AllowUnauthenticatedCors
+}
+
+func (o *PublisherAppsListResponseData) GetAppOption() *AppOption {
+	if o == nil {
+		return nil
+	}
+	return o.AppOption
 }
 
 func (o *PublisherAppsListResponseData) GetClientlessAccess() *bool {
@@ -73,11 +182,11 @@ func (o *PublisherAppsListResponseData) GetClientlessAccess() *bool {
 	return o.ClientlessAccess
 }
 
-func (o *PublisherAppsListResponseData) GetTrustSelfSignedCerts() *bool {
+func (o *PublisherAppsListResponseData) GetExternalID() *int {
 	if o == nil {
 		return nil
 	}
-	return o.TrustSelfSignedCerts
+	return o.ExternalID
 }
 
 func (o *PublisherAppsListResponseData) GetHost() *string {
@@ -87,6 +196,55 @@ func (o *PublisherAppsListResponseData) GetHost() *string {
 	return o.Host
 }
 
+func (o *PublisherAppsListResponseData) GetID() *float64 {
+	if o == nil {
+		return nil
+	}
+	return o.ID
+}
+
+func (o *PublisherAppsListResponseData) GetIsUserPortalApp() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.IsUserPortalApp
+}
+
+func (o *PublisherAppsListResponseData) GetName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Name
+}
+
+func (o *PublisherAppsListResponseData) GetPrivateAppProtocol() *string {
+	if o == nil {
+		return nil
+	}
+	return o.PrivateAppProtocol
+}
+
+func (o *PublisherAppsListResponseData) GetProtocols() []Protocols {
+	if o == nil {
+		return nil
+	}
+	return o.Protocols
+}
+
+func (o *PublisherAppsListResponseData) GetPublicHost() *string {
+	if o == nil {
+		return nil
+	}
+	return o.PublicHost
+}
+
+func (o *PublisherAppsListResponseData) GetReachability() *PublisherAppsListResponseReachability {
+	if o == nil {
+		return nil
+	}
+	return o.Reachability
+}
+
 func (o *PublisherAppsListResponseData) GetRealHost() *string {
 	if o == nil {
 		return nil
@@ -94,18 +252,32 @@ func (o *PublisherAppsListResponseData) GetRealHost() *string {
 	return o.RealHost
 }
 
-func (o *PublisherAppsListResponseData) GetProtocols() []ProtocolResponseItem {
-	if o == nil {
-		return nil
-	}
-	return o.Protocols
-}
-
-func (o *PublisherAppsListResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
+func (o *PublisherAppsListResponseData) GetServicePublisherAssignments() []ServicePublisherAssignments {
 	if o == nil {
 		return nil
 	}
 	return o.ServicePublisherAssignments
+}
+
+func (o *PublisherAppsListResponseData) GetSupplementDNSForOsx() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.SupplementDNSForOsx
+}
+
+func (o *PublisherAppsListResponseData) GetTrustSelfSignedCerts() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.TrustSelfSignedCerts
+}
+
+func (o *PublisherAppsListResponseData) GetUsePublisherDNS() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.UsePublisherDNS
 }
 
 type PublisherAppsListResponse struct {

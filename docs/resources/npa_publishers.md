@@ -30,7 +30,7 @@ resource "ns_npa_publishers" "my_npapublishers" {
 ### Optional
 
 - `lbrokerconnect` (Boolean) Allow this publisher to be stitched to Local Broker. Default: false
-- `publisher_upgrade_profiles_id` (Number) The ID of the upgrade profile to manage this publisher. Requires replacement if changed. ; Default: 1
+- `publisher_upgrade_profiles_id` (Number) The ID of the upgrade profile to manage this publisher. Default: 1
 
 ### Read-Only
 
@@ -47,5 +47,5 @@ resource "ns_npa_publishers" "my_npapublishers" {
 Import is supported using the following syntax:
 
 ```shell
-terraform import ns_npa_publishers.my_ns_npa_publishers "0"
+terraform import ns_npa_publishers.my_ns_npa_publishers "1"
 ```

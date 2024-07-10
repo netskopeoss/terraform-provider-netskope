@@ -35,9 +35,8 @@ type NPAPublishersBulkUpgradeResource struct {
 
 // NPAPublishersBulkUpgradeResourceModel describes the resource data model.
 type NPAPublishersBulkUpgradeResourceModel struct {
-	Data       []tfTypes.PublisherBulkItem `tfsdk:"data"`
-	Publishers *tfTypes.Publishers         `tfsdk:"publishers"`
-	Status     types.String                `tfsdk:"status"`
+	Publishers *tfTypes.Publishers `tfsdk:"publishers"`
+	Status     types.String        `tfsdk:"status"`
 }
 
 func (r *NPAPublishersBulkUpgradeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -48,59 +47,6 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "NPAPublishersBulkUpgrade Resource",
 		Attributes: map[string]schema.Attribute{
-			"data": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"assessment": schema.SingleNestedAttribute{
-							Computed:   true,
-							Attributes: map[string]schema.Attribute{},
-						},
-						"common_name": schema.StringAttribute{
-							Computed: true,
-						},
-						"id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"lbrokerconnect": schema.BoolAttribute{
-							Computed: true,
-						},
-						"name": schema.StringAttribute{
-							Computed: true,
-						},
-						"publisher_upgrade_profile_id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"registered": schema.BoolAttribute{
-							Computed: true,
-						},
-						"status": schema.StringAttribute{
-							Computed:    true,
-							Description: `must be one of ["connected", "not registered"]`,
-							Validators: []validator.String{
-								stringvalidator.OneOf(
-									"connected",
-									"not registered",
-								),
-							},
-						},
-						"stitcher_id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"upgrade_failed_reason": schema.SingleNestedAttribute{
-							Computed:   true,
-							Attributes: map[string]schema.Attribute{},
-						},
-						"upgrade_request": schema.BoolAttribute{
-							Computed: true,
-						},
-						"upgrade_status": schema.SingleNestedAttribute{
-							Computed:   true,
-							Attributes: map[string]schema.Attribute{},
-						},
-					},
-				},
-			},
 			"publishers": schema.SingleNestedAttribute{
 				PlanModifiers: []planmodifier.Object{
 					objectplanmodifier.RequiresReplaceIfConfigured(),

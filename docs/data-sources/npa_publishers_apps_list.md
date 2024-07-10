@@ -14,7 +14,7 @@ NPAPublishersAppsList DataSource
 
 ```terraform
 data "ns_npa_publishers_apps_list" "my_npapublishersappslist" {
-  publisher_id = 7
+  publisher_id = 1
 }
 ```
 
@@ -35,25 +35,47 @@ data "ns_npa_publishers_apps_list" "my_npapublishersappslist" {
 
 Read-Only:
 
+- `allow_unauthenticated_cors` (Boolean)
+- `app_option` (Attributes) (see [below for nested schema](#nestedatt--data--app_option))
 - `clientless_access` (Boolean)
+- `external_id` (Number)
 - `host` (String)
 - `id` (Number)
+- `is_user_portal_app` (Boolean)
 - `name` (String)
+- `private_app_protocol` (String)
 - `protocols` (Attributes List) (see [below for nested schema](#nestedatt--data--protocols))
+- `public_host` (String)
+- `reachability` (Attributes) (see [below for nested schema](#nestedatt--data--reachability))
 - `real_host` (String)
 - `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--data--service_publisher_assignments))
+- `supplement_dns_for_osx` (Boolean)
 - `trust_self_signed_certs` (Boolean)
 - `use_publisher_dns` (Boolean)
+
+<a id="nestedatt--data--app_option"></a>
+### Nested Schema for `data.app_option`
+
 
 <a id="nestedatt--data--protocols"></a>
 ### Nested Schema for `data.protocols`
 
 Read-Only:
 
+- `created_at` (String)
 - `id` (Number)
 - `port` (String)
 - `service_id` (Number)
 - `transport` (String)
+- `updated_at` (String)
+
+
+<a id="nestedatt--data--reachability"></a>
+### Nested Schema for `data.reachability`
+
+Read-Only:
+
+- `reachable` (Boolean)
 
 
 <a id="nestedatt--data--service_publisher_assignments"></a>
@@ -62,17 +84,9 @@ Read-Only:
 Read-Only:
 
 - `primary` (Boolean)
-- `publisher_id` (Number)
-- `reachability` (Attributes) (see [below for nested schema](#nestedatt--data--service_publisher_assignments--reachability))
-- `service_id` (Number)
-
-<a id="nestedatt--data--service_publisher_assignments--reachability"></a>
-### Nested Schema for `data.service_publisher_assignments.reachability`
-
-Read-Only:
-
-- `error_code` (Number)
-- `error_string` (String)
-- `reachable` (Boolean)
+- `publisher_external_id` (Number)
+- `publisher_name` (String)
+- `reachability` (Boolean)
+- `service_external_id` (Number)
 
 
