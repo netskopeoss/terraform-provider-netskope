@@ -27,7 +27,7 @@ func newPublisherToken(sdkConfig sdkConfiguration) *PublisherToken {
 
 // Create - Generate and retrieve a token for publisher registration
 // Generate and retrieve a token for publisher registration
-func (s *PublisherToken) Create(ctx context.Context, request operations.GenerateNPAPublisherTokenRequest) (*operations.GenerateNPAPublisherTokenResponse, error) {
+func (s *PublisherToken) Create(ctx context.Context, request operations.GenerateNPAPublisherTokenRequest, opts ...operations.Option) (*operations.GenerateNPAPublisherTokenResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "generateNPAPublisherToken",
@@ -35,10 +35,32 @@ func (s *PublisherToken) Create(ctx context.Context, request operations.Generate
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publishers/{publisher_id}/registration_token", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "POST", opURL, nil)

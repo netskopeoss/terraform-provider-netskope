@@ -3,15 +3,15 @@ id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
   docChecksum: ee5278dccd3fe92b1be7c6a98bf908f2
   docVersion: 1.0.0
-  speakeasyVersion: 1.330.2
-  generationVersion: 2.361.10
-  releaseVersion: 0.7.99
-  configChecksum: a17be3bcc5ecbefcb1378d53ba27c507
+  speakeasyVersion: 1.331.0
+  generationVersion: 2.365.0
+  releaseVersion: 0.7.100
+  configChecksum: bef47b59b770b8fd2c509813452b0544
 features:
   terraform:
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.4
-    core: 3.23.3
+    core: 3.23.5
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
     groups: 2.81.2
@@ -118,6 +118,7 @@ generatedFiles:
   - internal/sdk/models/shared/releaseitem.go
   - internal/sdk/models/shared/security.go
   - internal/sdk/.gitignore
+  - internal/sdk/models/operations/options.go
   - internal/sdk/.gitattributes
   - internal/sdk/internal/hooks/registration.go
   - internal/sdk/internal/hooks/hooks.go
