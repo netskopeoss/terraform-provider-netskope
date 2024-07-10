@@ -346,12 +346,12 @@ func (s *NPAPublishers) Delete(ctx context.Context, request operations.DeleteNPA
 
 }
 
-// Update a publisher
-// update a publisher based on publisher id
-func (s *NPAPublishers) Update(ctx context.Context, request operations.ReplaceNPAPublisherByIDRequest) (*operations.ReplaceNPAPublisherByIDResponse, error) {
+// Update - Patch a publisher
+// patch a publisher based on publisher id
+func (s *NPAPublishers) Update(ctx context.Context, request operations.UpdateNPAPublisherByIDRequest) (*operations.UpdateNPAPublisherByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "replaceNPAPublisherById",
+		OperationID:    "updateNPAPublisherById",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -367,7 +367,7 @@ func (s *NPAPublishers) Update(ctx context.Context, request operations.ReplaceNP
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
+	req, err := http.NewRequestWithContext(ctx, "PATCH", opURL, bodyReader)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
@@ -412,7 +412,7 @@ func (s *NPAPublishers) Update(ctx context.Context, request operations.ReplaceNP
 		}
 	}
 
-	res := &operations.ReplaceNPAPublisherByIDResponse{
+	res := &operations.UpdateNPAPublisherByIDResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,

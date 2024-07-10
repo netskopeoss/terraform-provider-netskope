@@ -6,14 +6,13 @@ import (
 	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/utils"
 )
 
-// PublisherPostRequest - The NPA Publisher is a software package that enables private application
-// connectivity between your data center and the Netskope cloud. It is a crucial
-// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
-// network access (ZTNA) to private applications and data in hybrid IT environments.
 type PublisherPostRequest struct {
-	Name                       string `json:"name"`
-	Lbrokerconnect             *bool  `default:"false" json:"lbrokerconnect"`
-	PublisherUpgradeProfilesID *int   `default:"1" json:"publisher_upgrade_profiles_id"`
+	// The name of the Publisher as seen in the UI
+	Name string `json:"name"`
+	// Allow this publisher to be stitched to Local Broker
+	Lbrokerconnect *bool `default:"false" json:"lbrokerconnect"`
+	// The ID of the upgrade profile to manage this publisher
+	PublisherUpgradeProfilesID *int `default:"1" json:"publisher_upgrade_profiles_id"`
 }
 
 func (p PublisherPostRequest) MarshalJSON() ([]byte, error) {

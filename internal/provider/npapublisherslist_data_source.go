@@ -30,7 +30,6 @@ type NPAPublishersListDataSource struct {
 // NPAPublishersListDataSourceModel describes the data model.
 type NPAPublishersListDataSourceModel struct {
 	Data   *tfTypes.Data `tfsdk:"data"`
-	Fields types.String  `tfsdk:"fields"`
 	Status types.String  `tfsdk:"status"`
 	Total  types.Int64   `tfsdk:"total"`
 }
@@ -158,10 +157,6 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 					},
 				},
 			},
-			"fields": schema.StringAttribute{
-				Optional:    true,
-				Description: `Return values only from specified fields`,
-			},
 			"status": schema.StringAttribute{
 				Computed: true,
 			},
@@ -210,15 +205,7 @@ func (r *NPAPublishersListDataSource) Read(ctx context.Context, req datasource.R
 		return
 	}
 
-	fields := new(string)
-	if !data.Fields.IsUnknown() && !data.Fields.IsNull() {
-		*fields = data.Fields.ValueString()
-	} else {
-		fields = nil
-	}
-	request := operations.GetNPAPublishersRequest{
-		Fields: fields,
-	}
+	request := operations.GetNPAPublishersRequest{}
 	res, err := r.client.NPAPublishers.ListObjects(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
