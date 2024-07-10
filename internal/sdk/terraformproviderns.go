@@ -197,12 +197,12 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	return sdk
 }
 
-// UpdateNPAPublisherByID - Patch a publisher
-// patch a publisher based on publisher id
-func (s *TerraformProviderNs) UpdateNPAPublisherByID(ctx context.Context, request operations.UpdateNPAPublisherByIDRequest) (*operations.UpdateNPAPublisherByIDResponse, error) {
+// ReplaceNPAPublisherByID - Update a publisher
+// update a publisher based on publisher id
+func (s *TerraformProviderNs) ReplaceNPAPublisherByID(ctx context.Context, request operations.ReplaceNPAPublisherByIDRequest) (*operations.ReplaceNPAPublisherByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "updateNPAPublisherById",
+		OperationID:    "replaceNPAPublisherById",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -218,7 +218,7 @@ func (s *TerraformProviderNs) UpdateNPAPublisherByID(ctx context.Context, reques
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "PATCH", opURL, bodyReader)
+	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
@@ -263,7 +263,7 @@ func (s *TerraformProviderNs) UpdateNPAPublisherByID(ctx context.Context, reques
 		}
 	}
 
-	res := &operations.UpdateNPAPublisherByIDResponse{
+	res := &operations.ReplaceNPAPublisherByIDResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,

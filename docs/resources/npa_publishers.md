@@ -25,12 +25,12 @@ resource "ns_npa_publishers" "my_npapublishers" {
 
 ### Required
 
-- `name` (String)
+- `name` (String) The name of the Publisher as seen in the UI
 
 ### Optional
 
-- `lbrokerconnect` (Boolean) Default: false
-- `publisher_upgrade_profiles_id` (Number) Requires replacement if changed. ; Default: 1
+- `lbrokerconnect` (Boolean) Allow this publisher to be stitched to Local Broker. Default: false
+- `publisher_upgrade_profiles_id` (Number) The ID of the upgrade profile to manage this publisher. Requires replacement if changed. ; Default: 1
 
 ### Read-Only
 
