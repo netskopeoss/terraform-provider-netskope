@@ -2,5 +2,5 @@
 
 package types
 
-type PublisherBulkItemAssessment struct {
+type AppOption struct {
 }

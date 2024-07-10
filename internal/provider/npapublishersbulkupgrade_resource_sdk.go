@@ -4,7 +4,6 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
@@ -40,69 +39,6 @@ func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *
 
 func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkResponse(resp *shared.PublishersBulkResponse) {
 	if resp != nil {
-		r.Data = []tfTypes.PublisherBulkItem{}
-		if len(r.Data) > len(resp.Data) {
-			r.Data = r.Data[:len(resp.Data)]
-		}
-		for dataCount, dataItem := range resp.Data {
-			var data1 tfTypes.PublisherBulkItem
-			if dataItem.Assessment == nil {
-				data1.Assessment = nil
-			} else {
-				data1.Assessment = &tfTypes.PublisherBulkItemAssessment{}
-			}
-			data1.CommonName = types.StringPointerValue(dataItem.CommonName)
-			if dataItem.ID != nil {
-				data1.ID = types.Int64Value(int64(*dataItem.ID))
-			} else {
-				data1.ID = types.Int64Null()
-			}
-			data1.Lbrokerconnect = types.BoolPointerValue(dataItem.Lbrokerconnect)
-			data1.Name = types.StringPointerValue(dataItem.Name)
-			if dataItem.PublisherUpgradeProfileID != nil {
-				data1.PublisherUpgradeProfileID = types.Int64Value(int64(*dataItem.PublisherUpgradeProfileID))
-			} else {
-				data1.PublisherUpgradeProfileID = types.Int64Null()
-			}
-			data1.Registered = types.BoolPointerValue(dataItem.Registered)
-			if dataItem.Status != nil {
-				data1.Status = types.StringValue(string(*dataItem.Status))
-			} else {
-				data1.Status = types.StringNull()
-			}
-			if dataItem.StitcherID != nil {
-				data1.StitcherID = types.Int64Value(int64(*dataItem.StitcherID))
-			} else {
-				data1.StitcherID = types.Int64Null()
-			}
-			if dataItem.UpgradeFailedReason == nil {
-				data1.UpgradeFailedReason = nil
-			} else {
-				data1.UpgradeFailedReason = &tfTypes.PublisherBulkItemAssessment{}
-			}
-			data1.UpgradeRequest = types.BoolPointerValue(dataItem.UpgradeRequest)
-			if dataItem.UpgradeStatus == nil {
-				data1.UpgradeStatus = nil
-			} else {
-				data1.UpgradeStatus = &tfTypes.PublisherBulkItemAssessment{}
-			}
-			if dataCount+1 > len(r.Data) {
-				r.Data = append(r.Data, data1)
-			} else {
-				r.Data[dataCount].Assessment = data1.Assessment
-				r.Data[dataCount].CommonName = data1.CommonName
-				r.Data[dataCount].ID = data1.ID
-				r.Data[dataCount].Lbrokerconnect = data1.Lbrokerconnect
-				r.Data[dataCount].Name = data1.Name
-				r.Data[dataCount].PublisherUpgradeProfileID = data1.PublisherUpgradeProfileID
-				r.Data[dataCount].Registered = data1.Registered
-				r.Data[dataCount].Status = data1.Status
-				r.Data[dataCount].StitcherID = data1.StitcherID
-				r.Data[dataCount].UpgradeFailedReason = data1.UpgradeFailedReason
-				r.Data[dataCount].UpgradeRequest = data1.UpgradeRequest
-				r.Data[dataCount].UpgradeStatus = data1.UpgradeStatus
-			}
-		}
 		if resp.Status != nil {
 			r.Status = types.StringValue(string(*resp.Status))
 		} else {

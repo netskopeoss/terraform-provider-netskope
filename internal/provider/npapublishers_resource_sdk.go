@@ -73,9 +73,16 @@ func (r *NPAPublishersResourceModel) ToSharedPublisherPatchRequest() *shared.Pub
 	} else {
 		lbrokerconnect = nil
 	}
+	publisherUpgradeProfilesID := new(int)
+	if !r.PublisherUpgradeProfilesID.IsUnknown() && !r.PublisherUpgradeProfilesID.IsNull() {
+		*publisherUpgradeProfilesID = int(r.PublisherUpgradeProfilesID.ValueInt64())
+	} else {
+		publisherUpgradeProfilesID = nil
+	}
 	out := shared.PublisherPatchRequest{
-		Name:           name,
-		Lbrokerconnect: lbrokerconnect,
+		Name:                       name,
+		Lbrokerconnect:             lbrokerconnect,
+		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
 	}
 	return &out
 }

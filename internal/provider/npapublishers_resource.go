@@ -11,8 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -85,13 +83,10 @@ func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaR
 				Computed: true,
 			},
 			"publisher_upgrade_profiles_id": schema.Int64Attribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.Int64{
-					int64planmodifier.RequiresReplaceIfConfigured(),
-				},
+				Computed:    true,
 				Optional:    true,
 				Default:     int64default.StaticInt64(1),
-				Description: `The ID of the upgrade profile to manage this publisher. Requires replacement if changed. ; Default: 1`,
+				Description: `The ID of the upgrade profile to manage this publisher. Default: 1`,
 			},
 			"registered": schema.BoolAttribute{
 				Computed: true,

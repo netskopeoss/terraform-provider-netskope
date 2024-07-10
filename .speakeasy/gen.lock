@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: eab961166235263e19f58e40660192e6
+  docChecksum: ee5278dccd3fe92b1be7c6a98bf908f2
   docVersion: 1.0.0
-  speakeasyVersion: 1.330.0
+  speakeasyVersion: 1.330.2
   generationVersion: 2.361.10
-  releaseVersion: 0.7.75
-  configChecksum: dfa84ef119db9a27f0f242343346c9db
+  releaseVersion: 0.7.99
+  configChecksum: a17be3bcc5ecbefcb1378d53ba27c507
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -77,7 +77,6 @@ generatedFiles:
   - internal/sdk/models/shared/publisherresponse.go
   - internal/sdk/models/shared/publisherputrequest.go
   - internal/sdk/models/shared/publishersbulkresponse.go
-  - internal/sdk/models/shared/publisherbulkitem.go
   - internal/sdk/models/shared/publisherbulkrequest.go
   - internal/sdk/models/shared/publishersalertgetresponse.go
   - internal/sdk/models/shared/publishersalertputrequest.go
@@ -175,8 +174,6 @@ generatedFiles:
   - internal/provider/types/rule_order.go
   - internal/provider/types/group_order.go
   - internal/provider/types/publishers_alert_get_response_data.go
-  - internal/provider/types/publisher_bulk_item_assessment.go
-  - internal/provider/types/publisher_bulk_item.go
   - internal/provider/types/apply.go
   - internal/provider/types/publishers.go
   - internal/provider/types/protocol_item.go
@@ -186,6 +183,10 @@ generatedFiles:
   - internal/provider/types/service_publisher_assignment_item.go
   - internal/provider/types/tag_item.go
   - internal/provider/types/npa_policy_response_item.go
+  - internal/provider/types/app_option.go
+  - internal/provider/types/protocols.go
+  - internal/provider/types/publisher_apps_list_response_reachability.go
+  - internal/provider/types/service_publisher_assignments.go
   - internal/provider/types/publisher_apps_list_response_data.go
   - internal/provider/types/assessment.go
   - internal/provider/types/publisher_assessment.go

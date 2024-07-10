@@ -5,13 +5,21 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type PublisherAppsListResponseData struct {
-	ClientlessAccess            types.Bool                       `tfsdk:"clientless_access"`
-	Host                        types.String                     `tfsdk:"host"`
-	ID                          types.Int64                      `tfsdk:"id"`
-	Name                        types.String                     `tfsdk:"name"`
-	Protocols                   []ProtocolResponseItem           `tfsdk:"protocols"`
-	RealHost                    types.String                     `tfsdk:"real_host"`
-	ServicePublisherAssignments []ServicePublisherAssignmentItem `tfsdk:"service_publisher_assignments"`
-	TrustSelfSignedCerts        types.Bool                       `tfsdk:"trust_self_signed_certs"`
-	UsePublisherDNS             types.Bool                       `tfsdk:"use_publisher_dns"`
+	AllowUnauthenticatedCors    types.Bool                             `tfsdk:"allow_unauthenticated_cors"`
+	AppOption                   *AppOption                             `tfsdk:"app_option"`
+	ClientlessAccess            types.Bool                             `tfsdk:"clientless_access"`
+	ExternalID                  types.Int64                            `tfsdk:"external_id"`
+	Host                        types.String                           `tfsdk:"host"`
+	ID                          types.Number                           `tfsdk:"id"`
+	IsUserPortalApp             types.Bool                             `tfsdk:"is_user_portal_app"`
+	Name                        types.String                           `tfsdk:"name"`
+	PrivateAppProtocol          types.String                           `tfsdk:"private_app_protocol"`
+	Protocols                   []Protocols                            `tfsdk:"protocols"`
+	PublicHost                  types.String                           `tfsdk:"public_host"`
+	Reachability                *PublisherAppsListResponseReachability `tfsdk:"reachability"`
+	RealHost                    types.String                           `tfsdk:"real_host"`
+	ServicePublisherAssignments []ServicePublisherAssignments          `tfsdk:"service_publisher_assignments"`
+	SupplementDNSForOsx         types.Bool                             `tfsdk:"supplement_dns_for_osx"`
+	TrustSelfSignedCerts        types.Bool                             `tfsdk:"trust_self_signed_certs"`
+	UsePublisherDNS             types.Bool                             `tfsdk:"use_publisher_dns"`
 }
