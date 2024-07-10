@@ -27,7 +27,7 @@ func newNPAPublishersApps(sdkConfig sdkConfiguration) *NPAPublishersApps {
 
 // ListObjects - Get all private apps associated to a publisher
 // Get all private apps associated to a publisher
-func (s *NPAPublishersApps) ListObjects(ctx context.Context, request operations.GetNPAPublisherAppsRequest) (*operations.GetNPAPublisherAppsResponse, error) {
+func (s *NPAPublishersApps) ListObjects(ctx context.Context, request operations.GetNPAPublisherAppsRequest, opts ...operations.Option) (*operations.GetNPAPublisherAppsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "getNPAPublisherApps",
@@ -35,10 +35,32 @@ func (s *NPAPublishersApps) ListObjects(ctx context.Context, request operations.
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publishers/{publisher_id}/apps", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)

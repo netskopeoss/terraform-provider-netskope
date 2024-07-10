@@ -60,6 +60,7 @@ type sdkConfiguration struct {
 	UserAgent         string
 	RetryConfig       *retry.Config
 	Hooks             *hooks.Hooks
+	Timeout           *time.Duration
 }
 
 func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
@@ -153,6 +154,13 @@ func WithRetryConfig(retryConfig retry.Config) SDKOption {
 	}
 }
 
+// WithTimeout Optional request timeout applied to each operation
+func WithTimeout(timeout time.Duration) SDKOption {
+	return func(sdk *TerraformProviderNs) {
+		sdk.sdkConfiguration.Timeout = &timeout
+	}
+}
+
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk := &TerraformProviderNs{
@@ -160,8 +168,8 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.361.10",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.361.10 1.0.0 github.com/netskope/terraform-provider-ns/internal/sdk",
+			GenVersion:        "2.365.0",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.365.0 1.0.0 github.com/netskope/terraform-provider-ns/internal/sdk",
 			ServerDefaults: []map[string]string{
 				{
 					"tenant": "demo",
@@ -199,12 +207,23 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 
 // ReplaceNPAPublisherByID - Update a publisher
 // update a publisher based on publisher id
-func (s *TerraformProviderNs) ReplaceNPAPublisherByID(ctx context.Context, request operations.ReplaceNPAPublisherByIDRequest) (*operations.ReplaceNPAPublisherByIDResponse, error) {
+func (s *TerraformProviderNs) ReplaceNPAPublisherByID(ctx context.Context, request operations.ReplaceNPAPublisherByIDRequest, opts ...operations.Option) (*operations.ReplaceNPAPublisherByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "replaceNPAPublisherById",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -216,6 +235,17 @@ func (s *TerraformProviderNs) ReplaceNPAPublisherByID(ctx context.Context, reque
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PublisherPutRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
@@ -311,12 +341,23 @@ func (s *TerraformProviderNs) ReplaceNPAPublisherByID(ctx context.Context, reque
 
 // TriggerNPAPublisherUpdate - Trigger bulk publisher update action
 // Trigger bulk publisher update action
-func (s *TerraformProviderNs) TriggerNPAPublisherUpdate(ctx context.Context, request shared.PublisherBulkRequest) (*operations.TriggerNPAPublisherUpdateResponse, error) {
+func (s *TerraformProviderNs) TriggerNPAPublisherUpdate(ctx context.Context, request shared.PublisherBulkRequest, opts ...operations.Option) (*operations.TriggerNPAPublisherUpdateResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "triggerNPAPublisherUpdate",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -328,6 +369,17 @@ func (s *TerraformProviderNs) TriggerNPAPublisherUpdate(ctx context.Context, req
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
@@ -419,7 +471,7 @@ func (s *TerraformProviderNs) TriggerNPAPublisherUpdate(ctx context.Context, req
 
 // GetNPAPublisherAlerts - Get list of publisher alerts
 // Get list of publisher alerts
-func (s *TerraformProviderNs) GetNPAPublisherAlerts(ctx context.Context) (*operations.GetNPAPublisherAlertsResponse, error) {
+func (s *TerraformProviderNs) GetNPAPublisherAlerts(ctx context.Context, opts ...operations.Option) (*operations.GetNPAPublisherAlertsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "getNPAPublisherAlerts",
@@ -427,10 +479,32 @@ func (s *TerraformProviderNs) GetNPAPublisherAlerts(ctx context.Context) (*opera
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := url.JoinPath(baseURL, "/infrastructure/publishers/alertsconfiguration")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
@@ -521,12 +595,23 @@ func (s *TerraformProviderNs) GetNPAPublisherAlerts(ctx context.Context) (*opera
 
 // ConfigureNPAPublisherAlerts - Configure publisher alerts
 // Configure publisher alerts
-func (s *TerraformProviderNs) ConfigureNPAPublisherAlerts(ctx context.Context, request shared.PublishersAlertPutRequest) (*operations.ConfigureNPAPublisherAlertsResponse, error) {
+func (s *TerraformProviderNs) ConfigureNPAPublisherAlerts(ctx context.Context, request shared.PublishersAlertPutRequest, opts ...operations.Option) (*operations.ConfigureNPAPublisherAlertsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "configureNPAPublisherAlerts",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -538,6 +623,17 @@ func (s *TerraformProviderNs) ConfigureNPAPublisherAlerts(ctx context.Context, r
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
@@ -629,7 +725,7 @@ func (s *TerraformProviderNs) ConfigureNPAPublisherAlerts(ctx context.Context, r
 
 // GetNPAPolicyRules - Get list of npa policies
 // Get list of npa policies
-func (s *TerraformProviderNs) GetNPAPolicyRules(ctx context.Context, request operations.GetNPAPolicyRulesRequest) (*operations.GetNPAPolicyRulesResponse, error) {
+func (s *TerraformProviderNs) GetNPAPolicyRules(ctx context.Context, request operations.GetNPAPolicyRulesRequest, opts ...operations.Option) (*operations.GetNPAPolicyRulesResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "getNPAPolicyRules",
@@ -637,10 +733,32 @@ func (s *TerraformProviderNs) GetNPAPolicyRules(ctx context.Context, request ope
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := url.JoinPath(baseURL, "/policy/npa/rules")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
@@ -735,12 +853,23 @@ func (s *TerraformProviderNs) GetNPAPolicyRules(ctx context.Context, request ope
 
 // CreateNPAPolicyRules - Create a npa policy
 // Create a policy
-func (s *TerraformProviderNs) CreateNPAPolicyRules(ctx context.Context, request shared.NpaPolicyRequest) (*operations.CreateNPAPolicyRulesResponse, error) {
+func (s *TerraformProviderNs) CreateNPAPolicyRules(ctx context.Context, request shared.NpaPolicyRequest, opts ...operations.Option) (*operations.CreateNPAPolicyRulesResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "createNPAPolicyRules",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -752,6 +881,17 @@ func (s *TerraformProviderNs) CreateNPAPolicyRules(ctx context.Context, request 
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "POST", opURL, bodyReader)
@@ -843,7 +983,7 @@ func (s *TerraformProviderNs) CreateNPAPolicyRules(ctx context.Context, request 
 
 // DeleteNPAPolicyRules - Delete a npa policy
 // Delete a npa policy with rule id
-func (s *TerraformProviderNs) DeleteNPAPolicyRules(ctx context.Context, request operations.DeleteNPAPolicyRulesRequest) (*operations.DeleteNPAPolicyRulesResponse, error) {
+func (s *TerraformProviderNs) DeleteNPAPolicyRules(ctx context.Context, request operations.DeleteNPAPolicyRulesRequest, opts ...operations.Option) (*operations.DeleteNPAPolicyRulesResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "deleteNPAPolicyRules",
@@ -851,10 +991,32 @@ func (s *TerraformProviderNs) DeleteNPAPolicyRules(ctx context.Context, request 
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/policy/npa/rules/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "DELETE", opURL, nil)
@@ -945,12 +1107,23 @@ func (s *TerraformProviderNs) DeleteNPAPolicyRules(ctx context.Context, request 
 
 // PatchNPAPolicyRulesByID - Patch a npa policy
 // Patch a npa policy based on rule id
-func (s *TerraformProviderNs) PatchNPAPolicyRulesByID(ctx context.Context, request operations.PatchNPAPolicyRulesByIDRequest) (*operations.PatchNPAPolicyRulesByIDResponse, error) {
+func (s *TerraformProviderNs) PatchNPAPolicyRulesByID(ctx context.Context, request operations.PatchNPAPolicyRulesByIDRequest, opts ...operations.Option) (*operations.PatchNPAPolicyRulesByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "patchNPAPolicyRulesById",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -962,6 +1135,17 @@ func (s *TerraformProviderNs) PatchNPAPolicyRulesByID(ctx context.Context, reque
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "NpaPolicyRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "PATCH", opURL, bodyReader)
@@ -1057,7 +1241,7 @@ func (s *TerraformProviderNs) PatchNPAPolicyRulesByID(ctx context.Context, reque
 
 // GetNPAPolicyRulesByID - Get a npa policy
 // Get a npa policy based on policy rule id
-func (s *TerraformProviderNs) GetNPAPolicyRulesByID(ctx context.Context, request operations.GetNPAPolicyRulesByIDRequest) (*operations.GetNPAPolicyRulesByIDResponse, error) {
+func (s *TerraformProviderNs) GetNPAPolicyRulesByID(ctx context.Context, request operations.GetNPAPolicyRulesByIDRequest, opts ...operations.Option) (*operations.GetNPAPolicyRulesByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "getNPAPolicyRulesById",
@@ -1065,10 +1249,32 @@ func (s *TerraformProviderNs) GetNPAPolicyRulesByID(ctx context.Context, request
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/policy/npa/rules/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
@@ -1163,7 +1369,7 @@ func (s *TerraformProviderNs) GetNPAPolicyRulesByID(ctx context.Context, request
 
 // GetNPAPolicyGroups - Get list of npa policy groups
 // Get list of npa policy groups
-func (s *TerraformProviderNs) GetNPAPolicyGroups(ctx context.Context, request operations.GetNPAPolicyGroupsRequest) (*operations.GetNPAPolicyGroupsResponse, error) {
+func (s *TerraformProviderNs) GetNPAPolicyGroups(ctx context.Context, request operations.GetNPAPolicyGroupsRequest, opts ...operations.Option) (*operations.GetNPAPolicyGroupsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "getNPAPolicyGroups",
@@ -1171,10 +1377,32 @@ func (s *TerraformProviderNs) GetNPAPolicyGroups(ctx context.Context, request op
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := url.JoinPath(baseURL, "/policy/npa/policygroups")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
@@ -1269,12 +1497,23 @@ func (s *TerraformProviderNs) GetNPAPolicyGroups(ctx context.Context, request op
 
 // CreateNPAPolicyGroups - Create a npa policy group
 // Create a npa policy group
-func (s *TerraformProviderNs) CreateNPAPolicyGroups(ctx context.Context, request operations.CreateNPAPolicyGroupsRequest) (*operations.CreateNPAPolicyGroupsResponse, error) {
+func (s *TerraformProviderNs) CreateNPAPolicyGroups(ctx context.Context, request operations.CreateNPAPolicyGroupsRequest, opts ...operations.Option) (*operations.CreateNPAPolicyGroupsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "createNPAPolicyGroups",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -1286,6 +1525,17 @@ func (s *TerraformProviderNs) CreateNPAPolicyGroups(ctx context.Context, request
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "NpaPolicygroupRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "POST", opURL, bodyReader)
@@ -1381,7 +1631,7 @@ func (s *TerraformProviderNs) CreateNPAPolicyGroups(ctx context.Context, request
 
 // DeleteNPAPolicyGroups - Delete a npa policy group
 // Delete a npa policy group with group id
-func (s *TerraformProviderNs) DeleteNPAPolicyGroups(ctx context.Context, request operations.DeleteNPAPolicyGroupsRequest) (*operations.DeleteNPAPolicyGroupsResponse, error) {
+func (s *TerraformProviderNs) DeleteNPAPolicyGroups(ctx context.Context, request operations.DeleteNPAPolicyGroupsRequest, opts ...operations.Option) (*operations.DeleteNPAPolicyGroupsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "deleteNPAPolicyGroups",
@@ -1389,10 +1639,32 @@ func (s *TerraformProviderNs) DeleteNPAPolicyGroups(ctx context.Context, request
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/policy/npa/policygroups/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "DELETE", opURL, nil)
@@ -1483,12 +1755,23 @@ func (s *TerraformProviderNs) DeleteNPAPolicyGroups(ctx context.Context, request
 
 // PatchNPAPolicyGroupsByID - Patch a npa policy group
 // Patch a npa policy group based on group id
-func (s *TerraformProviderNs) PatchNPAPolicyGroupsByID(ctx context.Context, request operations.PatchNPAPolicyGroupsByIDRequest) (*operations.PatchNPAPolicyGroupsByIDResponse, error) {
+func (s *TerraformProviderNs) PatchNPAPolicyGroupsByID(ctx context.Context, request operations.PatchNPAPolicyGroupsByIDRequest, opts ...operations.Option) (*operations.PatchNPAPolicyGroupsByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "patchNPAPolicyGroupsById",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -1500,6 +1783,17 @@ func (s *TerraformProviderNs) PatchNPAPolicyGroupsByID(ctx context.Context, requ
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "NpaPolicygroupPatchRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "PATCH", opURL, bodyReader)
@@ -1595,7 +1889,7 @@ func (s *TerraformProviderNs) PatchNPAPolicyGroupsByID(ctx context.Context, requ
 
 // GetNPAApps - Get list of private applications
 // Get list of private applications
-func (s *TerraformProviderNs) GetNPAApps(ctx context.Context, request operations.GetNPAAppsRequest) (*operations.GetNPAAppsResponse, error) {
+func (s *TerraformProviderNs) GetNPAApps(ctx context.Context, request operations.GetNPAAppsRequest, opts ...operations.Option) (*operations.GetNPAAppsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "getNPAApps",
@@ -1603,10 +1897,32 @@ func (s *TerraformProviderNs) GetNPAApps(ctx context.Context, request operations
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := url.JoinPath(baseURL, "/steering/apps/private")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
@@ -1701,12 +2017,23 @@ func (s *TerraformProviderNs) GetNPAApps(ctx context.Context, request operations
 
 // CreateNPAApps - Create a private application
 // Create a private application
-func (s *TerraformProviderNs) CreateNPAApps(ctx context.Context, request operations.CreateNPAAppsRequest) (*operations.CreateNPAAppsResponse, error) {
+func (s *TerraformProviderNs) CreateNPAApps(ctx context.Context, request operations.CreateNPAAppsRequest, opts ...operations.Option) (*operations.CreateNPAAppsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "createNPAApps",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -1718,6 +2045,17 @@ func (s *TerraformProviderNs) CreateNPAApps(ctx context.Context, request operati
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PrivateAppsRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "POST", opURL, bodyReader)
@@ -1813,7 +2151,7 @@ func (s *TerraformProviderNs) CreateNPAApps(ctx context.Context, request operati
 
 // DeleteNPAApps - Delete a private application
 // Delete a private application based on private app id
-func (s *TerraformProviderNs) DeleteNPAApps(ctx context.Context, request operations.DeleteNPAAppsRequest) (*operations.DeleteNPAAppsResponse, error) {
+func (s *TerraformProviderNs) DeleteNPAApps(ctx context.Context, request operations.DeleteNPAAppsRequest, opts ...operations.Option) (*operations.DeleteNPAAppsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "deleteNPAApps",
@@ -1821,10 +2159,32 @@ func (s *TerraformProviderNs) DeleteNPAApps(ctx context.Context, request operati
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/steering/apps/private/{private_app_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "DELETE", opURL, nil)
@@ -1915,12 +2275,23 @@ func (s *TerraformProviderNs) DeleteNPAApps(ctx context.Context, request operati
 
 // ReplaceNPAAppsByID - Update a private application
 // Update a private application based on private app id
-func (s *TerraformProviderNs) ReplaceNPAAppsByID(ctx context.Context, request operations.ReplaceNPAAppsByIDRequest) (*operations.ReplaceNPAAppsByIDResponse, error) {
+func (s *TerraformProviderNs) ReplaceNPAAppsByID(ctx context.Context, request operations.ReplaceNPAAppsByIDRequest, opts ...operations.Option) (*operations.ReplaceNPAAppsByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "replaceNPAAppsById",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -1932,6 +2303,17 @@ func (s *TerraformProviderNs) ReplaceNPAAppsByID(ctx context.Context, request op
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PrivateAppsPutRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
@@ -2027,12 +2409,23 @@ func (s *TerraformProviderNs) ReplaceNPAAppsByID(ctx context.Context, request op
 
 // PatchNPAAppsByID - Patch a private application
 // Patch a private application based on private app id
-func (s *TerraformProviderNs) PatchNPAAppsByID(ctx context.Context, request operations.PatchNPAAppsByIDRequest) (*operations.PatchNPAAppsByIDResponse, error) {
+func (s *TerraformProviderNs) PatchNPAAppsByID(ctx context.Context, request operations.PatchNPAAppsByIDRequest, opts ...operations.Option) (*operations.PatchNPAAppsByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "patchNPAAppsById",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -2044,6 +2437,17 @@ func (s *TerraformProviderNs) PatchNPAAppsByID(ctx context.Context, request oper
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PrivateAppsPutRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "PATCH", opURL, bodyReader)
@@ -2139,7 +2543,7 @@ func (s *TerraformProviderNs) PatchNPAAppsByID(ctx context.Context, request oper
 
 // GetNPAAppsByID - Get a private application
 // Get a private application based on private app id
-func (s *TerraformProviderNs) GetNPAAppsByID(ctx context.Context, request operations.GetNPAAppsByIDRequest) (*operations.GetNPAAppsByIDResponse, error) {
+func (s *TerraformProviderNs) GetNPAAppsByID(ctx context.Context, request operations.GetNPAAppsByIDRequest, opts ...operations.Option) (*operations.GetNPAAppsByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "getNPAAppsById",
@@ -2147,10 +2551,32 @@ func (s *TerraformProviderNs) GetNPAAppsByID(ctx context.Context, request operat
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/steering/apps/private/{private_app_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
@@ -2241,12 +2667,23 @@ func (s *TerraformProviderNs) GetNPAAppsByID(ctx context.Context, request operat
 
 // QueryNPAPolicyInUse - Retrieve number of policy in use for specified private apps
 // Retrieve number of policy in use for specified private apps
-func (s *TerraformProviderNs) QueryNPAPolicyInUse(ctx context.Context, request operations.QueryNPAPolicyInUseRequestBody) (*operations.QueryNPAPolicyInUseResponse, error) {
+func (s *TerraformProviderNs) QueryNPAPolicyInUse(ctx context.Context, request operations.QueryNPAPolicyInUseRequestBody, opts ...operations.Option) (*operations.QueryNPAPolicyInUseResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "queryNPAPolicyInUse",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -2258,6 +2695,17 @@ func (s *TerraformProviderNs) QueryNPAPolicyInUse(ctx context.Context, request o
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "POST", opURL, bodyReader)
@@ -2349,12 +2797,23 @@ func (s *TerraformProviderNs) QueryNPAPolicyInUse(ctx context.Context, request o
 
 // PatchNPATags - bulk update tags to associate with specified private apps
 // Bulk update tags to associate with specified private apps
-func (s *TerraformProviderNs) PatchNPATags(ctx context.Context, request shared.TagRequest) (*operations.PatchNPATagsResponse, error) {
+func (s *TerraformProviderNs) PatchNPATags(ctx context.Context, request shared.TagRequest, opts ...operations.Option) (*operations.PatchNPATagsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "patchNPATags",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
+	}
+
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
 	}
 
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
@@ -2366,6 +2825,17 @@ func (s *TerraformProviderNs) PatchNPATags(ctx context.Context, request shared.T
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "PATCH", opURL, bodyReader)
@@ -2457,7 +2927,7 @@ func (s *TerraformProviderNs) PatchNPATags(ctx context.Context, request shared.T
 
 // GetNPATags - Get list of private app tags
 // Get list of private app tags
-func (s *TerraformProviderNs) GetNPATags(ctx context.Context) (*operations.GetNPATagsResponse, error) {
+func (s *TerraformProviderNs) GetNPATags(ctx context.Context, opts ...operations.Option) (*operations.GetNPATagsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "getNPATags",
@@ -2465,10 +2935,32 @@ func (s *TerraformProviderNs) GetNPATags(ctx context.Context) (*operations.GetNP
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := url.JoinPath(baseURL, "/steering/apps/private/tags")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
@@ -2559,7 +3051,7 @@ func (s *TerraformProviderNs) GetNPATags(ctx context.Context) (*operations.GetNP
 
 // DeleteNPATagsByID - Delete a private app tag based on tag id
 // Delete a private app tag based on tag id
-func (s *TerraformProviderNs) DeleteNPATagsByID(ctx context.Context, request operations.DeleteNPATagsByIDRequest) (*operations.DeleteNPATagsByIDResponse, error) {
+func (s *TerraformProviderNs) DeleteNPATagsByID(ctx context.Context, request operations.DeleteNPATagsByIDRequest, opts ...operations.Option) (*operations.DeleteNPATagsByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "deleteNPATagsById",
@@ -2567,10 +3059,32 @@ func (s *TerraformProviderNs) DeleteNPATagsByID(ctx context.Context, request ope
 		SecuritySource: s.sdkConfiguration.Security,
 	}
 
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/steering/apps/private/tags/{tag_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "DELETE", opURL, nil)
