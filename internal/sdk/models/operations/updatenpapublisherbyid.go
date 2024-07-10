@@ -40,8 +40,8 @@ type UpdateNPAPublisherByIDRequest struct {
 	// publisher id
 	PublisherID int `pathParam:"style=simple,explode=false,name=publisher_id"`
 	// flag to skip output except status code
-	Silent              *UpdateNPAPublisherByIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
-	PublisherPutRequest shared.PublisherPutRequest              `request:"mediaType=application/json"`
+	Silent                *UpdateNPAPublisherByIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
+	PublisherPatchRequest shared.PublisherPatchRequest            `request:"mediaType=application/json"`
 }
 
 func (o *UpdateNPAPublisherByIDRequest) GetPublisherID() int {
@@ -58,11 +58,11 @@ func (o *UpdateNPAPublisherByIDRequest) GetSilent() *UpdateNPAPublisherByIDQuery
 	return o.Silent
 }
 
-func (o *UpdateNPAPublisherByIDRequest) GetPublisherPutRequest() shared.PublisherPutRequest {
+func (o *UpdateNPAPublisherByIDRequest) GetPublisherPatchRequest() shared.PublisherPatchRequest {
 	if o == nil {
-		return shared.PublisherPutRequest{}
+		return shared.PublisherPatchRequest{}
 	}
-	return o.PublisherPutRequest
+	return o.PublisherPatchRequest
 }
 
 type UpdateNPAPublisherByIDResponse struct {

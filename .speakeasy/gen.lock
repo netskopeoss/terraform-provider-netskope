@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: f484f594d0146f9244ca93c9b04e236f
+  docChecksum: eab961166235263e19f58e40660192e6
   docVersion: 1.0.0
   speakeasyVersion: 1.330.0
   generationVersion: 2.361.10
-  releaseVersion: 0.7.74
-  configChecksum: ac45f16b7e4dda827246fc5ea49af817
+  releaseVersion: 0.7.75
+  configChecksum: dfa84ef119db9a27f0f242343346c9db
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -113,6 +113,7 @@ generatedFiles:
   - internal/sdk/models/shared/upgradefailedreason.go
   - internal/sdk/models/shared/assessment.go
   - internal/sdk/models/shared/publisherpostrequest.go
+  - internal/sdk/models/shared/publisherpatchrequest.go
   - internal/sdk/models/shared/publisherappslistresponse.go
   - internal/sdk/models/shared/publishersreleasegetresponse.go
   - internal/sdk/models/shared/releaseitem.go

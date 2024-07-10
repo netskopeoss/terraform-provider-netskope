@@ -362,7 +362,7 @@ func (s *NPAPublishers) Update(ctx context.Context, request operations.UpdateNPA
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PublisherPutRequest", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PublisherPatchRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
 	}
