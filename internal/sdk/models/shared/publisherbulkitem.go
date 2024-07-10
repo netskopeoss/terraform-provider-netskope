@@ -55,7 +55,6 @@ type PublisherBulkItem struct {
 	StitcherID                *int                                  `json:"stitcher_id,omitempty"`
 	Status                    *PublisherBulkItemStatus              `json:"status,omitempty"`
 	PublisherUpgradeProfileID *int                                  `json:"publisher_upgrade_profile_id,omitempty"`
-	Tags                      []TagItem                             `json:"tags,omitempty"`
 }
 
 func (o *PublisherBulkItem) GetID() *int {
@@ -140,11 +139,4 @@ func (o *PublisherBulkItem) GetPublisherUpgradeProfileID() *int {
 		return nil
 	}
 	return o.PublisherUpgradeProfileID
-}
-
-func (o *PublisherBulkItem) GetTags() []TagItem {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
 }

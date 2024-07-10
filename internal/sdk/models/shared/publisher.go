@@ -152,7 +152,6 @@ type Publisher struct {
 	Registered                         bool                         `json:"registered"`
 	Status                             string                       `json:"status"`
 	StitcherID                         int64                        `json:"stitcher_id"`
-	Tags                               []any                        `json:"tags"`
 	UpgradeFailedReason                PublisherUpgradeFailedReason `json:"upgrade_failed_reason"`
 	UpgradeRequest                     bool                         `json:"upgrade_request"`
 	UpgradeStatus                      UpgradeStatus                `json:"upgrade_status"`
@@ -233,13 +232,6 @@ func (o *Publisher) GetStitcherID() int64 {
 		return 0
 	}
 	return o.StitcherID
-}
-
-func (o *Publisher) GetTags() []any {
-	if o == nil {
-		return []any{}
-	}
-	return o.Tags
 }
 
 func (o *Publisher) GetUpgradeFailedReason() PublisherUpgradeFailedReason {

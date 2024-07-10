@@ -113,19 +113,6 @@ func (r *NPAPublishersAppsListDataSource) Schema(ctx context.Context, req dataso
 								},
 							},
 						},
-						"tags": schema.ListNestedAttribute{
-							Computed: true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"tag_id": schema.Int64Attribute{
-										Computed: true,
-									},
-									"tag_name": schema.StringAttribute{
-										Computed: true,
-									},
-								},
-							},
-						},
 						"trust_self_signed_certs": schema.BoolAttribute{
 							Computed: true,
 						},

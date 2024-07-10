@@ -3,7 +3,6 @@
 package provider
 
 import (
-	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
@@ -46,13 +45,6 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 				publishers1.Registered = types.BoolValue(publishersItem.Registered)
 				publishers1.Status = types.StringValue(publishersItem.Status)
 				publishers1.StitcherID = types.Int64Value(publishersItem.StitcherID)
-				publishers1.Tags = nil
-				for _, tagsItem := range publishersItem.Tags {
-					var tags1 types.String
-					tags1Result, _ := json.Marshal(tagsItem)
-					tags1 = types.StringValue(string(tags1Result))
-					publishers1.Tags = append(publishers1.Tags, tags1)
-				}
 				if publishersItem.UpgradeFailedReason.UpgradeFailedReason2 != nil {
 					publishers1.UpgradeFailedReason.Two = &tfTypes.PublisherBulkItemAssessment{}
 				}
@@ -79,7 +71,6 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 					r.Data.Publishers[publishersCount].Registered = publishers1.Registered
 					r.Data.Publishers[publishersCount].Status = publishers1.Status
 					r.Data.Publishers[publishersCount].StitcherID = publishers1.StitcherID
-					r.Data.Publishers[publishersCount].Tags = publishers1.Tags
 					r.Data.Publishers[publishersCount].UpgradeFailedReason = publishers1.UpgradeFailedReason
 					r.Data.Publishers[publishersCount].UpgradeRequest = publishers1.UpgradeRequest
 					r.Data.Publishers[publishersCount].UpgradeStatus = publishers1.UpgradeStatus

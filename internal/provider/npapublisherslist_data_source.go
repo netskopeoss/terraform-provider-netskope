@@ -116,10 +116,6 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 								"stitcher_id": schema.Int64Attribute{
 									Computed: true,
 								},
-								"tags": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
 								"upgrade_failed_reason": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{

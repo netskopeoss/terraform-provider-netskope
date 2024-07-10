@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
@@ -29,16 +28,15 @@ type NPAPublishersDataSource struct {
 
 // NPAPublishersDataSourceModel describes the data model.
 type NPAPublishersDataSourceModel struct {
-	Assessment                types.String      `tfsdk:"assessment"`
-	CommonName                types.String      `tfsdk:"common_name"`
-	ID                        types.Int64       `tfsdk:"id"`
-	Lbrokerconnect            types.Bool        `tfsdk:"lbrokerconnect"`
-	Name                      types.String      `tfsdk:"name"`
-	PublisherUpgradeProfileID types.Int64       `tfsdk:"publisher_upgrade_profile_id"`
-	Registered                types.Bool        `tfsdk:"registered"`
-	Status                    types.String      `tfsdk:"status"`
-	StitcherID                types.Int64       `tfsdk:"stitcher_id"`
-	Tags                      []tfTypes.TagItem `tfsdk:"tags"`
+	Assessment                types.String `tfsdk:"assessment"`
+	CommonName                types.String `tfsdk:"common_name"`
+	Lbrokerconnect            types.Bool   `tfsdk:"lbrokerconnect"`
+	Name                      types.String `tfsdk:"name"`
+	PublisherID               types.Int64  `tfsdk:"publisher_id"`
+	PublisherUpgradeProfileID types.Int64  `tfsdk:"publisher_upgrade_profile_id"`
+	Registered                types.Bool   `tfsdk:"registered"`
+	Status                    types.String `tfsdk:"status"`
+	StitcherID                types.Int64  `tfsdk:"stitcher_id"`
 }
 
 // Metadata returns the data source type name.
@@ -59,14 +57,15 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 			"common_name": schema.StringAttribute{
 				Computed: true,
 			},
-			"id": schema.Int64Attribute{
-				Computed: true,
-			},
 			"lbrokerconnect": schema.BoolAttribute{
 				Computed: true,
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
+			},
+			"publisher_id": schema.Int64Attribute{
+				Required:    true,
+				Description: `publisher id`,
 			},
 			"publisher_upgrade_profile_id": schema.Int64Attribute{
 				Computed: true,
@@ -80,19 +79,6 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 			},
 			"stitcher_id": schema.Int64Attribute{
 				Computed: true,
-			},
-			"tags": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"tag_id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"tag_name": schema.StringAttribute{
-							Computed: true,
-						},
-					},
-				},
 			},
 		},
 	}
@@ -136,7 +122,7 @@ func (r *NPAPublishersDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	publisherID := int(data.ID.ValueInt64())
+	publisherID := int(data.PublisherID.ValueInt64())
 	request := operations.GetNPAPublisherByIDRequest{
 		PublisherID: publisherID,
 	}
