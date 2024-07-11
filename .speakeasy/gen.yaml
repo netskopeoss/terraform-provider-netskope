@@ -12,7 +12,7 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: true
 terraform:
-  version: 0.7.114
+  version: 0.7.123
   additionalDataSources: []
   additionalDependencies: {}
   additionalResources: []

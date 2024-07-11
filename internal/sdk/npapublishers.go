@@ -584,7 +584,7 @@ func (s *NPAPublishers) Update(ctx context.Context, request operations.UpdateNPA
 // component of Netskope’s Private Access (NPA) solution, which provides zero-trust
 // network access (ZTNA) to private applications and data in hybrid IT environments.
 //
-// This endpoint supports query of a specificPublisher object.
+// This endpoint supports query of a specific Publisher object.
 // Supply `publisher_id` in the path of the request.
 func (s *NPAPublishers) Read(ctx context.Context, request operations.GetNPAPublisherByIDRequest, opts ...operations.Option) (*operations.GetNPAPublisherByIDResponse, error) {
 	hookCtx := hooks.HookContext{
