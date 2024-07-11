@@ -4,6 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
@@ -39,6 +40,90 @@ func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *
 
 func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkResponse(resp *shared.PublishersBulkResponse) {
 	if resp != nil {
+		if resp.Data == nil {
+			r.Data = nil
+		} else {
+			r.Data = &tfTypes.PublishersBulkResponseData{}
+			r.Data.Publishers = []tfTypes.PublishersBulkResponsePublishers{}
+			if len(r.Data.Publishers) > len(resp.Data.Publishers) {
+				r.Data.Publishers = r.Data.Publishers[:len(resp.Data.Publishers)]
+			}
+			for publishersCount, publishersItem := range resp.Data.Publishers {
+				var publishers1 tfTypes.PublishersBulkResponsePublishers
+				if publishersItem.AppsCount != nil {
+					publishers1.AppsCount = types.Int64Value(int64(*publishersItem.AppsCount))
+				} else {
+					publishers1.AppsCount = types.Int64Null()
+				}
+				if publishersItem.Assessment == nil {
+					publishers1.Assessment = nil
+				} else {
+					publishers1.Assessment = &tfTypes.PublishersBulkResponseAssessment{}
+				}
+				if publishersItem.Capabilities == nil {
+					publishers1.Capabilities = nil
+				} else {
+					publishers1.Capabilities = &tfTypes.PublishersBulkResponseAssessment{}
+				}
+				publishers1.CommonName = types.StringPointerValue(publishersItem.CommonName)
+				publishers1.ConnectedApps = []types.String{}
+				for _, v := range publishersItem.ConnectedApps {
+					publishers1.ConnectedApps = append(publishers1.ConnectedApps, types.StringValue(v))
+				}
+				if publishersItem.ID != nil {
+					publishers1.ID = types.Int64Value(int64(*publishersItem.ID))
+				} else {
+					publishers1.ID = types.Int64Null()
+				}
+				publishers1.Lbrokerconnect = types.BoolPointerValue(publishersItem.Lbrokerconnect)
+				publishers1.Name = types.StringPointerValue(publishersItem.Name)
+				if publishersItem.PublisherUpgradeProfilesID != nil {
+					publishers1.PublisherUpgradeProfilesID = types.Int64Value(int64(*publishersItem.PublisherUpgradeProfilesID))
+				} else {
+					publishers1.PublisherUpgradeProfilesID = types.Int64Null()
+				}
+				publishers1.Registered = types.BoolPointerValue(publishersItem.Registered)
+				publishers1.Status = types.StringPointerValue(publishersItem.Status)
+				if publishersItem.StitcherID != nil {
+					publishers1.StitcherID = types.Int64Value(int64(*publishersItem.StitcherID))
+				} else {
+					publishers1.StitcherID = types.Int64Null()
+				}
+				publishers1.StitcherPop = types.StringPointerValue(publishersItem.StitcherPop)
+				if publishersItem.UpgradeFailedReason == nil {
+					publishers1.UpgradeFailedReason = nil
+				} else {
+					publishers1.UpgradeFailedReason = &tfTypes.PublishersBulkResponseAssessment{}
+				}
+				publishers1.UpgradeRequest = types.BoolPointerValue(publishersItem.UpgradeRequest)
+				if publishersItem.UpgradeStatus == nil {
+					publishers1.UpgradeStatus = nil
+				} else {
+					publishers1.UpgradeStatus = &tfTypes.PublishersBulkResponseUpgradeStatus{}
+					publishers1.UpgradeStatus.Upstat = types.StringPointerValue(publishersItem.UpgradeStatus.Upstat)
+				}
+				if publishersCount+1 > len(r.Data.Publishers) {
+					r.Data.Publishers = append(r.Data.Publishers, publishers1)
+				} else {
+					r.Data.Publishers[publishersCount].AppsCount = publishers1.AppsCount
+					r.Data.Publishers[publishersCount].Assessment = publishers1.Assessment
+					r.Data.Publishers[publishersCount].Capabilities = publishers1.Capabilities
+					r.Data.Publishers[publishersCount].CommonName = publishers1.CommonName
+					r.Data.Publishers[publishersCount].ConnectedApps = publishers1.ConnectedApps
+					r.Data.Publishers[publishersCount].ID = publishers1.ID
+					r.Data.Publishers[publishersCount].Lbrokerconnect = publishers1.Lbrokerconnect
+					r.Data.Publishers[publishersCount].Name = publishers1.Name
+					r.Data.Publishers[publishersCount].PublisherUpgradeProfilesID = publishers1.PublisherUpgradeProfilesID
+					r.Data.Publishers[publishersCount].Registered = publishers1.Registered
+					r.Data.Publishers[publishersCount].Status = publishers1.Status
+					r.Data.Publishers[publishersCount].StitcherID = publishers1.StitcherID
+					r.Data.Publishers[publishersCount].StitcherPop = publishers1.StitcherPop
+					r.Data.Publishers[publishersCount].UpgradeFailedReason = publishers1.UpgradeFailedReason
+					r.Data.Publishers[publishersCount].UpgradeRequest = publishers1.UpgradeRequest
+					r.Data.Publishers[publishersCount].UpgradeStatus = publishers1.UpgradeStatus
+				}
+			}
+		}
 		if resp.Status != nil {
 			r.Status = types.StringValue(string(*resp.Status))
 		} else {

@@ -34,6 +34,7 @@ resource "ns_npa_publishers_bulk_upgrade" "my_npapublishersbulkupgrade" {
 
 ### Read-Only
 
+- `data` (Attributes) (see [below for nested schema](#nestedatt--data))
 - `status` (String) must be one of ["success", "not found"]
 
 <a id="nestedatt--publishers"></a>
@@ -50,5 +51,55 @@ Optional:
 Optional:
 
 - `upgrade_request` (Boolean) Requires replacement if changed. ; Default: true
+
+
+
+<a id="nestedatt--data"></a>
+### Nested Schema for `data`
+
+Read-Only:
+
+- `publishers` (Attributes List) (see [below for nested schema](#nestedatt--data--publishers))
+
+<a id="nestedatt--data--publishers"></a>
+### Nested Schema for `data.publishers`
+
+Read-Only:
+
+- `apps_count` (Number)
+- `assessment` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--assessment))
+- `capabilities` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--capabilities))
+- `common_name` (String)
+- `connected_apps` (List of String)
+- `id` (Number)
+- `lbrokerconnect` (Boolean)
+- `name` (String)
+- `publisher_upgrade_profiles_id` (Number)
+- `registered` (Boolean)
+- `status` (String)
+- `stitcher_id` (Number)
+- `stitcher_pop` (String)
+- `upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--upgrade_failed_reason))
+- `upgrade_request` (Boolean)
+- `upgrade_status` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--upgrade_status))
+
+<a id="nestedatt--data--publishers--assessment"></a>
+### Nested Schema for `data.publishers.assessment`
+
+
+<a id="nestedatt--data--publishers--capabilities"></a>
+### Nested Schema for `data.publishers.capabilities`
+
+
+<a id="nestedatt--data--publishers--upgrade_failed_reason"></a>
+### Nested Schema for `data.publishers.upgrade_failed_reason`
+
+
+<a id="nestedatt--data--publishers--upgrade_status"></a>
+### Nested Schema for `data.publishers.upgrade_status`
+
+Read-Only:
+
+- `upstat` (String)
 
 
