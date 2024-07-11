@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: 564b87f56d09ede47590624ed08a0e04
+  docChecksum: d9ea4f30ed032c0ad8cc282a2d887f22
   docVersion: 1.0.0
   speakeasyVersion: 1.331.2
   generationVersion: 2.366.1
-  releaseVersion: 0.7.108
-  configChecksum: a2c0e5b2b65b66aad32f748da90b41ee
+  releaseVersion: 0.7.113
+  configChecksum: 5b2348dcbcdde598c314f5f18d4bb3e3
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -43,7 +43,7 @@ generatedFiles:
   - internal/sdk/internal/utils/security.go
   - internal/sdk/internal/utils/utils.go
   - internal/sdk/models/operations/replacenpapublisherbyid.go
-  - internal/sdk/models/operations/triggernpapublisherupdate.go
+  - internal/sdk/models/operations/putinfrastructurepublishersbulk.go
   - internal/sdk/models/operations/getnpapublisheralerts.go
   - internal/sdk/models/operations/configurenpapublisheralerts.go
   - internal/sdk/models/operations/getnpapolicyrules.go
@@ -175,7 +175,11 @@ generatedFiles:
   - internal/provider/types/rule_order.go
   - internal/provider/types/group_order.go
   - internal/provider/types/publishers_alert_get_response_data.go
+  - internal/provider/types/ca_certs_status.go
   - internal/provider/types/publishers_bulk_response_assessment.go
+  - internal/provider/types/pull_nsconfig.go
+  - internal/provider/types/capabilities.go
+  - internal/provider/types/publishers_bulk_response_upgrade_failed_reason.go
   - internal/provider/types/publishers_bulk_response_upgrade_status.go
   - internal/provider/types/publishers_bulk_response_publishers.go
   - internal/provider/types/publishers_bulk_response_data.go
@@ -188,6 +192,7 @@ generatedFiles:
   - internal/provider/types/service_publisher_assignment_item.go
   - internal/provider/types/tag_item.go
   - internal/provider/types/npa_policy_response_item.go
+  - internal/provider/types/app_option.go
   - internal/provider/types/protocols.go
   - internal/provider/types/publisher_apps_list_response_reachability.go
   - internal/provider/types/service_publisher_assignments.go

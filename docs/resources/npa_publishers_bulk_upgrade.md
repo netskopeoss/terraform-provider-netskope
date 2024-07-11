@@ -86,13 +86,56 @@ Read-Only:
 <a id="nestedatt--data--publishers--assessment"></a>
 ### Nested Schema for `data.publishers.assessment`
 
+Read-Only:
+
+- `ca_certs_status` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--assessment--ca_certs_status))
+- `eee_support` (Boolean)
+- `hdd_free` (String)
+- `hdd_total` (String)
+- `ip_address` (String)
+- `latency` (Number)
+- `version` (String)
+
+<a id="nestedatt--data--publishers--assessment--ca_certs_status"></a>
+### Nested Schema for `data.publishers.assessment.version`
+
+Read-Only:
+
+- `hashes` (List of String)
+- `last_modified` (Number)
+
+
 
 <a id="nestedatt--data--publishers--capabilities"></a>
 ### Nested Schema for `data.publishers.capabilities`
 
+Read-Only:
+
+- `auto_upgrade` (Boolean)
+- `dtls` (Boolean)
+- `eee` (Boolean)
+- `nwa_ba` (Boolean)
+- `pull_nsconfig` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--capabilities--pull_nsconfig))
+
+<a id="nestedatt--data--publishers--capabilities--pull_nsconfig"></a>
+### Nested Schema for `data.publishers.capabilities.pull_nsconfig`
+
+Read-Only:
+
+- `orgkey_exist` (Boolean)
+- `orguri_exist` (Boolean)
+
+
 
 <a id="nestedatt--data--publishers--upgrade_failed_reason"></a>
 ### Nested Schema for `data.publishers.upgrade_failed_reason`
+
+Read-Only:
+
+- `detail` (String)
+- `error_code` (Number)
+- `timestamp` (Number)
+- `version` (String)
 
 
 <a id="nestedatt--data--publishers--upgrade_status"></a>

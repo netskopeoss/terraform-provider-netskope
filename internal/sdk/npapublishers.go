@@ -171,7 +171,7 @@ func (s *NPAPublishers) ListObjects(ctx context.Context, request operations.GetN
 // component of Netskope’s Private Access (NPA) solution, which provides zero-trust
 // network access (ZTNA) to private applications and data in hybrid IT environments.
 //
-// This resource supports the creation of the Publisher objects.
+// This endpoint supports the creation of Publisher objects.
 // Please review the samples provided for minimum, and full schemas.
 //
 // Features may require additional licensing, please work with account team to enable.
@@ -308,7 +308,12 @@ func (s *NPAPublishers) Create(ctx context.Context, request operations.CreateNPA
 }
 
 // Delete a publisher
-// Delete a publisher based on publisher id
+// The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+// This endpoint supports deletion of Publishers by supplying the `publisher_id` attribute.
 func (s *NPAPublishers) Delete(ctx context.Context, request operations.DeleteNPAPublishersRequest, opts ...operations.Option) (*operations.DeleteNPAPublishersResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
@@ -432,7 +437,15 @@ func (s *NPAPublishers) Delete(ctx context.Context, request operations.DeleteNPA
 }
 
 // Update - Patch a publisher
-// patch a publisher based on publisher id
+// The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+// This endpoint supports updating the Publisher object.
+// Supply `publisher_id` in the path of the request and attributes that are to be updated.
+// *Note:* `name` attribute is required in the body of the Patch request.
+// See examples:
 func (s *NPAPublishers) Update(ctx context.Context, request operations.UpdateNPAPublisherByIDRequest, opts ...operations.Option) (*operations.UpdateNPAPublisherByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
@@ -566,7 +579,13 @@ func (s *NPAPublishers) Update(ctx context.Context, request operations.UpdateNPA
 }
 
 // Read - Get a publisher
-// get a publisher based on publisher id
+// The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+// This endpoint supports query of a specificPublisher object.
+// Supply `publisher_id` in the path of the request.
 func (s *NPAPublishers) Read(ctx context.Context, request operations.GetNPAPublisherByIDRequest, opts ...operations.Option) (*operations.GetNPAPublisherByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,

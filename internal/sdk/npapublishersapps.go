@@ -26,7 +26,16 @@ func newNPAPublishersApps(sdkConfig sdkConfiguration) *NPAPublishersApps {
 }
 
 // ListObjects - Get all private apps associated to a publisher
-// Get all private apps associated to a publisher
+// The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+// This endpoint supports the ability to list all private applications associated with
+// one or many publishers.
+//
+// Please supply the `publisher_id` in the path to retrieve the private applications
+// associated with the publisher.
 func (s *NPAPublishersApps) ListObjects(ctx context.Context, request operations.GetNPAPublisherAppsRequest, opts ...operations.Option) (*operations.GetNPAPublisherAppsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,

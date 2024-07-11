@@ -22,7 +22,7 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 				var publishers1 tfTypes.Publisher
 				publishers1.AppsCount = types.Int64Value(publishersItem.AppsCount)
 				if publishersItem.Assessment.Two != nil {
-					publishers1.Assessment.Two = &tfTypes.PublishersBulkResponseAssessment{}
+					publishers1.Assessment.Two = &tfTypes.AppOption{}
 				}
 				if publishersItem.Assessment.Assessment != nil {
 					publishers1.Assessment.Assessment = &tfTypes.Assessment{}
@@ -46,7 +46,7 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 				publishers1.Status = types.StringValue(publishersItem.Status)
 				publishers1.StitcherID = types.Int64Value(publishersItem.StitcherID)
 				if publishersItem.UpgradeFailedReason.UpgradeFailedReason2 != nil {
-					publishers1.UpgradeFailedReason.Two = &tfTypes.PublishersBulkResponseAssessment{}
+					publishers1.UpgradeFailedReason.Two = &tfTypes.AppOption{}
 				}
 				if publishersItem.UpgradeFailedReason.UpgradeFailedReason != nil {
 					publishers1.UpgradeFailedReason.UpgradeFailedReason = &tfTypes.UpgradeFailedReason{}

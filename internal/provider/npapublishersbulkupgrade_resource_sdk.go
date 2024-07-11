@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
+	"math/big"
 )
 
 func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *shared.PublisherBulkRequest {
@@ -51,19 +52,54 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkR
 			for publishersCount, publishersItem := range resp.Data.Publishers {
 				var publishers1 tfTypes.PublishersBulkResponsePublishers
 				if publishersItem.AppsCount != nil {
-					publishers1.AppsCount = types.Int64Value(int64(*publishersItem.AppsCount))
+					publishers1.AppsCount = types.NumberValue(big.NewFloat(float64(*publishersItem.AppsCount)))
 				} else {
-					publishers1.AppsCount = types.Int64Null()
+					publishers1.AppsCount = types.NumberNull()
 				}
 				if publishersItem.Assessment == nil {
 					publishers1.Assessment = nil
 				} else {
 					publishers1.Assessment = &tfTypes.PublishersBulkResponseAssessment{}
+					if publishersItem.Assessment.CaCertsStatus == nil {
+						publishers1.Assessment.CaCertsStatus = nil
+					} else {
+						publishers1.Assessment.CaCertsStatus = &tfTypes.CaCertsStatus{}
+						publishers1.Assessment.CaCertsStatus.Hashes = []types.String{}
+						for _, v := range publishersItem.Assessment.CaCertsStatus.Hashes {
+							publishers1.Assessment.CaCertsStatus.Hashes = append(publishers1.Assessment.CaCertsStatus.Hashes, types.StringValue(v))
+						}
+						if publishersItem.Assessment.CaCertsStatus.LastModified != nil {
+							publishers1.Assessment.CaCertsStatus.LastModified = types.NumberValue(big.NewFloat(float64(*publishersItem.Assessment.CaCertsStatus.LastModified)))
+						} else {
+							publishers1.Assessment.CaCertsStatus.LastModified = types.NumberNull()
+						}
+					}
+					publishers1.Assessment.EeeSupport = types.BoolPointerValue(publishersItem.Assessment.EeeSupport)
+					publishers1.Assessment.HddFree = types.StringPointerValue(publishersItem.Assessment.HddFree)
+					publishers1.Assessment.HddTotal = types.StringPointerValue(publishersItem.Assessment.HddTotal)
+					publishers1.Assessment.IPAddress = types.StringPointerValue(publishersItem.Assessment.IPAddress)
+					if publishersItem.Assessment.Latency != nil {
+						publishers1.Assessment.Latency = types.NumberValue(big.NewFloat(float64(*publishersItem.Assessment.Latency)))
+					} else {
+						publishers1.Assessment.Latency = types.NumberNull()
+					}
+					publishers1.Assessment.Version = types.StringPointerValue(publishersItem.Assessment.Version)
 				}
 				if publishersItem.Capabilities == nil {
 					publishers1.Capabilities = nil
 				} else {
-					publishers1.Capabilities = &tfTypes.PublishersBulkResponseAssessment{}
+					publishers1.Capabilities = &tfTypes.Capabilities{}
+					publishers1.Capabilities.AutoUpgrade = types.BoolPointerValue(publishersItem.Capabilities.AutoUpgrade)
+					publishers1.Capabilities.Dtls = types.BoolPointerValue(publishersItem.Capabilities.Dtls)
+					publishers1.Capabilities.Eee = types.BoolPointerValue(publishersItem.Capabilities.Eee)
+					publishers1.Capabilities.NwaBa = types.BoolPointerValue(publishersItem.Capabilities.NwaBa)
+					if publishersItem.Capabilities.PullNsconfig == nil {
+						publishers1.Capabilities.PullNsconfig = nil
+					} else {
+						publishers1.Capabilities.PullNsconfig = &tfTypes.PullNsconfig{}
+						publishers1.Capabilities.PullNsconfig.OrgkeyExist = types.BoolPointerValue(publishersItem.Capabilities.PullNsconfig.OrgkeyExist)
+						publishers1.Capabilities.PullNsconfig.OrguriExist = types.BoolPointerValue(publishersItem.Capabilities.PullNsconfig.OrguriExist)
+					}
 				}
 				publishers1.CommonName = types.StringPointerValue(publishersItem.CommonName)
 				publishers1.ConnectedApps = []types.String{}
@@ -71,29 +107,41 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkR
 					publishers1.ConnectedApps = append(publishers1.ConnectedApps, types.StringValue(v))
 				}
 				if publishersItem.ID != nil {
-					publishers1.ID = types.Int64Value(int64(*publishersItem.ID))
+					publishers1.ID = types.NumberValue(big.NewFloat(float64(*publishersItem.ID)))
 				} else {
-					publishers1.ID = types.Int64Null()
+					publishers1.ID = types.NumberNull()
 				}
 				publishers1.Lbrokerconnect = types.BoolPointerValue(publishersItem.Lbrokerconnect)
 				publishers1.Name = types.StringPointerValue(publishersItem.Name)
 				if publishersItem.PublisherUpgradeProfilesID != nil {
-					publishers1.PublisherUpgradeProfilesID = types.Int64Value(int64(*publishersItem.PublisherUpgradeProfilesID))
+					publishers1.PublisherUpgradeProfilesID = types.NumberValue(big.NewFloat(float64(*publishersItem.PublisherUpgradeProfilesID)))
 				} else {
-					publishers1.PublisherUpgradeProfilesID = types.Int64Null()
+					publishers1.PublisherUpgradeProfilesID = types.NumberNull()
 				}
 				publishers1.Registered = types.BoolPointerValue(publishersItem.Registered)
 				publishers1.Status = types.StringPointerValue(publishersItem.Status)
 				if publishersItem.StitcherID != nil {
-					publishers1.StitcherID = types.Int64Value(int64(*publishersItem.StitcherID))
+					publishers1.StitcherID = types.NumberValue(big.NewFloat(float64(*publishersItem.StitcherID)))
 				} else {
-					publishers1.StitcherID = types.Int64Null()
+					publishers1.StitcherID = types.NumberNull()
 				}
 				publishers1.StitcherPop = types.StringPointerValue(publishersItem.StitcherPop)
 				if publishersItem.UpgradeFailedReason == nil {
 					publishers1.UpgradeFailedReason = nil
 				} else {
-					publishers1.UpgradeFailedReason = &tfTypes.PublishersBulkResponseAssessment{}
+					publishers1.UpgradeFailedReason = &tfTypes.PublishersBulkResponseUpgradeFailedReason{}
+					publishers1.UpgradeFailedReason.Detail = types.StringPointerValue(publishersItem.UpgradeFailedReason.Detail)
+					if publishersItem.UpgradeFailedReason.ErrorCode != nil {
+						publishers1.UpgradeFailedReason.ErrorCode = types.NumberValue(big.NewFloat(float64(*publishersItem.UpgradeFailedReason.ErrorCode)))
+					} else {
+						publishers1.UpgradeFailedReason.ErrorCode = types.NumberNull()
+					}
+					if publishersItem.UpgradeFailedReason.Timestamp != nil {
+						publishers1.UpgradeFailedReason.Timestamp = types.NumberValue(big.NewFloat(float64(*publishersItem.UpgradeFailedReason.Timestamp)))
+					} else {
+						publishers1.UpgradeFailedReason.Timestamp = types.NumberNull()
+					}
+					publishers1.UpgradeFailedReason.Version = types.StringPointerValue(publishersItem.UpgradeFailedReason.Version)
 				}
 				publishers1.UpgradeRequest = types.BoolPointerValue(publishersItem.UpgradeRequest)
 				if publishersItem.UpgradeStatus == nil {

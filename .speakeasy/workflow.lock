@@ -2,16 +2,16 @@ speakeasyVersion: 1.331.2
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:abd74e5950ec7782b1b9ed3ece7b884510174bd02c2a48ad1bba1f5bc2fd34c1
-        sourceBlobDigest: sha256:bda8f583c4b8b68961831333603b38ae7a90cf45e0a95f44fa91358e6f20ae54
+        sourceRevisionDigest: sha256:422e0fdb6645cfbd6ab901d427e5648f505993ac1a6bcea81f2bb94abe20b350
+        sourceBlobDigest: sha256:5b56da0358488ad68d398b4df659437456170ec30798b6b5399a5b5908de940c
         tags:
             - latest
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:abd74e5950ec7782b1b9ed3ece7b884510174bd02c2a48ad1bba1f5bc2fd34c1
-        sourceBlobDigest: sha256:bda8f583c4b8b68961831333603b38ae7a90cf45e0a95f44fa91358e6f20ae54
+        sourceRevisionDigest: sha256:422e0fdb6645cfbd6ab901d427e5648f505993ac1a6bcea81f2bb94abe20b350
+        sourceBlobDigest: sha256:5b56da0358488ad68d398b4df659437456170ec30798b6b5399a5b5908de940c
         outLocation: /Users/jadrian/speakeasy/terraform-provider-ns
 workflow:
     workflowVersion: 1.0.0

@@ -27,8 +27,13 @@ func newNPAPublishersReleases(sdkConfig sdkConfiguration) *NPAPublishersReleases
 }
 
 // ListObjects - Get list of publisher release objects
-// Get list of publisher release objects
-func (s *NPAPublishersReleases) ListObjects(ctx context.Context, request operations.GetNPAPublisherObjectsRequest, opts ...operations.Option) (*operations.GetNPAPublisherObjectsResponse, error) {
+// The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+// This endpoint supports the ability to list all availble publisher releases.
+func (s *NPAPublishersReleases) ListObjects(ctx context.Context, opts ...operations.Option) (*operations.GetNPAPublisherObjectsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "getNPAPublisherObjects",
@@ -70,10 +75,6 @@ func (s *NPAPublishersReleases) ListObjects(ctx context.Context, request operati
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
-
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
-		return nil, fmt.Errorf("error populating query params: %w", err)
-	}
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err

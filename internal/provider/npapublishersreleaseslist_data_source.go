@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -29,9 +28,7 @@ type NPAPublishersReleasesListDataSource struct {
 
 // NPAPublishersReleasesListDataSourceModel describes the data model.
 type NPAPublishersReleasesListDataSourceModel struct {
-	Data   []tfTypes.ReleaseItem `tfsdk:"data"`
-	Fields types.String          `tfsdk:"fields"`
-	Status types.String          `tfsdk:"status"`
+	Data []tfTypes.ReleaseItem `tfsdk:"data"`
 }
 
 // Metadata returns the data source type name.
@@ -42,7 +39,7 @@ func (r *NPAPublishersReleasesListDataSource) Metadata(ctx context.Context, req 
 // Schema defines the schema for the data source.
 func (r *NPAPublishersReleasesListDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "NPAPublishersReleasesList DataSource",
+		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis data source supports retrieval of the current publisher versions.\n",
 
 		Attributes: map[string]schema.Attribute{
 			"data": schema.ListNestedAttribute{
@@ -60,14 +57,6 @@ func (r *NPAPublishersReleasesListDataSource) Schema(ctx context.Context, req da
 						},
 					},
 				},
-			},
-			"fields": schema.StringAttribute{
-				Optional:    true,
-				Description: `Return values only from specified fields`,
-			},
-			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["success", "not found"]`,
 			},
 		},
 	}
@@ -111,16 +100,7 @@ func (r *NPAPublishersReleasesListDataSource) Read(ctx context.Context, req data
 		return
 	}
 
-	fields := new(string)
-	if !data.Fields.IsUnknown() && !data.Fields.IsNull() {
-		*fields = data.Fields.ValueString()
-	} else {
-		fields = nil
-	}
-	request := operations.GetNPAPublisherObjectsRequest{
-		Fields: fields,
-	}
-	res, err := r.client.NPAPublishersReleases.ListObjects(ctx, request)
+	res, err := r.client.NPAPublishersReleases.ListObjects(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

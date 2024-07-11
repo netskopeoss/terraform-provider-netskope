@@ -3,12 +3,21 @@
 page_title: "ns_npa_publishers_apps_list Data Source - terraform-provider-ns"
 subcategory: ""
 description: |-
-  NPAPublishersAppsList DataSource
+  The NPA Publisher is a software package that enables private application
+  connectivity between your data center and the Netskope cloud. It is a crucial
+  component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+  network access (ZTNA) to private applications and data in hybrid IT environments.
+  This data source supports the list of applications associated with a publisher.
 ---
 
 # ns_npa_publishers_apps_list (Data Source)
 
-NPAPublishersAppsList DataSource
+The NPA Publisher is a software package that enables private application
+connectivity between your data center and the Netskope cloud. It is a crucial 
+component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+network access (ZTNA) to private applications and data in hybrid IT environments.
+
+This data source supports the list of applications associated with a publisher.
 
 ## Example Usage
 

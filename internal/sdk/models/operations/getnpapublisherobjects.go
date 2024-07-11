@@ -7,18 +7,6 @@ import (
 	"net/http"
 )
 
-type GetNPAPublisherObjectsRequest struct {
-	// Return values only from specified fields
-	Fields *string `queryParam:"style=form,explode=true,name=fields"`
-}
-
-func (o *GetNPAPublisherObjectsRequest) GetFields() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Fields
-}
-
 type GetNPAPublisherObjectsResponse struct {
 	// HTTP response content type for this operation
 	ContentType string

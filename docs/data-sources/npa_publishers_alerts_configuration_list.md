@@ -3,12 +3,21 @@
 page_title: "ns_npa_publishers_alerts_configuration_list Data Source - terraform-provider-ns"
 subcategory: ""
 description: |-
-  NPAPublishersAlertsConfigurationList DataSource
+  The NPA Publisher is a software package that enables private application
+  connectivity between your data center and the Netskope cloud. It is a crucial
+  component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+  network access (ZTNA) to private applications and data in hybrid IT environments.
+  This resource supports the ability to retrieve publisher alert configurations.
 ---
 
 # ns_npa_publishers_alerts_configuration_list (Data Source)
 
-NPAPublishersAlertsConfigurationList DataSource
+The NPA Publisher is a software package that enables private application
+connectivity between your data center and the Netskope cloud. It is a crucial 
+component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+network access (ZTNA) to private applications and data in hybrid IT environments.
+
+This resource supports the ability to retrieve publisher alert configurations.
 
 ## Example Usage
 
