@@ -46,7 +46,7 @@ func (r *NPAPublishersBulkUpgradeResource) Metadata(ctx context.Context, req res
 
 func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "NPAPublishersBulkUpgrade Resource",
+		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource supports the triggering of upgrades on publishers.\n",
 		Attributes: map[string]schema.Attribute{
 			"data": schema.SingleNestedAttribute{
 				Computed: true,
