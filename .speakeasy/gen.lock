@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: a76d3a50-7d28-47aa-96a0-41eb7882b85b
 management:
-  docChecksum: ee5278dccd3fe92b1be7c6a98bf908f2
+  docChecksum: 564b87f56d09ede47590624ed08a0e04
   docVersion: 1.0.0
-  speakeasyVersion: 1.331.0
-  generationVersion: 2.365.0
-  releaseVersion: 0.7.100
-  configChecksum: bef47b59b770b8fd2c509813452b0544
+  speakeasyVersion: 1.331.2
+  generationVersion: 2.366.1
+  releaseVersion: 0.7.108
+  configChecksum: a2c0e5b2b65b66aad32f748da90b41ee
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -175,6 +175,10 @@ generatedFiles:
   - internal/provider/types/rule_order.go
   - internal/provider/types/group_order.go
   - internal/provider/types/publishers_alert_get_response_data.go
+  - internal/provider/types/publishers_bulk_response_assessment.go
+  - internal/provider/types/publishers_bulk_response_upgrade_status.go
+  - internal/provider/types/publishers_bulk_response_publishers.go
+  - internal/provider/types/publishers_bulk_response_data.go
   - internal/provider/types/apply.go
   - internal/provider/types/publishers.go
   - internal/provider/types/protocol_item.go
@@ -184,7 +188,6 @@ generatedFiles:
   - internal/provider/types/service_publisher_assignment_item.go
   - internal/provider/types/tag_item.go
   - internal/provider/types/npa_policy_response_item.go
-  - internal/provider/types/app_option.go
   - internal/provider/types/protocols.go
   - internal/provider/types/publisher_apps_list_response_reachability.go
   - internal/provider/types/service_publisher_assignments.go

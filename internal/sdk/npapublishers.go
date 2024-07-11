@@ -27,7 +27,18 @@ func newNPAPublishers(sdkConfig sdkConfiguration) *NPAPublishers {
 }
 
 // ListObjects - Get list of publisher objects
-// Get list of publisher objects
+// The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+// This endpoint queries all publishers objects.
+//
+// By using the fields parameter, you are able to reduce the attributes in the return.
+//
+// `?fields = publisher_id,publisher_name`
+//
+// Features may require additional licensing, please work with account team to enable.
 func (s *NPAPublishers) ListObjects(ctx context.Context, request operations.GetNPAPublishersRequest, opts ...operations.Option) (*operations.GetNPAPublishersResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
@@ -155,7 +166,15 @@ func (s *NPAPublishers) ListObjects(ctx context.Context, request operations.GetN
 }
 
 // Create a publisher
-// Create a publisher
+// The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+// This resource supports the creation of the Publisher objects.
+// Please review the samples provided for minimum, and full schemas.
+//
+// Features may require additional licensing, please work with account team to enable.
 func (s *NPAPublishers) Create(ctx context.Context, request operations.CreateNPApublishersRequest, opts ...operations.Option) (*operations.CreateNPApublishersResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,

@@ -21,7 +21,7 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 			if dataItem.AppOption == nil {
 				data1.AppOption = nil
 			} else {
-				data1.AppOption = &tfTypes.AppOption{}
+				data1.AppOption = &tfTypes.PublishersBulkResponseAssessment{}
 			}
 			data1.ClientlessAccess = types.BoolPointerValue(dataItem.ClientlessAccess)
 			if dataItem.ExternalID != nil {

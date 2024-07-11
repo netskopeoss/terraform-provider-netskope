@@ -2,5 +2,5 @@
 
 package types
 
-type AppOption struct {
+type PublishersBulkResponseAssessment struct {
 }
