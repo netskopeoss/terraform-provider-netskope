@@ -6,7 +6,7 @@ import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type PublisherAppsListResponseData struct {
 	AllowUnauthenticatedCors    types.Bool                             `tfsdk:"allow_unauthenticated_cors"`
-	AppOption                   *PublishersBulkResponseAssessment      `tfsdk:"app_option"`
+	AppOption                   *AppOption                             `tfsdk:"app_option"`
 	ClientlessAccess            types.Bool                             `tfsdk:"clientless_access"`
 	ExternalID                  types.Int64                            `tfsdk:"external_id"`
 	Host                        types.String                           `tfsdk:"host"`

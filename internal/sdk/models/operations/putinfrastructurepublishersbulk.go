@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type TriggerNPAPublisherUpdateResponse struct {
+type PutInfrastructurePublishersBulkResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -20,35 +20,35 @@ type TriggerNPAPublisherUpdateResponse struct {
 	PublishersResponse400 *shared.PublishersResponse400
 }
 
-func (o *TriggerNPAPublisherUpdateResponse) GetContentType() string {
+func (o *PutInfrastructurePublishersBulkResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *TriggerNPAPublisherUpdateResponse) GetStatusCode() int {
+func (o *PutInfrastructurePublishersBulkResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *TriggerNPAPublisherUpdateResponse) GetRawResponse() *http.Response {
+func (o *PutInfrastructurePublishersBulkResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}
 	return o.RawResponse
 }
 
-func (o *TriggerNPAPublisherUpdateResponse) GetPublishersBulkResponse() *shared.PublishersBulkResponse {
+func (o *PutInfrastructurePublishersBulkResponse) GetPublishersBulkResponse() *shared.PublishersBulkResponse {
 	if o == nil {
 		return nil
 	}
 	return o.PublishersBulkResponse
 }
 
-func (o *TriggerNPAPublisherUpdateResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+func (o *PutInfrastructurePublishersBulkResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
 	if o == nil {
 		return nil
 	}

@@ -40,7 +40,7 @@ func (r *PublisherTokenResource) Metadata(ctx context.Context, req resource.Meta
 
 func (r *PublisherTokenResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "PublisherToken Resource",
+		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource supports the creation and retrival of a registration token.\n",
 		Attributes: map[string]schema.Attribute{
 			"publisher_id": schema.Int64Attribute{
 				PlanModifiers: []planmodifier.Int64{

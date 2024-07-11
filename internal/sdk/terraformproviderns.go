@@ -206,7 +206,16 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 }
 
 // ReplaceNPAPublisherByID - Update a publisher
-// update a publisher based on publisher id
+// The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+// This endpoint supports updating the Publisher object.
+// Supply `publisher_id` in the path of the request with appropriate body message.
+// *Note:* `id` attribute is required in the body of the Patch request,
+// this id is the same as the publisher_id in the path.
+// See examples:
 func (s *TerraformProviderNs) ReplaceNPAPublisherByID(ctx context.Context, request operations.ReplaceNPAPublisherByIDRequest, opts ...operations.Option) (*operations.ReplaceNPAPublisherByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
@@ -339,12 +348,19 @@ func (s *TerraformProviderNs) ReplaceNPAPublisherByID(ctx context.Context, reque
 
 }
 
-// TriggerNPAPublisherUpdate - Trigger bulk publisher update action
-// Trigger bulk publisher update action
-func (s *TerraformProviderNs) TriggerNPAPublisherUpdate(ctx context.Context, request shared.PublisherBulkRequest, opts ...operations.Option) (*operations.TriggerNPAPublisherUpdateResponse, error) {
+// PutInfrastructurePublishersBulk - Trigger bulk publisher update action
+// The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+// This endpoint supports the ability to trigger bulk update actions.
+//
+// Please see examples for how to use this endpoint.
+func (s *TerraformProviderNs) PutInfrastructurePublishersBulk(ctx context.Context, request shared.PublisherBulkRequest, opts ...operations.Option) (*operations.PutInfrastructurePublishersBulkResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "triggerNPAPublisherUpdate",
+		OperationID:    "put_/infrastructure/publishers/bulk",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -423,7 +439,7 @@ func (s *TerraformProviderNs) TriggerNPAPublisherUpdate(ctx context.Context, req
 		}
 	}
 
-	res := &operations.TriggerNPAPublisherUpdateResponse{
+	res := &operations.PutInfrastructurePublishersBulkResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -469,8 +485,13 @@ func (s *TerraformProviderNs) TriggerNPAPublisherUpdate(ctx context.Context, req
 
 }
 
-// GetNPAPublisherAlerts - Get list of publisher alerts
-// Get list of publisher alerts
+// GetNPAPublisherAlerts - Get list of publisher alerts configurations
+// The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+// This endpoint supports the ability to retrieve publisher alert configurations.
 func (s *TerraformProviderNs) GetNPAPublisherAlerts(ctx context.Context, opts ...operations.Option) (*operations.GetNPAPublisherAlertsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
@@ -594,7 +615,14 @@ func (s *TerraformProviderNs) GetNPAPublisherAlerts(ctx context.Context, opts ..
 }
 
 // ConfigureNPAPublisherAlerts - Configure publisher alerts
-// Configure publisher alerts
+// The NPA Publisher is a software package that enables private application
+// connectivity between your data center and the Netskope cloud. It is a crucial
+// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+// This endpoint supports the ability to configure publisher alert configurations.
+//
+// Please see the examples for how to configure.
 func (s *TerraformProviderNs) ConfigureNPAPublisherAlerts(ctx context.Context, request shared.PublishersAlertPutRequest, opts ...operations.Option) (*operations.ConfigureNPAPublisherAlertsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,

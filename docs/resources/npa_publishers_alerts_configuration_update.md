@@ -3,24 +3,33 @@
 page_title: "ns_npa_publishers_alerts_configuration_update Resource - terraform-provider-ns"
 subcategory: ""
 description: |-
-  NPAPublishersAlertsConfigurationUpdate Resource
+  The NPA Publisher is a software package that enables private application
+  connectivity between your data center and the Netskope cloud. It is a crucial
+  component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+  network access (ZTNA) to private applications and data in hybrid IT environments.
+  This resource supports the ability to create publisher alert configurations.
 ---
 
 # ns_npa_publishers_alerts_configuration_update (Resource)
 
-NPAPublishersAlertsConfigurationUpdate Resource
+The NPA Publisher is a software package that enables private application
+connectivity between your data center and the Netskope cloud. It is a crucial 
+component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+network access (ZTNA) to private applications and data in hybrid IT environments.
+
+This resource supports the ability to create publisher alert configurations.
 
 ## Example Usage
 
 ```terraform
 resource "ns_npa_publishers_alerts_configuration_update" "my_npapublishersalertsconfigurationupdate" {
   admin_users = [
-    ["admin1@abc.com", "admin2@abc.com"],
+    "...",
   ]
   event_types = [
     "UPGRADE_FAILED",
   ]
-  selected_users = "abc@xyz.com,def@xyz.com"
+  selected_users = "...my_selected_users..."
 }
 ```
 

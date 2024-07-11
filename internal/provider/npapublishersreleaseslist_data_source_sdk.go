@@ -27,10 +27,5 @@ func (r *NPAPublishersReleasesListDataSourceModel) RefreshFromSharedPublishersRe
 				r.Data[dataCount].Version = data1.Version
 			}
 		}
-		if resp.Status != nil {
-			r.Status = types.StringValue(string(*resp.Status))
-		} else {
-			r.Status = types.StringNull()
-		}
 	}
 }

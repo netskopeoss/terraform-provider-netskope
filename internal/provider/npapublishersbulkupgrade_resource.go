@@ -55,16 +55,71 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 						Computed: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{
-								"apps_count": schema.Int64Attribute{
+								"apps_count": schema.NumberAttribute{
 									Computed: true,
 								},
 								"assessment": schema.SingleNestedAttribute{
-									Computed:   true,
-									Attributes: map[string]schema.Attribute{},
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"ca_certs_status": schema.SingleNestedAttribute{
+											Computed: true,
+											Attributes: map[string]schema.Attribute{
+												"hashes": schema.ListAttribute{
+													Computed:    true,
+													ElementType: types.StringType,
+												},
+												"last_modified": schema.NumberAttribute{
+													Computed: true,
+												},
+											},
+										},
+										"eee_support": schema.BoolAttribute{
+											Computed: true,
+										},
+										"hdd_free": schema.StringAttribute{
+											Computed: true,
+										},
+										"hdd_total": schema.StringAttribute{
+											Computed: true,
+										},
+										"ip_address": schema.StringAttribute{
+											Computed: true,
+										},
+										"latency": schema.NumberAttribute{
+											Computed: true,
+										},
+										"version": schema.StringAttribute{
+											Computed: true,
+										},
+									},
 								},
 								"capabilities": schema.SingleNestedAttribute{
-									Computed:   true,
-									Attributes: map[string]schema.Attribute{},
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"auto_upgrade": schema.BoolAttribute{
+											Computed: true,
+										},
+										"dtls": schema.BoolAttribute{
+											Computed: true,
+										},
+										"eee": schema.BoolAttribute{
+											Computed: true,
+										},
+										"nwa_ba": schema.BoolAttribute{
+											Computed: true,
+										},
+										"pull_nsconfig": schema.SingleNestedAttribute{
+											Computed: true,
+											Attributes: map[string]schema.Attribute{
+												"orgkey_exist": schema.BoolAttribute{
+													Computed: true,
+												},
+												"orguri_exist": schema.BoolAttribute{
+													Computed: true,
+												},
+											},
+										},
+									},
 								},
 								"common_name": schema.StringAttribute{
 									Computed: true,
@@ -73,7 +128,7 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 									Computed:    true,
 									ElementType: types.StringType,
 								},
-								"id": schema.Int64Attribute{
+								"id": schema.NumberAttribute{
 									Computed: true,
 								},
 								"lbrokerconnect": schema.BoolAttribute{
@@ -82,7 +137,7 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 								"name": schema.StringAttribute{
 									Computed: true,
 								},
-								"publisher_upgrade_profiles_id": schema.Int64Attribute{
+								"publisher_upgrade_profiles_id": schema.NumberAttribute{
 									Computed: true,
 								},
 								"registered": schema.BoolAttribute{
@@ -91,15 +146,28 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 								"status": schema.StringAttribute{
 									Computed: true,
 								},
-								"stitcher_id": schema.Int64Attribute{
+								"stitcher_id": schema.NumberAttribute{
 									Computed: true,
 								},
 								"stitcher_pop": schema.StringAttribute{
 									Computed: true,
 								},
 								"upgrade_failed_reason": schema.SingleNestedAttribute{
-									Computed:   true,
-									Attributes: map[string]schema.Attribute{},
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"detail": schema.StringAttribute{
+											Computed: true,
+										},
+										"error_code": schema.NumberAttribute{
+											Computed: true,
+										},
+										"timestamp": schema.NumberAttribute{
+											Computed: true,
+										},
+										"version": schema.StringAttribute{
+											Computed: true,
+										},
+									},
 								},
 								"upgrade_request": schema.BoolAttribute{
 									Computed: true,
@@ -205,7 +273,7 @@ func (r *NPAPublishersBulkUpgradeResource) Create(ctx context.Context, req resou
 	}
 
 	request := *data.ToSharedPublisherBulkRequest()
-	res, err := r.client.TriggerNPAPublisherUpdate(ctx, request)
+	res, err := r.client.PutInfrastructurePublishersBulk(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

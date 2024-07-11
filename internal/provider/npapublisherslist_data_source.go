@@ -42,7 +42,7 @@ func (r *NPAPublishersListDataSource) Metadata(ctx context.Context, req datasour
 // Schema defines the schema for the data source.
 func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "NPAPublishersList DataSource",
+		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis data source supports the list of all Publisher objects.\n\nFeatures may require additional licensing, please work with account team to enable.\n",
 
 		Attributes: map[string]schema.Attribute{
 			"data": schema.SingleNestedAttribute{
