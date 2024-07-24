@@ -7,7 +7,7 @@ description: |-
   connectivity between your data center and the Netskope cloud. It is a crucial
   component of Netskope’s Private Access (NPA) solution, which provides zero-trust
   network access (ZTNA) to private applications and data in hybrid IT environments.
-  This resource supports the ability to create publisher alert configurations.
+  This resource supports the ability to update publisher alert configurations.
 ---
 
 # ns_npa_publishers_alerts_configuration_update (Resource)
@@ -17,19 +17,19 @@ connectivity between your data center and the Netskope cloud. It is a crucial
 component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
 network access (ZTNA) to private applications and data in hybrid IT environments.
 
-This resource supports the ability to create publisher alert configurations.
+This resource supports the ability to update publisher alert configurations.
 
 ## Example Usage
 
 ```terraform
 resource "ns_npa_publishers_alerts_configuration_update" "my_npapublishersalertsconfigurationupdate" {
   admin_users = [
-    "admin1@abc.com",
+    "...",
   ]
   event_types = [
-    "UPGRADE_FAILED",
+    "UPGRADE_SUCCEEDED",
   ]
-  selected_users = "admin1@abc.com"
+  selected_users = "abc@xyz.com,def@xyz.com"
 }
 ```
 
@@ -44,15 +44,6 @@ resource "ns_npa_publishers_alerts_configuration_update" "my_npapublishersalerts
 
 ### Read-Only
 
-- `data` (Attributes) (see [below for nested schema](#nestedatt--data))
-
-<a id="nestedatt--data"></a>
-### Nested Schema for `data`
-
-Read-Only:
-
-- `admin_users` (List of String)
-- `event_types` (List of String)
-- `selected_users` (String)
+- `status` (String) must be one of ["success", "not found", "failure"]
 
 

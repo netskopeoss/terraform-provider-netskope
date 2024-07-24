@@ -4,14 +4,9 @@ sources:
     openapi:
         inputs:
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/base_oas.yaml
-            - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_publisher.yaml
-#            - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_upgrade_profiles.yaml
-            - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policy.yaml
-            - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policygroup.yaml
+            - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_publishers.yaml
+            - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_upgrade_profiles.yaml
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/npa_apps_private.yaml
-            - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/npa_private_tag.yaml
-#            - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/gre.yaml
-#            - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/ipsec.yaml
         overlays:
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
         registry:

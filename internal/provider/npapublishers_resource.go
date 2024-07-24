@@ -5,18 +5,16 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
-	"github.com/netskope/terraform-provider-ns/internal/validators"
 	"strconv"
 )
 
@@ -35,16 +33,22 @@ type NPAPublishersResource struct {
 
 // NPAPublishersResourceModel describes the resource data model.
 type NPAPublishersResourceModel struct {
-	Assessment                 types.String `tfsdk:"assessment"`
-	CommonName                 types.String `tfsdk:"common_name"`
-	Lbrokerconnect             types.Bool   `tfsdk:"lbrokerconnect"`
-	Name                       types.String `tfsdk:"name"`
-	PublisherID                types.Int64  `tfsdk:"publisher_id"`
-	PublisherUpgradeProfileID  types.Int64  `tfsdk:"publisher_upgrade_profile_id"`
-	PublisherUpgradeProfilesID types.Int64  `tfsdk:"publisher_upgrade_profiles_id"`
-	Registered                 types.Bool   `tfsdk:"registered"`
-	Status                     types.String `tfsdk:"status"`
-	StitcherID                 types.Int64  `tfsdk:"stitcher_id"`
+	AppsCount                  types.Int64                  `tfsdk:"apps_count"`
+	Assessment                 *tfTypes.Assessment          `tfsdk:"assessment"`
+	Capabilities               *tfTypes.Capabilities        `tfsdk:"capabilities"`
+	CommonName                 types.String                 `tfsdk:"common_name"`
+	ConnectedApps              []types.String               `tfsdk:"connected_apps"`
+	Lbrokerconnect             types.Bool                   `tfsdk:"lbrokerconnect"`
+	Name                       types.String                 `tfsdk:"name"`
+	PublisherID                types.Int64                  `tfsdk:"publisher_id"`
+	PublisherUpgradeProfilesID types.Int64                  `tfsdk:"publisher_upgrade_profiles_id"`
+	Registered                 types.Bool                   `tfsdk:"registered"`
+	Status                     types.String                 `tfsdk:"status"`
+	SticherPop                 types.String                 `tfsdk:"sticher_pop"`
+	StitcherID                 types.Int64                  `tfsdk:"stitcher_id"`
+	UpgradeFailedReason        *tfTypes.UpgradeFailedReason `tfsdk:"upgrade_failed_reason"`
+	UpgradeRequest             types.Bool                   `tfsdk:"upgrade_request"`
+	UpgradeStatus              *tfTypes.UpgradeStatus       `tfsdk:"upgrade_status"`
 }
 
 func (r *NPAPublishersResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -55,15 +59,78 @@ func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaR
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource supports the creation of the Publisher objects.\n\nFeatures may require additional licensing, please work with account team to enable.\n",
 		Attributes: map[string]schema.Attribute{
-			"assessment": schema.StringAttribute{
-				Computed:    true,
-				Description: `Parsed as JSON.`,
-				Validators: []validator.String{
-					validators.IsValidJSON(),
+			"apps_count": schema.Int64Attribute{
+				Computed: true,
+			},
+			"assessment": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"ca_certs_status": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"hashes": schema.ListAttribute{
+								Computed:    true,
+								ElementType: types.StringType,
+							},
+							"last_modified": schema.NumberAttribute{
+								Computed: true,
+							},
+						},
+					},
+					"eee_support": schema.BoolAttribute{
+						Computed: true,
+					},
+					"hdd_free": schema.StringAttribute{
+						Computed: true,
+					},
+					"hdd_total": schema.StringAttribute{
+						Computed: true,
+					},
+					"ip_address": schema.StringAttribute{
+						Computed: true,
+					},
+					"latency": schema.NumberAttribute{
+						Computed: true,
+					},
+					"version": schema.StringAttribute{
+						Computed: true,
+					},
+				},
+			},
+			"capabilities": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"auto_upgrade": schema.BoolAttribute{
+						Computed: true,
+					},
+					"dtls": schema.BoolAttribute{
+						Computed: true,
+					},
+					"eee": schema.BoolAttribute{
+						Computed: true,
+					},
+					"nwa_ba": schema.BoolAttribute{
+						Computed: true,
+					},
+					"pull_nsconfig": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"orgkey_exist": schema.BoolAttribute{
+								Computed: true,
+							},
+							"orguri_exist": schema.BoolAttribute{
+								Computed: true,
+							},
+						},
+					},
 				},
 			},
 			"common_name": schema.StringAttribute{
 				Computed: true,
+			},
+			"connected_apps": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
 			},
 			"lbrokerconnect": schema.BoolAttribute{
 				Computed:    true,
@@ -79,9 +146,6 @@ func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaR
 				Computed:    true,
 				Description: `publisher id`,
 			},
-			"publisher_upgrade_profile_id": schema.Int64Attribute{
-				Computed: true,
-			},
 			"publisher_upgrade_profiles_id": schema.Int64Attribute{
 				Computed:    true,
 				Optional:    true,
@@ -92,17 +156,41 @@ func (r *NPAPublishersResource) Schema(ctx context.Context, req resource.SchemaR
 				Computed: true,
 			},
 			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["connected", "not registered"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"connected",
-						"not registered",
-					),
-				},
+				Computed: true,
+			},
+			"sticher_pop": schema.StringAttribute{
+				Computed: true,
 			},
 			"stitcher_id": schema.Int64Attribute{
 				Computed: true,
+			},
+			"upgrade_failed_reason": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"detail": schema.StringAttribute{
+						Computed: true,
+					},
+					"error_code": schema.NumberAttribute{
+						Computed: true,
+					},
+					"timestamp": schema.NumberAttribute{
+						Computed: true,
+					},
+					"version": schema.StringAttribute{
+						Computed: true,
+					},
+				},
+			},
+			"upgrade_request": schema.BoolAttribute{
+				Computed: true,
+			},
+			"upgrade_status": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"upstat": schema.StringAttribute{
+						Computed: true,
+					},
+				},
 			},
 		},
 	}
@@ -146,10 +234,7 @@ func (r *NPAPublishersResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
-	publisherPostRequest := *data.ToSharedPublisherPostRequest()
-	request := operations.CreateNPApublishersRequest{
-		PublisherPostRequest: publisherPostRequest,
-	}
+	request := *data.ToSharedPublisherPostRequest()
 	res, err := r.client.NPAPublishers.Create(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -166,37 +251,11 @@ func (r *NPAPublishersResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublisherResponse != nil && res.PublisherResponse.Data != nil) {
+	if !(res.PublisherResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	publisherID := int(data.PublisherID.ValueInt64())
-	request1 := operations.GetNPAPublisherByIDRequest{
-		PublisherID: publisherID,
-	}
-	res1, err := r.client.NPAPublishers.Read(ctx, request1)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
-		}
-		return
-	}
-	if res1 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
-		return
-	}
-	if !(res1.PublisherResponse != nil && res1.PublisherResponse.Data != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
-		return
-	}
-	data.RefreshFromSharedPublisherResponseData(res1.PublisherResponse.Data)
+	data.RefreshFromSharedPublisherResponse(res.PublisherResponse)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -245,11 +304,11 @@ func (r *NPAPublishersResource) Read(ctx context.Context, req resource.ReadReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublisherResponse != nil && res.PublisherResponse.Data != nil) {
+	if !(res.PublisherResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
+	data.RefreshFromSharedPublisherResponse(res.PublisherResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -291,11 +350,11 @@ func (r *NPAPublishersResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublisherResponse != nil && res.PublisherResponse.Data != nil) {
+	if !(res.PublisherResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
+	data.RefreshFromSharedPublisherResponse(res.PublisherResponse)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	publisherId1 := int(data.PublisherID.ValueInt64())
 	request1 := operations.GetNPAPublisherByIDRequest{
@@ -317,11 +376,11 @@ func (r *NPAPublishersResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if !(res1.PublisherResponse != nil && res1.PublisherResponse.Data != nil) {
+	if !(res1.PublisherResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherResponseData(res1.PublisherResponse.Data)
+	data.RefreshFromSharedPublisherResponse(res1.PublisherResponse)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state

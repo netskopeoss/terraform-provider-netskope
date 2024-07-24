@@ -3,45 +3,14 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 	"net/http"
 )
 
-// UpdateNPAPublisherByIDQueryParamSilent - flag to skip output except status code
-type UpdateNPAPublisherByIDQueryParamSilent string
-
-const (
-	UpdateNPAPublisherByIDQueryParamSilentOne  UpdateNPAPublisherByIDQueryParamSilent = "1"
-	UpdateNPAPublisherByIDQueryParamSilentZero UpdateNPAPublisherByIDQueryParamSilent = "0"
-)
-
-func (e UpdateNPAPublisherByIDQueryParamSilent) ToPointer() *UpdateNPAPublisherByIDQueryParamSilent {
-	return &e
-}
-func (e *UpdateNPAPublisherByIDQueryParamSilent) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "1":
-		fallthrough
-	case "0":
-		*e = UpdateNPAPublisherByIDQueryParamSilent(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for UpdateNPAPublisherByIDQueryParamSilent: %v", v)
-	}
-}
-
 type UpdateNPAPublisherByIDRequest struct {
 	// publisher id
-	PublisherID int `pathParam:"style=simple,explode=false,name=publisher_id"`
-	// flag to skip output except status code
-	Silent                *UpdateNPAPublisherByIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
-	PublisherPatchRequest shared.PublisherPatchRequest            `request:"mediaType=application/json"`
+	PublisherID           int                          `pathParam:"style=simple,explode=false,name=publisher_id"`
+	PublisherPatchRequest shared.PublisherPatchRequest `request:"mediaType=application/json"`
 }
 
 func (o *UpdateNPAPublisherByIDRequest) GetPublisherID() int {
@@ -49,13 +18,6 @@ func (o *UpdateNPAPublisherByIDRequest) GetPublisherID() int {
 		return 0
 	}
 	return o.PublisherID
-}
-
-func (o *UpdateNPAPublisherByIDRequest) GetSilent() *UpdateNPAPublisherByIDQueryParamSilent {
-	if o == nil {
-		return nil
-	}
-	return o.Silent
 }
 
 func (o *UpdateNPAPublisherByIDRequest) GetPublisherPatchRequest() shared.PublisherPatchRequest {

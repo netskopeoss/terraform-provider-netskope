@@ -6,7 +6,7 @@ import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type UpgradeFailedReason struct {
 	Detail    types.String `tfsdk:"detail"`
-	ErrorCode types.Int64  `tfsdk:"error_code"`
-	Timestamp types.Int64  `tfsdk:"timestamp"`
+	ErrorCode types.Number `tfsdk:"error_code"`
+	Timestamp types.Number `tfsdk:"timestamp"`
 	Version   types.String `tfsdk:"version"`
 }

@@ -6,12 +6,12 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
 )
 
@@ -30,10 +30,10 @@ type NPAPublishersAlertsConfigurationUpdateResource struct {
 
 // NPAPublishersAlertsConfigurationUpdateResourceModel describes the resource data model.
 type NPAPublishersAlertsConfigurationUpdateResourceModel struct {
-	AdminUsers    []types.String                          `tfsdk:"admin_users"`
-	Data          *tfTypes.PublishersAlertGetResponseData `tfsdk:"data"`
-	EventTypes    []types.String                          `tfsdk:"event_types"`
-	SelectedUsers types.String                            `tfsdk:"selected_users"`
+	AdminUsers    []types.String `tfsdk:"admin_users"`
+	EventTypes    []types.String `tfsdk:"event_types"`
+	SelectedUsers types.String   `tfsdk:"selected_users"`
+	Status        types.String   `tfsdk:"status"`
 }
 
 func (r *NPAPublishersAlertsConfigurationUpdateResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -42,27 +42,11 @@ func (r *NPAPublishersAlertsConfigurationUpdateResource) Metadata(ctx context.Co
 
 func (r *NPAPublishersAlertsConfigurationUpdateResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource supports the ability to create publisher alert configurations.\n",
+		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource supports the ability to update publisher alert configurations.\n",
 		Attributes: map[string]schema.Attribute{
 			"admin_users": schema.ListAttribute{
 				Optional:    true,
 				ElementType: types.StringType,
-			},
-			"data": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"admin_users": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"event_types": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"selected_users": schema.StringAttribute{
-						Computed: true,
-					},
-				},
 			},
 			"event_types": schema.ListAttribute{
 				Optional:    true,
@@ -74,6 +58,17 @@ func (r *NPAPublishersAlertsConfigurationUpdateResource) Schema(ctx context.Cont
 			},
 			"selected_users": schema.StringAttribute{
 				Optional: true,
+			},
+			"status": schema.StringAttribute{
+				Computed:    true,
+				Description: `must be one of ["success", "not found", "failure"]`,
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"success",
+						"not found",
+						"failure",
+					),
+				},
 			},
 		},
 	}
@@ -118,7 +113,7 @@ func (r *NPAPublishersAlertsConfigurationUpdateResource) Create(ctx context.Cont
 	}
 
 	request := *data.ToSharedPublishersAlertPutRequest()
-	res, err := r.client.ConfigureNPAPublisherAlerts(ctx, request)
+	res, err := r.client.CreateNPAPublisherAlerts(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -134,11 +129,11 @@ func (r *NPAPublishersAlertsConfigurationUpdateResource) Create(ctx context.Cont
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublishersAlertGetResponse != nil) {
+	if !(res.PublishersAlertPutResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublishersAlertGetResponse(res.PublishersAlertGetResponse)
+	data.RefreshFromSharedPublishersAlertPutResponse(res.PublishersAlertPutResponse)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -184,7 +179,7 @@ func (r *NPAPublishersAlertsConfigurationUpdateResource) Update(ctx context.Cont
 	}
 
 	request := *data.ToSharedPublishersAlertPutRequest()
-	res, err := r.client.ConfigureNPAPublisherAlerts(ctx, request)
+	res, err := r.client.CreateNPAPublisherAlerts(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -200,11 +195,11 @@ func (r *NPAPublishersAlertsConfigurationUpdateResource) Update(ctx context.Cont
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublishersAlertGetResponse != nil) {
+	if !(res.PublishersAlertPutResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublishersAlertGetResponse(res.PublishersAlertGetResponse)
+	data.RefreshFromSharedPublishersAlertPutResponse(res.PublishersAlertPutResponse)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state

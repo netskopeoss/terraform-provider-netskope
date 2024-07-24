@@ -12,10 +12,6 @@ import (
 func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *shared.PublisherBulkRequest {
 	var publishers *shared.Publishers
 	if r.Publishers != nil {
-		var id []string = []string{}
-		for _, idItem := range r.Publishers.ID {
-			id = append(id, idItem.ValueString())
-		}
 		var apply *shared.Apply
 		if r.Publishers.Apply != nil {
 			upgradeRequest := new(bool)
@@ -28,9 +24,13 @@ func (r *NPAPublishersBulkUpgradeResourceModel) ToSharedPublisherBulkRequest() *
 				UpgradeRequest: upgradeRequest,
 			}
 		}
+		var id []string = []string{}
+		for _, idItem := range r.Publishers.ID {
+			id = append(id, idItem.ValueString())
+		}
 		publishers = &shared.Publishers{
-			ID:    id,
 			Apply: apply,
+			ID:    id,
 		}
 	}
 	out := shared.PublisherBulkRequest{
@@ -45,21 +45,21 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkR
 			r.Data = nil
 		} else {
 			r.Data = &tfTypes.PublishersBulkResponseData{}
-			r.Data.Publishers = []tfTypes.PublishersBulkResponsePublishers{}
+			r.Data.Publishers = []tfTypes.PublisherBulkItem{}
 			if len(r.Data.Publishers) > len(resp.Data.Publishers) {
 				r.Data.Publishers = r.Data.Publishers[:len(resp.Data.Publishers)]
 			}
 			for publishersCount, publishersItem := range resp.Data.Publishers {
-				var publishers1 tfTypes.PublishersBulkResponsePublishers
+				var publishers1 tfTypes.PublisherBulkItem
 				if publishersItem.AppsCount != nil {
-					publishers1.AppsCount = types.NumberValue(big.NewFloat(float64(*publishersItem.AppsCount)))
+					publishers1.AppsCount = types.Int64Value(int64(*publishersItem.AppsCount))
 				} else {
-					publishers1.AppsCount = types.NumberNull()
+					publishers1.AppsCount = types.Int64Null()
 				}
 				if publishersItem.Assessment == nil {
 					publishers1.Assessment = nil
 				} else {
-					publishers1.Assessment = &tfTypes.PublishersBulkResponseAssessment{}
+					publishers1.Assessment = &tfTypes.PublisherBulkItemAssessment{}
 					if publishersItem.Assessment.CaCertsStatus == nil {
 						publishers1.Assessment.CaCertsStatus = nil
 					} else {
@@ -79,9 +79,9 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkR
 					publishers1.Assessment.HddTotal = types.StringPointerValue(publishersItem.Assessment.HddTotal)
 					publishers1.Assessment.IPAddress = types.StringPointerValue(publishersItem.Assessment.IPAddress)
 					if publishersItem.Assessment.Latency != nil {
-						publishers1.Assessment.Latency = types.NumberValue(big.NewFloat(float64(*publishersItem.Assessment.Latency)))
+						publishers1.Assessment.Latency = types.Int64Value(int64(*publishersItem.Assessment.Latency))
 					} else {
-						publishers1.Assessment.Latency = types.NumberNull()
+						publishers1.Assessment.Latency = types.Int64Null()
 					}
 					publishers1.Assessment.Version = types.StringPointerValue(publishersItem.Assessment.Version)
 				}
@@ -107,29 +107,33 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkR
 					publishers1.ConnectedApps = append(publishers1.ConnectedApps, types.StringValue(v))
 				}
 				if publishersItem.ID != nil {
-					publishers1.ID = types.NumberValue(big.NewFloat(float64(*publishersItem.ID)))
+					publishers1.ID = types.Int64Value(int64(*publishersItem.ID))
 				} else {
-					publishers1.ID = types.NumberNull()
+					publishers1.ID = types.Int64Null()
 				}
 				publishers1.Lbrokerconnect = types.BoolPointerValue(publishersItem.Lbrokerconnect)
 				publishers1.Name = types.StringPointerValue(publishersItem.Name)
 				if publishersItem.PublisherUpgradeProfilesID != nil {
-					publishers1.PublisherUpgradeProfilesID = types.NumberValue(big.NewFloat(float64(*publishersItem.PublisherUpgradeProfilesID)))
+					publishers1.PublisherUpgradeProfilesID = types.Int64Value(int64(*publishersItem.PublisherUpgradeProfilesID))
 				} else {
-					publishers1.PublisherUpgradeProfilesID = types.NumberNull()
+					publishers1.PublisherUpgradeProfilesID = types.Int64Null()
 				}
 				publishers1.Registered = types.BoolPointerValue(publishersItem.Registered)
-				publishers1.Status = types.StringPointerValue(publishersItem.Status)
-				if publishersItem.StitcherID != nil {
-					publishers1.StitcherID = types.NumberValue(big.NewFloat(float64(*publishersItem.StitcherID)))
+				if publishersItem.Status != nil {
+					publishers1.Status = types.StringValue(string(*publishersItem.Status))
 				} else {
-					publishers1.StitcherID = types.NumberNull()
+					publishers1.Status = types.StringNull()
+				}
+				if publishersItem.StitcherID != nil {
+					publishers1.StitcherID = types.Int64Value(int64(*publishersItem.StitcherID))
+				} else {
+					publishers1.StitcherID = types.Int64Null()
 				}
 				publishers1.StitcherPop = types.StringPointerValue(publishersItem.StitcherPop)
 				if publishersItem.UpgradeFailedReason == nil {
 					publishers1.UpgradeFailedReason = nil
 				} else {
-					publishers1.UpgradeFailedReason = &tfTypes.PublishersBulkResponseUpgradeFailedReason{}
+					publishers1.UpgradeFailedReason = &tfTypes.UpgradeFailedReason{}
 					publishers1.UpgradeFailedReason.Detail = types.StringPointerValue(publishersItem.UpgradeFailedReason.Detail)
 					if publishersItem.UpgradeFailedReason.ErrorCode != nil {
 						publishers1.UpgradeFailedReason.ErrorCode = types.NumberValue(big.NewFloat(float64(*publishersItem.UpgradeFailedReason.ErrorCode)))
@@ -147,7 +151,7 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkR
 				if publishersItem.UpgradeStatus == nil {
 					publishers1.UpgradeStatus = nil
 				} else {
-					publishers1.UpgradeStatus = &tfTypes.PublishersBulkResponseUpgradeStatus{}
+					publishers1.UpgradeStatus = &tfTypes.UpgradeStatus{}
 					publishers1.UpgradeStatus.Upstat = types.StringPointerValue(publishersItem.UpgradeStatus.Upstat)
 				}
 				if publishersCount+1 > len(r.Data.Publishers) {
@@ -171,11 +175,6 @@ func (r *NPAPublishersBulkUpgradeResourceModel) RefreshFromSharedPublishersBulkR
 					r.Data.Publishers[publishersCount].UpgradeStatus = publishers1.UpgradeStatus
 				}
 			}
-		}
-		if resp.Status != nil {
-			r.Status = types.StringValue(string(*resp.Status))
-		} else {
-			r.Status = types.StringNull()
 		}
 	}
 }
