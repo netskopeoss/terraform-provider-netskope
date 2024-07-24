@@ -37,7 +37,6 @@ type NPAPublishersBulkUpgradeResource struct {
 type NPAPublishersBulkUpgradeResourceModel struct {
 	Data       *tfTypes.PublishersBulkResponseData `tfsdk:"data"`
 	Publishers *tfTypes.Publishers                 `tfsdk:"publishers"`
-	Status     types.String                        `tfsdk:"status"`
 }
 
 func (r *NPAPublishersBulkUpgradeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -55,7 +54,7 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 						Computed: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{
-								"apps_count": schema.NumberAttribute{
+								"apps_count": schema.Int64Attribute{
 									Computed: true,
 								},
 								"assessment": schema.SingleNestedAttribute{
@@ -85,7 +84,7 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 										"ip_address": schema.StringAttribute{
 											Computed: true,
 										},
-										"latency": schema.NumberAttribute{
+										"latency": schema.Int64Attribute{
 											Computed: true,
 										},
 										"version": schema.StringAttribute{
@@ -128,7 +127,7 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 									Computed:    true,
 									ElementType: types.StringType,
 								},
-								"id": schema.NumberAttribute{
+								"id": schema.Int64Attribute{
 									Computed: true,
 								},
 								"lbrokerconnect": schema.BoolAttribute{
@@ -137,16 +136,23 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 								"name": schema.StringAttribute{
 									Computed: true,
 								},
-								"publisher_upgrade_profiles_id": schema.NumberAttribute{
+								"publisher_upgrade_profiles_id": schema.Int64Attribute{
 									Computed: true,
 								},
 								"registered": schema.BoolAttribute{
 									Computed: true,
 								},
 								"status": schema.StringAttribute{
-									Computed: true,
+									Computed:    true,
+									Description: `must be one of ["connected", "not registered"]`,
+									Validators: []validator.String{
+										stringvalidator.OneOf(
+											"connected",
+											"not registered",
+										),
+									},
 								},
-								"stitcher_id": schema.NumberAttribute{
+								"stitcher_id": schema.Int64Attribute{
 									Computed: true,
 								},
 								"stitcher_pop": schema.StringAttribute{
@@ -220,16 +226,6 @@ func (r *NPAPublishersBulkUpgradeResource) Schema(ctx context.Context, req resou
 				},
 				Description: `Requires replacement if changed. `,
 			},
-			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["success", "not found"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"success",
-						"not found",
-					),
-				},
-			},
 		},
 	}
 }
@@ -273,7 +269,7 @@ func (r *NPAPublishersBulkUpgradeResource) Create(ctx context.Context, req resou
 	}
 
 	request := *data.ToSharedPublisherBulkRequest()
-	res, err := r.client.PutInfrastructurePublishersBulk(ctx, request)
+	res, err := r.client.TriggerNPAPublisherUpdates(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

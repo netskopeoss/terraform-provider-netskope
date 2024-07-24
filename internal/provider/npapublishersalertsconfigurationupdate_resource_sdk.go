@@ -4,7 +4,6 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
@@ -31,21 +30,12 @@ func (r *NPAPublishersAlertsConfigurationUpdateResourceModel) ToSharedPublishers
 	return &out
 }
 
-func (r *NPAPublishersAlertsConfigurationUpdateResourceModel) RefreshFromSharedPublishersAlertGetResponse(resp *shared.PublishersAlertGetResponse) {
+func (r *NPAPublishersAlertsConfigurationUpdateResourceModel) RefreshFromSharedPublishersAlertPutResponse(resp *shared.PublishersAlertPutResponse) {
 	if resp != nil {
-		if resp.Data == nil {
-			r.Data = nil
+		if resp.Status != nil {
+			r.Status = types.StringValue(string(*resp.Status))
 		} else {
-			r.Data = &tfTypes.PublishersAlertGetResponseData{}
-			r.Data.AdminUsers = []types.String{}
-			for _, v := range resp.Data.AdminUsers {
-				r.Data.AdminUsers = append(r.Data.AdminUsers, types.StringValue(v))
-			}
-			r.Data.EventTypes = []types.String{}
-			for _, v := range resp.Data.EventTypes {
-				r.Data.EventTypes = append(r.Data.EventTypes, types.StringValue(string(v)))
-			}
-			r.Data.SelectedUsers = types.StringPointerValue(resp.Data.SelectedUsers)
+			r.Status = types.StringNull()
 		}
 	}
 }

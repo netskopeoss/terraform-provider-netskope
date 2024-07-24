@@ -34,15 +34,8 @@ func (e *PublishersReleaseGetResponseStatus) UnmarshalJSON(data []byte) error {
 }
 
 type PublishersReleaseGetResponse struct {
-	Status *PublishersReleaseGetResponseStatus `json:"status,omitempty"`
 	Data   []ReleaseItem                       `json:"data,omitempty"`
-}
-
-func (o *PublishersReleaseGetResponse) GetStatus() *PublishersReleaseGetResponseStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
+	Status *PublishersReleaseGetResponseStatus `json:"status,omitempty"`
 }
 
 func (o *PublishersReleaseGetResponse) GetData() []ReleaseItem {
@@ -50,4 +43,11 @@ func (o *PublishersReleaseGetResponse) GetData() []ReleaseItem {
 		return nil
 	}
 	return o.Data
+}
+
+func (o *PublishersReleaseGetResponse) GetStatus() *PublishersReleaseGetResponseStatus {
+	if o == nil {
+		return nil
+	}
+	return o.Status
 }

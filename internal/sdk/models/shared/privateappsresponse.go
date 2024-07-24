@@ -2,38 +2,66 @@
 
 package shared
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type PrivateAppsResponseAppOption struct {
+}
+
 type PrivateAppsResponseData struct {
-	ID                          *int                             `json:"id,omitempty"`
-	Name                        *string                          `json:"name,omitempty"`
-	UsePublisherDNS             *bool                            `json:"use_publisher_dns,omitempty"`
+	AllowUnauthenticatedCors    *bool                            `json:"allow_unauthenticated_cors,omitempty"`
+	AllowURIBypass              *bool                            `json:"allow_uri_bypass,omitempty"`
+	UribypassHeaderValue        *string                          `json:"uribypass_header_value,omitempty"`
+	BypassUris                  []string                         `json:"bypass_uris,omitempty"`
+	AppOption                   *PrivateAppsResponseAppOption    `json:"app_option,omitempty"`
 	ClientlessAccess            *bool                            `json:"clientless_access,omitempty"`
-	TrustSelfSignedCerts        *bool                            `json:"trust_self_signed_certs,omitempty"`
 	Host                        *string                          `json:"host,omitempty"`
+	PrivateAppID                *int                             `json:"id,omitempty"`
+	IsUserPortalApp             *bool                            `json:"is_user_portal_app,omitempty"`
+	Name                        *string                          `json:"name,omitempty"`
+	Protocols                   []ProtocolResponseItem           `json:"protocols,omitempty"`
 	RealHost                    *string                          `json:"real_host,omitempty"`
-	ResolvedProtocols           []ProtocolResponseItem           `json:"protocols,omitempty"`
-	Tags                        []TagItem                        `json:"tags,omitempty"`
 	ServicePublisherAssignments []ServicePublisherAssignmentItem `json:"service_publisher_assignments,omitempty"`
+	Tags                        []TagItem                        `json:"tags,omitempty"`
+	TrustSelfSignedCerts        *bool                            `json:"trust_self_signed_certs,omitempty"`
+	UsePublisherDNS             *bool                            `json:"use_publisher_dns,omitempty"`
 }
 
-func (o *PrivateAppsResponseData) GetID() *int {
+func (o *PrivateAppsResponseData) GetAllowUnauthenticatedCors() *bool {
 	if o == nil {
 		return nil
 	}
-	return o.ID
+	return o.AllowUnauthenticatedCors
 }
 
-func (o *PrivateAppsResponseData) GetName() *string {
+func (o *PrivateAppsResponseData) GetAllowURIBypass() *bool {
 	if o == nil {
 		return nil
 	}
-	return o.Name
+	return o.AllowURIBypass
 }
 
-func (o *PrivateAppsResponseData) GetUsePublisherDNS() *bool {
+func (o *PrivateAppsResponseData) GetUribypassHeaderValue() *string {
 	if o == nil {
 		return nil
 	}
-	return o.UsePublisherDNS
+	return o.UribypassHeaderValue
+}
+
+func (o *PrivateAppsResponseData) GetBypassUris() []string {
+	if o == nil {
+		return nil
+	}
+	return o.BypassUris
+}
+
+func (o *PrivateAppsResponseData) GetAppOption() *PrivateAppsResponseAppOption {
+	if o == nil {
+		return nil
+	}
+	return o.AppOption
 }
 
 func (o *PrivateAppsResponseData) GetClientlessAccess() *bool {
@@ -43,18 +71,39 @@ func (o *PrivateAppsResponseData) GetClientlessAccess() *bool {
 	return o.ClientlessAccess
 }
 
-func (o *PrivateAppsResponseData) GetTrustSelfSignedCerts() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.TrustSelfSignedCerts
-}
-
 func (o *PrivateAppsResponseData) GetHost() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Host
+}
+
+func (o *PrivateAppsResponseData) GetPrivateAppID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.PrivateAppID
+}
+
+func (o *PrivateAppsResponseData) GetIsUserPortalApp() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.IsUserPortalApp
+}
+
+func (o *PrivateAppsResponseData) GetName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Name
+}
+
+func (o *PrivateAppsResponseData) GetProtocols() []ProtocolResponseItem {
+	if o == nil {
+		return nil
+	}
+	return o.Protocols
 }
 
 func (o *PrivateAppsResponseData) GetRealHost() *string {
@@ -64,11 +113,11 @@ func (o *PrivateAppsResponseData) GetRealHost() *string {
 	return o.RealHost
 }
 
-func (o *PrivateAppsResponseData) GetResolvedProtocols() []ProtocolResponseItem {
+func (o *PrivateAppsResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
 	if o == nil {
 		return nil
 	}
-	return o.ResolvedProtocols
+	return o.ServicePublisherAssignments
 }
 
 func (o *PrivateAppsResponseData) GetTags() []TagItem {
@@ -78,15 +127,49 @@ func (o *PrivateAppsResponseData) GetTags() []TagItem {
 	return o.Tags
 }
 
-func (o *PrivateAppsResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
+func (o *PrivateAppsResponseData) GetTrustSelfSignedCerts() *bool {
 	if o == nil {
 		return nil
 	}
-	return o.ServicePublisherAssignments
+	return o.TrustSelfSignedCerts
+}
+
+func (o *PrivateAppsResponseData) GetUsePublisherDNS() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.UsePublisherDNS
+}
+
+type PrivateAppsResponseStatus string
+
+const (
+	PrivateAppsResponseStatusSuccess  PrivateAppsResponseStatus = "success"
+	PrivateAppsResponseStatusNotFound PrivateAppsResponseStatus = "not found"
+)
+
+func (e PrivateAppsResponseStatus) ToPointer() *PrivateAppsResponseStatus {
+	return &e
+}
+func (e *PrivateAppsResponseStatus) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "success":
+		fallthrough
+	case "not found":
+		*e = PrivateAppsResponseStatus(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for PrivateAppsResponseStatus: %v", v)
+	}
 }
 
 type PrivateAppsResponse struct {
-	Data *PrivateAppsResponseData `json:"data,omitempty"`
+	Data   *PrivateAppsResponseData   `json:"data,omitempty"`
+	Status *PrivateAppsResponseStatus `json:"status,omitempty"`
 }
 
 func (o *PrivateAppsResponse) GetData() *PrivateAppsResponseData {
@@ -94,4 +177,11 @@ func (o *PrivateAppsResponse) GetData() *PrivateAppsResponseData {
 		return nil
 	}
 	return o.Data
+}
+
+func (o *PrivateAppsResponse) GetStatus() *PrivateAppsResponseStatus {
+	if o == nil {
+		return nil
+	}
+	return o.Status
 }

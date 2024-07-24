@@ -2,23 +2,8 @@
 
 package shared
 
-import (
-	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/utils"
-)
-
 type TagItemNoID struct {
-	TagName *string `default:"tag_name" json:"tag_name"`
-}
-
-func (t TagItemNoID) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(t, "", false)
-}
-
-func (t *TagItemNoID) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &t, "", false, false); err != nil {
-		return err
-	}
-	return nil
+	TagName *string `json:"tag_name,omitempty"`
 }
 
 func (o *TagItemNoID) GetTagName() *string {

@@ -7,6 +7,140 @@ import (
 	"fmt"
 )
 
+type PrivateAppsGetResponseAppOption struct {
+}
+
+type PrivateAppsGetResponseData struct {
+	AllowUnauthenticatedCors    *bool                            `json:"allow_unauthenticated_cors,omitempty"`
+	AllowURIBypass              *bool                            `json:"allow_uri_bypass,omitempty"`
+	UribypassHeaderValue        *string                          `json:"uribypass_header_value,omitempty"`
+	BypassUris                  []string                         `json:"bypass_uris,omitempty"`
+	AppID                       *int                             `json:"app_id,omitempty"`
+	AppName                     *string                          `json:"app_name,omitempty"`
+	AppOption                   *PrivateAppsGetResponseAppOption `json:"app_option,omitempty"`
+	ClientlessAccess            *bool                            `json:"clientless_access,omitempty"`
+	Host                        *string                          `json:"host,omitempty"`
+	IsUserPortalApp             *bool                            `json:"is_user_portal_app,omitempty"`
+	Protocols                   []ProtocolResponseItem           `json:"protocols,omitempty"`
+	RealHost                    *string                          `json:"real_host,omitempty"`
+	ServicePublisherAssignments []ServicePublisherAssignmentItem `json:"service_publisher_assignments,omitempty"`
+	Tags                        []TagItem                        `json:"tags,omitempty"`
+	TrustSelfSignedCerts        *bool                            `json:"trust_self_signed_certs,omitempty"`
+	UsePublisherDNS             *bool                            `json:"use_publisher_dns,omitempty"`
+}
+
+func (o *PrivateAppsGetResponseData) GetAllowUnauthenticatedCors() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.AllowUnauthenticatedCors
+}
+
+func (o *PrivateAppsGetResponseData) GetAllowURIBypass() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.AllowURIBypass
+}
+
+func (o *PrivateAppsGetResponseData) GetUribypassHeaderValue() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UribypassHeaderValue
+}
+
+func (o *PrivateAppsGetResponseData) GetBypassUris() []string {
+	if o == nil {
+		return nil
+	}
+	return o.BypassUris
+}
+
+func (o *PrivateAppsGetResponseData) GetAppID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.AppID
+}
+
+func (o *PrivateAppsGetResponseData) GetAppName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.AppName
+}
+
+func (o *PrivateAppsGetResponseData) GetAppOption() *PrivateAppsGetResponseAppOption {
+	if o == nil {
+		return nil
+	}
+	return o.AppOption
+}
+
+func (o *PrivateAppsGetResponseData) GetClientlessAccess() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.ClientlessAccess
+}
+
+func (o *PrivateAppsGetResponseData) GetHost() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Host
+}
+
+func (o *PrivateAppsGetResponseData) GetIsUserPortalApp() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.IsUserPortalApp
+}
+
+func (o *PrivateAppsGetResponseData) GetProtocols() []ProtocolResponseItem {
+	if o == nil {
+		return nil
+	}
+	return o.Protocols
+}
+
+func (o *PrivateAppsGetResponseData) GetRealHost() *string {
+	if o == nil {
+		return nil
+	}
+	return o.RealHost
+}
+
+func (o *PrivateAppsGetResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
+	if o == nil {
+		return nil
+	}
+	return o.ServicePublisherAssignments
+}
+
+func (o *PrivateAppsGetResponseData) GetTags() []TagItem {
+	if o == nil {
+		return nil
+	}
+	return o.Tags
+}
+
+func (o *PrivateAppsGetResponseData) GetTrustSelfSignedCerts() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.TrustSelfSignedCerts
+}
+
+func (o *PrivateAppsGetResponseData) GetUsePublisherDNS() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.UsePublisherDNS
+}
+
 type PrivateAppsGetResponseStatus string
 
 const (
@@ -33,28 +167,10 @@ func (e *PrivateAppsGetResponseStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PrivateAppsGetResponseData struct {
-	PrivateApps []any `json:"private_apps,omitempty"`
-}
-
-func (o *PrivateAppsGetResponseData) GetPrivateApps() []any {
-	if o == nil {
-		return nil
-	}
-	return o.PrivateApps
-}
-
 type PrivateAppsGetResponse struct {
-	Status *PrivateAppsGetResponseStatus `json:"status,omitempty"`
 	Data   *PrivateAppsGetResponseData   `json:"data,omitempty"`
+	Status *PrivateAppsGetResponseStatus `json:"status,omitempty"`
 	Total  *int                          `json:"total,omitempty"`
-}
-
-func (o *PrivateAppsGetResponse) GetStatus() *PrivateAppsGetResponseStatus {
-	if o == nil {
-		return nil
-	}
-	return o.Status
 }
 
 func (o *PrivateAppsGetResponse) GetData() *PrivateAppsGetResponseData {
@@ -62,6 +178,13 @@ func (o *PrivateAppsGetResponse) GetData() *PrivateAppsGetResponseData {
 		return nil
 	}
 	return o.Data
+}
+
+func (o *PrivateAppsGetResponse) GetStatus() *PrivateAppsGetResponseStatus {
+	if o == nil {
+		return nil
+	}
+	return o.Status
 }
 
 func (o *PrivateAppsGetResponse) GetTotal() *int {

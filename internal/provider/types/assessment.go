@@ -5,10 +5,11 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type Assessment struct {
-	EeeSupport types.Bool   `tfsdk:"eee_support"`
-	HddFree    types.String `tfsdk:"hdd_free"`
-	HddTotal   types.String `tfsdk:"hdd_total"`
-	IPAddress  types.String `tfsdk:"ip_address"`
-	Latency    types.Int64  `tfsdk:"latency"`
-	Version    types.String `tfsdk:"version"`
+	CaCertsStatus *CaCertsStatus `tfsdk:"ca_certs_status"`
+	EeeSupport    types.Bool     `tfsdk:"eee_support"`
+	HddFree       types.String   `tfsdk:"hdd_free"`
+	HddTotal      types.String   `tfsdk:"hdd_total"`
+	IPAddress     types.String   `tfsdk:"ip_address"`
+	Latency       types.Number   `tfsdk:"latency"`
+	Version       types.String   `tfsdk:"version"`
 }

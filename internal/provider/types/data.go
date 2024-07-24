@@ -2,6 +2,8 @@
 
 package types
 
+import "github.com/hashicorp/terraform-plugin-framework/types"
+
 type Data struct {
-	Publishers []Publisher `tfsdk:"publishers"`
+	Token types.String `tfsdk:"token"`
 }

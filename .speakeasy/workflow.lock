@@ -1,17 +1,17 @@
-speakeasyVersion: 1.331.2
+speakeasyVersion: 1.345.4
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:cc5a8f1f8c5e0884a7a897b8afb4f47aa7580dfa4242a16ae5f0b98f2e3ae268
-        sourceBlobDigest: sha256:94a290c6fe5ef00fa7ab8c89a9919e8445667f4db26355d46d282474759cb972
+        sourceRevisionDigest: sha256:5eec2d6479b7e404c81cef7cf1943e3fe73f037855c9ad470a6ef64bb2f122c8
+        sourceBlobDigest: sha256:6efd8a391de7cadc88444a7a48349b9dd0de44a5d3374573a1a5a2a005b00db2
         tags:
             - latest
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:cc5a8f1f8c5e0884a7a897b8afb4f47aa7580dfa4242a16ae5f0b98f2e3ae268
-        sourceBlobDigest: sha256:94a290c6fe5ef00fa7ab8c89a9919e8445667f4db26355d46d282474759cb972
+        sourceRevisionDigest: sha256:5eec2d6479b7e404c81cef7cf1943e3fe73f037855c9ad470a6ef64bb2f122c8
+        sourceBlobDigest: sha256:6efd8a391de7cadc88444a7a48349b9dd0de44a5d3374573a1a5a2a005b00db2
         outLocation: /Users/jadrian/speakeasy/terraform-provider-ns
 workflow:
     workflowVersion: 1.0.0
@@ -20,11 +20,9 @@ workflow:
         openapi:
             inputs:
                 - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/base_oas.yaml
-                - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_publisher.yaml
-                - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policy.yaml
-                - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policygroup.yaml
+                - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_publishers.yaml
+                - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_upgrade_profiles.yaml
                 - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/npa_apps_private.yaml
-                - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/npa_private_tag.yaml
             overlays:
                 - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
             registry:

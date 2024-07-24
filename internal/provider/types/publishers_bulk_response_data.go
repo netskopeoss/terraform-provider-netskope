@@ -3,5 +3,5 @@
 package types
 
 type PublishersBulkResponseData struct {
-	Publishers []PublishersBulkResponsePublishers `tfsdk:"publishers"`
+	Publishers []PublisherBulkItem `tfsdk:"publishers"`
 }

@@ -44,7 +44,6 @@ resource "ns_npa_publishers_bulk_upgrade" "my_npapublishersbulkupgrade" {
 ### Read-Only
 
 - `data` (Attributes) (see [below for nested schema](#nestedatt--data))
-- `status` (String) must be one of ["success", "not found"]
 
 <a id="nestedatt--publishers"></a>
 ### Nested Schema for `publishers`
@@ -85,7 +84,7 @@ Read-Only:
 - `name` (String)
 - `publisher_upgrade_profiles_id` (Number)
 - `registered` (Boolean)
-- `status` (String)
+- `status` (String) must be one of ["connected", "not registered"]
 - `stitcher_id` (Number)
 - `stitcher_pop` (String)
 - `upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--upgrade_failed_reason))

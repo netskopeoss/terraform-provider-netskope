@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
@@ -28,15 +29,22 @@ type NPAPublishersDataSource struct {
 
 // NPAPublishersDataSourceModel describes the data model.
 type NPAPublishersDataSourceModel struct {
-	Assessment                types.String `tfsdk:"assessment"`
-	CommonName                types.String `tfsdk:"common_name"`
-	Lbrokerconnect            types.Bool   `tfsdk:"lbrokerconnect"`
-	Name                      types.String `tfsdk:"name"`
-	PublisherID               types.Int64  `tfsdk:"publisher_id"`
-	PublisherUpgradeProfileID types.Int64  `tfsdk:"publisher_upgrade_profile_id"`
-	Registered                types.Bool   `tfsdk:"registered"`
-	Status                    types.String `tfsdk:"status"`
-	StitcherID                types.Int64  `tfsdk:"stitcher_id"`
+	AppsCount                  types.Int64                  `tfsdk:"apps_count"`
+	Assessment                 *tfTypes.Assessment          `tfsdk:"assessment"`
+	Capabilities               *tfTypes.Capabilities        `tfsdk:"capabilities"`
+	CommonName                 types.String                 `tfsdk:"common_name"`
+	ConnectedApps              []types.String               `tfsdk:"connected_apps"`
+	Lbrokerconnect             types.Bool                   `tfsdk:"lbrokerconnect"`
+	Name                       types.String                 `tfsdk:"name"`
+	PublisherID                types.Int64                  `tfsdk:"publisher_id"`
+	PublisherUpgradeProfilesID types.Int64                  `tfsdk:"publisher_upgrade_profiles_id"`
+	Registered                 types.Bool                   `tfsdk:"registered"`
+	Status                     types.String                 `tfsdk:"status"`
+	SticherPop                 types.String                 `tfsdk:"sticher_pop"`
+	StitcherID                 types.Int64                  `tfsdk:"stitcher_id"`
+	UpgradeFailedReason        *tfTypes.UpgradeFailedReason `tfsdk:"upgrade_failed_reason"`
+	UpgradeRequest             types.Bool                   `tfsdk:"upgrade_request"`
+	UpgradeStatus              *tfTypes.UpgradeStatus       `tfsdk:"upgrade_status"`
 }
 
 // Metadata returns the data source type name.
@@ -47,15 +55,81 @@ func (r *NPAPublishersDataSource) Metadata(ctx context.Context, req datasource.M
 // Schema defines the schema for the data source.
 func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis data source supports query of a specific Publisher object. \n",
+		MarkdownDescription: "NPAPublishers DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"assessment": schema.StringAttribute{
-				Computed:    true,
-				Description: `Parsed as JSON.`,
+			"apps_count": schema.Int64Attribute{
+				Computed: true,
+			},
+			"assessment": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"ca_certs_status": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"hashes": schema.ListAttribute{
+								Computed:    true,
+								ElementType: types.StringType,
+							},
+							"last_modified": schema.NumberAttribute{
+								Computed: true,
+							},
+						},
+					},
+					"eee_support": schema.BoolAttribute{
+						Computed: true,
+					},
+					"hdd_free": schema.StringAttribute{
+						Computed: true,
+					},
+					"hdd_total": schema.StringAttribute{
+						Computed: true,
+					},
+					"ip_address": schema.StringAttribute{
+						Computed: true,
+					},
+					"latency": schema.NumberAttribute{
+						Computed: true,
+					},
+					"version": schema.StringAttribute{
+						Computed: true,
+					},
+				},
+			},
+			"capabilities": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"auto_upgrade": schema.BoolAttribute{
+						Computed: true,
+					},
+					"dtls": schema.BoolAttribute{
+						Computed: true,
+					},
+					"eee": schema.BoolAttribute{
+						Computed: true,
+					},
+					"nwa_ba": schema.BoolAttribute{
+						Computed: true,
+					},
+					"pull_nsconfig": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"orgkey_exist": schema.BoolAttribute{
+								Computed: true,
+							},
+							"orguri_exist": schema.BoolAttribute{
+								Computed: true,
+							},
+						},
+					},
+				},
 			},
 			"common_name": schema.StringAttribute{
 				Computed: true,
+			},
+			"connected_apps": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
 			},
 			"lbrokerconnect": schema.BoolAttribute{
 				Computed: true,
@@ -67,18 +141,48 @@ func (r *NPAPublishersDataSource) Schema(ctx context.Context, req datasource.Sch
 				Required:    true,
 				Description: `publisher id`,
 			},
-			"publisher_upgrade_profile_id": schema.Int64Attribute{
+			"publisher_upgrade_profiles_id": schema.Int64Attribute{
 				Computed: true,
 			},
 			"registered": schema.BoolAttribute{
 				Computed: true,
 			},
 			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["connected", "not registered"]`,
+				Computed: true,
+			},
+			"sticher_pop": schema.StringAttribute{
+				Computed: true,
 			},
 			"stitcher_id": schema.Int64Attribute{
 				Computed: true,
+			},
+			"upgrade_failed_reason": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"detail": schema.StringAttribute{
+						Computed: true,
+					},
+					"error_code": schema.NumberAttribute{
+						Computed: true,
+					},
+					"timestamp": schema.NumberAttribute{
+						Computed: true,
+					},
+					"version": schema.StringAttribute{
+						Computed: true,
+					},
+				},
+			},
+			"upgrade_request": schema.BoolAttribute{
+				Computed: true,
+			},
+			"upgrade_status": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"upstat": schema.StringAttribute{
+						Computed: true,
+					},
+				},
 			},
 		},
 	}
@@ -146,11 +250,11 @@ func (r *NPAPublishersDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublisherResponse != nil && res.PublisherResponse.Data != nil) {
+	if !(res.PublisherResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
+	data.RefreshFromSharedPublisherResponse(res.PublisherResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

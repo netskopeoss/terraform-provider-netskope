@@ -2,9 +2,379 @@
 
 package shared
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type PublishersGetResponseCaCertsStatus struct {
+	Hashes       []string `json:"hashes,omitempty"`
+	LastModified *int     `json:"last_modified,omitempty"`
+}
+
+func (o *PublishersGetResponseCaCertsStatus) GetHashes() []string {
+	if o == nil {
+		return nil
+	}
+	return o.Hashes
+}
+
+func (o *PublishersGetResponseCaCertsStatus) GetLastModified() *int {
+	if o == nil {
+		return nil
+	}
+	return o.LastModified
+}
+
+type PublishersGetResponseAssessment struct {
+	CaCertsStatus *PublishersGetResponseCaCertsStatus `json:"ca_certs_status,omitempty"`
+	EeeSupport    *bool                               `json:"eee_support,omitempty"`
+	HddFree       *string                             `json:"hdd_free,omitempty"`
+	HddTotal      *string                             `json:"hdd_total,omitempty"`
+	IPAddress     *string                             `json:"ip_address,omitempty"`
+	Latency       *int                                `json:"latency,omitempty"`
+	Version       *string                             `json:"version,omitempty"`
+}
+
+func (o *PublishersGetResponseAssessment) GetCaCertsStatus() *PublishersGetResponseCaCertsStatus {
+	if o == nil {
+		return nil
+	}
+	return o.CaCertsStatus
+}
+
+func (o *PublishersGetResponseAssessment) GetEeeSupport() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.EeeSupport
+}
+
+func (o *PublishersGetResponseAssessment) GetHddFree() *string {
+	if o == nil {
+		return nil
+	}
+	return o.HddFree
+}
+
+func (o *PublishersGetResponseAssessment) GetHddTotal() *string {
+	if o == nil {
+		return nil
+	}
+	return o.HddTotal
+}
+
+func (o *PublishersGetResponseAssessment) GetIPAddress() *string {
+	if o == nil {
+		return nil
+	}
+	return o.IPAddress
+}
+
+func (o *PublishersGetResponseAssessment) GetLatency() *int {
+	if o == nil {
+		return nil
+	}
+	return o.Latency
+}
+
+func (o *PublishersGetResponseAssessment) GetVersion() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Version
+}
+
+type PublishersGetResponsePullNsconfig struct {
+	OrgkeyExist *bool `json:"orgkey_exist,omitempty"`
+	OrguriExist *bool `json:"orguri_exist,omitempty"`
+}
+
+func (o *PublishersGetResponsePullNsconfig) GetOrgkeyExist() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.OrgkeyExist
+}
+
+func (o *PublishersGetResponsePullNsconfig) GetOrguriExist() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.OrguriExist
+}
+
+type PublishersGetResponseCapabilities struct {
+	Dtls         *bool                              `json:"DTLS,omitempty"`
+	Eee          *bool                              `json:"EEE,omitempty"`
+	AutoUpgrade  *bool                              `json:"auto_upgrade,omitempty"`
+	NwaBa        *bool                              `json:"nwa_ba,omitempty"`
+	PullNsconfig *PublishersGetResponsePullNsconfig `json:"pull_nsconfig,omitempty"`
+}
+
+func (o *PublishersGetResponseCapabilities) GetDtls() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Dtls
+}
+
+func (o *PublishersGetResponseCapabilities) GetEee() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Eee
+}
+
+func (o *PublishersGetResponseCapabilities) GetAutoUpgrade() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.AutoUpgrade
+}
+
+func (o *PublishersGetResponseCapabilities) GetNwaBa() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.NwaBa
+}
+
+func (o *PublishersGetResponseCapabilities) GetPullNsconfig() *PublishersGetResponsePullNsconfig {
+	if o == nil {
+		return nil
+	}
+	return o.PullNsconfig
+}
+
+type Tags struct {
+}
+
+type PublishersGetResponseUpgradeFailedReason struct {
+	Detail    *string `json:"detail,omitempty"`
+	ErrorCode *int    `json:"error_code,omitempty"`
+	Timestamp *int    `json:"timestamp,omitempty"`
+	Version   *string `json:"version,omitempty"`
+}
+
+func (o *PublishersGetResponseUpgradeFailedReason) GetDetail() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Detail
+}
+
+func (o *PublishersGetResponseUpgradeFailedReason) GetErrorCode() *int {
+	if o == nil {
+		return nil
+	}
+	return o.ErrorCode
+}
+
+func (o *PublishersGetResponseUpgradeFailedReason) GetTimestamp() *int {
+	if o == nil {
+		return nil
+	}
+	return o.Timestamp
+}
+
+func (o *PublishersGetResponseUpgradeFailedReason) GetVersion() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Version
+}
+
+type PublishersGetResponseUpgradeStatus struct {
+	Upstat *string `json:"upstat,omitempty"`
+}
+
+func (o *PublishersGetResponseUpgradeStatus) GetUpstat() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Upstat
+}
+
+type PublishersGetResponsePublishers struct {
+	AppsCount                          *int                                      `json:"apps_count,omitempty"`
+	Assessment                         *PublishersGetResponseAssessment          `json:"assessment,omitempty"`
+	Capabilities                       *PublishersGetResponseCapabilities        `json:"capabilities,omitempty"`
+	CommonName                         *string                                   `json:"common_name,omitempty"`
+	ConnectedApps                      []string                                  `json:"connected_apps,omitempty"`
+	Lbrokerconnect                     *bool                                     `json:"lbrokerconnect,omitempty"`
+	PublisherID                        *int                                      `json:"publisher_id,omitempty"`
+	PublisherName                      *string                                   `json:"publisher_name,omitempty"`
+	PublisherUpgradeProfilesExternalID *int                                      `json:"publisher_upgrade_profiles_external_id,omitempty"`
+	Registered                         *bool                                     `json:"registered,omitempty"`
+	Status                             *string                                   `json:"status,omitempty"`
+	StitcherID                         *int                                      `json:"stitcher_id,omitempty"`
+	StitcherPop                        *string                                   `json:"stitcher_pop,omitempty"`
+	Tags                               []Tags                                    `json:"tags,omitempty"`
+	UpgradeFailedReason                *PublishersGetResponseUpgradeFailedReason `json:"upgrade_failed_reason,omitempty"`
+	UpgradeRequest                     *bool                                     `json:"upgrade_request,omitempty"`
+	UpgradeStatus                      *PublishersGetResponseUpgradeStatus       `json:"upgrade_status,omitempty"`
+}
+
+func (o *PublishersGetResponsePublishers) GetAppsCount() *int {
+	if o == nil {
+		return nil
+	}
+	return o.AppsCount
+}
+
+func (o *PublishersGetResponsePublishers) GetAssessment() *PublishersGetResponseAssessment {
+	if o == nil {
+		return nil
+	}
+	return o.Assessment
+}
+
+func (o *PublishersGetResponsePublishers) GetCapabilities() *PublishersGetResponseCapabilities {
+	if o == nil {
+		return nil
+	}
+	return o.Capabilities
+}
+
+func (o *PublishersGetResponsePublishers) GetCommonName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CommonName
+}
+
+func (o *PublishersGetResponsePublishers) GetConnectedApps() []string {
+	if o == nil {
+		return nil
+	}
+	return o.ConnectedApps
+}
+
+func (o *PublishersGetResponsePublishers) GetLbrokerconnect() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Lbrokerconnect
+}
+
+func (o *PublishersGetResponsePublishers) GetPublisherID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherID
+}
+
+func (o *PublishersGetResponsePublishers) GetPublisherName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherName
+}
+
+func (o *PublishersGetResponsePublishers) GetPublisherUpgradeProfilesExternalID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherUpgradeProfilesExternalID
+}
+
+func (o *PublishersGetResponsePublishers) GetRegistered() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Registered
+}
+
+func (o *PublishersGetResponsePublishers) GetStatus() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Status
+}
+
+func (o *PublishersGetResponsePublishers) GetStitcherID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.StitcherID
+}
+
+func (o *PublishersGetResponsePublishers) GetStitcherPop() *string {
+	if o == nil {
+		return nil
+	}
+	return o.StitcherPop
+}
+
+func (o *PublishersGetResponsePublishers) GetTags() []Tags {
+	if o == nil {
+		return nil
+	}
+	return o.Tags
+}
+
+func (o *PublishersGetResponsePublishers) GetUpgradeFailedReason() *PublishersGetResponseUpgradeFailedReason {
+	if o == nil {
+		return nil
+	}
+	return o.UpgradeFailedReason
+}
+
+func (o *PublishersGetResponsePublishers) GetUpgradeRequest() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.UpgradeRequest
+}
+
+func (o *PublishersGetResponsePublishers) GetUpgradeStatus() *PublishersGetResponseUpgradeStatus {
+	if o == nil {
+		return nil
+	}
+	return o.UpgradeStatus
+}
+
+type Data struct {
+	Publishers []PublishersGetResponsePublishers `json:"publishers,omitempty"`
+}
+
+func (o *Data) GetPublishers() []PublishersGetResponsePublishers {
+	if o == nil {
+		return nil
+	}
+	return o.Publishers
+}
+
+type Status string
+
+const (
+	StatusSuccess  Status = "success"
+	StatusNotFound Status = "not found"
+)
+
+func (e Status) ToPointer() *Status {
+	return &e
+}
+func (e *Status) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "success":
+		fallthrough
+	case "not found":
+		*e = Status(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for Status: %v", v)
+	}
+}
+
 type PublishersGetResponse struct {
 	Data   *Data   `json:"data,omitempty"`
-	Status *string `json:"status,omitempty"`
+	Status *Status `json:"status,omitempty"`
 	Total  *int    `json:"total,omitempty"`
 }
 
@@ -15,7 +385,7 @@ func (o *PublishersGetResponse) GetData() *Data {
 	return o.Data
 }
 
-func (o *PublishersGetResponse) GetStatus() *string {
+func (o *PublishersGetResponse) GetStatus() *Status {
 	if o == nil {
 		return nil
 	}

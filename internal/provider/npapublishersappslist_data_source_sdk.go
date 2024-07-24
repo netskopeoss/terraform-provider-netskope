@@ -6,42 +6,42 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
-	"math/big"
 )
 
-func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsListResponse(resp *shared.PublisherAppsListResponse) {
-	if resp != nil {
-		r.Data = []tfTypes.PublisherAppsListResponseData{}
-		if len(r.Data) > len(resp.Data) {
-			r.Data = r.Data[:len(resp.Data)]
-		}
-		for dataCount, dataItem := range resp.Data {
-			var data1 tfTypes.PublisherAppsListResponseData
-			data1.AllowUnauthenticatedCors = types.BoolPointerValue(dataItem.AllowUnauthenticatedCors)
-			if dataItem.AppOption == nil {
-				data1.AppOption = nil
+func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPrivateAppsResponse(resp []shared.PrivateAppsResponse) {
+	r.Data = []tfTypes.PrivateAppsResponse{}
+	if len(r.Data) > len(resp) {
+		r.Data = r.Data[:len(resp)]
+	}
+	for dataCount, dataItem := range resp {
+		var data tfTypes.PrivateAppsResponse
+		if dataItem.Data == nil {
+			data.Data = nil
+		} else {
+			data.Data = &tfTypes.PrivateAppsResponseData{}
+			data.Data.AllowUnauthenticatedCors = types.BoolPointerValue(dataItem.Data.AllowUnauthenticatedCors)
+			data.Data.AllowURIBypass = types.BoolPointerValue(dataItem.Data.AllowURIBypass)
+			if dataItem.Data.AppOption == nil {
+				data.Data.AppOption = nil
 			} else {
-				data1.AppOption = &tfTypes.AppOption{}
+				data.Data.AppOption = &tfTypes.AppOption{}
 			}
-			data1.ClientlessAccess = types.BoolPointerValue(dataItem.ClientlessAccess)
-			if dataItem.ExternalID != nil {
-				data1.ExternalID = types.Int64Value(int64(*dataItem.ExternalID))
+			data.Data.BypassUris = []types.String{}
+			for _, v := range dataItem.Data.BypassUris {
+				data.Data.BypassUris = append(data.Data.BypassUris, types.StringValue(v))
+			}
+			data.Data.ClientlessAccess = types.BoolPointerValue(dataItem.Data.ClientlessAccess)
+			data.Data.Host = types.StringPointerValue(dataItem.Data.Host)
+			data.Data.IsUserPortalApp = types.BoolPointerValue(dataItem.Data.IsUserPortalApp)
+			data.Data.Name = types.StringPointerValue(dataItem.Data.Name)
+			if dataItem.Data.PrivateAppID != nil {
+				data.Data.PrivateAppID = types.Int64Value(int64(*dataItem.Data.PrivateAppID))
 			} else {
-				data1.ExternalID = types.Int64Null()
+				data.Data.PrivateAppID = types.Int64Null()
 			}
-			data1.Host = types.StringPointerValue(dataItem.Host)
-			if dataItem.ID != nil {
-				data1.ID = types.NumberValue(big.NewFloat(float64(*dataItem.ID)))
-			} else {
-				data1.ID = types.NumberNull()
-			}
-			data1.IsUserPortalApp = types.BoolPointerValue(dataItem.IsUserPortalApp)
-			data1.Name = types.StringPointerValue(dataItem.Name)
-			data1.PrivateAppProtocol = types.StringPointerValue(dataItem.PrivateAppProtocol)
-			data1.Protocols = []tfTypes.Protocols{}
-			for protocolsCount, protocolsItem := range dataItem.Protocols {
-				var protocols1 tfTypes.Protocols
-				protocols1.CreatedAt = types.StringPointerValue(protocolsItem.CreatedAt)
+			data.Data.Protocols = []tfTypes.ProtocolResponseItem{}
+			for protocolsCount, protocolsItem := range dataItem.Data.Protocols {
+				var protocols1 tfTypes.ProtocolResponseItem
 				if protocolsItem.ID != nil {
 					protocols1.ID = types.Int64Value(int64(*protocolsItem.ID))
 				} else {
@@ -54,81 +54,81 @@ func (r *NPAPublishersAppsListDataSourceModel) RefreshFromSharedPublisherAppsLis
 					protocols1.ServiceID = types.Int64Null()
 				}
 				protocols1.Transport = types.StringPointerValue(protocolsItem.Transport)
-				protocols1.UpdatedAt = types.StringPointerValue(protocolsItem.UpdatedAt)
-				if protocolsCount+1 > len(data1.Protocols) {
-					data1.Protocols = append(data1.Protocols, protocols1)
+				if protocolsCount+1 > len(data.Data.Protocols) {
+					data.Data.Protocols = append(data.Data.Protocols, protocols1)
 				} else {
-					data1.Protocols[protocolsCount].CreatedAt = protocols1.CreatedAt
-					data1.Protocols[protocolsCount].ID = protocols1.ID
-					data1.Protocols[protocolsCount].Port = protocols1.Port
-					data1.Protocols[protocolsCount].ServiceID = protocols1.ServiceID
-					data1.Protocols[protocolsCount].Transport = protocols1.Transport
-					data1.Protocols[protocolsCount].UpdatedAt = protocols1.UpdatedAt
+					data.Data.Protocols[protocolsCount].ID = protocols1.ID
+					data.Data.Protocols[protocolsCount].Port = protocols1.Port
+					data.Data.Protocols[protocolsCount].ServiceID = protocols1.ServiceID
+					data.Data.Protocols[protocolsCount].Transport = protocols1.Transport
 				}
 			}
-			data1.PublicHost = types.StringPointerValue(dataItem.PublicHost)
-			if dataItem.Reachability == nil {
-				data1.Reachability = nil
-			} else {
-				data1.Reachability = &tfTypes.PublisherAppsListResponseReachability{}
-				data1.Reachability.Reachable = types.BoolPointerValue(dataItem.Reachability.Reachable)
-			}
-			data1.RealHost = types.StringPointerValue(dataItem.RealHost)
-			data1.ServicePublisherAssignments = []tfTypes.ServicePublisherAssignments{}
-			for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range dataItem.ServicePublisherAssignments {
-				var servicePublisherAssignments1 tfTypes.ServicePublisherAssignments
+			data.Data.RealHost = types.StringPointerValue(dataItem.Data.RealHost)
+			data.Data.ServicePublisherAssignments = []tfTypes.ServicePublisherAssignmentItem{}
+			for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range dataItem.Data.ServicePublisherAssignments {
+				var servicePublisherAssignments1 tfTypes.ServicePublisherAssignmentItem
 				servicePublisherAssignments1.Primary = types.BoolPointerValue(servicePublisherAssignmentsItem.Primary)
-				if servicePublisherAssignmentsItem.PublisherExternalID != nil {
-					servicePublisherAssignments1.PublisherExternalID = types.NumberValue(big.NewFloat(float64(*servicePublisherAssignmentsItem.PublisherExternalID)))
+				if servicePublisherAssignmentsItem.PublisherID != nil {
+					servicePublisherAssignments1.PublisherID = types.Int64Value(int64(*servicePublisherAssignmentsItem.PublisherID))
 				} else {
-					servicePublisherAssignments1.PublisherExternalID = types.NumberNull()
+					servicePublisherAssignments1.PublisherID = types.Int64Null()
 				}
-				servicePublisherAssignments1.PublisherName = types.StringPointerValue(servicePublisherAssignmentsItem.PublisherName)
-				servicePublisherAssignments1.Reachability = types.BoolPointerValue(servicePublisherAssignmentsItem.Reachability)
-				if servicePublisherAssignmentsItem.ServiceExternalID != nil {
-					servicePublisherAssignments1.ServiceExternalID = types.NumberValue(big.NewFloat(float64(*servicePublisherAssignmentsItem.ServiceExternalID)))
+				if servicePublisherAssignmentsItem.Reachability == nil {
+					servicePublisherAssignments1.Reachability = nil
 				} else {
-					servicePublisherAssignments1.ServiceExternalID = types.NumberNull()
+					servicePublisherAssignments1.Reachability = &tfTypes.Reachability{}
+					if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
+						servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
+					} else {
+						servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Null()
+					}
+					servicePublisherAssignments1.Reachability.ErrorString = types.StringPointerValue(servicePublisherAssignmentsItem.Reachability.ErrorString)
+					servicePublisherAssignments1.Reachability.Reachable = types.BoolPointerValue(servicePublisherAssignmentsItem.Reachability.Reachable)
 				}
-				if servicePublisherAssignmentsCount+1 > len(data1.ServicePublisherAssignments) {
-					data1.ServicePublisherAssignments = append(data1.ServicePublisherAssignments, servicePublisherAssignments1)
+				if servicePublisherAssignmentsItem.ServiceID != nil {
+					servicePublisherAssignments1.ServiceID = types.Int64Value(int64(*servicePublisherAssignmentsItem.ServiceID))
 				} else {
-					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].Primary = servicePublisherAssignments1.Primary
-					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].PublisherExternalID = servicePublisherAssignments1.PublisherExternalID
-					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].PublisherName = servicePublisherAssignments1.PublisherName
-					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].Reachability = servicePublisherAssignments1.Reachability
-					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].ServiceExternalID = servicePublisherAssignments1.ServiceExternalID
+					servicePublisherAssignments1.ServiceID = types.Int64Null()
+				}
+				if servicePublisherAssignmentsCount+1 > len(data.Data.ServicePublisherAssignments) {
+					data.Data.ServicePublisherAssignments = append(data.Data.ServicePublisherAssignments, servicePublisherAssignments1)
+				} else {
+					data.Data.ServicePublisherAssignments[servicePublisherAssignmentsCount].Primary = servicePublisherAssignments1.Primary
+					data.Data.ServicePublisherAssignments[servicePublisherAssignmentsCount].PublisherID = servicePublisherAssignments1.PublisherID
+					data.Data.ServicePublisherAssignments[servicePublisherAssignmentsCount].Reachability = servicePublisherAssignments1.Reachability
+					data.Data.ServicePublisherAssignments[servicePublisherAssignmentsCount].ServiceID = servicePublisherAssignments1.ServiceID
 				}
 			}
-			data1.SupplementDNSForOsx = types.BoolPointerValue(dataItem.SupplementDNSForOsx)
-			data1.TrustSelfSignedCerts = types.BoolPointerValue(dataItem.TrustSelfSignedCerts)
-			data1.UsePublisherDNS = types.BoolPointerValue(dataItem.UsePublisherDNS)
-			if dataCount+1 > len(r.Data) {
-				r.Data = append(r.Data, data1)
-			} else {
-				r.Data[dataCount].AllowUnauthenticatedCors = data1.AllowUnauthenticatedCors
-				r.Data[dataCount].AppOption = data1.AppOption
-				r.Data[dataCount].ClientlessAccess = data1.ClientlessAccess
-				r.Data[dataCount].ExternalID = data1.ExternalID
-				r.Data[dataCount].Host = data1.Host
-				r.Data[dataCount].ID = data1.ID
-				r.Data[dataCount].IsUserPortalApp = data1.IsUserPortalApp
-				r.Data[dataCount].Name = data1.Name
-				r.Data[dataCount].PrivateAppProtocol = data1.PrivateAppProtocol
-				r.Data[dataCount].Protocols = data1.Protocols
-				r.Data[dataCount].PublicHost = data1.PublicHost
-				r.Data[dataCount].Reachability = data1.Reachability
-				r.Data[dataCount].RealHost = data1.RealHost
-				r.Data[dataCount].ServicePublisherAssignments = data1.ServicePublisherAssignments
-				r.Data[dataCount].SupplementDNSForOsx = data1.SupplementDNSForOsx
-				r.Data[dataCount].TrustSelfSignedCerts = data1.TrustSelfSignedCerts
-				r.Data[dataCount].UsePublisherDNS = data1.UsePublisherDNS
+			data.Data.Tags = []tfTypes.TagItem{}
+			for tagsCount, tagsItem := range dataItem.Data.Tags {
+				var tags1 tfTypes.TagItem
+				if tagsItem.TagID != nil {
+					tags1.TagID = types.Int64Value(int64(*tagsItem.TagID))
+				} else {
+					tags1.TagID = types.Int64Null()
+				}
+				tags1.TagName = types.StringPointerValue(tagsItem.TagName)
+				if tagsCount+1 > len(data.Data.Tags) {
+					data.Data.Tags = append(data.Data.Tags, tags1)
+				} else {
+					data.Data.Tags[tagsCount].TagID = tags1.TagID
+					data.Data.Tags[tagsCount].TagName = tags1.TagName
+				}
 			}
+			data.Data.TrustSelfSignedCerts = types.BoolPointerValue(dataItem.Data.TrustSelfSignedCerts)
+			data.Data.UribypassHeaderValue = types.StringPointerValue(dataItem.Data.UribypassHeaderValue)
+			data.Data.UsePublisherDNS = types.BoolPointerValue(dataItem.Data.UsePublisherDNS)
 		}
-		if resp.Status != nil {
-			r.Status = types.StringValue(string(*resp.Status))
+		if dataItem.Status != nil {
+			data.Status = types.StringValue(string(*dataItem.Status))
 		} else {
-			r.Status = types.StringNull()
+			data.Status = types.StringNull()
+		}
+		if dataCount+1 > len(r.Data) {
+			r.Data = append(r.Data, data)
+		} else {
+			r.Data[dataCount].Data = data.Data
+			r.Data[dataCount].Status = data.Status
 		}
 	}
 }

@@ -16,12 +16,14 @@ const (
 	SupportedOptionRetries              = "retries"
 	SupportedOptionTimeout              = "timeout"
 	SupportedOptionAcceptHeaderOverride = "acceptHeaderOverride"
+	SupportedOptionURLOverride          = "urlOverride"
 )
 
 type Options struct {
-	ServerURL *string
-	Retries   *retry.Config
-	Timeout   *time.Duration
+	ServerURL   *string
+	Retries     *retry.Config
+	Timeout     *time.Duration
+	URLOverride *string
 }
 
 type Option func(*Options, ...string) error
@@ -74,6 +76,18 @@ func WithOperationTimeout(timeout time.Duration) Option {
 		}
 
 		opts.Timeout = &timeout
+		return nil
+	}
+}
+
+// WithURLOverride allows overriding the URL.
+func WithURLOverride(urlOverride string) Option {
+	return func(opts *Options, supportedOptions ...string) error {
+		if !utils.Contains(supportedOptions, SupportedOptionURLOverride) {
+			return ErrUnsupportedOption
+		}
+
+		opts.URLOverride = &urlOverride
 		return nil
 	}
 }

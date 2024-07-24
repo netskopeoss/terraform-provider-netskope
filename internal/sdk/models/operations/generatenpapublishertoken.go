@@ -58,7 +58,6 @@ func (e *GenerateNPAPublisherTokenStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-// GenerateNPAPublisherTokenResponseBody - successful operation
 type GenerateNPAPublisherTokenResponseBody struct {
 	Data   GenerateNPAPublisherTokenData   `json:"data"`
 	Status GenerateNPAPublisherTokenStatus `json:"status"`
@@ -85,8 +84,7 @@ type GenerateNPAPublisherTokenResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// successful operation
-	Object *GenerateNPAPublisherTokenResponseBody
+	Object      *GenerateNPAPublisherTokenResponseBody
 	// Invalid request
 	PublishersResponse400 *shared.PublishersResponse400
 }

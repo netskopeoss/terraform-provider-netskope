@@ -2,25 +2,55 @@
 
 package shared
 
-type PrivateAppsPutRequest struct {
-	ID                   *int            `json:"id,omitempty"`
-	AppName              *string         `json:"app_name,omitempty"`
-	Host                 *string         `json:"host,omitempty"`
-	RealHost             *string         `json:"real_host,omitempty"`
-	Protocols            []ProtocolItem  `json:"protocols,omitempty"`
-	Publishers           []PublisherItem `json:"publishers,omitempty"`
-	PublisherTags        []TagItemNoID   `json:"publisher_tags,omitempty"`
-	Tags                 []TagItemNoID   `json:"tags,omitempty"`
-	UsePublisherDNS      *bool           `json:"use_publisher_dns,omitempty"`
-	ClientlessAccess     *bool           `json:"clientless_access,omitempty"`
-	TrustSelfSignedCerts *bool           `json:"trust_self_signed_certs,omitempty"`
+type PrivateAppsPutRequestAppOption struct {
 }
 
-func (o *PrivateAppsPutRequest) GetID() *int {
+type PrivateAppsPutRequest struct {
+	AllowUnauthenticatedCors *bool                           `json:"allow_unauthenticated_cors,omitempty"`
+	AllowURIBypass           *bool                           `json:"allow_uri_bypass,omitempty"`
+	UribypassHeaderValue     *string                         `json:"uribypass_header_value,omitempty"`
+	BypassUris               []string                        `json:"bypass_uris,omitempty"`
+	AppName                  *string                         `json:"app_name,omitempty"`
+	AppOption                *PrivateAppsPutRequestAppOption `json:"app_option,omitempty"`
+	ClientlessAccess         *bool                           `json:"clientless_access,omitempty"`
+	Host                     *string                         `json:"host,omitempty"`
+	ID                       *int                            `json:"id,omitempty"`
+	IsUserPortalApp          *bool                           `json:"is_user_portal_app,omitempty"`
+	Protocols                []ProtocolItem                  `json:"protocols,omitempty"`
+	PublisherTags            []TagItemNoID                   `json:"publisher_tags,omitempty"`
+	Publishers               []PublisherItem                 `json:"publishers,omitempty"`
+	RealHost                 *string                         `json:"real_host,omitempty"`
+	Tags                     []TagItemNoID                   `json:"tags,omitempty"`
+	TrustSelfSignedCerts     *bool                           `json:"trust_self_signed_certs,omitempty"`
+	UsePublisherDNS          *bool                           `json:"use_publisher_dns,omitempty"`
+}
+
+func (o *PrivateAppsPutRequest) GetAllowUnauthenticatedCors() *bool {
 	if o == nil {
 		return nil
 	}
-	return o.ID
+	return o.AllowUnauthenticatedCors
+}
+
+func (o *PrivateAppsPutRequest) GetAllowURIBypass() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.AllowURIBypass
+}
+
+func (o *PrivateAppsPutRequest) GetUribypassHeaderValue() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UribypassHeaderValue
+}
+
+func (o *PrivateAppsPutRequest) GetBypassUris() []string {
+	if o == nil {
+		return nil
+	}
+	return o.BypassUris
 }
 
 func (o *PrivateAppsPutRequest) GetAppName() *string {
@@ -30,53 +60,11 @@ func (o *PrivateAppsPutRequest) GetAppName() *string {
 	return o.AppName
 }
 
-func (o *PrivateAppsPutRequest) GetHost() *string {
+func (o *PrivateAppsPutRequest) GetAppOption() *PrivateAppsPutRequestAppOption {
 	if o == nil {
 		return nil
 	}
-	return o.Host
-}
-
-func (o *PrivateAppsPutRequest) GetRealHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.RealHost
-}
-
-func (o *PrivateAppsPutRequest) GetProtocols() []ProtocolItem {
-	if o == nil {
-		return nil
-	}
-	return o.Protocols
-}
-
-func (o *PrivateAppsPutRequest) GetPublishers() []PublisherItem {
-	if o == nil {
-		return nil
-	}
-	return o.Publishers
-}
-
-func (o *PrivateAppsPutRequest) GetPublisherTags() []TagItemNoID {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherTags
-}
-
-func (o *PrivateAppsPutRequest) GetTags() []TagItemNoID {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
-}
-
-func (o *PrivateAppsPutRequest) GetUsePublisherDNS() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.UsePublisherDNS
+	return o.AppOption
 }
 
 func (o *PrivateAppsPutRequest) GetClientlessAccess() *bool {
@@ -86,9 +74,72 @@ func (o *PrivateAppsPutRequest) GetClientlessAccess() *bool {
 	return o.ClientlessAccess
 }
 
+func (o *PrivateAppsPutRequest) GetHost() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Host
+}
+
+func (o *PrivateAppsPutRequest) GetID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.ID
+}
+
+func (o *PrivateAppsPutRequest) GetIsUserPortalApp() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.IsUserPortalApp
+}
+
+func (o *PrivateAppsPutRequest) GetProtocols() []ProtocolItem {
+	if o == nil {
+		return nil
+	}
+	return o.Protocols
+}
+
+func (o *PrivateAppsPutRequest) GetPublisherTags() []TagItemNoID {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherTags
+}
+
+func (o *PrivateAppsPutRequest) GetPublishers() []PublisherItem {
+	if o == nil {
+		return nil
+	}
+	return o.Publishers
+}
+
+func (o *PrivateAppsPutRequest) GetRealHost() *string {
+	if o == nil {
+		return nil
+	}
+	return o.RealHost
+}
+
+func (o *PrivateAppsPutRequest) GetTags() []TagItemNoID {
+	if o == nil {
+		return nil
+	}
+	return o.Tags
+}
+
 func (o *PrivateAppsPutRequest) GetTrustSelfSignedCerts() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.TrustSelfSignedCerts
+}
+
+func (o *PrivateAppsPutRequest) GetUsePublisherDNS() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.UsePublisherDNS
 }

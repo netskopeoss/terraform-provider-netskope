@@ -3,21 +3,12 @@
 page_title: "ns_npa_publishers Data Source - terraform-provider-ns"
 subcategory: ""
 description: |-
-  The NPA Publisher is a software package that enables private application
-  connectivity between your data center and the Netskope cloud. It is a crucial
-  component of Netskope’s Private Access (NPA) solution, which provides zero-trust
-  network access (ZTNA) to private applications and data in hybrid IT environments.
-  This data source supports query of a specific Publisher object.
+  NPAPublishers DataSource
 ---
 
 # ns_npa_publishers (Data Source)
 
-The NPA Publisher is a software package that enables private application
-connectivity between your data center and the Netskope cloud. It is a crucial 
-component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
-network access (ZTNA) to private applications and data in hybrid IT environments.
-
-This data source supports query of a specific Publisher object.
+NPAPublishers DataSource
 
 ## Example Usage
 
@@ -36,13 +27,82 @@ data "ns_npa_publishers" "my_npapublishers" {
 
 ### Read-Only
 
-- `assessment` (String) Parsed as JSON.
+- `apps_count` (Number)
+- `assessment` (Attributes) (see [below for nested schema](#nestedatt--assessment))
+- `capabilities` (Attributes) (see [below for nested schema](#nestedatt--capabilities))
 - `common_name` (String)
+- `connected_apps` (List of String)
 - `lbrokerconnect` (Boolean)
 - `name` (String)
-- `publisher_upgrade_profile_id` (Number)
+- `publisher_upgrade_profiles_id` (Number)
 - `registered` (Boolean)
-- `status` (String) must be one of ["connected", "not registered"]
+- `status` (String)
+- `sticher_pop` (String)
 - `stitcher_id` (Number)
+- `upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--upgrade_failed_reason))
+- `upgrade_request` (Boolean)
+- `upgrade_status` (Attributes) (see [below for nested schema](#nestedatt--upgrade_status))
+
+<a id="nestedatt--assessment"></a>
+### Nested Schema for `assessment`
+
+Read-Only:
+
+- `ca_certs_status` (Attributes) (see [below for nested schema](#nestedatt--assessment--ca_certs_status))
+- `eee_support` (Boolean)
+- `hdd_free` (String)
+- `hdd_total` (String)
+- `ip_address` (String)
+- `latency` (Number)
+- `version` (String)
+
+<a id="nestedatt--assessment--ca_certs_status"></a>
+### Nested Schema for `assessment.ca_certs_status`
+
+Read-Only:
+
+- `hashes` (List of String)
+- `last_modified` (Number)
+
+
+
+<a id="nestedatt--capabilities"></a>
+### Nested Schema for `capabilities`
+
+Read-Only:
+
+- `auto_upgrade` (Boolean)
+- `dtls` (Boolean)
+- `eee` (Boolean)
+- `nwa_ba` (Boolean)
+- `pull_nsconfig` (Attributes) (see [below for nested schema](#nestedatt--capabilities--pull_nsconfig))
+
+<a id="nestedatt--capabilities--pull_nsconfig"></a>
+### Nested Schema for `capabilities.pull_nsconfig`
+
+Read-Only:
+
+- `orgkey_exist` (Boolean)
+- `orguri_exist` (Boolean)
+
+
+
+<a id="nestedatt--upgrade_failed_reason"></a>
+### Nested Schema for `upgrade_failed_reason`
+
+Read-Only:
+
+- `detail` (String)
+- `error_code` (Number)
+- `timestamp` (Number)
+- `version` (String)
+
+
+<a id="nestedatt--upgrade_status"></a>
+### Nested Schema for `upgrade_status`
+
+Read-Only:
+
+- `upstat` (String)
 
 

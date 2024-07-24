@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -29,9 +28,8 @@ type NPAPublishersListDataSource struct {
 
 // NPAPublishersListDataSourceModel describes the data model.
 type NPAPublishersListDataSourceModel struct {
-	Data   *tfTypes.Data `tfsdk:"data"`
-	Status types.String  `tfsdk:"status"`
-	Total  types.Int64   `tfsdk:"total"`
+	Data  *tfTypes.Data1 `tfsdk:"data"`
+	Total types.Int64    `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -42,7 +40,7 @@ func (r *NPAPublishersListDataSource) Metadata(ctx context.Context, req datasour
 // Schema defines the schema for the data source.
 func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis data source supports the list of all Publisher objects.\n\nFeatures may require additional licensing, please work with account team to enable.\n",
+		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis data source supports the list of all Publisher objects.\n\nFeatures may require additional licensing, please work with account team to enable.    \n",
 
 		Attributes: map[string]schema.Attribute{
 			"data": schema.SingleNestedAttribute{
@@ -58,29 +56,60 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 								"assessment": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
-										"two": schema.SingleNestedAttribute{
-											Computed:   true,
-											Attributes: map[string]schema.Attribute{},
-										},
-										"assessment": schema.SingleNestedAttribute{
+										"ca_certs_status": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
-												"eee_support": schema.BoolAttribute{
+												"hashes": schema.ListAttribute{
+													Computed:    true,
+													ElementType: types.StringType,
+												},
+												"last_modified": schema.Int64Attribute{
 													Computed: true,
 												},
-												"hdd_free": schema.StringAttribute{
+											},
+										},
+										"eee_support": schema.BoolAttribute{
+											Computed: true,
+										},
+										"hdd_free": schema.StringAttribute{
+											Computed: true,
+										},
+										"hdd_total": schema.StringAttribute{
+											Computed: true,
+										},
+										"ip_address": schema.StringAttribute{
+											Computed: true,
+										},
+										"latency": schema.Int64Attribute{
+											Computed: true,
+										},
+										"version": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+								},
+								"capabilities": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"auto_upgrade": schema.BoolAttribute{
+											Computed: true,
+										},
+										"dtls": schema.BoolAttribute{
+											Computed: true,
+										},
+										"eee": schema.BoolAttribute{
+											Computed: true,
+										},
+										"nwa_ba": schema.BoolAttribute{
+											Computed: true,
+										},
+										"pull_nsconfig": schema.SingleNestedAttribute{
+											Computed: true,
+											Attributes: map[string]schema.Attribute{
+												"orgkey_exist": schema.BoolAttribute{
 													Computed: true,
 												},
-												"hdd_total": schema.StringAttribute{
-													Computed: true,
-												},
-												"ip_address": schema.StringAttribute{
-													Computed: true,
-												},
-												"latency": schema.Int64Attribute{
-													Computed: true,
-												},
-												"version": schema.StringAttribute{
+												"orguri_exist": schema.BoolAttribute{
 													Computed: true,
 												},
 											},
@@ -115,29 +144,23 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 								"stitcher_id": schema.Int64Attribute{
 									Computed: true,
 								},
+								"stitcher_pop": schema.StringAttribute{
+									Computed: true,
+								},
 								"upgrade_failed_reason": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
-										"two": schema.SingleNestedAttribute{
-											Computed:   true,
-											Attributes: map[string]schema.Attribute{},
-										},
-										"upgrade_failed_reason": schema.SingleNestedAttribute{
+										"detail": schema.StringAttribute{
 											Computed: true,
-											Attributes: map[string]schema.Attribute{
-												"detail": schema.StringAttribute{
-													Computed: true,
-												},
-												"error_code": schema.Int64Attribute{
-													Computed: true,
-												},
-												"timestamp": schema.Int64Attribute{
-													Computed: true,
-												},
-												"version": schema.StringAttribute{
-													Computed: true,
-												},
-											},
+										},
+										"error_code": schema.Int64Attribute{
+											Computed: true,
+										},
+										"timestamp": schema.Int64Attribute{
+											Computed: true,
+										},
+										"version": schema.StringAttribute{
+											Computed: true,
 										},
 									},
 								},
@@ -156,9 +179,6 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 						},
 					},
 				},
-			},
-			"status": schema.StringAttribute{
-				Computed: true,
 			},
 			"total": schema.Int64Attribute{
 				Computed: true,
@@ -205,8 +225,7 @@ func (r *NPAPublishersListDataSource) Read(ctx context.Context, req datasource.R
 		return
 	}
 
-	request := operations.GetNPAPublishersRequest{}
-	res, err := r.client.NPAPublishers.ListObjects(ctx, request)
+	res, err := r.client.NPAPublishers.ListObjects(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
