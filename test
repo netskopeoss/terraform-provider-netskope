@@ -1,4 +1,0 @@
-curl -X 'GET' \
-  'https://ryans.goskope.com/api/v2/infrastructure/publishers' \
-  -H 'accept: application/json' \
-  -H 'Netskope-Api-Token: f32b0997a486eb2c732aec436092ddc1'

@@ -1,17 +1,17 @@
 lockVersion: 2.0.0
 id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
-  docChecksum: 3f428636bf8019314b44986d31a4d59e
+  docChecksum: 3507e831fc0770731b3fae76cb022300
   docVersion: 1.0.0
-  speakeasyVersion: 1.345.4
-  generationVersion: 2.378.3
-  releaseVersion: 0.3.53
-  configChecksum: 278c93857d75f73faa68ef16dda38b27
+  speakeasyVersion: 1.348.0
+  generationVersion: 2.380.1
+  releaseVersion: 0.3.131
+  configChecksum: c24490590bcb3e4235f4e24ac0298e15
 features:
   terraform:
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.4
-    core: 3.24.2
+    core: 3.24.5
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
     groups: 2.81.2
@@ -19,10 +19,13 @@ features:
     nameOverrides: 2.81.2
 generatedFiles:
   - internal/sdk/npapublishers.go
+  - internal/sdk/npapublisher.go
   - internal/sdk/npapublishersreleases.go
-  - internal/sdk/npapublishersapps.go
+  - internal/sdk/npapublisherapps.go
   - internal/sdk/npapublishertoken.go
   - internal/sdk/npapublisherupgradeprofiles.go
+  - internal/sdk/npapublisherupgradeprofile.go
+  - internal/sdk/npaprivateapp.go
   - internal/sdk/terraformproviderns.go
   - internal/sdk/models/errors/sdkerror.go
   - internal/sdk/retry/config.go
@@ -46,11 +49,9 @@ generatedFiles:
   - internal/sdk/models/operations/triggernpapublisherupdates.go
   - internal/sdk/models/operations/bulkupdatenpapublishers.go
   - internal/sdk/models/operations/listnpaprivateapps.go
-  - internal/sdk/models/operations/createnpaprivateapps.go
   - internal/sdk/models/operations/getnpapolicyinuse.go
   - internal/sdk/models/operations/deletenpaprivateapp.go
   - internal/sdk/models/operations/getnpaprivateapp.go
-  - internal/sdk/models/operations/updatenpaprivateapp.go
   - internal/sdk/models/operations/getnpapublishers.go
   - internal/sdk/models/operations/createnpapublishers.go
   - internal/sdk/models/operations/deletenpapublishers.go
@@ -60,10 +61,12 @@ generatedFiles:
   - internal/sdk/models/operations/getnpapublisherapps.go
   - internal/sdk/models/operations/generatenpapublishertoken.go
   - internal/sdk/models/operations/listnpapublisherupgradeprofiles.go
-  - internal/sdk/models/operations/createnpapublisherupgradeprofiles.go
-  - internal/sdk/models/operations/deletenpapublisherupgradeprofiles.go
-  - internal/sdk/models/operations/getnpapublisherupgradeprofiles.go
-  - internal/sdk/models/operations/updatenpapublisherupgradeprofiles.go
+  - internal/sdk/models/operations/createnpapublisherupgradeprofile.go
+  - internal/sdk/models/operations/deletenpapublisherupgradeprofile.go
+  - internal/sdk/models/operations/getnpapublisherupgradeprofile.go
+  - internal/sdk/models/operations/updatenpapublisherupgradeprofile.go
+  - internal/sdk/models/operations/createnpaprivateapps.go
+  - internal/sdk/models/operations/updatenpaprivateapp.go
   - internal/sdk/models/shared/fourhundred.go
   - internal/sdk/models/shared/publishersresponse400.go
   - internal/sdk/models/shared/publishersalertgetresponse.go
@@ -74,19 +77,15 @@ generatedFiles:
   - internal/sdk/models/shared/tagitem.go
   - internal/sdk/models/shared/publisherbulkrequest.go
   - internal/sdk/models/shared/publisherupgradeprofilebulkresponse.go
-  - internal/sdk/models/shared/publisherresponse.go
+  - internal/sdk/models/shared/upgradepublisherresponse.go
   - internal/sdk/models/shared/publisherupgradeprofilebulkrequest.go
   - internal/sdk/models/shared/privateappsresponse400.go
-  - internal/sdk/models/shared/privateappsgetresponse.go
+  - internal/sdk/models/shared/privateappslistresponse.go
   - internal/sdk/models/shared/servicepublisherassignmentitem.go
   - internal/sdk/models/shared/protocolresponseitem.go
   - internal/sdk/models/shared/privateappsresponse.go
-  - internal/sdk/models/shared/privateappsrequest.go
-  - internal/sdk/models/shared/tagitemnoid.go
-  - internal/sdk/models/shared/publisheritem.go
-  - internal/sdk/models/shared/protocolitem.go
-  - internal/sdk/models/shared/privateappsputrequest.go
   - internal/sdk/models/shared/publishersgetresponse.go
+  - internal/sdk/models/shared/publisherresponse.go
   - internal/sdk/models/shared/publisherpostrequest.go
   - internal/sdk/models/shared/publisherpatchrequest.go
   - internal/sdk/models/shared/publishersreleasegetresponse.go
@@ -96,6 +95,11 @@ generatedFiles:
   - internal/sdk/models/shared/publisherupgradeprofilepostrequest.go
   - internal/sdk/models/shared/publisherupgradeprofilegetresponse.go
   - internal/sdk/models/shared/publisherupgradeprofileputrequest.go
+  - internal/sdk/models/shared/privateappsrequest.go
+  - internal/sdk/models/shared/privateappsputrequest.go
+  - internal/sdk/models/shared/tagitemnoid.go
+  - internal/sdk/models/shared/publisheritem.go
+  - internal/sdk/models/shared/protocolitem.go
   - internal/sdk/models/shared/security.go
   - internal/sdk/.gitignore
   - internal/sdk/models/operations/options.go
@@ -148,33 +152,36 @@ generatedFiles:
   - terraform-registry-manifest.json
   - tools/tools.go
   - internal/provider/types/app_option.go
-  - internal/provider/types/protocol_item.go
-  - internal/provider/types/tag_item_no_id.go
+  - internal/provider/types/protocols.go
   - internal/provider/types/publisher_item.go
+  - internal/provider/types/private_apps_response_reachability.go
   - internal/provider/types/reachability.go
   - internal/provider/types/service_publisher_assignment_item.go
-  - internal/provider/types/tag_item.go
-  - internal/provider/types/ca_certs_status.go
-  - internal/provider/types/assessment.go
-  - internal/provider/types/pull_nsconfig.go
-  - internal/provider/types/capabilities.go
-  - internal/provider/types/upgrade_failed_reason.go
-  - internal/provider/types/upgrade_status.go
-  - internal/provider/types/publisher_bulk_item_assessment.go
+  - internal/provider/types/tags.go
+  - internal/provider/types/publisher_response_ca_certs_status.go
+  - internal/provider/types/publisher_response_assessment.go
+  - internal/provider/types/publisher_response_pull_nsconfig.go
+  - internal/provider/types/publisher_response_capabilities.go
+  - internal/provider/types/publisher_response_upgrade_failed_reason.go
+  - internal/provider/types/publisher_response_upgrade_status.go
+  - internal/provider/types/upgrade_publisher_response_ca_certs_status.go
+  - internal/provider/types/upgrade_publisher_response_assessment.go
+  - internal/provider/types/upgrade_publisher_response_upgrade_failed_reason.go
+  - internal/provider/types/upgrade_publisher_response.go
+  - internal/provider/types/publisher_upgrade_profile_bulk_response_data.go
+  - internal/provider/types/publisher_upgrade_profile_bulk_request_apply.go
+  - internal/provider/types/publisher_upgrade_profile_bulk_request_publishers.go
   - internal/provider/types/publisher_bulk_item.go
   - internal/provider/types/publishers_bulk_response_data.go
   - internal/provider/types/apply.go
   - internal/provider/types/publishers.go
   - internal/provider/types/protocol_response_item.go
-  - internal/provider/types/private_apps_get_response_data.go
-  - internal/provider/types/private_apps_get_response.go
+  - internal/provider/types/tag_item.go
+  - internal/provider/types/private_apps_list_response_data.go
+  - internal/provider/types/private_apps_list_response.go
   - internal/provider/types/data.go
   - internal/provider/types/response_body.go
   - internal/provider/types/private_apps_response_data.go
-  - internal/provider/types/private_apps_response.go
-  - internal/provider/types/publishers_get_response_ca_certs_status.go
-  - internal/provider/types/publishers_get_response_assessment.go
-  - internal/provider/types/publishers_get_response_upgrade_failed_reason.go
   - internal/provider/types/publishers_get_response_publishers.go
   - internal/provider/types/data1.go
   - internal/provider/types/release_item.go
@@ -187,23 +194,26 @@ generatedFiles:
   - internal/provider/npaprivateapp_resource.go
   - internal/provider/npaprivateapp_resource_sdk.go
   - examples/resources/ns_npa_private_app/resource.tf
-  - examples/resources/ns_npa_publishers/import.sh
-  - internal/provider/npapublishers_resource.go
-  - internal/provider/npapublishers_resource_sdk.go
-  - examples/resources/ns_npa_publishers/resource.tf
-  - internal/provider/npapublishersalertsconfigurationupdate_resource.go
-  - internal/provider/npapublishersalertsconfigurationupdate_resource_sdk.go
-  - examples/resources/ns_npa_publishers_alerts_configuration_update/resource.tf
-  - internal/provider/npapublishersbulkupgrade_resource.go
-  - internal/provider/npapublishersbulkupgrade_resource_sdk.go
-  - examples/resources/ns_npa_publishers_bulk_upgrade/resource.tf
+  - examples/resources/ns_npa_publisher/import.sh
+  - internal/provider/npapublisher_resource.go
+  - internal/provider/npapublisher_resource_sdk.go
+  - examples/resources/ns_npa_publisher/resource.tf
+  - internal/provider/npapublishersalertsconfiguration_resource.go
+  - internal/provider/npapublishersalertsconfiguration_resource_sdk.go
+  - examples/resources/ns_npa_publishers_alerts_configuration/resource.tf
+  - internal/provider/npapublishersbulkprofileupdates_resource.go
+  - internal/provider/npapublishersbulkprofileupdates_resource_sdk.go
+  - examples/resources/ns_npa_publishers_bulk_profile_updates/resource.tf
+  - internal/provider/npapublishersbulkupgraderequest_resource.go
+  - internal/provider/npapublishersbulkupgraderequest_resource_sdk.go
+  - examples/resources/ns_npa_publishers_bulk_upgrade_request/resource.tf
   - internal/provider/npapublishertoken_resource.go
   - internal/provider/npapublishertoken_resource_sdk.go
   - examples/resources/ns_npa_publisher_token/resource.tf
-  - examples/resources/ns_npa_publisher_upgrade_profiles/import.sh
-  - internal/provider/npapublisherupgradeprofiles_resource.go
-  - internal/provider/npapublisherupgradeprofiles_resource_sdk.go
-  - examples/resources/ns_npa_publisher_upgrade_profiles/resource.tf
+  - examples/resources/ns_npa_publisher_upgrade_profile/import.sh
+  - internal/provider/npapublisherupgradeprofile_resource.go
+  - internal/provider/npapublisherupgradeprofile_resource_sdk.go
+  - examples/resources/ns_npa_publisher_upgrade_profile/resource.tf
   - internal/provider/npaprivateapp_data_source.go
   - internal/provider/npaprivateapp_data_source_sdk.go
   - examples/data-sources/ns_npa_private_app/data-source.tf
@@ -213,24 +223,24 @@ generatedFiles:
   - internal/provider/npaprivatepolicyinuse_data_source.go
   - internal/provider/npaprivatepolicyinuse_data_source_sdk.go
   - examples/data-sources/ns_npa_private_policy_in_use/data-source.tf
-  - internal/provider/npapublishers_data_source.go
-  - internal/provider/npapublishers_data_source_sdk.go
-  - examples/data-sources/ns_npa_publishers/data-source.tf
-  - internal/provider/npapublishersalertsconfigurationlist_data_source.go
-  - internal/provider/npapublishersalertsconfigurationlist_data_source_sdk.go
-  - examples/data-sources/ns_npa_publishers_alerts_configuration_list/data-source.tf
-  - internal/provider/npapublishersappslist_data_source.go
-  - internal/provider/npapublishersappslist_data_source_sdk.go
-  - examples/data-sources/ns_npa_publishers_apps_list/data-source.tf
+  - internal/provider/npapublisher_data_source.go
+  - internal/provider/npapublisher_data_source_sdk.go
+  - examples/data-sources/ns_npa_publisher/data-source.tf
+  - internal/provider/npapublisherappslist_data_source.go
+  - internal/provider/npapublisherappslist_data_source_sdk.go
+  - examples/data-sources/ns_npa_publisher_apps_list/data-source.tf
+  - internal/provider/npapublishersalertsconfiguration_data_source.go
+  - internal/provider/npapublishersalertsconfiguration_data_source_sdk.go
+  - examples/data-sources/ns_npa_publishers_alerts_configuration/data-source.tf
   - internal/provider/npapublisherslist_data_source.go
   - internal/provider/npapublisherslist_data_source_sdk.go
   - examples/data-sources/ns_npa_publishers_list/data-source.tf
   - internal/provider/npapublishersreleaseslist_data_source.go
   - internal/provider/npapublishersreleaseslist_data_source_sdk.go
   - examples/data-sources/ns_npa_publishers_releases_list/data-source.tf
-  - internal/provider/npapublisherupgradeprofiles_data_source.go
-  - internal/provider/npapublisherupgradeprofiles_data_source_sdk.go
-  - examples/data-sources/ns_npa_publisher_upgrade_profiles/data-source.tf
+  - internal/provider/npapublisherupgradeprofile_data_source.go
+  - internal/provider/npapublisherupgradeprofile_data_source_sdk.go
+  - examples/data-sources/ns_npa_publisher_upgrade_profile/data-source.tf
   - internal/provider/npapublisherupgradeprofileslist_data_source.go
   - internal/provider/npapublisherupgradeprofileslist_data_source_sdk.go
   - examples/data-sources/ns_npa_publisher_upgrade_profiles_list/data-source.tf

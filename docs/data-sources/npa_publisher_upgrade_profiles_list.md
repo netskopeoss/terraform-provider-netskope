@@ -3,12 +3,21 @@
 page_title: "ns_npa_publisher_upgrade_profiles_list Data Source - terraform-provider-ns"
 subcategory: ""
 description: |-
-  NPAPublisherUpgradeProfilesList DataSource
+  The NPA Publisher is a software package that enables private application
+  connectivity between your data center and the Netskope cloud. It is a crucial
+  component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+  network access (ZTNA) to private applications and data in hybrid IT environments.
+  This data object queries and returns all publisher upgrade profiles.
 ---
 
 # ns_npa_publisher_upgrade_profiles_list (Data Source)
 
-NPAPublisherUpgradeProfilesList DataSource
+The NPA Publisher is a software package that enables private application
+connectivity between your data center and the Netskope cloud. It is a crucial
+component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+network access (ZTNA) to private applications and data in hybrid IT environments.
+
+This data object queries and returns all publisher upgrade profiles.
 
 ## Example Usage
 
@@ -40,11 +49,11 @@ Read-Only:
 - `created_at` (String)
 - `docker_tag` (String)
 - `enabled` (Boolean)
-- `external_id` (Number)
 - `frequency` (String)
 - `name` (String)
 - `next_update_time` (Number)
 - `num_associated_publisher` (Number)
+- `publisher_upgrade_profile_id` (Number)
 - `release_type` (String)
 - `timezone` (String)
 - `updated_at` (String)
