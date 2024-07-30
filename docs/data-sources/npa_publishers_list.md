@@ -57,9 +57,9 @@ Read-Only:
 - `lbrokerconnect` (Boolean)
 - `publisher_id` (Number)
 - `publisher_name` (String)
-- `publisher_upgrade_profiles_external_id` (Number)
+- `publisher_upgrade_profile_id` (Number)
 - `registered` (Boolean)
-- `status` (String)
+- `status` (String) must be one of ["connected", "not registered"]
 - `stitcher_id` (Number)
 - `stitcher_pop` (String)
 - `upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--upgrade_failed_reason))

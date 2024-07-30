@@ -28,20 +28,25 @@ data "ns_npa_private_app" "my_npaprivateapp" {
 ### Read-Only
 
 - `allow_unauthenticated_cors` (Boolean)
-- `allow_uri_bypass` (Boolean)
+- `app_name` (String)
 - `app_option` (Attributes) (see [below for nested schema](#nestedatt--app_option))
-- `bypass_uris` (List of String)
 - `clientless_access` (Boolean)
-- `host` (String)
 - `is_user_portal_app` (Boolean)
-- `name` (String)
+- `modified_by` (String)
+- `modify_time` (String)
+- `policies` (List of String)
+- `private_app_hostname` (String)
+- `private_app_name` (String)
+- `private_app_protocol` (String)
 - `protocols` (Attributes List) (see [below for nested schema](#nestedatt--protocols))
+- `public_host` (String)
+- `reachability` (Attributes) (see [below for nested schema](#nestedatt--reachability))
 - `real_host` (String)
 - `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--service_publisher_assignments))
-- `status` (String) must be one of ["success", "not found"]
+- `steering_configs` (List of String)
+- `supplement_dns_for_osx` (Boolean)
 - `tags` (Attributes List) (see [below for nested schema](#nestedatt--tags))
 - `trust_self_signed_certs` (Boolean)
-- `uribypass_header_value` (String)
 - `use_publisher_dns` (Boolean)
 
 <a id="nestedatt--app_option"></a>
@@ -53,10 +58,20 @@ data "ns_npa_private_app" "my_npaprivateapp" {
 
 Read-Only:
 
+- `created_at` (String)
 - `id` (Number)
 - `port` (String)
+- `protocol` (String)
 - `service_id` (Number)
-- `transport` (String)
+- `updated_at` (String)
+
+
+<a id="nestedatt--reachability"></a>
+### Nested Schema for `reachability`
+
+Read-Only:
+
+- `reachable` (Boolean)
 
 
 <a id="nestedatt--service_publisher_assignments"></a>
@@ -65,9 +80,10 @@ Read-Only:
 Read-Only:
 
 - `primary` (Boolean)
+- `private_app_id` (Number)
 - `publisher_id` (Number)
+- `publisher_name` (String)
 - `reachability` (Attributes) (see [below for nested schema](#nestedatt--service_publisher_assignments--reachability))
-- `service_id` (Number)
 
 <a id="nestedatt--service_publisher_assignments--reachability"></a>
 ### Nested Schema for `service_publisher_assignments.reachability`

@@ -1,24 +1,27 @@
 resource "ns_npa_private_app" "my_npaprivateapp" {
   allow_unauthenticated_cors = false
-  allow_uri_bypass           = true
-  app_name                   = "...my_app_name..."
-  clientless_access          = true
-  host                       = "...my_host..."
-  is_user_portal_app         = true
-  publisher_tags = [
+  clientless_access          = false
+  is_user_portal_app         = false
+  name                       = "Loren Lakin"
+  private_app_hostname       = "webserver.local"
+  private_app_protocol       = "http"
+  protocols = [
     {
-      tag_name = "...my_tag_name..."
+      created_at = "2024-07-26T18:11:06.809Z"
+      id         = 108
+      port       = 80
+      protocol   = "tcp"
+      service_id = 67
+      updated_at = "2024-07-26T18:11:06.809Z"
     },
   ]
   publishers = [
     {
-      publisher_id   = "...my_publisher_id..."
-      publisher_name = "...my_publisher_name..."
+      publisher_id   = 10
+      publisher_name = "webservers"
     },
   ]
-  real_host               = "...my_real_host..."
-  silent                  = "0"
+  real_host               = ""
   trust_self_signed_certs = true
-  uribypass_header_value  = "...my_uribypass_header_value..."
-  use_publisher_dns       = true
+  use_publisher_dns       = false
 }
