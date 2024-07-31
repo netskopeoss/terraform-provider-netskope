@@ -20,10 +20,6 @@ type Options struct {
 	// they must be explicitly handled.
 	UnhandledUnknownAsEmpty bool
 
-	// AllowRoundingNumbers silently rounds numbers that don't fit
-	// perfectly in the types they're being stored in, rather than
-	// returning errors. Numbers will always be rounded towards 0.
-	AllowRoundingNumbers bool
 	// SourceType informs the reflection system what the source is
 	// such that it can make decisions based on the tfPlanOnly annotation
 	// The default is SourceTypeState

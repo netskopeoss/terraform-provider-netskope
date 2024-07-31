@@ -4,44 +4,48 @@ import (
 	"net/http"
 	"strings"
 	"encoding/json"
+    "io/ioutil"
 	"fmt"
-	"context"
-
-
 )
 
 type MyAppResponse struct{}
 
 var (
-	_ afterSuccessHook  = (*MyAppResponse)(nil)
+    //_ sdkInitHook       = (*MyAppResponse)(nil)
+	//_ beforeRequestHook = (*MyAppResponse)(nil)
+    _ afterSuccessHook  = (*MyAppResponse)(nil)
+    //_ afterErrorHook    = (*MyAppResponse)(nil)
 )
 
 func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
-	var responseMap map[string]interface{}
+	if hookCtx.OperationID == "createNPAPrivateApps" { 
+        var responseMap map[string]interface{}
 
-	// Unmarshal the raw response
-	if err := json.Unmarshal(*resp, &responseMap); err != nil {
-		return fm.Error("failed to unmarshal response: %w", err)
-	}
+        // Read and unmarshal the response body
+         body, err := ioutil.ReadAll(res.Body)
+         if err != nil {
+          return nil, fmt.Errorf("Error reading response body:", err)
+         }
 
-	// Modify the response
-	if val, ok := responseMap["app_name"]; ok {
-		if strVal, isString := val.(string); {
-			cleanedValue := strings.Trim(strVal, "[]")
-			responseMap["app_name"] = cleanedValue
-		}
-	}
+		// Unmarshal the raw response into a map
+        if err := json.Unmarshal(body, &responseMap); err != nil {
+            return nil, fmt.Errorf("failed to unmarshal response: %w", err)
+        }
 
-	// Marshal the modified response back to the json Raw Message
-	modifiedResp, err := json.Marshal(responseMap)
-	of err != nil {
-		return fmt.Error("failed to marshal modified response: %w", err)
-	}
+        // Modify the response as needed
+        if val, ok := responseMap["app_name"]; ok { 
+            if strVal, isString := val.(string); isString {
+                cleanedValue := strings.Trim(strVal, "[]")
+                responseMap["app_name"] = cleanedValue 
+            }
+        }
 
-	// Set the modified response back to the ResourceData
-	if err := data.Set("modified_response", string(modifiedResp)); err != nil {
-		return fmt.Error("failed to set modified response: %w", err)
-	}
-	
+        // Marshal the modified response back to json.RawMessage
+        modifiedResponse, err := json.Marshal(responseMap)
+        if err != nil {
+            return nil, fmt.Errorf("failed to marshal modified response: %w", err)
+        }
+		return modifiedResponse, nil
+    }
 	return res, nil
 }
