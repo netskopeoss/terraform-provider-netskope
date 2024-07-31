@@ -4,8 +4,9 @@ import (
 	"net/http"
 	"strings"
 	"encoding/json"
-    "io/ioutil"
+    "io"
 	"fmt"
+	"bytes"
 )
 
 type MyAppResponse struct{}
@@ -19,10 +20,12 @@ func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
         var responseMap map[string]interface{}
 
         // Read and unmarshal the response body
-         body, err := ioutil.ReadAll(res.Body)
+         body, err := io.ReadAll(res.Body)
          if err != nil {
-          return nil, fmt.Errorf("Error reading response body:", err)
+          return nil, fmt.Errorf("Error reading response body: %w", err)
          }
+
+		 defer res.Body.Close()
 
 		// Unmarshal the raw response into a map
         if err := json.Unmarshal(body, &responseMap); err != nil {
@@ -43,13 +46,14 @@ func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
             return nil, fmt.Errorf("failed to marshal modified response: %w", err)
 		}
 	
-		s := string(modifiedBody)
+		//s := string(modifiedBody)
 
 		modifiedResponse := &http.Response{
 			Status: res.Status,
 			StatusCode: res.StatusCode,
 			Header: res.Header,
-			Body: ioutil.NopCloser(strings.NewReader(s)),
+			Body: io.NopCloser(bytes.NewReader(modifiedBody)),
+			//Body: ioutil.NopCloser(strings.NewReader(s)),
 		}
 		return modifiedResponse, nil
     }
