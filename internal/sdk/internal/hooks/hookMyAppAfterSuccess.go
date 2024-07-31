@@ -41,10 +41,17 @@ func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
         }
 
         // Marshal the modified response back to json.RawMessage
-        modifiedResponse, err := json.Marshal(responseMap)
+        modifiedBody, err := json.Marshal(responseMap)
         if err != nil {
             return nil, fmt.Errorf("failed to marshal modified response: %w", err)
-        }
+		}
+	
+		modifiedResponse := &http.Response{
+			Status: res.Status,
+			StatusCode: res.StatusCode,
+			Header: res.Header,
+			Body: ioutil.NopCloser(strings.NewReader(modifiedBody)),
+		}
 		return modifiedResponse, nil
     }
 	return res, nil
