@@ -1,17 +1,17 @@
-speakeasyVersion: 1.349.0
+speakeasyVersion: 1.348.0
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:7a63fa15aac7e781b9af415fb66486288cd8ac06b2c971eb5eb037967f824dc8
-        sourceBlobDigest: sha256:3fd1a892b147a53aa933badea5e48b157937df50dec545c334669cdfc4fe7867
+        sourceRevisionDigest: sha256:a275441b3549d23d3f6e6a397e5f8e7f5ca2a50b220c236871d0eefd83809f48
+        sourceBlobDigest: sha256:92697185691cdaa741faf7ef32e953d9222efca5c41a1bfa104a4b331d7d642c
         tags:
             - latest
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:7a63fa15aac7e781b9af415fb66486288cd8ac06b2c971eb5eb037967f824dc8
-        sourceBlobDigest: sha256:3fd1a892b147a53aa933badea5e48b157937df50dec545c334669cdfc4fe7867
+        sourceRevisionDigest: sha256:a275441b3549d23d3f6e6a397e5f8e7f5ca2a50b220c236871d0eefd83809f48
+        sourceBlobDigest: sha256:92697185691cdaa741faf7ef32e953d9222efca5c41a1bfa104a4b331d7d642c
         outLocation: /Users/jadrian/speakeasy/terraform-provider-ns
 workflow:
     workflowVersion: 1.0.0
