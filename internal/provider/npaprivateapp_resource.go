@@ -44,7 +44,6 @@ type NPAPrivateAppResourceModel struct {
 	IsUserPortalApp             types.Bool                               `tfsdk:"is_user_portal_app"`
 	ModifiedBy                  types.String                             `tfsdk:"modified_by"`
 	ModifyTime                  types.String                             `tfsdk:"modify_time"`
-	Name                        types.String                             `tfsdk:"name"`
 	Policies                    []types.String                           `tfsdk:"policies"`
 	PrivateAppHostname          types.String                             `tfsdk:"private_app_hostname"`
 	PrivateAppID                types.Int64                              `tfsdk:"private_app_id"`
@@ -76,10 +75,12 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Optional: true,
 			},
 			"app_name": schema.StringAttribute{
-				Computed: true,
 				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
+				Required:    true,
+				Description: `Requires replacement if changed. `,
 			},
 			"app_option": schema.SingleNestedAttribute{
 				Computed:   true,
@@ -99,13 +100,6 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 			},
 			"modify_time": schema.StringAttribute{
 				Computed: true,
-			},
-			"name": schema.StringAttribute{
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplaceIfConfigured(),
-				},
-				Required:    true,
-				Description: `Requires replacement if changed. `,
 			},
 			"policies": schema.ListAttribute{
 				Computed:    true,

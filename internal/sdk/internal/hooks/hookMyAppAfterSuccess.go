@@ -19,7 +19,7 @@ var (
 
 func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
 	log.Print(hookCtx)
-	log.Print("--------------------")
+	log.Print("-------- before if  --------")
 	log.Print(res.Body)
 	if hookCtx.OperationID == "createNPAPrivateApps" || hookCtx.OperationID == "getNPAPrivateApp" {
         log.Print(hookCtx.OperationID)
@@ -33,7 +33,7 @@ func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
             return nil, fmt.Errorf("Error reading response body: %w", err)
         }
 
-		log.Print("--------------------")
+		log.Print("------- after io.Read -----------")
 		log.Print(body)
 
         // defer res.Body.Close()

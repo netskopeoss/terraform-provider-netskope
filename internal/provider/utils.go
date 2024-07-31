@@ -17,9 +17,6 @@ import (
 )
 
 func debugResponse(response *http.Response) string {
-	if v := response.Request.Header.Get("Netskope-Api-Token"); v != "" {
-		response.Request.Header.Set("Netskope-Api-Token", "(sensitive)")
-	}
 	dumpReq, err := httputil.DumpRequest(response.Request, true)
 	if err != nil {
 		dumpReq, err = httputil.DumpRequest(response.Request, false)

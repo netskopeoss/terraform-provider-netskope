@@ -87,7 +87,7 @@ func (o *Tags) GetTagName() string {
 
 type PrivateAppsRequest struct {
 	AllowUnauthenticatedCors *bool                          `json:"allow_unauthenticated_cors,omitempty"`
-	Name                     string                         `json:"app_name"`
+	AppName                  string                         `json:"app_name"`
 	AppOption                *AppOption                     `json:"app_option,omitempty"`
 	ClientlessAccess         *bool                          `json:"clientless_access,omitempty"`
 	PrivateAppProtocol       *PrivateAppProtocol            `json:"private_app_protocol,omitempty"`
@@ -108,11 +108,11 @@ func (o *PrivateAppsRequest) GetAllowUnauthenticatedCors() *bool {
 	return o.AllowUnauthenticatedCors
 }
 
-func (o *PrivateAppsRequest) GetName() string {
+func (o *PrivateAppsRequest) GetAppName() string {
 	if o == nil {
 		return ""
 	}
-	return o.Name
+	return o.AppName
 }
 
 func (o *PrivateAppsRequest) GetAppOption() *AppOption {

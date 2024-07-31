@@ -15,9 +15,9 @@ NPAPrivateApp Resource
 ```terraform
 resource "ns_npa_private_app" "my_npaprivateapp" {
   allow_unauthenticated_cors = false
+  app_name                   = "...my_app_name..."
   clientless_access          = false
   is_user_portal_app         = false
-  name                       = "Loren Lakin"
   private_app_hostname       = "webserver.local"
   private_app_protocol       = "http"
   protocols = [
@@ -47,7 +47,7 @@ resource "ns_npa_private_app" "my_npaprivateapp" {
 
 ### Required
 
-- `name` (String) Requires replacement if changed.
+- `app_name` (String) Requires replacement if changed.
 - `private_app_hostname` (String)
 - `protocols` (Attributes List) (see [below for nested schema](#nestedatt--protocols))
 - `publishers` (Attributes List) (see [below for nested schema](#nestedatt--publishers))
@@ -66,7 +66,6 @@ resource "ns_npa_private_app" "my_npaprivateapp" {
 
 ### Read-Only
 
-- `app_name` (String)
 - `modified_by` (String)
 - `modify_time` (String)
 - `policies` (List of String)

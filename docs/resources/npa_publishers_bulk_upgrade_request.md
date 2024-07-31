@@ -108,7 +108,7 @@ Read-Only:
 - `version` (String)
 
 <a id="nestedatt--data--publishers--assessment--ca_certs_status"></a>
-### Nested Schema for `data.publishers.assessment.version`
+### Nested Schema for `data.publishers.assessment.ca_certs_status`
 
 Read-Only:
 
@@ -155,5 +155,3 @@ Read-Only:
 Read-Only:
 
 - `upstat` (String)
-
-

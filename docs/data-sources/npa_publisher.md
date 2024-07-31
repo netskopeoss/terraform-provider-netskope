@@ -113,5 +113,3 @@ Read-Only:
 Read-Only:
 
 - `upstat` (String)
-
-

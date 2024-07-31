@@ -17,7 +17,7 @@ terraform {
   required_providers {
     ns = {
       source  = "netskope/ns"
-      version = "0.3.155"
+      version = "0.3.166"
     }
   }
 }
@@ -32,5 +32,4 @@ provider "ns" {
 
 ### Optional
 
-- `api_key` (String, Sensitive)
 - `server_url` (String) Server URL (defaults to https://{tenant}.goskope.com/api/v2)

@@ -1,8 +1,8 @@
 resource "ns_npa_private_app" "my_npaprivateapp" {
   allow_unauthenticated_cors = false
+  app_name                   = "...my_app_name..."
   clientless_access          = false
   is_user_portal_app         = false
-  name                       = "Loren Lakin"
   private_app_hostname       = "webserver.local"
   private_app_protocol       = "http"
   protocols = [
