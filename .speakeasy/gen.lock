@@ -5,8 +5,8 @@ management:
   docVersion: 1.0.0
   speakeasyVersion: 1.348.0
   generationVersion: 2.380.1
-  releaseVersion: 0.3.142
-  configChecksum: e389b4e877ffe0fe4991117e9ca48765
+  releaseVersion: 0.3.144
+  configChecksum: 90907b49ff63a89f6587a662d47e1a4c
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -104,7 +104,6 @@ generatedFiles:
   - internal/sdk/.gitignore
   - internal/sdk/models/operations/options.go
   - internal/sdk/.gitattributes
-  - internal/sdk/internal/hooks/registration.go
   - internal/sdk/internal/hooks/hooks.go
   - internal/sdk/CONTRIBUTING.md
   - examples/README.md

@@ -1,42 +1,41 @@
 package hooks
 
 import (
-	"net/http"
-	"strings"
-	"encoding/json"
+    "encoding/json"
+    "fmt"
     "io"
-	"fmt"
-	"bytes"
+    "net/http"
+    "strings"
 )
 
 type MyAppResponse struct{}
 
 var (
-    _ afterSuccessHook  = (*MyAppResponse)(nil)
+    _ afterSuccessHook = (*MyAppResponse)(nil)
 )
 
 func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
-	if hookCtx.OperationID == "createNPAPrivateApps" || hookCtx.OperationID == "getNPAPrivateApp" { 
+    if hookCtx.OperationID == "createNPAPrivateApps" || hookCtx.OperationID == "getNPAPrivateApp" {
         var responseMap map[string]interface{}
 
         // Read and unmarshal the response body
-         body, err := io.ReadAll(res.Body)
-         if err != nil {
-          return nil, fmt.Errorf("Error reading response body: %w", err)
-         }
+        body, err := io.ReadAll(res.Body)
+        if err != nil {
+            return nil, fmt.Errorf("Error reading response body: %w", err)
+        }
 
-		 defer res.Body.Close()
+        defer res.Body.Close()
 
-		// Unmarshal the raw response into a map
+        // Unmarshal the raw response into a map
         if err := json.Unmarshal(body, &responseMap); err != nil {
             return nil, fmt.Errorf("failed to unmarshal response: %w", err)
         }
 
         // Modify the response as needed
-        if val, ok := responseMap["app_name"]; ok { 
+        if val, ok := responseMap["app_name"]; ok {
             if strVal, isString := val.(string); isString {
                 cleanedValue := strings.Trim(strVal, "[]")
-                responseMap["app_name"] = cleanedValue 
+                responseMap["app_name"] = cleanedValue
             }
         }
 
@@ -44,18 +43,12 @@ func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
         modifiedBody, err := json.Marshal(responseMap)
         if err != nil {
             return nil, fmt.Errorf("failed to marshal modified response: %w", err)
-		}
-	
-		//s := string(modifiedBody)
+        }
 
-		modifiedResponse := &http.Response{
-			Status: res.Status,
-			StatusCode: res.StatusCode,
-			Header: res.Header,
-			Body: io.NopCloser(bytes.NewReader(modifiedBody)),
-			//Body: ioutil.NopCloser(strings.NewReader(s)),
-		}
-		return modifiedResponse, nil
+        s := string(modifiedBody)
+        res.Body = io.NopCloser(strings.NewReader(s))
+
+        return res, nil
     }
-	return res, nil
+    return res, nil
 }
