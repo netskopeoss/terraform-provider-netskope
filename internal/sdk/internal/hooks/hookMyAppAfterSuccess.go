@@ -11,10 +11,7 @@ import (
 type MyAppResponse struct{}
 
 var (
-    //_ sdkInitHook       = (*MyAppResponse)(nil)
-	//_ beforeRequestHook = (*MyAppResponse)(nil)
     _ afterSuccessHook  = (*MyAppResponse)(nil)
-    //_ afterErrorHook    = (*MyAppResponse)(nil)
 )
 
 func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
