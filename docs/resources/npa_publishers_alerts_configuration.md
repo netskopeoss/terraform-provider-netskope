@@ -27,7 +27,7 @@ resource "ns_npa_publishers_alerts_configuration" "my_npapublishersalertsconfigu
     "admin1@abc.com",
   ]
   event_types = [
-    "UPGRADE_SUCCEEDED",
+    "UPGRADE_WILL_START",
   ]
   selected_users = "abc@xyz.com,def@xyz.com"
 }
@@ -45,5 +45,3 @@ resource "ns_npa_publishers_alerts_configuration" "my_npapublishersalertsconfigu
 ### Read-Only
 
 - `status` (String) must be one of ["success", "not found", "failure"]
-
-

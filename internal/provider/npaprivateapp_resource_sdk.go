@@ -15,8 +15,8 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.Privat
 	} else {
 		allowUnauthenticatedCors = nil
 	}
-	var name string
-	name = r.Name.ValueString()
+	var appName string
+	appName = r.AppName.ValueString()
 
 	var appOption *shared.AppOption
 	if r.AppOption != nil {
@@ -98,7 +98,7 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest() *shared.Privat
 	}
 	out := shared.PrivateAppsRequest{
 		AllowUnauthenticatedCors: allowUnauthenticatedCors,
-		Name:                     name,
+		AppName:                  appName,
 		AppOption:                appOption,
 		ClientlessAccess:         clientlessAccess,
 		PrivateAppProtocol:       privateAppProtocol,

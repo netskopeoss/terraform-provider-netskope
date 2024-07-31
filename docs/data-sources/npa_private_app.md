@@ -14,7 +14,7 @@ NPAPrivateApp DataSource
 
 ```terraform
 data "ns_npa_private_app" "my_npaprivateapp" {
-  private_app_id = 9
+  private_app_id = 3
 }
 ```
 
@@ -103,5 +103,3 @@ Read-Only:
 
 - `tag_id` (Number)
 - `tag_name` (String)
-
-

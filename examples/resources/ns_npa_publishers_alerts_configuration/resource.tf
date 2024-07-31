@@ -3,7 +3,7 @@ resource "ns_npa_publishers_alerts_configuration" "my_npapublishersalertsconfigu
     "admin1@abc.com",
   ]
   event_types = [
-    "UPGRADE_SUCCEEDED",
+    "UPGRADE_WILL_START",
   ]
   selected_users = "abc@xyz.com,def@xyz.com"
 }

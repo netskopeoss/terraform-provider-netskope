@@ -34,5 +34,3 @@ data "ns_npa_publishers_alerts_configuration" "my_npapublishersalertsconfigurati
 - `admin_users` (List of String)
 - `event_types` (List of String)
 - `selected_users` (String)
-
-

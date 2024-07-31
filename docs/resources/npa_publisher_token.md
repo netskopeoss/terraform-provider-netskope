@@ -37,5 +37,3 @@ resource "ns_npa_publisher_token" "my_npapublishertoken" {
 ### Read-Only
 
 - `token` (String)
-
-

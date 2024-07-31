@@ -41,5 +41,3 @@ Read-Only:
 - `docker_tag` (String)
 - `name` (String)
 - `version` (String)
-
-

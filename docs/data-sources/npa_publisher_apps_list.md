@@ -111,5 +111,3 @@ Read-Only:
 
 - `tag_id` (Number)
 - `tag_name` (String)
-
-

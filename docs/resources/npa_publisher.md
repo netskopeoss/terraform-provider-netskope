@@ -26,7 +26,7 @@ Features may require additional licensing, please work with account team to enab
 
 ```terraform
 resource "ns_npa_publisher" "my_npapublisher" {
-  lbrokerconnect                = true
+  lbrokerconnect                = false
   publisher_name                = "npa_publisher_1"
   publisher_upgrade_profiles_id = 1
 }

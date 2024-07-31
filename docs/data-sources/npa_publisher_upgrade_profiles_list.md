@@ -59,5 +59,3 @@ Read-Only:
 - `updated_at` (String)
 - `upgrading_stage` (Number)
 - `will_start` (Boolean)
-
-
