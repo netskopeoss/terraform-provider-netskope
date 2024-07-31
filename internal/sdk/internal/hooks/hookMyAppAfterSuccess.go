@@ -43,11 +43,13 @@ func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
             return nil, fmt.Errorf("failed to marshal modified response: %w", err)
 		}
 	
+		s := string(modifiedBody)
+
 		modifiedResponse := &http.Response{
 			Status: res.Status,
 			StatusCode: res.StatusCode,
 			Header: res.Header,
-			Body: ioutil.NopCloser(strings.NewReader(modifiedBody)),
+			Body: ioutil.NopCloser(strings.NewReader(s)),
 		}
 		return modifiedResponse, nil
     }
