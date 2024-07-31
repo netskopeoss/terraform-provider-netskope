@@ -67,36 +67,17 @@ func FromString(ctx context.Context, typ attr.Type, val string, path path.Path) 
 	}
 	tfStr := tftypes.NewValue(tftypes.String, val)
 
-	str, err := typ.ValueFromTerraform(ctx, tfStr)
-	if err != nil {
-		return nil, append(diags, valueFromTerraformErrorDiag(err, path))
-	}
-
-	switch t := str.(type) {
-	case xattr.ValidateableAttribute:
-		resp := xattr.ValidateAttributeResponse{}
-
-		t.ValidateAttribute(ctx,
-			xattr.ValidateAttributeRequest{
-				Path: path,
-			},
-			&resp,
-		)
-
-		diags.Append(resp.Diagnostics...)
+	if typeWithValidate, ok := typ.(xattr.TypeWithValidate); ok {
+		diags.Append(typeWithValidate.Validate(ctx, tfStr, path)...)
 
 		if diags.HasError() {
 			return nil, diags
 		}
-	default:
-		//lint:ignore SA1019 xattr.TypeWithValidate is deprecated, but we still need to support it.
-		if typeWithValidate, ok := typ.(xattr.TypeWithValidate); ok {
-			diags.Append(typeWithValidate.Validate(ctx, tfStr, path)...)
+	}
 
-			if diags.HasError() {
-				return nil, diags
-			}
-		}
+	str, err := typ.ValueFromTerraform(ctx, tfStr)
+	if err != nil {
+		return nil, append(diags, valueFromTerraformErrorDiag(err, path))
 	}
 
 	return str, diags
@@ -113,36 +94,17 @@ func FromBool(ctx context.Context, typ attr.Type, val bool, path path.Path) (att
 	}
 	tfBool := tftypes.NewValue(tftypes.Bool, val)
 
-	b, err := typ.ValueFromTerraform(ctx, tfBool)
-	if err != nil {
-		return nil, append(diags, valueFromTerraformErrorDiag(err, path))
-	}
-
-	switch t := b.(type) {
-	case xattr.ValidateableAttribute:
-		resp := xattr.ValidateAttributeResponse{}
-
-		t.ValidateAttribute(ctx,
-			xattr.ValidateAttributeRequest{
-				Path: path,
-			},
-			&resp,
-		)
-
-		diags.Append(resp.Diagnostics...)
+	if typeWithValidate, ok := typ.(xattr.TypeWithValidate); ok {
+		diags.Append(typeWithValidate.Validate(ctx, tfBool, path)...)
 
 		if diags.HasError() {
 			return nil, diags
 		}
-	default:
-		//lint:ignore SA1019 xattr.TypeWithValidate is deprecated, but we still need to support it.
-		if typeWithValidate, ok := typ.(xattr.TypeWithValidate); ok {
-			diags.Append(typeWithValidate.Validate(ctx, tfBool, path)...)
+	}
 
-			if diags.HasError() {
-				return nil, diags
-			}
-		}
+	b, err := typ.ValueFromTerraform(ctx, tfBool)
+	if err != nil {
+		return nil, append(diags, valueFromTerraformErrorDiag(err, path))
 	}
 
 	return b, diags

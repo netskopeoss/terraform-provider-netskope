@@ -229,9 +229,6 @@ func FromStruct(ctx context.Context, typ attr.TypeWithAttributeTypes, val reflec
 		path := path.AtName(name)
 		fieldValue := val.Field(fieldNo)
 
-		// If the attr implements xattr.ValidateableAttribute, or xattr.TypeWithValidate,
-		// and the attr does not validate then diagnostics will be added here and returned
-		// before reaching the switch statement below.
 		attrVal, attrValDiags := FromValue(ctx, attrTypes[name], fieldValue.Interface(), path)
 		diags.Append(attrValDiags...)
 
@@ -244,80 +241,33 @@ func FromStruct(ctx context.Context, typ attr.TypeWithAttributeTypes, val reflec
 			return nil, append(diags, toTerraformValueErrorDiag(err, path))
 		}
 
-		switch t := attrVal.(type) {
-		case xattr.ValidateableAttribute:
-			resp := xattr.ValidateAttributeResponse{}
-
-			t.ValidateAttribute(ctx,
-				xattr.ValidateAttributeRequest{
-					Path: path,
-				},
-				&resp,
-			)
-
-			diags.Append(resp.Diagnostics...)
+		if typeWithValidate, ok := typ.(xattr.TypeWithValidate); ok {
+			diags.Append(typeWithValidate.Validate(ctx, tfObjVal, path)...)
 
 			if diags.HasError() {
 				return nil, diags
 			}
-		default:
-			//lint:ignore SA1019 xattr.TypeWithValidate is deprecated, but we still need to support it.
-			if typeWithValidate, ok := attrTypes[name].(xattr.TypeWithValidate); ok {
-				diags.Append(typeWithValidate.Validate(ctx, tfObjVal, path)...)
-
-				if diags.HasError() {
-					return nil, diags
-				}
-			}
-		}
-
-		tfObjTyp := tfObjVal.Type()
-
-		// If the original attribute type is tftypes.DynamicPseudoType, the value could end up being
-		// a concrete type (like tftypes.String, tftypes.List, etc.). In this scenario, the type used
-		// to build the final tftypes.Object must stay as tftypes.DynamicPseudoType
-		if attrTypes[name].TerraformType(ctx).Is(tftypes.DynamicPseudoType) {
-			tfObjTyp = tftypes.DynamicPseudoType
 		}
 
 		objValues[name] = tfObjVal
-		objTypes[name] = tfObjTyp
+		objTypes[name] = tfObjVal.Type()
 	}
 
 	tfVal := tftypes.NewValue(tftypes.Object{
 		AttributeTypes: objTypes,
 	}, objValues)
 
-	ret, err := typ.ValueFromTerraform(ctx, tfVal)
-	if err != nil {
-		return nil, append(diags, valueFromTerraformErrorDiag(err, path))
-	}
-
-	switch t := ret.(type) {
-	case xattr.ValidateableAttribute:
-		resp := xattr.ValidateAttributeResponse{}
-
-		t.ValidateAttribute(ctx,
-			xattr.ValidateAttributeRequest{
-				Path: path,
-			},
-			&resp,
-		)
-
-		diags.Append(resp.Diagnostics...)
+	if typeWithValidate, ok := typ.(xattr.TypeWithValidate); ok {
+		diags.Append(typeWithValidate.Validate(ctx, tfVal, path)...)
 
 		if diags.HasError() {
 			return nil, diags
 		}
-	default:
-		//lint:ignore SA1019 xattr.TypeWithValidate is deprecated, but we still need to support it.
-		if typeWithValidate, ok := typ.(xattr.TypeWithValidate); ok {
-			diags.Append(typeWithValidate.Validate(ctx, tfVal, path)...)
+	}
 
-			if diags.HasError() {
-				return nil, diags
-			}
-		}
+	ret, err := typ.ValueFromTerraform(ctx, tfVal)
+	if err != nil {
+		return nil, append(diags, valueFromTerraformErrorDiag(err, path))
 	}
 
 	return ret, diags

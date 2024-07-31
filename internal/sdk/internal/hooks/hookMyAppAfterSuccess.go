@@ -15,7 +15,7 @@ var (
 )
 
 func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
-	if hookCtx.OperationID == "createNPAPrivateApps" { 
+	if hookCtx.OperationID == "createNPAPrivateApps" || hookCtx.OperationID == "getNPAPrivateApp" { 
         var responseMap map[string]interface{}
 
         // Read and unmarshal the response body
