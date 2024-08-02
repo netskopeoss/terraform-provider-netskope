@@ -44,8 +44,8 @@ func (p *NsProvider) Schema(ctx context.Context, req provider.SchemaRequest, res
 				Required:            false,
 			},
 			"api_key": schema.StringAttribute{
-				Optional:  true,
 				Sensitive: true,
+				Required:  true,
 			},
 		},
 	}
