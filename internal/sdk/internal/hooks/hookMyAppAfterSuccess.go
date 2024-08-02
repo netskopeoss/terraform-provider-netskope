@@ -10,7 +10,7 @@ import (
     "github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 type MyAppResponse struct {
-    PrivateAppsResponse *shared.PrivateAppsResponse
+    PrivateAppsResponse *shared.PrivateAppsResponse 
 }
 
 var (
@@ -21,16 +21,17 @@ func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
     log.Print("-------- before if  --------")
     log.Print(res.Body)
     if hookCtx.OperationID == "createNPAPrivateApps" || hookCtx.OperationID == "getNPAPrivateApp" {
-        log.Print("-------- Operation ID ---------")
-		log.Print(hookCtx.OperationID)
-        log.Print("inside the if statement")
-        var responseMap MyAppResponse
+        //log.Print("-------- Operation ID ---------")
+		//log.Print(hookCtx.OperationID)
+        //log.Print("inside the if statement")
+		var responseMap MyAppResponse
 
         // Read and unmarshal the response body
         body, err := io.ReadAll(res.Body)
-		log.Print("-------- reading the body ---------")
-		log.Print(body)
-		log.Print("-------- body end ---------")
+		//log.Print("-------- reading the body ---------")
+		//log.Print(body)
+		//log.Print("-------- body end ---------")
+
         if err != nil {
             return nil, fmt.Errorf("Error reading response body: %w", err)
         }
@@ -38,8 +39,10 @@ func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
         if err := json.Unmarshal(body, &responseMap); err != nil {
             return nil, fmt.Errorf("failed to unmarshal response: %w", err)
         }
-        log.Print("--------------------")
+        log.Print("-------response map-------------")
         log.Print(responseMap)
+		log.Print("-------end response map-------------")
+
         oldValue := *responseMap.PrivateAppsResponse.Data.AppName
         newValue := strings.Trim(oldValue, "[]")
         responseMap.PrivateAppsResponse.Data.AppName = &(newValue)
