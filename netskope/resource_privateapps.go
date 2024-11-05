@@ -3,12 +3,30 @@ package netskope
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/netskopeoss/netskope-api-client-go/nsgo"
 )
+
+type PublisherIdentity struct {
+	PublisherID   float64 `json:"publisher_id"`
+	PublisherName string  `json:"publisher_name"`
+}
+
+type Protocol struct {
+	Type string `json:"transport"`
+	Port string `json:"port"`
+}
+
+type ExtendedPrivateApp struct {
+	*nsgo.PrivateApp
+	Protocols  []Protocol          `json:"protocols"`
+	Publishers []PublisherIdentity `json:"service_publisher_assignments"`
+}
 
 func resourcePrivateAppsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	//Collect Diags
@@ -69,8 +87,54 @@ func resourcePrivateAppsCreate(ctx context.Context, d *schema.ResourceData, m in
 }
 
 func resourcePrivateAppsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	// Collect Diags
 	var diags diag.Diagnostics
-	return diags
+
+	// Init Client
+	nsclient, ok := m.(*nsgo.Client)
+	if !ok {
+		return diag.Errorf("Failed to convert interface to nsgo.Client")
+	}
+
+	// Get the resource ID from State
+	appId := d.Id()
+
+	// Query the API for the privateapp using the ID - marshal the JSON body to the ExtendedPrivateApp struct
+	var privateApp *ExtendedPrivateApp
+	appsIdInterface, err := nsclient.GetPrivateAppId(nsgo.PrivateAppOptions{Id: appId})
+	if err != nil {
+		if err.Error() != fmt.Sprintf("No private app with id '%s' is found.", appId) {
+			return diag.FromErr(err)
+		}
+	}
+	jsonIdData, err := json.Marshal(appsIdInterface)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	err = json.Unmarshal(jsonIdData, &privateApp)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	// Remove the private app if it does not exist, otherwise set the values
+	if privateApp == nil {
+		// Remove the private app from state
+		d.SetId("")
+		return diags
+	} else {
+		// Update the values in state
+		d.SetId(strconv.Itoa(privateApp.Id))
+		d.Set("app_name", strings.Trim(privateApp.AppName, "[]"))
+		d.Set("host", privateApp.Host)
+		d.Set("use_publisher_dns", privateApp.UsePublisherDNS)
+		d.Set("clientless_access", privateApp.ClientlessAccess)
+		d.Set("trust_self_signed_certs", privateApp.TrustSelfSignedCerts)
+		d.Set("tags", flattenPrivateAppTags(privateApp.Tags))
+		d.Set("protocols", flattenPrivateAppProtocols(privateApp.Protocols))
+		d.Set("publisher", flattenPrivateAppPublishers(privateApp.Publishers))
+
+		return diags
+	}
 }
 
 func resourcePrivateAppsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -170,6 +234,9 @@ func resourcePrivateApps() *schema.Resource {
 		ReadContext:   resourcePrivateAppsRead,
 		UpdateContext: resourcePrivateAppsUpdate,
 		DeleteContext: resourcePrivateAppsDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"id": &schema.Schema{
 				Type:     schema.TypeString,
@@ -241,4 +308,36 @@ func resourcePrivateApps() *schema.Resource {
 			},
 		},
 	}
+}
+
+func flattenPrivateAppProtocols(protocols []Protocol) []interface{} {
+	flattened := make([]interface{}, len(protocols))
+	for i, protocol := range protocols {
+		flattened[i] = map[string]interface{}{
+			"type": protocol.Type,
+			"port": protocol.Port,
+		}
+	}
+	return flattened
+}
+
+func flattenPrivateAppPublishers(publishers []PublisherIdentity) []interface{} {
+	flattened := make([]interface{}, len(publishers))
+	for i, publisher := range publishers {
+		flattened[i] = map[string]interface{}{
+			"publisher_id":   strconv.Itoa(int(publisher.PublisherID)),
+			"publisher_name": publisher.PublisherName,
+		}
+	}
+	return flattened
+}
+
+func flattenPrivateAppTags(tags []nsgo.PrivateAppTags) []interface{} {
+	flattened := make([]interface{}, len(tags))
+	for i, tag := range tags {
+		flattened[i] = map[string]interface{}{
+			"tag_name": tag.TagName,
+		}
+	}
+	return flattened
 }
