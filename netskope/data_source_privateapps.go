@@ -11,6 +11,60 @@ import (
 	"github.com/netskopeoss/netskope-api-client-go/nsgo"
 )
 
+type ExtendedPrivateAppList struct {
+	PrivateApps *[]ExtendedPrivateAppListItem `json:"private_apps"`
+}
+
+type ExtendedPrivateAppListItem struct {
+	AppID                       int                                              `json:"app_id"`
+	AppName                     string                                           `json:"app_name"`
+	ClientlessAccess            bool                                             `json:"clientless_access"`
+	Host                        string                                           `json:"host"`
+	PrivateAppProtocol          string                                           `json:"private_app_protocol"`
+	Protocols                   *[]ExtendedPrivateAppProtocols                   `json:"protocols"`
+	Reachability                ExtendedPrivateAppReachability                   `json:"reachability"`
+	ServicePublisherAssignments *[]ExtendedPrivateAppServicePublisherAssignments `json:"service_publisher_assignments"`
+	TrustSelfSignedCerts        bool                                             `json:"trust_self_signed_certs"`
+	UsePublisherDNS             bool                                             `json:"use_publisher_dns"`
+	Tags                        *[]ExtendedPrivateAppTags                        `json:"tags"`
+}
+
+type ExtendedPrivateAppTags struct {
+	TagID   int    `json:"tag_id"`
+	TagName string `json:"tag_name"`
+}
+
+type ExtendedPrivateAppProtocols struct {
+	CreatedAt time.Time `json:"created_at"`
+	ID        int       `json:"id"`
+	Port      string    `json:"port"`
+	ServiceID int       `json:"service_id"`
+	Transport string    `json:"transport"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type ExtendedPrivateAppReachability struct {
+	//*Error
+	Reachable bool `json:"reachable"`
+}
+
+type ExtendedPrivateAppServicePublisherAssignments struct {
+	Primary      string                                                    `json:"primary"`
+	PublisherID  int                                                       `json:"publisher_id"`
+	Reachability ExtendedPrivateAppServicePublisherAssignmentsReachability `json:"reachability"`
+	ServiceID    int                                                       `json:"service_id"`
+}
+
+type ExtendedPrivateAppServicePublisherAssignmentsReachability struct {
+	//*Error
+	Reachable bool `json:"reachable"`
+}
+
+type Error struct {
+	ErrorCode   int    `json:"error_code"`
+	ErrorString string `json:"error_string"`
+}
+
 func dataSourcePrivateAppsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	//Collect Diags
 	var diags diag.Diagnostics
@@ -21,22 +75,24 @@ func dataSourcePrivateAppsRead(ctx context.Context, d *schema.ResourceData, m in
 	//Init a client instance
 	nsclient := m.(*nsgo.Client)
 
-	//Get Publishers
-	apps, err := nsclient.GetPrivateAppsWithFilter(filter)
+	//Get Private Apps, marshal to ExtendedPrivateAppList type
+	var privateAppList *ExtendedPrivateAppList
+	appsInterface, err := nsclient.GetPrivateAppsWithFilter(filter)
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	jsonData, err := json.Marshal(appsInterface)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	json.Unmarshal(jsonData, &privateAppList)
 
-	jsonData, _ := json.Marshal(apps)
+	// Convert ExtendedPrivateAppList to map[string]interface{}
+	privateAppsSchemaJson, _ := json.Marshal(privateAppList.PrivateApps)
+	privateAppsSchemaMap := make([]map[string]interface{}, 0)
+	json.Unmarshal(privateAppsSchemaJson, &privateAppsSchemaMap)
 
-	appsStruct := nsgo.PrivateAppsList{}
-	json.Unmarshal(jsonData, &appsStruct)
-
-	newjsonData, _ := json.Marshal(appsStruct.PrivateApps)
-	appsMap := make([]map[string]interface{}, 0)
-	json.Unmarshal(newjsonData, &appsMap)
-
-	if err := d.Set("private_apps", appsMap); err != nil {
+	if err := d.Set("private_apps", privateAppsSchemaMap); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
@@ -95,6 +151,10 @@ func dataSourcePrivateApps() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"tag_name": &schema.Schema{
 										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"tag_id": &schema.Schema{
+										Type:     schema.TypeFloat,
 										Computed: true,
 									},
 								},
