@@ -45,7 +45,7 @@ func (p *NsProvider) Schema(ctx context.Context, req provider.SchemaRequest, res
 			},
 			"api_key": schema.StringAttribute{
 				Sensitive: true,
-				Required:  true,
+				Optional:  true,
 			},
 		},
 	}
@@ -66,17 +66,23 @@ func (p *NsProvider) Configure(ctx context.Context, req provider.ConfigureReques
 		ServerURL = "https://{tenant}.goskope.com/api/v2"
 	}
 
-	var apiKey string
-	apiKey = data.APIKey.ValueString()
-
+	apiKey := new(string)
+	if !data.APIKey.IsUnknown() && !data.APIKey.IsNull() {
+		*apiKey = data.APIKey.ValueString()
+	} else {
+		apiKey = nil
+	}
 	security := shared.Security{
 		APIKey: apiKey,
 	}
 
+	httpClient := http.DefaultClient
+	httpClient.Transport = NewLoggingHTTPTransport(http.DefaultTransport)
+
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(ServerURL),
 		sdk.WithSecurity(security),
-		sdk.WithClient(http.DefaultClient),
+		sdk.WithClient(httpClient),
 	}
 	client := sdk.New(opts...)
 
@@ -86,21 +92,18 @@ func (p *NsProvider) Configure(ctx context.Context, req provider.ConfigureReques
 
 func (p *NsProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		NewNPAPrivateAppResource,
 		NewNPAPublisherResource,
 		NewNPAPublishersAlertsConfigurationResource,
 		NewNPAPublishersBulkProfileUpdatesResource,
 		NewNPAPublishersBulkUpgradeRequestResource,
 		NewNPAPublisherTokenResource,
 		NewNPAPublisherUpgradeProfileResource,
+		NewNPARulesResource,
 	}
 }
 
 func (p *NsProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewNPAPrivateAppDataSource,
-		NewNPAPrivateAppsListDataSource,
-		NewNPAPrivatePolicyInUseDataSource,
 		NewNPAPublisherDataSource,
 		NewNPAPublisherAppsListDataSource,
 		NewNPAPublishersAlertsConfigurationDataSource,
@@ -108,6 +111,8 @@ func (p *NsProvider) DataSources(ctx context.Context) []func() datasource.DataSo
 		NewNPAPublishersReleasesListDataSource,
 		NewNPAPublisherUpgradeProfileDataSource,
 		NewNPAPublisherUpgradeProfilesListDataSource,
+		NewNPARulesDataSource,
+		NewNPARulesListDataSource,
 	}
 }
 

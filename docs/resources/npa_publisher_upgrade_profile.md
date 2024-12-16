@@ -54,18 +54,16 @@ Docker Tag for releases can be obtained from: \
 - `release_type` (String) This is the Release Type that is to be installed. \
 Release Type for releases can be obtained from: \
 `api/v2/infrastructure/publishers/releases`
-
 must be one of ["Beta", "Latest", "Latest-1", "Latest-2"]
 - `timezone` (String) The timezone for which the upgrade triggers. \
 Please see enum for accepted values.
-
 must be one of ["Africa/Cairo", "Africa/Casablanca", "Africa/Johannesburg", "Africa/Nairobi", "America/Argentina/Buenos_Aires", "America/Caracas", "America/Godthab", "America/Lima", "America/Mazatlan", "America/Santiago", "America/Tijuana", "Asia/Almaty", "Asia/Baghdad", "Asia/Baku", "Asia/Calcutta", "Asia/Dhaka", "Asia/Harbin", "Asia/Jakarta", "Asia/Jerusalem", "Asia/Kabul", "Asia/Karachi", "Asia/Kathmandu", "Asia/Krasnoyarsk", "Asia/Kuala_Lumpur", "Asia/Muscat", "Asia/Rangoon", "Asia/Taipei", "Asia/Tehran", "Asia/Vladivostok", "Asia/Yakutsk", "Asia/Yerevan", "Atlantic/Azores", "Atlantic/Cape_Verde", "Australia/Adelaide", "Australia/Brisbane", "Australia/Darwin", "Australia/Hobart", "Australia/Perth", "Australia/Sydney", "Brazil/East", "Canada/Atlantic", "Canada/Central", "Canada/Newfoundland", "Canada/Saskatchewan", "Europe/Amsterdam", "Europe/Athens", "Europe/Copenhagen", "Europe/Helsinki", "Europe/London", "Europe/Minsk", "Europe/Moscow", "Europe/Paris", "Europe/Prague", "Europe/Sarajevo", "Japan", "Mexico/General", "Pacific/Auckland", "Pacific/Fiji", "Pacific/Guadalcanal", "Pacific/Guam", "Pacific/Samoa", "Pacific/Tongatapu", "US/Alaska", "US/Arizona", "US/East-Indiana", "US/Eastern", "US/Hawaii", "US/Mountain", "US/Pacific"]
 
 ### Read-Only
 
 - `created_at` (String)
 - `next_update_time` (Number)
-- `num_associated_publisher` (Number)
+- `num_associated_publisher` (Number) Default: 0
 - `publisher_upgrade_profile_id` (Number) publisher upgrade profile external_id
 - `updated_at` (String)
 - `upgrading_stage` (Number)

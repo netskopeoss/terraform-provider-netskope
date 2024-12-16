@@ -3,12 +3,12 @@
 package shared
 
 type Security struct {
-	APIKey string `security:"scheme,type=apiKey,subtype=header,name=Netskope-Api-Token"`
+	APIKey *string `security:"scheme,type=apiKey,subtype=header,name=Netskope-Api-Token"`
 }
 
-func (o *Security) GetAPIKey() string {
+func (o *Security) GetAPIKey() *string {
 	if o == nil {
-		return ""
+		return nil
 	}
 	return o.APIKey
 }

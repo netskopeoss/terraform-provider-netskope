@@ -30,11 +30,10 @@ func (o *Reachability) GetReachable() *bool {
 }
 
 type ServicePublisherAssignmentItem struct {
-	Primary       *bool         `json:"primary,omitempty"`
-	PublisherID   *int          `json:"publisher_id,omitempty"`
-	PublisherName *string       `json:"publisher_name,omitempty"`
-	Reachability  *Reachability `json:"reachability,omitempty"`
-	PrivateAppID  *int          `json:"service_id,omitempty"`
+	Primary      *bool         `json:"primary,omitempty"`
+	PublisherID  *int          `json:"publisher_id,omitempty"`
+	Reachability *Reachability `json:"reachability,omitempty"`
+	ServiceID    *int          `json:"service_id,omitempty"`
 }
 
 func (o *ServicePublisherAssignmentItem) GetPrimary() *bool {
@@ -51,13 +50,6 @@ func (o *ServicePublisherAssignmentItem) GetPublisherID() *int {
 	return o.PublisherID
 }
 
-func (o *ServicePublisherAssignmentItem) GetPublisherName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.PublisherName
-}
-
 func (o *ServicePublisherAssignmentItem) GetReachability() *Reachability {
 	if o == nil {
 		return nil
@@ -65,9 +57,9 @@ func (o *ServicePublisherAssignmentItem) GetReachability() *Reachability {
 	return o.Reachability
 }
 
-func (o *ServicePublisherAssignmentItem) GetPrivateAppID() *int {
+func (o *ServicePublisherAssignmentItem) GetServiceID() *int {
 	if o == nil {
 		return nil
 	}
-	return o.PrivateAppID
+	return o.ServiceID
 }

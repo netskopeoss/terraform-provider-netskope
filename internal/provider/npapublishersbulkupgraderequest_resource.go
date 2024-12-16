@@ -191,37 +191,37 @@ func (r *NPAPublishersBulkUpgradeRequestResource) Schema(ctx context.Context, re
 				},
 			},
 			"publishers": schema.SingleNestedAttribute{
+				Optional: true,
 				PlanModifiers: []planmodifier.Object{
 					objectplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Optional: true,
 				Attributes: map[string]schema.Attribute{
 					"apply": schema.SingleNestedAttribute{
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"upgrade_request": schema.BoolAttribute{
+								Required: true,
 								PlanModifiers: []planmodifier.Bool{
 									boolplanmodifier.RequiresReplaceIfConfigured(),
 								},
-								Required:    true,
-								Description: `Requires replacement if changed. `,
+								Description: `Requires replacement if changed.`,
 							},
 						},
-						Description: `Requires replacement if changed. `,
+						Description: `Requires replacement if changed.`,
 					},
 					"publisher_id": schema.ListAttribute{
+						Required: true,
 						PlanModifiers: []planmodifier.List{
 							listplanmodifier.RequiresReplaceIfConfigured(),
 						},
-						Required:    true,
 						ElementType: types.StringType,
-						Description: `Requires replacement if changed. `,
+						Description: `Requires replacement if changed.`,
 					},
 				},
-				Description: `Requires replacement if changed. `,
+				Description: `Requires replacement if changed.`,
 			},
 		},
 	}

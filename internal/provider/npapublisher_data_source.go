@@ -55,7 +55,7 @@ func (r *NPAPublisherDataSource) Metadata(ctx context.Context, req datasource.Me
 // Schema defines the schema for the data source.
 func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis data source supports query of a specific Publisher object. \n",
+		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis data source supports query of a specific Publisher object.\n",
 
 		Attributes: map[string]schema.Attribute{
 			"apps_count": schema.Int64Attribute{
@@ -148,8 +148,7 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed: true,
 			},
 			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["connected", "not registered"]`,
+				Computed: true,
 			},
 			"sticher_pop": schema.StringAttribute{
 				Computed: true,

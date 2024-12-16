@@ -183,41 +183,37 @@ func (r *NPAPublishersBulkProfileUpdatesResource) Schema(ctx context.Context, re
 				},
 			},
 			"publishers": schema.SingleNestedAttribute{
+				Optional: true,
 				PlanModifiers: []planmodifier.Object{
 					objectplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Optional: true,
 				Attributes: map[string]schema.Attribute{
 					"apply": schema.SingleNestedAttribute{
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"publisher_upgrade_profiles_id": schema.StringAttribute{
+								Required: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 								},
-								Required: true,
-								MarkdownDescription: `Please use the ` + "`" + `external_id` + "`" + ` of the upgrade profile for this value.` + "\n" +
-									`` + "\n" +
-									`Requires replacement if changed. `,
+								Description: `Please use the ` + "`" + `external_id` + "`" + ` of the upgrade profile for this value. Requires replacement if changed.`,
 							},
 						},
-						Description: `Requires replacement if changed. `,
+						Description: `Requires replacement if changed.`,
 					},
 					"publisher_id": schema.ListAttribute{
+						Required: true,
 						PlanModifiers: []planmodifier.List{
 							listplanmodifier.RequiresReplaceIfConfigured(),
 						},
-						Required:    true,
 						ElementType: types.StringType,
-						MarkdownDescription: `This is an array of publisher ` + "`" + `id` + "`" + ` values.` + "\n" +
-							`` + "\n" +
-							`Requires replacement if changed. `,
+						Description: `This is an array of publisher ` + "`" + `id` + "`" + ` values. Requires replacement if changed.`,
 					},
 				},
-				Description: `Requires replacement if changed. `,
+				Description: `Requires replacement if changed.`,
 			},
 			"total": schema.Int64Attribute{
 				Computed: true,

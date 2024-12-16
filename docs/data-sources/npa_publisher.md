@@ -45,7 +45,7 @@ data "ns_npa_publisher" "my_npapublisher" {
 - `publisher_name` (String)
 - `publisher_upgrade_profiles_id` (Number)
 - `registered` (Boolean)
-- `status` (String) must be one of ["connected", "not registered"]
+- `status` (String)
 - `sticher_pop` (String)
 - `stitcher_id` (Number)
 - `upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--upgrade_failed_reason))

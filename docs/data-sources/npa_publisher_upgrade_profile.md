@@ -23,7 +23,7 @@ This data object queries and returns an upgrade profile by supplying 'external_i
 
 ```terraform
 data "ns_npa_publisher_upgrade_profile" "my_npapublisherupgradeprofile" {
-  publisher_upgrade_profile_id = 5
+  publisher_upgrade_profile_id = 1
 }
 ```
 

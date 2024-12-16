@@ -28,7 +28,7 @@ resource "ns_npa_publishers_bulk_profile_updates" "my_npapublishersbulkprofileup
       publisher_upgrade_profiles_id = 1
     }
     publisher_id = [
-      10,
+      10
     ]
   }
 }
@@ -51,9 +51,7 @@ resource "ns_npa_publishers_bulk_profile_updates" "my_npapublishersbulkprofileup
 
 Required:
 
-- `publisher_id` (List of String) This is an array of publisher `id` values.
-
-Requires replacement if changed.
+- `publisher_id` (List of String) This is an array of publisher `id` values. Requires replacement if changed.
 
 Optional:
 
@@ -64,9 +62,7 @@ Optional:
 
 Required:
 
-- `publisher_upgrade_profiles_id` (String) Please use the `external_id` of the upgrade profile for this value.
-
-Requires replacement if changed.
+- `publisher_upgrade_profiles_id` (String) Please use the `external_id` of the upgrade profile for this value. Requires replacement if changed.
 
 
 

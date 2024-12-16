@@ -4,7 +4,7 @@ resource "ns_npa_publishers_bulk_upgrade_request" "my_npapublishersbulkupgradere
       upgrade_request = true
     }
     publisher_id = [
-      "1",
+      "1"
     ]
   }
 }

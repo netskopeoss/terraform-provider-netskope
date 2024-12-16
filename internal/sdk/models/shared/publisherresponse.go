@@ -231,8 +231,8 @@ type PublisherResponseData struct {
 	PublisherUpgradeProfilesID *int                           `json:"publisher_upgrade_profiles_id,omitempty"`
 	Registered                 *bool                          `json:"registered,omitempty"`
 	Status                     *PublisherResponseStatus       `json:"status,omitempty"`
-	StitcherID                 *int                           `json:"stitcher_id,omitempty"`
 	SticherPop                 *string                        `json:"sticher_pop,omitempty"`
+	StitcherID                 *int                           `json:"stitcher_id,omitempty"`
 	// Not used at this time - please ignore
 	//
 	Tags                []TagItem                             `json:"tags,omitempty"`
@@ -318,18 +318,18 @@ func (o *PublisherResponseData) GetStatus() *PublisherResponseStatus {
 	return o.Status
 }
 
-func (o *PublisherResponseData) GetStitcherID() *int {
-	if o == nil {
-		return nil
-	}
-	return o.StitcherID
-}
-
 func (o *PublisherResponseData) GetSticherPop() *string {
 	if o == nil {
 		return nil
 	}
 	return o.SticherPop
+}
+
+func (o *PublisherResponseData) GetStitcherID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.StitcherID
 }
 
 func (o *PublisherResponseData) GetTags() []TagItem {

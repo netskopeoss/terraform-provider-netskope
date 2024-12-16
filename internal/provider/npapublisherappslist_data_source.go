@@ -29,8 +29,8 @@ type NPAPublisherAppsListDataSource struct {
 
 // NPAPublisherAppsListDataSourceModel describes the data model.
 type NPAPublisherAppsListDataSourceModel struct {
-	Data        *tfTypes.PrivateAppsResponseData `tfsdk:"data"`
-	PublisherID types.Int64                      `tfsdk:"publisher_id"`
+	Data        []tfTypes.PublishersPrivateAppsResponseData `tfsdk:"data"`
+	PublisherID types.Int64                                 `tfsdk:"publisher_id"`
 }
 
 // Metadata returns the data source type name.
@@ -41,147 +41,118 @@ func (r *NPAPublisherAppsListDataSource) Metadata(ctx context.Context, req datas
 // Schema defines the schema for the data source.
 func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "NPAPublisherAppsList DataSource",
+		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis data source supports the list of applications associated with a publisher.\n",
 
 		Attributes: map[string]schema.Attribute{
-			"data": schema.SingleNestedAttribute{
+			"data": schema.ListNestedAttribute{
 				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"allow_unauthenticated_cors": schema.BoolAttribute{
-						Computed: true,
-					},
-					"app_name": schema.StringAttribute{
-						Computed: true,
-					},
-					"app_option": schema.SingleNestedAttribute{
-						Computed:   true,
-						Attributes: map[string]schema.Attribute{},
-					},
-					"clientless_access": schema.BoolAttribute{
-						Computed: true,
-					},
-					"is_user_portal_app": schema.BoolAttribute{
-						Computed: true,
-					},
-					"modified_by": schema.StringAttribute{
-						Computed: true,
-					},
-					"modify_time": schema.StringAttribute{
-						Computed: true,
-					},
-					"policies": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"private_app_hostname": schema.StringAttribute{
-						Computed: true,
-					},
-					"private_app_id": schema.Int64Attribute{
-						Computed: true,
-					},
-					"private_app_name": schema.StringAttribute{
-						Computed: true,
-					},
-					"private_app_protocol": schema.StringAttribute{
-						Computed: true,
-					},
-					"protocols": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"created_at": schema.StringAttribute{
-									Computed: true,
-								},
-								"id": schema.Int64Attribute{
-									Computed: true,
-								},
-								"port": schema.StringAttribute{
-									Computed: true,
-								},
-								"protocol": schema.StringAttribute{
-									Computed: true,
-								},
-								"service_id": schema.Int64Attribute{
-									Computed: true,
-								},
-								"updated_at": schema.StringAttribute{
-									Computed: true,
-								},
-							},
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"allow_unauthenticated_cors": schema.BoolAttribute{
+							Computed: true,
 						},
-					},
-					"public_host": schema.StringAttribute{
-						Computed: true,
-					},
-					"reachability": schema.SingleNestedAttribute{
-						Computed: true,
-						Attributes: map[string]schema.Attribute{
-							"reachable": schema.BoolAttribute{
-								Computed: true,
-							},
+						"app_option": schema.SingleNestedAttribute{
+							Computed: true,
 						},
-					},
-					"real_host": schema.StringAttribute{
-						Computed: true,
-					},
-					"service_publisher_assignments": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"primary": schema.BoolAttribute{
-									Computed: true,
-								},
-								"private_app_id": schema.Int64Attribute{
-									Computed: true,
-								},
-								"publisher_id": schema.Int64Attribute{
-									Computed: true,
-								},
-								"publisher_name": schema.StringAttribute{
-									Computed: true,
-								},
-								"reachability": schema.SingleNestedAttribute{
-									Computed: true,
-									Attributes: map[string]schema.Attribute{
-										"error_code": schema.Int64Attribute{
-											Computed: true,
-										},
-										"error_string": schema.StringAttribute{
-											Computed: true,
-										},
-										"reachable": schema.BoolAttribute{
-											Computed: true,
-										},
+						"clientless_access": schema.BoolAttribute{
+							Computed: true,
+						},
+						"external_id": schema.Int64Attribute{
+							Computed: true,
+						},
+						"host": schema.StringAttribute{
+							Computed: true,
+						},
+						"id": schema.Int64Attribute{
+							Computed: true,
+						},
+						"is_user_portal_app": schema.BoolAttribute{
+							Computed: true,
+						},
+						"private_app_name": schema.StringAttribute{
+							Computed: true,
+						},
+						"private_app_protocol": schema.StringAttribute{
+							Computed: true,
+						},
+						"protocols": schema.ListNestedAttribute{
+							Computed: true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.Int64Attribute{
+										Computed: true,
+									},
+									"port": schema.StringAttribute{
+										Computed: true,
+									},
+									"service_id": schema.Int64Attribute{
+										Computed: true,
+									},
+									"transport": schema.StringAttribute{
+										Computed: true,
 									},
 								},
 							},
 						},
-					},
-					"steering_configs": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"supplement_dns_for_osx": schema.BoolAttribute{
-						Computed: true,
-					},
-					"tags": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
+						"public_host": schema.StringAttribute{
+							Computed: true,
+						},
+						"reachability": schema.SingleNestedAttribute{
+							Computed: true,
 							Attributes: map[string]schema.Attribute{
-								"tag_id": schema.Int64Attribute{
+								"error_code": schema.Int64Attribute{
 									Computed: true,
 								},
-								"tag_name": schema.StringAttribute{
+								"error_string": schema.StringAttribute{
+									Computed: true,
+								},
+								"reachable": schema.BoolAttribute{
 									Computed: true,
 								},
 							},
 						},
-					},
-					"trust_self_signed_certs": schema.BoolAttribute{
-						Computed: true,
-					},
-					"use_publisher_dns": schema.BoolAttribute{
-						Computed: true,
+						"real_host": schema.StringAttribute{
+							Computed: true,
+						},
+						"service_publisher_assignments": schema.ListNestedAttribute{
+							Computed: true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"primary": schema.BoolAttribute{
+										Computed: true,
+									},
+									"publisher_id": schema.Int64Attribute{
+										Computed: true,
+									},
+									"reachability": schema.SingleNestedAttribute{
+										Computed: true,
+										Attributes: map[string]schema.Attribute{
+											"error_code": schema.Int64Attribute{
+												Computed: true,
+											},
+											"error_string": schema.StringAttribute{
+												Computed: true,
+											},
+											"reachable": schema.BoolAttribute{
+												Computed: true,
+											},
+										},
+									},
+									"service_id": schema.Int64Attribute{
+										Computed: true,
+									},
+								},
+							},
+						},
+						"suppliment_dns_for_osx": schema.BoolAttribute{
+							Computed: true,
+						},
+						"trust_self_signed_certs": schema.BoolAttribute{
+							Computed: true,
+						},
+						"use_publisher_dns": schema.BoolAttribute{
+							Computed: true,
+						},
 					},
 				},
 			},
@@ -257,11 +228,11 @@ func (r *NPAPublisherAppsListDataSource) Read(ctx context.Context, req datasourc
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PrivateAppsResponse != nil) {
+	if !(res.PublishersPrivateAppsResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsResponse(res.PrivateAppsResponse)
+	data.RefreshFromSharedPublishersPrivateAppsResponse(res.PublishersPrivateAppsResponse)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

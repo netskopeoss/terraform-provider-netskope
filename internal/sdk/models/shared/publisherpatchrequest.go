@@ -3,17 +3,10 @@
 package shared
 
 type PublisherPatchRequest struct {
-	PublisherName              string `json:"name"`
 	ID                         *int   `json:"id,omitempty"`
 	Lbrokerconnect             *bool  `json:"lbrokerconnect,omitempty"`
+	PublisherName              string `json:"name"`
 	PublisherUpgradeProfilesID *int   `json:"publisher_upgrade_profiles_id,omitempty"`
-}
-
-func (o *PublisherPatchRequest) GetPublisherName() string {
-	if o == nil {
-		return ""
-	}
-	return o.PublisherName
 }
 
 func (o *PublisherPatchRequest) GetID() *int {
@@ -28,6 +21,13 @@ func (o *PublisherPatchRequest) GetLbrokerconnect() *bool {
 		return nil
 	}
 	return o.Lbrokerconnect
+}
+
+func (o *PublisherPatchRequest) GetPublisherName() string {
+	if o == nil {
+		return ""
+	}
+	return o.PublisherName
 }
 
 func (o *PublisherPatchRequest) GetPublisherUpgradeProfilesID() *int {
