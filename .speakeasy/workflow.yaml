@@ -7,6 +7,7 @@ sources:
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_publishers.yaml
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_upgrade_profiles.yaml
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/steering/npa_apps_private.yaml
+            - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policy.yaml
         overlays:
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
         registry:

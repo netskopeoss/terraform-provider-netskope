@@ -43,11 +43,11 @@ func (r *NPAPublisherTokenResource) Schema(ctx context.Context, req resource.Sch
 		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource supports the creation and retrival of a registration token.\n",
 		Attributes: map[string]schema.Attribute{
 			"publisher_id": schema.Int64Attribute{
+				Required: true,
 				PlanModifiers: []planmodifier.Int64{
 					int64planmodifier.RequiresReplaceIfConfigured(),
 				},
-				Required:    true,
-				Description: `publisher id. Requires replacement if changed. `,
+				Description: `publisher id. Requires replacement if changed.`,
 			},
 			"token": schema.StringAttribute{
 				Computed: true,

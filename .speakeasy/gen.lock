@@ -1,112 +1,48 @@
 lockVersion: 2.0.0
 id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
-  docChecksum: 69bd91af291778d0fcffd92404265e01
+  docChecksum: 2e65dd4d14870b3e967967ba3c5c651c
   docVersion: 1.0.0
-  speakeasyVersion: 1.352.0
-  generationVersion: 2.384.4
-  releaseVersion: 0.3.180
-  configChecksum: ae76316305a232c1a823cda053167c92
+  speakeasyVersion: 1.455.6
+  generationVersion: 2.479.7
+  releaseVersion: 0.5.3
+  configChecksum: 7bf17f4ae156709b8b082cb42f1c0b51
 features:
   terraform:
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.1.4
-    core: 3.24.6
-    globalSecurity: 2.81.6
+    constsAndDefaults: 0.2.0
+    core: 3.27.5
+    envVarSecurityUsage: 0.1.0
+    globalSecurity: 2.81.9
     globalServerURLs: 2.82.1
     groups: 2.81.2
     ignores: 2.81.1
     nameOverrides: 2.81.2
 generatedFiles:
-  - internal/sdk/npapublishers.go
-  - internal/sdk/npapublisher.go
-  - internal/sdk/npapublishersreleases.go
-  - internal/sdk/npapublisherapps.go
-  - internal/sdk/npapublishertoken.go
-  - internal/sdk/npapublisherupgradeprofiles.go
-  - internal/sdk/npapublisherupgradeprofile.go
-  - internal/sdk/npaprivateapp.go
-  - internal/sdk/terraformproviderns.go
-  - internal/sdk/models/errors/sdkerror.go
-  - internal/sdk/retry/config.go
-  - internal/sdk/types/bigint.go
-  - internal/sdk/types/date.go
-  - internal/sdk/types/datetime.go
-  - internal/sdk/types/decimal.go
-  - internal/sdk/types/pointers.go
-  - internal/sdk/internal/utils/contenttype.go
-  - internal/sdk/internal/utils/form.go
-  - internal/sdk/internal/utils/headers.go
-  - internal/sdk/internal/utils/json.go
-  - internal/sdk/internal/utils/pathparams.go
-  - internal/sdk/internal/utils/queryparams.go
-  - internal/sdk/internal/utils/requestbody.go
-  - internal/sdk/internal/utils/retries.go
-  - internal/sdk/internal/utils/security.go
-  - internal/sdk/internal/utils/utils.go
-  - internal/sdk/models/operations/getnpapublisheralerts.go
-  - internal/sdk/models/operations/createnpapublisheralerts.go
-  - internal/sdk/models/operations/triggernpapublisherupdates.go
-  - internal/sdk/models/operations/bulkupdatenpapublishers.go
-  - internal/sdk/models/operations/listnpaprivateapps.go
-  - internal/sdk/models/operations/getnpapolicyinuse.go
-  - internal/sdk/models/operations/deletenpaprivateapp.go
-  - internal/sdk/models/operations/getnpaprivateapp.go
-  - internal/sdk/models/operations/getnpapublishers.go
-  - internal/sdk/models/operations/createnpapublishers.go
-  - internal/sdk/models/operations/deletenpapublishers.go
-  - internal/sdk/models/operations/getnpapublisherbyid.go
-  - internal/sdk/models/operations/updatenpapublisherbyid.go
-  - internal/sdk/models/operations/getnpapublisherobjects.go
-  - internal/sdk/models/operations/getnpapublisherapps.go
-  - internal/sdk/models/operations/generatenpapublishertoken.go
-  - internal/sdk/models/operations/listnpapublisherupgradeprofiles.go
-  - internal/sdk/models/operations/createnpapublisherupgradeprofile.go
-  - internal/sdk/models/operations/deletenpapublisherupgradeprofile.go
-  - internal/sdk/models/operations/getnpapublisherupgradeprofile.go
-  - internal/sdk/models/operations/updatenpapublisherupgradeprofile.go
-  - internal/sdk/models/operations/createnpaprivateapps.go
-  - internal/sdk/models/operations/updatenpaprivateapp.go
-  - internal/sdk/models/shared/fourhundred.go
-  - internal/sdk/models/shared/publishersresponse400.go
-  - internal/sdk/models/shared/publishersalertgetresponse.go
-  - internal/sdk/models/shared/publishersalertputresponse.go
-  - internal/sdk/models/shared/publishersalertputrequest.go
-  - internal/sdk/models/shared/publishersbulkresponse.go
-  - internal/sdk/models/shared/publisherbulkitem.go
-  - internal/sdk/models/shared/tagitem.go
-  - internal/sdk/models/shared/publisherbulkrequest.go
-  - internal/sdk/models/shared/publisherupgradeprofilebulkresponse.go
-  - internal/sdk/models/shared/upgradepublisherresponse.go
-  - internal/sdk/models/shared/publisherupgradeprofilebulkrequest.go
-  - internal/sdk/models/shared/privateappsresponse400.go
-  - internal/sdk/models/shared/privateappslistresponse.go
-  - internal/sdk/models/shared/servicepublisherassignmentitem.go
-  - internal/sdk/models/shared/protocolresponseitem.go
-  - internal/sdk/models/shared/privateappsresponse.go
-  - internal/sdk/models/shared/publishersgetresponse.go
-  - internal/sdk/models/shared/publisherresponse.go
-  - internal/sdk/models/shared/publisherpostrequest.go
-  - internal/sdk/models/shared/publisherpatchrequest.go
-  - internal/sdk/models/shared/publishersreleasegetresponse.go
-  - internal/sdk/models/shared/releaseitem.go
-  - internal/sdk/models/shared/publisherupgradeprofilelistresponse.go
-  - internal/sdk/models/shared/publisherupgradeprofileresponse.go
-  - internal/sdk/models/shared/publisherupgradeprofilepostrequest.go
-  - internal/sdk/models/shared/publisherupgradeprofilegetresponse.go
-  - internal/sdk/models/shared/publisherupgradeprofileputrequest.go
-  - internal/sdk/models/shared/privateappsrequest.go
-  - internal/sdk/models/shared/privateappsputrequest.go
-  - internal/sdk/models/shared/tagitemnoid.go
-  - internal/sdk/models/shared/publisheritem.go
-  - internal/sdk/models/shared/protocolitem.go
-  - internal/sdk/models/shared/security.go
-  - internal/sdk/.gitignore
-  - internal/sdk/models/operations/options.go
-  - internal/sdk/.gitattributes
-  - internal/sdk/internal/hooks/hooks.go
-  - internal/sdk/CONTRIBUTING.md
+  - .gitattributes
+  - CONTRIBUTING.md
+  - USAGE.md
   - examples/README.md
+  - examples/data-sources/ns_npa_publisher/data-source.tf
+  - examples/data-sources/ns_npa_publisher_apps_list/data-source.tf
+  - examples/data-sources/ns_npa_publisher_upgrade_profile/data-source.tf
+  - examples/data-sources/ns_npa_publisher_upgrade_profiles_list/data-source.tf
+  - examples/data-sources/ns_npa_publishers_alerts_configuration/data-source.tf
+  - examples/data-sources/ns_npa_publishers_list/data-source.tf
+  - examples/data-sources/ns_npa_publishers_releases_list/data-source.tf
+  - examples/data-sources/ns_npa_rules/data-source.tf
+  - examples/data-sources/ns_npa_rules_list/data-source.tf
+  - examples/provider/provider.tf
+  - examples/resources/ns_npa_publisher/import.sh
+  - examples/resources/ns_npa_publisher/resource.tf
+  - examples/resources/ns_npa_publisher_token/resource.tf
+  - examples/resources/ns_npa_publisher_upgrade_profile/import.sh
+  - examples/resources/ns_npa_publisher_upgrade_profile/resource.tf
+  - examples/resources/ns_npa_publishers_alerts_configuration/resource.tf
+  - examples/resources/ns_npa_publishers_bulk_profile_updates/resource.tf
+  - examples/resources/ns_npa_publishers_bulk_upgrade_request/resource.tf
+  - examples/resources/ns_npa_rules/import.sh
+  - examples/resources/ns_npa_rules/resource.tf
   - go.mod
   - go.sum
   - internal/planmodifiers/boolplanmodifier/suppress_diff.go
@@ -119,6 +55,39 @@ generatedFiles:
   - internal/planmodifiers/setplanmodifier/suppress_diff.go
   - internal/planmodifiers/stringplanmodifier/suppress_diff.go
   - internal/planmodifiers/utils/state_check.go
+  - internal/provider/npapublisher_data_source.go
+  - internal/provider/npapublisher_data_source_sdk.go
+  - internal/provider/npapublisher_resource.go
+  - internal/provider/npapublisher_resource_sdk.go
+  - internal/provider/npapublisherappslist_data_source.go
+  - internal/provider/npapublisherappslist_data_source_sdk.go
+  - internal/provider/npapublishersalertsconfiguration_data_source.go
+  - internal/provider/npapublishersalertsconfiguration_data_source_sdk.go
+  - internal/provider/npapublishersalertsconfiguration_resource.go
+  - internal/provider/npapublishersalertsconfiguration_resource_sdk.go
+  - internal/provider/npapublishersbulkprofileupdates_resource.go
+  - internal/provider/npapublishersbulkprofileupdates_resource_sdk.go
+  - internal/provider/npapublishersbulkupgraderequest_resource.go
+  - internal/provider/npapublishersbulkupgraderequest_resource_sdk.go
+  - internal/provider/npapublisherslist_data_source.go
+  - internal/provider/npapublisherslist_data_source_sdk.go
+  - internal/provider/npapublishersreleaseslist_data_source.go
+  - internal/provider/npapublishersreleaseslist_data_source_sdk.go
+  - internal/provider/npapublishertoken_resource.go
+  - internal/provider/npapublishertoken_resource_sdk.go
+  - internal/provider/npapublisherupgradeprofile_data_source.go
+  - internal/provider/npapublisherupgradeprofile_data_source_sdk.go
+  - internal/provider/npapublisherupgradeprofile_resource.go
+  - internal/provider/npapublisherupgradeprofile_resource_sdk.go
+  - internal/provider/npapublisherupgradeprofileslist_data_source.go
+  - internal/provider/npapublisherupgradeprofileslist_data_source_sdk.go
+  - internal/provider/nparules_data_source.go
+  - internal/provider/nparules_data_source_sdk.go
+  - internal/provider/nparules_resource.go
+  - internal/provider/nparules_resource_sdk.go
+  - internal/provider/nparuleslist_data_source.go
+  - internal/provider/nparuleslist_data_source_sdk.go
+  - internal/provider/provider.go
   - internal/provider/reflect/diags.go
   - internal/provider/reflect/doc.go
   - internal/provider/reflect/generic_attr_value.go
@@ -133,7 +102,145 @@ generatedFiles:
   - internal/provider/reflect/primitive.go
   - internal/provider/reflect/slice.go
   - internal/provider/reflect/struct.go
+  - internal/provider/types/activities.go
+  - internal/provider/types/apply.go
+  - internal/provider/types/data.go
+  - internal/provider/types/match_criteria_action.go
+  - internal/provider/types/npa_policy_response_item.go
+  - internal/provider/types/npa_policy_rule_data.go
+  - internal/provider/types/npa_policy_rule_dlp.go
+  - internal/provider/types/npa_policy_rule_tss.go
+  - internal/provider/types/npa_policy_rule_tss_actions.go
+  - internal/provider/types/private_apps_with_activities.go
+  - internal/provider/types/protocol_response_item.go
+  - internal/provider/types/publisher_bulk_item.go
+  - internal/provider/types/publisher_response_assessment.go
+  - internal/provider/types/publisher_response_ca_certs_status.go
+  - internal/provider/types/publisher_response_capabilities.go
+  - internal/provider/types/publisher_response_pull_nsconfig.go
+  - internal/provider/types/publisher_response_upgrade_failed_reason.go
+  - internal/provider/types/publisher_response_upgrade_status.go
+  - internal/provider/types/publisher_upgrade_profile_bulk_request_apply.go
+  - internal/provider/types/publisher_upgrade_profile_bulk_request_publishers.go
+  - internal/provider/types/publisher_upgrade_profile_bulk_response_data.go
+  - internal/provider/types/publisher_upgrade_profile_list_response_data.go
+  - internal/provider/types/publishers.go
+  - internal/provider/types/publishers_bulk_response_data.go
+  - internal/provider/types/publishers_get_response_publishers.go
+  - internal/provider/types/publishers_private_apps_response_app_option.go
+  - internal/provider/types/publishers_private_apps_response_data.go
+  - internal/provider/types/publishers_private_apps_response_reachability.go
+  - internal/provider/types/release_item.go
+  - internal/provider/types/rule_order.go
+  - internal/provider/types/service_publisher_assignment_item.go
+  - internal/provider/types/upgrade_profiles.go
+  - internal/provider/types/upgrade_publisher_response.go
+  - internal/provider/types/upgrade_publisher_response_assessment.go
+  - internal/provider/types/upgrade_publisher_response_ca_certs_status.go
+  - internal/provider/types/upgrade_publisher_response_upgrade_failed_reason.go
   - internal/provider/utils.go
+  - internal/sdk/.gitattributes
+  - internal/sdk/.gitignore
+  - internal/sdk/CONTRIBUTING.md
+  - internal/sdk/internal/hooks/hooks.go
+  - internal/sdk/internal/utils/contenttype.go
+  - internal/sdk/internal/utils/env.go
+  - internal/sdk/internal/utils/form.go
+  - internal/sdk/internal/utils/headers.go
+  - internal/sdk/internal/utils/json.go
+  - internal/sdk/internal/utils/pathparams.go
+  - internal/sdk/internal/utils/queryparams.go
+  - internal/sdk/internal/utils/requestbody.go
+  - internal/sdk/internal/utils/retries.go
+  - internal/sdk/internal/utils/security.go
+  - internal/sdk/internal/utils/utils.go
+  - internal/sdk/models/errors/sdkerror.go
+  - internal/sdk/models/operations/bulkupdatenpapublishers.go
+  - internal/sdk/models/operations/createnpapublisheralerts.go
+  - internal/sdk/models/operations/createnpapublishers.go
+  - internal/sdk/models/operations/createnpapublisherupgradeprofile.go
+  - internal/sdk/models/operations/createnparules.go
+  - internal/sdk/models/operations/deleteappsprivateprivateappid.go
+  - internal/sdk/models/operations/deletenpapublishers.go
+  - internal/sdk/models/operations/deletenpapublisherupgradeprofile.go
+  - internal/sdk/models/operations/deletenparules.go
+  - internal/sdk/models/operations/generatenpapublishertoken.go
+  - internal/sdk/models/operations/getappsprivate.go
+  - internal/sdk/models/operations/getappsprivateprivateappid.go
+  - internal/sdk/models/operations/getnpapublisheralerts.go
+  - internal/sdk/models/operations/getnpapublisherapps.go
+  - internal/sdk/models/operations/getnpapublisherbyid.go
+  - internal/sdk/models/operations/getnpapublisherobjects.go
+  - internal/sdk/models/operations/getnpapublishers.go
+  - internal/sdk/models/operations/getnpapublisherupgradeprofile.go
+  - internal/sdk/models/operations/getnparules.go
+  - internal/sdk/models/operations/getnparulesbyid.go
+  - internal/sdk/models/operations/listnpapublisherupgradeprofiles.go
+  - internal/sdk/models/operations/options.go
+  - internal/sdk/models/operations/patchappsprivateprivateappid.go
+  - internal/sdk/models/operations/postappsprivate.go
+  - internal/sdk/models/operations/postappsprivategetpolicyinuse.go
+  - internal/sdk/models/operations/putappsprivateprivateappid.go
+  - internal/sdk/models/operations/triggernpapublisherupdates.go
+  - internal/sdk/models/operations/updatenpapublisherbyid.go
+  - internal/sdk/models/operations/updatenpapublisherupgradeprofile.go
+  - internal/sdk/models/operations/updatenparulesbyid.go
+  - internal/sdk/models/shared/fourhundred.go
+  - internal/sdk/models/shared/npapolicyrequest.go
+  - internal/sdk/models/shared/npapolicyresponse400.go
+  - internal/sdk/models/shared/npapolicyresponseitem.go
+  - internal/sdk/models/shared/npapolicyruledata.go
+  - internal/sdk/models/shared/npapolicyruledlp.go
+  - internal/sdk/models/shared/npapolicyruletss.go
+  - internal/sdk/models/shared/privateappsgetresponse.go
+  - internal/sdk/models/shared/privateappsputrequest.go
+  - internal/sdk/models/shared/privateappsrequest.go
+  - internal/sdk/models/shared/privateappsresponse.go
+  - internal/sdk/models/shared/privateappsresponse400.go
+  - internal/sdk/models/shared/protocolitem.go
+  - internal/sdk/models/shared/protocolresponseitem.go
+  - internal/sdk/models/shared/publisherbulkitem.go
+  - internal/sdk/models/shared/publisherbulkrequest.go
+  - internal/sdk/models/shared/publisheritem.go
+  - internal/sdk/models/shared/publisherpatchrequest.go
+  - internal/sdk/models/shared/publisherpostrequest.go
+  - internal/sdk/models/shared/publisherresponse.go
+  - internal/sdk/models/shared/publishersalertgetresponse.go
+  - internal/sdk/models/shared/publishersalertputrequest.go
+  - internal/sdk/models/shared/publishersalertputresponse.go
+  - internal/sdk/models/shared/publishersbulkresponse.go
+  - internal/sdk/models/shared/publishersgetresponse.go
+  - internal/sdk/models/shared/publishersprivateappsresponse.go
+  - internal/sdk/models/shared/publishersreleasegetresponse.go
+  - internal/sdk/models/shared/publishersresponse400.go
+  - internal/sdk/models/shared/publisherupgradeprofilebulkrequest.go
+  - internal/sdk/models/shared/publisherupgradeprofilebulkresponse.go
+  - internal/sdk/models/shared/publisherupgradeprofilegetresponse.go
+  - internal/sdk/models/shared/publisherupgradeprofilelistresponse.go
+  - internal/sdk/models/shared/publisherupgradeprofilepostrequest.go
+  - internal/sdk/models/shared/publisherupgradeprofileputrequest.go
+  - internal/sdk/models/shared/publisherupgradeprofileresponse.go
+  - internal/sdk/models/shared/releaseitem.go
+  - internal/sdk/models/shared/security.go
+  - internal/sdk/models/shared/servicepublisherassignmentitem.go
+  - internal/sdk/models/shared/tagitem.go
+  - internal/sdk/models/shared/tagitemnoid.go
+  - internal/sdk/models/shared/upgradepublisherresponse.go
+  - internal/sdk/npapublisher.go
+  - internal/sdk/npapublisherapps.go
+  - internal/sdk/npapublishers.go
+  - internal/sdk/npapublishersreleases.go
+  - internal/sdk/npapublishertoken.go
+  - internal/sdk/npapublisherupgradeprofile.go
+  - internal/sdk/npapublisherupgradeprofiles.go
+  - internal/sdk/nparules.go
+  - internal/sdk/retry/config.go
+  - internal/sdk/terraformproviderns.go
+  - internal/sdk/types/bigint.go
+  - internal/sdk/types/date.go
+  - internal/sdk/types/datetime.go
+  - internal/sdk/types/decimal.go
+  - internal/sdk/types/pointers.go
   - internal/validators/DateValidator.go
   - internal/validators/ExactlyOneChild.go
   - internal/validators/JSONParseValidator.go
@@ -150,98 +257,376 @@ generatedFiles:
   - main.go
   - terraform-registry-manifest.json
   - tools/tools.go
-  - internal/provider/types/app_option.go
-  - internal/provider/types/protocols.go
-  - internal/provider/types/publisher_item.go
-  - internal/provider/types/private_apps_response_reachability.go
-  - internal/provider/types/reachability.go
-  - internal/provider/types/service_publisher_assignment_item.go
-  - internal/provider/types/tags.go
-  - internal/provider/types/publisher_response_ca_certs_status.go
-  - internal/provider/types/publisher_response_assessment.go
-  - internal/provider/types/publisher_response_pull_nsconfig.go
-  - internal/provider/types/publisher_response_capabilities.go
-  - internal/provider/types/publisher_response_upgrade_failed_reason.go
-  - internal/provider/types/publisher_response_upgrade_status.go
-  - internal/provider/types/upgrade_publisher_response_ca_certs_status.go
-  - internal/provider/types/upgrade_publisher_response_assessment.go
-  - internal/provider/types/upgrade_publisher_response_upgrade_failed_reason.go
-  - internal/provider/types/upgrade_publisher_response.go
-  - internal/provider/types/publisher_upgrade_profile_bulk_response_data.go
-  - internal/provider/types/publisher_upgrade_profile_bulk_request_apply.go
-  - internal/provider/types/publisher_upgrade_profile_bulk_request_publishers.go
-  - internal/provider/types/publisher_bulk_item.go
-  - internal/provider/types/publishers_bulk_response_data.go
-  - internal/provider/types/apply.go
-  - internal/provider/types/publishers.go
-  - internal/provider/types/protocol_response_item.go
-  - internal/provider/types/tag_item.go
-  - internal/provider/types/private_apps_list_response_data.go
-  - internal/provider/types/private_apps_list_response.go
-  - internal/provider/types/data.go
-  - internal/provider/types/response_body.go
-  - internal/provider/types/private_apps_response_data.go
-  - internal/provider/types/publishers_get_response_publishers.go
-  - internal/provider/types/data1.go
-  - internal/provider/types/release_item.go
-  - internal/provider/types/upgrade_profiles.go
-  - internal/provider/types/publisher_upgrade_profile_list_response_data.go
-  - USAGE.md
-  - internal/provider/provider.go
-  - examples/provider/provider.tf
-  - examples/resources/ns_npa_private_app/import.sh
-  - internal/provider/npaprivateapp_resource.go
-  - internal/provider/npaprivateapp_resource_sdk.go
-  - examples/resources/ns_npa_private_app/resource.tf
-  - examples/resources/ns_npa_publisher/import.sh
-  - internal/provider/npapublisher_resource.go
-  - internal/provider/npapublisher_resource_sdk.go
-  - examples/resources/ns_npa_publisher/resource.tf
-  - internal/provider/npapublishersalertsconfiguration_resource.go
-  - internal/provider/npapublishersalertsconfiguration_resource_sdk.go
-  - examples/resources/ns_npa_publishers_alerts_configuration/resource.tf
-  - internal/provider/npapublishersbulkprofileupdates_resource.go
-  - internal/provider/npapublishersbulkprofileupdates_resource_sdk.go
-  - examples/resources/ns_npa_publishers_bulk_profile_updates/resource.tf
-  - internal/provider/npapublishersbulkupgraderequest_resource.go
-  - internal/provider/npapublishersbulkupgraderequest_resource_sdk.go
-  - examples/resources/ns_npa_publishers_bulk_upgrade_request/resource.tf
-  - internal/provider/npapublishertoken_resource.go
-  - internal/provider/npapublishertoken_resource_sdk.go
-  - examples/resources/ns_npa_publisher_token/resource.tf
-  - examples/resources/ns_npa_publisher_upgrade_profile/import.sh
-  - internal/provider/npapublisherupgradeprofile_resource.go
-  - internal/provider/npapublisherupgradeprofile_resource_sdk.go
-  - examples/resources/ns_npa_publisher_upgrade_profile/resource.tf
-  - internal/provider/npaprivateapp_data_source.go
-  - internal/provider/npaprivateapp_data_source_sdk.go
-  - examples/data-sources/ns_npa_private_app/data-source.tf
-  - internal/provider/npaprivateappslist_data_source.go
-  - internal/provider/npaprivateappslist_data_source_sdk.go
-  - examples/data-sources/ns_npa_private_apps_list/data-source.tf
-  - internal/provider/npaprivatepolicyinuse_data_source.go
-  - internal/provider/npaprivatepolicyinuse_data_source_sdk.go
-  - examples/data-sources/ns_npa_private_policy_in_use/data-source.tf
-  - internal/provider/npapublisher_data_source.go
-  - internal/provider/npapublisher_data_source_sdk.go
-  - examples/data-sources/ns_npa_publisher/data-source.tf
-  - internal/provider/npapublisherappslist_data_source.go
-  - internal/provider/npapublisherappslist_data_source_sdk.go
-  - examples/data-sources/ns_npa_publisher_apps_list/data-source.tf
-  - internal/provider/npapublishersalertsconfiguration_data_source.go
-  - internal/provider/npapublishersalertsconfiguration_data_source_sdk.go
-  - examples/data-sources/ns_npa_publishers_alerts_configuration/data-source.tf
-  - internal/provider/npapublisherslist_data_source.go
-  - internal/provider/npapublisherslist_data_source_sdk.go
-  - examples/data-sources/ns_npa_publishers_list/data-source.tf
-  - internal/provider/npapublishersreleaseslist_data_source.go
-  - internal/provider/npapublishersreleaseslist_data_source_sdk.go
-  - examples/data-sources/ns_npa_publishers_releases_list/data-source.tf
-  - internal/provider/npapublisherupgradeprofile_data_source.go
-  - internal/provider/npapublisherupgradeprofile_data_source_sdk.go
-  - examples/data-sources/ns_npa_publisher_upgrade_profile/data-source.tf
-  - internal/provider/npapublisherupgradeprofileslist_data_source.go
-  - internal/provider/npapublisherupgradeprofileslist_data_source_sdk.go
-  - examples/data-sources/ns_npa_publisher_upgrade_profiles_list/data-source.tf
-  - .gitattributes
-  - CONTRIBUTING.md
+examples:
+  getNPAPublisherAlerts:
+    speakeasy-default-get-NPA-publisher-alerts:
+      responses:
+        "200":
+          application/json: {"data": {"adminUsers": ["admin1@abc.com", "admin2@abc.com"], "eventTypes": ["CONNECTION_FAILED", "UPGRADE_STARTED"], "selectedUsers": "abc@xyz.com,def@xyz.com"}}
+        "400":
+          application/json: {"status": 400}
+  createNPAPublisherAlerts:
+    speakeasy-default-create-NPA-publisher-alerts:
+      requestBody:
+        application/json: {"adminUsers": ["admin1@abc.com"], "eventTypes": ["CONNECTION_FAILED", "UPGRADE_STARTED"], "selectedUsers": "abc@xyz.com,def@xyz.com"}
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+  triggerNPAPublisherUpdates:
+    single_publisher:
+      requestBody:
+        application/json: {"publishers": {"apply": {"upgrade_request": true}, "id": ["12"]}}
+      responses:
+        "200":
+          application/json: {"data": {"publishers": [{"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 6, "registered": true, "status": "connected", "stitcher_id": 319, "stitcher_pop": "US-SEA1", "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}]}}
+        "400":
+          application/json: {"status": 400}
+    multiple_publishers:
+      requestBody:
+        application/json: {"publishers": {"apply": {"upgrade_request": true}, "id": ["12", "15", "30"]}}
+      responses:
+        "200":
+          application/json: {"data": {"publishers": [{"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 6, "registered": true, "status": "not registered", "stitcher_id": 319, "stitcher_pop": "US-SEA1", "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}]}}
+        "400":
+          application/json: {"status": 400}
+  BulkupdateNPAPublishers:
+    speakeasy-default-bulkupdate-NPA-publishers:
+      requestBody:
+        application/json: {"publishers": {"apply": {"publisher_upgrade_profiles_id": "1"}, "id": ["10"]}}
+      responses:
+        "200":
+          application/json: {"data": {"publishers": [{"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": "tue", "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "sticher_pop": "US-SEA1", "stitcher_id": 319, "tags": [], "upgrade_failed_reason": {"detail": "", "error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}]}}
+        "400":
+          application/json: {"status": 400}
+  listNPAPrivateApps:
+    speakeasy-default-list-NPA-private-apps:
+      responses:
+        "200":
+          application/json: []
+        "400":
+          application/json: {"status": 400}
+  getNPAPolicyInUse:
+    speakeasy-default-get-NPA-policy-in-use:
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+  deleteNPAPrivateApp:
+    speakeasy-default-delete-NPA-private-app:
+      parameters:
+        path:
+          private_app_id: 18457
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+  getNPAPrivateApp:
+    speakeasy-default-get-NPA-private-app:
+      parameters:
+        path:
+          private_app_id: 520591
+      responses:
+        "200":
+          application/json: {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "webserver", "clientless_access": false, "host": "webserver.local", "id": 1, "is_user_portal_app": false, "modified_by": "apigw", "modify_time": "2024-07-26T18:11:06Z", "name": "[webserver]", "policies": ["Allow_WebServers"], "private_app_protocol": "http", "protocols": [{"created_at": "2024-07-26T18:11:06.809Z", "id": 108, "port": "80", "service_id": 67, "transport": "tcp", "updated_at": "2024-07-26T18:11:06.809Z"}, {"created_at": "2024-07-26T18:11:06.809Z", "id": 108, "port": "80", "service_id": 67, "transport": "tcp", "updated_at": "2024-07-26T18:11:06.809Z"}, {"created_at": "2024-07-26T18:11:06.809Z", "id": 108, "port": "80", "service_id": 67, "transport": "tcp", "updated_at": "2024-07-26T18:11:06.809Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "real_host": "", "service_publisher_assignments": [], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false, "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "trust_self_signed_certs": true, "use_publisher_dns": false}}
+        "400":
+          application/json: {"status": 400}
+  getNPAPublishers:
+    speakeasy-default-get-NPA-publishers:
+      responses:
+        "200":
+          application/json: {"data": {"publishers": []}}
+        "400":
+          application/json: {"status": 400}
+  createNPAPublishers:
+    minimum:
+      requestBody:
+        application/json: {"name": "npa_publisher_1", "publisher_upgrade_profiles_id": 1}
+      responses:
+        "200":
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "sticher_pop": "US-SEA1", "stitcher_id": 319, "tags": [{"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+        "400":
+          application/json: {"status": 400}
+    full:
+      requestBody:
+        application/json: {"lbrokerconnect": false, "name": "npa_publisher_1", "publisher_upgrade_profiles_id": 1}
+      responses:
+        "200":
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "sticher_pop": "US-SEA1", "stitcher_id": 319, "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+        "400":
+          application/json: {"status": 400}
+  deleteNPAPublishers:
+    speakeasy-default-delete-NPA-publishers:
+      parameters:
+        path:
+          publisher_id: 1
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+  getNPAPublisherById:
+    speakeasy-default-get-NPA-publisher-by-id:
+      parameters:
+        path:
+          publisher_id: 1
+      responses:
+        "200":
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "sticher_pop": "US-SEA1", "stitcher_id": 319, "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+        "400":
+          application/json: {"status": 400}
+  updateNPAPublisherById:
+    name_change:
+      parameters:
+        path:
+          publisher_id: 1
+      requestBody:
+        application/json: {"name": "updated_name"}
+      responses:
+        "200":
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "sticher_pop": "US-SEA1", "stitcher_id": 319, "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+        "400":
+          application/json: {"status": 400}
+    upgrade_profile:
+      parameters:
+        path:
+          publisher_id: 1
+      requestBody:
+        application/json: {"name": "publisher_1", "publisher_upgrade_profiles_id": 2}
+      responses:
+        "200":
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "sticher_pop": "US-SEA1", "stitcher_id": 319, "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+        "400":
+          application/json: {"status": 400}
+  getNPAPublisherObjects:
+    speakeasy-default-get-NPA-publisher-objects:
+      responses:
+        "200":
+          application/json: {"data": []}
+        "400":
+          application/json: {"status": 400}
+  getNPAPublisherApps:
+    speakeasy-default-get-NPA-publisher-apps:
+      parameters:
+        path:
+          publisher_id: 1
+      responses:
+        "200":
+          application/json: {"data": [{"allow_unauthenticated_cors": false, "clientless_access": false, "host": "192.168.1.1", "id": 3, "is_user_portal_app": false, "name": "[Web-Management]", "private_app_protocol": "", "protocols": [], "public_host": "", "reachability": {"reachable": true}, "real_host": "<value>", "service_publisher_assignments": [{"primary": false, "publisher_id": 1, "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}, {"primary": false, "publisher_id": 1, "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}, {"primary": false, "publisher_id": 1, "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}], "tags": [], "trust_self_signed_certs": true, "use_publisher_dns": false}]}
+        "400":
+          application/json: {"status": 400}
+  generateNPAPublisherToken:
+    speakeasy-default-generate-NPA-publisher-token:
+      parameters:
+        path:
+          publisher_id: 1
+      responses:
+        "200":
+          application/json: {"data": {"token": "aaJhbGciOiJSUzI1Ni99.eyJpc3MiOiJucy03MzA2LnVzLXN2NS5ucGEuZ29za29wZS5jb20iLCJzdWIiOiJiNDRmMjk4MWE2NjAyNWFmIiwiZXhwIjoxNzIxOTk3Njc5LCJqdGkiOiI3M2U1M2M5Yi04NzU1LTQ3ZGEtOTE3MC05ODE4MDM5ZDAwYTQifQ.hP-8RI4Unp9iUnQcXEt0d3nRKeJ5OHRZ5H5RbMUt3YLfeUQeISC2ZDepaZygABAvFRRNpdhG-7VUJPQ9Rht3sV2Kli3lvQEjQNRL8WgmcrYsgpFs_4WFEhozxPY7NViMRDKehJTcoMA4vZnGKLZC3Qdne7VBO3OKzYd1EbBiEiez5OKxK3jcPk4mOR7ReyN6kkM_KFPyjFd2XToxfbxwoV5n6NA6KBjrZdSJ_Jk3AA4C5Pn3X0Nwq_K22zHCT_zXk9gFoQfxQfgMlkwvArvlyTWquYeJfUiaCJvJeGTaa5qBynf8Z3fLY_3wYs02sFxXQNRyg7TkN7Yk--shm7Ho-w"}, "status": "success"}
+        "400":
+          application/json: {"status": 400}
+  listNPAPublisherUpgradeProfiles:
+    speakeasy-default-list-NPA-publisher-upgrade-profiles:
+      responses:
+        "200":
+          application/json: {"data": {"upgrade_profiles": []}, "total": 1}
+        "400":
+          application/json: {"status": 400}
+  createNPAPublisherUpgradeProfile:
+    speakeasy-default-create-NPA-publisher-upgrade-profile:
+      requestBody:
+        application/json: {"docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "name": "My Upgrade Profile", "release_type": "Latest", "timezone": "US/Eastern"}
+      responses:
+        "200":
+          application/json: {"data": {"created_at": "2024-07-23 14:00:22.731000+00:00", "docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "id": 10, "name": "My Upgrade Profile", "next_update_time": 1722312000, "num_associated_publisher": 0, "release_type": "Latest", "timezone": "US/Eastern", "updated_at": "2024-07-23 14:00:22.731000+00:00", "upgrading_stage": 1, "will_start": false}}
+        "400":
+          application/json: {"status": 400}
+  deleteNPAPublisherUpgradeProfile:
+    speakeasy-default-delete-NPA-publisher-upgrade-profile:
+      parameters:
+        path:
+          external_id: 42502
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+  getNPAPublisherUpgradeProfile:
+    speakeasy-default-get-NPA-publisher-upgrade-profile:
+      parameters:
+        path:
+          external_id: 416725
+      responses:
+        "200":
+          application/json: {"data": {"created_at": "2024-07-23 14:06:32.070000+00:00", "docker_tag": "8691", "enabled": true, "external_id": 1, "frequency": "0 0 1 * SAT", "id": 1, "name": "My Upgrade Profile", "next_update_time": 1722052800, "num_associated_publisher": 1, "release_type": "Latest", "timezone": "US/Eastern", "updated_at": "2024-07-23 14:06:32.070000+00:00", "upgrading_stage": 1, "will_start": false}}
+        "400":
+          application/json: {"status": 400}
+  updateNPAPublisherUpgradeProfile:
+    speakeasy-default-update-NPA-publisher-upgrade-profile:
+      parameters:
+        path:
+          external_id: 10
+      requestBody:
+        application/json: {"docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "id": 10, "name": "My Upgrade Profile", "release_type": "Latest", "timezone": "US/Eastern"}
+      responses:
+        "200":
+          application/json: {"data": {"created_at": "2024-07-23 14:00:22.731000+00:00", "docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "id": 10, "name": "My Upgrade Profile", "next_update_time": 1722312000, "num_associated_publisher": 0, "release_type": "Latest", "timezone": "US/Eastern", "updated_at": "2024-07-23 14:00:22.731000+00:00", "upgrading_stage": 1, "will_start": false}}
+        "400":
+          application/json: {"status": 400}
+  createNPAPrivateApps:
+    minimum_client_app:
+      requestBody:
+        application/json: {"allow_unauthenticated_cors": false, "app_name": "my_private_app", "clientless_access": false, "private_app_protocol": "http", "host": "webserver.local", "is_user_portal_app": false, "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}], "real_host": "", "tags": [{"tag_name": "tag01"}], "trust_self_signed_certs": true, "use_publisher_dns": false}
+      responses:
+        "200":
+          application/json: {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "webserver", "clientless_access": false, "host": "webserver.local", "id": 1, "is_user_portal_app": false, "modified_by": "apigw", "modify_time": "2024-07-26T18:11:06Z", "name": "[webserver]", "policies": ["Allow_WebServers"], "private_app_protocol": "http", "protocols": [], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "real_host": "", "service_publisher_assignments": [{"primary": false, "publisher_id": 1, "publisher_name": "pub1.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false, "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "trust_self_signed_certs": true, "use_publisher_dns": false}}
+        "400":
+          application/json: {"status": 400}
+    minimum_clientless_app:
+      requestBody:
+        application/json: {"allow_unauthenticated_cors": false, "app_name": "my_private_app", "clientless_access": true, "private_app_protocol": "http", "host": "webserver.local", "is_user_portal_app": false, "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}], "real_host": "", "tags": [{"tag_name": "tag01"}], "trust_self_signed_certs": true, "use_publisher_dns": false}
+      responses:
+        "200":
+          application/json: {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "webserver", "clientless_access": false, "host": "webserver.local", "id": 1, "is_user_portal_app": false, "modified_by": "apigw", "modify_time": "2024-07-26T18:11:06Z", "name": "[webserver]", "policies": ["Allow_WebServers"], "private_app_protocol": "http", "protocols": [{"created_at": "2024-07-26T18:11:06.809Z", "id": 108, "port": "80", "service_id": 67, "transport": "tcp", "updated_at": "2024-07-26T18:11:06.809Z"}, {"created_at": "2024-07-26T18:11:06.809Z", "id": 108, "port": "80", "service_id": 67, "transport": "tcp", "updated_at": "2024-07-26T18:11:06.809Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "real_host": "", "service_publisher_assignments": [{"primary": false, "publisher_id": 1, "publisher_name": "pub1.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false, "tags": [], "trust_self_signed_certs": true, "use_publisher_dns": false}}
+        "400":
+          application/json: {"status": 400}
+  updateNPAPrivateApp:
+    speakeasy-default-update-NPA-private-app:
+      parameters:
+        path:
+          private_app_id: 74186
+      requestBody:
+        application/json: {"allow_unauthenticated_cors": false, "clientless_access": false, "is_user_portal_app": false, "protocols": [{"port": "80", "type": "tcp"}, {"port": "80", "type": "tcp"}], "publisher_tags": [{"tag_name": "tag01"}], "tags": [{"tag_name": "tag01"}], "real_host": "", "trust_self_signed_certs": true, "use_publisher_dns": false}
+      responses:
+        "200":
+          application/json: {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "webserver", "clientless_access": false, "host": "webserver.local", "id": 1, "is_user_portal_app": false, "modified_by": "apigw", "modify_time": "2024-07-26T18:11:06Z", "name": "[webserver]", "policies": ["Allow_WebServers"], "private_app_protocol": "http", "protocols": [], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "real_host": "", "service_publisher_assignments": [{"primary": false, "publisher_id": 1, "publisher_name": "pub1.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false, "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "trust_self_signed_certs": true, "use_publisher_dns": false}}
+        "400":
+          application/json: {"status": 400}
+  get_/apps/private:
+    Multiple Filter Example:
+      parameters:
+        query:
+          query: "name sw test and clientless_access eq true"
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+    Name has Query example:
+      parameters:
+        query:
+          query: "name has testName"
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+    Name starts with Query example:
+      parameters:
+        query:
+          query: "name sw testName"
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+  post_/apps/private:
+    speakeasy-default-post-/apps/private:
+      responses:
+        "200":
+          application/json: []
+        "400":
+          application/json: {"status": 400}
+  post_/apps/private/getpolicyinuse:
+    speakeasy-default-post-/apps/private/getpolicyinuse:
+      responses:
+        "200":
+          application/json: []
+        "400":
+          application/json: {"status": 400}
+  delete_/apps/private/{private_app_id}:
+    speakeasy-default-delete-/apps/private/{private-app-id}:
+      parameters:
+        path:
+          private_app_id: 167077
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+  get_/apps/private/{private_app_id}:
+    speakeasy-default-get-/apps/private/{private-app-id}:
+      parameters:
+        path:
+          private_app_id: 489017
+      responses:
+        "200":
+          application/json: []
+        "400":
+          application/json: {"status": 400}
+  patch_/apps/private/{private_app_id}:
+    speakeasy-default-patch-/apps/private/{private-app-id}:
+      parameters:
+        path:
+          private_app_id: 572296
+        query: {}
+      responses:
+        "200":
+          application/json: []
+        "400":
+          application/json: {"status": 400}
+  put_/apps/private/{private_app_id}:
+    speakeasy-default-put-/apps/private/{private-app-id}:
+      parameters:
+        path:
+          private_app_id: 678569
+        query: {}
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+  getNPARules:
+    speakeasy-default-get-NPA-rules:
+      responses:
+        "200":
+          application/json: []
+        "400":
+          application/json: {"status": 400}
+  createNPARules:
+    speakeasy-default-create-NPA-rules:
+      requestBody:
+        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}, {"activities": [], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "vantest", "rule_order": {"position": 5, "rule_id": 1, "rule_name": "api-policy-managed"}}
+      responses:
+        "200":
+          application/json: {"group_id": "1", "rule_data": {"dlp_actions": [], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}, {"list_of_constraints": []}, {"list_of_constraints": []}], "appName": "[172.31.12.135]"}, {"activities": [], "appName": "[172.31.12.135]"}, {"activities": [], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": 1, "rule_name": "van-test"}
+        "400":
+          application/json: {"status": 400}
+  deleteNPARules:
+    speakeasy-default-delete-NPA-rules:
+      parameters:
+        path:
+          rule_id: 545907
+      responses:
+        "200":
+          application/json: {"data": {"group_id": "1", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}, {"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}, {"list_of_constraints": []}, {"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": 1, "rule_name": "van-test"}}
+        "400":
+          application/json: {"status": 400}
+  getNPARulesById:
+    speakeasy-default-get-NPA-rules-by-id:
+      parameters:
+        path:
+          rule_id: 899901
+        query: {}
+      responses:
+        "200":
+          application/json: {"data": {"group_id": "1", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}, {"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": 1, "rule_name": "van-test"}}
+        "400":
+          application/json: {"status": 400}
+  updateNPARulesById:
+    speakeasy-default-update-NPA-rules-by-id:
+      parameters:
+        path:
+          rule_id: 627690
+        query: {}
+      requestBody:
+        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}, {"actions": ["allow"], "dlp_profile": "Payment Card"}, {"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}, {"activities": [{"list_of_constraints": []}, {"list_of_constraints": []}, {"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "vantest", "rule_order": {"position": 5, "rule_id": 1, "rule_name": "api-policy-managed"}}
+      responses:
+        "200":
+          application/json: {"data": {"group_id": "1", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [], "appName": "[172.31.12.135]"}, {"activities": [{"list_of_constraints": []}, {"list_of_constraints": []}, {"list_of_constraints": []}], "appName": "[172.31.12.135]"}, {"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": 1, "rule_name": "van-test"}}
+        "400":
+          application/json: {"status": 400}
+generatedTests: {}

@@ -27,7 +27,7 @@ type GetNPAPublisherAppsResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// successful operation
-	PrivateAppsResponse *shared.PrivateAppsResponse
+	PublishersPrivateAppsResponse *shared.PublishersPrivateAppsResponse
 	// Invalid request
 	PublishersResponse400 *shared.PublishersResponse400
 }
@@ -53,11 +53,11 @@ func (o *GetNPAPublisherAppsResponse) GetRawResponse() *http.Response {
 	return o.RawResponse
 }
 
-func (o *GetNPAPublisherAppsResponse) GetPrivateAppsResponse() *shared.PrivateAppsResponse {
+func (o *GetNPAPublisherAppsResponse) GetPublishersPrivateAppsResponse() *shared.PublishersPrivateAppsResponse {
 	if o == nil {
 		return nil
 	}
-	return o.PrivateAppsResponse
+	return o.PublishersPrivateAppsResponse
 }
 
 func (o *GetNPAPublisherAppsResponse) GetPublishersResponse400() *shared.PublishersResponse400 {

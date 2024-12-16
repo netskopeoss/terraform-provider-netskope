@@ -10,15 +10,15 @@ import (
 )
 
 func (r *NPAPublisherResourceModel) ToSharedPublisherPostRequest() *shared.PublisherPostRequest {
-	var publisherName string
-	publisherName = r.PublisherName.ValueString()
-
 	lbrokerconnect := new(bool)
 	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
 		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
 	} else {
 		lbrokerconnect = nil
 	}
+	var publisherName string
+	publisherName = r.PublisherName.ValueString()
+
 	publisherUpgradeProfilesID := new(int)
 	if !r.PublisherUpgradeProfilesID.IsUnknown() && !r.PublisherUpgradeProfilesID.IsNull() {
 		*publisherUpgradeProfilesID = int(r.PublisherUpgradeProfilesID.ValueInt64())
@@ -26,8 +26,8 @@ func (r *NPAPublisherResourceModel) ToSharedPublisherPostRequest() *shared.Publi
 		publisherUpgradeProfilesID = nil
 	}
 	out := shared.PublisherPostRequest{
-		PublisherName:              publisherName,
 		Lbrokerconnect:             lbrokerconnect,
+		PublisherName:              publisherName,
 		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
 	}
 	return &out
@@ -142,15 +142,15 @@ func (r *NPAPublisherResourceModel) RefreshFromSharedPublisherResponseData(resp 
 }
 
 func (r *NPAPublisherResourceModel) ToSharedPublisherPatchRequest() *shared.PublisherPatchRequest {
-	var publisherName string
-	publisherName = r.PublisherName.ValueString()
-
 	lbrokerconnect := new(bool)
 	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
 		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
 	} else {
 		lbrokerconnect = nil
 	}
+	var publisherName string
+	publisherName = r.PublisherName.ValueString()
+
 	publisherUpgradeProfilesID := new(int)
 	if !r.PublisherUpgradeProfilesID.IsUnknown() && !r.PublisherUpgradeProfilesID.IsNull() {
 		*publisherUpgradeProfilesID = int(r.PublisherUpgradeProfilesID.ValueInt64())
@@ -158,8 +158,8 @@ func (r *NPAPublisherResourceModel) ToSharedPublisherPatchRequest() *shared.Publ
 		publisherUpgradeProfilesID = nil
 	}
 	out := shared.PublisherPatchRequest{
-		PublisherName:              publisherName,
 		Lbrokerconnect:             lbrokerconnect,
+		PublisherName:              publisherName,
 		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
 	}
 	return &out

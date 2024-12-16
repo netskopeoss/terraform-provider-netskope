@@ -2,103 +2,26 @@
 
 package shared
 
-import (
-	"encoding/json"
-	"fmt"
-)
-
 type AppOption struct {
 }
 
-type PrivateAppProtocol string
-
-const (
-	PrivateAppProtocolHTTP  PrivateAppProtocol = "http"
-	PrivateAppProtocolHTTPS PrivateAppProtocol = "https"
-)
-
-func (e PrivateAppProtocol) ToPointer() *PrivateAppProtocol {
-	return &e
-}
-func (e *PrivateAppProtocol) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "http":
-		fallthrough
-	case "https":
-		*e = PrivateAppProtocol(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PrivateAppProtocol: %v", v)
-	}
-}
-
-type Protocols struct {
-	Port     string `json:"port"`
-	Protocol string `json:"type"`
-}
-
-func (o *Protocols) GetPort() string {
-	if o == nil {
-		return ""
-	}
-	return o.Port
-}
-
-func (o *Protocols) GetProtocol() string {
-	if o == nil {
-		return ""
-	}
-	return o.Protocol
-}
-
-type PrivateAppsRequestPublishers struct {
-	PublisherID   string `json:"publisher_id"`
-	PublisherName string `json:"publisher_name"`
-}
-
-func (o *PrivateAppsRequestPublishers) GetPublisherID() string {
-	if o == nil {
-		return ""
-	}
-	return o.PublisherID
-}
-
-func (o *PrivateAppsRequestPublishers) GetPublisherName() string {
-	if o == nil {
-		return ""
-	}
-	return o.PublisherName
-}
-
-type Tags struct {
-	TagName string `json:"tag_name"`
-}
-
-func (o *Tags) GetTagName() string {
-	if o == nil {
-		return ""
-	}
-	return o.TagName
-}
-
 type PrivateAppsRequest struct {
-	AllowUnauthenticatedCors *bool                          `json:"allow_unauthenticated_cors,omitempty"`
-	AppName                  string                         `json:"app_name"`
-	AppOption                *AppOption                     `json:"app_option,omitempty"`
-	ClientlessAccess         *bool                          `json:"clientless_access,omitempty"`
-	PrivateAppProtocol       *PrivateAppProtocol            `json:"private_app_protocol,omitempty"`
-	PrivateAppHostname       string                         `json:"host"`
-	IsUserPortalApp          *bool                          `json:"is_user_portal_app,omitempty"`
-	Protocols                []Protocols                    `json:"protocols"`
-	Publishers               []PrivateAppsRequestPublishers `json:"publishers"`
-	RealHost                 *string                        `json:"real_host,omitempty"`
-	Tags                     []Tags                         `json:"tags,omitempty"`
-	TrustSelfSignedCerts     *bool                          `json:"trust_self_signed_certs,omitempty"`
-	UsePublisherDNS          *bool                          `json:"use_publisher_dns,omitempty"`
+	AllowUnauthenticatedCors *bool           `json:"allow_unauthenticated_cors,omitempty"`
+	AllowURIBypass           *bool           `json:"allow_uri_bypass,omitempty"`
+	AppName                  *string         `json:"app_name,omitempty"`
+	AppOption                *AppOption      `json:"app_option,omitempty"`
+	BypassUris               []string        `json:"bypass_uris,omitempty"`
+	ClientlessAccess         *bool           `json:"clientless_access,omitempty"`
+	Host                     *string         `json:"host,omitempty"`
+	IsUserPortalApp          *bool           `json:"is_user_portal_app,omitempty"`
+	Protocols                []ProtocolItem  `json:"protocols,omitempty"`
+	PublisherTags            []TagItemNoID   `json:"publisher_tags,omitempty"`
+	Publishers               []PublisherItem `json:"publishers,omitempty"`
+	RealHost                 *string         `json:"real_host,omitempty"`
+	Tags                     []TagItemNoID   `json:"tags,omitempty"`
+	TrustSelfSignedCerts     *bool           `json:"trust_self_signed_certs,omitempty"`
+	UribypassHeaderValue     *string         `json:"uribypass_header_value,omitempty"`
+	UsePublisherDNS          *bool           `json:"use_publisher_dns,omitempty"`
 }
 
 func (o *PrivateAppsRequest) GetAllowUnauthenticatedCors() *bool {
@@ -108,9 +31,16 @@ func (o *PrivateAppsRequest) GetAllowUnauthenticatedCors() *bool {
 	return o.AllowUnauthenticatedCors
 }
 
-func (o *PrivateAppsRequest) GetAppName() string {
+func (o *PrivateAppsRequest) GetAllowURIBypass() *bool {
 	if o == nil {
-		return ""
+		return nil
+	}
+	return o.AllowURIBypass
+}
+
+func (o *PrivateAppsRequest) GetAppName() *string {
+	if o == nil {
+		return nil
 	}
 	return o.AppName
 }
@@ -122,6 +52,13 @@ func (o *PrivateAppsRequest) GetAppOption() *AppOption {
 	return o.AppOption
 }
 
+func (o *PrivateAppsRequest) GetBypassUris() []string {
+	if o == nil {
+		return nil
+	}
+	return o.BypassUris
+}
+
 func (o *PrivateAppsRequest) GetClientlessAccess() *bool {
 	if o == nil {
 		return nil
@@ -129,18 +66,11 @@ func (o *PrivateAppsRequest) GetClientlessAccess() *bool {
 	return o.ClientlessAccess
 }
 
-func (o *PrivateAppsRequest) GetPrivateAppProtocol() *PrivateAppProtocol {
+func (o *PrivateAppsRequest) GetHost() *string {
 	if o == nil {
 		return nil
 	}
-	return o.PrivateAppProtocol
-}
-
-func (o *PrivateAppsRequest) GetPrivateAppHostname() string {
-	if o == nil {
-		return ""
-	}
-	return o.PrivateAppHostname
+	return o.Host
 }
 
 func (o *PrivateAppsRequest) GetIsUserPortalApp() *bool {
@@ -150,16 +80,23 @@ func (o *PrivateAppsRequest) GetIsUserPortalApp() *bool {
 	return o.IsUserPortalApp
 }
 
-func (o *PrivateAppsRequest) GetProtocols() []Protocols {
+func (o *PrivateAppsRequest) GetProtocols() []ProtocolItem {
 	if o == nil {
-		return []Protocols{}
+		return nil
 	}
 	return o.Protocols
 }
 
-func (o *PrivateAppsRequest) GetPublishers() []PrivateAppsRequestPublishers {
+func (o *PrivateAppsRequest) GetPublisherTags() []TagItemNoID {
 	if o == nil {
-		return []PrivateAppsRequestPublishers{}
+		return nil
+	}
+	return o.PublisherTags
+}
+
+func (o *PrivateAppsRequest) GetPublishers() []PublisherItem {
+	if o == nil {
+		return nil
 	}
 	return o.Publishers
 }
@@ -171,7 +108,7 @@ func (o *PrivateAppsRequest) GetRealHost() *string {
 	return o.RealHost
 }
 
-func (o *PrivateAppsRequest) GetTags() []Tags {
+func (o *PrivateAppsRequest) GetTags() []TagItemNoID {
 	if o == nil {
 		return nil
 	}
@@ -183,6 +120,13 @@ func (o *PrivateAppsRequest) GetTrustSelfSignedCerts() *bool {
 		return nil
 	}
 	return o.TrustSelfSignedCerts
+}
+
+func (o *PrivateAppsRequest) GetUribypassHeaderValue() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UribypassHeaderValue
 }
 
 func (o *PrivateAppsRequest) GetUsePublisherDNS() *bool {

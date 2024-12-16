@@ -3,8 +3,8 @@
 package shared
 
 type ProtocolItem struct {
-	Port     *string `json:"port,omitempty"`
-	Protocol *string `json:"type,omitempty"`
+	Port *string `json:"port,omitempty"`
+	Type *string `json:"type,omitempty"`
 }
 
 func (o *ProtocolItem) GetPort() *string {
@@ -14,9 +14,9 @@ func (o *ProtocolItem) GetPort() *string {
 	return o.Port
 }
 
-func (o *ProtocolItem) GetProtocol() *string {
+func (o *ProtocolItem) GetType() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Protocol
+	return o.Type
 }

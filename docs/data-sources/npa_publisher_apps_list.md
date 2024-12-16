@@ -3,12 +3,21 @@
 page_title: "ns_npa_publisher_apps_list Data Source - terraform-provider-ns"
 subcategory: ""
 description: |-
-  NPAPublisherAppsList DataSource
+  The NPA Publisher is a software package that enables private application
+  connectivity between your data center and the Netskope cloud. It is a crucial
+  component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+  network access (ZTNA) to private applications and data in hybrid IT environments.
+  This data source supports the list of applications associated with a publisher.
 ---
 
 # ns_npa_publisher_apps_list (Data Source)
 
-NPAPublisherAppsList DataSource
+The NPA Publisher is a software package that enables private application
+connectivity between your data center and the Netskope cloud. It is a crucial 
+component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+network access (ZTNA) to private applications and data in hybrid IT environments.
+
+This data source supports the list of applications associated with a publisher.
 
 ## Example Usage
 
@@ -27,7 +36,7 @@ data "ns_npa_publisher_apps_list" "my_npapublisherappslist" {
 
 ### Read-Only
 
-- `data` (Attributes) (see [below for nested schema](#nestedatt--data))
+- `data` (Attributes List) (see [below for nested schema](#nestedatt--data))
 
 <a id="nestedatt--data"></a>
 ### Nested Schema for `data`
@@ -35,15 +44,12 @@ data "ns_npa_publisher_apps_list" "my_npapublisherappslist" {
 Read-Only:
 
 - `allow_unauthenticated_cors` (Boolean)
-- `app_name` (String)
 - `app_option` (Attributes) (see [below for nested schema](#nestedatt--data--app_option))
 - `clientless_access` (Boolean)
+- `external_id` (Number)
+- `host` (String)
+- `id` (Number)
 - `is_user_portal_app` (Boolean)
-- `modified_by` (String)
-- `modify_time` (String)
-- `policies` (List of String)
-- `private_app_hostname` (String)
-- `private_app_id` (Number)
 - `private_app_name` (String)
 - `private_app_protocol` (String)
 - `protocols` (Attributes List) (see [below for nested schema](#nestedatt--data--protocols))
@@ -51,9 +57,7 @@ Read-Only:
 - `reachability` (Attributes) (see [below for nested schema](#nestedatt--data--reachability))
 - `real_host` (String)
 - `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--data--service_publisher_assignments))
-- `steering_configs` (List of String)
-- `supplement_dns_for_osx` (Boolean)
-- `tags` (Attributes List) (see [below for nested schema](#nestedatt--data--tags))
+- `suppliment_dns_for_osx` (Boolean)
 - `trust_self_signed_certs` (Boolean)
 - `use_publisher_dns` (Boolean)
 
@@ -66,12 +70,10 @@ Read-Only:
 
 Read-Only:
 
-- `created_at` (String)
 - `id` (Number)
 - `port` (String)
-- `protocol` (String)
 - `service_id` (Number)
-- `updated_at` (String)
+- `transport` (String)
 
 
 <a id="nestedatt--data--reachability"></a>
@@ -79,6 +81,8 @@ Read-Only:
 
 Read-Only:
 
+- `error_code` (Number)
+- `error_string` (String)
 - `reachable` (Boolean)
 
 
@@ -88,10 +92,9 @@ Read-Only:
 Read-Only:
 
 - `primary` (Boolean)
-- `private_app_id` (Number)
 - `publisher_id` (Number)
-- `publisher_name` (String)
 - `reachability` (Attributes) (see [below for nested schema](#nestedatt--data--service_publisher_assignments--reachability))
+- `service_id` (Number)
 
 <a id="nestedatt--data--service_publisher_assignments--reachability"></a>
 ### Nested Schema for `data.service_publisher_assignments.reachability`
@@ -101,13 +104,3 @@ Read-Only:
 - `error_code` (Number)
 - `error_string` (String)
 - `reachable` (Boolean)
-
-
-
-<a id="nestedatt--data--tags"></a>
-### Nested Schema for `data.tags`
-
-Read-Only:
-
-- `tag_id` (Number)
-- `tag_name` (String)

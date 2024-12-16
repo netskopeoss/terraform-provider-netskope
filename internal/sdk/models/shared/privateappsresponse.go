@@ -2,43 +2,30 @@
 
 package shared
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 type PrivateAppsResponseAppOption struct {
-}
-
-type PrivateAppsResponseReachability struct {
-	Reachable *bool `json:"reachable,omitempty"`
-}
-
-func (o *PrivateAppsResponseReachability) GetReachable() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Reachable
 }
 
 type PrivateAppsResponseData struct {
 	AllowUnauthenticatedCors    *bool                            `json:"allow_unauthenticated_cors,omitempty"`
-	AppID                       *int                             `json:"app_id,omitempty"`
-	AppName                     *string                          `json:"app_name,omitempty"`
+	AllowURIBypass              *bool                            `json:"allow_uri_bypass,omitempty"`
 	AppOption                   *PrivateAppsResponseAppOption    `json:"app_option,omitempty"`
+	BypassUris                  []string                         `json:"bypass_uris,omitempty"`
 	ClientlessAccess            *bool                            `json:"clientless_access,omitempty"`
-	PrivateAppHostname          *string                          `json:"host,omitempty"`
-	PrivateAppID                *int                             `json:"id,omitempty"`
+	Host                        *string                          `json:"host,omitempty"`
+	ID                          *int                             `json:"id,omitempty"`
 	IsUserPortalApp             *bool                            `json:"is_user_portal_app,omitempty"`
-	ModifiedBy                  *string                          `json:"modified_by,omitempty"`
-	ModifyTime                  *string                          `json:"modify_time,omitempty"`
-	PrivateAppName              *string                          `json:"name,omitempty"`
-	Policies                    []string                         `json:"policies,omitempty"`
-	PrivateAppProtocol          *string                          `json:"private_app_protocol,omitempty"`
+	Name                        *string                          `json:"name,omitempty"`
 	Protocols                   []ProtocolResponseItem           `json:"protocols,omitempty"`
-	PublicHost                  *string                          `json:"public_host,omitempty"`
-	Reachability                *PrivateAppsResponseReachability `json:"reachability,omitempty"`
 	RealHost                    *string                          `json:"real_host,omitempty"`
 	ServicePublisherAssignments []ServicePublisherAssignmentItem `json:"service_publisher_assignments,omitempty"`
-	SteeringConfigs             []string                         `json:"steering_configs,omitempty"`
-	SupplementDNSForOsx         *bool                            `json:"supplement_dns_for_osx,omitempty"`
 	Tags                        []TagItem                        `json:"tags,omitempty"`
 	TrustSelfSignedCerts        *bool                            `json:"trust_self_signed_certs,omitempty"`
+	UribypassHeaderValue        *string                          `json:"uribypass_header_value,omitempty"`
 	UsePublisherDNS             *bool                            `json:"use_publisher_dns,omitempty"`
 }
 
@@ -49,18 +36,11 @@ func (o *PrivateAppsResponseData) GetAllowUnauthenticatedCors() *bool {
 	return o.AllowUnauthenticatedCors
 }
 
-func (o *PrivateAppsResponseData) GetAppID() *int {
+func (o *PrivateAppsResponseData) GetAllowURIBypass() *bool {
 	if o == nil {
 		return nil
 	}
-	return o.AppID
-}
-
-func (o *PrivateAppsResponseData) GetAppName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.AppName
+	return o.AllowURIBypass
 }
 
 func (o *PrivateAppsResponseData) GetAppOption() *PrivateAppsResponseAppOption {
@@ -70,6 +50,13 @@ func (o *PrivateAppsResponseData) GetAppOption() *PrivateAppsResponseAppOption {
 	return o.AppOption
 }
 
+func (o *PrivateAppsResponseData) GetBypassUris() []string {
+	if o == nil {
+		return nil
+	}
+	return o.BypassUris
+}
+
 func (o *PrivateAppsResponseData) GetClientlessAccess() *bool {
 	if o == nil {
 		return nil
@@ -77,18 +64,18 @@ func (o *PrivateAppsResponseData) GetClientlessAccess() *bool {
 	return o.ClientlessAccess
 }
 
-func (o *PrivateAppsResponseData) GetPrivateAppHostname() *string {
+func (o *PrivateAppsResponseData) GetHost() *string {
 	if o == nil {
 		return nil
 	}
-	return o.PrivateAppHostname
+	return o.Host
 }
 
-func (o *PrivateAppsResponseData) GetPrivateAppID() *int {
+func (o *PrivateAppsResponseData) GetID() *int {
 	if o == nil {
 		return nil
 	}
-	return o.PrivateAppID
+	return o.ID
 }
 
 func (o *PrivateAppsResponseData) GetIsUserPortalApp() *bool {
@@ -98,39 +85,11 @@ func (o *PrivateAppsResponseData) GetIsUserPortalApp() *bool {
 	return o.IsUserPortalApp
 }
 
-func (o *PrivateAppsResponseData) GetModifiedBy() *string {
+func (o *PrivateAppsResponseData) GetName() *string {
 	if o == nil {
 		return nil
 	}
-	return o.ModifiedBy
-}
-
-func (o *PrivateAppsResponseData) GetModifyTime() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ModifyTime
-}
-
-func (o *PrivateAppsResponseData) GetPrivateAppName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.PrivateAppName
-}
-
-func (o *PrivateAppsResponseData) GetPolicies() []string {
-	if o == nil {
-		return nil
-	}
-	return o.Policies
-}
-
-func (o *PrivateAppsResponseData) GetPrivateAppProtocol() *string {
-	if o == nil {
-		return nil
-	}
-	return o.PrivateAppProtocol
+	return o.Name
 }
 
 func (o *PrivateAppsResponseData) GetProtocols() []ProtocolResponseItem {
@@ -138,20 +97,6 @@ func (o *PrivateAppsResponseData) GetProtocols() []ProtocolResponseItem {
 		return nil
 	}
 	return o.Protocols
-}
-
-func (o *PrivateAppsResponseData) GetPublicHost() *string {
-	if o == nil {
-		return nil
-	}
-	return o.PublicHost
-}
-
-func (o *PrivateAppsResponseData) GetReachability() *PrivateAppsResponseReachability {
-	if o == nil {
-		return nil
-	}
-	return o.Reachability
 }
 
 func (o *PrivateAppsResponseData) GetRealHost() *string {
@@ -168,20 +113,6 @@ func (o *PrivateAppsResponseData) GetServicePublisherAssignments() []ServicePubl
 	return o.ServicePublisherAssignments
 }
 
-func (o *PrivateAppsResponseData) GetSteeringConfigs() []string {
-	if o == nil {
-		return nil
-	}
-	return o.SteeringConfigs
-}
-
-func (o *PrivateAppsResponseData) GetSupplementDNSForOsx() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.SupplementDNSForOsx
-}
-
 func (o *PrivateAppsResponseData) GetTags() []TagItem {
 	if o == nil {
 		return nil
@@ -196,6 +127,13 @@ func (o *PrivateAppsResponseData) GetTrustSelfSignedCerts() *bool {
 	return o.TrustSelfSignedCerts
 }
 
+func (o *PrivateAppsResponseData) GetUribypassHeaderValue() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UribypassHeaderValue
+}
+
 func (o *PrivateAppsResponseData) GetUsePublisherDNS() *bool {
 	if o == nil {
 		return nil
@@ -203,8 +141,35 @@ func (o *PrivateAppsResponseData) GetUsePublisherDNS() *bool {
 	return o.UsePublisherDNS
 }
 
+type PrivateAppsResponseStatus string
+
+const (
+	PrivateAppsResponseStatusSuccess  PrivateAppsResponseStatus = "success"
+	PrivateAppsResponseStatusNotFound PrivateAppsResponseStatus = "not found"
+)
+
+func (e PrivateAppsResponseStatus) ToPointer() *PrivateAppsResponseStatus {
+	return &e
+}
+func (e *PrivateAppsResponseStatus) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "success":
+		fallthrough
+	case "not found":
+		*e = PrivateAppsResponseStatus(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for PrivateAppsResponseStatus: %v", v)
+	}
+}
+
 type PrivateAppsResponse struct {
-	Data *PrivateAppsResponseData `json:"data,omitempty"`
+	Data   *PrivateAppsResponseData   `json:"data,omitempty"`
+	Status *PrivateAppsResponseStatus `json:"status,omitempty"`
 }
 
 func (o *PrivateAppsResponse) GetData() *PrivateAppsResponseData {
@@ -212,4 +177,11 @@ func (o *PrivateAppsResponse) GetData() *PrivateAppsResponseData {
 		return nil
 	}
 	return o.Data
+}
+
+func (o *PrivateAppsResponse) GetStatus() *PrivateAppsResponseStatus {
+	if o == nil {
+		return nil
+	}
+	return o.Status
 }

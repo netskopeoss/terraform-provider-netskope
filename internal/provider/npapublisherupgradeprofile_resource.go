@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -53,7 +54,7 @@ func (r *NPAPublisherUpgradeProfileResource) Metadata(ctx context.Context, req r
 
 func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial\ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust\nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource creates a publisher upgrade profile.    \n",
+		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial\ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust\nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource creates a publisher upgrade profile.\n",
 		Attributes: map[string]schema.Attribute{
 			"created_at": schema.StringAttribute{
 				Computed: true,
@@ -62,15 +63,13 @@ func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req res
 				Required: true,
 				MarkdownDescription: `Docker Tag of the release version you wish to install. \` + "\n" +
 					`Docker Tag for releases can be obtained from: \` + "\n" +
-					`` + "`" + `api/v2/infrastructure/publishers/releases` + "`" + `` + "\n" +
-					``,
+					`` + "`" + `api/v2/infrastructure/publishers/releases` + "`" + ``,
 			},
 			"enabled": schema.BoolAttribute{
 				Required: true,
 				MarkdownDescription: `Is this updgrade profile enabled.` + "\n" +
 					`* ` + "`" + `true` + "`" + ` - Enabled` + "\n" +
-					`* ` + "`" + `false` + "`" + ` - Disabled` + "\n" +
-					``,
+					`* ` + "`" + `false` + "`" + ` - Disabled`,
 			},
 			"frequency": schema.StringAttribute{
 				Required: true,
@@ -80,8 +79,7 @@ func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req res
 					`│ │ ┌───────────── day of the month (1–31) \` + "\n" +
 					`│ │ │ ┌───────────── month (1–12) (Leave as *) \` + "\n" +
 					`│ │ │ │ ┌───────────── day of the week (MON, TUE, WED, THU, FRI, SAT, SUN) \` + "\n" +
-					`0 0 1 * TUE => (Midnight, Weekly, Tuesday)` + "\n" +
-					``,
+					`0 0 1 * TUE => (Midnight, Weekly, Tuesday)`,
 			},
 			"name": schema.StringAttribute{
 				Required: true,
@@ -90,7 +88,9 @@ func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req res
 				Computed: true,
 			},
 			"num_associated_publisher": schema.Int64Attribute{
-				Computed: true,
+				Computed:    true,
+				Default:     int64default.StaticInt64(0),
+				Description: `Default: 0`,
 			},
 			"publisher_upgrade_profile_id": schema.Int64Attribute{
 				Computed:    true,
@@ -101,7 +101,6 @@ func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req res
 				MarkdownDescription: `This is the Release Type that is to be installed. \` + "\n" +
 					`Release Type for releases can be obtained from: \` + "\n" +
 					`` + "`" + `api/v2/infrastructure/publishers/releases` + "`" + `` + "\n" +
-					`` + "\n" +
 					`must be one of ["Beta", "Latest", "Latest-1", "Latest-2"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
@@ -116,7 +115,6 @@ func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req res
 				Required: true,
 				MarkdownDescription: `The timezone for which the upgrade triggers. \` + "\n" +
 					`Please see enum for accepted values.` + "\n" +
-					`` + "\n" +
 					`must be one of ["Africa/Cairo", "Africa/Casablanca", "Africa/Johannesburg", "Africa/Nairobi", "America/Argentina/Buenos_Aires", "America/Caracas", "America/Godthab", "America/Lima", "America/Mazatlan", "America/Santiago", "America/Tijuana", "Asia/Almaty", "Asia/Baghdad", "Asia/Baku", "Asia/Calcutta", "Asia/Dhaka", "Asia/Harbin", "Asia/Jakarta", "Asia/Jerusalem", "Asia/Kabul", "Asia/Karachi", "Asia/Kathmandu", "Asia/Krasnoyarsk", "Asia/Kuala_Lumpur", "Asia/Muscat", "Asia/Rangoon", "Asia/Taipei", "Asia/Tehran", "Asia/Vladivostok", "Asia/Yakutsk", "Asia/Yerevan", "Atlantic/Azores", "Atlantic/Cape_Verde", "Australia/Adelaide", "Australia/Brisbane", "Australia/Darwin", "Australia/Hobart", "Australia/Perth", "Australia/Sydney", "Brazil/East", "Canada/Atlantic", "Canada/Central", "Canada/Newfoundland", "Canada/Saskatchewan", "Europe/Amsterdam", "Europe/Athens", "Europe/Copenhagen", "Europe/Helsinki", "Europe/London", "Europe/Minsk", "Europe/Moscow", "Europe/Paris", "Europe/Prague", "Europe/Sarajevo", "Japan", "Mexico/General", "Pacific/Auckland", "Pacific/Fiji", "Pacific/Guadalcanal", "Pacific/Guam", "Pacific/Samoa", "Pacific/Tongatapu", "US/Alaska", "US/Arizona", "US/East-Indiana", "US/Eastern", "US/Hawaii", "US/Mountain", "US/Pacific"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
