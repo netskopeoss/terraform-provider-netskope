@@ -7,12 +7,12 @@ import "github.com/hashicorp/terraform-plugin-framework/types"
 type RuleData struct {
 	AccessMethod              []types.String              `tfsdk:"access_method"`
 	ExternalDlp               types.Bool                  `tfsdk:"external_dlp"`
-	JSONVersion               types.Number                `tfsdk:"json_version"`
+	JSONVersion               types.Int64                 `tfsdk:"json_version"`
 	MatchCriteriaAction       *MatchCriteriaAction        `tfsdk:"match_criteria_action"`
 	PolicyType                types.String                `tfsdk:"policy_type"`
 	PrivateApps               []types.String              `tfsdk:"private_apps"`
 	PrivateAppsWithActivities []PrivateAppsWithActivities `tfsdk:"private_apps_with_activities"`
 	ShowDlpProfileActionTable types.Bool                  `tfsdk:"show_dlp_profile_action_table"`
 	UserType                  types.String                `tfsdk:"user_type"`
-	Version                   types.Number                `tfsdk:"version"`
+	Version                   types.Int64                 `tfsdk:"version"`
 }

@@ -131,7 +131,7 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Computed: true,
 						Optional: true,
 					},
-					"json_version": schema.NumberAttribute{
+					"json_version": schema.Int64Attribute{
 						Computed: true,
 						Optional: true,
 					},
@@ -322,14 +322,15 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Optional:    true,
 						ElementType: types.StringType,
 					},
-					"version": schema.NumberAttribute{
+					"version": schema.Int64Attribute{
 						Computed: true,
 						Optional: true,
 					},
 				},
 			},
 			"rule_id": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: `npa policy id`,
 			},
 			"rule_name": schema.StringAttribute{
 				Computed: true,
@@ -443,16 +444,16 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 	}
 	data.RefreshFromSharedNpaPolicyResponseItemTest(res.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var id string
-	id = data.RuleID.ValueString()
+	var ruleID string
+	ruleID = data.RuleID.ValueString()
 
 	// create.npa_rules.fieldscreate.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create","NPARules#create.req"]
 	var fields *string
 	request1 := operations.NPARulesRequest{
-		ID:     id,
+		RuleID: ruleID,
 		Fields: fields,
 	}
-	res1, err := r.client.NPARules.NPARules(ctx, request1)
+	res1, err := r.client.NPARules.Read(ctx, request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -497,16 +498,16 @@ func (r *NPARulesResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	var id string
-	id = data.RuleID.ValueString()
+	var ruleID string
+	ruleID = data.RuleID.ValueString()
 
 	// read.npa_rules.fieldsread.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create","NPARules#create.req"]
 	var fields *string
 	request := operations.NPARulesRequest{
-		ID:     id,
+		RuleID: ruleID,
 		Fields: fields,
 	}
-	res, err := r.client.NPARules.NPARules(ctx, request)
+	res, err := r.client.NPARules.Read(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -550,8 +551,8 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
-	var id string
-	id = data.RuleID.ValueString()
+	var ruleID string
+	ruleID = data.RuleID.ValueString()
 
 	silent := new(operations.UpdateNPARulesByIDQueryParamSilent)
 	if !data.Silent.IsUnknown() && !data.Silent.IsNull() {
@@ -561,7 +562,7 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 	}
 	npaPolicyRequest := *data.ToSharedNpaPolicyRequest()
 	request := operations.UpdateNPARulesByIDRequest{
-		ID:               id,
+		RuleID:           ruleID,
 		Silent:           silent,
 		NpaPolicyRequest: npaPolicyRequest,
 	}
@@ -587,16 +588,16 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 	}
 	data.RefreshFromOperationsUpdateNPARulesByIDResponseBody(res.Object)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var id1 string
-	id1 = data.RuleID.ValueString()
+	var ruleId1 string
+	ruleId1 = data.RuleID.ValueString()
 
-	// update.npa_rules.fieldsupdate.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create.req","NPARules#create"]
+	// update.npa_rules.fieldsupdate.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create","NPARules#create.req"]
 	var fields *string
 	request1 := operations.NPARulesRequest{
-		ID:     id1,
+		RuleID: ruleId1,
 		Fields: fields,
 	}
-	res1, err := r.client.NPARules.NPARules(ctx, request1)
+	res1, err := r.client.NPARules.Read(ctx, request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -641,11 +642,11 @@ func (r *NPARulesResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
-	var id string
-	id = data.RuleID.ValueString()
+	var ruleID string
+	ruleID = data.RuleID.ValueString()
 
 	request := operations.DeleteNPARulesRequest{
-		ID: id,
+		RuleID: ruleID,
 	}
 	res, err := r.client.NPARules.Delete(ctx, request)
 	if err != nil {

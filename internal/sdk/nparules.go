@@ -483,9 +483,9 @@ func (s *NPARules) Delete(ctx context.Context, request operations.DeleteNPARules
 
 }
 
-// NPARules - Get a npa policy
+// Read - Get a npa policy
 // Get a npa policy based on policy rule id
-func (s *NPARules) NPARules(ctx context.Context, request operations.NPARulesRequest, opts ...operations.Option) (*operations.NPARulesResponse, error) {
+func (s *NPARules) Read(ctx context.Context, request operations.NPARulesRequest, opts ...operations.Option) (*operations.NPARulesResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "NPARules",

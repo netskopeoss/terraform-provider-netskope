@@ -135,7 +135,7 @@ resource "ns_npa_rules" "my_nparules" {
 - `modify_time` (String)
 - `modify_type` (String)
 - `policy_type` (String)
-- `rule_id` (String)
+- `rule_id` (String) npa policy id
 
 <a id="nestedatt--rule_data"></a>
 ### Nested Schema for `rule_data`

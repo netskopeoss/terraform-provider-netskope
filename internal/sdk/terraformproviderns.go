@@ -173,9 +173,9 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 		sdkConfiguration: sdkConfiguration{
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
-			SDKVersion:        "0.5.23",
+			SDKVersion:        "0.5.27",
 			GenVersion:        "2.481.0",
-			UserAgent:         "speakeasy-sdk/terraform 0.5.23 2.481.0 1.0.0 github.com/netskope/terraform-provider-ns/internal/sdk",
+			UserAgent:         "speakeasy-sdk/terraform 0.5.27 2.481.0 1.0.0 github.com/netskope/terraform-provider-ns/internal/sdk",
 			ServerDefaults: []map[string]string{
 				{
 					"tenant": "demo",

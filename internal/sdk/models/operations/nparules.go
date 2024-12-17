@@ -11,16 +11,16 @@ import (
 
 type NPARulesRequest struct {
 	// npa policy id
-	ID string `pathParam:"style=simple,explode=false,name=id"`
+	RuleID string `pathParam:"style=simple,explode=false,name=id"`
 	// Return values only from specified fields
 	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 }
 
-func (o *NPARulesRequest) GetID() string {
+func (o *NPARulesRequest) GetRuleID() string {
 	if o == nil {
 		return ""
 	}
-	return o.ID
+	return o.RuleID
 }
 
 func (o *NPARulesRequest) GetFields() *string {

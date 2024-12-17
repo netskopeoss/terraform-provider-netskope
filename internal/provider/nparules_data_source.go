@@ -81,7 +81,7 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					"external_dlp": schema.BoolAttribute{
 						Computed: true,
 					},
-					"json_version": schema.NumberAttribute{
+					"json_version": schema.Int64Attribute{
 						Computed: true,
 					},
 					"match_criteria_action": schema.SingleNestedAttribute{
@@ -133,13 +133,14 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					"user_type": schema.StringAttribute{
 						Computed: true,
 					},
-					"version": schema.NumberAttribute{
+					"version": schema.Int64Attribute{
 						Computed: true,
 					},
 				},
 			},
 			"rule_id": schema.StringAttribute{
-				Computed: true,
+				Required:    true,
+				Description: `npa policy id`,
 			},
 			"rule_name": schema.StringAttribute{
 				Computed: true,
@@ -189,8 +190,8 @@ func (r *NPARulesDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	var id string
-	id = data.RuleID.ValueString()
+	var ruleID string
+	ruleID = data.RuleID.ValueString()
 
 	fields := new(string)
 	if !data.Fields.IsUnknown() && !data.Fields.IsNull() {
@@ -199,10 +200,10 @@ func (r *NPARulesDataSource) Read(ctx context.Context, req datasource.ReadReques
 		fields = nil
 	}
 	request := operations.NPARulesRequest{
-		ID:     id,
+		RuleID: ruleID,
 		Fields: fields,
 	}
-	res, err := r.client.NPARules.NPARules(ctx, request)
+	res, err := r.client.NPARules.Read(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

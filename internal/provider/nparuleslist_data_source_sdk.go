@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
-	"math/big"
 )
 
 func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(resp *shared.NpaPolicyResponse) {
@@ -59,11 +58,7 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(resp *s
 						}
 					}
 					r.Items.Data.RuleData.ExternalDlp = types.BoolPointerValue(resp.Items.Data.RuleData.ExternalDlp)
-					if resp.Items.Data.RuleData.JSONVersion != nil {
-						r.Items.Data.RuleData.JSONVersion = types.NumberValue(big.NewFloat(float64(*resp.Items.Data.RuleData.JSONVersion)))
-					} else {
-						r.Items.Data.RuleData.JSONVersion = types.NumberNull()
-					}
+					r.Items.Data.RuleData.JSONVersion = types.Int64PointerValue(resp.Items.Data.RuleData.JSONVersion)
 					if resp.Items.Data.RuleData.MatchCriteriaAction == nil {
 						r.Items.Data.RuleData.MatchCriteriaAction = nil
 					} else {
@@ -200,11 +195,7 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(resp *s
 					} else {
 						r.Items.Data.RuleData.UserType = types.StringNull()
 					}
-					if resp.Items.Data.RuleData.Version != nil {
-						r.Items.Data.RuleData.Version = types.NumberValue(big.NewFloat(float64(*resp.Items.Data.RuleData.Version)))
-					} else {
-						r.Items.Data.RuleData.Version = types.NumberNull()
-					}
+					r.Items.Data.RuleData.Version = types.Int64PointerValue(resp.Items.Data.RuleData.Version)
 				}
 				r.Items.Data.RuleID = types.StringPointerValue(resp.Items.Data.RuleID)
 				r.Items.Data.RuleName = types.StringPointerValue(resp.Items.Data.RuleName)
