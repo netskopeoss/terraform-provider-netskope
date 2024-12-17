@@ -8,8 +8,6 @@ import (
 )
 
 type GetNPARulesRequest struct {
-	// Return values only from specified fields
-	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 	// Query string based on query operaters
 	Filter *string `queryParam:"style=form,explode=true,name=filter"`
 	// Max number of policies to retrieve. Default will be all policies.
@@ -20,13 +18,6 @@ type GetNPARulesRequest struct {
 	Sortby *string `queryParam:"style=form,explode=true,name=sortby"`
 	// Sort in either asc or desc order. The default is asc order
 	Sortorder *string `queryParam:"style=form,explode=true,name=sortorder"`
-}
-
-func (o *GetNPARulesRequest) GetFields() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Fields
 }
 
 func (o *GetNPARulesRequest) GetFilter() *string {
@@ -64,6 +55,26 @@ func (o *GetNPARulesRequest) GetSortorder() *string {
 	return o.Sortorder
 }
 
+// GetNPARulesResponseBody - successful operation
+type GetNPARulesResponseBody struct {
+	Data   *shared.NpaPolicyResponse `json:"data,omitempty"`
+	Status *string                   `json:"status,omitempty"`
+}
+
+func (o *GetNPARulesResponseBody) GetData() *shared.NpaPolicyResponse {
+	if o == nil {
+		return nil
+	}
+	return o.Data
+}
+
+func (o *GetNPARulesResponseBody) GetStatus() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Status
+}
+
 type GetNPARulesResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
@@ -72,7 +83,7 @@ type GetNPARulesResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// successful operation
-	NpaPolicyResponse []shared.NpaPolicyResponseItem
+	Object *GetNPARulesResponseBody
 	// Invalid request
 	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
@@ -98,11 +109,11 @@ func (o *GetNPARulesResponse) GetRawResponse() *http.Response {
 	return o.RawResponse
 }
 
-func (o *GetNPARulesResponse) GetNpaPolicyResponse() []shared.NpaPolicyResponseItem {
+func (o *GetNPARulesResponse) GetObject() *GetNPARulesResponseBody {
 	if o == nil {
 		return nil
 	}
-	return o.NpaPolicyResponse
+	return o.Object
 }
 
 func (o *GetNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {

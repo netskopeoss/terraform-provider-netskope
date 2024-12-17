@@ -51,8 +51,13 @@ func (s *NPAPublishersReleases) ListObjects(ctx context.Context, opts ...operati
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := url.JoinPath(baseURL, "/publishers/releases")
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := url.JoinPath(baseURL, "/infrastructure/publishers/releases")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}

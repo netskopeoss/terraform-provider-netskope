@@ -9,11 +9,11 @@ import (
 	"net/http"
 )
 
-type PostAppsPrivateGetpolicyinuseRequestBody struct {
+type PostSteeringAppsPrivateGetpolicyinuseRequestBody struct {
 	Ids []string `json:"ids,omitempty"`
 }
 
-func (o *PostAppsPrivateGetpolicyinuseRequestBody) GetIds() []string {
+func (o *PostSteeringAppsPrivateGetpolicyinuseRequestBody) GetIds() []string {
 	if o == nil {
 		return nil
 	}
@@ -76,7 +76,7 @@ func (o *ResponseBody) GetStatus() *Status {
 	return o.Status
 }
 
-type PostAppsPrivateGetpolicyinuseResponse struct {
+type PostSteeringAppsPrivateGetpolicyinuseResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -89,35 +89,35 @@ type PostAppsPrivateGetpolicyinuseResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *PostAppsPrivateGetpolicyinuseResponse) GetContentType() string {
+func (o *PostSteeringAppsPrivateGetpolicyinuseResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *PostAppsPrivateGetpolicyinuseResponse) GetStatusCode() int {
+func (o *PostSteeringAppsPrivateGetpolicyinuseResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *PostAppsPrivateGetpolicyinuseResponse) GetRawResponse() *http.Response {
+func (o *PostSteeringAppsPrivateGetpolicyinuseResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}
 	return o.RawResponse
 }
 
-func (o *PostAppsPrivateGetpolicyinuseResponse) GetResponseBodies() []ResponseBody {
+func (o *PostSteeringAppsPrivateGetpolicyinuseResponse) GetResponseBodies() []ResponseBody {
 	if o == nil {
 		return nil
 	}
 	return o.ResponseBodies
 }
 
-func (o *PostAppsPrivateGetpolicyinuseResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+func (o *PostSteeringAppsPrivateGetpolicyinuseResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
 	if o == nil {
 		return nil
 	}

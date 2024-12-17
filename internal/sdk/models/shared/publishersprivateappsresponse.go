@@ -52,8 +52,8 @@ type PublishersPrivateAppsResponseData struct {
 	Reachability                *PublishersPrivateAppsResponseReachability `json:"reachability,omitempty"`
 	RealHost                    *string                                    `json:"real_host,omitempty"`
 	ServicePublisherAssignments []ServicePublisherAssignmentItem           `json:"service_publisher_assignments,omitempty"`
-	SupplimentDNSForOsx         *bool                                      `json:"suppliment_dns_for_osx,omitempty"`
 	Tags                        []TagItem                                  `json:"tags,omitempty"`
+	SupplimentDNSForOsx         *bool                                      `json:"suppliment_dns_for_osx,omitempty"`
 	TrustSelfSignedCerts        *bool                                      `json:"trust_self_signed_certs,omitempty"`
 	UsePublisherDNS             *bool                                      `json:"use_publisher_dns,omitempty"`
 }
@@ -156,18 +156,18 @@ func (o *PublishersPrivateAppsResponseData) GetServicePublisherAssignments() []S
 	return o.ServicePublisherAssignments
 }
 
-func (o *PublishersPrivateAppsResponseData) GetSupplimentDNSForOsx() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.SupplimentDNSForOsx
-}
-
 func (o *PublishersPrivateAppsResponseData) GetTags() []TagItem {
 	if o == nil {
 		return nil
 	}
 	return o.Tags
+}
+
+func (o *PublishersPrivateAppsResponseData) GetSupplimentDNSForOsx() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.SupplimentDNSForOsx
 }
 
 func (o *PublishersPrivateAppsResponseData) GetTrustSelfSignedCerts() *bool {

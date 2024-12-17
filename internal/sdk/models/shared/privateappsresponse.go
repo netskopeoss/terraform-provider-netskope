@@ -13,8 +13,9 @@ type PrivateAppsResponseAppOption struct {
 type PrivateAppsResponseData struct {
 	AllowUnauthenticatedCors    *bool                            `json:"allow_unauthenticated_cors,omitempty"`
 	AllowURIBypass              *bool                            `json:"allow_uri_bypass,omitempty"`
-	AppOption                   *PrivateAppsResponseAppOption    `json:"app_option,omitempty"`
+	UribypassHeaderValue        *string                          `json:"uribypass_header_value,omitempty"`
 	BypassUris                  []string                         `json:"bypass_uris,omitempty"`
+	AppOption                   *PrivateAppsResponseAppOption    `json:"app_option,omitempty"`
 	ClientlessAccess            *bool                            `json:"clientless_access,omitempty"`
 	Host                        *string                          `json:"host,omitempty"`
 	ID                          *int                             `json:"id,omitempty"`
@@ -25,7 +26,6 @@ type PrivateAppsResponseData struct {
 	ServicePublisherAssignments []ServicePublisherAssignmentItem `json:"service_publisher_assignments,omitempty"`
 	Tags                        []TagItem                        `json:"tags,omitempty"`
 	TrustSelfSignedCerts        *bool                            `json:"trust_self_signed_certs,omitempty"`
-	UribypassHeaderValue        *string                          `json:"uribypass_header_value,omitempty"`
 	UsePublisherDNS             *bool                            `json:"use_publisher_dns,omitempty"`
 }
 
@@ -43,11 +43,11 @@ func (o *PrivateAppsResponseData) GetAllowURIBypass() *bool {
 	return o.AllowURIBypass
 }
 
-func (o *PrivateAppsResponseData) GetAppOption() *PrivateAppsResponseAppOption {
+func (o *PrivateAppsResponseData) GetUribypassHeaderValue() *string {
 	if o == nil {
 		return nil
 	}
-	return o.AppOption
+	return o.UribypassHeaderValue
 }
 
 func (o *PrivateAppsResponseData) GetBypassUris() []string {
@@ -55,6 +55,13 @@ func (o *PrivateAppsResponseData) GetBypassUris() []string {
 		return nil
 	}
 	return o.BypassUris
+}
+
+func (o *PrivateAppsResponseData) GetAppOption() *PrivateAppsResponseAppOption {
+	if o == nil {
+		return nil
+	}
+	return o.AppOption
 }
 
 func (o *PrivateAppsResponseData) GetClientlessAccess() *bool {
@@ -125,13 +132,6 @@ func (o *PrivateAppsResponseData) GetTrustSelfSignedCerts() *bool {
 		return nil
 	}
 	return o.TrustSelfSignedCerts
-}
-
-func (o *PrivateAppsResponseData) GetUribypassHeaderValue() *string {
-	if o == nil {
-		return nil
-	}
-	return o.UribypassHeaderValue
 }
 
 func (o *PrivateAppsResponseData) GetUsePublisherDNS() *bool {

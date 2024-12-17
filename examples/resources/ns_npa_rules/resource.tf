@@ -52,6 +52,9 @@ resource "ns_npa_rules" "my_nparules" {
             ]
           }
         ]
+        app_id = [
+          "..."
+        ]
         app_name = "[172.31.12.135]"
       }
     ]
@@ -90,7 +93,7 @@ resource "ns_npa_rules" "my_nparules" {
   rule_order = {
     order     = "before"
     position  = 5
-    rule_id   = 1
+    rule_id   = "...my_rule_id..."
     rule_name = "api-policy-managed"
   }
   silent = "1"

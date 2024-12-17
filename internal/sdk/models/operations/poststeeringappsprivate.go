@@ -36,27 +36,27 @@ func (e *Silent) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PostAppsPrivateRequest struct {
+type PostSteeringAppsPrivateRequest struct {
 	// flag to skip output except status code
 	Silent             *Silent                   `queryParam:"style=form,explode=true,name=silent"`
 	PrivateAppsRequest shared.PrivateAppsRequest `request:"mediaType=application/json"`
 }
 
-func (o *PostAppsPrivateRequest) GetSilent() *Silent {
+func (o *PostSteeringAppsPrivateRequest) GetSilent() *Silent {
 	if o == nil {
 		return nil
 	}
 	return o.Silent
 }
 
-func (o *PostAppsPrivateRequest) GetPrivateAppsRequest() shared.PrivateAppsRequest {
+func (o *PostSteeringAppsPrivateRequest) GetPrivateAppsRequest() shared.PrivateAppsRequest {
 	if o == nil {
 		return shared.PrivateAppsRequest{}
 	}
 	return o.PrivateAppsRequest
 }
 
-type PostAppsPrivateResponse struct {
+type PostSteeringAppsPrivateResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -69,35 +69,35 @@ type PostAppsPrivateResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *PostAppsPrivateResponse) GetContentType() string {
+func (o *PostSteeringAppsPrivateResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *PostAppsPrivateResponse) GetStatusCode() int {
+func (o *PostSteeringAppsPrivateResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *PostAppsPrivateResponse) GetRawResponse() *http.Response {
+func (o *PostSteeringAppsPrivateResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}
 	return o.RawResponse
 }
 
-func (o *PostAppsPrivateResponse) GetPrivateAppsResponse() []shared.PrivateAppsResponse {
+func (o *PostSteeringAppsPrivateResponse) GetPrivateAppsResponse() []shared.PrivateAppsResponse {
 	if o == nil {
 		return nil
 	}
 	return o.PrivateAppsResponse
 }
 
-func (o *PostAppsPrivateResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+func (o *PostSteeringAppsPrivateResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
 	if o == nil {
 		return nil
 	}

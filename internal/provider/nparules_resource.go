@@ -15,7 +15,7 @@ import (
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
-	"strconv"
+	speakeasy_objectvalidators "github.com/netskope/terraform-provider-ns/internal/validators/objectvalidators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -33,46 +33,19 @@ type NPARulesResource struct {
 
 // NPARulesResourceModel describes the resource data model.
 type NPARulesResourceModel struct {
-	AccessMethod              []types.String                 `tfsdk:"access_method"`
-	ActionName                types.String                   `tfsdk:"action_name"`
-	Actions                   []types.String                 `tfsdk:"actions"`
-	Activity                  types.String                   `tfsdk:"activity"`
-	AppName                   types.String                   `tfsdk:"app_name"`
-	BNegateNetLocation        types.Bool                     `tfsdk:"b_negate_net_location"`
-	BNegateSrcCountries       types.Bool                     `tfsdk:"b_negate_src_countries"`
-	Classification            types.String                   `tfsdk:"classification"`
-	Data                      *tfTypes.NpaPolicyResponseItem `tfsdk:"data"`
-	Description               types.String                   `tfsdk:"description"`
-	DeviceClassificationID    []types.Int64                  `tfsdk:"device_classification_id"`
-	DlpProfile                types.String                   `tfsdk:"dlp_profile"`
-	Enabled                   types.String                   `tfsdk:"enabled"`
-	ExternalDlp               types.Bool                     `tfsdk:"external_dlp"`
-	GroupID                   types.String                   `tfsdk:"group_id"`
-	GroupName                 types.String                   `tfsdk:"group_name"`
-	JSONVersion               types.Int64                    `tfsdk:"json_version"`
-	ListOfConstraints         []types.String                 `tfsdk:"list_of_constraints"`
-	NetLocationObj            []types.String                 `tfsdk:"net_location_obj"`
-	OrganizationUnits         []types.String                 `tfsdk:"organization_units"`
-	PolicyType                types.String                   `tfsdk:"policy_type"`
-	PrivateAppTagIds          []types.String                 `tfsdk:"private_app_tag_ids"`
-	PrivateAppTags            []types.String                 `tfsdk:"private_app_tags"`
-	PrivateApps               []types.String                 `tfsdk:"private_apps"`
-	RemediationProfile        types.String                   `tfsdk:"remediation_profile"`
-	RuleData                  *tfTypes.NpaPolicyRuleData     `tfsdk:"rule_data"`
-	RuleID                    types.Int64                    `tfsdk:"rule_id"`
-	RuleName                  types.String                   `tfsdk:"rule_name"`
-	RuleOrder                 *tfTypes.RuleOrder             `tfsdk:"rule_order"`
-	Severity                  types.String                   `tfsdk:"severity"`
-	ShowDlpProfileActionTable types.Bool                     `tfsdk:"show_dlp_profile_action_table"`
-	Silent                    types.String                   `tfsdk:"silent"`
-	SrcCountries              []types.String                 `tfsdk:"src_countries"`
-	Status                    types.String                   `tfsdk:"status"`
-	Template                  types.String                   `tfsdk:"template"`
-	TssProfile                []types.String                 `tfsdk:"tss_profile"`
-	UserGroups                []types.String                 `tfsdk:"user_groups"`
-	UserType                  types.String                   `tfsdk:"user_type"`
-	Users                     []types.String                 `tfsdk:"users"`
-	Version                   types.Int64                    `tfsdk:"version"`
+	Description types.String               `tfsdk:"description"`
+	Enabled     types.String               `tfsdk:"enabled"`
+	GroupID     types.String               `tfsdk:"group_id"`
+	GroupName   types.String               `tfsdk:"group_name"`
+	ModifyBy    types.String               `tfsdk:"modify_by"`
+	ModifyTime  types.String               `tfsdk:"modify_time"`
+	ModifyType  types.String               `tfsdk:"modify_type"`
+	PolicyType  types.String               `tfsdk:"policy_type"`
+	RuleData    *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleID      types.String               `tfsdk:"rule_id"`
+	RuleName    types.String               `tfsdk:"rule_name"`
+	RuleOrder   *tfTypes.RuleOrder         `tfsdk:"rule_order"`
+	Silent      types.String               `tfsdk:"silent"`
 }
 
 func (r *NPARulesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -83,352 +56,91 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "NPARules Resource",
 		Attributes: map[string]schema.Attribute{
-			"access_method": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"action_name": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["allow", "block"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"allow",
-						"block",
-					),
-				},
-			},
-			"actions": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"activity": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be "any"`,
-				Validators: []validator.String{
-					stringvalidator.OneOf("any"),
-				},
-			},
-			"app_name": schema.StringAttribute{
-				Computed: true,
-			},
-			"b_negate_net_location": schema.BoolAttribute{
-				Computed: true,
-			},
-			"b_negate_src_countries": schema.BoolAttribute{
-				Computed: true,
-			},
-			"classification": schema.StringAttribute{
-				Computed: true,
-			},
-			"data": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"group_id": schema.StringAttribute{
-						Computed: true,
-					},
-					"rule_data": schema.SingleNestedAttribute{
-						Computed: true,
-						Attributes: map[string]schema.Attribute{
-							"access_method": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-							},
-							"b_negate_net_location": schema.BoolAttribute{
-								Computed: true,
-							},
-							"b_negate_src_countries": schema.BoolAttribute{
-								Computed: true,
-							},
-							"classification": schema.StringAttribute{
-								Computed: true,
-							},
-							"device_classification_id": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.Int64Type,
-							},
-							"dlp_actions": schema.ListNestedAttribute{
-								Computed: true,
-								NestedObject: schema.NestedAttributeObject{
-									Attributes: map[string]schema.Attribute{
-										"actions": schema.ListAttribute{
-											Computed:    true,
-											ElementType: types.StringType,
-										},
-										"dlp_profile": schema.StringAttribute{
-											Computed: true,
-										},
-									},
-								},
-							},
-							"external_dlp": schema.BoolAttribute{
-								Computed: true,
-							},
-							"json_version": schema.Int64Attribute{
-								Computed: true,
-							},
-							"match_criteria_action": schema.SingleNestedAttribute{
-								Computed: true,
-								Attributes: map[string]schema.Attribute{
-									"action_name": schema.StringAttribute{
-										Computed:    true,
-										Description: `must be one of ["allow", "block"]`,
-										Validators: []validator.String{
-											stringvalidator.OneOf(
-												"allow",
-												"block",
-											),
-										},
-									},
-								},
-							},
-							"net_location_obj": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-							},
-							"organization_units": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-							},
-							"policy_type": schema.StringAttribute{
-								Computed:    true,
-								Description: `must be "private-app"`,
-								Validators: []validator.String{
-									stringvalidator.OneOf(
-										"private-app",
-									),
-								},
-							},
-							"private_app_tag_ids": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-							},
-							"private_app_tags": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-							},
-							"private_apps": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-							},
-							"private_apps_with_activities": schema.ListNestedAttribute{
-								Computed: true,
-								NestedObject: schema.NestedAttributeObject{
-									Attributes: map[string]schema.Attribute{
-										"activities": schema.ListNestedAttribute{
-											Computed: true,
-											NestedObject: schema.NestedAttributeObject{
-												Attributes: map[string]schema.Attribute{
-													"activity": schema.StringAttribute{
-														Computed:    true,
-														Description: `must be "any"`,
-														Validators: []validator.String{
-															stringvalidator.OneOf("any"),
-														},
-													},
-													"list_of_constraints": schema.ListAttribute{
-														Computed:    true,
-														ElementType: types.StringType,
-													},
-												},
-											},
-										},
-										"app_name": schema.StringAttribute{
-											Computed: true,
-										},
-									},
-								},
-							},
-							"show_dlp_profile_action_table": schema.BoolAttribute{
-								Computed: true,
-							},
-							"src_countries": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-							},
-							"tss_actions": schema.ListNestedAttribute{
-								Computed: true,
-								NestedObject: schema.NestedAttributeObject{
-									Attributes: map[string]schema.Attribute{
-										"actions": schema.ListNestedAttribute{
-											Computed: true,
-											NestedObject: schema.NestedAttributeObject{
-												Attributes: map[string]schema.Attribute{
-													"action_name": schema.StringAttribute{
-														Computed:    true,
-														Description: `must be one of ["block", "alert", "allow"]`,
-														Validators: []validator.String{
-															stringvalidator.OneOf(
-																"block",
-																"alert",
-																"allow",
-															),
-														},
-													},
-													"remediation_profile": schema.StringAttribute{
-														Computed: true,
-													},
-													"severity": schema.StringAttribute{
-														Computed:    true,
-														Description: `must be one of ["low", "medium", "high"]`,
-														Validators: []validator.String{
-															stringvalidator.OneOf(
-																"low",
-																"medium",
-																"high",
-															),
-														},
-													},
-													"template": schema.StringAttribute{
-														Computed: true,
-													},
-												},
-											},
-										},
-										"tss_profile": schema.ListAttribute{
-											Computed:    true,
-											ElementType: types.StringType,
-										},
-									},
-								},
-							},
-							"tss_profile": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-							},
-							"user_groups": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-							},
-							"user_type": schema.StringAttribute{
-								Computed:    true,
-								Description: `must be "user"`,
-								Validators: []validator.String{
-									stringvalidator.OneOf("user"),
-								},
-							},
-							"users": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-							},
-							"version": schema.Int64Attribute{
-								Computed: true,
-							},
-						},
-					},
-					"rule_id": schema.Int64Attribute{
-						Computed: true,
-					},
-					"rule_name": schema.StringAttribute{
-						Computed: true,
-					},
-				},
-			},
 			"description": schema.StringAttribute{
 				Optional: true,
 			},
-			"device_classification_id": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.Int64Type,
-			},
-			"dlp_profile": schema.StringAttribute{
-				Computed: true,
-			},
 			"enabled": schema.StringAttribute{
+				Computed: true,
 				Optional: true,
 			},
-			"external_dlp": schema.BoolAttribute{
-				Computed: true,
-			},
 			"group_id": schema.StringAttribute{
-				Computed: true,
 				Optional: true,
 			},
 			"group_name": schema.StringAttribute{
 				Optional: true,
 			},
-			"json_version": schema.Int64Attribute{
+			"modify_by": schema.StringAttribute{
 				Computed: true,
 			},
-			"list_of_constraints": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
+			"modify_time": schema.StringAttribute{
+				Computed: true,
 			},
-			"net_location_obj": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"organization_units": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
+			"modify_type": schema.StringAttribute{
+				Computed: true,
 			},
 			"policy_type": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be "private-app"`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"private-app",
-					),
-				},
-			},
-			"private_app_tag_ids": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"private_app_tags": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"private_apps": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"remediation_profile": schema.StringAttribute{
 				Computed: true,
 			},
 			"rule_data": schema.SingleNestedAttribute{
+				Computed: true,
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
 					"access_method": schema.ListAttribute{
+						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,
 					},
 					"b_negate_net_location": schema.BoolAttribute{
+						Computed: true,
 						Optional: true,
 					},
 					"b_negate_src_countries": schema.BoolAttribute{
+						Computed: true,
 						Optional: true,
 					},
 					"classification": schema.StringAttribute{
+						Computed: true,
 						Optional: true,
 					},
 					"device_classification_id": schema.ListAttribute{
+						Computed:    true,
 						Optional:    true,
 						ElementType: types.Int64Type,
 					},
 					"dlp_actions": schema.ListNestedAttribute{
+						Computed: true,
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
+							Validators: []validator.Object{
+								speakeasy_objectvalidators.NotNull(),
+							},
 							Attributes: map[string]schema.Attribute{
 								"actions": schema.ListAttribute{
+									Computed:    true,
 									Optional:    true,
 									ElementType: types.StringType,
 								},
 								"dlp_profile": schema.StringAttribute{
+									Computed: true,
 									Optional: true,
 								},
 							},
 						},
 					},
 					"external_dlp": schema.BoolAttribute{
+						Computed: true,
 						Optional: true,
 					},
-					"json_version": schema.Int64Attribute{
+					"json_version": schema.NumberAttribute{
+						Computed: true,
 						Optional: true,
 					},
 					"match_criteria_action": schema.SingleNestedAttribute{
+						Computed: true,
 						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"action_name": schema.StringAttribute{
+								Computed:    true,
 								Optional:    true,
 								Description: `must be one of ["allow", "block"]`,
 								Validators: []validator.String{
@@ -441,14 +153,17 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 					},
 					"net_location_obj": schema.ListAttribute{
+						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,
 					},
 					"organization_units": schema.ListAttribute{
+						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,
 					},
 					"policy_type": schema.StringAttribute{
+						Computed:    true,
 						Optional:    true,
 						Description: `must be "private-app"`,
 						Validators: []validator.String{
@@ -458,26 +173,38 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 					},
 					"private_app_tag_ids": schema.ListAttribute{
+						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,
 					},
 					"private_app_tags": schema.ListAttribute{
+						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,
 					},
 					"private_apps": schema.ListAttribute{
+						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,
 					},
 					"private_apps_with_activities": schema.ListNestedAttribute{
+						Computed: true,
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
+							Validators: []validator.Object{
+								speakeasy_objectvalidators.NotNull(),
+							},
 							Attributes: map[string]schema.Attribute{
 								"activities": schema.ListNestedAttribute{
+									Computed: true,
 									Optional: true,
 									NestedObject: schema.NestedAttributeObject{
+										Validators: []validator.Object{
+											speakeasy_objectvalidators.NotNull(),
+										},
 										Attributes: map[string]schema.Attribute{
 											"activity": schema.StringAttribute{
+												Computed:    true,
 												Optional:    true,
 												Description: `must be "any"`,
 												Validators: []validator.String{
@@ -485,34 +212,52 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 												},
 											},
 											"list_of_constraints": schema.ListAttribute{
+												Computed:    true,
 												Optional:    true,
 												ElementType: types.StringType,
 											},
 										},
 									},
 								},
+								"app_id": schema.ListAttribute{
+									Computed:    true,
+									Optional:    true,
+									ElementType: types.StringType,
+								},
 								"app_name": schema.StringAttribute{
+									Computed: true,
 									Optional: true,
 								},
 							},
 						},
 					},
 					"show_dlp_profile_action_table": schema.BoolAttribute{
+						Computed: true,
 						Optional: true,
 					},
 					"src_countries": schema.ListAttribute{
+						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,
 					},
 					"tss_actions": schema.ListNestedAttribute{
+						Computed: true,
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
+							Validators: []validator.Object{
+								speakeasy_objectvalidators.NotNull(),
+							},
 							Attributes: map[string]schema.Attribute{
 								"actions": schema.ListNestedAttribute{
+									Computed: true,
 									Optional: true,
 									NestedObject: schema.NestedAttributeObject{
+										Validators: []validator.Object{
+											speakeasy_objectvalidators.NotNull(),
+										},
 										Attributes: map[string]schema.Attribute{
 											"action_name": schema.StringAttribute{
+												Computed:    true,
 												Optional:    true,
 												Description: `must be one of ["block", "alert", "allow"]`,
 												Validators: []validator.String{
@@ -524,9 +269,11 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 												},
 											},
 											"remediation_profile": schema.StringAttribute{
+												Computed: true,
 												Optional: true,
 											},
 											"severity": schema.StringAttribute{
+												Computed:    true,
 												Optional:    true,
 												Description: `must be one of ["low", "medium", "high"]`,
 												Validators: []validator.String{
@@ -538,12 +285,14 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 												},
 											},
 											"template": schema.StringAttribute{
+												Computed: true,
 												Optional: true,
 											},
 										},
 									},
 								},
 								"tss_profile": schema.ListAttribute{
+									Computed:    true,
 									Optional:    true,
 									ElementType: types.StringType,
 								},
@@ -551,14 +300,17 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 					},
 					"tss_profile": schema.ListAttribute{
+						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,
 					},
 					"user_groups": schema.ListAttribute{
+						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,
 					},
 					"user_type": schema.StringAttribute{
+						Computed:    true,
 						Optional:    true,
 						Description: `must be "user"`,
 						Validators: []validator.String{
@@ -566,15 +318,17 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 					},
 					"users": schema.ListAttribute{
+						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,
 					},
-					"version": schema.Int64Attribute{
+					"version": schema.NumberAttribute{
+						Computed: true,
 						Optional: true,
 					},
 				},
 			},
-			"rule_id": schema.Int64Attribute{
+			"rule_id": schema.StringAttribute{
 				Computed: true,
 			},
 			"rule_name": schema.StringAttribute{
@@ -599,7 +353,7 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 					"position": schema.Int64Attribute{
 						Optional: true,
 					},
-					"rule_id": schema.Int64Attribute{
+					"rule_id": schema.StringAttribute{
 						Optional: true,
 					},
 					"rule_name": schema.StringAttribute{
@@ -607,65 +361,12 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 					},
 				},
 			},
-			"severity": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["low", "medium", "high"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"low",
-						"medium",
-						"high",
-					),
-				},
-			},
-			"show_dlp_profile_action_table": schema.BoolAttribute{
-				Computed: true,
-			},
 			"silent": schema.StringAttribute{
 				Optional:    true,
 				Description: `flag to skip output except status code. must be one of ["1", "0"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf("1", "0"),
 				},
-			},
-			"src_countries": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["success", "error"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"success",
-						"error",
-					),
-				},
-			},
-			"template": schema.StringAttribute{
-				Computed: true,
-			},
-			"tss_profile": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"user_groups": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"user_type": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be "user"`,
-				Validators: []validator.String{
-					stringvalidator.OneOf("user"),
-				},
-			},
-			"users": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"version": schema.Int64Attribute{
-				Computed: true,
 			},
 		},
 	}
@@ -736,17 +437,22 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
+	if !(res.Object != nil && res.Object.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
+		return
+	}
+	data.RefreshFromSharedNpaPolicyResponseItemTest(res.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var ruleID int
-	ruleID = int(data.RuleID.ValueInt64())
+	var id string
+	id = data.RuleID.ValueString()
 
 	// create.npa_rules.fieldscreate.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create","NPARules#create.req"]
 	var fields *string
-	request1 := operations.GetNPARulesByIDRequest{
-		RuleID: ruleID,
+	request1 := operations.NPARulesRequest{
+		ID:     id,
 		Fields: fields,
 	}
-	res1, err := r.client.NPARules.GetNPARulesByID(ctx, request1)
+	res1, err := r.client.NPARules.NPARules(ctx, request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -762,11 +468,11 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if !(res1.Object != nil) {
+	if !(res1.Object != nil && res1.Object.Data != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGetNPARulesByIDResponseBody(res1.Object)
+	data.RefreshFromSharedNpaPolicyResponseItemTest(res1.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -791,16 +497,16 @@ func (r *NPARulesResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	var ruleID int
-	ruleID = int(data.RuleID.ValueInt64())
+	var id string
+	id = data.RuleID.ValueString()
 
 	// read.npa_rules.fieldsread.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create","NPARules#create.req"]
 	var fields *string
-	request := operations.GetNPARulesByIDRequest{
-		RuleID: ruleID,
+	request := operations.NPARulesRequest{
+		ID:     id,
 		Fields: fields,
 	}
-	res, err := r.client.NPARules.GetNPARulesByID(ctx, request)
+	res, err := r.client.NPARules.NPARules(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -820,11 +526,11 @@ func (r *NPARulesResource) Read(ctx context.Context, req resource.ReadRequest, r
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.Object != nil) {
+	if !(res.Object != nil && res.Object.Data != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGetNPARulesByIDResponseBody(res.Object)
+	data.RefreshFromSharedNpaPolicyResponseItemTest(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -844,8 +550,8 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
-	var ruleID int
-	ruleID = int(data.RuleID.ValueInt64())
+	var id string
+	id = data.RuleID.ValueString()
 
 	silent := new(operations.UpdateNPARulesByIDQueryParamSilent)
 	if !data.Silent.IsUnknown() && !data.Silent.IsNull() {
@@ -855,7 +561,7 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 	}
 	npaPolicyRequest := *data.ToSharedNpaPolicyRequest()
 	request := operations.UpdateNPARulesByIDRequest{
-		RuleID:           ruleID,
+		ID:               id,
 		Silent:           silent,
 		NpaPolicyRequest: npaPolicyRequest,
 	}
@@ -881,16 +587,16 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 	}
 	data.RefreshFromOperationsUpdateNPARulesByIDResponseBody(res.Object)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var ruleId1 int
-	ruleId1 = int(data.RuleID.ValueInt64())
+	var id1 string
+	id1 = data.RuleID.ValueString()
 
-	// update.npa_rules.fieldsupdate.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create","NPARules#create.req"]
+	// update.npa_rules.fieldsupdate.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create.req","NPARules#create"]
 	var fields *string
-	request1 := operations.GetNPARulesByIDRequest{
-		RuleID: ruleId1,
+	request1 := operations.NPARulesRequest{
+		ID:     id1,
 		Fields: fields,
 	}
-	res1, err := r.client.NPARules.GetNPARulesByID(ctx, request1)
+	res1, err := r.client.NPARules.NPARules(ctx, request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -906,11 +612,11 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if !(res1.Object != nil) {
+	if !(res1.Object != nil && res1.Object.Data != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGetNPARulesByIDResponseBody(res1.Object)
+	data.RefreshFromSharedNpaPolicyResponseItemTest(res1.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -935,11 +641,11 @@ func (r *NPARulesResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
-	var ruleID int
-	ruleID = int(data.RuleID.ValueInt64())
+	var id string
+	id = data.RuleID.ValueString()
 
 	request := operations.DeleteNPARulesRequest{
-		RuleID: ruleID,
+		ID: id,
 	}
 	res, err := r.client.NPARules.Delete(ctx, request)
 	if err != nil {
@@ -961,10 +667,5 @@ func (r *NPARulesResource) Delete(ctx context.Context, req resource.DeleteReques
 }
 
 func (r *NPARulesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	ruleID, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
-	}
-
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("rule_id"), int64(ruleID))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("rule_id"), req.ID)...)
 }

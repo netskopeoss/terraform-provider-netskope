@@ -12,7 +12,6 @@ import (
 var ErrUnsupportedOption = errors.New("unsupported option")
 
 const (
-	SupportedOptionServerURL            = "serverURL"
 	SupportedOptionRetries              = "retries"
 	SupportedOptionTimeout              = "timeout"
 	SupportedOptionAcceptHeaderOverride = "acceptHeaderOverride"
@@ -32,10 +31,6 @@ type Option func(*Options, ...string) error
 // WithServerURL allows providing an alternative server URL.
 func WithServerURL(serverURL string) Option {
 	return func(opts *Options, supportedOptions ...string) error {
-		if !utils.Contains(supportedOptions, SupportedOptionServerURL) {
-			return ErrUnsupportedOption
-		}
-
 		opts.ServerURL = &serverURL
 		return nil
 	}
@@ -44,10 +39,6 @@ func WithServerURL(serverURL string) Option {
 // WithTemplatedServerURL allows providing an alternative server URL with templated parameters.
 func WithTemplatedServerURL(serverURL string, params map[string]string) Option {
 	return func(opts *Options, supportedOptions ...string) error {
-		if !utils.Contains(supportedOptions, SupportedOptionServerURL) {
-			return ErrUnsupportedOption
-		}
-
 		if params != nil {
 			serverURL = utils.ReplaceParameters(serverURL, params)
 		}

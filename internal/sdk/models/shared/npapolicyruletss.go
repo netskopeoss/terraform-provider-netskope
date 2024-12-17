@@ -7,18 +7,18 @@ import (
 	"fmt"
 )
 
-type NpaPolicyRuleTssActionName string
+type ActionName string
 
 const (
-	NpaPolicyRuleTssActionNameBlock NpaPolicyRuleTssActionName = "block"
-	NpaPolicyRuleTssActionNameAlert NpaPolicyRuleTssActionName = "alert"
-	NpaPolicyRuleTssActionNameAllow NpaPolicyRuleTssActionName = "allow"
+	ActionNameBlock ActionName = "block"
+	ActionNameAlert ActionName = "alert"
+	ActionNameAllow ActionName = "allow"
 )
 
-func (e NpaPolicyRuleTssActionName) ToPointer() *NpaPolicyRuleTssActionName {
+func (e ActionName) ToPointer() *ActionName {
 	return &e
 }
-func (e *NpaPolicyRuleTssActionName) UnmarshalJSON(data []byte) error {
+func (e *ActionName) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -29,10 +29,10 @@ func (e *NpaPolicyRuleTssActionName) UnmarshalJSON(data []byte) error {
 	case "alert":
 		fallthrough
 	case "allow":
-		*e = NpaPolicyRuleTssActionName(v)
+		*e = ActionName(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for NpaPolicyRuleTssActionName: %v", v)
+		return fmt.Errorf("invalid value for ActionName: %v", v)
 	}
 }
 
@@ -66,13 +66,13 @@ func (e *Severity) UnmarshalJSON(data []byte) error {
 }
 
 type NpaPolicyRuleTssActions struct {
-	ActionName         *NpaPolicyRuleTssActionName `json:"action_name,omitempty"`
-	RemediationProfile *string                     `json:"remediation_profile,omitempty"`
-	Severity           *Severity                   `json:"severity,omitempty"`
-	Template           *string                     `json:"template,omitempty"`
+	ActionName         *ActionName `json:"action_name,omitempty"`
+	RemediationProfile *string     `json:"remediation_profile,omitempty"`
+	Severity           *Severity   `json:"severity,omitempty"`
+	Template           *string     `json:"template,omitempty"`
 }
 
-func (o *NpaPolicyRuleTssActions) GetActionName() *NpaPolicyRuleTssActionName {
+func (o *NpaPolicyRuleTssActions) GetActionName() *ActionName {
 	if o == nil {
 		return nil
 	}
@@ -101,15 +101,8 @@ func (o *NpaPolicyRuleTssActions) GetTemplate() *string {
 }
 
 type NpaPolicyRuleTss struct {
-	Actions    []NpaPolicyRuleTssActions `json:"actions,omitempty"`
 	TssProfile []string                  `json:"tss_profile,omitempty"`
-}
-
-func (o *NpaPolicyRuleTss) GetActions() []NpaPolicyRuleTssActions {
-	if o == nil {
-		return nil
-	}
-	return o.Actions
+	Actions    []NpaPolicyRuleTssActions `json:"actions,omitempty"`
 }
 
 func (o *NpaPolicyRuleTss) GetTssProfile() []string {
@@ -117,4 +110,11 @@ func (o *NpaPolicyRuleTss) GetTssProfile() []string {
 		return nil
 	}
 	return o.TssProfile
+}
+
+func (o *NpaPolicyRuleTss) GetActions() []NpaPolicyRuleTssActions {
+	if o == nil {
+		return nil
+	}
+	return o.Actions
 }

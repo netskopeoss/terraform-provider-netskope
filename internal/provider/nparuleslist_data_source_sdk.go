@@ -6,184 +6,209 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
+	"math/big"
 )
 
-func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp []shared.NpaPolicyResponseItem) {
-	r.Data = []tfTypes.NpaPolicyResponseItem{}
-	if len(r.Data) > len(resp) {
-		r.Data = r.Data[:len(resp)]
-	}
-	for dataCount, dataItem := range resp {
-		var data tfTypes.NpaPolicyResponseItem
-		data.GroupID = types.StringPointerValue(dataItem.GroupID)
-		if dataItem.RuleData == nil {
-			data.RuleData = nil
+func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(resp *shared.NpaPolicyResponse) {
+	if resp != nil {
+		if resp.Items == nil {
+			r.Items = nil
 		} else {
-			data.RuleData = &tfTypes.NpaPolicyRuleData{}
-			data.RuleData.AccessMethod = []types.String{}
-			for _, v := range dataItem.RuleData.AccessMethod {
-				data.RuleData.AccessMethod = append(data.RuleData.AccessMethod, types.StringValue(string(v)))
-			}
-			data.RuleData.BNegateNetLocation = types.BoolPointerValue(dataItem.RuleData.BNegateNetLocation)
-			data.RuleData.BNegateSrcCountries = types.BoolPointerValue(dataItem.RuleData.BNegateSrcCountries)
-			data.RuleData.Classification = types.StringPointerValue(dataItem.RuleData.Classification)
-			data.RuleData.DeviceClassificationID = []types.Int64{}
-			for _, v := range dataItem.RuleData.DeviceClassificationID {
-				data.RuleData.DeviceClassificationID = append(data.RuleData.DeviceClassificationID, types.Int64Value(v))
-			}
-			data.RuleData.DlpActions = []tfTypes.NpaPolicyRuleDlp{}
-			for dlpActionsCount, dlpActionsItem := range dataItem.RuleData.DlpActions {
-				var dlpActions1 tfTypes.NpaPolicyRuleDlp
-				dlpActions1.Actions = []types.String{}
-				for _, v := range dlpActionsItem.Actions {
-					dlpActions1.Actions = append(dlpActions1.Actions, types.StringValue(string(v)))
-				}
-				dlpActions1.DlpProfile = types.StringPointerValue(dlpActionsItem.DlpProfile)
-				if dlpActionsCount+1 > len(data.RuleData.DlpActions) {
-					data.RuleData.DlpActions = append(data.RuleData.DlpActions, dlpActions1)
-				} else {
-					data.RuleData.DlpActions[dlpActionsCount].Actions = dlpActions1.Actions
-					data.RuleData.DlpActions[dlpActionsCount].DlpProfile = dlpActions1.DlpProfile
-				}
-			}
-			data.RuleData.ExternalDlp = types.BoolPointerValue(dataItem.RuleData.ExternalDlp)
-			data.RuleData.JSONVersion = types.Int64PointerValue(dataItem.RuleData.JSONVersion)
-			if dataItem.RuleData.MatchCriteriaAction == nil {
-				data.RuleData.MatchCriteriaAction = nil
+			r.Items = &tfTypes.NpaPolicyResponseItem{}
+			if resp.Items.Data == nil {
+				r.Items.Data = nil
 			} else {
-				data.RuleData.MatchCriteriaAction = &tfTypes.MatchCriteriaAction{}
-				if dataItem.RuleData.MatchCriteriaAction.ActionName != nil {
-					data.RuleData.MatchCriteriaAction.ActionName = types.StringValue(string(*dataItem.RuleData.MatchCriteriaAction.ActionName))
+				r.Items.Data = &tfTypes.NpaPolicyResponseItemData{}
+				r.Items.Data.Enabled = types.StringPointerValue(resp.Items.Data.Enabled)
+				r.Items.Data.GroupID = types.StringPointerValue(resp.Items.Data.GroupID)
+				r.Items.Data.ModifyBy = types.StringPointerValue(resp.Items.Data.ModifyBy)
+				r.Items.Data.ModifyTime = types.StringPointerValue(resp.Items.Data.ModifyTime)
+				r.Items.Data.ModifyType = types.StringPointerValue(resp.Items.Data.ModifyType)
+				r.Items.Data.PolicyType = types.StringPointerValue(resp.Items.Data.PolicyType)
+				if resp.Items.Data.RuleData == nil {
+					r.Items.Data.RuleData = nil
 				} else {
-					data.RuleData.MatchCriteriaAction.ActionName = types.StringNull()
-				}
-			}
-			data.RuleData.NetLocationObj = []types.String{}
-			for _, v := range dataItem.RuleData.NetLocationObj {
-				data.RuleData.NetLocationObj = append(data.RuleData.NetLocationObj, types.StringValue(v))
-			}
-			data.RuleData.OrganizationUnits = []types.String{}
-			for _, v := range dataItem.RuleData.OrganizationUnits {
-				data.RuleData.OrganizationUnits = append(data.RuleData.OrganizationUnits, types.StringValue(v))
-			}
-			if dataItem.RuleData.PolicyType != nil {
-				data.RuleData.PolicyType = types.StringValue(string(*dataItem.RuleData.PolicyType))
-			} else {
-				data.RuleData.PolicyType = types.StringNull()
-			}
-			data.RuleData.PrivateApps = []types.String{}
-			for _, v := range dataItem.RuleData.PrivateApps {
-				data.RuleData.PrivateApps = append(data.RuleData.PrivateApps, types.StringValue(v))
-			}
-			data.RuleData.PrivateAppsWithActivities = []tfTypes.PrivateAppsWithActivities{}
-			for privateAppsWithActivitiesCount, privateAppsWithActivitiesItem := range dataItem.RuleData.PrivateAppsWithActivities {
-				var privateAppsWithActivities1 tfTypes.PrivateAppsWithActivities
-				privateAppsWithActivities1.Activities = []tfTypes.Activities{}
-				for activitiesCount, activitiesItem := range privateAppsWithActivitiesItem.Activities {
-					var activities1 tfTypes.Activities
-					if activitiesItem.Activity != nil {
-						activities1.Activity = types.StringValue(string(*activitiesItem.Activity))
+					r.Items.Data.RuleData = &tfTypes.NpaPolicyRuleData{}
+					r.Items.Data.RuleData.AccessMethod = []types.String{}
+					for _, v := range resp.Items.Data.RuleData.AccessMethod {
+						r.Items.Data.RuleData.AccessMethod = append(r.Items.Data.RuleData.AccessMethod, types.StringValue(string(v)))
+					}
+					r.Items.Data.RuleData.BNegateNetLocation = types.BoolPointerValue(resp.Items.Data.RuleData.BNegateNetLocation)
+					r.Items.Data.RuleData.BNegateSrcCountries = types.BoolPointerValue(resp.Items.Data.RuleData.BNegateSrcCountries)
+					r.Items.Data.RuleData.Classification = types.StringPointerValue(resp.Items.Data.RuleData.Classification)
+					r.Items.Data.RuleData.DeviceClassificationID = []types.Int64{}
+					for _, v := range resp.Items.Data.RuleData.DeviceClassificationID {
+						r.Items.Data.RuleData.DeviceClassificationID = append(r.Items.Data.RuleData.DeviceClassificationID, types.Int64Value(v))
+					}
+					r.Items.Data.RuleData.DlpActions = []tfTypes.NpaPolicyRuleDlp{}
+					if len(r.Items.Data.RuleData.DlpActions) > len(resp.Items.Data.RuleData.DlpActions) {
+						r.Items.Data.RuleData.DlpActions = r.Items.Data.RuleData.DlpActions[:len(resp.Items.Data.RuleData.DlpActions)]
+					}
+					for dlpActionsCount, dlpActionsItem := range resp.Items.Data.RuleData.DlpActions {
+						var dlpActions1 tfTypes.NpaPolicyRuleDlp
+						dlpActions1.Actions = []types.String{}
+						for _, v := range dlpActionsItem.Actions {
+							dlpActions1.Actions = append(dlpActions1.Actions, types.StringValue(string(v)))
+						}
+						dlpActions1.DlpProfile = types.StringPointerValue(dlpActionsItem.DlpProfile)
+						if dlpActionsCount+1 > len(r.Items.Data.RuleData.DlpActions) {
+							r.Items.Data.RuleData.DlpActions = append(r.Items.Data.RuleData.DlpActions, dlpActions1)
+						} else {
+							r.Items.Data.RuleData.DlpActions[dlpActionsCount].Actions = dlpActions1.Actions
+							r.Items.Data.RuleData.DlpActions[dlpActionsCount].DlpProfile = dlpActions1.DlpProfile
+						}
+					}
+					r.Items.Data.RuleData.ExternalDlp = types.BoolPointerValue(resp.Items.Data.RuleData.ExternalDlp)
+					if resp.Items.Data.RuleData.JSONVersion != nil {
+						r.Items.Data.RuleData.JSONVersion = types.NumberValue(big.NewFloat(float64(*resp.Items.Data.RuleData.JSONVersion)))
 					} else {
-						activities1.Activity = types.StringNull()
+						r.Items.Data.RuleData.JSONVersion = types.NumberNull()
 					}
-					activities1.ListOfConstraints = []types.String{}
-					for _, v := range activitiesItem.ListOfConstraints {
-						activities1.ListOfConstraints = append(activities1.ListOfConstraints, types.StringValue(v))
-					}
-					if activitiesCount+1 > len(privateAppsWithActivities1.Activities) {
-						privateAppsWithActivities1.Activities = append(privateAppsWithActivities1.Activities, activities1)
+					if resp.Items.Data.RuleData.MatchCriteriaAction == nil {
+						r.Items.Data.RuleData.MatchCriteriaAction = nil
 					} else {
-						privateAppsWithActivities1.Activities[activitiesCount].Activity = activities1.Activity
-						privateAppsWithActivities1.Activities[activitiesCount].ListOfConstraints = activities1.ListOfConstraints
+						r.Items.Data.RuleData.MatchCriteriaAction = &tfTypes.MatchCriteriaAction{}
+						if resp.Items.Data.RuleData.MatchCriteriaAction.ActionName != nil {
+							r.Items.Data.RuleData.MatchCriteriaAction.ActionName = types.StringValue(string(*resp.Items.Data.RuleData.MatchCriteriaAction.ActionName))
+						} else {
+							r.Items.Data.RuleData.MatchCriteriaAction.ActionName = types.StringNull()
+						}
 					}
-				}
-				privateAppsWithActivities1.AppName = types.StringPointerValue(privateAppsWithActivitiesItem.AppName)
-				if privateAppsWithActivitiesCount+1 > len(data.RuleData.PrivateAppsWithActivities) {
-					data.RuleData.PrivateAppsWithActivities = append(data.RuleData.PrivateAppsWithActivities, privateAppsWithActivities1)
-				} else {
-					data.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].Activities = privateAppsWithActivities1.Activities
-					data.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppName = privateAppsWithActivities1.AppName
-				}
-			}
-			data.RuleData.PrivateAppTagIds = []types.String{}
-			for _, v := range dataItem.RuleData.PrivateAppTagIds {
-				data.RuleData.PrivateAppTagIds = append(data.RuleData.PrivateAppTagIds, types.StringValue(v))
-			}
-			data.RuleData.PrivateAppTags = []types.String{}
-			for _, v := range dataItem.RuleData.PrivateAppTags {
-				data.RuleData.PrivateAppTags = append(data.RuleData.PrivateAppTags, types.StringValue(v))
-			}
-			data.RuleData.ShowDlpProfileActionTable = types.BoolPointerValue(dataItem.RuleData.ShowDlpProfileActionTable)
-			data.RuleData.SrcCountries = []types.String{}
-			for _, v := range dataItem.RuleData.SrcCountries {
-				data.RuleData.SrcCountries = append(data.RuleData.SrcCountries, types.StringValue(v))
-			}
-			data.RuleData.TssActions = []tfTypes.NpaPolicyRuleTss{}
-			for tssActionsCount, tssActionsItem := range dataItem.RuleData.TssActions {
-				var tssActions1 tfTypes.NpaPolicyRuleTss
-				tssActions1.Actions = []tfTypes.NpaPolicyRuleTssActions{}
-				for actionsCount, actionsItem := range tssActionsItem.Actions {
-					var actions2 tfTypes.NpaPolicyRuleTssActions
-					if actionsItem.ActionName != nil {
-						actions2.ActionName = types.StringValue(string(*actionsItem.ActionName))
+					r.Items.Data.RuleData.NetLocationObj = []types.String{}
+					for _, v := range resp.Items.Data.RuleData.NetLocationObj {
+						r.Items.Data.RuleData.NetLocationObj = append(r.Items.Data.RuleData.NetLocationObj, types.StringValue(v))
+					}
+					r.Items.Data.RuleData.OrganizationUnits = []types.String{}
+					for _, v := range resp.Items.Data.RuleData.OrganizationUnits {
+						r.Items.Data.RuleData.OrganizationUnits = append(r.Items.Data.RuleData.OrganizationUnits, types.StringValue(v))
+					}
+					if resp.Items.Data.RuleData.PolicyType != nil {
+						r.Items.Data.RuleData.PolicyType = types.StringValue(string(*resp.Items.Data.RuleData.PolicyType))
 					} else {
-						actions2.ActionName = types.StringNull()
+						r.Items.Data.RuleData.PolicyType = types.StringNull()
 					}
-					actions2.RemediationProfile = types.StringPointerValue(actionsItem.RemediationProfile)
-					if actionsItem.Severity != nil {
-						actions2.Severity = types.StringValue(string(*actionsItem.Severity))
+					r.Items.Data.RuleData.PrivateApps = []types.String{}
+					for _, v := range resp.Items.Data.RuleData.PrivateApps {
+						r.Items.Data.RuleData.PrivateApps = append(r.Items.Data.RuleData.PrivateApps, types.StringValue(v))
+					}
+					r.Items.Data.RuleData.PrivateAppsWithActivities = []tfTypes.PrivateAppsWithActivities{}
+					if len(r.Items.Data.RuleData.PrivateAppsWithActivities) > len(resp.Items.Data.RuleData.PrivateAppsWithActivities) {
+						r.Items.Data.RuleData.PrivateAppsWithActivities = r.Items.Data.RuleData.PrivateAppsWithActivities[:len(resp.Items.Data.RuleData.PrivateAppsWithActivities)]
+					}
+					for privateAppsWithActivitiesCount, privateAppsWithActivitiesItem := range resp.Items.Data.RuleData.PrivateAppsWithActivities {
+						var privateAppsWithActivities1 tfTypes.PrivateAppsWithActivities
+						privateAppsWithActivities1.Activities = []tfTypes.Activities{}
+						for activitiesCount, activitiesItem := range privateAppsWithActivitiesItem.Activities {
+							var activities1 tfTypes.Activities
+							if activitiesItem.Activity != nil {
+								activities1.Activity = types.StringValue(string(*activitiesItem.Activity))
+							} else {
+								activities1.Activity = types.StringNull()
+							}
+							activities1.ListOfConstraints = []types.String{}
+							for _, v := range activitiesItem.ListOfConstraints {
+								activities1.ListOfConstraints = append(activities1.ListOfConstraints, types.StringValue(v))
+							}
+							if activitiesCount+1 > len(privateAppsWithActivities1.Activities) {
+								privateAppsWithActivities1.Activities = append(privateAppsWithActivities1.Activities, activities1)
+							} else {
+								privateAppsWithActivities1.Activities[activitiesCount].Activity = activities1.Activity
+								privateAppsWithActivities1.Activities[activitiesCount].ListOfConstraints = activities1.ListOfConstraints
+							}
+						}
+						privateAppsWithActivities1.AppID = []types.String{}
+						for _, v := range privateAppsWithActivitiesItem.AppID {
+							privateAppsWithActivities1.AppID = append(privateAppsWithActivities1.AppID, types.StringValue(v))
+						}
+						privateAppsWithActivities1.AppName = types.StringPointerValue(privateAppsWithActivitiesItem.AppName)
+						if privateAppsWithActivitiesCount+1 > len(r.Items.Data.RuleData.PrivateAppsWithActivities) {
+							r.Items.Data.RuleData.PrivateAppsWithActivities = append(r.Items.Data.RuleData.PrivateAppsWithActivities, privateAppsWithActivities1)
+						} else {
+							r.Items.Data.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].Activities = privateAppsWithActivities1.Activities
+							r.Items.Data.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppID = privateAppsWithActivities1.AppID
+							r.Items.Data.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppName = privateAppsWithActivities1.AppName
+						}
+					}
+					r.Items.Data.RuleData.PrivateAppTagIds = []types.String{}
+					for _, v := range resp.Items.Data.RuleData.PrivateAppTagIds {
+						r.Items.Data.RuleData.PrivateAppTagIds = append(r.Items.Data.RuleData.PrivateAppTagIds, types.StringValue(v))
+					}
+					r.Items.Data.RuleData.PrivateAppTags = []types.String{}
+					for _, v := range resp.Items.Data.RuleData.PrivateAppTags {
+						r.Items.Data.RuleData.PrivateAppTags = append(r.Items.Data.RuleData.PrivateAppTags, types.StringValue(v))
+					}
+					r.Items.Data.RuleData.ShowDlpProfileActionTable = types.BoolPointerValue(resp.Items.Data.RuleData.ShowDlpProfileActionTable)
+					r.Items.Data.RuleData.SrcCountries = []types.String{}
+					for _, v := range resp.Items.Data.RuleData.SrcCountries {
+						r.Items.Data.RuleData.SrcCountries = append(r.Items.Data.RuleData.SrcCountries, types.StringValue(v))
+					}
+					r.Items.Data.RuleData.TssActions = []tfTypes.NpaPolicyRuleTss{}
+					if len(r.Items.Data.RuleData.TssActions) > len(resp.Items.Data.RuleData.TssActions) {
+						r.Items.Data.RuleData.TssActions = r.Items.Data.RuleData.TssActions[:len(resp.Items.Data.RuleData.TssActions)]
+					}
+					for tssActionsCount, tssActionsItem := range resp.Items.Data.RuleData.TssActions {
+						var tssActions1 tfTypes.NpaPolicyRuleTss
+						tssActions1.Actions = []tfTypes.NpaPolicyRuleTssActions{}
+						for actionsCount, actionsItem := range tssActionsItem.Actions {
+							var actions2 tfTypes.NpaPolicyRuleTssActions
+							if actionsItem.ActionName != nil {
+								actions2.ActionName = types.StringValue(string(*actionsItem.ActionName))
+							} else {
+								actions2.ActionName = types.StringNull()
+							}
+							actions2.RemediationProfile = types.StringPointerValue(actionsItem.RemediationProfile)
+							if actionsItem.Severity != nil {
+								actions2.Severity = types.StringValue(string(*actionsItem.Severity))
+							} else {
+								actions2.Severity = types.StringNull()
+							}
+							actions2.Template = types.StringPointerValue(actionsItem.Template)
+							if actionsCount+1 > len(tssActions1.Actions) {
+								tssActions1.Actions = append(tssActions1.Actions, actions2)
+							} else {
+								tssActions1.Actions[actionsCount].ActionName = actions2.ActionName
+								tssActions1.Actions[actionsCount].RemediationProfile = actions2.RemediationProfile
+								tssActions1.Actions[actionsCount].Severity = actions2.Severity
+								tssActions1.Actions[actionsCount].Template = actions2.Template
+							}
+						}
+						tssActions1.TssProfile = []types.String{}
+						for _, v := range tssActionsItem.TssProfile {
+							tssActions1.TssProfile = append(tssActions1.TssProfile, types.StringValue(v))
+						}
+						if tssActionsCount+1 > len(r.Items.Data.RuleData.TssActions) {
+							r.Items.Data.RuleData.TssActions = append(r.Items.Data.RuleData.TssActions, tssActions1)
+						} else {
+							r.Items.Data.RuleData.TssActions[tssActionsCount].Actions = tssActions1.Actions
+							r.Items.Data.RuleData.TssActions[tssActionsCount].TssProfile = tssActions1.TssProfile
+						}
+					}
+					r.Items.Data.RuleData.TssProfile = []types.String{}
+					for _, v := range resp.Items.Data.RuleData.TssProfile {
+						r.Items.Data.RuleData.TssProfile = append(r.Items.Data.RuleData.TssProfile, types.StringValue(v))
+					}
+					r.Items.Data.RuleData.UserGroups = []types.String{}
+					for _, v := range resp.Items.Data.RuleData.UserGroups {
+						r.Items.Data.RuleData.UserGroups = append(r.Items.Data.RuleData.UserGroups, types.StringValue(v))
+					}
+					r.Items.Data.RuleData.Users = []types.String{}
+					for _, v := range resp.Items.Data.RuleData.Users {
+						r.Items.Data.RuleData.Users = append(r.Items.Data.RuleData.Users, types.StringValue(v))
+					}
+					if resp.Items.Data.RuleData.UserType != nil {
+						r.Items.Data.RuleData.UserType = types.StringValue(string(*resp.Items.Data.RuleData.UserType))
 					} else {
-						actions2.Severity = types.StringNull()
+						r.Items.Data.RuleData.UserType = types.StringNull()
 					}
-					actions2.Template = types.StringPointerValue(actionsItem.Template)
-					if actionsCount+1 > len(tssActions1.Actions) {
-						tssActions1.Actions = append(tssActions1.Actions, actions2)
+					if resp.Items.Data.RuleData.Version != nil {
+						r.Items.Data.RuleData.Version = types.NumberValue(big.NewFloat(float64(*resp.Items.Data.RuleData.Version)))
 					} else {
-						tssActions1.Actions[actionsCount].ActionName = actions2.ActionName
-						tssActions1.Actions[actionsCount].RemediationProfile = actions2.RemediationProfile
-						tssActions1.Actions[actionsCount].Severity = actions2.Severity
-						tssActions1.Actions[actionsCount].Template = actions2.Template
+						r.Items.Data.RuleData.Version = types.NumberNull()
 					}
 				}
-				tssActions1.TssProfile = []types.String{}
-				for _, v := range tssActionsItem.TssProfile {
-					tssActions1.TssProfile = append(tssActions1.TssProfile, types.StringValue(v))
-				}
-				if tssActionsCount+1 > len(data.RuleData.TssActions) {
-					data.RuleData.TssActions = append(data.RuleData.TssActions, tssActions1)
-				} else {
-					data.RuleData.TssActions[tssActionsCount].Actions = tssActions1.Actions
-					data.RuleData.TssActions[tssActionsCount].TssProfile = tssActions1.TssProfile
-				}
+				r.Items.Data.RuleID = types.StringPointerValue(resp.Items.Data.RuleID)
+				r.Items.Data.RuleName = types.StringPointerValue(resp.Items.Data.RuleName)
 			}
-			data.RuleData.TssProfile = []types.String{}
-			for _, v := range dataItem.RuleData.TssProfile {
-				data.RuleData.TssProfile = append(data.RuleData.TssProfile, types.StringValue(v))
-			}
-			data.RuleData.UserGroups = []types.String{}
-			for _, v := range dataItem.RuleData.UserGroups {
-				data.RuleData.UserGroups = append(data.RuleData.UserGroups, types.StringValue(v))
-			}
-			data.RuleData.Users = []types.String{}
-			for _, v := range dataItem.RuleData.Users {
-				data.RuleData.Users = append(data.RuleData.Users, types.StringValue(v))
-			}
-			if dataItem.RuleData.UserType != nil {
-				data.RuleData.UserType = types.StringValue(string(*dataItem.RuleData.UserType))
-			} else {
-				data.RuleData.UserType = types.StringNull()
-			}
-			data.RuleData.Version = types.Int64PointerValue(dataItem.RuleData.Version)
-		}
-		data.RuleID = types.Int64PointerValue(dataItem.RuleID)
-		data.RuleName = types.StringPointerValue(dataItem.RuleName)
-		if dataCount+1 > len(r.Data) {
-			r.Data = append(r.Data, data)
-		} else {
-			r.Data[dataCount].GroupID = data.GroupID
-			r.Data[dataCount].RuleData = data.RuleData
-			r.Data[dataCount].RuleID = data.RuleID
-			r.Data[dataCount].RuleName = data.RuleName
 		}
 	}
 }

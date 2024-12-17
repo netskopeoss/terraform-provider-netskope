@@ -2,6 +2,5 @@
 
 package types
 
-type NpaPolicyResponseItem struct {
-	Data *NpaPolicyResponseItemData `tfsdk:"data"`
+type ListOfConstraints struct {
 }

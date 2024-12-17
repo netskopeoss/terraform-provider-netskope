@@ -67,6 +67,9 @@ resource "ns_npa_rules" "my_nparules" {
             ]
           }
         ]
+        app_id = [
+          "..."
+        ]
         app_name = "[172.31.12.135]"
       }
     ]
@@ -105,7 +108,7 @@ resource "ns_npa_rules" "my_nparules" {
   rule_order = {
     order     = "before"
     position  = 5
-    rule_id   = 1
+    rule_id   = "...my_rule_id..."
     rule_name = "api-policy-managed"
   }
   silent = "1"
@@ -128,38 +131,11 @@ resource "ns_npa_rules" "my_nparules" {
 
 ### Read-Only
 
-- `access_method` (List of String)
-- `action_name` (String) must be one of ["allow", "block"]
-- `actions` (List of String)
-- `activity` (String) must be "any"
-- `app_name` (String)
-- `b_negate_net_location` (Boolean)
-- `b_negate_src_countries` (Boolean)
-- `classification` (String)
-- `data` (Attributes) (see [below for nested schema](#nestedatt--data))
-- `device_classification_id` (List of Number)
-- `dlp_profile` (String)
-- `external_dlp` (Boolean)
-- `json_version` (Number)
-- `list_of_constraints` (List of String)
-- `net_location_obj` (List of String)
-- `organization_units` (List of String)
-- `policy_type` (String) must be "private-app"
-- `private_app_tag_ids` (List of String)
-- `private_app_tags` (List of String)
-- `private_apps` (List of String)
-- `remediation_profile` (String)
-- `rule_id` (Number)
-- `severity` (String) must be one of ["low", "medium", "high"]
-- `show_dlp_profile_action_table` (Boolean)
-- `src_countries` (List of String)
-- `status` (String) must be one of ["success", "error"]
-- `template` (String)
-- `tss_profile` (List of String)
-- `user_groups` (List of String)
-- `user_type` (String) must be "user"
-- `users` (List of String)
-- `version` (Number)
+- `modify_by` (String)
+- `modify_time` (String)
+- `modify_type` (String)
+- `policy_type` (String)
+- `rule_id` (String)
 
 <a id="nestedatt--rule_data"></a>
 ### Nested Schema for `rule_data`
@@ -214,6 +190,7 @@ Optional:
 Optional:
 
 - `activities` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--private_apps_with_activities--activities))
+- `app_id` (List of String)
 - `app_name` (String)
 
 <a id="nestedatt--rule_data--private_apps_with_activities--activities"></a>
@@ -254,107 +231,13 @@ Optional:
 
 - `order` (String) must be one of ["top", "bottom", "before", "after"]
 - `position` (Number)
-- `rule_id` (Number)
+- `rule_id` (String)
 - `rule_name` (String)
-
-
-<a id="nestedatt--data"></a>
-### Nested Schema for `data`
-
-Read-Only:
-
-- `group_id` (String)
-- `rule_data` (Attributes) (see [below for nested schema](#nestedatt--data--rule_data))
-- `rule_id` (Number)
-- `rule_name` (String)
-
-<a id="nestedatt--data--rule_data"></a>
-### Nested Schema for `data.rule_data`
-
-Read-Only:
-
-- `access_method` (List of String)
-- `b_negate_net_location` (Boolean)
-- `b_negate_src_countries` (Boolean)
-- `classification` (String)
-- `device_classification_id` (List of Number)
-- `dlp_actions` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--dlp_actions))
-- `external_dlp` (Boolean)
-- `json_version` (Number)
-- `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--data--rule_data--match_criteria_action))
-- `net_location_obj` (List of String)
-- `organization_units` (List of String)
-- `policy_type` (String) must be "private-app"
-- `private_app_tag_ids` (List of String)
-- `private_app_tags` (List of String)
-- `private_apps` (List of String)
-- `private_apps_with_activities` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--private_apps_with_activities))
-- `show_dlp_profile_action_table` (Boolean)
-- `src_countries` (List of String)
-- `tss_actions` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--tss_actions))
-- `tss_profile` (List of String)
-- `user_groups` (List of String)
-- `user_type` (String) must be "user"
-- `users` (List of String)
-- `version` (Number)
-
-<a id="nestedatt--data--rule_data--dlp_actions"></a>
-### Nested Schema for `data.rule_data.dlp_actions`
-
-Read-Only:
-
-- `actions` (List of String)
-- `dlp_profile` (String)
-
-
-<a id="nestedatt--data--rule_data--match_criteria_action"></a>
-### Nested Schema for `data.rule_data.match_criteria_action`
-
-Read-Only:
-
-- `action_name` (String) must be one of ["allow", "block"]
-
-
-<a id="nestedatt--data--rule_data--private_apps_with_activities"></a>
-### Nested Schema for `data.rule_data.private_apps_with_activities`
-
-Read-Only:
-
-- `activities` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--private_apps_with_activities--activities))
-- `app_name` (String)
-
-<a id="nestedatt--data--rule_data--private_apps_with_activities--activities"></a>
-### Nested Schema for `data.rule_data.private_apps_with_activities.activities`
-
-Read-Only:
-
-- `activity` (String) must be "any"
-- `list_of_constraints` (List of String)
-
-
-
-<a id="nestedatt--data--rule_data--tss_actions"></a>
-### Nested Schema for `data.rule_data.tss_actions`
-
-Read-Only:
-
-- `actions` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--tss_actions--actions))
-- `tss_profile` (List of String)
-
-<a id="nestedatt--data--rule_data--tss_actions--actions"></a>
-### Nested Schema for `data.rule_data.tss_actions.actions`
-
-Read-Only:
-
-- `action_name` (String) must be one of ["block", "alert", "allow"]
-- `remediation_profile` (String)
-- `severity` (String) must be one of ["low", "medium", "high"]
-- `template` (String)
 
 ## Import
 
 Import is supported using the following syntax:
 
 ```shell
-terraform import ns_npa_rules.my_ns_npa_rules "0"
+terraform import ns_npa_rules.my_ns_npa_rules ""
 ```

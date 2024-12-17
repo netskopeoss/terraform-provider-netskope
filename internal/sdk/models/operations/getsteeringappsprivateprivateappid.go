@@ -7,19 +7,19 @@ import (
 	"net/http"
 )
 
-type GetAppsPrivatePrivateAppIDRequest struct {
+type GetSteeringAppsPrivatePrivateAppIDRequest struct {
 	// private apps id
 	PrivateAppID int `pathParam:"style=simple,explode=false,name=private_app_id"`
 }
 
-func (o *GetAppsPrivatePrivateAppIDRequest) GetPrivateAppID() int {
+func (o *GetSteeringAppsPrivatePrivateAppIDRequest) GetPrivateAppID() int {
 	if o == nil {
 		return 0
 	}
 	return o.PrivateAppID
 }
 
-type GetAppsPrivatePrivateAppIDResponse struct {
+type GetSteeringAppsPrivatePrivateAppIDResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -32,35 +32,35 @@ type GetAppsPrivatePrivateAppIDResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *GetAppsPrivatePrivateAppIDResponse) GetContentType() string {
+func (o *GetSteeringAppsPrivatePrivateAppIDResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *GetAppsPrivatePrivateAppIDResponse) GetStatusCode() int {
+func (o *GetSteeringAppsPrivatePrivateAppIDResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *GetAppsPrivatePrivateAppIDResponse) GetRawResponse() *http.Response {
+func (o *GetSteeringAppsPrivatePrivateAppIDResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}
 	return o.RawResponse
 }
 
-func (o *GetAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse() []shared.PrivateAppsResponse {
+func (o *GetSteeringAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse() []shared.PrivateAppsResponse {
 	if o == nil {
 		return nil
 	}
 	return o.PrivateAppsResponse
 }
 
-func (o *GetAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+func (o *GetSteeringAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
 	if o == nil {
 		return nil
 	}

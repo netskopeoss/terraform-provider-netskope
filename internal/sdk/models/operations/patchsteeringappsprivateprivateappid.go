@@ -36,7 +36,7 @@ func (e *QueryParamSilent) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PatchAppsPrivatePrivateAppIDRequest struct {
+type PatchSteeringAppsPrivatePrivateAppIDRequest struct {
 	// private apps id
 	PrivateAppID int `pathParam:"style=simple,explode=false,name=private_app_id"`
 	// flag to skip output except status code
@@ -44,28 +44,28 @@ type PatchAppsPrivatePrivateAppIDRequest struct {
 	PrivateAppsPutRequest shared.PrivateAppsPutRequest `request:"mediaType=application/json"`
 }
 
-func (o *PatchAppsPrivatePrivateAppIDRequest) GetPrivateAppID() int {
+func (o *PatchSteeringAppsPrivatePrivateAppIDRequest) GetPrivateAppID() int {
 	if o == nil {
 		return 0
 	}
 	return o.PrivateAppID
 }
 
-func (o *PatchAppsPrivatePrivateAppIDRequest) GetSilent() *QueryParamSilent {
+func (o *PatchSteeringAppsPrivatePrivateAppIDRequest) GetSilent() *QueryParamSilent {
 	if o == nil {
 		return nil
 	}
 	return o.Silent
 }
 
-func (o *PatchAppsPrivatePrivateAppIDRequest) GetPrivateAppsPutRequest() shared.PrivateAppsPutRequest {
+func (o *PatchSteeringAppsPrivatePrivateAppIDRequest) GetPrivateAppsPutRequest() shared.PrivateAppsPutRequest {
 	if o == nil {
 		return shared.PrivateAppsPutRequest{}
 	}
 	return o.PrivateAppsPutRequest
 }
 
-type PatchAppsPrivatePrivateAppIDResponse struct {
+type PatchSteeringAppsPrivatePrivateAppIDResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -78,35 +78,35 @@ type PatchAppsPrivatePrivateAppIDResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *PatchAppsPrivatePrivateAppIDResponse) GetContentType() string {
+func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *PatchAppsPrivatePrivateAppIDResponse) GetStatusCode() int {
+func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *PatchAppsPrivatePrivateAppIDResponse) GetRawResponse() *http.Response {
+func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}
 	return o.RawResponse
 }
 
-func (o *PatchAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse() []shared.PrivateAppsResponse {
+func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse() []shared.PrivateAppsResponse {
 	if o == nil {
 		return nil
 	}
 	return o.PrivateAppsResponse
 }
 
-func (o *PatchAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
 	if o == nil {
 		return nil
 	}
