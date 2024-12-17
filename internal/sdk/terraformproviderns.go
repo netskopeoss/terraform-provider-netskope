@@ -173,9 +173,9 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 		sdkConfiguration: sdkConfiguration{
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
-			SDKVersion:        "0.5.3",
-			GenVersion:        "2.479.7",
-			UserAgent:         "speakeasy-sdk/terraform 0.5.3 2.479.7 1.0.0 github.com/netskope/terraform-provider-ns/internal/sdk",
+			SDKVersion:        "0.5.23",
+			GenVersion:        "2.481.0",
+			UserAgent:         "speakeasy-sdk/terraform 0.5.23 2.481.0 1.0.0 github.com/netskope/terraform-provider-ns/internal/sdk",
 			ServerDefaults: []map[string]string{
 				{
 					"tenant": "demo",
@@ -245,8 +245,13 @@ func (s *TerraformProviderNs) GetNPAPublisherAlerts(ctx context.Context, opts ..
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := url.JoinPath(baseURL, "/publishers/alertsconfiguration")
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := url.JoinPath(baseURL, "/infrastructure/publishers/alertsconfiguration")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -395,8 +400,13 @@ func (s *TerraformProviderNs) CreateNPAPublisherAlerts(ctx context.Context, requ
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := url.JoinPath(baseURL, "/publishers/alertsconfiguration")
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := url.JoinPath(baseURL, "/infrastructure/publishers/alertsconfiguration")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -551,8 +561,13 @@ func (s *TerraformProviderNs) TriggerNPAPublisherUpdates(ctx context.Context, re
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := url.JoinPath(baseURL, "/publishers/bulk")
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := url.JoinPath(baseURL, "/infrastructure/publishers/bulk")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -706,8 +721,13 @@ func (s *TerraformProviderNs) BulkupdateNPAPublishers(ctx context.Context, reque
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := url.JoinPath(baseURL, "/publisherupgradeprofiles/bulk")
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := url.JoinPath(baseURL, "/infrastructure/publisherupgradeprofiles/bulk")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -834,12 +854,12 @@ func (s *TerraformProviderNs) BulkupdateNPAPublishers(ctx context.Context, reque
 
 }
 
-// GetAppsPrivate - Get list of private applications
+// GetSteeringAppsPrivate - Get list of private applications
 // Get list of private applications
-func (s *TerraformProviderNs) GetAppsPrivate(ctx context.Context, request operations.GetAppsPrivateRequest, opts ...operations.Option) (*operations.GetAppsPrivateResponse, error) {
+func (s *TerraformProviderNs) GetSteeringAppsPrivate(ctx context.Context, request operations.GetSteeringAppsPrivateRequest, opts ...operations.Option) (*operations.GetSteeringAppsPrivateResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "get_/apps/private",
+		OperationID:    "get_/steering/apps/private",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -855,8 +875,13 @@ func (s *TerraformProviderNs) GetAppsPrivate(ctx context.Context, request operat
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := url.JoinPath(baseURL, "/apps/private")
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := url.JoinPath(baseURL, "/steering/apps/private")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -920,7 +945,7 @@ func (s *TerraformProviderNs) GetAppsPrivate(ctx context.Context, request operat
 		}
 	}
 
-	res := &operations.GetAppsPrivateResponse{
+	res := &operations.GetSteeringAppsPrivateResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -981,12 +1006,12 @@ func (s *TerraformProviderNs) GetAppsPrivate(ctx context.Context, request operat
 
 }
 
-// PostAppsPrivate - Create a private application
+// PostSteeringAppsPrivate - Create a private application
 // Create a private application
-func (s *TerraformProviderNs) PostAppsPrivate(ctx context.Context, request operations.PostAppsPrivateRequest, opts ...operations.Option) (*operations.PostAppsPrivateResponse, error) {
+func (s *TerraformProviderNs) PostSteeringAppsPrivate(ctx context.Context, request operations.PostSteeringAppsPrivateRequest, opts ...operations.Option) (*operations.PostSteeringAppsPrivateResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "post_/apps/private",
+		OperationID:    "post_/steering/apps/private",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -1002,8 +1027,13 @@ func (s *TerraformProviderNs) PostAppsPrivate(ctx context.Context, request opera
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := url.JoinPath(baseURL, "/apps/private")
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := url.JoinPath(baseURL, "/steering/apps/private")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -1073,7 +1103,7 @@ func (s *TerraformProviderNs) PostAppsPrivate(ctx context.Context, request opera
 		}
 	}
 
-	res := &operations.PostAppsPrivateResponse{
+	res := &operations.PostSteeringAppsPrivateResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -1134,12 +1164,12 @@ func (s *TerraformProviderNs) PostAppsPrivate(ctx context.Context, request opera
 
 }
 
-// PostAppsPrivateGetpolicyinuse - Retrieve number of policy in use for specified private apps
+// PostSteeringAppsPrivateGetpolicyinuse - Retrieve number of policy in use for specified private apps
 // Retrieve number of policy in use for specified private apps
-func (s *TerraformProviderNs) PostAppsPrivateGetpolicyinuse(ctx context.Context, request operations.PostAppsPrivateGetpolicyinuseRequestBody, opts ...operations.Option) (*operations.PostAppsPrivateGetpolicyinuseResponse, error) {
+func (s *TerraformProviderNs) PostSteeringAppsPrivateGetpolicyinuse(ctx context.Context, request operations.PostSteeringAppsPrivateGetpolicyinuseRequestBody, opts ...operations.Option) (*operations.PostSteeringAppsPrivateGetpolicyinuseResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "post_/apps/private/getpolicyinuse",
+		OperationID:    "post_/steering/apps/private/getpolicyinuse",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -1155,8 +1185,13 @@ func (s *TerraformProviderNs) PostAppsPrivateGetpolicyinuse(ctx context.Context,
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := url.JoinPath(baseURL, "/apps/private/getpolicyinuse")
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := url.JoinPath(baseURL, "/steering/apps/private/getpolicyinuse")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -1222,7 +1257,7 @@ func (s *TerraformProviderNs) PostAppsPrivateGetpolicyinuse(ctx context.Context,
 		}
 	}
 
-	res := &operations.PostAppsPrivateGetpolicyinuseResponse{
+	res := &operations.PostSteeringAppsPrivateGetpolicyinuseResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -1283,12 +1318,12 @@ func (s *TerraformProviderNs) PostAppsPrivateGetpolicyinuse(ctx context.Context,
 
 }
 
-// DeleteAppsPrivatePrivateAppID - Delete a private application
+// DeleteSteeringAppsPrivatePrivateAppID - Delete a private application
 // Delete a private application based on private app id
-func (s *TerraformProviderNs) DeleteAppsPrivatePrivateAppID(ctx context.Context, request operations.DeleteAppsPrivatePrivateAppIDRequest, opts ...operations.Option) (*operations.DeleteAppsPrivatePrivateAppIDResponse, error) {
+func (s *TerraformProviderNs) DeleteSteeringAppsPrivatePrivateAppID(ctx context.Context, request operations.DeleteSteeringAppsPrivatePrivateAppIDRequest, opts ...operations.Option) (*operations.DeleteSteeringAppsPrivatePrivateAppIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "delete_/apps/private/{private_app_id}",
+		OperationID:    "delete_/steering/apps/private/{private_app_id}",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -1304,8 +1339,13 @@ func (s *TerraformProviderNs) DeleteAppsPrivatePrivateAppID(ctx context.Context,
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/apps/private/{private_app_id}", request, nil)
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/steering/apps/private/{private_app_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -1365,7 +1405,7 @@ func (s *TerraformProviderNs) DeleteAppsPrivatePrivateAppID(ctx context.Context,
 		}
 	}
 
-	res := &operations.DeleteAppsPrivatePrivateAppIDResponse{
+	res := &operations.DeleteSteeringAppsPrivatePrivateAppIDResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -1380,7 +1420,7 @@ func (s *TerraformProviderNs) DeleteAppsPrivatePrivateAppID(ctx context.Context,
 				return nil, err
 			}
 
-			var out operations.DeleteAppsPrivatePrivateAppIDResponseBody
+			var out operations.DeleteSteeringAppsPrivatePrivateAppIDResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -1426,12 +1466,12 @@ func (s *TerraformProviderNs) DeleteAppsPrivatePrivateAppID(ctx context.Context,
 
 }
 
-// GetAppsPrivatePrivateAppID - Get a private application
+// GetSteeringAppsPrivatePrivateAppID - Get a private application
 // Get a private application based on private app id
-func (s *TerraformProviderNs) GetAppsPrivatePrivateAppID(ctx context.Context, request operations.GetAppsPrivatePrivateAppIDRequest, opts ...operations.Option) (*operations.GetAppsPrivatePrivateAppIDResponse, error) {
+func (s *TerraformProviderNs) GetSteeringAppsPrivatePrivateAppID(ctx context.Context, request operations.GetSteeringAppsPrivatePrivateAppIDRequest, opts ...operations.Option) (*operations.GetSteeringAppsPrivatePrivateAppIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "get_/apps/private/{private_app_id}",
+		OperationID:    "get_/steering/apps/private/{private_app_id}",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -1447,8 +1487,13 @@ func (s *TerraformProviderNs) GetAppsPrivatePrivateAppID(ctx context.Context, re
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/apps/private/{private_app_id}", request, nil)
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/steering/apps/private/{private_app_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -1508,7 +1553,7 @@ func (s *TerraformProviderNs) GetAppsPrivatePrivateAppID(ctx context.Context, re
 		}
 	}
 
-	res := &operations.GetAppsPrivatePrivateAppIDResponse{
+	res := &operations.GetSteeringAppsPrivatePrivateAppIDResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -1569,12 +1614,12 @@ func (s *TerraformProviderNs) GetAppsPrivatePrivateAppID(ctx context.Context, re
 
 }
 
-// PatchAppsPrivatePrivateAppID - Patch a private application
+// PatchSteeringAppsPrivatePrivateAppID - Patch a private application
 // Patch a private application based on private app id
-func (s *TerraformProviderNs) PatchAppsPrivatePrivateAppID(ctx context.Context, request operations.PatchAppsPrivatePrivateAppIDRequest, opts ...operations.Option) (*operations.PatchAppsPrivatePrivateAppIDResponse, error) {
+func (s *TerraformProviderNs) PatchSteeringAppsPrivatePrivateAppID(ctx context.Context, request operations.PatchSteeringAppsPrivatePrivateAppIDRequest, opts ...operations.Option) (*operations.PatchSteeringAppsPrivatePrivateAppIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "patch_/apps/private/{private_app_id}",
+		OperationID:    "patch_/steering/apps/private/{private_app_id}",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -1590,8 +1635,13 @@ func (s *TerraformProviderNs) PatchAppsPrivatePrivateAppID(ctx context.Context, 
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/apps/private/{private_app_id}", request, nil)
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/steering/apps/private/{private_app_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -1661,7 +1711,7 @@ func (s *TerraformProviderNs) PatchAppsPrivatePrivateAppID(ctx context.Context, 
 		}
 	}
 
-	res := &operations.PatchAppsPrivatePrivateAppIDResponse{
+	res := &operations.PatchSteeringAppsPrivatePrivateAppIDResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -1722,12 +1772,12 @@ func (s *TerraformProviderNs) PatchAppsPrivatePrivateAppID(ctx context.Context, 
 
 }
 
-// PutAppsPrivatePrivateAppID - Update a private application
+// PutSteeringAppsPrivatePrivateAppID - Update a private application
 // Update a private application based on private app id
-func (s *TerraformProviderNs) PutAppsPrivatePrivateAppID(ctx context.Context, request operations.PutAppsPrivatePrivateAppIDRequest, opts ...operations.Option) (*operations.PutAppsPrivatePrivateAppIDResponse, error) {
+func (s *TerraformProviderNs) PutSteeringAppsPrivatePrivateAppID(ctx context.Context, request operations.PutSteeringAppsPrivatePrivateAppIDRequest, opts ...operations.Option) (*operations.PutSteeringAppsPrivatePrivateAppIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "put_/apps/private/{private_app_id}",
+		OperationID:    "put_/steering/apps/private/{private_app_id}",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -1743,8 +1793,13 @@ func (s *TerraformProviderNs) PutAppsPrivatePrivateAppID(ctx context.Context, re
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/apps/private/{private_app_id}", request, nil)
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/steering/apps/private/{private_app_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -1814,7 +1869,7 @@ func (s *TerraformProviderNs) PutAppsPrivatePrivateAppID(ctx context.Context, re
 		}
 	}
 
-	res := &operations.PutAppsPrivatePrivateAppIDResponse{
+	res := &operations.PutSteeringAppsPrivatePrivateAppIDResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,

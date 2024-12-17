@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type GetAppsPrivateRequest struct {
+type GetSteeringAppsPrivateRequest struct {
 	// Return values only from specified fields
 	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 	// Return filtered result based on query
@@ -18,35 +18,35 @@ type GetAppsPrivateRequest struct {
 	Limit *int `queryParam:"style=form,explode=true,name=limit"`
 }
 
-func (o *GetAppsPrivateRequest) GetFields() *string {
+func (o *GetSteeringAppsPrivateRequest) GetFields() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Fields
 }
 
-func (o *GetAppsPrivateRequest) GetQuery() *string {
+func (o *GetSteeringAppsPrivateRequest) GetQuery() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Query
 }
 
-func (o *GetAppsPrivateRequest) GetOffset() *int {
+func (o *GetSteeringAppsPrivateRequest) GetOffset() *int {
 	if o == nil {
 		return nil
 	}
 	return o.Offset
 }
 
-func (o *GetAppsPrivateRequest) GetLimit() *int {
+func (o *GetSteeringAppsPrivateRequest) GetLimit() *int {
 	if o == nil {
 		return nil
 	}
 	return o.Limit
 }
 
-type GetAppsPrivateResponse struct {
+type GetSteeringAppsPrivateResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -59,35 +59,35 @@ type GetAppsPrivateResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *GetAppsPrivateResponse) GetContentType() string {
+func (o *GetSteeringAppsPrivateResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *GetAppsPrivateResponse) GetStatusCode() int {
+func (o *GetSteeringAppsPrivateResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *GetAppsPrivateResponse) GetRawResponse() *http.Response {
+func (o *GetSteeringAppsPrivateResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}
 	return o.RawResponse
 }
 
-func (o *GetAppsPrivateResponse) GetPrivateAppsGetResponse() []shared.PrivateAppsGetResponse {
+func (o *GetSteeringAppsPrivateResponse) GetPrivateAppsGetResponse() []shared.PrivateAppsGetResponse {
 	if o == nil {
 		return nil
 	}
 	return o.PrivateAppsGetResponse
 }
 
-func (o *GetAppsPrivateResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+func (o *GetSteeringAppsPrivateResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
 	if o == nil {
 		return nil
 	}

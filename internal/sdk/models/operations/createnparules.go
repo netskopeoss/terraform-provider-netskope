@@ -56,6 +56,26 @@ func (o *CreateNPARulesRequest) GetNpaPolicyRequest() shared.NpaPolicyRequest {
 	return o.NpaPolicyRequest
 }
 
+// CreateNPARulesResponseBody - successful operation
+type CreateNPARulesResponseBody struct {
+	Data   *shared.NpaPolicyResponseItemTest `json:"data,omitempty"`
+	Status *string                           `json:"status,omitempty"`
+}
+
+func (o *CreateNPARulesResponseBody) GetData() *shared.NpaPolicyResponseItemTest {
+	if o == nil {
+		return nil
+	}
+	return o.Data
+}
+
+func (o *CreateNPARulesResponseBody) GetStatus() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Status
+}
+
 type CreateNPARulesResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
@@ -64,7 +84,7 @@ type CreateNPARulesResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// successful operation
-	NpaPolicyResponseItem *shared.NpaPolicyResponseItem
+	Object *CreateNPARulesResponseBody
 	// Invalid request
 	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
@@ -90,11 +110,11 @@ func (o *CreateNPARulesResponse) GetRawResponse() *http.Response {
 	return o.RawResponse
 }
 
-func (o *CreateNPARulesResponse) GetNpaPolicyResponseItem() *shared.NpaPolicyResponseItem {
+func (o *CreateNPARulesResponse) GetObject() *CreateNPARulesResponseBody {
 	if o == nil {
 		return nil
 	}
-	return o.NpaPolicyResponseItem
+	return o.Object
 }
 
 func (o *CreateNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {

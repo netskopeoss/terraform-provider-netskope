@@ -33,17 +33,17 @@ func (e *AccessMethod) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type ActionName string
+type NpaPolicyRuleDataActionName string
 
 const (
-	ActionNameAllow ActionName = "allow"
-	ActionNameBlock ActionName = "block"
+	NpaPolicyRuleDataActionNameAllow NpaPolicyRuleDataActionName = "allow"
+	NpaPolicyRuleDataActionNameBlock NpaPolicyRuleDataActionName = "block"
 )
 
-func (e ActionName) ToPointer() *ActionName {
+func (e NpaPolicyRuleDataActionName) ToPointer() *NpaPolicyRuleDataActionName {
 	return &e
 }
-func (e *ActionName) UnmarshalJSON(data []byte) error {
+func (e *NpaPolicyRuleDataActionName) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -52,18 +52,18 @@ func (e *ActionName) UnmarshalJSON(data []byte) error {
 	case "allow":
 		fallthrough
 	case "block":
-		*e = ActionName(v)
+		*e = NpaPolicyRuleDataActionName(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for ActionName: %v", v)
+		return fmt.Errorf("invalid value for NpaPolicyRuleDataActionName: %v", v)
 	}
 }
 
 type MatchCriteriaAction struct {
-	ActionName *ActionName `json:"action_name,omitempty"`
+	ActionName *NpaPolicyRuleDataActionName `json:"action_name,omitempty"`
 }
 
-func (o *MatchCriteriaAction) GetActionName() *ActionName {
+func (o *MatchCriteriaAction) GetActionName() *NpaPolicyRuleDataActionName {
 	if o == nil {
 		return nil
 	}
@@ -137,6 +137,7 @@ func (o *Activities) GetListOfConstraints() []string {
 
 type PrivateAppsWithActivities struct {
 	Activities []Activities `json:"activities,omitempty"`
+	AppID      []string     `json:"appId,omitempty"`
 	AppName    *string      `json:"appName,omitempty"`
 }
 
@@ -145,6 +146,13 @@ func (o *PrivateAppsWithActivities) GetActivities() []Activities {
 		return nil
 	}
 	return o.Activities
+}
+
+func (o *PrivateAppsWithActivities) GetAppID() []string {
+	if o == nil {
+		return nil
+	}
+	return o.AppID
 }
 
 func (o *PrivateAppsWithActivities) GetAppName() *string {
@@ -182,10 +190,12 @@ type NpaPolicyRuleData struct {
 	BNegateNetLocation        *bool                       `json:"b_negateNetLocation,omitempty"`
 	BNegateSrcCountries       *bool                       `json:"b_negateSrcCountries,omitempty"`
 	Classification            *string                     `json:"classification,omitempty"`
-	DeviceClassificationID    []int64                     `json:"device_classification_id,omitempty"`
 	DlpActions                []NpaPolicyRuleDlp          `json:"dlp_actions,omitempty"`
+	TssActions                []NpaPolicyRuleTss          `json:"tss_actions,omitempty"`
+	TssProfile                []string                    `json:"tss_profile,omitempty"`
 	ExternalDlp               *bool                       `json:"external_dlp,omitempty"`
-	JSONVersion               *int64                      `json:"json_version,omitempty"`
+	JSONVersion               *float64                    `json:"json_version,omitempty"`
+	DeviceClassificationID    []int64                     `json:"device_classification_id,omitempty"`
 	MatchCriteriaAction       *MatchCriteriaAction        `json:"match_criteria_action,omitempty"`
 	NetLocationObj            []string                    `json:"net_location_obj,omitempty"`
 	OrganizationUnits         []string                    `json:"organization_units,omitempty"`
@@ -196,12 +206,10 @@ type NpaPolicyRuleData struct {
 	PrivateAppsWithActivities []PrivateAppsWithActivities `json:"privateAppsWithActivities,omitempty"`
 	ShowDlpProfileActionTable *bool                       `json:"show_dlp_profile_action_table,omitempty"`
 	SrcCountries              []string                    `json:"srcCountries,omitempty"`
-	TssActions                []NpaPolicyRuleTss          `json:"tss_actions,omitempty"`
-	TssProfile                []string                    `json:"tss_profile,omitempty"`
 	UserGroups                []string                    `json:"userGroups,omitempty"`
 	UserType                  *UserType                   `json:"userType,omitempty"`
 	Users                     []string                    `json:"users,omitempty"`
-	Version                   *int64                      `json:"version,omitempty"`
+	Version                   *float64                    `json:"version,omitempty"`
 }
 
 func (o *NpaPolicyRuleData) GetAccessMethod() []AccessMethod {
@@ -232,18 +240,25 @@ func (o *NpaPolicyRuleData) GetClassification() *string {
 	return o.Classification
 }
 
-func (o *NpaPolicyRuleData) GetDeviceClassificationID() []int64 {
-	if o == nil {
-		return nil
-	}
-	return o.DeviceClassificationID
-}
-
 func (o *NpaPolicyRuleData) GetDlpActions() []NpaPolicyRuleDlp {
 	if o == nil {
 		return nil
 	}
 	return o.DlpActions
+}
+
+func (o *NpaPolicyRuleData) GetTssActions() []NpaPolicyRuleTss {
+	if o == nil {
+		return nil
+	}
+	return o.TssActions
+}
+
+func (o *NpaPolicyRuleData) GetTssProfile() []string {
+	if o == nil {
+		return nil
+	}
+	return o.TssProfile
 }
 
 func (o *NpaPolicyRuleData) GetExternalDlp() *bool {
@@ -253,11 +268,18 @@ func (o *NpaPolicyRuleData) GetExternalDlp() *bool {
 	return o.ExternalDlp
 }
 
-func (o *NpaPolicyRuleData) GetJSONVersion() *int64 {
+func (o *NpaPolicyRuleData) GetJSONVersion() *float64 {
 	if o == nil {
 		return nil
 	}
 	return o.JSONVersion
+}
+
+func (o *NpaPolicyRuleData) GetDeviceClassificationID() []int64 {
+	if o == nil {
+		return nil
+	}
+	return o.DeviceClassificationID
 }
 
 func (o *NpaPolicyRuleData) GetMatchCriteriaAction() *MatchCriteriaAction {
@@ -330,20 +352,6 @@ func (o *NpaPolicyRuleData) GetSrcCountries() []string {
 	return o.SrcCountries
 }
 
-func (o *NpaPolicyRuleData) GetTssActions() []NpaPolicyRuleTss {
-	if o == nil {
-		return nil
-	}
-	return o.TssActions
-}
-
-func (o *NpaPolicyRuleData) GetTssProfile() []string {
-	if o == nil {
-		return nil
-	}
-	return o.TssProfile
-}
-
 func (o *NpaPolicyRuleData) GetUserGroups() []string {
 	if o == nil {
 		return nil
@@ -365,7 +373,7 @@ func (o *NpaPolicyRuleData) GetUsers() []string {
 	return o.Users
 }
 
-func (o *NpaPolicyRuleData) GetVersion() *int64 {
+func (o *NpaPolicyRuleData) GetVersion() *float64 {
 	if o == nil {
 		return nil
 	}

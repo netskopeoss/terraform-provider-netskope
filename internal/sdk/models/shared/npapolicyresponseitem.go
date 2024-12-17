@@ -2,37 +2,88 @@
 
 package shared
 
-type NpaPolicyResponseItem struct {
-	GroupID  *string            `json:"group_id,omitempty"`
-	RuleData *NpaPolicyRuleData `json:"rule_data,omitempty"`
-	RuleID   *int64             `json:"rule_id,omitempty"`
-	RuleName *string            `json:"rule_name,omitempty"`
+type NpaPolicyResponseItemData struct {
+	Enabled    *string            `json:"enabled,omitempty"`
+	ModifyBy   *string            `json:"modify_by,omitempty"`
+	ModifyTime *string            `json:"modify_time,omitempty"`
+	ModifyType *string            `json:"modify_type,omitempty"`
+	PolicyType *string            `json:"policy_type,omitempty"`
+	GroupID    *string            `json:"group_id,omitempty"`
+	RuleData   *NpaPolicyRuleData `json:"rule_data,omitempty"`
+	RuleID     *string            `json:"rule_id,omitempty"`
+	RuleName   *string            `json:"rule_name,omitempty"`
 }
 
-func (o *NpaPolicyResponseItem) GetGroupID() *string {
+func (o *NpaPolicyResponseItemData) GetEnabled() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Enabled
+}
+
+func (o *NpaPolicyResponseItemData) GetModifyBy() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ModifyBy
+}
+
+func (o *NpaPolicyResponseItemData) GetModifyTime() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ModifyTime
+}
+
+func (o *NpaPolicyResponseItemData) GetModifyType() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ModifyType
+}
+
+func (o *NpaPolicyResponseItemData) GetPolicyType() *string {
+	if o == nil {
+		return nil
+	}
+	return o.PolicyType
+}
+
+func (o *NpaPolicyResponseItemData) GetGroupID() *string {
 	if o == nil {
 		return nil
 	}
 	return o.GroupID
 }
 
-func (o *NpaPolicyResponseItem) GetRuleData() *NpaPolicyRuleData {
+func (o *NpaPolicyResponseItemData) GetRuleData() *NpaPolicyRuleData {
 	if o == nil {
 		return nil
 	}
 	return o.RuleData
 }
 
-func (o *NpaPolicyResponseItem) GetRuleID() *int64 {
+func (o *NpaPolicyResponseItemData) GetRuleID() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RuleID
 }
 
-func (o *NpaPolicyResponseItem) GetRuleName() *string {
+func (o *NpaPolicyResponseItemData) GetRuleName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RuleName
+}
+
+type NpaPolicyResponseItem struct {
+	Data *NpaPolicyResponseItemData `json:"data,omitempty"`
+}
+
+func (o *NpaPolicyResponseItem) GetData() *NpaPolicyResponseItemData {
+	if o == nil {
+		return nil
+	}
+	return o.Data
 }

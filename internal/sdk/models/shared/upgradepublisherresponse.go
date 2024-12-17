@@ -200,8 +200,8 @@ type UpgradePublisherResponse struct {
 	PublisherUpgradeProfilesID *int                                         `json:"publisher_upgrade_profiles_id,omitempty"`
 	Registered                 *bool                                        `json:"registered,omitempty"`
 	Status                     *string                                      `json:"status,omitempty"`
-	SticherPop                 *string                                      `json:"sticher_pop,omitempty"`
 	StitcherID                 *int                                         `json:"stitcher_id,omitempty"`
+	SticherPop                 *string                                      `json:"sticher_pop,omitempty"`
 	Tags                       []TagItem                                    `json:"tags,omitempty"`
 	UpgradeFailedReason        *UpgradePublisherResponseUpgradeFailedReason `json:"upgrade_failed_reason,omitempty"`
 	UpgradeRequest             *bool                                        `json:"upgrade_request,omitempty"`
@@ -285,18 +285,18 @@ func (o *UpgradePublisherResponse) GetStatus() *string {
 	return o.Status
 }
 
-func (o *UpgradePublisherResponse) GetSticherPop() *string {
-	if o == nil {
-		return nil
-	}
-	return o.SticherPop
-}
-
 func (o *UpgradePublisherResponse) GetStitcherID() *int {
 	if o == nil {
 		return nil
 	}
 	return o.StitcherID
+}
+
+func (o *UpgradePublisherResponse) GetSticherPop() *string {
+	if o == nil {
+		return nil
+	}
+	return o.SticherPop
 }
 
 func (o *UpgradePublisherResponse) GetTags() []TagItem {

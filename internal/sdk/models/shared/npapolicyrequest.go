@@ -42,7 +42,7 @@ func (e *Order) UnmarshalJSON(data []byte) error {
 type RuleOrder struct {
 	Order    *Order  `json:"order,omitempty"`
 	Position *int64  `json:"position,omitempty"`
-	RuleID   *int64  `json:"rule_id,omitempty"`
+	RuleID   *string `json:"rule_id,omitempty"`
 	RuleName *string `json:"rule_name,omitempty"`
 }
 
@@ -60,7 +60,7 @@ func (o *RuleOrder) GetPosition() *int64 {
 	return o.Position
 }
 
-func (o *RuleOrder) GetRuleID() *int64 {
+func (o *RuleOrder) GetRuleID() *string {
 	if o == nil {
 		return nil
 	}

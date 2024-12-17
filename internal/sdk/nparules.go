@@ -46,8 +46,13 @@ func (s *NPARules) ListObjects(ctx context.Context, request operations.GetNPARul
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := url.JoinPath(baseURL, "/npa/rules")
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := url.JoinPath(baseURL, "/policy/npa/rules")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -126,12 +131,12 @@ func (s *NPARules) ListObjects(ctx context.Context, request operations.GetNPARul
 				return nil, err
 			}
 
-			var out []shared.NpaPolicyResponseItem
+			var out operations.GetNPARulesResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.NpaPolicyResponse = out
+			res.Object = &out
 		default:
 			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
@@ -193,8 +198,13 @@ func (s *NPARules) Create(ctx context.Context, request operations.CreateNPARules
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := url.JoinPath(baseURL, "/npa/rules")
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := url.JoinPath(baseURL, "/policy/npa/rules")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -279,12 +289,12 @@ func (s *NPARules) Create(ctx context.Context, request operations.CreateNPARules
 				return nil, err
 			}
 
-			var out shared.NpaPolicyResponseItem
+			var out operations.CreateNPARulesResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.NpaPolicyResponseItem = &out
+			res.Object = &out
 		default:
 			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
@@ -346,8 +356,13 @@ func (s *NPARules) Delete(ctx context.Context, request operations.DeleteNPARules
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/npa/rules/{rule_id}", request, nil)
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/policy/npa/rules/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -468,12 +483,12 @@ func (s *NPARules) Delete(ctx context.Context, request operations.DeleteNPARules
 
 }
 
-// GetNPARulesByID - Get a npa policy
+// NPARules - Get a npa policy
 // Get a npa policy based on policy rule id
-func (s *NPARules) GetNPARulesByID(ctx context.Context, request operations.GetNPARulesByIDRequest, opts ...operations.Option) (*operations.GetNPARulesByIDResponse, error) {
+func (s *NPARules) NPARules(ctx context.Context, request operations.NPARulesRequest, opts ...operations.Option) (*operations.NPARulesResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "getNPARulesById",
+		OperationID:    "NPARules",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -489,8 +504,13 @@ func (s *NPARules) GetNPARulesByID(ctx context.Context, request operations.GetNP
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/npa/rules/{rule_id}", request, nil)
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/policy/npa/rules/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -554,7 +574,7 @@ func (s *NPARules) GetNPARulesByID(ctx context.Context, request operations.GetNP
 		}
 	}
 
-	res := &operations.GetNPARulesByIDResponse{
+	res := &operations.NPARulesResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -569,7 +589,7 @@ func (s *NPARules) GetNPARulesByID(ctx context.Context, request operations.GetNP
 				return nil, err
 			}
 
-			var out operations.GetNPARulesByIDResponseBody
+			var out operations.NPARulesResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -636,8 +656,13 @@ func (s *NPARules) Update(ctx context.Context, request operations.UpdateNPARules
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/npa/rules/{rule_id}", request, nil)
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/policy/npa/rules/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}

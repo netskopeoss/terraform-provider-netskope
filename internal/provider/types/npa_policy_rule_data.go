@@ -12,7 +12,7 @@ type NpaPolicyRuleData struct {
 	DeviceClassificationID    []types.Int64               `tfsdk:"device_classification_id"`
 	DlpActions                []NpaPolicyRuleDlp          `tfsdk:"dlp_actions"`
 	ExternalDlp               types.Bool                  `tfsdk:"external_dlp"`
-	JSONVersion               types.Int64                 `tfsdk:"json_version"`
+	JSONVersion               types.Number                `tfsdk:"json_version"`
 	MatchCriteriaAction       *MatchCriteriaAction        `tfsdk:"match_criteria_action"`
 	NetLocationObj            []types.String              `tfsdk:"net_location_obj"`
 	OrganizationUnits         []types.String              `tfsdk:"organization_units"`
@@ -28,5 +28,5 @@ type NpaPolicyRuleData struct {
 	UserGroups                []types.String              `tfsdk:"user_groups"`
 	Users                     []types.String              `tfsdk:"users"`
 	UserType                  types.String                `tfsdk:"user_type"`
-	Version                   types.Int64                 `tfsdk:"version"`
+	Version                   types.Number                `tfsdk:"version"`
 }

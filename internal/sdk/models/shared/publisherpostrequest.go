@@ -7,10 +7,10 @@ import (
 )
 
 type PublisherPostRequest struct {
-	// Allow this publisher to be stitched to Local Broker
-	Lbrokerconnect *bool `default:"false" json:"lbrokerconnect"`
 	// The name of the Publisher as seen in the UI
 	PublisherName string `json:"name"`
+	// Allow this publisher to be stitched to Local Broker
+	Lbrokerconnect *bool `default:"false" json:"lbrokerconnect"`
 	// The ID of the upgrade profile to manage this publisher
 	PublisherUpgradeProfilesID *int `default:"1" json:"publisher_upgrade_profiles_id"`
 }
@@ -26,18 +26,18 @@ func (p *PublisherPostRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *PublisherPostRequest) GetLbrokerconnect() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.Lbrokerconnect
-}
-
 func (o *PublisherPostRequest) GetPublisherName() string {
 	if o == nil {
 		return ""
 	}
 	return o.PublisherName
+}
+
+func (o *PublisherPostRequest) GetLbrokerconnect() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Lbrokerconnect
 }
 
 func (o *PublisherPostRequest) GetPublisherUpgradeProfilesID() *int {
