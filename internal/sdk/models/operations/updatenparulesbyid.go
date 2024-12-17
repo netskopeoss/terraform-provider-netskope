@@ -38,17 +38,17 @@ func (e *UpdateNPARulesByIDQueryParamSilent) UnmarshalJSON(data []byte) error {
 
 type UpdateNPARulesByIDRequest struct {
 	// npa policy id
-	ID string `pathParam:"style=simple,explode=false,name=id"`
+	RuleID string `pathParam:"style=simple,explode=false,name=id"`
 	// flag to skip output except status code
 	Silent           *UpdateNPARulesByIDQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
 	NpaPolicyRequest shared.NpaPolicyRequest             `request:"mediaType=application/json"`
 }
 
-func (o *UpdateNPARulesByIDRequest) GetID() string {
+func (o *UpdateNPARulesByIDRequest) GetRuleID() string {
 	if o == nil {
 		return ""
 	}
-	return o.ID
+	return o.RuleID
 }
 
 func (o *UpdateNPARulesByIDRequest) GetSilent() *UpdateNPARulesByIDQueryParamSilent {

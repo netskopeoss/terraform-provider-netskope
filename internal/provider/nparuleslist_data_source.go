@@ -113,7 +113,7 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 									"external_dlp": schema.BoolAttribute{
 										Computed: true,
 									},
-									"json_version": schema.NumberAttribute{
+									"json_version": schema.Int64Attribute{
 										Computed: true,
 									},
 									"match_criteria_action": schema.SingleNestedAttribute{
@@ -227,7 +227,7 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 										Computed:    true,
 										ElementType: types.StringType,
 									},
-									"version": schema.NumberAttribute{
+									"version": schema.Int64Attribute{
 										Computed: true,
 									},
 								},

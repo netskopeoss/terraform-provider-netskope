@@ -62,14 +62,14 @@ func (o *NpaPolicyResponseItemTestPrivateAppsWithActivities) GetAppName() *strin
 type RuleData struct {
 	AccessMethod              []string                                             `json:"access_method,omitempty"`
 	ExternalDlp               *bool                                                `json:"external_dlp,omitempty"`
-	JSONVersion               *float64                                             `json:"json_version,omitempty"`
+	JSONVersion               *int64                                               `json:"json_version,omitempty"`
 	MatchCriteriaAction       *NpaPolicyResponseItemTestMatchCriteriaAction        `json:"match_criteria_action,omitempty"`
 	PolicyType                *string                                              `json:"policy_type,omitempty"`
 	PrivateApps               []string                                             `json:"privateApps,omitempty"`
 	PrivateAppsWithActivities []NpaPolicyResponseItemTestPrivateAppsWithActivities `json:"privateAppsWithActivities,omitempty"`
 	ShowDlpProfileActionTable *bool                                                `json:"show_dlp_profile_action_table,omitempty"`
 	UserType                  *string                                              `json:"userType,omitempty"`
-	Version                   *float64                                             `json:"version,omitempty"`
+	Version                   *int64                                               `json:"version,omitempty"`
 }
 
 func (o *RuleData) GetAccessMethod() []string {
@@ -86,7 +86,7 @@ func (o *RuleData) GetExternalDlp() *bool {
 	return o.ExternalDlp
 }
 
-func (o *RuleData) GetJSONVersion() *float64 {
+func (o *RuleData) GetJSONVersion() *int64 {
 	if o == nil {
 		return nil
 	}
@@ -135,7 +135,7 @@ func (o *RuleData) GetUserType() *string {
 	return o.UserType
 }
 
-func (o *RuleData) GetVersion() *float64 {
+func (o *RuleData) GetVersion() *int64 {
 	if o == nil {
 		return nil
 	}

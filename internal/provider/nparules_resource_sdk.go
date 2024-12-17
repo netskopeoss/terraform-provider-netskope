@@ -7,7 +7,6 @@ import (
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
-	"math/big"
 )
 
 func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyRequest {
@@ -130,9 +129,9 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyRequ
 		} else {
 			externalDlp = nil
 		}
-		jsonVersion := new(float64)
+		jsonVersion := new(int64)
 		if !r.RuleData.JSONVersion.IsUnknown() && !r.RuleData.JSONVersion.IsNull() {
-			*jsonVersion, _ = r.RuleData.JSONVersion.ValueBigFloat().Float64()
+			*jsonVersion = r.RuleData.JSONVersion.ValueInt64()
 		} else {
 			jsonVersion = nil
 		}
@@ -237,9 +236,9 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest() *shared.NpaPolicyRequ
 		for _, usersItem := range r.RuleData.Users {
 			users = append(users, usersItem.ValueString())
 		}
-		version := new(float64)
+		version := new(int64)
 		if !r.RuleData.Version.IsUnknown() && !r.RuleData.Version.IsNull() {
-			*version, _ = r.RuleData.Version.ValueBigFloat().Float64()
+			*version = r.RuleData.Version.ValueInt64()
 		} else {
 			version = nil
 		}
@@ -337,11 +336,7 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItemTest(resp 
 				r.RuleData.AccessMethod = append(r.RuleData.AccessMethod, types.StringValue(string(v)))
 			}
 			r.RuleData.ExternalDlp = types.BoolPointerValue(resp.RuleData.ExternalDlp)
-			if resp.RuleData.JSONVersion != nil {
-				r.RuleData.JSONVersion = types.NumberValue(big.NewFloat(float64(*resp.RuleData.JSONVersion)))
-			} else {
-				r.RuleData.JSONVersion = types.NumberNull()
-			}
+			r.RuleData.JSONVersion = types.Int64PointerValue(resp.RuleData.JSONVersion)
 			if resp.RuleData.MatchCriteriaAction == nil {
 				r.RuleData.MatchCriteriaAction = nil
 			} else {
@@ -405,11 +400,7 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItemTest(resp 
 			} else {
 				r.RuleData.UserType = types.StringNull()
 			}
-			if resp.RuleData.Version != nil {
-				r.RuleData.Version = types.NumberValue(big.NewFloat(float64(*resp.RuleData.Version)))
-			} else {
-				r.RuleData.Version = types.NumberNull()
-			}
+			r.RuleData.Version = types.Int64PointerValue(resp.RuleData.Version)
 		}
 		r.RuleID = types.StringPointerValue(resp.RuleID)
 		r.RuleName = types.StringPointerValue(resp.RuleName)
