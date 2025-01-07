@@ -22,6 +22,7 @@ func resourcePrivateAppsCreate(ctx context.Context, d *schema.ResourceData, m in
 	tags := d.Get("tags").([]interface{})
 	use_publisher_dns := d.Get("use_publisher_dns").(bool)
 	clientless_access := d.Get("clientless_access").(bool)
+	private_app_protocol := d.Get("private_app_protocol").(string)
 	trust_self_signed_certs := d.Get("trust_self_signed_certs").(bool)
 	//log.Println(app_name)
 	//log.Println(host)
@@ -55,6 +56,7 @@ func resourcePrivateAppsCreate(ctx context.Context, d *schema.ResourceData, m in
 		UsePublisherDNS:      use_publisher_dns,
 		ClientlessAccess:     clientless_access,
 		TrustSelfSignedCerts: trust_self_signed_certs,
+		PrivateAppProtocol:   private_app_protocol,
 	}
 
 	newapp, err := nsclient.CreatePrivateApp(appStruct)
@@ -86,6 +88,7 @@ func resourcePrivateAppsUpdate(ctx context.Context, d *schema.ResourceData, m in
 	use_publisher_dns := d.Get("use_publisher_dns").(bool)
 	tags := d.Get("tags").([]interface{})
 	clientless_access := d.Get("clientless_access").(bool)
+	private_app_protocol := d.Get("private_app_protocol").(string)
 	trust_self_signed_certs := d.Get("trust_self_signed_certs").(bool)
 	//log.Println(app_name)
 	//log.Println(host)
@@ -128,6 +131,7 @@ func resourcePrivateAppsUpdate(ctx context.Context, d *schema.ResourceData, m in
 		UsePublisherDNS:      use_publisher_dns,
 		ClientlessAccess:     clientless_access,
 		TrustSelfSignedCerts: trust_self_signed_certs,
+		PrivateAppProtocol:   private_app_protocol
 	}
 
 	_, err := nsclient.ReplacePrivateApp(appid, appStruct)
@@ -183,6 +187,10 @@ func resourcePrivateApps() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"private_app_protocol": &schema.Schema{
+               		 Type:        schema.TypeString,
+              		  Optional:    true,
+		        },
 			"use_publisher_dns": &schema.Schema{
 				Type:     schema.TypeBool,
 				Optional: true,
