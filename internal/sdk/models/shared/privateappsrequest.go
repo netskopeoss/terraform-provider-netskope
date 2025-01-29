@@ -5,6 +5,7 @@ package shared
 type AppOption struct {
 }
 
+// PrivateAppsRequest - Private APP request body
 type PrivateAppsRequest struct {
 	AllowUnauthenticatedCors *bool           `json:"allow_unauthenticated_cors,omitempty"`
 	AllowURIBypass           *bool           `json:"allow_uri_bypass,omitempty"`
@@ -13,7 +14,7 @@ type PrivateAppsRequest struct {
 	AppName                  *string         `json:"app_name,omitempty"`
 	AppOption                *AppOption      `json:"app_option,omitempty"`
 	ClientlessAccess         *bool           `json:"clientless_access,omitempty"`
-	Host                     *string         `json:"host,omitempty"`
+	PrivateAppHostname       *string         `json:"host,omitempty"`
 	IsUserPortalApp          *bool           `json:"is_user_portal_app,omitempty"`
 	Protocols                []ProtocolItem  `json:"protocols,omitempty"`
 	PublisherTags            []TagItemNoID   `json:"publisher_tags,omitempty"`
@@ -73,11 +74,11 @@ func (o *PrivateAppsRequest) GetClientlessAccess() *bool {
 	return o.ClientlessAccess
 }
 
-func (o *PrivateAppsRequest) GetHost() *string {
+func (o *PrivateAppsRequest) GetPrivateAppHostname() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Host
+	return o.PrivateAppHostname
 }
 
 func (o *PrivateAppsRequest) GetIsUserPortalApp() *bool {

@@ -2,6 +2,16 @@
 
 package types
 
+import "github.com/hashicorp/terraform-plugin-framework/types"
+
 type NpaPolicyResponseItem struct {
-	Data *NpaPolicyResponseItemData `tfsdk:"data"`
+	Enabled    types.String       `tfsdk:"enabled"`
+	GroupID    types.String       `tfsdk:"group_id"`
+	ModifyBy   types.String       `tfsdk:"modify_by"`
+	ModifyTime types.String       `tfsdk:"modify_time"`
+	ModifyType types.String       `tfsdk:"modify_type"`
+	PolicyType types.String       `tfsdk:"policy_type"`
+	RuleData   *NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleID     types.String       `tfsdk:"rule_id"`
+	RuleName   types.String       `tfsdk:"rule_name"`
 }

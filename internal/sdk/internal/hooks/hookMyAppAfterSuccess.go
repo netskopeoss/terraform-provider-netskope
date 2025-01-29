@@ -9,11 +9,11 @@ import (
 	"strings"
 )
 
-type MyAppResponse struct {
-	Data   Data   `json:"data"`
+type myAppResponse struct {
+	App    App    `json:"data"`
 	Status string `json:"status"`
 }
-type Data struct {
+type App struct {
 	AllowUnauthenticatedCors    bool                         `json:"allow_unauthenticated_cors"`
 	AppID                       int                          `json:"app_id"`
 	AppName                     string                       `json:"app_name"`
@@ -62,13 +62,13 @@ type Tag struct {
 }
 
 var (
-	_ afterSuccessHook = (*MyAppResponse)(nil)
+	_ afterSuccessHook = (*myAppResponse)(nil)
 )
 
-func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
+func (i *myAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
 	log.Print("Executing AfterSucess hook....")
 	if hookCtx.OperationID == "createNPAPrivateApps" || hookCtx.OperationID == "getNPAPrivateApp" {
-		var responseMap MyAppResponse
+		var responseMap myAppResponse
 		// Read and unmarshal the response body
 		body, err := io.ReadAll(res.Body)
 		if err != nil {
@@ -85,8 +85,8 @@ func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
 		log.Print("--------------------")
 		log.Print(responseMap)
 		log.Print("--------------------")
-		oldValue := responseMap.Data.AppName
-		responseMap.Data.AppName = strings.Trim(oldValue, "[]")
+		oldValue := responseMap.App.AppName
+		responseMap.App.AppName = strings.Trim(oldValue, "[]")
 		// Marshal the modified response back to json.RawMessage
 		modifiedBody, err := json.MarshalIndent(responseMap, "", "")
 		if err != nil {

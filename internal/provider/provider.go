@@ -92,6 +92,8 @@ func (p *NsProvider) Configure(ctx context.Context, req provider.ConfigureReques
 
 func (p *NsProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		NewNPAPolicyGroupsResource,
+		NewNPAPrivateAppResource,
 		NewNPAPublisherResource,
 		NewNPAPublishersAlertsConfigurationResource,
 		NewNPAPublishersBulkProfileUpdatesResource,
@@ -104,6 +106,11 @@ func (p *NsProvider) Resources(ctx context.Context) []func() resource.Resource {
 
 func (p *NsProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewNPAPolicyGroupsDataSource,
+		NewNPAPolicyGroupsListDataSource,
+		NewNPAPrivateAppDataSource,
+		NewNPAPrivateAppsListDataSource,
+		NewNPAPrivatePolicyInUseDataSource,
 		NewNPAPublisherDataSource,
 		NewNPAPublisherAppsListDataSource,
 		NewNPAPublishersAlertsConfigurationDataSource,

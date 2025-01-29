@@ -10,7 +10,7 @@ import (
 type PrivateAppsGetResponseAppOption struct {
 }
 
-type PrivateAppsGetResponseData struct {
+type Data struct {
 	AllowUnauthenticatedCors    *bool                            `json:"allow_unauthenticated_cors,omitempty"`
 	AllowURIBypass              *bool                            `json:"allow_uri_bypass,omitempty"`
 	UribypassHeaderValue        *string                          `json:"uribypass_header_value,omitempty"`
@@ -29,129 +29,129 @@ type PrivateAppsGetResponseData struct {
 	UsePublisherDNS             *bool                            `json:"use_publisher_dns,omitempty"`
 }
 
-func (o *PrivateAppsGetResponseData) GetAllowUnauthenticatedCors() *bool {
+func (o *Data) GetAllowUnauthenticatedCors() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.AllowUnauthenticatedCors
 }
 
-func (o *PrivateAppsGetResponseData) GetAllowURIBypass() *bool {
+func (o *Data) GetAllowURIBypass() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.AllowURIBypass
 }
 
-func (o *PrivateAppsGetResponseData) GetUribypassHeaderValue() *string {
+func (o *Data) GetUribypassHeaderValue() *string {
 	if o == nil {
 		return nil
 	}
 	return o.UribypassHeaderValue
 }
 
-func (o *PrivateAppsGetResponseData) GetBypassUris() []string {
+func (o *Data) GetBypassUris() []string {
 	if o == nil {
 		return nil
 	}
 	return o.BypassUris
 }
 
-func (o *PrivateAppsGetResponseData) GetAppID() *int {
+func (o *Data) GetAppID() *int {
 	if o == nil {
 		return nil
 	}
 	return o.AppID
 }
 
-func (o *PrivateAppsGetResponseData) GetAppName() *string {
+func (o *Data) GetAppName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.AppName
 }
 
-func (o *PrivateAppsGetResponseData) GetAppOption() *PrivateAppsGetResponseAppOption {
+func (o *Data) GetAppOption() *PrivateAppsGetResponseAppOption {
 	if o == nil {
 		return nil
 	}
 	return o.AppOption
 }
 
-func (o *PrivateAppsGetResponseData) GetClientlessAccess() *bool {
+func (o *Data) GetClientlessAccess() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.ClientlessAccess
 }
 
-func (o *PrivateAppsGetResponseData) GetHost() *string {
+func (o *Data) GetHost() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Host
 }
 
-func (o *PrivateAppsGetResponseData) GetIsUserPortalApp() *bool {
+func (o *Data) GetIsUserPortalApp() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.IsUserPortalApp
 }
 
-func (o *PrivateAppsGetResponseData) GetProtocols() []ProtocolResponseItem {
+func (o *Data) GetProtocols() []ProtocolResponseItem {
 	if o == nil {
 		return nil
 	}
 	return o.Protocols
 }
 
-func (o *PrivateAppsGetResponseData) GetRealHost() *string {
+func (o *Data) GetRealHost() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RealHost
 }
 
-func (o *PrivateAppsGetResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
+func (o *Data) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
 	if o == nil {
 		return nil
 	}
 	return o.ServicePublisherAssignments
 }
 
-func (o *PrivateAppsGetResponseData) GetTags() []TagItem {
+func (o *Data) GetTags() []TagItem {
 	if o == nil {
 		return nil
 	}
 	return o.Tags
 }
 
-func (o *PrivateAppsGetResponseData) GetTrustSelfSignedCerts() *bool {
+func (o *Data) GetTrustSelfSignedCerts() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.TrustSelfSignedCerts
 }
 
-func (o *PrivateAppsGetResponseData) GetUsePublisherDNS() *bool {
+func (o *Data) GetUsePublisherDNS() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.UsePublisherDNS
 }
 
-type PrivateAppsGetResponseStatus string
+type Status string
 
 const (
-	PrivateAppsGetResponseStatusSuccess  PrivateAppsGetResponseStatus = "success"
-	PrivateAppsGetResponseStatusNotFound PrivateAppsGetResponseStatus = "not found"
+	StatusSuccess  Status = "success"
+	StatusNotFound Status = "not found"
 )
 
-func (e PrivateAppsGetResponseStatus) ToPointer() *PrivateAppsGetResponseStatus {
+func (e Status) ToPointer() *Status {
 	return &e
 }
-func (e *PrivateAppsGetResponseStatus) UnmarshalJSON(data []byte) error {
+func (e *Status) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -160,27 +160,27 @@ func (e *PrivateAppsGetResponseStatus) UnmarshalJSON(data []byte) error {
 	case "success":
 		fallthrough
 	case "not found":
-		*e = PrivateAppsGetResponseStatus(v)
+		*e = Status(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PrivateAppsGetResponseStatus: %v", v)
+		return fmt.Errorf("invalid value for Status: %v", v)
 	}
 }
 
 type PrivateAppsGetResponse struct {
-	Data   *PrivateAppsGetResponseData   `json:"data,omitempty"`
-	Status *PrivateAppsGetResponseStatus `json:"status,omitempty"`
-	Total  *int                          `json:"total,omitempty"`
+	Data   *Data   `json:"data,omitempty"`
+	Status *Status `json:"status,omitempty"`
+	Total  *int    `json:"total,omitempty"`
 }
 
-func (o *PrivateAppsGetResponse) GetData() *PrivateAppsGetResponseData {
+func (o *PrivateAppsGetResponse) GetData() *Data {
 	if o == nil {
 		return nil
 	}
 	return o.Data
 }
 
-func (o *PrivateAppsGetResponse) GetStatus() *PrivateAppsGetResponseStatus {
+func (o *PrivateAppsGetResponse) GetStatus() *Status {
 	if o == nil {
 		return nil
 	}

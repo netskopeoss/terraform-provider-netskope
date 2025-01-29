@@ -79,6 +79,9 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
+									"created_at": schema.StringAttribute{
+										Computed: true,
+									},
 									"id": schema.Int64Attribute{
 										Computed: true,
 									},
@@ -89,6 +92,9 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 										Computed: true,
 									},
 									"transport": schema.StringAttribute{
+										Computed: true,
+									},
+									"updated_at": schema.StringAttribute{
 										Computed: true,
 									},
 								},
@@ -121,7 +127,10 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 									"primary": schema.BoolAttribute{
 										Computed: true,
 									},
-									"publisher_id": schema.Int64Attribute{
+									"publisher_external_id": schema.Int64Attribute{
+										Computed: true,
+									},
+									"publisher_name": schema.StringAttribute{
 										Computed: true,
 									},
 									"reachability": schema.SingleNestedAttribute{
@@ -138,7 +147,7 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 											},
 										},
 									},
-									"service_id": schema.Int64Attribute{
+									"service_external_id": schema.Int64Attribute{
 										Computed: true,
 									},
 								},

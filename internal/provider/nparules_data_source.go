@@ -29,16 +29,17 @@ type NPARulesDataSource struct {
 
 // NPARulesDataSourceModel describes the data model.
 type NPARulesDataSourceModel struct {
-	Enabled    types.String      `tfsdk:"enabled"`
-	Fields     types.String      `tfsdk:"fields"`
-	ModifyBy   types.String      `tfsdk:"modify_by"`
-	ModifyTime types.String      `tfsdk:"modify_time"`
-	ModifyType types.String      `tfsdk:"modify_type"`
-	PolicyType types.String      `tfsdk:"policy_type"`
-	RuleData   *tfTypes.RuleData `tfsdk:"rule_data"`
-	RuleID     types.String      `tfsdk:"rule_id"`
-	RuleName   types.String      `tfsdk:"rule_name"`
-	Status     types.String      `tfsdk:"status"`
+	Enabled    types.String               `tfsdk:"enabled"`
+	Fields     types.String               `tfsdk:"fields"`
+	GroupID    types.String               `tfsdk:"group_id"`
+	ModifyBy   types.String               `tfsdk:"modify_by"`
+	ModifyTime types.String               `tfsdk:"modify_time"`
+	ModifyType types.String               `tfsdk:"modify_type"`
+	PolicyType types.String               `tfsdk:"policy_type"`
+	RuleData   *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleID     types.String               `tfsdk:"rule_id"`
+	RuleName   types.String               `tfsdk:"rule_name"`
+	Status     types.String               `tfsdk:"status"`
 }
 
 // Metadata returns the data source type name.
@@ -59,6 +60,9 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Optional:    true,
 				Description: `Return values only from specified fields`,
 			},
+			"group_id": schema.StringAttribute{
+				Computed: true,
+			},
 			"modify_by": schema.StringAttribute{
 				Computed: true,
 			},
@@ -78,6 +82,33 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						Computed:    true,
 						ElementType: types.StringType,
 					},
+					"b_negate_net_location": schema.BoolAttribute{
+						Computed: true,
+					},
+					"b_negate_src_countries": schema.BoolAttribute{
+						Computed: true,
+					},
+					"classification": schema.StringAttribute{
+						Computed: true,
+					},
+					"device_classification_id": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.Int64Type,
+					},
+					"dlp_actions": schema.ListNestedAttribute{
+						Computed: true,
+						NestedObject: schema.NestedAttributeObject{
+							Attributes: map[string]schema.Attribute{
+								"actions": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"dlp_profile": schema.StringAttribute{
+									Computed: true,
+								},
+							},
+						},
+					},
 					"external_dlp": schema.BoolAttribute{
 						Computed: true,
 					},
@@ -92,8 +123,24 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 					},
+					"net_location_obj": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"organization_units": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
 					"policy_type": schema.StringAttribute{
 						Computed: true,
+					},
+					"private_app_tag_ids": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"private_app_tags": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
 					},
 					"private_apps": schema.ListAttribute{
 						Computed:    true,
@@ -130,8 +177,54 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					"show_dlp_profile_action_table": schema.BoolAttribute{
 						Computed: true,
 					},
+					"src_countries": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"tss_actions": schema.ListNestedAttribute{
+						Computed: true,
+						NestedObject: schema.NestedAttributeObject{
+							Attributes: map[string]schema.Attribute{
+								"actions": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"action_name": schema.StringAttribute{
+												Computed: true,
+											},
+											"remediation_profile": schema.StringAttribute{
+												Computed: true,
+											},
+											"severity": schema.StringAttribute{
+												Computed: true,
+											},
+											"template": schema.StringAttribute{
+												Computed: true,
+											},
+										},
+									},
+								},
+								"tss_profile": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+							},
+						},
+					},
+					"tss_profile": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"user_groups": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
 					"user_type": schema.StringAttribute{
 						Computed: true,
+					},
+					"users": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
 					},
 					"version": schema.Int64Attribute{
 						Computed: true,
@@ -227,7 +320,7 @@ func (r *NPARulesDataSource) Read(ctx context.Context, req datasource.ReadReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseItemTest(res.Object.Data)
+	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

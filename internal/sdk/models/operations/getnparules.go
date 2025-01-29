@@ -55,26 +55,6 @@ func (o *GetNPARulesRequest) GetSortorder() *string {
 	return o.Sortorder
 }
 
-// GetNPARulesResponseBody - successful operation
-type GetNPARulesResponseBody struct {
-	Data   *shared.NpaPolicyResponse `json:"data,omitempty"`
-	Status *string                   `json:"status,omitempty"`
-}
-
-func (o *GetNPARulesResponseBody) GetData() *shared.NpaPolicyResponse {
-	if o == nil {
-		return nil
-	}
-	return o.Data
-}
-
-func (o *GetNPARulesResponseBody) GetStatus() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Status
-}
-
 type GetNPARulesResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
@@ -83,7 +63,7 @@ type GetNPARulesResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// successful operation
-	Object *GetNPARulesResponseBody
+	NpaPolicyResponseList *shared.NpaPolicyResponseList
 	// Invalid request
 	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
@@ -109,11 +89,11 @@ func (o *GetNPARulesResponse) GetRawResponse() *http.Response {
 	return o.RawResponse
 }
 
-func (o *GetNPARulesResponse) GetObject() *GetNPARulesResponseBody {
+func (o *GetNPARulesResponse) GetNpaPolicyResponseList() *shared.NpaPolicyResponseList {
 	if o == nil {
 		return nil
 	}
-	return o.Object
+	return o.NpaPolicyResponseList
 }
 
 func (o *GetNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {

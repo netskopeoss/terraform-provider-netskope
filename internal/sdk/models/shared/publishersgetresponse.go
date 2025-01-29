@@ -147,17 +147,17 @@ func (o *PublishersGetResponseCapabilities) GetPullNsconfig() *PublishersGetResp
 	return o.PullNsconfig
 }
 
-type PublishersGetResponseStatus string
+type PublishersGetResponseDataStatus string
 
 const (
-	PublishersGetResponseStatusConnected     PublishersGetResponseStatus = "connected"
-	PublishersGetResponseStatusNotRegistered PublishersGetResponseStatus = "not registered"
+	PublishersGetResponseDataStatusConnected     PublishersGetResponseDataStatus = "connected"
+	PublishersGetResponseDataStatusNotRegistered PublishersGetResponseDataStatus = "not registered"
 )
 
-func (e PublishersGetResponseStatus) ToPointer() *PublishersGetResponseStatus {
+func (e PublishersGetResponseDataStatus) ToPointer() *PublishersGetResponseDataStatus {
 	return &e
 }
-func (e *PublishersGetResponseStatus) UnmarshalJSON(data []byte) error {
+func (e *PublishersGetResponseDataStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -166,10 +166,10 @@ func (e *PublishersGetResponseStatus) UnmarshalJSON(data []byte) error {
 	case "connected":
 		fallthrough
 	case "not registered":
-		*e = PublishersGetResponseStatus(v)
+		*e = PublishersGetResponseDataStatus(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PublishersGetResponseStatus: %v", v)
+		return fmt.Errorf("invalid value for PublishersGetResponseDataStatus: %v", v)
 	}
 }
 
@@ -233,7 +233,7 @@ type PublishersGetResponsePublishers struct {
 	PublisherName             *string                            `json:"publisher_name,omitempty"`
 	PublisherUpgradeProfileID *int                               `json:"publisher_upgrade_profiles_external_id,omitempty"`
 	Registered                *bool                              `json:"registered,omitempty"`
-	Status                    *PublishersGetResponseStatus       `json:"status,omitempty"`
+	Status                    *PublishersGetResponseDataStatus   `json:"status,omitempty"`
 	StitcherID                *int                               `json:"stitcher_id,omitempty"`
 	StitcherPop               *string                            `json:"stitcher_pop,omitempty"`
 	// Not used at this time - please ignore
@@ -314,7 +314,7 @@ func (o *PublishersGetResponsePublishers) GetRegistered() *bool {
 	return o.Registered
 }
 
-func (o *PublishersGetResponsePublishers) GetStatus() *PublishersGetResponseStatus {
+func (o *PublishersGetResponsePublishers) GetStatus() *PublishersGetResponseDataStatus {
 	if o == nil {
 		return nil
 	}
@@ -363,28 +363,28 @@ func (o *PublishersGetResponsePublishers) GetUpgradeStatus() *PublishersGetRespo
 	return o.UpgradeStatus
 }
 
-type Data struct {
+type PublishersGetResponseData struct {
 	Publishers []PublishersGetResponsePublishers `json:"publishers,omitempty"`
 }
 
-func (o *Data) GetPublishers() []PublishersGetResponsePublishers {
+func (o *PublishersGetResponseData) GetPublishers() []PublishersGetResponsePublishers {
 	if o == nil {
 		return nil
 	}
 	return o.Publishers
 }
 
-type Status string
+type PublishersGetResponseStatus string
 
 const (
-	StatusSuccess  Status = "success"
-	StatusNotFound Status = "not found"
+	PublishersGetResponseStatusSuccess  PublishersGetResponseStatus = "success"
+	PublishersGetResponseStatusNotFound PublishersGetResponseStatus = "not found"
 )
 
-func (e Status) ToPointer() *Status {
+func (e PublishersGetResponseStatus) ToPointer() *PublishersGetResponseStatus {
 	return &e
 }
-func (e *Status) UnmarshalJSON(data []byte) error {
+func (e *PublishersGetResponseStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -393,27 +393,27 @@ func (e *Status) UnmarshalJSON(data []byte) error {
 	case "success":
 		fallthrough
 	case "not found":
-		*e = Status(v)
+		*e = PublishersGetResponseStatus(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for Status: %v", v)
+		return fmt.Errorf("invalid value for PublishersGetResponseStatus: %v", v)
 	}
 }
 
 type PublishersGetResponse struct {
-	Data   *Data   `json:"data,omitempty"`
-	Status *Status `json:"status,omitempty"`
-	Total  *int    `json:"total,omitempty"`
+	Data   *PublishersGetResponseData   `json:"data,omitempty"`
+	Status *PublishersGetResponseStatus `json:"status,omitempty"`
+	Total  *int                         `json:"total,omitempty"`
 }
 
-func (o *PublishersGetResponse) GetData() *Data {
+func (o *PublishersGetResponse) GetData() *PublishersGetResponseData {
 	if o == nil {
 		return nil
 	}
 	return o.Data
 }
 
-func (o *PublishersGetResponse) GetStatus() *Status {
+func (o *PublishersGetResponse) GetStatus() *PublishersGetResponseStatus {
 	if o == nil {
 		return nil
 	}

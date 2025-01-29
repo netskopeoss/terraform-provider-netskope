@@ -3,10 +3,19 @@
 package shared
 
 type ProtocolResponseItem struct {
+	CreatedAt *string `json:"created_at,omitempty"`
 	ID        *int    `json:"id,omitempty"`
 	Port      *string `json:"port,omitempty"`
 	ServiceID *int    `json:"service_id,omitempty"`
 	Transport *string `json:"transport,omitempty"`
+	UpdatedAt *string `json:"updated_at,omitempty"`
+}
+
+func (o *ProtocolResponseItem) GetCreatedAt() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CreatedAt
 }
 
 func (o *ProtocolResponseItem) GetID() *int {
@@ -35,4 +44,11 @@ func (o *ProtocolResponseItem) GetTransport() *string {
 		return nil
 	}
 	return o.Transport
+}
+
+func (o *ProtocolResponseItem) GetUpdatedAt() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UpdatedAt
 }

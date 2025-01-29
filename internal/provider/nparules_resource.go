@@ -64,6 +64,7 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 				Optional: true,
 			},
 			"group_id": schema.StringAttribute{
+				Computed: true,
 				Optional: true,
 			},
 			"group_name": schema.StringAttribute{
@@ -411,9 +412,9 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	silent := new(operations.CreateNPARulesQueryParamSilent)
+	silent := new(operations.QueryParamSilent)
 	if !data.Silent.IsUnknown() && !data.Silent.IsNull() {
-		*silent = operations.CreateNPARulesQueryParamSilent(data.Silent.ValueString())
+		*silent = operations.QueryParamSilent(data.Silent.ValueString())
 	} else {
 		silent = nil
 	}
@@ -442,7 +443,7 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseItemTest(res.Object.Data)
+	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	var ruleID string
 	ruleID = data.RuleID.ValueString()
@@ -473,7 +474,7 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseItemTest(res1.Object.Data)
+	data.RefreshFromSharedNpaPolicyResponseItem(res1.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -531,7 +532,7 @@ func (r *NPARulesResource) Read(ctx context.Context, req resource.ReadRequest, r
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseItemTest(res.Object.Data)
+	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -582,11 +583,11 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.Object != nil) {
+	if !(res.Object != nil && res.Object.Data != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsUpdateNPARulesByIDResponseBody(res.Object)
+	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	var ruleId1 string
 	ruleId1 = data.RuleID.ValueString()
@@ -617,7 +618,7 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseItemTest(res1.Object.Data)
+	data.RefreshFromSharedNpaPolicyResponseItem(res1.Object.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
