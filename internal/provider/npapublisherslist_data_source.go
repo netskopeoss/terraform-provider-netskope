@@ -28,8 +28,8 @@ type NPAPublishersListDataSource struct {
 
 // NPAPublishersListDataSourceModel describes the data model.
 type NPAPublishersListDataSourceModel struct {
-	Data  *tfTypes.Data `tfsdk:"data"`
-	Total types.Int64   `tfsdk:"total"`
+	Data  *tfTypes.PublishersGetResponseData `tfsdk:"data"`
+	Total types.Int64                        `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.

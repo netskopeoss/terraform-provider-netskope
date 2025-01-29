@@ -58,11 +58,11 @@ func (e *NPARulesStatus) UnmarshalJSON(data []byte) error {
 
 // NPARulesResponseBody - successful operation
 type NPARulesResponseBody struct {
-	Data   *shared.NpaPolicyResponseItemTest `json:"data,omitempty"`
-	Status *NPARulesStatus                   `json:"status,omitempty"`
+	Data   *shared.NpaPolicyResponseItem `json:"data,omitempty"`
+	Status *NPARulesStatus               `json:"status,omitempty"`
 }
 
-func (o *NPARulesResponseBody) GetData() *shared.NpaPolicyResponseItemTest {
+func (o *NPARulesResponseBody) GetData() *shared.NpaPolicyResponseItem {
 	if o == nil {
 		return nil
 	}

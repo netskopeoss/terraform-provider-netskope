@@ -2,6 +2,8 @@
 
 package shared
 
+// TagItem - Tags are not currently supported by Netskope.\
+// Please do not use!
 type TagItem struct {
 	TagID   *int    `json:"tag_id,omitempty"`
 	TagName *string `json:"tag_name,omitempty"`

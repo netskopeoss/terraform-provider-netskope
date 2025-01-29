@@ -20,7 +20,7 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 			if dataItem.AppOption == nil {
 				data1.AppOption = nil
 			} else {
-				data1.AppOption = &tfTypes.PublishersPrivateAppsResponseAppOption{}
+				data1.AppOption = &tfTypes.AppOption{}
 			}
 			data1.ClientlessAccess = types.BoolPointerValue(dataItem.ClientlessAccess)
 			if dataItem.ExternalID != nil {
@@ -40,6 +40,7 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 			data1.Protocols = []tfTypes.ProtocolResponseItem{}
 			for protocolsCount, protocolsItem := range dataItem.Protocols {
 				var protocols1 tfTypes.ProtocolResponseItem
+				protocols1.CreatedAt = types.StringPointerValue(protocolsItem.CreatedAt)
 				if protocolsItem.ID != nil {
 					protocols1.ID = types.Int64Value(int64(*protocolsItem.ID))
 				} else {
@@ -52,20 +53,23 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 					protocols1.ServiceID = types.Int64Null()
 				}
 				protocols1.Transport = types.StringPointerValue(protocolsItem.Transport)
+				protocols1.UpdatedAt = types.StringPointerValue(protocolsItem.UpdatedAt)
 				if protocolsCount+1 > len(data1.Protocols) {
 					data1.Protocols = append(data1.Protocols, protocols1)
 				} else {
+					data1.Protocols[protocolsCount].CreatedAt = protocols1.CreatedAt
 					data1.Protocols[protocolsCount].ID = protocols1.ID
 					data1.Protocols[protocolsCount].Port = protocols1.Port
 					data1.Protocols[protocolsCount].ServiceID = protocols1.ServiceID
 					data1.Protocols[protocolsCount].Transport = protocols1.Transport
+					data1.Protocols[protocolsCount].UpdatedAt = protocols1.UpdatedAt
 				}
 			}
 			data1.PublicHost = types.StringPointerValue(dataItem.PublicHost)
 			if dataItem.Reachability == nil {
 				data1.Reachability = nil
 			} else {
-				data1.Reachability = &tfTypes.PublishersPrivateAppsResponseReachability{}
+				data1.Reachability = &tfTypes.Reachability{}
 				if dataItem.Reachability.ErrorCode != nil {
 					data1.Reachability.ErrorCode = types.Int64Value(int64(*dataItem.Reachability.ErrorCode))
 				} else {
@@ -79,15 +83,16 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 			for servicePublisherAssignmentsCount, servicePublisherAssignmentsItem := range dataItem.ServicePublisherAssignments {
 				var servicePublisherAssignments1 tfTypes.ServicePublisherAssignmentItem
 				servicePublisherAssignments1.Primary = types.BoolPointerValue(servicePublisherAssignmentsItem.Primary)
-				if servicePublisherAssignmentsItem.PublisherID != nil {
-					servicePublisherAssignments1.PublisherID = types.Int64Value(int64(*servicePublisherAssignmentsItem.PublisherID))
+				if servicePublisherAssignmentsItem.PublisherExternalID != nil {
+					servicePublisherAssignments1.PublisherExternalID = types.Int64Value(int64(*servicePublisherAssignmentsItem.PublisherExternalID))
 				} else {
-					servicePublisherAssignments1.PublisherID = types.Int64Null()
+					servicePublisherAssignments1.PublisherExternalID = types.Int64Null()
 				}
+				servicePublisherAssignments1.PublisherName = types.StringPointerValue(servicePublisherAssignmentsItem.PublisherName)
 				if servicePublisherAssignmentsItem.Reachability == nil {
 					servicePublisherAssignments1.Reachability = nil
 				} else {
-					servicePublisherAssignments1.Reachability = &tfTypes.PublishersPrivateAppsResponseReachability{}
+					servicePublisherAssignments1.Reachability = &tfTypes.Reachability{}
 					if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
 						servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
 					} else {
@@ -96,18 +101,19 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 					servicePublisherAssignments1.Reachability.ErrorString = types.StringPointerValue(servicePublisherAssignmentsItem.Reachability.ErrorString)
 					servicePublisherAssignments1.Reachability.Reachable = types.BoolPointerValue(servicePublisherAssignmentsItem.Reachability.Reachable)
 				}
-				if servicePublisherAssignmentsItem.ServiceID != nil {
-					servicePublisherAssignments1.ServiceID = types.Int64Value(int64(*servicePublisherAssignmentsItem.ServiceID))
+				if servicePublisherAssignmentsItem.ServiceExternalID != nil {
+					servicePublisherAssignments1.ServiceExternalID = types.Int64Value(int64(*servicePublisherAssignmentsItem.ServiceExternalID))
 				} else {
-					servicePublisherAssignments1.ServiceID = types.Int64Null()
+					servicePublisherAssignments1.ServiceExternalID = types.Int64Null()
 				}
 				if servicePublisherAssignmentsCount+1 > len(data1.ServicePublisherAssignments) {
 					data1.ServicePublisherAssignments = append(data1.ServicePublisherAssignments, servicePublisherAssignments1)
 				} else {
 					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].Primary = servicePublisherAssignments1.Primary
-					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].PublisherID = servicePublisherAssignments1.PublisherID
+					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].PublisherExternalID = servicePublisherAssignments1.PublisherExternalID
+					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].PublisherName = servicePublisherAssignments1.PublisherName
 					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].Reachability = servicePublisherAssignments1.Reachability
-					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].ServiceID = servicePublisherAssignments1.ServiceID
+					data1.ServicePublisherAssignments[servicePublisherAssignmentsCount].ServiceExternalID = servicePublisherAssignments1.ServiceExternalID
 				}
 			}
 			data1.SupplimentDNSForOsx = types.BoolPointerValue(dataItem.SupplimentDNSForOsx)

@@ -33,6 +33,7 @@ data "ns_npa_rules" "my_nparules" {
 ### Read-Only
 
 - `enabled` (String)
+- `group_id` (String)
 - `modify_by` (String)
 - `modify_time` (String)
 - `modify_type` (String)
@@ -47,15 +48,38 @@ data "ns_npa_rules" "my_nparules" {
 Read-Only:
 
 - `access_method` (List of String)
+- `b_negate_net_location` (Boolean)
+- `b_negate_src_countries` (Boolean)
+- `classification` (String)
+- `device_classification_id` (List of Number)
+- `dlp_actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--dlp_actions))
 - `external_dlp` (Boolean)
 - `json_version` (Number)
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
+- `net_location_obj` (List of String)
+- `organization_units` (List of String)
 - `policy_type` (String)
+- `private_app_tag_ids` (List of String)
+- `private_app_tags` (List of String)
 - `private_apps` (List of String)
 - `private_apps_with_activities` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--private_apps_with_activities))
 - `show_dlp_profile_action_table` (Boolean)
+- `src_countries` (List of String)
+- `tss_actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--tss_actions))
+- `tss_profile` (List of String)
+- `user_groups` (List of String)
 - `user_type` (String)
+- `users` (List of String)
 - `version` (Number)
+
+<a id="nestedatt--rule_data--dlp_actions"></a>
+### Nested Schema for `rule_data.dlp_actions`
+
+Read-Only:
+
+- `actions` (List of String)
+- `dlp_profile` (String)
+
 
 <a id="nestedatt--rule_data--match_criteria_action"></a>
 ### Nested Schema for `rule_data.match_criteria_action`
@@ -81,3 +105,23 @@ Read-Only:
 
 - `activity` (String)
 - `list_of_constraints` (List of String)
+
+
+
+<a id="nestedatt--rule_data--tss_actions"></a>
+### Nested Schema for `rule_data.tss_actions`
+
+Read-Only:
+
+- `actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--tss_actions--actions))
+- `tss_profile` (List of String)
+
+<a id="nestedatt--rule_data--tss_actions--actions"></a>
+### Nested Schema for `rule_data.tss_actions.actions`
+
+Read-Only:
+
+- `action_name` (String)
+- `remediation_profile` (String)
+- `severity` (String)
+- `template` (String)

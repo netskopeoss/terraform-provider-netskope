@@ -2,7 +2,7 @@
 
 package shared
 
-type NpaPolicyResponseItemData struct {
+type NpaPolicyResponseItem struct {
 	Enabled    *string            `json:"enabled,omitempty"`
 	ModifyBy   *string            `json:"modify_by,omitempty"`
 	ModifyTime *string            `json:"modify_time,omitempty"`
@@ -14,76 +14,65 @@ type NpaPolicyResponseItemData struct {
 	RuleName   *string            `json:"rule_name,omitempty"`
 }
 
-func (o *NpaPolicyResponseItemData) GetEnabled() *string {
+func (o *NpaPolicyResponseItem) GetEnabled() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Enabled
 }
 
-func (o *NpaPolicyResponseItemData) GetModifyBy() *string {
+func (o *NpaPolicyResponseItem) GetModifyBy() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ModifyBy
 }
 
-func (o *NpaPolicyResponseItemData) GetModifyTime() *string {
+func (o *NpaPolicyResponseItem) GetModifyTime() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ModifyTime
 }
 
-func (o *NpaPolicyResponseItemData) GetModifyType() *string {
+func (o *NpaPolicyResponseItem) GetModifyType() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ModifyType
 }
 
-func (o *NpaPolicyResponseItemData) GetPolicyType() *string {
+func (o *NpaPolicyResponseItem) GetPolicyType() *string {
 	if o == nil {
 		return nil
 	}
 	return o.PolicyType
 }
 
-func (o *NpaPolicyResponseItemData) GetGroupID() *string {
+func (o *NpaPolicyResponseItem) GetGroupID() *string {
 	if o == nil {
 		return nil
 	}
 	return o.GroupID
 }
 
-func (o *NpaPolicyResponseItemData) GetRuleData() *NpaPolicyRuleData {
+func (o *NpaPolicyResponseItem) GetRuleData() *NpaPolicyRuleData {
 	if o == nil {
 		return nil
 	}
 	return o.RuleData
 }
 
-func (o *NpaPolicyResponseItemData) GetRuleID() *string {
+func (o *NpaPolicyResponseItem) GetRuleID() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RuleID
 }
 
-func (o *NpaPolicyResponseItemData) GetRuleName() *string {
+func (o *NpaPolicyResponseItem) GetRuleName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.RuleName
-}
-
-type NpaPolicyResponseItem struct {
-	Data *NpaPolicyResponseItemData `json:"data,omitempty"`
-}
-
-func (o *NpaPolicyResponseItem) GetData() *NpaPolicyResponseItemData {
-	if o == nil {
-		return nil
-	}
-	return o.Data
 }

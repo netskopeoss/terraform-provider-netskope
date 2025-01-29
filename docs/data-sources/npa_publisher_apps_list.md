@@ -70,10 +70,12 @@ Read-Only:
 
 Read-Only:
 
+- `created_at` (String)
 - `id` (Number)
 - `port` (String)
 - `service_id` (Number)
 - `transport` (String)
+- `updated_at` (String)
 
 
 <a id="nestedatt--data--reachability"></a>
@@ -92,9 +94,10 @@ Read-Only:
 Read-Only:
 
 - `primary` (Boolean)
-- `publisher_id` (Number)
+- `publisher_external_id` (Number)
+- `publisher_name` (String)
 - `reachability` (Attributes) (see [below for nested schema](#nestedatt--data--service_publisher_assignments--reachability))
-- `service_id` (Number)
+- `service_external_id` (Number)
 
 <a id="nestedatt--data--service_publisher_assignments--reachability"></a>
 ### Nested Schema for `data.service_publisher_assignments.reachability`

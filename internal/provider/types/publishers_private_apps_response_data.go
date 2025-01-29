@@ -5,21 +5,21 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type PublishersPrivateAppsResponseData struct {
-	AllowUnauthenticatedCors    types.Bool                                 `tfsdk:"allow_unauthenticated_cors"`
-	AppOption                   *PublishersPrivateAppsResponseAppOption    `tfsdk:"app_option"`
-	ClientlessAccess            types.Bool                                 `tfsdk:"clientless_access"`
-	ExternalID                  types.Int64                                `tfsdk:"external_id"`
-	Host                        types.String                               `tfsdk:"host"`
-	ID                          types.Int64                                `tfsdk:"id"`
-	IsUserPortalApp             types.Bool                                 `tfsdk:"is_user_portal_app"`
-	PrivateAppName              types.String                               `tfsdk:"private_app_name"`
-	PrivateAppProtocol          types.String                               `tfsdk:"private_app_protocol"`
-	Protocols                   []ProtocolResponseItem                     `tfsdk:"protocols"`
-	PublicHost                  types.String                               `tfsdk:"public_host"`
-	Reachability                *PublishersPrivateAppsResponseReachability `tfsdk:"reachability"`
-	RealHost                    types.String                               `tfsdk:"real_host"`
-	ServicePublisherAssignments []ServicePublisherAssignmentItem           `tfsdk:"service_publisher_assignments"`
-	SupplimentDNSForOsx         types.Bool                                 `tfsdk:"suppliment_dns_for_osx"`
-	TrustSelfSignedCerts        types.Bool                                 `tfsdk:"trust_self_signed_certs"`
-	UsePublisherDNS             types.Bool                                 `tfsdk:"use_publisher_dns"`
+	AllowUnauthenticatedCors    types.Bool                       `tfsdk:"allow_unauthenticated_cors"`
+	AppOption                   *AppOption                       `tfsdk:"app_option"`
+	ClientlessAccess            types.Bool                       `tfsdk:"clientless_access"`
+	ExternalID                  types.Int64                      `tfsdk:"external_id"`
+	Host                        types.String                     `tfsdk:"host"`
+	ID                          types.Int64                      `tfsdk:"id"`
+	IsUserPortalApp             types.Bool                       `tfsdk:"is_user_portal_app"`
+	PrivateAppName              types.String                     `tfsdk:"private_app_name"`
+	PrivateAppProtocol          types.String                     `tfsdk:"private_app_protocol"`
+	Protocols                   []ProtocolResponseItem           `tfsdk:"protocols"`
+	PublicHost                  types.String                     `tfsdk:"public_host"`
+	Reachability                *Reachability                    `tfsdk:"reachability"`
+	RealHost                    types.String                     `tfsdk:"real_host"`
+	ServicePublisherAssignments []ServicePublisherAssignmentItem `tfsdk:"service_publisher_assignments"`
+	SupplimentDNSForOsx         types.Bool                       `tfsdk:"suppliment_dns_for_osx"`
+	TrustSelfSignedCerts        types.Bool                       `tfsdk:"trust_self_signed_certs"`
+	UsePublisherDNS             types.Bool                       `tfsdk:"use_publisher_dns"`
 }

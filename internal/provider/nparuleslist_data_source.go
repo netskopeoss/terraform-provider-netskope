@@ -29,12 +29,12 @@ type NPARulesListDataSource struct {
 
 // NPARulesListDataSourceModel describes the data model.
 type NPARulesListDataSourceModel struct {
-	Filter    types.String                   `tfsdk:"filter"`
-	Items     *tfTypes.NpaPolicyResponseItem `tfsdk:"items"`
-	Limit     types.Int64                    `tfsdk:"limit"`
-	Offset    types.Int64                    `tfsdk:"offset"`
-	Sortby    types.String                   `tfsdk:"sortby"`
-	Sortorder types.String                   `tfsdk:"sortorder"`
+	Data      []tfTypes.NpaPolicyResponseItem `tfsdk:"data"`
+	Filter    types.String                    `tfsdk:"filter"`
+	Limit     types.Int64                     `tfsdk:"limit"`
+	Offset    types.Int64                     `tfsdk:"offset"`
+	Sortby    types.String                    `tfsdk:"sortby"`
+	Sortorder types.String                    `tfsdk:"sortorder"`
 }
 
 // Metadata returns the data source type name.
@@ -48,199 +48,196 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 		MarkdownDescription: "NPARulesList DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"filter": schema.StringAttribute{
-				Optional:    true,
-				Description: `Query string based on query operaters`,
-			},
-			"items": schema.SingleNestedAttribute{
+			"data": schema.ListNestedAttribute{
 				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"data": schema.SingleNestedAttribute{
-						Computed: true,
-						Attributes: map[string]schema.Attribute{
-							"enabled": schema.StringAttribute{
-								Computed: true,
-							},
-							"group_id": schema.StringAttribute{
-								Computed: true,
-							},
-							"modify_by": schema.StringAttribute{
-								Computed: true,
-							},
-							"modify_time": schema.StringAttribute{
-								Computed: true,
-							},
-							"modify_type": schema.StringAttribute{
-								Computed: true,
-							},
-							"policy_type": schema.StringAttribute{
-								Computed: true,
-							},
-							"rule_data": schema.SingleNestedAttribute{
-								Computed: true,
-								Attributes: map[string]schema.Attribute{
-									"access_method": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
-									},
-									"b_negate_net_location": schema.BoolAttribute{
-										Computed: true,
-									},
-									"b_negate_src_countries": schema.BoolAttribute{
-										Computed: true,
-									},
-									"classification": schema.StringAttribute{
-										Computed: true,
-									},
-									"device_classification_id": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.Int64Type,
-									},
-									"dlp_actions": schema.ListNestedAttribute{
-										Computed: true,
-										NestedObject: schema.NestedAttributeObject{
-											Attributes: map[string]schema.Attribute{
-												"actions": schema.ListAttribute{
-													Computed:    true,
-													ElementType: types.StringType,
-												},
-												"dlp_profile": schema.StringAttribute{
-													Computed: true,
-												},
-											},
-										},
-									},
-									"external_dlp": schema.BoolAttribute{
-										Computed: true,
-									},
-									"json_version": schema.Int64Attribute{
-										Computed: true,
-									},
-									"match_criteria_action": schema.SingleNestedAttribute{
-										Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"enabled": schema.StringAttribute{
+							Computed: true,
+						},
+						"group_id": schema.StringAttribute{
+							Computed: true,
+						},
+						"modify_by": schema.StringAttribute{
+							Computed: true,
+						},
+						"modify_time": schema.StringAttribute{
+							Computed: true,
+						},
+						"modify_type": schema.StringAttribute{
+							Computed: true,
+						},
+						"policy_type": schema.StringAttribute{
+							Computed: true,
+						},
+						"rule_data": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"access_method": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"b_negate_net_location": schema.BoolAttribute{
+									Computed: true,
+								},
+								"b_negate_src_countries": schema.BoolAttribute{
+									Computed: true,
+								},
+								"classification": schema.StringAttribute{
+									Computed: true,
+								},
+								"device_classification_id": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.Int64Type,
+								},
+								"dlp_actions": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
 										Attributes: map[string]schema.Attribute{
-											"action_name": schema.StringAttribute{
+											"actions": schema.ListAttribute{
+												Computed:    true,
+												ElementType: types.StringType,
+											},
+											"dlp_profile": schema.StringAttribute{
 												Computed: true,
 											},
 										},
 									},
-									"net_location_obj": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
-									},
-									"organization_units": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
-									},
-									"policy_type": schema.StringAttribute{
-										Computed: true,
-									},
-									"private_app_tag_ids": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
-									},
-									"private_app_tags": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
-									},
-									"private_apps": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
-									},
-									"private_apps_with_activities": schema.ListNestedAttribute{
-										Computed: true,
-										NestedObject: schema.NestedAttributeObject{
-											Attributes: map[string]schema.Attribute{
-												"activities": schema.ListNestedAttribute{
-													Computed: true,
-													NestedObject: schema.NestedAttributeObject{
-														Attributes: map[string]schema.Attribute{
-															"activity": schema.StringAttribute{
-																Computed: true,
-															},
-															"list_of_constraints": schema.ListAttribute{
-																Computed:    true,
-																ElementType: types.StringType,
-															},
-														},
-													},
-												},
-												"app_id": schema.ListAttribute{
-													Computed:    true,
-													ElementType: types.StringType,
-												},
-												"app_name": schema.StringAttribute{
-													Computed: true,
-												},
-											},
+								},
+								"external_dlp": schema.BoolAttribute{
+									Computed: true,
+								},
+								"json_version": schema.Int64Attribute{
+									Computed: true,
+								},
+								"match_criteria_action": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"action_name": schema.StringAttribute{
+											Computed: true,
 										},
-									},
-									"show_dlp_profile_action_table": schema.BoolAttribute{
-										Computed: true,
-									},
-									"src_countries": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
-									},
-									"tss_actions": schema.ListNestedAttribute{
-										Computed: true,
-										NestedObject: schema.NestedAttributeObject{
-											Attributes: map[string]schema.Attribute{
-												"actions": schema.ListNestedAttribute{
-													Computed: true,
-													NestedObject: schema.NestedAttributeObject{
-														Attributes: map[string]schema.Attribute{
-															"action_name": schema.StringAttribute{
-																Computed: true,
-															},
-															"remediation_profile": schema.StringAttribute{
-																Computed: true,
-															},
-															"severity": schema.StringAttribute{
-																Computed: true,
-															},
-															"template": schema.StringAttribute{
-																Computed: true,
-															},
-														},
-													},
-												},
-												"tss_profile": schema.ListAttribute{
-													Computed:    true,
-													ElementType: types.StringType,
-												},
-											},
-										},
-									},
-									"tss_profile": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
-									},
-									"user_groups": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
-									},
-									"user_type": schema.StringAttribute{
-										Computed: true,
-									},
-									"users": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
-									},
-									"version": schema.Int64Attribute{
-										Computed: true,
 									},
 								},
+								"net_location_obj": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"organization_units": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"policy_type": schema.StringAttribute{
+									Computed: true,
+								},
+								"private_app_tag_ids": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"private_app_tags": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"private_apps": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"private_apps_with_activities": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"activities": schema.ListNestedAttribute{
+												Computed: true,
+												NestedObject: schema.NestedAttributeObject{
+													Attributes: map[string]schema.Attribute{
+														"activity": schema.StringAttribute{
+															Computed: true,
+														},
+														"list_of_constraints": schema.ListAttribute{
+															Computed:    true,
+															ElementType: types.StringType,
+														},
+													},
+												},
+											},
+											"app_id": schema.ListAttribute{
+												Computed:    true,
+												ElementType: types.StringType,
+											},
+											"app_name": schema.StringAttribute{
+												Computed: true,
+											},
+										},
+									},
+								},
+								"show_dlp_profile_action_table": schema.BoolAttribute{
+									Computed: true,
+								},
+								"src_countries": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"tss_actions": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"actions": schema.ListNestedAttribute{
+												Computed: true,
+												NestedObject: schema.NestedAttributeObject{
+													Attributes: map[string]schema.Attribute{
+														"action_name": schema.StringAttribute{
+															Computed: true,
+														},
+														"remediation_profile": schema.StringAttribute{
+															Computed: true,
+														},
+														"severity": schema.StringAttribute{
+															Computed: true,
+														},
+														"template": schema.StringAttribute{
+															Computed: true,
+														},
+													},
+												},
+											},
+											"tss_profile": schema.ListAttribute{
+												Computed:    true,
+												ElementType: types.StringType,
+											},
+										},
+									},
+								},
+								"tss_profile": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"user_groups": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"user_type": schema.StringAttribute{
+									Computed: true,
+								},
+								"users": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"version": schema.Int64Attribute{
+									Computed: true,
+								},
 							},
-							"rule_id": schema.StringAttribute{
-								Computed: true,
-							},
-							"rule_name": schema.StringAttribute{
-								Computed: true,
-							},
+						},
+						"rule_id": schema.StringAttribute{
+							Computed: true,
+						},
+						"rule_name": schema.StringAttribute{
+							Computed: true,
 						},
 					},
 				},
+			},
+			"filter": schema.StringAttribute{
+				Optional:    true,
+				Description: `Query string based on query operaters`,
 			},
 			"limit": schema.Int64Attribute{
 				Optional:    true,
@@ -357,11 +354,11 @@ func (r *NPARulesListDataSource) Read(ctx context.Context, req datasource.ReadRe
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.Object != nil && res.Object.Data != nil) {
+	if !(res.NpaPolicyResponseList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponse(res.Object.Data)
+	data.RefreshFromSharedNpaPolicyResponseList(res.NpaPolicyResponseList)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

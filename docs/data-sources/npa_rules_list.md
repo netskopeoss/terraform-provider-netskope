@@ -35,17 +35,10 @@ data "ns_npa_rules_list" "my_nparuleslist" {
 
 ### Read-Only
 
-- `items` (Attributes) (see [below for nested schema](#nestedatt--items))
+- `data` (Attributes List) (see [below for nested schema](#nestedatt--data))
 
-<a id="nestedatt--items"></a>
-### Nested Schema for `items`
-
-Read-Only:
-
-- `data` (Attributes) (see [below for nested schema](#nestedatt--items--data))
-
-<a id="nestedatt--items--data"></a>
-### Nested Schema for `items.data`
+<a id="nestedatt--data"></a>
+### Nested Schema for `data`
 
 Read-Only:
 
@@ -55,12 +48,12 @@ Read-Only:
 - `modify_time` (String)
 - `modify_type` (String)
 - `policy_type` (String)
-- `rule_data` (Attributes) (see [below for nested schema](#nestedatt--items--data--rule_data))
+- `rule_data` (Attributes) (see [below for nested schema](#nestedatt--data--rule_data))
 - `rule_id` (String)
 - `rule_name` (String)
 
-<a id="nestedatt--items--data--rule_data"></a>
-### Nested Schema for `items.data.rule_data`
+<a id="nestedatt--data--rule_data"></a>
+### Nested Schema for `data.rule_data`
 
 Read-Only:
 
@@ -69,28 +62,28 @@ Read-Only:
 - `b_negate_src_countries` (Boolean)
 - `classification` (String)
 - `device_classification_id` (List of Number)
-- `dlp_actions` (Attributes List) (see [below for nested schema](#nestedatt--items--data--rule_data--dlp_actions))
+- `dlp_actions` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--dlp_actions))
 - `external_dlp` (Boolean)
 - `json_version` (Number)
-- `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--items--data--rule_data--match_criteria_action))
+- `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--data--rule_data--match_criteria_action))
 - `net_location_obj` (List of String)
 - `organization_units` (List of String)
 - `policy_type` (String)
 - `private_app_tag_ids` (List of String)
 - `private_app_tags` (List of String)
 - `private_apps` (List of String)
-- `private_apps_with_activities` (Attributes List) (see [below for nested schema](#nestedatt--items--data--rule_data--private_apps_with_activities))
+- `private_apps_with_activities` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--private_apps_with_activities))
 - `show_dlp_profile_action_table` (Boolean)
 - `src_countries` (List of String)
-- `tss_actions` (Attributes List) (see [below for nested schema](#nestedatt--items--data--rule_data--tss_actions))
+- `tss_actions` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--tss_actions))
 - `tss_profile` (List of String)
 - `user_groups` (List of String)
 - `user_type` (String)
 - `users` (List of String)
 - `version` (Number)
 
-<a id="nestedatt--items--data--rule_data--dlp_actions"></a>
-### Nested Schema for `items.data.rule_data.dlp_actions`
+<a id="nestedatt--data--rule_data--dlp_actions"></a>
+### Nested Schema for `data.rule_data.dlp_actions`
 
 Read-Only:
 
@@ -98,25 +91,25 @@ Read-Only:
 - `dlp_profile` (String)
 
 
-<a id="nestedatt--items--data--rule_data--match_criteria_action"></a>
-### Nested Schema for `items.data.rule_data.match_criteria_action`
+<a id="nestedatt--data--rule_data--match_criteria_action"></a>
+### Nested Schema for `data.rule_data.match_criteria_action`
 
 Read-Only:
 
 - `action_name` (String)
 
 
-<a id="nestedatt--items--data--rule_data--private_apps_with_activities"></a>
-### Nested Schema for `items.data.rule_data.private_apps_with_activities`
+<a id="nestedatt--data--rule_data--private_apps_with_activities"></a>
+### Nested Schema for `data.rule_data.private_apps_with_activities`
 
 Read-Only:
 
-- `activities` (Attributes List) (see [below for nested schema](#nestedatt--items--data--rule_data--private_apps_with_activities--activities))
+- `activities` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--private_apps_with_activities--activities))
 - `app_id` (List of String)
 - `app_name` (String)
 
-<a id="nestedatt--items--data--rule_data--private_apps_with_activities--activities"></a>
-### Nested Schema for `items.data.rule_data.private_apps_with_activities.activities`
+<a id="nestedatt--data--rule_data--private_apps_with_activities--activities"></a>
+### Nested Schema for `data.rule_data.private_apps_with_activities.activities`
 
 Read-Only:
 
@@ -125,16 +118,16 @@ Read-Only:
 
 
 
-<a id="nestedatt--items--data--rule_data--tss_actions"></a>
-### Nested Schema for `items.data.rule_data.tss_actions`
+<a id="nestedatt--data--rule_data--tss_actions"></a>
+### Nested Schema for `data.rule_data.tss_actions`
 
 Read-Only:
 
-- `actions` (Attributes List) (see [below for nested schema](#nestedatt--items--data--rule_data--tss_actions--actions))
+- `actions` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--tss_actions--actions))
 - `tss_profile` (List of String)
 
-<a id="nestedatt--items--data--rule_data--tss_actions--actions"></a>
-### Nested Schema for `items.data.rule_data.tss_actions.actions`
+<a id="nestedatt--data--rule_data--tss_actions--actions"></a>
+### Nested Schema for `data.rule_data.tss_actions.actions`
 
 Read-Only:
 

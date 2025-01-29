@@ -1,17 +1,17 @@
 lockVersion: 2.0.0
 id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
-  docChecksum: aef8f83fd4a22b24b0b570f82a93b439
+  docChecksum: 1075379a11a94f95ebc04e3961169ce2
   docVersion: 1.0.0
-  speakeasyVersion: 1.456.0
-  generationVersion: 2.481.0
-  releaseVersion: 0.5.27
-  configChecksum: e325496c5755762b642df2d65746fb83
+  speakeasyVersion: 1.477.2
+  generationVersion: 2.497.8
+  releaseVersion: 0.8.89
+  configChecksum: 9fd643077da3b70d4033866a8c4623b0
 features:
   terraform:
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.2.0
-    core: 3.27.6
+    core: 3.29.0
     envVarSecurityUsage: 0.1.0
     globalSecurity: 2.81.9
     globalServerURLs: 2.82.1
@@ -20,9 +20,13 @@ features:
     nameOverrides: 2.81.2
 generatedFiles:
   - .gitattributes
-  - CONTRIBUTING.md
   - USAGE.md
   - examples/README.md
+  - examples/data-sources/ns_npa_policy_groups/data-source.tf
+  - examples/data-sources/ns_npa_policy_groups_list/data-source.tf
+  - examples/data-sources/ns_npa_private_app/data-source.tf
+  - examples/data-sources/ns_npa_private_apps_list/data-source.tf
+  - examples/data-sources/ns_npa_private_policy_in_use/data-source.tf
   - examples/data-sources/ns_npa_publisher/data-source.tf
   - examples/data-sources/ns_npa_publisher_apps_list/data-source.tf
   - examples/data-sources/ns_npa_publisher_upgrade_profile/data-source.tf
@@ -33,6 +37,10 @@ generatedFiles:
   - examples/data-sources/ns_npa_rules/data-source.tf
   - examples/data-sources/ns_npa_rules_list/data-source.tf
   - examples/provider/provider.tf
+  - examples/resources/ns_npa_policy_groups/import.sh
+  - examples/resources/ns_npa_policy_groups/resource.tf
+  - examples/resources/ns_npa_private_app/import.sh
+  - examples/resources/ns_npa_private_app/resource.tf
   - examples/resources/ns_npa_publisher/import.sh
   - examples/resources/ns_npa_publisher/resource.tf
   - examples/resources/ns_npa_publisher_token/resource.tf
@@ -55,6 +63,20 @@ generatedFiles:
   - internal/planmodifiers/setplanmodifier/suppress_diff.go
   - internal/planmodifiers/stringplanmodifier/suppress_diff.go
   - internal/planmodifiers/utils/state_check.go
+  - internal/provider/npapolicygroups_data_source.go
+  - internal/provider/npapolicygroups_data_source_sdk.go
+  - internal/provider/npapolicygroups_resource.go
+  - internal/provider/npapolicygroups_resource_sdk.go
+  - internal/provider/npapolicygroupslist_data_source.go
+  - internal/provider/npapolicygroupslist_data_source_sdk.go
+  - internal/provider/npaprivateapp_data_source.go
+  - internal/provider/npaprivateapp_data_source_sdk.go
+  - internal/provider/npaprivateapp_resource.go
+  - internal/provider/npaprivateapp_resource_sdk.go
+  - internal/provider/npaprivateappslist_data_source.go
+  - internal/provider/npaprivateappslist_data_source_sdk.go
+  - internal/provider/npaprivatepolicyinuse_data_source.go
+  - internal/provider/npaprivatepolicyinuse_data_source_sdk.go
   - internal/provider/npapublisher_data_source.go
   - internal/provider/npapublisher_data_source_sdk.go
   - internal/provider/npapublisher_resource.go
@@ -103,18 +125,26 @@ generatedFiles:
   - internal/provider/reflect/slice.go
   - internal/provider/reflect/struct.go
   - internal/provider/types/activities.go
+  - internal/provider/types/app_option.go
   - internal/provider/types/apply.go
   - internal/provider/types/data.go
+  - internal/provider/types/data1.go
+  - internal/provider/types/group_order.go
   - internal/provider/types/match_criteria_action.go
   - internal/provider/types/npa_policy_response_item.go
-  - internal/provider/types/npa_policy_response_item_data.go
   - internal/provider/types/npa_policy_rule_data.go
   - internal/provider/types/npa_policy_rule_dlp.go
   - internal/provider/types/npa_policy_rule_tss.go
   - internal/provider/types/npa_policy_rule_tss_actions.go
+  - internal/provider/types/npa_policygroup_request_group_order.go
+  - internal/provider/types/npa_policygroup_response_item.go
+  - internal/provider/types/private_apps_get_response.go
+  - internal/provider/types/private_apps_response_reachability.go
   - internal/provider/types/private_apps_with_activities.go
+  - internal/provider/types/protocol_item.go
   - internal/provider/types/protocol_response_item.go
   - internal/provider/types/publisher_bulk_item.go
+  - internal/provider/types/publisher_item.go
   - internal/provider/types/publisher_response_assessment.go
   - internal/provider/types/publisher_response_ca_certs_status.go
   - internal/provider/types/publisher_response_capabilities.go
@@ -127,14 +157,15 @@ generatedFiles:
   - internal/provider/types/publisher_upgrade_profile_list_response_data.go
   - internal/provider/types/publishers.go
   - internal/provider/types/publishers_bulk_response_data.go
+  - internal/provider/types/publishers_get_response_data.go
   - internal/provider/types/publishers_get_response_publishers.go
-  - internal/provider/types/publishers_private_apps_response_app_option.go
   - internal/provider/types/publishers_private_apps_response_data.go
-  - internal/provider/types/publishers_private_apps_response_reachability.go
+  - internal/provider/types/reachability.go
   - internal/provider/types/release_item.go
-  - internal/provider/types/rule_data.go
+  - internal/provider/types/response_body.go
   - internal/provider/types/rule_order.go
   - internal/provider/types/service_publisher_assignment_item.go
+  - internal/provider/types/tag_item.go
   - internal/provider/types/upgrade_profiles.go
   - internal/provider/types/upgrade_publisher_response.go
   - internal/provider/types/upgrade_publisher_response_assessment.go
@@ -142,8 +173,6 @@ generatedFiles:
   - internal/provider/types/upgrade_publisher_response_upgrade_failed_reason.go
   - internal/provider/utils.go
   - internal/sdk/.gitattributes
-  - internal/sdk/.gitignore
-  - internal/sdk/CONTRIBUTING.md
   - internal/sdk/internal/hooks/hooks.go
   - internal/sdk/internal/utils/contenttype.go
   - internal/sdk/internal/utils/env.go
@@ -158,15 +187,22 @@ generatedFiles:
   - internal/sdk/internal/utils/utils.go
   - internal/sdk/models/errors/sdkerror.go
   - internal/sdk/models/operations/bulkupdatenpapublishers.go
+  - internal/sdk/models/operations/createnpapolicygroups.go
+  - internal/sdk/models/operations/createnpaprivateapps.go
   - internal/sdk/models/operations/createnpapublisheralerts.go
   - internal/sdk/models/operations/createnpapublishers.go
   - internal/sdk/models/operations/createnpapublisherupgradeprofile.go
   - internal/sdk/models/operations/createnparules.go
+  - internal/sdk/models/operations/deletenpapolicygroups.go
+  - internal/sdk/models/operations/deletenpaprivateapp.go
   - internal/sdk/models/operations/deletenpapublishers.go
   - internal/sdk/models/operations/deletenpapublisherupgradeprofile.go
   - internal/sdk/models/operations/deletenparules.go
-  - internal/sdk/models/operations/deletesteeringappsprivateprivateappid.go
   - internal/sdk/models/operations/generatenpapublishertoken.go
+  - internal/sdk/models/operations/getnpapolicygroupbyid.go
+  - internal/sdk/models/operations/getnpapolicygroups.go
+  - internal/sdk/models/operations/getnpapolicyinuse.go
+  - internal/sdk/models/operations/getnpaprivateapp.go
   - internal/sdk/models/operations/getnpapublisheralerts.go
   - internal/sdk/models/operations/getnpapublisherapps.go
   - internal/sdk/models/operations/getnpapublisherbyid.go
@@ -174,25 +210,24 @@ generatedFiles:
   - internal/sdk/models/operations/getnpapublishers.go
   - internal/sdk/models/operations/getnpapublisherupgradeprofile.go
   - internal/sdk/models/operations/getnparules.go
-  - internal/sdk/models/operations/getsteeringappsprivate.go
-  - internal/sdk/models/operations/getsteeringappsprivateprivateappid.go
+  - internal/sdk/models/operations/listnpaprivateapps.go
   - internal/sdk/models/operations/listnpapublisherupgradeprofiles.go
   - internal/sdk/models/operations/nparules.go
   - internal/sdk/models/operations/options.go
-  - internal/sdk/models/operations/patchsteeringappsprivateprivateappid.go
-  - internal/sdk/models/operations/poststeeringappsprivate.go
-  - internal/sdk/models/operations/poststeeringappsprivategetpolicyinuse.go
-  - internal/sdk/models/operations/putsteeringappsprivateprivateappid.go
   - internal/sdk/models/operations/triggernpapublisherupdates.go
+  - internal/sdk/models/operations/updatenpapolicygroups.go
+  - internal/sdk/models/operations/updatenpaprivateapp.go
   - internal/sdk/models/operations/updatenpapublisherbyid.go
   - internal/sdk/models/operations/updatenpapublisherupgradeprofile.go
   - internal/sdk/models/operations/updatenparulesbyid.go
   - internal/sdk/models/shared/fourhundred.go
+  - internal/sdk/models/shared/npapolicygrouprequest.go
+  - internal/sdk/models/shared/npapolicygroupresponse400.go
+  - internal/sdk/models/shared/npapolicygroupresponseitem.go
   - internal/sdk/models/shared/npapolicyrequest.go
-  - internal/sdk/models/shared/npapolicyresponse.go
   - internal/sdk/models/shared/npapolicyresponse400.go
   - internal/sdk/models/shared/npapolicyresponseitem.go
-  - internal/sdk/models/shared/npapolicyresponseitemtest.go
+  - internal/sdk/models/shared/npapolicyresponselist.go
   - internal/sdk/models/shared/npapolicyruledata.go
   - internal/sdk/models/shared/npapolicyruledlp.go
   - internal/sdk/models/shared/npapolicyruletss.go
@@ -230,6 +265,8 @@ generatedFiles:
   - internal/sdk/models/shared/tagitem.go
   - internal/sdk/models/shared/tagitemnoid.go
   - internal/sdk/models/shared/upgradepublisherresponse.go
+  - internal/sdk/npapolicygroups.go
+  - internal/sdk/npaprivateapp.go
   - internal/sdk/npapublisher.go
   - internal/sdk/npapublisherapps.go
   - internal/sdk/npapublishers.go
@@ -262,6 +299,63 @@ generatedFiles:
   - terraform-registry-manifest.json
   - tools/tools.go
 examples:
+  listNPAPrivateApps:
+    Name has Query example:
+      parameters:
+        query:
+          query: "name has testName"
+      responses:
+        "200":
+          application/json: [{"data": {"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}}]
+        "400":
+          application/json: {"status": 400}
+    Name starts with Query example:
+      parameters:
+        query:
+          query: "name sw testName"
+      responses:
+        "200":
+          application/json: [{"data": {"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}}, {"data": {"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}}]
+        "400":
+          application/json: {"status": 400}
+    Multiple Filter Example:
+      parameters:
+        query:
+          query: "name sw test and clientless_access eq true"
+      responses:
+        "200":
+          application/json: [{"data": {"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}}]
+        "400":
+          application/json: {"status": 400}
+  getNPAPolicyInUse:
+    speakeasy-default-get-NPA-policy-in-use:
+      requestBody:
+        application/json: {}
+      responses:
+        "200":
+          application/json: [{}, {}, {}]
+        "400":
+          application/json: {"status": 400}
+  deleteNPAPrivateApp:
+    speakeasy-default-delete-NPA-private-app:
+      parameters:
+        path:
+          private_app_id: 18457
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  getNPAPrivateApp:
+    speakeasy-default-get-NPA-private-app:
+      parameters:
+        path:
+          private_app_id: 520591
+      responses:
+        "200":
+          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}, {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}, {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
+        "400":
+          application/json: {"status": 400}
   getNPAPublisherAlerts:
     speakeasy-default-get-NPA-publisher-alerts:
       responses:
@@ -274,17 +368,17 @@ examples:
       requestBody:
         application/json: {"adminUsers": ["admin1@abc.com"], "eventTypes": ["CONNECTION_FAILED", "UPGRADE_STARTED"], "selectedUsers": "abc@xyz.com,def@xyz.com"}
       responses:
-        "400":
-          application/json: {"status": 400}
         "200":
           application/json: {}
+        "400":
+          application/json: {"status": 400}
   triggerNPAPublisherUpdates:
     single_publisher:
       requestBody:
         application/json: {"publishers": {"apply": {"upgrade_request": true}, "id": ["12"]}}
       responses:
         "200":
-          application/json: {"data": {"publishers": [{"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 6, "registered": true, "status": "connected", "stitcher_id": 319, "stitcher_pop": "US-SEA1", "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}]}}
+          application/json: {"data": {"publishers": [{"status": "connected"}]}}
         "400":
           application/json: {"status": 400}
     multiple_publishers:
@@ -292,7 +386,7 @@ examples:
         application/json: {"publishers": {"apply": {"upgrade_request": true}, "id": ["12", "15", "30"]}}
       responses:
         "200":
-          application/json: {"data": {"publishers": [{"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 6, "registered": true, "status": "not registered", "stitcher_id": 319, "stitcher_pop": "US-SEA1", "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}]}}
+          application/json: {"data": {"publishers": [{"status": "not registered"}]}}
         "400":
           application/json: {"status": 400}
   BulkupdateNPAPublishers:
@@ -301,55 +395,152 @@ examples:
         application/json: {"publishers": {"apply": {"publisher_upgrade_profiles_id": "1"}, "id": ["10"]}}
       responses:
         "200":
-          application/json: {"data": {"publishers": [{"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": "tue", "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "tags": [], "upgrade_failed_reason": {"detail": "", "error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}]}}
+          application/json: {"data": {"publishers": [{"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": "tue", "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"detail": "", "error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}, {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": "tue", "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"detail": "", "error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}]}}
         "400":
           application/json: {"status": 400}
-  listNPAPrivateApps:
-    speakeasy-default-list-NPA-private-apps:
+  createNPAPrivateApps:
+    minimum_client_app:
+      requestBody:
+        application/json: {"app_name": "my_private_app", "host": "webserver.local", "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}]}
       responses:
         "200":
-          application/json: []
+          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
         "400":
           application/json: {"status": 400}
-  getNPAPolicyInUse:
-    speakeasy-default-get-NPA-policy-in-use:
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200": {}
-  deleteNPAPrivateApp:
-    speakeasy-default-delete-NPA-private-app:
-      parameters:
-        path:
-          private_app_id: 18457
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200": {}
-  getNPAPrivateApp:
-    speakeasy-default-get-NPA-private-app:
-      parameters:
-        path:
-          private_app_id: 520591
+    minimum_clientless_app:
+      requestBody:
+        application/json: {"app_name": "my_private_app", "clientless_access": true, "host": "webserver.local", "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}]}
       responses:
         "200":
-          application/json: {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "webserver", "clientless_access": false, "host": "webserver.local", "id": 1, "is_user_portal_app": false, "modified_by": "apigw", "modify_time": "2024-07-26T18:11:06Z", "name": "[webserver]", "policies": ["Allow_WebServers"], "private_app_protocol": "http", "protocols": [{"created_at": "2024-07-26T18:11:06.809Z", "id": 108, "port": "80", "service_id": 67, "transport": "tcp", "updated_at": "2024-07-26T18:11:06.809Z"}, {"created_at": "2024-07-26T18:11:06.809Z", "id": 108, "port": "80", "service_id": 67, "transport": "tcp", "updated_at": "2024-07-26T18:11:06.809Z"}, {"created_at": "2024-07-26T18:11:06.809Z", "id": 108, "port": "80", "service_id": 67, "transport": "tcp", "updated_at": "2024-07-26T18:11:06.809Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "real_host": "", "service_publisher_assignments": [], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false, "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "trust_self_signed_certs": true, "use_publisher_dns": false}}
+          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
+        "400":
+          application/json: {"status": 400}
+  updateNPAPrivateApp:
+    speakeasy-default-update-NPA-private-app:
+      parameters:
+        path:
+          private_app_id: 749406
+        query: {}
+      requestBody:
+        application/json: {}
+      responses:
+        "200":
+          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}, {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
+        "400":
+          application/json: {"status": 400}
+  getNPARules:
+    speakeasy-default-get-NPA-rules:
+      responses:
+        "200":
+          application/json: {"data": [{}]}
+        "400":
+          application/json: {"status": 400}
+  createNPARules:
+    speakeasy-default-create-NPA-rules:
+      requestBody:
+        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_data": {"json_version": 3, "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}, {"list_of_constraints": []}], "appName": "[172.31.12.135]"}, {"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "version": 1}, "rule_name": "vantest", "rule_order": {"position": 5, "rule_name": "api-policy-managed"}}
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  deleteNPARules:
+    speakeasy-default-delete-NPA-rules:
+      parameters:
+        path:
+          id: "<id>"
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  NPARules:
+    speakeasy-default-NPA-rules:
+      parameters:
+        path:
+          id: "<id>"
+        query: {}
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  updateNPARulesById:
+    speakeasy-default-update-NPA-rules-by-id:
+      parameters:
+        path:
+          id: "<id>"
+        query: {}
+      requestBody:
+        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_data": {"json_version": 3, "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}, {"list_of_constraints": []}], "appName": "[172.31.12.135]"}, {"activities": [{"list_of_constraints": []}, {"list_of_constraints": []}, {"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "version": 1}, "rule_name": "vantest", "rule_order": {"position": 5, "rule_name": "api-policy-managed"}}
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  getNPAPolicyGroups:
+    speakeasy-default-get-NPA-policy-groups:
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  createNPAPolicyGroups:
+    speakeasy-default-create-NPA-policy-groups:
+      requestBody:
+        application/json: {"group_order": {"group_order": {"group_id": "1"}}}
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  deleteNPAPolicyGroups:
+    speakeasy-default-delete-NPA-policy-groups:
+      parameters:
+        path:
+          id: "<id>"
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  getNPAPolicyGroupById:
+    speakeasy-default-get-NPA-policy-group-by-id:
+      parameters:
+        path:
+          id: "<id>"
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  updateNPAPolicyGroups:
+    speakeasy-default-update-NPA-policy-groups:
+      parameters:
+        path:
+          id: "<id>"
+        query: {}
+      requestBody:
+        application/json: {"group_order": {"group_order": {"group_id": "1"}}}
+      responses:
+        "200":
+          application/json: {}
         "400":
           application/json: {"status": 400}
   getNPAPublishers:
     speakeasy-default-get-NPA-publishers:
       responses:
         "200":
-          application/json: {"data": {"publishers": []}}
+          application/json: {"data": {"publishers": [{"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "lbrokerconnect": false, "publisher_id": 6, "publisher_name": "pub01.local", "publisher_upgrade_profiles_external_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "stitcher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}]}}
         "400":
           application/json: {"status": 400}
   createNPAPublishers:
     minimum:
       requestBody:
-        application/json: {"name": "npa_publisher_1", "publisher_upgrade_profiles_id": 1}
+        application/json: {"name": "npa_publisher_1", "lbrokerconnect": false, "publisher_upgrade_profiles_id": 1}
       responses:
         "200":
-          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "tags": [{"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
         "400":
           application/json: {"status": 400}
     full:
@@ -357,7 +548,7 @@ examples:
         application/json: {"name": "npa_publisher_1", "lbrokerconnect": false, "publisher_upgrade_profiles_id": 1}
       responses:
         "200":
-          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
         "400":
           application/json: {"status": 400}
   deleteNPAPublishers:
@@ -366,10 +557,10 @@ examples:
         path:
           publisher_id: 1
       responses:
-        "400":
-          application/json: {"status": 400}
         "200":
           application/json: {}
+        "400":
+          application/json: {"status": 400}
   getNPAPublisherById:
     speakeasy-default-get-NPA-publisher-by-id:
       parameters:
@@ -377,7 +568,7 @@ examples:
           publisher_id: 1
       responses:
         "200":
-          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
         "400":
           application/json: {"status": 400}
   updateNPAPublisherById:
@@ -389,7 +580,7 @@ examples:
         application/json: {"name": "updated_name"}
       responses:
         "200":
-          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
         "400":
           application/json: {"status": 400}
     upgrade_profile:
@@ -400,14 +591,14 @@ examples:
         application/json: {"name": "publisher_1", "publisher_upgrade_profiles_id": 2}
       responses:
         "200":
-          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
         "400":
           application/json: {"status": 400}
   getNPAPublisherObjects:
     speakeasy-default-get-NPA-publisher-objects:
       responses:
         "200":
-          application/json: {"data": []}
+          application/json: {"data": [{"docker_tag": "8690", "name": "Latest", "version": "117.0.0.8690"}]}
         "400":
           application/json: {"status": 400}
   getNPAPublisherApps:
@@ -417,7 +608,7 @@ examples:
           publisher_id: 1
       responses:
         "200":
-          application/json: {"data": [{"allow_unauthenticated_cors": false, "clientless_access": false, "host": "192.168.1.1", "id": 3, "is_user_portal_app": false, "name": "[Web-Management]", "private_app_protocol": "", "protocols": [], "public_host": "", "reachability": {"reachable": true}, "real_host": "<value>", "service_publisher_assignments": [{"primary": false, "publisher_id": 1, "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}, {"primary": false, "publisher_id": 1, "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}, {"primary": false, "publisher_id": 1, "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}], "tags": [], "trust_self_signed_certs": true, "use_publisher_dns": false}]}
+          application/json: {"data": [{"allow_unauthenticated_cors": false, "clientless_access": false, "external_id": 193, "host": "192.168.1.1", "id": 3, "is_user_portal_app": false, "name": "[Web-Management]", "private_app_protocol": "", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "real_host": "<value>", "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "tags": [], "suppliment_dns_for_osx": false, "trust_self_signed_certs": true, "use_publisher_dns": false}]}
         "400":
           application/json: {"status": 400}
   generateNPAPublisherToken:
@@ -434,7 +625,7 @@ examples:
     speakeasy-default-list-NPA-publisher-upgrade-profiles:
       responses:
         "200":
-          application/json: {"data": {"upgrade_profiles": []}, "total": 1}
+          application/json: {"data": {"upgrade_profiles": [{"created_at": "2024-07-23T14:06:32.07Z", "docker_tag": "8691", "enabled": true, "external_id": 1, "frequency": "0 0 1 * SAT", "id": 1, "name": "My Upgrade Profile", "next_update_time": 1722052800, "num_associated_publisher": 1, "release_type": "Latest", "timezone": "US/Eastern", "updated_at": "2024-07-23T14:06:32.07Z", "upgrading_stage": 1, "will_start": false}]}, "total": 1}
         "400":
           application/json: {"status": 400}
   createNPAPublisherUpgradeProfile:
@@ -452,10 +643,10 @@ examples:
         path:
           external_id: 42502
       responses:
-        "400":
-          application/json: {"status": 400}
         "200":
           application/json: {}
+        "400":
+          application/json: {"status": 400}
   getNPAPublisherUpgradeProfile:
     speakeasy-default-get-NPA-publisher-upgrade-profile:
       parameters:
@@ -478,257 +669,5 @@ examples:
           application/json: {"data": {"created_at": "2024-07-23T14:00:22.731Z", "docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "id": 10, "name": "My Upgrade Profile", "next_update_time": 1722312000, "num_associated_publisher": 0, "release_type": "Latest", "timezone": "US/Eastern", "updated_at": "2024-07-23T14:00:22.731Z", "upgrading_stage": 1, "will_start": false}}
         "400":
           application/json: {"status": 400}
-  createNPAPrivateApps:
-    minimum_client_app:
-      requestBody:
-        application/json: {"allow_unauthenticated_cors": false, "app_name": "my_private_app", "clientless_access": false, "private_app_protocol": "http", "host": "webserver.local", "is_user_portal_app": false, "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}], "real_host": "", "tags": [{"tag_name": "tag01"}], "trust_self_signed_certs": true, "use_publisher_dns": false}
-      responses:
-        "200":
-          application/json: {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "webserver", "clientless_access": false, "host": "webserver.local", "id": 1, "is_user_portal_app": false, "modified_by": "apigw", "modify_time": "2024-07-26T18:11:06Z", "name": "[webserver]", "policies": ["Allow_WebServers"], "private_app_protocol": "http", "protocols": [], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "real_host": "", "service_publisher_assignments": [{"primary": false, "publisher_id": 1, "publisher_name": "pub1.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false, "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "trust_self_signed_certs": true, "use_publisher_dns": false}}
-        "400":
-          application/json: {"status": 400}
-    minimum_clientless_app:
-      requestBody:
-        application/json: {"allow_unauthenticated_cors": false, "app_name": "my_private_app", "clientless_access": true, "private_app_protocol": "http", "host": "webserver.local", "is_user_portal_app": false, "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}], "real_host": "", "tags": [{"tag_name": "tag01"}], "trust_self_signed_certs": true, "use_publisher_dns": false}
-      responses:
-        "200":
-          application/json: {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "webserver", "clientless_access": false, "host": "webserver.local", "id": 1, "is_user_portal_app": false, "modified_by": "apigw", "modify_time": "2024-07-26T18:11:06Z", "name": "[webserver]", "policies": ["Allow_WebServers"], "private_app_protocol": "http", "protocols": [{"created_at": "2024-07-26T18:11:06.809Z", "id": 108, "port": "80", "service_id": 67, "transport": "tcp", "updated_at": "2024-07-26T18:11:06.809Z"}, {"created_at": "2024-07-26T18:11:06.809Z", "id": 108, "port": "80", "service_id": 67, "transport": "tcp", "updated_at": "2024-07-26T18:11:06.809Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "real_host": "", "service_publisher_assignments": [{"primary": false, "publisher_id": 1, "publisher_name": "pub1.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false, "tags": [], "trust_self_signed_certs": true, "use_publisher_dns": false}}
-        "400":
-          application/json: {"status": 400}
-  updateNPAPrivateApp:
-    speakeasy-default-update-NPA-private-app:
-      parameters:
-        path:
-          private_app_id: 74186
-      requestBody:
-        application/json: {"allow_unauthenticated_cors": false, "clientless_access": false, "is_user_portal_app": false, "protocols": [{"port": "80", "type": "tcp"}, {"port": "80", "type": "tcp"}], "publisher_tags": [{"tag_name": "tag01"}], "tags": [{"tag_name": "tag01"}], "real_host": "", "trust_self_signed_certs": true, "use_publisher_dns": false}
-      responses:
-        "200":
-          application/json: {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "webserver", "clientless_access": false, "host": "webserver.local", "id": 1, "is_user_portal_app": false, "modified_by": "apigw", "modify_time": "2024-07-26T18:11:06Z", "name": "[webserver]", "policies": ["Allow_WebServers"], "private_app_protocol": "http", "protocols": [], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "real_host": "", "service_publisher_assignments": [{"primary": false, "publisher_id": 1, "publisher_name": "pub1.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_id": 1}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false, "tags": [{"tag_id": 1, "tag_name": "tag01"}, {"tag_id": 1, "tag_name": "tag01"}], "trust_self_signed_certs": true, "use_publisher_dns": false}}
-        "400":
-          application/json: {"status": 400}
-  get_/apps/private:
-    Multiple Filter Example:
-      parameters:
-        query:
-          query: "name sw test and clientless_access eq true"
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200": {}
-    Name has Query example:
-      parameters:
-        query:
-          query: "name has testName"
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200": {}
-    Name starts with Query example:
-      parameters:
-        query:
-          query: "name sw testName"
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200": {}
-  post_/apps/private:
-    speakeasy-default-post-/apps/private:
-      responses:
-        "200":
-          application/json: []
-        "400":
-          application/json: {"status": 400}
-  post_/apps/private/getpolicyinuse:
-    speakeasy-default-post-/apps/private/getpolicyinuse:
-      responses:
-        "200":
-          application/json: []
-        "400":
-          application/json: {"status": 400}
-  delete_/apps/private/{private_app_id}:
-    speakeasy-default-delete-/apps/private/{private-app-id}:
-      parameters:
-        path:
-          private_app_id: 167077
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200": {}
-  get_/apps/private/{private_app_id}:
-    speakeasy-default-get-/apps/private/{private-app-id}:
-      parameters:
-        path:
-          private_app_id: 489017
-      responses:
-        "200":
-          application/json: []
-        "400":
-          application/json: {"status": 400}
-  patch_/apps/private/{private_app_id}:
-    speakeasy-default-patch-/apps/private/{private-app-id}:
-      parameters:
-        path:
-          private_app_id: 572296
-        query: {}
-      responses:
-        "200":
-          application/json: []
-        "400":
-          application/json: {"status": 400}
-  put_/apps/private/{private_app_id}:
-    speakeasy-default-put-/apps/private/{private-app-id}:
-      parameters:
-        path:
-          private_app_id: 678569
-        query: {}
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200": {}
-  getNPARules:
-    speakeasy-default-get-NPA-rules:
-      responses:
-        "200":
-          application/json: {}
-        "400":
-          application/json: {"status": 400}
-  createNPARules:
-    speakeasy-default-create-NPA-rules:
-      requestBody:
-        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}, {"activities": [], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "vantest", "rule_order": {"position": 5, "rule_id": "1", "rule_name": "api-policy-managed"}}
-      responses:
-        "200":
-          application/json: {}
-        "400":
-          application/json: {"status": 400}
-  deleteNPARules:
-    speakeasy-default-delete-NPA-rules:
-      parameters:
-        path:
-          rule_id: "545907"
-          id: "<id>"
-      responses:
-        "200":
-          application/json: {}
-        "400":
-          application/json: {"status": 400}
-  getNPARulesById:
-    speakeasy-default-get-NPA-rules-by-id:
-      parameters:
-        path:
-          rule_id: 899901
-        query: {}
-      responses:
-        "200":
-          application/json: {}
-        "400":
-          application/json: {"status": 400}
-  updateNPARulesById:
-    speakeasy-default-update-NPA-rules-by-id:
-      parameters:
-        path:
-          rule_id: "627690"
-          id: "<id>"
-        query: {}
-      requestBody:
-        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}, {"actions": ["allow"], "dlp_profile": "Payment Card"}, {"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}, {"activities": [{"list_of_constraints": []}, {"list_of_constraints": []}, {"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "vantest", "rule_order": {"position": 5, "rule_id": "1", "rule_name": "api-policy-managed"}}
-      responses:
-        "200":
-          application/json: {}
-        "400":
-          application/json: {"status": 400}
-  get_/steering/apps/private:
-    Name has Query example:
-      parameters:
-        query:
-          query: "name has testName"
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200": {}
-    Name starts with Query example:
-      parameters:
-        query:
-          query: "name sw testName"
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200": {}
-    Multiple Filter Example:
-      parameters:
-        query:
-          query: "name sw test and clientless_access eq true"
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200": {}
-  post_/steering/apps/private:
-    speakeasy-default-post-/steering/apps/private:
-      responses:
-        "200":
-          application/json: []
-        "400":
-          application/json: {"status": 400}
-  post_/steering/apps/private/getpolicyinuse:
-    speakeasy-default-post-/steering/apps/private/getpolicyinuse:
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200":
-          application/json: [{}]
-  delete_/steering/apps/private/{private_app_id}:
-    speakeasy-default-delete-/steering/apps/private/{private-app-id}:
-      parameters:
-        path:
-          private_app_id: 972440
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200":
-          application/json: {}
-  get_/steering/apps/private/{private_app_id}:
-    speakeasy-default-get-/steering/apps/private/{private-app-id}:
-      parameters:
-        path:
-          private_app_id: 200653
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200":
-          application/json: []
-  patch_/steering/apps/private/{private_app_id}:
-    speakeasy-default-patch-/steering/apps/private/{private-app-id}:
-      parameters:
-        path:
-          private_app_id: 954557
-        query: {}
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200":
-          application/json: [{}, {}, {}]
-  put_/steering/apps/private/{private_app_id}:
-    speakeasy-default-put-/steering/apps/private/{private-app-id}:
-      parameters:
-        path:
-          private_app_id: 758582
-        query: {}
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200":
-          application/json: [{}, {}, {}]
-  NPARules:
-    speakeasy-default-NPA-rules:
-      parameters:
-        path:
-          rule_id: "<id>"
-          id: "<id>"
-        query: {}
-      responses:
-        "400":
-          application/json: {"status": 400}
-        "200":
-          application/json: {}
+examplesVersion: 1.0.0
 generatedTests: {}

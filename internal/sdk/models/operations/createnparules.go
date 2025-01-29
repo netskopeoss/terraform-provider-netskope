@@ -9,18 +9,18 @@ import (
 	"net/http"
 )
 
-// CreateNPARulesQueryParamSilent - flag to skip output except status code
-type CreateNPARulesQueryParamSilent string
+// QueryParamSilent - flag to skip output except status code
+type QueryParamSilent string
 
 const (
-	CreateNPARulesQueryParamSilentOne  CreateNPARulesQueryParamSilent = "1"
-	CreateNPARulesQueryParamSilentZero CreateNPARulesQueryParamSilent = "0"
+	QueryParamSilentOne  QueryParamSilent = "1"
+	QueryParamSilentZero QueryParamSilent = "0"
 )
 
-func (e CreateNPARulesQueryParamSilent) ToPointer() *CreateNPARulesQueryParamSilent {
+func (e QueryParamSilent) ToPointer() *QueryParamSilent {
 	return &e
 }
-func (e *CreateNPARulesQueryParamSilent) UnmarshalJSON(data []byte) error {
+func (e *QueryParamSilent) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -29,20 +29,20 @@ func (e *CreateNPARulesQueryParamSilent) UnmarshalJSON(data []byte) error {
 	case "1":
 		fallthrough
 	case "0":
-		*e = CreateNPARulesQueryParamSilent(v)
+		*e = QueryParamSilent(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for CreateNPARulesQueryParamSilent: %v", v)
+		return fmt.Errorf("invalid value for QueryParamSilent: %v", v)
 	}
 }
 
 type CreateNPARulesRequest struct {
 	// flag to skip output except status code
-	Silent           *CreateNPARulesQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
-	NpaPolicyRequest shared.NpaPolicyRequest         `request:"mediaType=application/json"`
+	Silent           *QueryParamSilent       `queryParam:"style=form,explode=true,name=silent"`
+	NpaPolicyRequest shared.NpaPolicyRequest `request:"mediaType=application/json"`
 }
 
-func (o *CreateNPARulesRequest) GetSilent() *CreateNPARulesQueryParamSilent {
+func (o *CreateNPARulesRequest) GetSilent() *QueryParamSilent {
 	if o == nil {
 		return nil
 	}
@@ -58,11 +58,11 @@ func (o *CreateNPARulesRequest) GetNpaPolicyRequest() shared.NpaPolicyRequest {
 
 // CreateNPARulesResponseBody - successful operation
 type CreateNPARulesResponseBody struct {
-	Data   *shared.NpaPolicyResponseItemTest `json:"data,omitempty"`
-	Status *string                           `json:"status,omitempty"`
+	Data   *shared.NpaPolicyResponseItem `json:"data,omitempty"`
+	Status *string                       `json:"status,omitempty"`
 }
 
-func (o *CreateNPARulesResponseBody) GetData() *shared.NpaPolicyResponseItemTest {
+func (o *CreateNPARulesResponseBody) GetData() *shared.NpaPolicyResponseItem {
 	if o == nil {
 		return nil
 	}
