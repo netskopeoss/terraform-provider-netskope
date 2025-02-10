@@ -18,10 +18,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_boolplanmodifier "github.com/netskope/terraform-provider-ns/internal/planmodifiers/boolplanmodifier"
 	speakeasy_listplanmodifier "github.com/netskope/terraform-provider-ns/internal/planmodifiers/listplanmodifier"
-	speakeasy_stringplanmodifier "github.com/netskope/terraform-provider-ns/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
+	"github.com/netskope/terraform-provider-ns/internal/validators"
 	speakeasy_objectvalidators "github.com/netskope/terraform-provider-ns/internal/validators/objectvalidators"
 	"strconv"
 )
@@ -41,33 +41,32 @@ type NPAPrivateAppResource struct {
 
 // NPAPrivateAppResourceModel describes the resource data model.
 type NPAPrivateAppResourceModel struct {
-	AllowUnauthenticatedCors    types.Bool                               `tfsdk:"allow_unauthenticated_cors"`
-	AllowURIBypass              types.Bool                               `tfsdk:"allow_uri_bypass"`
-	AppName                     types.String                             `tfsdk:"app_name"`
-	AppOption                   *tfTypes.AppOption                       `tfsdk:"app_option"`
-	BypassUris                  []types.String                           `tfsdk:"bypass_uris"`
-	ClientlessAccess            types.Bool                               `tfsdk:"clientless_access"`
-	IsUserPortalApp             types.Bool                               `tfsdk:"is_user_portal_app"`
-	ModifiedBy                  types.String                             `tfsdk:"modified_by"`
-	ModifiedTime                types.String                             `tfsdk:"modified_time"`
-	Policies                    []types.String                           `tfsdk:"policies"`
-	PrivateAppHostname          types.String                             `tfsdk:"private_app_hostname"`
-	PrivateAppID                types.Int64                              `tfsdk:"private_app_id"`
-	PrivateAppName              types.String                             `tfsdk:"private_app_name"`
-	PrivateAppProtocol          types.String                             `tfsdk:"private_app_protocol"`
-	Protocols                   []tfTypes.ProtocolItem                   `tfsdk:"protocols"`
-	PublicHost                  types.String                             `tfsdk:"public_host"`
-	Publishers                  []tfTypes.PublisherItem                  `tfsdk:"publishers"`
-	Reachability                *tfTypes.PrivateAppsResponseReachability `tfsdk:"reachability"`
-	RealHost                    types.String                             `tfsdk:"real_host"`
-	ServicePublisherAssignments []tfTypes.ServicePublisherAssignmentItem `tfsdk:"service_publisher_assignments"`
-	Status                      types.String                             `tfsdk:"status"`
-	SteeringConfigs             []types.String                           `tfsdk:"steering_configs"`
-	SupplementDNSForOsx         types.Bool                               `tfsdk:"supplement_dns_for_osx"`
-	Tags                        []tfTypes.TagItem                        `tfsdk:"tags"`
-	TrustSelfSignedCerts        types.Bool                               `tfsdk:"trust_self_signed_certs"`
-	UribypassHeaderValue        types.String                             `tfsdk:"uribypass_header_value"`
-	UsePublisherDNS             types.Bool                               `tfsdk:"use_publisher_dns"`
+	AllowUnauthenticatedCors    types.Bool                                                     `tfsdk:"allow_unauthenticated_cors"`
+	AllowURIBypass              types.Bool                                                     `tfsdk:"allow_uri_bypass"`
+	AppName                     types.String                                                   `tfsdk:"app_name"`
+	AppOption                   *tfTypes.PrivateAppsRequestAppOption                           `tfsdk:"app_option"`
+	BypassUris                  []types.String                                                 `tfsdk:"bypass_uris"`
+	ClientlessAccess            types.Bool                                                     `tfsdk:"clientless_access"`
+	IsUserPortalApp             types.Bool                                                     `tfsdk:"is_user_portal_app"`
+	ModifiedBy                  types.String                                                   `tfsdk:"modified_by"`
+	ModifyTime                  types.String                                                   `tfsdk:"modify_time"`
+	Policies                    []types.String                                                 `tfsdk:"policies"`
+	PrivateAppHostname          types.String                                                   `tfsdk:"private_app_hostname"`
+	PrivateAppID                types.Int64                                                    `tfsdk:"private_app_id"`
+	PrivateAppName              types.String                                                   `tfsdk:"private_app_name"`
+	PrivateAppProtocol          types.String                                                   `tfsdk:"private_app_protocol"`
+	Protocols                   []tfTypes.ProtocolItem                                         `tfsdk:"protocols"`
+	PublicHost                  types.String                                                   `tfsdk:"public_host"`
+	Publishers                  []tfTypes.PublisherItem                                        `tfsdk:"publishers"`
+	Reachability                *tfTypes.PrivateAppsGetResponseNewReachability                 `tfsdk:"reachability"`
+	RealHost                    types.String                                                   `tfsdk:"real_host"`
+	ServicePublisherAssignments []tfTypes.PrivateAppsGetResponseNewServicePublisherAssignments `tfsdk:"service_publisher_assignments"`
+	SteeringConfigs             []types.String                                                 `tfsdk:"steering_configs"`
+	SupplementDNSForOsx         types.Bool                                                     `tfsdk:"supplement_dns_for_osx"`
+	Tags                        []tfTypes.TagItemNoID                                          `tfsdk:"tags"`
+	TrustSelfSignedCerts        types.Bool                                                     `tfsdk:"trust_self_signed_certs"`
+	UribypassHeaderValue        types.String                                                   `tfsdk:"uribypass_header_value"`
+	UsePublisherDNS             types.Bool                                                     `tfsdk:"use_publisher_dns"`
 }
 
 func (r *NPAPrivateAppResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -92,11 +91,9 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Description: `Requires replacement if changed.`,
 			},
 			"app_name": schema.StringAttribute{
-				Computed: true,
 				Optional: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
-					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `Requires replacement if changed.`,
 			},
@@ -125,7 +122,7 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 			"modified_by": schema.StringAttribute{
 				Computed: true,
 			},
-			"modified_time": schema.StringAttribute{
+			"modify_time": schema.StringAttribute{
 				Computed: true,
 			},
 			"policies": schema.ListAttribute{
@@ -137,8 +134,7 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Optional: true,
 			},
 			"private_app_id": schema.Int64Attribute{
-				Computed:    true,
-				Description: `private apps id`,
+				Computed: true,
 			},
 			"private_app_name": schema.StringAttribute{
 				Computed: true,
@@ -165,13 +161,17 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 							Optional: true,
 						},
 						"protocol": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `must be one of ["tcp", "udp"]`,
+							Validators: []validator.String{
+								stringvalidator.OneOf(
+									"tcp",
+									"udp",
+								),
+							},
 						},
 						"service_id": schema.Int64Attribute{
-							Computed: true,
-						},
-						"transport": schema.StringAttribute{
 							Computed: true,
 						},
 						"updated_at": schema.StringAttribute{
@@ -199,6 +199,12 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 			"reachability": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
+					"error_code": schema.Int64Attribute{
+						Computed: true,
+					},
+					"error_string": schema.StringAttribute{
+						Computed: true,
+					},
 					"reachable": schema.BoolAttribute{
 						Computed: true,
 					},
@@ -212,10 +218,10 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"primary": schema.BoolAttribute{
+						"primary": schema.StringAttribute{
 							Computed: true,
 						},
-						"publisher_external_id": schema.Int64Attribute{
+						"publisher_id": schema.Int64Attribute{
 							Computed: true,
 						},
 						"publisher_name": schema.StringAttribute{
@@ -235,20 +241,10 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 								},
 							},
 						},
-						"service_external_id": schema.Int64Attribute{
+						"service_id": schema.Int64Attribute{
 							Computed: true,
 						},
 					},
-				},
-			},
-			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["success", "not found"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"success",
-						"not found",
-					),
 				},
 			},
 			"steering_configs": schema.ListAttribute{
@@ -266,8 +262,12 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 						speakeasy_objectvalidators.NotNull(),
 					},
 					Attributes: map[string]schema.Attribute{
-						"tag_id": schema.Int64Attribute{
-							Computed: true,
+						"tag_id": schema.StringAttribute{
+							Computed:    true,
+							Description: `Parsed as JSON.`,
+							Validators: []validator.String{
+								validators.IsValidJSON(),
+							},
 						},
 						"tag_name": schema.StringAttribute{
 							Computed: true,
@@ -347,11 +347,11 @@ func (r *NPAPrivateAppResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PrivateAppsResponse != nil && len(res.PrivateAppsResponse) > 0 && res.PrivateAppsResponse[0].Data != nil) {
+	if !(res.PrivateAppsGetResponseNew != nil && res.PrivateAppsGetResponseNew.Data != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsResponseData(res.PrivateAppsResponse[0].Data)
+	data.RefreshFromSharedPrivateAppsGetResponseNewData(res.PrivateAppsGetResponseNew.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	var privateAppID int
 	privateAppID = int(data.PrivateAppID.ValueInt64())
@@ -375,11 +375,11 @@ func (r *NPAPrivateAppResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if !(res1.PrivateAppsResponse != nil && len(res1.PrivateAppsResponse) > 0 && res1.PrivateAppsResponse[0].Data != nil) {
+	if !(res1.PrivateAppsGetResponseNew != nil && res1.PrivateAppsGetResponseNew.Data != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsResponseData(res1.PrivateAppsResponse[0].Data)
+	data.RefreshFromSharedPrivateAppsGetResponseNewData(res1.PrivateAppsGetResponseNew.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -430,11 +430,11 @@ func (r *NPAPrivateAppResource) Read(ctx context.Context, req resource.ReadReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PrivateAppsResponse != nil && len(res.PrivateAppsResponse) > 0 && res.PrivateAppsResponse[0].Data != nil) {
+	if !(res.PrivateAppsGetResponseNew != nil && res.PrivateAppsGetResponseNew.Data != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsResponseData(res.PrivateAppsResponse[0].Data)
+	data.RefreshFromSharedPrivateAppsGetResponseNewData(res.PrivateAppsGetResponseNew.Data)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -478,11 +478,11 @@ func (r *NPAPrivateAppResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PrivateAppsResponse != nil && len(res.PrivateAppsResponse) > 0 && res.PrivateAppsResponse[0].Data != nil) {
+	if !(res.PrivateAppsResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsResponseData(res.PrivateAppsResponse[0].Data)
+	data.RefreshFromSharedPrivateAppsResponse(res.PrivateAppsResponse)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	var privateAppId1 int
 	privateAppId1 = int(data.PrivateAppID.ValueInt64())
@@ -506,11 +506,11 @@ func (r *NPAPrivateAppResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if !(res1.PrivateAppsResponse != nil && len(res1.PrivateAppsResponse) > 0 && res1.PrivateAppsResponse[0].Data != nil) {
+	if !(res1.PrivateAppsGetResponseNew != nil && res1.PrivateAppsGetResponseNew.Data != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsResponseData(res1.PrivateAppsResponse[0].Data)
+	data.RefreshFromSharedPrivateAppsGetResponseNewData(res1.PrivateAppsGetResponseNew.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state

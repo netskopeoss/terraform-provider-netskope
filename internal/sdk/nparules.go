@@ -27,10 +27,10 @@ func newNPARules(sdkConfig sdkConfiguration) *NPARules {
 
 // ListObjects - Get list of npa policies
 // Get list of npa policies
-func (s *NPARules) ListObjects(ctx context.Context, request operations.GetNPARulesRequest, opts ...operations.Option) (*operations.GetNPARulesResponse, error) {
+func (s *NPARules) ListObjects(ctx context.Context, request operations.GetNPARulesListRequest, opts ...operations.Option) (*operations.GetNPARulesListResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "getNPARules",
+		OperationID:    "getNPARulesList",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -116,7 +116,7 @@ func (s *NPARules) ListObjects(ctx context.Context, request operations.GetNPARul
 		}
 	}
 
-	res := &operations.GetNPARulesResponse{
+	res := &operations.GetNPARulesListResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,

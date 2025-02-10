@@ -10,6 +10,5 @@ type ProtocolItem struct {
 	Port      types.String `tfsdk:"port"`
 	Protocol  types.String `tfsdk:"protocol"`
 	ServiceID types.Int64  `tfsdk:"service_id"`
-	Transport types.String `tfsdk:"transport"`
 	UpdatedAt types.String `tfsdk:"updated_at"`
 }

@@ -1,23 +1,24 @@
 lockVersion: 2.0.0
 id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
-  docChecksum: 1075379a11a94f95ebc04e3961169ce2
+  docChecksum: d6d70727a48e1d30f98012e9097f183b
   docVersion: 1.0.0
-  speakeasyVersion: 1.477.2
-  generationVersion: 2.497.8
-  releaseVersion: 0.8.89
-  configChecksum: 9fd643077da3b70d4033866a8c4623b0
+  speakeasyVersion: 1.488.0
+  generationVersion: 2.506.0
+  releaseVersion: 0.10.56
+  configChecksum: f3d82253dd01490474969ba0dcd96323
 features:
   terraform:
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.2.0
-    core: 3.29.0
+    core: 3.30.0
     envVarSecurityUsage: 0.1.0
     globalSecurity: 2.81.9
     globalServerURLs: 2.82.1
     groups: 2.81.2
     ignores: 2.81.1
     nameOverrides: 2.81.2
+    nullables: 0.0.0
 generatedFiles:
   - .gitattributes
   - USAGE.md
@@ -125,10 +126,8 @@ generatedFiles:
   - internal/provider/reflect/slice.go
   - internal/provider/reflect/struct.go
   - internal/provider/types/activities.go
-  - internal/provider/types/app_option.go
   - internal/provider/types/apply.go
   - internal/provider/types/data.go
-  - internal/provider/types/data1.go
   - internal/provider/types/group_order.go
   - internal/provider/types/match_criteria_action.go
   - internal/provider/types/npa_policy_response_item.go
@@ -138,8 +137,10 @@ generatedFiles:
   - internal/provider/types/npa_policy_rule_tss_actions.go
   - internal/provider/types/npa_policygroup_request_group_order.go
   - internal/provider/types/npa_policygroup_response_item.go
-  - internal/provider/types/private_apps_get_response.go
-  - internal/provider/types/private_apps_response_reachability.go
+  - internal/provider/types/private_apps_get_response_new_reachability.go
+  - internal/provider/types/private_apps_get_response_new_service_publisher_assignments.go
+  - internal/provider/types/private_apps_item.go
+  - internal/provider/types/private_apps_request_app_option.go
   - internal/provider/types/private_apps_with_activities.go
   - internal/provider/types/protocol_item.go
   - internal/provider/types/protocol_response_item.go
@@ -160,12 +161,12 @@ generatedFiles:
   - internal/provider/types/publishers_get_response_data.go
   - internal/provider/types/publishers_get_response_publishers.go
   - internal/provider/types/publishers_private_apps_response_data.go
-  - internal/provider/types/reachability.go
+  - internal/provider/types/publishers_private_apps_response_reachability.go
   - internal/provider/types/release_item.go
   - internal/provider/types/response_body.go
   - internal/provider/types/rule_order.go
   - internal/provider/types/service_publisher_assignment_item.go
-  - internal/provider/types/tag_item.go
+  - internal/provider/types/tag_item_no_id.go
   - internal/provider/types/upgrade_profiles.go
   - internal/provider/types/upgrade_publisher_response.go
   - internal/provider/types/upgrade_publisher_response_assessment.go
@@ -209,7 +210,7 @@ generatedFiles:
   - internal/sdk/models/operations/getnpapublisherobjects.go
   - internal/sdk/models/operations/getnpapublishers.go
   - internal/sdk/models/operations/getnpapublisherupgradeprofile.go
-  - internal/sdk/models/operations/getnparules.go
+  - internal/sdk/models/operations/getnparuleslist.go
   - internal/sdk/models/operations/listnpaprivateapps.go
   - internal/sdk/models/operations/listnpapublisherupgradeprofiles.go
   - internal/sdk/models/operations/nparules.go
@@ -231,7 +232,9 @@ generatedFiles:
   - internal/sdk/models/shared/npapolicyruledata.go
   - internal/sdk/models/shared/npapolicyruledlp.go
   - internal/sdk/models/shared/npapolicyruletss.go
-  - internal/sdk/models/shared/privateappsgetresponse.go
+  - internal/sdk/models/shared/privateappsgetresponsenew.go
+  - internal/sdk/models/shared/privateappsitem.go
+  - internal/sdk/models/shared/privateappslistresponse.go
   - internal/sdk/models/shared/privateappsputrequest.go
   - internal/sdk/models/shared/privateappsrequest.go
   - internal/sdk/models/shared/privateappsresponse.go
@@ -306,7 +309,7 @@ examples:
           query: "name has testName"
       responses:
         "200":
-          application/json: [{"data": {"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}}]
+          application/json: [{}]
         "400":
           application/json: {"status": 400}
     Name starts with Query example:
@@ -315,7 +318,7 @@ examples:
           query: "name sw testName"
       responses:
         "200":
-          application/json: [{"data": {"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}}, {"data": {"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}}]
+          application/json: [{}, {}]
         "400":
           application/json: {"status": 400}
     Multiple Filter Example:
@@ -324,7 +327,7 @@ examples:
           query: "name sw test and clientless_access eq true"
       responses:
         "200":
-          application/json: [{"data": {"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}}]
+          application/json: [{}]
         "400":
           application/json: {"status": 400}
   getNPAPolicyInUse:
@@ -353,7 +356,7 @@ examples:
           private_app_id: 520591
       responses:
         "200":
-          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}, {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}, {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
+          application/json: {}
         "400":
           application/json: {"status": 400}
   getNPAPublisherAlerts:
@@ -404,7 +407,7 @@ examples:
         application/json: {"app_name": "my_private_app", "host": "webserver.local", "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}]}
       responses:
         "200":
-          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
+          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "service_publisher_assignments": [{"publisher_name": "pub01.local"}, {"primary": "{}", "publisher_name": "pub01.local"}, {"primary": "{}", "publisher_name": "pub01.local"}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
         "400":
           application/json: {"status": 400}
     minimum_clientless_app:
@@ -412,7 +415,7 @@ examples:
         application/json: {"app_name": "my_private_app", "clientless_access": true, "host": "webserver.local", "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}]}
       responses:
         "200":
-          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
+          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "service_publisher_assignments": [{"primary": "{}", "publisher_name": "pub01.local"}, {"publisher_name": "pub01.local"}, {"publisher_name": "pub01.local"}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
         "400":
           application/json: {"status": 400}
   updateNPAPrivateApp:
@@ -425,7 +428,7 @@ examples:
         application/json: {}
       responses:
         "200":
-          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}, {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modified_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
+          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "service_publisher_assignments": [{"publisher_name": "pub01.local"}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}, {"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "service_publisher_assignments": [{"primary": false, "publisher_name": "pub01.local"}, {"primary": true, "publisher_name": "pub01.local"}, {"primary": true, "publisher_name": "pub01.local"}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
         "400":
           application/json: {"status": 400}
   getNPARules:
@@ -667,6 +670,13 @@ examples:
       responses:
         "200":
           application/json: {"data": {"created_at": "2024-07-23T14:00:22.731Z", "docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "id": 10, "name": "My Upgrade Profile", "next_update_time": 1722312000, "num_associated_publisher": 0, "release_type": "Latest", "timezone": "US/Eastern", "updated_at": "2024-07-23T14:00:22.731Z", "upgrading_stage": 1, "will_start": false}}
+        "400":
+          application/json: {"status": 400}
+  getNPARulesList:
+    speakeasy-default-get-NPA-rules-list:
+      responses:
+        "200":
+          application/json: {"data": [{"group_id": "1", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}, {"actions": ["allow"], "dlp_profile": "Payment Card"}, {"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}, {"activities": [{"list_of_constraints": []}, {"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "van-test"}]}
         "400":
           application/json: {"status": 400}
 examplesVersion: 1.0.0

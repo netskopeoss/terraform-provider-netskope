@@ -4,6 +4,7 @@ package types
 
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
-type PrivateAppsResponseReachability struct {
-	Reachable types.Bool `tfsdk:"reachable"`
+type TagItemNoID struct {
+	TagID   types.String `tfsdk:"tag_id"`
+	TagName types.String `tfsdk:"tag_name"`
 }

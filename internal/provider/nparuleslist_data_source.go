@@ -327,7 +327,7 @@ func (r *NPARulesListDataSource) Read(ctx context.Context, req datasource.ReadRe
 	} else {
 		sortorder = nil
 	}
-	request := operations.GetNPARulesRequest{
+	request := operations.GetNPARulesListRequest{
 		Filter:    filter,
 		Limit:     limit,
 		Offset:    offset,

@@ -59,7 +59,7 @@ func (r *NPAPolicyGroupsResource) Schema(ctx context.Context, req resource.Schem
 			},
 			"group_id": schema.StringAttribute{
 				Computed:    true,
-				Description: `npa policy group id`,
+				Description: `policy group rule id`,
 			},
 			"group_name": schema.StringAttribute{
 				Computed: true,

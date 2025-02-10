@@ -1,7 +1,7 @@
 resource "ns_npa_private_app" "my_npaprivateapp" {
   allow_unauthenticated_cors = false
   allow_uri_bypass           = false
-  app_name                   = "Webserver"
+  app_name                   = "...my_app_name..."
   app_option = {
     # ...
   }
@@ -13,8 +13,8 @@ resource "ns_npa_private_app" "my_npaprivateapp" {
   private_app_hostname = "...my_private_app_hostname..."
   protocols = [
     {
-      port     = 22
-      protocol = "...my_protocol..."
+      port     = "...my_port..."
+      protocol = "udp"
     }
   ]
   publishers = [

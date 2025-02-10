@@ -61,7 +61,7 @@ func (r *NPAPublishersBulkUpgradeRequestResourceModel) RefreshFromSharedPublishe
 						publishers1.Assessment.CaCertsStatus = nil
 					} else {
 						publishers1.Assessment.CaCertsStatus = &tfTypes.UpgradePublisherResponseCaCertsStatus{}
-						publishers1.Assessment.CaCertsStatus.Hashes = []types.String{}
+						publishers1.Assessment.CaCertsStatus.Hashes = make([]types.String, 0, len(publishersItem.Assessment.CaCertsStatus.Hashes))
 						for _, v := range publishersItem.Assessment.CaCertsStatus.Hashes {
 							publishers1.Assessment.CaCertsStatus.Hashes = append(publishers1.Assessment.CaCertsStatus.Hashes, types.StringValue(v))
 						}
@@ -99,7 +99,7 @@ func (r *NPAPublishersBulkUpgradeRequestResourceModel) RefreshFromSharedPublishe
 					}
 				}
 				publishers1.CommonName = types.StringPointerValue(publishersItem.CommonName)
-				publishers1.ConnectedApps = []types.String{}
+				publishers1.ConnectedApps = make([]types.String, 0, len(publishersItem.ConnectedApps))
 				for _, v := range publishersItem.ConnectedApps {
 					publishers1.ConnectedApps = append(publishers1.ConnectedApps, types.StringValue(v))
 				}

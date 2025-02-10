@@ -60,6 +60,7 @@ func (r *NPAPrivatePolicyInUseDataSource) Schema(ctx context.Context, req dataso
 						},
 					},
 				},
+				Description: `successful operation`,
 			},
 			"ids": schema.ListAttribute{
 				Optional:    true,

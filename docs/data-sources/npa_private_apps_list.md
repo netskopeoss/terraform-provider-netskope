@@ -31,68 +31,78 @@ data "ns_npa_private_apps_list" "my_npaprivateappslist" {
 
 ### Read-Only
 
-- `data` (Attributes List) (see [below for nested schema](#nestedatt--data))
+- `private_apps` (Attributes List) (see [below for nested schema](#nestedatt--private_apps))
 
-<a id="nestedatt--data"></a>
-### Nested Schema for `data`
-
-Read-Only:
-
-- `data` (Attributes) (see [below for nested schema](#nestedatt--data--data))
-- `status` (String)
-- `total` (Number)
-
-<a id="nestedatt--data--data"></a>
-### Nested Schema for `data.data`
+<a id="nestedatt--private_apps"></a>
+### Nested Schema for `private_apps`
 
 Read-Only:
 
 - `allow_unauthenticated_cors` (Boolean)
 - `allow_uri_bypass` (Boolean)
-- `app_id` (Number)
-- `app_option` (Attributes) (see [below for nested schema](#nestedatt--data--data--app_option))
+- `app_option` (Attributes) (see [below for nested schema](#nestedatt--private_apps--app_option))
 - `bypass_uris` (List of String)
 - `clientless_access` (Boolean)
-- `host` (String)
 - `is_user_portal_app` (Boolean)
-- `protocols` (Attributes List) (see [below for nested schema](#nestedatt--data--data--protocols))
+- `modified_by` (String)
+- `modify_time` (String)
+- `policies` (List of String)
+- `private_app_hostname` (String)
+- `private_app_id` (Number)
+- `private_app_name` (String)
+- `private_app_protocol` (String)
+- `protocols` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--protocols))
+- `public_host` (String)
+- `reachability` (Attributes) (see [below for nested schema](#nestedatt--private_apps--reachability))
 - `real_host` (String)
-- `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--data--data--service_publisher_assignments))
-- `tags` (Attributes List) (see [below for nested schema](#nestedatt--data--data--tags))
+- `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--service_publisher_assignments))
+- `steering_configs` (List of String)
+- `supplement_dns_for_osx` (Boolean)
+- `tags` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--tags))
 - `trust_self_signed_certs` (Boolean)
 - `uribypass_header_value` (String)
 - `use_publisher_dns` (Boolean)
 
-<a id="nestedatt--data--data--app_option"></a>
-### Nested Schema for `data.data.app_option`
+<a id="nestedatt--private_apps--app_option"></a>
+### Nested Schema for `private_apps.app_option`
 
 
-<a id="nestedatt--data--data--protocols"></a>
-### Nested Schema for `data.data.protocols`
+<a id="nestedatt--private_apps--protocols"></a>
+### Nested Schema for `private_apps.protocols`
 
 Read-Only:
 
 - `created_at` (String)
 - `id` (Number)
 - `port` (String)
+- `protocol` (String)
 - `service_id` (Number)
-- `transport` (String)
 - `updated_at` (String)
 
 
-<a id="nestedatt--data--data--service_publisher_assignments"></a>
-### Nested Schema for `data.data.service_publisher_assignments`
+<a id="nestedatt--private_apps--reachability"></a>
+### Nested Schema for `private_apps.reachability`
 
 Read-Only:
 
-- `primary` (Boolean)
-- `publisher_external_id` (Number)
-- `publisher_name` (String)
-- `reachability` (Attributes) (see [below for nested schema](#nestedatt--data--data--service_publisher_assignments--reachability))
-- `service_external_id` (Number)
+- `error_code` (Number)
+- `error_string` (String)
+- `reachable` (Boolean)
 
-<a id="nestedatt--data--data--service_publisher_assignments--reachability"></a>
-### Nested Schema for `data.data.service_publisher_assignments.reachability`
+
+<a id="nestedatt--private_apps--service_publisher_assignments"></a>
+### Nested Schema for `private_apps.service_publisher_assignments`
+
+Read-Only:
+
+- `primary` (String)
+- `publisher_id` (Number)
+- `publisher_name` (String)
+- `reachability` (Attributes) (see [below for nested schema](#nestedatt--private_apps--service_publisher_assignments--reachability))
+- `service_id` (Number)
+
+<a id="nestedatt--private_apps--service_publisher_assignments--reachability"></a>
+### Nested Schema for `private_apps.service_publisher_assignments.reachability`
 
 Read-Only:
 
@@ -102,10 +112,10 @@ Read-Only:
 
 
 
-<a id="nestedatt--data--data--tags"></a>
-### Nested Schema for `data.data.tags`
+<a id="nestedatt--private_apps--tags"></a>
+### Nested Schema for `private_apps.tags`
 
 Read-Only:
 
-- `tag_id` (Number)
+- `tag_id` (String) Parsed as JSON.
 - `tag_name` (String)
