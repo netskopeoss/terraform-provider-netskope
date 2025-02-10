@@ -13,9 +13,11 @@ generation:
     oAuth2ClientCredentialsEnabled: true
     oAuth2PasswordEnabled: false
 terraform:
-  version: 0.8.89
+  version: 0.10.56
   additionalDataSources: []
   additionalDependencies: {}
+  additionalProviderAttributes:
+    httpHeaders: ""
   additionalResources: []
   allowUnknownFieldsInWeakUnions: false
   author: netskope

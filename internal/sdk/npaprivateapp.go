@@ -143,12 +143,12 @@ func (s *NPAPrivateApp) CreateNPAPrivateApps(ctx context.Context, request shared
 				return nil, err
 			}
 
-			var out []shared.PrivateAppsResponse
+			var out shared.PrivateAppsGetResponseNew
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.PrivateAppsResponse = out
+			res.PrivateAppsGetResponseNew = &out
 		default:
 			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {

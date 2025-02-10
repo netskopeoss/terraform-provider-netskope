@@ -173,7 +173,7 @@ func (e *PublishersGetResponseDataStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type Tags struct {
+type PublishersGetResponseTags struct {
 }
 
 type PublishersGetResponseUpgradeFailedReason struct {
@@ -238,7 +238,7 @@ type PublishersGetResponsePublishers struct {
 	StitcherPop               *string                            `json:"stitcher_pop,omitempty"`
 	// Not used at this time - please ignore
 	//
-	Tags                []Tags                                    `json:"tags,omitempty"`
+	Tags                []PublishersGetResponseTags               `json:"tags,omitempty"`
 	UpgradeFailedReason *PublishersGetResponseUpgradeFailedReason `json:"upgrade_failed_reason,omitempty"`
 	UpgradeRequest      *bool                                     `json:"upgrade_request,omitempty"`
 	UpgradeStatus       *PublishersGetResponseUpgradeStatus       `json:"upgrade_status,omitempty"`
@@ -335,7 +335,7 @@ func (o *PublishersGetResponsePublishers) GetStitcherPop() *string {
 	return o.StitcherPop
 }
 
-func (o *PublishersGetResponsePublishers) GetTags() []Tags {
+func (o *PublishersGetResponsePublishers) GetTags() []PublishersGetResponseTags {
 	if o == nil {
 		return nil
 	}

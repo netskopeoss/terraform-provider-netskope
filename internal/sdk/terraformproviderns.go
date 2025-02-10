@@ -175,9 +175,9 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 		sdkConfiguration: sdkConfiguration{
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
-			SDKVersion:        "0.8.89",
-			GenVersion:        "2.497.8",
-			UserAgent:         "speakeasy-sdk/terraform 0.8.89 2.497.8 1.0.0 github.com/netskope/terraform-provider-ns/internal/sdk",
+			SDKVersion:        "0.10.56",
+			GenVersion:        "2.506.0",
+			UserAgent:         "speakeasy-sdk/terraform 0.10.56 2.506.0 1.0.0 github.com/netskope/terraform-provider-ns/internal/sdk",
 			ServerDefaults: []map[string]string{
 				{
 					"tenant": "demo",
@@ -335,12 +335,12 @@ func (s *TerraformProviderNs) ListNPAPrivateApps(ctx context.Context, request op
 				return nil, err
 			}
 
-			var out []shared.PrivateAppsGetResponse
+			var out shared.PrivateAppsListResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.PrivateAppsGetResponse = out
+			res.PrivateAppsListResponse = &out
 		default:
 			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
@@ -787,12 +787,12 @@ func (s *TerraformProviderNs) GetNPAPrivateApp(ctx context.Context, request oper
 				return nil, err
 			}
 
-			var out []shared.PrivateAppsResponse
+			var out shared.PrivateAppsGetResponseNew
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.PrivateAppsResponse = out
+			res.PrivateAppsGetResponseNew = &out
 		default:
 			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {

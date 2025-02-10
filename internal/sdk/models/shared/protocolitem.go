@@ -2,9 +2,40 @@
 
 package shared
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type Protocol string
+
+const (
+	ProtocolTCP Protocol = "tcp"
+	ProtocolUDP Protocol = "udp"
+)
+
+func (e Protocol) ToPointer() *Protocol {
+	return &e
+}
+func (e *Protocol) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "tcp":
+		fallthrough
+	case "udp":
+		*e = Protocol(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for Protocol: %v", v)
+	}
+}
+
 type ProtocolItem struct {
-	Port     *string `json:"port,omitempty"`
-	Protocol *string `json:"type,omitempty"`
+	Port     *string   `json:"port,omitempty"`
+	Protocol *Protocol `json:"type,omitempty"`
 }
 
 func (o *ProtocolItem) GetPort() *string {
@@ -14,7 +45,7 @@ func (o *ProtocolItem) GetPort() *string {
 	return o.Port
 }
 
-func (o *ProtocolItem) GetProtocol() *string {
+func (o *ProtocolItem) GetProtocol() *Protocol {
 	if o == nil {
 		return nil
 	}

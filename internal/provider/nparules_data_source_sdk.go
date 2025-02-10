@@ -20,14 +20,14 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *s
 			r.RuleData = nil
 		} else {
 			r.RuleData = &tfTypes.NpaPolicyRuleData{}
-			r.RuleData.AccessMethod = []types.String{}
+			r.RuleData.AccessMethod = make([]types.String, 0, len(resp.RuleData.AccessMethod))
 			for _, v := range resp.RuleData.AccessMethod {
 				r.RuleData.AccessMethod = append(r.RuleData.AccessMethod, types.StringValue(string(v)))
 			}
 			r.RuleData.BNegateNetLocation = types.BoolPointerValue(resp.RuleData.BNegateNetLocation)
 			r.RuleData.BNegateSrcCountries = types.BoolPointerValue(resp.RuleData.BNegateSrcCountries)
 			r.RuleData.Classification = types.StringPointerValue(resp.RuleData.Classification)
-			r.RuleData.DeviceClassificationID = []types.Int64{}
+			r.RuleData.DeviceClassificationID = make([]types.Int64, 0, len(resp.RuleData.DeviceClassificationID))
 			for _, v := range resp.RuleData.DeviceClassificationID {
 				r.RuleData.DeviceClassificationID = append(r.RuleData.DeviceClassificationID, types.Int64Value(v))
 			}
@@ -37,7 +37,7 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *s
 			}
 			for dlpActionsCount, dlpActionsItem := range resp.RuleData.DlpActions {
 				var dlpActions1 tfTypes.NpaPolicyRuleDlp
-				dlpActions1.Actions = []types.String{}
+				dlpActions1.Actions = make([]types.String, 0, len(dlpActionsItem.Actions))
 				for _, v := range dlpActionsItem.Actions {
 					dlpActions1.Actions = append(dlpActions1.Actions, types.StringValue(string(v)))
 				}
@@ -61,11 +61,11 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *s
 					r.RuleData.MatchCriteriaAction.ActionName = types.StringNull()
 				}
 			}
-			r.RuleData.NetLocationObj = []types.String{}
+			r.RuleData.NetLocationObj = make([]types.String, 0, len(resp.RuleData.NetLocationObj))
 			for _, v := range resp.RuleData.NetLocationObj {
 				r.RuleData.NetLocationObj = append(r.RuleData.NetLocationObj, types.StringValue(v))
 			}
-			r.RuleData.OrganizationUnits = []types.String{}
+			r.RuleData.OrganizationUnits = make([]types.String, 0, len(resp.RuleData.OrganizationUnits))
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
 			}
@@ -74,7 +74,7 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *s
 			} else {
 				r.RuleData.PolicyType = types.StringNull()
 			}
-			r.RuleData.PrivateApps = []types.String{}
+			r.RuleData.PrivateApps = make([]types.String, 0, len(resp.RuleData.PrivateApps))
 			for _, v := range resp.RuleData.PrivateApps {
 				r.RuleData.PrivateApps = append(r.RuleData.PrivateApps, types.StringValue(v))
 			}
@@ -92,7 +92,7 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *s
 					} else {
 						activities1.Activity = types.StringNull()
 					}
-					activities1.ListOfConstraints = []types.String{}
+					activities1.ListOfConstraints = make([]types.String, 0, len(activitiesItem.ListOfConstraints))
 					for _, v := range activitiesItem.ListOfConstraints {
 						activities1.ListOfConstraints = append(activities1.ListOfConstraints, types.StringValue(v))
 					}
@@ -103,7 +103,7 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *s
 						privateAppsWithActivities1.Activities[activitiesCount].ListOfConstraints = activities1.ListOfConstraints
 					}
 				}
-				privateAppsWithActivities1.AppID = []types.String{}
+				privateAppsWithActivities1.AppID = make([]types.String, 0, len(privateAppsWithActivitiesItem.AppID))
 				for _, v := range privateAppsWithActivitiesItem.AppID {
 					privateAppsWithActivities1.AppID = append(privateAppsWithActivities1.AppID, types.StringValue(v))
 				}
@@ -116,16 +116,16 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *s
 					r.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppName = privateAppsWithActivities1.AppName
 				}
 			}
-			r.RuleData.PrivateAppTagIds = []types.String{}
+			r.RuleData.PrivateAppTagIds = make([]types.String, 0, len(resp.RuleData.PrivateAppTagIds))
 			for _, v := range resp.RuleData.PrivateAppTagIds {
 				r.RuleData.PrivateAppTagIds = append(r.RuleData.PrivateAppTagIds, types.StringValue(v))
 			}
-			r.RuleData.PrivateAppTags = []types.String{}
+			r.RuleData.PrivateAppTags = make([]types.String, 0, len(resp.RuleData.PrivateAppTags))
 			for _, v := range resp.RuleData.PrivateAppTags {
 				r.RuleData.PrivateAppTags = append(r.RuleData.PrivateAppTags, types.StringValue(v))
 			}
 			r.RuleData.ShowDlpProfileActionTable = types.BoolPointerValue(resp.RuleData.ShowDlpProfileActionTable)
-			r.RuleData.SrcCountries = []types.String{}
+			r.RuleData.SrcCountries = make([]types.String, 0, len(resp.RuleData.SrcCountries))
 			for _, v := range resp.RuleData.SrcCountries {
 				r.RuleData.SrcCountries = append(r.RuleData.SrcCountries, types.StringValue(v))
 			}
@@ -159,7 +159,7 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *s
 						tssActions1.Actions[actionsCount].Template = actions2.Template
 					}
 				}
-				tssActions1.TssProfile = []types.String{}
+				tssActions1.TssProfile = make([]types.String, 0, len(tssActionsItem.TssProfile))
 				for _, v := range tssActionsItem.TssProfile {
 					tssActions1.TssProfile = append(tssActions1.TssProfile, types.StringValue(v))
 				}
@@ -170,15 +170,15 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(resp *s
 					r.RuleData.TssActions[tssActionsCount].TssProfile = tssActions1.TssProfile
 				}
 			}
-			r.RuleData.TssProfile = []types.String{}
+			r.RuleData.TssProfile = make([]types.String, 0, len(resp.RuleData.TssProfile))
 			for _, v := range resp.RuleData.TssProfile {
 				r.RuleData.TssProfile = append(r.RuleData.TssProfile, types.StringValue(v))
 			}
-			r.RuleData.UserGroups = []types.String{}
+			r.RuleData.UserGroups = make([]types.String, 0, len(resp.RuleData.UserGroups))
 			for _, v := range resp.RuleData.UserGroups {
 				r.RuleData.UserGroups = append(r.RuleData.UserGroups, types.StringValue(v))
 			}
-			r.RuleData.Users = []types.String{}
+			r.RuleData.Users = make([]types.String, 0, len(resp.RuleData.Users))
 			for _, v := range resp.RuleData.Users {
 				r.RuleData.Users = append(r.RuleData.Users, types.StringValue(v))
 			}

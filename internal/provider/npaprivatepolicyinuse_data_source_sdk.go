@@ -23,7 +23,7 @@ func (r *NPAPrivatePolicyInUseDataSourceModel) RefreshFromResponseBody(resp []op
 		if dataItem.Data == nil {
 			data.Data = nil
 		} else {
-			data.Data = &tfTypes.Data1{}
+			data.Data = &tfTypes.Data{}
 			data.Data.Token = types.StringPointerValue(dataItem.Data.Token)
 		}
 		if dataItem.Status != nil {

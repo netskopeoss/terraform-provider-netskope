@@ -11,29 +11,29 @@ import (
 	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/models"
 )
 
-type myAppResponse struct {
-	Data   models.AppData `json:"data"`
-	Status string         `json:"status"`
+type myBulkAppResponse struct {
+	BulkApps models.BulkAppData `json:"data"`
+	Status   string             `json:"status"`
 }
 
 var (
-	_                  afterSuccessHook = (*myAppResponse)(nil)
-	myAppResponseDebug bool             = true
+	_                      afterSuccessHook = (*myBulkAppResponse)(nil)
+	myBulkAppResponseDebug bool             = true
 )
 
-func (i *myAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
-	if hookCtx.OperationID == "createNPAPrivateApps" || hookCtx.OperationID == "getNPAPrivateApp" {
-		if myAppResponseDebug {
-			log.Print("Executing AfterSucess single app hook....")
+func (i *myBulkAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
+	if hookCtx.OperationID == "listNPAPrivateApps" {
+		if myBulkAppResponseDebug {
+			log.Print("Executing AfterSucess hook BULK APPS")
 		}
-		var responseMap myAppResponse
+		var responseMap myBulkAppResponse
 		// Read and unmarshal the response body
 		body, err := io.ReadAll(res.Body)
 		if err != nil {
 			log.Printf("ERROR: Unable to read response body: %v", err)
 			return nil, fmt.Errorf("ERROR: Unable to read response body: %w", err)
 		}
-		if myAppResponseDebug {
+		if myBulkAppResponseDebug {
 			log.Printf("SUCCESS: Successfully read response body")
 		}
 		// Unmarshal the raw response into a map
@@ -41,16 +41,29 @@ func (i *myAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
 			log.Printf("ERROR: Unable to unmarshal response: %v", err)
 			return nil, fmt.Errorf("ERROR: Unable to unmarshal response: %v", err)
 		}
-		if myAppResponseDebug {
+		if myBulkAppResponseDebug {
 			log.Printf("SUCCESS: Successfully unmarshalled response")
 			log.Print("--------------------")
 			log.Print(responseMap)
 			log.Print("--------------------")
 		}
-		oldAppNameValue := responseMap.Data.AppName
-		responseMap.Data.AppName = strings.Trim(oldAppNameValue, "[]")
-		// Marshal the modified response back to json.RawMessage
+		for i := range responseMap.BulkApps.AppData {
+			oldAppNameValue := responseMap.BulkApps.AppData[i].AppName
+			responseMap.BulkApps.AppData[i].AppName = strings.Trim(oldAppNameValue, "[]")
+			if myBulkAppResponseDebug {
+				log.Print("--------------------")
+				log.Print(responseMap.BulkApps.AppData[i].AppName)
+				log.Print("--------------------")
+				log.Print(responseMap.BulkApps.AppData[i])
+			}
+		}
 		modifiedBody, err := json.MarshalIndent(responseMap, "", "")
+		if myBulkAppResponseDebug {
+			log.Print("=================")
+			log.Println(string(modifiedBody))
+			log.Print("=================")
+		}
+
 		if err != nil {
 			log.Printf("Error: Unable to marshal modified response: %v", err)
 			return nil, fmt.Errorf("Error: Unable to marshal modified response: %v", err)

@@ -25,8 +25,8 @@ type NsProvider struct {
 
 // NsProviderModel describes the provider data model.
 type NsProviderModel struct {
-	ServerURL types.String `tfsdk:"server_url"`
 	APIKey    types.String `tfsdk:"api_key"`
+	ServerURL types.String `tfsdk:"server_url"`
 }
 
 func (p *NsProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -36,18 +36,17 @@ func (p *NsProvider) Metadata(ctx context.Context, req provider.MetadataRequest,
 
 func (p *NsProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: `Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy`,
 		Attributes: map[string]schema.Attribute{
-			"server_url": schema.StringAttribute{
-				MarkdownDescription: "Server URL (defaults to https://{tenant}.goskope.com/api/v2)",
-				Optional:            true,
-				Required:            false,
-			},
 			"api_key": schema.StringAttribute{
-				Sensitive: true,
 				Optional:  true,
+				Sensitive: true,
+			},
+			"server_url": schema.StringAttribute{
+				Description: `Server URL (defaults to https://{tenant}.goskope.com/api/v2)`,
+				Optional:    true,
 			},
 		},
+		MarkdownDescription: `Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy`,
 	}
 }
 
@@ -76,8 +75,13 @@ func (p *NsProvider) Configure(ctx context.Context, req provider.ConfigureReques
 		APIKey: apiKey,
 	}
 
+	providerHTTPTransportOpts := ProviderHTTPTransportOpts{
+		SetHeaders: make(map[string]string),
+		Transport:  http.DefaultTransport,
+	}
+
 	httpClient := http.DefaultClient
-	httpClient.Transport = NewLoggingHTTPTransport(http.DefaultTransport)
+	httpClient.Transport = NewProviderHTTPTransport(providerHTTPTransportOpts)
 
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(ServerURL),

@@ -9,11 +9,11 @@ import (
 
 func (r *NPAPublishersAlertsConfigurationDataSourceModel) RefreshFromSharedPublishersAlertGetResponseData(resp *shared.PublishersAlertGetResponseData) {
 	if resp != nil {
-		r.AdminUsers = []types.String{}
+		r.AdminUsers = make([]types.String, 0, len(resp.AdminUsers))
 		for _, v := range resp.AdminUsers {
 			r.AdminUsers = append(r.AdminUsers, types.StringValue(v))
 		}
-		r.EventTypes = []types.String{}
+		r.EventTypes = make([]types.String, 0, len(resp.EventTypes))
 		for _, v := range resp.EventTypes {
 			r.EventTypes = append(r.EventTypes, types.StringValue(string(v)))
 		}

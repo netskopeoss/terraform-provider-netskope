@@ -41,7 +41,7 @@ resource "ns_npa_policy_groups" "my_npapolicygroups" {
 ### Read-Only
 
 - `can_be_edited_deleted` (String)
-- `group_id` (String) npa policy group id
+- `group_id` (String) policy group rule id
 - `group_pinned_id` (String)
 - `group_prod_id` (String)
 - `group_type` (String)

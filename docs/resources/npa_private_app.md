@@ -16,7 +16,7 @@ NPAPrivateApp Resource
 resource "ns_npa_private_app" "my_npaprivateapp" {
   allow_unauthenticated_cors = false
   allow_uri_bypass           = false
-  app_name                   = "Webserver"
+  app_name                   = "...my_app_name..."
   app_option = {
     # ...
   }
@@ -28,8 +28,8 @@ resource "ns_npa_private_app" "my_npaprivateapp" {
   private_app_hostname = "...my_private_app_hostname..."
   protocols = [
     {
-      port     = 22
-      protocol = "...my_protocol..."
+      port     = "...my_port..."
+      protocol = "udp"
     }
   ]
   publishers = [
@@ -74,15 +74,14 @@ resource "ns_npa_private_app" "my_npaprivateapp" {
 ### Read-Only
 
 - `modified_by` (String)
-- `modified_time` (String)
+- `modify_time` (String)
 - `policies` (List of String)
-- `private_app_id` (Number) private apps id
+- `private_app_id` (Number)
 - `private_app_name` (String)
 - `private_app_protocol` (String)
 - `public_host` (String)
 - `reachability` (Attributes) (see [below for nested schema](#nestedatt--reachability))
 - `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--service_publisher_assignments))
-- `status` (String) must be one of ["success", "not found"]
 - `steering_configs` (List of String)
 - `supplement_dns_for_osx` (Boolean)
 
@@ -96,14 +95,13 @@ resource "ns_npa_private_app" "my_npaprivateapp" {
 Optional:
 
 - `port` (String)
-- `protocol` (String)
+- `protocol` (String) must be one of ["tcp", "udp"]
 
 Read-Only:
 
 - `created_at` (String)
 - `id` (Number)
 - `service_id` (Number)
-- `transport` (String)
 - `updated_at` (String)
 
 
@@ -125,7 +123,7 @@ Optional:
 
 Read-Only:
 
-- `tag_id` (Number)
+- `tag_id` (String) Parsed as JSON.
 
 
 <a id="nestedatt--reachability"></a>
@@ -133,6 +131,8 @@ Read-Only:
 
 Read-Only:
 
+- `error_code` (Number)
+- `error_string` (String)
 - `reachable` (Boolean)
 
 
@@ -141,11 +141,11 @@ Read-Only:
 
 Read-Only:
 
-- `primary` (Boolean)
-- `publisher_external_id` (Number)
+- `primary` (String)
+- `publisher_id` (Number)
 - `publisher_name` (String)
 - `reachability` (Attributes) (see [below for nested schema](#nestedatt--service_publisher_assignments--reachability))
-- `service_external_id` (Number)
+- `service_id` (Number)
 
 <a id="nestedatt--service_publisher_assignments--reachability"></a>
 ### Nested Schema for `service_publisher_assignments.reachability`

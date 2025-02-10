@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type GetNPARulesRequest struct {
+type GetNPARulesListRequest struct {
 	// Query string based on query operaters
 	Filter *string `queryParam:"style=form,explode=true,name=filter"`
 	// Max number of policies to retrieve. Default will be all policies.
@@ -20,42 +20,42 @@ type GetNPARulesRequest struct {
 	Sortorder *string `queryParam:"style=form,explode=true,name=sortorder"`
 }
 
-func (o *GetNPARulesRequest) GetFilter() *string {
+func (o *GetNPARulesListRequest) GetFilter() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Filter
 }
 
-func (o *GetNPARulesRequest) GetLimit() *int64 {
+func (o *GetNPARulesListRequest) GetLimit() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.Limit
 }
 
-func (o *GetNPARulesRequest) GetOffset() *int64 {
+func (o *GetNPARulesListRequest) GetOffset() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.Offset
 }
 
-func (o *GetNPARulesRequest) GetSortby() *string {
+func (o *GetNPARulesListRequest) GetSortby() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Sortby
 }
 
-func (o *GetNPARulesRequest) GetSortorder() *string {
+func (o *GetNPARulesListRequest) GetSortorder() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Sortorder
 }
 
-type GetNPARulesResponse struct {
+type GetNPARulesListResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -68,35 +68,35 @@ type GetNPARulesResponse struct {
 	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
 
-func (o *GetNPARulesResponse) GetContentType() string {
+func (o *GetNPARulesListResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *GetNPARulesResponse) GetStatusCode() int {
+func (o *GetNPARulesListResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *GetNPARulesResponse) GetRawResponse() *http.Response {
+func (o *GetNPARulesListResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}
 	return o.RawResponse
 }
 
-func (o *GetNPARulesResponse) GetNpaPolicyResponseList() *shared.NpaPolicyResponseList {
+func (o *GetNPARulesListResponse) GetNpaPolicyResponseList() *shared.NpaPolicyResponseList {
 	if o == nil {
 		return nil
 	}
 	return o.NpaPolicyResponseList
 }
 
-func (o *GetNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
+func (o *GetNPARulesListResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
 	if o == nil {
 		return nil
 	}

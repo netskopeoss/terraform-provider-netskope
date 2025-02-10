@@ -14,6 +14,12 @@ func initHooks(h *Hooks) {
 	// Hooks are registered per SDK instance, and are valid for the lifetime of the SDK instance
 	MyApp := &myAppResponse{} 
 	h.registerAfterSuccessHook(MyApp)
+	MyBulkApp := &myBulkAppResponse{} 
+	h.registerAfterSuccessHook(MyBulkApp)
 	MyPolicy :=&myPolicyResponse{}
 	h.registerAfterSuccessHook(MyPolicy)
+	MyBulkPolicy :=&myBulkPolicyResponse{}
+	h.registerAfterSuccessHook(MyBulkPolicy)
+	MyPolicyRequest :=&myPolicyRequest{}
+	h.registerBeforeRequestHook(MyPolicyRequest)
 }

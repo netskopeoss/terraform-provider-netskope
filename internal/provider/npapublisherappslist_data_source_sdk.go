@@ -20,7 +20,7 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 			if dataItem.AppOption == nil {
 				data1.AppOption = nil
 			} else {
-				data1.AppOption = &tfTypes.AppOption{}
+				data1.AppOption = &tfTypes.PrivateAppsRequestAppOption{}
 			}
 			data1.ClientlessAccess = types.BoolPointerValue(dataItem.ClientlessAccess)
 			if dataItem.ExternalID != nil {
@@ -69,7 +69,7 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 			if dataItem.Reachability == nil {
 				data1.Reachability = nil
 			} else {
-				data1.Reachability = &tfTypes.Reachability{}
+				data1.Reachability = &tfTypes.PublishersPrivateAppsResponseReachability{}
 				if dataItem.Reachability.ErrorCode != nil {
 					data1.Reachability.ErrorCode = types.Int64Value(int64(*dataItem.Reachability.ErrorCode))
 				} else {
@@ -92,7 +92,7 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 				if servicePublisherAssignmentsItem.Reachability == nil {
 					servicePublisherAssignments1.Reachability = nil
 				} else {
-					servicePublisherAssignments1.Reachability = &tfTypes.Reachability{}
+					servicePublisherAssignments1.Reachability = &tfTypes.PublishersPrivateAppsResponseReachability{}
 					if servicePublisherAssignmentsItem.Reachability.ErrorCode != nil {
 						servicePublisherAssignments1.Reachability.ErrorCode = types.Int64Value(int64(*servicePublisherAssignmentsItem.Reachability.ErrorCode))
 					} else {

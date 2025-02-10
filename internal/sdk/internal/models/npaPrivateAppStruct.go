@@ -1,19 +1,10 @@
-package hooks
+package models
 
-import (
-	"encoding/json"
-	"fmt"
-	"io"
-	"log"
-	"net/http"
-	"strings"
-)
-
-type MyAppResponse struct {
-	Data   Data   `json:"data"`
-	Status string `json:"status"`
+type BulkAppData struct {
+	AppData []AppData `json:"private_apps"`
 }
-type Data struct {
+
+type AppData struct {
 	AllowUnauthenticatedCors    bool                         `json:"allow_unauthenticated_cors"`
 	AppID                       int                          `json:"app_id"`
 	AppName                     string                       `json:"app_name"`
@@ -59,43 +50,4 @@ type ServicePublisherAssignment struct {
 type Tag struct {
 	TagID   int    `json:"tag_id"`
 	TagName string `json:"tag_name"`
-}
-
-var (
-	_ afterSuccessHook = (*MyAppResponse)(nil)
-)
-
-func (i *MyAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
-	log.Print("Executing AfterSucess hook....")
-	if hookCtx.OperationID == "createNPAPrivateApps" || hookCtx.OperationID == "getNPAPrivateApp" {
-		var responseMap MyAppResponse
-		// Read and unmarshal the response body
-		body, err := io.ReadAll(res.Body)
-		if err != nil {
-			log.Printf("ERROR: Unable to read response body: %v", err)
-			return nil, fmt.Errorf("ERROR: Unable to read response body: %w", err)
-		}
-		log.Printf("SUCCESS: Successfully read response body")
-		// Unmarshal the raw response into a map
-		if err := json.Unmarshal(body, &responseMap); err != nil {
-			log.Printf("ERROR: Unable to unmarshal response: %v", err)
-			return nil, fmt.Errorf("ERROR: Unable to unmarshal response: %v", err)
-		}
-		log.Printf("SUCCESS: Successfully unmarshalled response")
-		log.Print("--------------------")
-		log.Print(responseMap)
-		log.Print("--------------------")
-		oldValue := responseMap.Data.AppName
-		responseMap.Data.AppName = strings.Trim(oldValue, "[]")
-		// Marshal the modified response back to json.RawMessage
-		modifiedBody, err := json.MarshalIndent(responseMap, "", "")
-		if err != nil {
-			log.Printf("Error: Unable to marshal modified response: %v", err)
-			return nil, fmt.Errorf("Error: Unable to marshal modified response: %v", err)
-		}
-		s := string(modifiedBody)
-		res.Body = io.NopCloser(strings.NewReader(s))
-		return res, nil
-	}
-	return res, nil
 }

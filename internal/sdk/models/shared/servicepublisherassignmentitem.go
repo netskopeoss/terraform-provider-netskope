@@ -2,27 +2,27 @@
 
 package shared
 
-type Reachability struct {
+type ServicePublisherAssignmentItemReachability struct {
 	ErrorCode   *int    `json:"error_code,omitempty"`
 	ErrorString *string `json:"error_string,omitempty"`
 	Reachable   *bool   `json:"reachable,omitempty"`
 }
 
-func (o *Reachability) GetErrorCode() *int {
+func (o *ServicePublisherAssignmentItemReachability) GetErrorCode() *int {
 	if o == nil {
 		return nil
 	}
 	return o.ErrorCode
 }
 
-func (o *Reachability) GetErrorString() *string {
+func (o *ServicePublisherAssignmentItemReachability) GetErrorString() *string {
 	if o == nil {
 		return nil
 	}
 	return o.ErrorString
 }
 
-func (o *Reachability) GetReachable() *bool {
+func (o *ServicePublisherAssignmentItemReachability) GetReachable() *bool {
 	if o == nil {
 		return nil
 	}
@@ -30,11 +30,11 @@ func (o *Reachability) GetReachable() *bool {
 }
 
 type ServicePublisherAssignmentItem struct {
-	Primary             *bool         `json:"primary,omitempty"`
-	PublisherExternalID *int          `json:"publisher_external_id,omitempty"`
-	PublisherName       *string       `json:"publisher_name,omitempty"`
-	Reachability        *Reachability `json:"reachability,omitempty"`
-	ServiceExternalID   *int          `json:"service_external_id,omitempty"`
+	Primary             *bool                                       `json:"primary,omitempty"`
+	PublisherExternalID *int                                        `json:"publisher_external_id,omitempty"`
+	PublisherName       *string                                     `json:"publisher_name,omitempty"`
+	Reachability        *ServicePublisherAssignmentItemReachability `json:"reachability,omitempty"`
+	ServiceExternalID   *int                                        `json:"service_external_id,omitempty"`
 }
 
 func (o *ServicePublisherAssignmentItem) GetPrimary() *bool {
@@ -58,7 +58,7 @@ func (o *ServicePublisherAssignmentItem) GetPublisherName() *string {
 	return o.PublisherName
 }
 
-func (o *ServicePublisherAssignmentItem) GetReachability() *Reachability {
+func (o *ServicePublisherAssignmentItem) GetReachability() *ServicePublisherAssignmentItemReachability {
 	if o == nil {
 		return nil
 	}

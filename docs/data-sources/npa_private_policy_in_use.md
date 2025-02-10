@@ -29,7 +29,7 @@ data "ns_npa_private_policy_in_use" "my_npaprivatepolicyinuse" {
 
 ### Read-Only
 
-- `data` (Attributes List) (see [below for nested schema](#nestedatt--data))
+- `data` (Attributes List) successful operation (see [below for nested schema](#nestedatt--data))
 
 <a id="nestedatt--data"></a>
 ### Nested Schema for `data`

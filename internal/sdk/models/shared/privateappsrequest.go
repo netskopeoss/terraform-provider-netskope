@@ -2,27 +2,27 @@
 
 package shared
 
-type AppOption struct {
+type PrivateAppsRequestAppOption struct {
 }
 
 // PrivateAppsRequest - Private APP request body
 type PrivateAppsRequest struct {
-	AllowUnauthenticatedCors *bool           `json:"allow_unauthenticated_cors,omitempty"`
-	AllowURIBypass           *bool           `json:"allow_uri_bypass,omitempty"`
-	UribypassHeaderValue     *string         `json:"uribypass_header_value,omitempty"`
-	BypassUris               []string        `json:"bypass_uris,omitempty"`
-	AppName                  *string         `json:"app_name,omitempty"`
-	AppOption                *AppOption      `json:"app_option,omitempty"`
-	ClientlessAccess         *bool           `json:"clientless_access,omitempty"`
-	PrivateAppHostname       *string         `json:"host,omitempty"`
-	IsUserPortalApp          *bool           `json:"is_user_portal_app,omitempty"`
-	Protocols                []ProtocolItem  `json:"protocols,omitempty"`
-	PublisherTags            []TagItemNoID   `json:"publisher_tags,omitempty"`
-	Publishers               []PublisherItem `json:"publishers,omitempty"`
-	RealHost                 *string         `json:"real_host,omitempty"`
-	Tags                     []TagItemNoID   `json:"tags,omitempty"`
-	TrustSelfSignedCerts     *bool           `json:"trust_self_signed_certs,omitempty"`
-	UsePublisherDNS          *bool           `json:"use_publisher_dns,omitempty"`
+	AllowUnauthenticatedCors *bool                        `json:"allow_unauthenticated_cors,omitempty"`
+	AllowURIBypass           *bool                        `json:"allow_uri_bypass,omitempty"`
+	UribypassHeaderValue     *string                      `json:"uribypass_header_value,omitempty"`
+	BypassUris               []string                     `json:"bypass_uris,omitempty"`
+	AppName                  *string                      `json:"app_name,omitempty"`
+	AppOption                *PrivateAppsRequestAppOption `json:"app_option,omitempty"`
+	ClientlessAccess         *bool                        `json:"clientless_access,omitempty"`
+	PrivateAppHostname       *string                      `json:"host,omitempty"`
+	IsUserPortalApp          *bool                        `json:"is_user_portal_app,omitempty"`
+	Protocols                []ProtocolItem               `json:"protocols,omitempty"`
+	PublisherTags            []TagItemNoID                `json:"publisher_tags,omitempty"`
+	Publishers               []PublisherItem              `json:"publishers,omitempty"`
+	RealHost                 *string                      `json:"real_host,omitempty"`
+	Tags                     []TagItemNoID                `json:"tags,omitempty"`
+	TrustSelfSignedCerts     *bool                        `json:"trust_self_signed_certs,omitempty"`
+	UsePublisherDNS          *bool                        `json:"use_publisher_dns,omitempty"`
 }
 
 func (o *PrivateAppsRequest) GetAllowUnauthenticatedCors() *bool {
@@ -60,7 +60,7 @@ func (o *PrivateAppsRequest) GetAppName() *string {
 	return o.AppName
 }
 
-func (o *PrivateAppsRequest) GetAppOption() *AppOption {
+func (o *PrivateAppsRequest) GetAppOption() *PrivateAppsRequestAppOption {
 	if o == nil {
 		return nil
 	}
