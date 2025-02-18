@@ -95,14 +95,14 @@ var (
 	myPolicyRequestDebug bool              = true
 )
 
-func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, res *http.Request) (*http.Request, error) {
-	if hookCtx.OperationID == "createNPARules" || hookCtx.OperationID == "updateNPARules" {
+func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.Request) (*http.Request, error) {
+	if hookCtx.OperationID == "createNPARules" || hookCtx.OperationID == "updateNPARulesById" {
 		if myPolicyRequestDebug {
 			log.Print("Executing BeforeRequest hook....")
 		}
 		var requestMap myPolicyRequest
 		// Read and unmarshal the response body
-		body, err := io.ReadAll(res.Body)
+		body, err := io.ReadAll(req.Body)
 		if err != nil {
 			log.Printf("ERROR: Unable to read request body: %v", err)
 			return nil, fmt.Errorf("ERROR: Unable to read request body: %w", err)
@@ -134,7 +134,8 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, res *http.
 			untrimmedApp := "[" + trimmedApp + "]"
 			requestMap.RuleData.PrivateApps = append(requestMap.RuleData.PrivateApps, untrimmedApp)
 		}
-		modifiedBody, err := json.MarshalIndent(requestMap, "", "")
+		//modifiedBody, err := json.MarshalIndent(requestMap, "", "")
+		modifiedBody, err := json.Marshal(requestMap)
 		if err != nil {
 			log.Printf("Error: Unable to marshal modified response: %v", err)
 			return nil, fmt.Errorf("Error: Unable to marshal modified response: %v", err)
@@ -143,18 +144,15 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, res *http.
 			log.Print("=======exit==========")
 			log.Println(string(modifiedBody))
 			log.Print("=================")
-			s := string(modifiedBody)
-			res.Body = io.NopCloser(strings.NewReader(s))
-			log.Print("=================")
-			log.Print(res.Body)
+		}
+		if myPolicyRequestDebug {
+			log.Printf("Modified body length: %d", len(modifiedBody))
+			log.Printf("Request Content-Length header: %d", req.ContentLength)
 		}
 		s := string(modifiedBody)
-		log.Print("=================")
-		log.Print(s)
-		res.Body = io.NopCloser(strings.NewReader(s))
-		log.Print("=================")
-		log.Print(res.Body)
-		return res, nil
+		req.Body = io.NopCloser(strings.NewReader(s))
+		req.ContentLength = int64(len(modifiedBody))
+		return req, nil
 	}
-	return res, nil
+	return req, nil
 }

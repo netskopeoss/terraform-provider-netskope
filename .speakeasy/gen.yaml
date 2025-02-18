@@ -9,11 +9,13 @@ generation:
     nameResolutionDec2023: true
     parameterOrderingFeb2024: true
     requestResponseComponentNamesFeb2024: true
+    nameResolutionFeb2025: false
+    securityFeb2025: false
   auth:
     oAuth2ClientCredentialsEnabled: true
     oAuth2PasswordEnabled: false
 terraform:
-  version: 0.10.56
+  version: 0.14.1
   additionalDataSources: []
   additionalDependencies: {}
   additionalProviderAttributes:
