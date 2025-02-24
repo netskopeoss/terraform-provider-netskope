@@ -27,3 +27,6 @@ test/
 testing/
 *.tfvars
 spec/merged.yaml
+# removing speakeasy directories from merge
+*.speakeasy/
+
