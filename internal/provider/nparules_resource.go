@@ -448,7 +448,7 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 	var ruleID string
 	ruleID = data.RuleID.ValueString()
 
-	// create.npa_rules.fieldscreate.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create","NPARules#create.req"]
+	// create.npa_rules.fieldscreate.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create.req","NPARules#create"]
 	var fields *string
 	request1 := operations.NPARulesRequest{
 		RuleID: ruleID,
