@@ -6,6 +6,7 @@
 #
 # Binaries for programs and plugins
 *.exe
+*.tgz
 *.exe~
 *.dll
 *.so
