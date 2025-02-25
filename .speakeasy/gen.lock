@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
-  docChecksum: d6d70727a48e1d30f98012e9097f183b
+  docChecksum: 79754bee4dba0371b1f5e21a1c6bccea
   docVersion: 1.0.0
   speakeasyVersion: 1.488.0
   generationVersion: 2.506.0
-  releaseVersion: 0.3.1
-  configChecksum: 4c66ac1999e7209494d6477dcda58a5c
+  releaseVersion: 0.4.1
+  configChecksum: 6376d8b4e73ce6c47816cfd7b91b85a8
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -199,6 +199,8 @@ generatedFiles:
   - internal/sdk/models/operations/deletenpapublishers.go
   - internal/sdk/models/operations/deletenpapublisherupgradeprofile.go
   - internal/sdk/models/operations/deletenparules.go
+  - internal/sdk/models/operations/deletesteeringappsprivatetags.go
+  - internal/sdk/models/operations/deletesteeringappsprivatetagstagid.go
   - internal/sdk/models/operations/generatenpapublishertoken.go
   - internal/sdk/models/operations/getnpapolicygroupbyid.go
   - internal/sdk/models/operations/getnpapolicygroups.go
@@ -211,10 +213,17 @@ generatedFiles:
   - internal/sdk/models/operations/getnpapublishers.go
   - internal/sdk/models/operations/getnpapublisherupgradeprofile.go
   - internal/sdk/models/operations/getnparuleslist.go
+  - internal/sdk/models/operations/getsteeringappsprivatetags.go
+  - internal/sdk/models/operations/getsteeringappsprivatetagstagid.go
   - internal/sdk/models/operations/listnpaprivateapps.go
   - internal/sdk/models/operations/listnpapublisherupgradeprofiles.go
   - internal/sdk/models/operations/nparules.go
   - internal/sdk/models/operations/options.go
+  - internal/sdk/models/operations/patchsteeringappsprivatetags.go
+  - internal/sdk/models/operations/poststeeringappsprivatetags.go
+  - internal/sdk/models/operations/poststeeringappsprivatetagsgetpolicyinuse.go
+  - internal/sdk/models/operations/putsteeringappsprivatetags.go
+  - internal/sdk/models/operations/putsteeringappsprivatetagstagid.go
   - internal/sdk/models/operations/triggernpapublisherupdates.go
   - internal/sdk/models/operations/updatenpapolicygroups.go
   - internal/sdk/models/operations/updatenpaprivateapp.go
@@ -267,6 +276,15 @@ generatedFiles:
   - internal/sdk/models/shared/servicepublisherassignmentitem.go
   - internal/sdk/models/shared/tagitem.go
   - internal/sdk/models/shared/tagitemnoid.go
+  - internal/sdk/models/shared/tagprivateappsresponse.go
+  - internal/sdk/models/shared/tagprivateappsresponsealldetails.go
+  - internal/sdk/models/shared/tagrequestitem.go
+  - internal/sdk/models/shared/tagrequestwithid.go
+  - internal/sdk/models/shared/tagrequestwithids.go
+  - internal/sdk/models/shared/tagresponse400.go
+  - internal/sdk/models/shared/tagresponseitem.go
+  - internal/sdk/models/shared/tagsresponsewithid.go
+  - internal/sdk/models/shared/tagsresponsewithoutid.go
   - internal/sdk/models/shared/upgradepublisherresponse.go
   - internal/sdk/npapolicygroups.go
   - internal/sdk/npaprivateapp.go
@@ -679,5 +697,99 @@ examples:
           application/json: {"data": [{"group_id": "1", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}, {"actions": ["allow"], "dlp_profile": "Payment Card"}, {"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}, {"activities": [{"list_of_constraints": []}, {"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "van-test"}]}
         "400":
           application/json: {"status": 400}
+  delete_/steering/apps/private/tags:
+    speakeasy-default-delete-/steering/apps/private/tags:
+      requestBody:
+        application/json: {}
+      responses:
+        "200":
+          application/json: {"data": [{"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}, {"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}, {"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}]}
+        "400":
+          application/json: {"status": 400}
+  get_/steering/apps/private/tags:
+    Name has Query example:
+      parameters:
+        query:
+          query: "tag_name has testTagName"
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+    Name starts with Query example:
+      parameters:
+        query:
+          query: "tag_name sw testTagName"
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200": {}
+  patch_/steering/apps/private/tags:
+    speakeasy-default-patch-/steering/apps/private/tags:
+      requestBody:
+        application/json: {}
+      responses:
+        "200":
+          application/json: {"data": [{"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}, {"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}, {"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}]}
+        "400":
+          application/json: {"status": 400}
+  put_/steering/apps/private/tags:
+    speakeasy-default-put-/steering/apps/private/tags:
+      requestBody:
+        application/json: {}
+      responses:
+        "200":
+          application/json: {"data": [{"protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}]}
+        "400":
+          application/json: {"status": 400}
+  post_/steering/apps/private/tags:
+    speakeasy-default-post-/steering/apps/private/tags:
+      requestBody:
+        application/json: {}
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200":
+          application/json: {}
+  post_/steering/apps/private/tags/getpolicyinuse:
+    speakeasy-default-post-/steering/apps/private/tags/getpolicyinuse:
+      requestBody:
+        application/json: {}
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200":
+          application/json: {}
+  delete_/steering/apps/private/tags/{tag_id}:
+    speakeasy-default-delete-/steering/apps/private/tags/{tag-id}:
+      parameters:
+        path:
+          tag_id: 183916
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200":
+          application/json: {}
+  get_/steering/apps/private/tags/{tag_id}:
+    speakeasy-default-get-/steering/apps/private/tags/{tag-id}:
+      parameters:
+        path:
+          tag_id: 292873
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200":
+          application/json: {}
+  put_/steering/apps/private/tags/{tag_id}:
+    speakeasy-default-put-/steering/apps/private/tags/{tag-id}:
+      parameters:
+        path:
+          tag_id: 128783
+      requestBody:
+        application/json: {}
+      responses:
+        "400":
+          application/json: {"status": 400}
+        "200":
+          application/json: {}
 examplesVersion: 1.0.0
 generatedTests: {}
