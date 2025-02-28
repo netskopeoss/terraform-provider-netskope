@@ -37,13 +37,6 @@ func newNPAPublisher(sdkConfig sdkConfiguration) *NPAPublisher {
 //
 // Features may require additional licensing, please work with account team to enable.
 func (s *NPAPublisher) Create(ctx context.Context, request shared.PublisherPostRequest, opts ...operations.Option) (*operations.CreateNPAPublishersResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createNPAPublishers",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -66,6 +59,13 @@ func (s *NPAPublisher) Create(ctx context.Context, request shared.PublisherPostR
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createNPAPublishers",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -198,13 +198,6 @@ func (s *NPAPublisher) Create(ctx context.Context, request shared.PublisherPostR
 //
 // This endpoint supports deletion of Publishers by supplying the `publisher_id` attribute.
 func (s *NPAPublisher) Delete(ctx context.Context, request operations.DeleteNPAPublishersRequest, opts ...operations.Option) (*operations.DeleteNPAPublishersResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteNPAPublishers",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -225,6 +218,14 @@ func (s *NPAPublisher) Delete(ctx context.Context, request operations.DeleteNPAP
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publishers/{publisher_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteNPAPublishers",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -352,13 +353,6 @@ func (s *NPAPublisher) Delete(ctx context.Context, request operations.DeleteNPAP
 // This endpoint supports query of a specific Publisher object. \
 // Supply `publisher_id` in the path of the request.
 func (s *NPAPublisher) Read(ctx context.Context, request operations.GetNPAPublisherByIDRequest, opts ...operations.Option) (*operations.GetNPAPublisherByIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getNPAPublisherById",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -379,6 +373,14 @@ func (s *NPAPublisher) Read(ctx context.Context, request operations.GetNPAPublis
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publishers/{publisher_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getNPAPublisherById",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -511,13 +513,6 @@ func (s *NPAPublisher) Read(ctx context.Context, request operations.GetNPAPublis
 //
 // See examples on how to use this endpoint.
 func (s *NPAPublisher) Update(ctx context.Context, request operations.UpdateNPAPublisherByIDRequest, opts ...operations.Option) (*operations.UpdateNPAPublisherByIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateNPAPublisherById",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -540,6 +535,13 @@ func (s *NPAPublisher) Update(ctx context.Context, request operations.UpdateNPAP
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateNPAPublisherById",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PublisherPatchRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err

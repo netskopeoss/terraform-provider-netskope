@@ -5,18 +5,18 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type PublishersGetResponsePublishers struct {
-	AppsCount                 types.Int64                                  `tfsdk:"apps_count"`
+	AppsCount                 types.Int32                                  `tfsdk:"apps_count"`
 	Assessment                *UpgradePublisherResponseAssessment          `tfsdk:"assessment"`
 	Capabilities              *PublisherResponseCapabilities               `tfsdk:"capabilities"`
 	CommonName                types.String                                 `tfsdk:"common_name"`
 	ConnectedApps             []types.String                               `tfsdk:"connected_apps"`
 	Lbrokerconnect            types.Bool                                   `tfsdk:"lbrokerconnect"`
-	PublisherID               types.Int64                                  `tfsdk:"publisher_id"`
+	PublisherID               types.Int32                                  `tfsdk:"publisher_id"`
 	PublisherName             types.String                                 `tfsdk:"publisher_name"`
-	PublisherUpgradeProfileID types.Int64                                  `tfsdk:"publisher_upgrade_profile_id"`
+	PublisherUpgradeProfileID types.Int32                                  `tfsdk:"publisher_upgrade_profile_id"`
 	Registered                types.Bool                                   `tfsdk:"registered"`
 	Status                    types.String                                 `tfsdk:"status"`
-	StitcherID                types.Int64                                  `tfsdk:"stitcher_id"`
+	StitcherID                types.Int32                                  `tfsdk:"stitcher_id"`
 	StitcherPop               types.String                                 `tfsdk:"stitcher_pop"`
 	UpgradeFailedReason       *UpgradePublisherResponseUpgradeFailedReason `tfsdk:"upgrade_failed_reason"`
 	UpgradeRequest            types.Bool                                   `tfsdk:"upgrade_request"`

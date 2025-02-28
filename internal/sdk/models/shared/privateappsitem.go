@@ -175,7 +175,7 @@ func (o *Tags) GetTagName() *string {
 type PrivateAppsItem struct {
 	AllowUnauthenticatedCors    *bool                         `json:"allow_unauthenticated_cors,omitempty"`
 	AllowURIBypass              *bool                         `json:"allow_uri_bypass,omitempty"`
-	PrivateAppID                *int64                        `json:"app_id,omitempty"`
+	PrivateAppID                *int                          `json:"app_id,omitempty"`
 	PrivateAppName              *string                       `json:"app_name,omitempty"`
 	AppOption                   *AppOption                    `json:"app_option,omitempty"`
 	BypassUris                  []string                      `json:"bypass_uris,omitempty"`
@@ -214,7 +214,7 @@ func (o *PrivateAppsItem) GetAllowURIBypass() *bool {
 	return o.AllowURIBypass
 }
 
-func (o *PrivateAppsItem) GetPrivateAppID() *int64 {
+func (o *PrivateAppsItem) GetPrivateAppID() *int {
 	if o == nil {
 		return nil
 	}

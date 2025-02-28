@@ -170,7 +170,11 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsGetResponseNewD
 			r.Policies = append(r.Policies, types.StringValue(v))
 		}
 		r.PrivateAppHostname = types.StringPointerValue(resp.PrivateAppHostname)
-		r.PrivateAppID = types.Int64PointerValue(resp.PrivateAppID)
+		if resp.PrivateAppID != nil {
+			r.PrivateAppID = types.Int32Value(int32(*resp.PrivateAppID))
+		} else {
+			r.PrivateAppID = types.Int32Null()
+		}
 		r.PrivateAppName = types.StringPointerValue(resp.PrivateAppName)
 		r.PrivateAppProtocol = types.StringPointerValue(resp.PrivateAppProtocol)
 		r.Protocols = []tfTypes.ProtocolItem{}

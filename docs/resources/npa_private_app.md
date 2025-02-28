@@ -76,7 +76,7 @@ resource "ns_npa_private_app" "my_npaprivateapp" {
 - `modified_by` (String)
 - `modify_time` (String)
 - `policies` (List of String)
-- `private_app_id` (Number)
+- `private_app_id` (Number) private apps id
 - `private_app_name` (String)
 - `private_app_protocol` (String)
 - `public_host` (String)

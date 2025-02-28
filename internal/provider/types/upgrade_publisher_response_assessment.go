@@ -10,6 +10,6 @@ type UpgradePublisherResponseAssessment struct {
 	HddFree       types.String                           `tfsdk:"hdd_free"`
 	HddTotal      types.String                           `tfsdk:"hdd_total"`
 	IPAddress     types.String                           `tfsdk:"ip_address"`
-	Latency       types.Int64                            `tfsdk:"latency"`
+	Latency       types.Int32                            `tfsdk:"latency"`
 	Version       types.String                           `tfsdk:"version"`
 }

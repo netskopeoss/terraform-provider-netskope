@@ -3,8 +3,16 @@
 package shared
 
 type TagResponseItem struct {
-	TagID   *int    `json:"tag_id,omitempty"`
-	TagName *string `json:"tag_name,omitempty"`
+	XSpeakeasyEntity any     `json:"x-speakeasy-entity,omitempty"`
+	TagID            *int    `json:"tag_id,omitempty"`
+	TagName          *string `json:"tag_name,omitempty"`
+}
+
+func (o *TagResponseItem) GetXSpeakeasyEntity() any {
+	if o == nil {
+		return nil
+	}
+	return o.XSpeakeasyEntity
 }
 
 func (o *TagResponseItem) GetTagID() *int {

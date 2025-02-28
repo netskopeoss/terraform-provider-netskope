@@ -29,19 +29,19 @@ type NPAPublisherDataSource struct {
 
 // NPAPublisherDataSourceModel describes the data model.
 type NPAPublisherDataSourceModel struct {
-	AppsCount                  types.Int64                                   `tfsdk:"apps_count"`
+	AppsCount                  types.Int32                                   `tfsdk:"apps_count"`
 	Assessment                 *tfTypes.PublisherResponseAssessment          `tfsdk:"assessment"`
 	Capabilities               *tfTypes.PublisherResponseCapabilities        `tfsdk:"capabilities"`
 	CommonName                 types.String                                  `tfsdk:"common_name"`
 	ConnectedApps              []types.String                                `tfsdk:"connected_apps"`
 	Lbrokerconnect             types.Bool                                    `tfsdk:"lbrokerconnect"`
-	PublisherID                types.Int64                                   `tfsdk:"publisher_id"`
+	PublisherID                types.Int32                                   `tfsdk:"publisher_id"`
 	PublisherName              types.String                                  `tfsdk:"publisher_name"`
-	PublisherUpgradeProfilesID types.Int64                                   `tfsdk:"publisher_upgrade_profiles_id"`
+	PublisherUpgradeProfilesID types.Int32                                   `tfsdk:"publisher_upgrade_profiles_id"`
 	Registered                 types.Bool                                    `tfsdk:"registered"`
 	Status                     types.String                                  `tfsdk:"status"`
 	SticherPop                 types.String                                  `tfsdk:"sticher_pop"`
-	StitcherID                 types.Int64                                   `tfsdk:"stitcher_id"`
+	StitcherID                 types.Int32                                   `tfsdk:"stitcher_id"`
 	UpgradeFailedReason        *tfTypes.PublisherResponseUpgradeFailedReason `tfsdk:"upgrade_failed_reason"`
 	UpgradeRequest             types.Bool                                    `tfsdk:"upgrade_request"`
 	UpgradeStatus              *tfTypes.PublisherResponseUpgradeStatus       `tfsdk:"upgrade_status"`
@@ -58,7 +58,7 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis data source supports query of a specific Publisher object.\n",
 
 		Attributes: map[string]schema.Attribute{
-			"apps_count": schema.Int64Attribute{
+			"apps_count": schema.Int32Attribute{
 				Computed: true,
 			},
 			"assessment": schema.SingleNestedAttribute{
@@ -134,14 +134,14 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 			"lbrokerconnect": schema.BoolAttribute{
 				Computed: true,
 			},
-			"publisher_id": schema.Int64Attribute{
+			"publisher_id": schema.Int32Attribute{
 				Required:    true,
 				Description: `publisher id`,
 			},
 			"publisher_name": schema.StringAttribute{
 				Computed: true,
 			},
-			"publisher_upgrade_profiles_id": schema.Int64Attribute{
+			"publisher_upgrade_profiles_id": schema.Int32Attribute{
 				Computed: true,
 			},
 			"registered": schema.BoolAttribute{
@@ -153,7 +153,7 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 			"sticher_pop": schema.StringAttribute{
 				Computed: true,
 			},
-			"stitcher_id": schema.Int64Attribute{
+			"stitcher_id": schema.Int32Attribute{
 				Computed: true,
 			},
 			"upgrade_failed_reason": schema.SingleNestedAttribute{
@@ -227,7 +227,7 @@ func (r *NPAPublisherDataSource) Read(ctx context.Context, req datasource.ReadRe
 	}
 
 	var publisherID int
-	publisherID = int(data.PublisherID.ValueInt64())
+	publisherID = int(data.PublisherID.ValueInt32())
 
 	request := operations.GetNPAPublisherByIDRequest{
 		PublisherID: publisherID,

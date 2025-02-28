@@ -34,7 +34,7 @@ type NPAPublishersBulkProfileUpdatesResource struct {
 type NPAPublishersBulkProfileUpdatesResourceModel struct {
 	Data       *tfTypes.PublisherUpgradeProfileBulkResponseData      `tfsdk:"data"`
 	Publishers *tfTypes.PublisherUpgradeProfileBulkRequestPublishers `tfsdk:"publishers"`
-	Total      types.Int64                                           `tfsdk:"total"`
+	Total      types.Int32                                           `tfsdk:"total"`
 }
 
 func (r *NPAPublishersBulkProfileUpdatesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -52,7 +52,7 @@ func (r *NPAPublishersBulkProfileUpdatesResource) Schema(ctx context.Context, re
 						Computed: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{
-								"apps_count": schema.Int64Attribute{
+								"apps_count": schema.Int32Attribute{
 									Computed: true,
 								},
 								"assessment": schema.SingleNestedAttribute{
@@ -65,7 +65,7 @@ func (r *NPAPublishersBulkProfileUpdatesResource) Schema(ctx context.Context, re
 													Computed:    true,
 													ElementType: types.StringType,
 												},
-												"last_modified": schema.Int64Attribute{
+												"last_modified": schema.Int32Attribute{
 													Computed: true,
 												},
 											},
@@ -82,7 +82,7 @@ func (r *NPAPublishersBulkProfileUpdatesResource) Schema(ctx context.Context, re
 										"ip_address": schema.StringAttribute{
 											Computed: true,
 										},
-										"latency": schema.Int64Attribute{
+										"latency": schema.Int32Attribute{
 											Computed: true,
 										},
 										"version": schema.StringAttribute{
@@ -131,10 +131,10 @@ func (r *NPAPublishersBulkProfileUpdatesResource) Schema(ctx context.Context, re
 								"name": schema.StringAttribute{
 									Computed: true,
 								},
-								"publisher_id": schema.Int64Attribute{
+								"publisher_id": schema.Int32Attribute{
 									Computed: true,
 								},
-								"publisher_upgrade_profiles_id": schema.Int64Attribute{
+								"publisher_upgrade_profiles_id": schema.Int32Attribute{
 									Computed: true,
 								},
 								"registered": schema.BoolAttribute{
@@ -146,7 +146,7 @@ func (r *NPAPublishersBulkProfileUpdatesResource) Schema(ctx context.Context, re
 								"sticher_pop": schema.StringAttribute{
 									Computed: true,
 								},
-								"stitcher_id": schema.Int64Attribute{
+								"stitcher_id": schema.Int32Attribute{
 									Computed: true,
 								},
 								"upgrade_failed_reason": schema.SingleNestedAttribute{
@@ -155,10 +155,10 @@ func (r *NPAPublishersBulkProfileUpdatesResource) Schema(ctx context.Context, re
 										"detail": schema.StringAttribute{
 											Computed: true,
 										},
-										"error_code": schema.Int64Attribute{
+										"error_code": schema.Int32Attribute{
 											Computed: true,
 										},
-										"timestamp": schema.Int64Attribute{
+										"timestamp": schema.Int32Attribute{
 											Computed: true,
 										},
 										"version": schema.StringAttribute{
@@ -215,7 +215,7 @@ func (r *NPAPublishersBulkProfileUpdatesResource) Schema(ctx context.Context, re
 				},
 				Description: `Requires replacement if changed.`,
 			},
-			"total": schema.Int64Attribute{
+			"total": schema.Int32Attribute{
 				Computed: true,
 			},
 		},

@@ -42,7 +42,7 @@ type NPAPolicyGroupsResourceModel struct {
 	ModifyBy           types.String        `tfsdk:"modify_by"`
 	ModifyTime         types.String        `tfsdk:"modify_time"`
 	ModifyType         types.String        `tfsdk:"modify_type"`
-	Silent             types.String        `tfsdk:"silent"`
+	Silent             types.String        `queryParam:"style=form,explode=true,name=silent" tfsdk:"silent"`
 	Status             types.String        `tfsdk:"status"`
 }
 

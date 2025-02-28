@@ -175,13 +175,13 @@ func (o *PrivateAppsGetResponseNewTags) GetTagName() *string {
 type PrivateAppsGetResponseNewData struct {
 	AllowUnauthenticatedCors    *bool                                                  `json:"allow_unauthenticated_cors,omitempty"`
 	AllowURIBypass              *bool                                                  `json:"allow_uri_bypass,omitempty"`
-	AppID                       *int64                                                 `json:"app_id,omitempty"`
+	AppID                       *int                                                   `json:"app_id,omitempty"`
 	PrivateAppName              *string                                                `json:"app_name,omitempty"`
 	AppOption                   *PrivateAppsGetResponseNewAppOption                    `json:"app_option,omitempty"`
 	BypassUris                  []string                                               `json:"bypass_uris,omitempty"`
 	ClientlessAccess            *bool                                                  `json:"clientless_access,omitempty"`
 	PrivateAppHostname          *string                                                `json:"host,omitempty"`
-	PrivateAppID                *int64                                                 `json:"id,omitempty"`
+	PrivateAppID                *int                                                   `json:"id,omitempty"`
 	IsUserPortalApp             *bool                                                  `json:"is_user_portal_app,omitempty"`
 	ModifiedBy                  *string                                                `json:"modified_by,omitempty"`
 	ModifyTime                  *string                                                `json:"modify_time,omitempty"`
@@ -215,7 +215,7 @@ func (o *PrivateAppsGetResponseNewData) GetAllowURIBypass() *bool {
 	return o.AllowURIBypass
 }
 
-func (o *PrivateAppsGetResponseNewData) GetAppID() *int64 {
+func (o *PrivateAppsGetResponseNewData) GetAppID() *int {
 	if o == nil {
 		return nil
 	}
@@ -257,7 +257,7 @@ func (o *PrivateAppsGetResponseNewData) GetPrivateAppHostname() *string {
 	return o.PrivateAppHostname
 }
 
-func (o *PrivateAppsGetResponseNewData) GetPrivateAppID() *int64 {
+func (o *PrivateAppsGetResponseNewData) GetPrivateAppID() *int {
 	if o == nil {
 		return nil
 	}

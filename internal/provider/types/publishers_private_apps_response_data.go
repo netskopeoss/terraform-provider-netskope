@@ -8,9 +8,9 @@ type PublishersPrivateAppsResponseData struct {
 	AllowUnauthenticatedCors    types.Bool                                 `tfsdk:"allow_unauthenticated_cors"`
 	AppOption                   *PrivateAppsRequestAppOption               `tfsdk:"app_option"`
 	ClientlessAccess            types.Bool                                 `tfsdk:"clientless_access"`
-	ExternalID                  types.Int64                                `tfsdk:"external_id"`
+	ExternalID                  types.Int32                                `tfsdk:"external_id"`
 	Host                        types.String                               `tfsdk:"host"`
-	ID                          types.Int64                                `tfsdk:"id"`
+	ID                          types.Int32                                `tfsdk:"id"`
 	IsUserPortalApp             types.Bool                                 `tfsdk:"is_user_portal_app"`
 	PrivateAppName              types.String                               `tfsdk:"private_app_name"`
 	PrivateAppProtocol          types.String                               `tfsdk:"private_app_protocol"`

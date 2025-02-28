@@ -30,11 +30,11 @@ type NPARulesListDataSource struct {
 // NPARulesListDataSourceModel describes the data model.
 type NPARulesListDataSourceModel struct {
 	Data      []tfTypes.NpaPolicyResponseItem `tfsdk:"data"`
-	Filter    types.String                    `tfsdk:"filter"`
-	Limit     types.Int64                     `tfsdk:"limit"`
-	Offset    types.Int64                     `tfsdk:"offset"`
-	Sortby    types.String                    `tfsdk:"sortby"`
-	Sortorder types.String                    `tfsdk:"sortorder"`
+	Filter    types.String                    `queryParam:"style=form,explode=true,name=filter" tfsdk:"filter"`
+	Limit     types.Int64                     `queryParam:"style=form,explode=true,name=limit" tfsdk:"limit"`
+	Offset    types.Int64                     `queryParam:"style=form,explode=true,name=offset" tfsdk:"offset"`
+	Sortby    types.String                    `queryParam:"style=form,explode=true,name=sortby" tfsdk:"sortby"`
+	Sortorder types.String                    `queryParam:"style=form,explode=true,name=sortorder" tfsdk:"sortorder"`
 }
 
 // Metadata returns the data source type name.

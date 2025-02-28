@@ -10,12 +10,12 @@ type UpgradeProfiles struct {
 	Enabled                   types.Bool   `tfsdk:"enabled"`
 	Frequency                 types.String `tfsdk:"frequency"`
 	Name                      types.String `tfsdk:"name"`
-	NextUpdateTime            types.Int64  `tfsdk:"next_update_time"`
-	NumAssociatedPublisher    types.Int64  `tfsdk:"num_associated_publisher"`
-	PublisherUpgradeProfileID types.Int64  `tfsdk:"publisher_upgrade_profile_id"`
+	NextUpdateTime            types.Int32  `tfsdk:"next_update_time"`
+	NumAssociatedPublisher    types.Int32  `tfsdk:"num_associated_publisher"`
+	PublisherUpgradeProfileID types.Int32  `tfsdk:"publisher_upgrade_profile_id"`
 	ReleaseType               types.String `tfsdk:"release_type"`
 	Timezone                  types.String `tfsdk:"timezone"`
 	UpdatedAt                 types.String `tfsdk:"updated_at"`
-	UpgradingStage            types.Int64  `tfsdk:"upgrading_stage"`
+	UpgradingStage            types.Int32  `tfsdk:"upgrading_stage"`
 	WillStart                 types.Bool   `tfsdk:"will_start"`
 }

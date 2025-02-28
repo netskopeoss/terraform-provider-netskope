@@ -37,7 +37,11 @@ func (r *NPAPrivateAppsListDataSourceModel) RefreshFromSharedData(resp *shared.D
 				privateApps1.Policies = append(privateApps1.Policies, types.StringValue(v))
 			}
 			privateApps1.PrivateAppHostname = types.StringPointerValue(privateAppsItem.PrivateAppHostname)
-			privateApps1.PrivateAppID = types.Int64PointerValue(privateAppsItem.PrivateAppID)
+			if privateAppsItem.PrivateAppID != nil {
+				privateApps1.PrivateAppID = types.Int32Value(int32(*privateAppsItem.PrivateAppID))
+			} else {
+				privateApps1.PrivateAppID = types.Int32Null()
+			}
 			privateApps1.PrivateAppName = types.StringPointerValue(privateAppsItem.PrivateAppName)
 			privateApps1.PrivateAppProtocol = types.StringPointerValue(privateAppsItem.PrivateAppProtocol)
 			privateApps1.Protocols = []tfTypes.ProtocolItem{}

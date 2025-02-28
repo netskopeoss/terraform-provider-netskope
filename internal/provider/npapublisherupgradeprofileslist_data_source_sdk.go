@@ -26,27 +26,27 @@ func (r *NPAPublisherUpgradeProfilesListDataSourceModel) RefreshFromSharedPublis
 				upgradeProfiles1.Frequency = types.StringPointerValue(upgradeProfilesItem.Frequency)
 				upgradeProfiles1.Name = types.StringPointerValue(upgradeProfilesItem.Name)
 				if upgradeProfilesItem.NextUpdateTime != nil {
-					upgradeProfiles1.NextUpdateTime = types.Int64Value(int64(*upgradeProfilesItem.NextUpdateTime))
+					upgradeProfiles1.NextUpdateTime = types.Int32Value(int32(*upgradeProfilesItem.NextUpdateTime))
 				} else {
-					upgradeProfiles1.NextUpdateTime = types.Int64Null()
+					upgradeProfiles1.NextUpdateTime = types.Int32Null()
 				}
 				if upgradeProfilesItem.NumAssociatedPublisher != nil {
-					upgradeProfiles1.NumAssociatedPublisher = types.Int64Value(int64(*upgradeProfilesItem.NumAssociatedPublisher))
+					upgradeProfiles1.NumAssociatedPublisher = types.Int32Value(int32(*upgradeProfilesItem.NumAssociatedPublisher))
 				} else {
-					upgradeProfiles1.NumAssociatedPublisher = types.Int64Null()
+					upgradeProfiles1.NumAssociatedPublisher = types.Int32Null()
 				}
 				if upgradeProfilesItem.PublisherUpgradeProfileID != nil {
-					upgradeProfiles1.PublisherUpgradeProfileID = types.Int64Value(int64(*upgradeProfilesItem.PublisherUpgradeProfileID))
+					upgradeProfiles1.PublisherUpgradeProfileID = types.Int32Value(int32(*upgradeProfilesItem.PublisherUpgradeProfileID))
 				} else {
-					upgradeProfiles1.PublisherUpgradeProfileID = types.Int64Null()
+					upgradeProfiles1.PublisherUpgradeProfileID = types.Int32Null()
 				}
 				upgradeProfiles1.ReleaseType = types.StringPointerValue(upgradeProfilesItem.ReleaseType)
 				upgradeProfiles1.Timezone = types.StringPointerValue(upgradeProfilesItem.Timezone)
 				upgradeProfiles1.UpdatedAt = types.StringPointerValue(upgradeProfilesItem.UpdatedAt)
 				if upgradeProfilesItem.UpgradingStage != nil {
-					upgradeProfiles1.UpgradingStage = types.Int64Value(int64(*upgradeProfilesItem.UpgradingStage))
+					upgradeProfiles1.UpgradingStage = types.Int32Value(int32(*upgradeProfilesItem.UpgradingStage))
 				} else {
-					upgradeProfiles1.UpgradingStage = types.Int64Null()
+					upgradeProfiles1.UpgradingStage = types.Int32Null()
 				}
 				upgradeProfiles1.WillStart = types.BoolPointerValue(upgradeProfilesItem.WillStart)
 				if upgradeProfilesCount+1 > len(r.Data.UpgradeProfiles) {
@@ -69,9 +69,9 @@ func (r *NPAPublisherUpgradeProfilesListDataSourceModel) RefreshFromSharedPublis
 			}
 		}
 		if resp.Total != nil {
-			r.Total = types.Int64Value(int64(*resp.Total))
+			r.Total = types.Int32Value(int32(*resp.Total))
 		} else {
-			r.Total = types.Int64Null()
+			r.Total = types.Int32Null()
 		}
 	}
 }

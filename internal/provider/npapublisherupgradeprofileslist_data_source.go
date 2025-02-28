@@ -29,7 +29,7 @@ type NPAPublisherUpgradeProfilesListDataSource struct {
 // NPAPublisherUpgradeProfilesListDataSourceModel describes the data model.
 type NPAPublisherUpgradeProfilesListDataSourceModel struct {
 	Data  *tfTypes.PublisherUpgradeProfileListResponseData `tfsdk:"data"`
-	Total types.Int64                                      `tfsdk:"total"`
+	Total types.Int32                                      `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -65,13 +65,13 @@ func (r *NPAPublisherUpgradeProfilesListDataSource) Schema(ctx context.Context, 
 								"name": schema.StringAttribute{
 									Computed: true,
 								},
-								"next_update_time": schema.Int64Attribute{
+								"next_update_time": schema.Int32Attribute{
 									Computed: true,
 								},
-								"num_associated_publisher": schema.Int64Attribute{
+								"num_associated_publisher": schema.Int32Attribute{
 									Computed: true,
 								},
-								"publisher_upgrade_profile_id": schema.Int64Attribute{
+								"publisher_upgrade_profile_id": schema.Int32Attribute{
 									Computed: true,
 								},
 								"release_type": schema.StringAttribute{
@@ -83,7 +83,7 @@ func (r *NPAPublisherUpgradeProfilesListDataSource) Schema(ctx context.Context, 
 								"updated_at": schema.StringAttribute{
 									Computed: true,
 								},
-								"upgrading_stage": schema.Int64Attribute{
+								"upgrading_stage": schema.Int32Attribute{
 									Computed: true,
 								},
 								"will_start": schema.BoolAttribute{
@@ -94,7 +94,7 @@ func (r *NPAPublisherUpgradeProfilesListDataSource) Schema(ctx context.Context, 
 					},
 				},
 			},
-			"total": schema.Int64Attribute{
+			"total": schema.Int32Attribute{
 				Computed: true,
 			},
 		},

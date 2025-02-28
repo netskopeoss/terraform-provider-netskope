@@ -39,7 +39,7 @@ type NPAPrivateAppDataSourceModel struct {
 	ModifyTime                  types.String                                                   `tfsdk:"modify_time"`
 	Policies                    []types.String                                                 `tfsdk:"policies"`
 	PrivateAppHostname          types.String                                                   `tfsdk:"private_app_hostname"`
-	PrivateAppID                types.Int64                                                    `tfsdk:"private_app_id"`
+	PrivateAppID                types.Int32                                                    `tfsdk:"private_app_id"`
 	PrivateAppName              types.String                                                   `tfsdk:"private_app_name"`
 	PrivateAppProtocol          types.String                                                   `tfsdk:"private_app_protocol"`
 	Protocols                   []tfTypes.ProtocolItem                                         `tfsdk:"protocols"`
@@ -98,7 +98,7 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 			"private_app_hostname": schema.StringAttribute{
 				Computed: true,
 			},
-			"private_app_id": schema.Int64Attribute{
+			"private_app_id": schema.Int32Attribute{
 				Required:    true,
 				Description: `private apps id`,
 			},
@@ -259,7 +259,7 @@ func (r *NPAPrivateAppDataSource) Read(ctx context.Context, req datasource.ReadR
 	}
 
 	var privateAppID int
-	privateAppID = int(data.PrivateAppID.ValueInt64())
+	privateAppID = int(data.PrivateAppID.ValueInt32())
 
 	request := operations.GetNPAPrivateAppRequest{
 		PrivateAppID: privateAppID,

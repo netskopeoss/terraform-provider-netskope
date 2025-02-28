@@ -12,9 +12,9 @@ import (
 func (r *NPAPublisherDataSourceModel) RefreshFromSharedPublisherResponseData(resp *shared.PublisherResponseData) {
 	if resp != nil {
 		if resp.AppsCount != nil {
-			r.AppsCount = types.Int64Value(int64(*resp.AppsCount))
+			r.AppsCount = types.Int32Value(int32(*resp.AppsCount))
 		} else {
-			r.AppsCount = types.Int64Null()
+			r.AppsCount = types.Int32Null()
 		}
 		if resp.Assessment == nil {
 			r.Assessment = nil
@@ -68,15 +68,15 @@ func (r *NPAPublisherDataSourceModel) RefreshFromSharedPublisherResponseData(res
 		}
 		r.Lbrokerconnect = types.BoolPointerValue(resp.Lbrokerconnect)
 		if resp.PublisherID != nil {
-			r.PublisherID = types.Int64Value(int64(*resp.PublisherID))
+			r.PublisherID = types.Int32Value(int32(*resp.PublisherID))
 		} else {
-			r.PublisherID = types.Int64Null()
+			r.PublisherID = types.Int32Null()
 		}
 		r.PublisherName = types.StringPointerValue(resp.PublisherName)
 		if resp.PublisherUpgradeProfilesID != nil {
-			r.PublisherUpgradeProfilesID = types.Int64Value(int64(*resp.PublisherUpgradeProfilesID))
+			r.PublisherUpgradeProfilesID = types.Int32Value(int32(*resp.PublisherUpgradeProfilesID))
 		} else {
-			r.PublisherUpgradeProfilesID = types.Int64Null()
+			r.PublisherUpgradeProfilesID = types.Int32Null()
 		}
 		r.Registered = types.BoolPointerValue(resp.Registered)
 		if resp.Status != nil {
@@ -86,9 +86,9 @@ func (r *NPAPublisherDataSourceModel) RefreshFromSharedPublisherResponseData(res
 		}
 		r.SticherPop = types.StringPointerValue(resp.SticherPop)
 		if resp.StitcherID != nil {
-			r.StitcherID = types.Int64Value(int64(*resp.StitcherID))
+			r.StitcherID = types.Int32Value(int32(*resp.StitcherID))
 		} else {
-			r.StitcherID = types.Int64Null()
+			r.StitcherID = types.Int32Null()
 		}
 		if resp.UpgradeFailedReason == nil {
 			r.UpgradeFailedReason = nil

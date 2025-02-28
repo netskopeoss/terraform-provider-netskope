@@ -3,7 +3,15 @@
 package shared
 
 type TagRequestItem struct {
-	TagName *string `json:"tag_name,omitempty"`
+	XSpeakeasyEntity any     `json:"x-speakeasy-entity,omitempty"`
+	TagName          *string `json:"tag_name,omitempty"`
+}
+
+func (o *TagRequestItem) GetXSpeakeasyEntity() any {
+	if o == nil {
+		return nil
+	}
+	return o.XSpeakeasyEntity
 }
 
 func (o *TagRequestItem) GetTagName() *string {
