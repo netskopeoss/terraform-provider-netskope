@@ -29,10 +29,7 @@ type NPAPrivateAppsTagsListDataSource struct {
 
 // NPAPrivateAppsTagsListDataSourceModel describes the data model.
 type NPAPrivateAppsTagsListDataSourceModel struct {
-	Limit  types.Int32    `queryParam:"style=form,explode=true,name=limit" tfsdk:"limit"`
-	Offset types.Int32    `queryParam:"style=form,explode=true,name=offset" tfsdk:"offset"`
-	Query  types.String   `queryParam:"style=form,explode=true,name=query" tfsdk:"query"`
-	Tags   []tfTypes.Tags `tfsdk:"tags"`
+	Tags []tfTypes.Tags `tfsdk:"tags"`
 }
 
 // Metadata returns the data source type name.
@@ -46,18 +43,6 @@ func (r *NPAPrivateAppsTagsListDataSource) Schema(ctx context.Context, req datas
 		MarkdownDescription: "NPAPrivateAppsTagsList DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"limit": schema.Int32Attribute{
-				Optional:    true,
-				Description: `Number of results to limit the output by`,
-			},
-			"offset": schema.Int32Attribute{
-				Optional:    true,
-				Description: `Query offset`,
-			},
-			"query": schema.StringAttribute{
-				Optional:    true,
-				Description: `Return filtered result based on query`,
-			},
 			"tags": schema.ListNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
@@ -177,29 +162,7 @@ func (r *NPAPrivateAppsTagsListDataSource) Read(ctx context.Context, req datasou
 		return
 	}
 
-	query := new(string)
-	if !data.Query.IsUnknown() && !data.Query.IsNull() {
-		*query = data.Query.ValueString()
-	} else {
-		query = nil
-	}
-	offset := new(int)
-	if !data.Offset.IsUnknown() && !data.Offset.IsNull() {
-		*offset = int(data.Offset.ValueInt32())
-	} else {
-		offset = nil
-	}
-	limit := new(int)
-	if !data.Limit.IsUnknown() && !data.Limit.IsNull() {
-		*limit = int(data.Limit.ValueInt32())
-	} else {
-		limit = nil
-	}
-	request := operations.ListNPAPrivateTagsRequest{
-		Query:  query,
-		Offset: offset,
-		Limit:  limit,
-	}
+	request := operations.ListNPAPrivateTagsRequest{}
 	res, err := r.client.ListObjects(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())

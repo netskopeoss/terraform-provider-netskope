@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
-  docChecksum: 097baa95c55e14e493229570f9e2f713
+  docChecksum: fec686987decb70728a645ab9b5978ca
   docVersion: 1.0.0
   speakeasyVersion: 1.508.0
   generationVersion: 2.536.0
-  releaseVersion: 0.5.0
-  configChecksum: 982fa97937c6f91d0ef66c1691e9dbf1
+  releaseVersion: 0.3.2
+  configChecksum: 6f5a71bd8988319e5c20cb6d5295d429
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -816,6 +816,7 @@ examples:
       responses:
         "400":
           application/json: {"status": 400}
+        "200": {}
     Name starts with Query example:
       parameters:
         query:
@@ -823,6 +824,7 @@ examples:
       responses:
         "400":
           application/json: {"status": 400}
+        "200": {}
   createNPAPrivateAppTags:
     speakeasy-default-create-NPA-private-app-tags:
       requestBody:
