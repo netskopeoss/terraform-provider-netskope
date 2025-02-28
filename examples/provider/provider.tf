@@ -2,7 +2,7 @@ terraform {
   required_providers {
     ns = {
       source  = "netskope/ns"
-      version = "0.5.0"
+      version = "0.3.2"
     }
   }
 }
