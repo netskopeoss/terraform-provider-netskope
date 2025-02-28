@@ -28,13 +28,6 @@ func newNPARules(sdkConfig sdkConfiguration) *NPARules {
 // ListObjects - Get list of npa policies
 // Get list of npa policies
 func (s *NPARules) ListObjects(ctx context.Context, request operations.GetNPARulesListRequest, opts ...operations.Option) (*operations.GetNPARulesListResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getNPARulesList",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -55,6 +48,14 @@ func (s *NPARules) ListObjects(ctx context.Context, request operations.GetNPARul
 	opURL, err := url.JoinPath(baseURL, "/policy/npa/rules")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getNPARulesList",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -180,13 +181,6 @@ func (s *NPARules) ListObjects(ctx context.Context, request operations.GetNPARul
 // Create a npa policy
 // Create a policy
 func (s *NPARules) Create(ctx context.Context, request operations.CreateNPARulesRequest, opts ...operations.Option) (*operations.CreateNPARulesResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createNPARules",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -209,6 +203,13 @@ func (s *NPARules) Create(ctx context.Context, request operations.CreateNPARules
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createNPARules",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "NpaPolicyRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -340,13 +341,6 @@ func (s *NPARules) Create(ctx context.Context, request operations.CreateNPARules
 // Delete a npa policy
 // Delete a npa policy with rule id
 func (s *NPARules) Delete(ctx context.Context, request operations.DeleteNPARulesRequest, opts ...operations.Option) (*operations.DeleteNPARulesResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteNPARules",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -367,6 +361,14 @@ func (s *NPARules) Delete(ctx context.Context, request operations.DeleteNPARules
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/policy/npa/rules/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteNPARules",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -488,13 +490,6 @@ func (s *NPARules) Delete(ctx context.Context, request operations.DeleteNPARules
 // Read - Get a npa policy
 // Get a npa policy based on policy rule id
 func (s *NPARules) Read(ctx context.Context, request operations.NPARulesRequest, opts ...operations.Option) (*operations.NPARulesResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "NPARules",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -515,6 +510,14 @@ func (s *NPARules) Read(ctx context.Context, request operations.NPARulesRequest,
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/policy/npa/rules/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "NPARules",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -640,13 +643,6 @@ func (s *NPARules) Read(ctx context.Context, request operations.NPARulesRequest,
 // Update - Patch a npa policy
 // Patch a npa policy based on rule id
 func (s *NPARules) Update(ctx context.Context, request operations.UpdateNPARulesByIDRequest, opts ...operations.Option) (*operations.UpdateNPARulesByIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateNPARulesById",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -669,6 +665,13 @@ func (s *NPARules) Update(ctx context.Context, request operations.UpdateNPARules
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateNPARulesById",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "NpaPolicyRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err

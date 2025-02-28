@@ -29,7 +29,7 @@ type NPAPublishersListDataSource struct {
 // NPAPublishersListDataSourceModel describes the data model.
 type NPAPublishersListDataSourceModel struct {
 	Data  *tfTypes.PublishersGetResponseData `tfsdk:"data"`
-	Total types.Int64                        `tfsdk:"total"`
+	Total types.Int32                        `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -50,7 +50,7 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 						Computed: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{
-								"apps_count": schema.Int64Attribute{
+								"apps_count": schema.Int32Attribute{
 									Computed: true,
 								},
 								"assessment": schema.SingleNestedAttribute{
@@ -63,7 +63,7 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 													Computed:    true,
 													ElementType: types.StringType,
 												},
-												"last_modified": schema.Int64Attribute{
+												"last_modified": schema.Int32Attribute{
 													Computed: true,
 												},
 											},
@@ -80,7 +80,7 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 										"ip_address": schema.StringAttribute{
 											Computed: true,
 										},
-										"latency": schema.Int64Attribute{
+										"latency": schema.Int32Attribute{
 											Computed: true,
 										},
 										"version": schema.StringAttribute{
@@ -126,13 +126,13 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 								"lbrokerconnect": schema.BoolAttribute{
 									Computed: true,
 								},
-								"publisher_id": schema.Int64Attribute{
+								"publisher_id": schema.Int32Attribute{
 									Computed: true,
 								},
 								"publisher_name": schema.StringAttribute{
 									Computed: true,
 								},
-								"publisher_upgrade_profile_id": schema.Int64Attribute{
+								"publisher_upgrade_profile_id": schema.Int32Attribute{
 									Computed: true,
 								},
 								"registered": schema.BoolAttribute{
@@ -141,7 +141,7 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 								"status": schema.StringAttribute{
 									Computed: true,
 								},
-								"stitcher_id": schema.Int64Attribute{
+								"stitcher_id": schema.Int32Attribute{
 									Computed: true,
 								},
 								"stitcher_pop": schema.StringAttribute{
@@ -153,10 +153,10 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 										"detail": schema.StringAttribute{
 											Computed: true,
 										},
-										"error_code": schema.Int64Attribute{
+										"error_code": schema.Int32Attribute{
 											Computed: true,
 										},
-										"timestamp": schema.Int64Attribute{
+										"timestamp": schema.Int32Attribute{
 											Computed: true,
 										},
 										"version": schema.StringAttribute{
@@ -180,7 +180,7 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 					},
 				},
 			},
-			"total": schema.Int64Attribute{
+			"total": schema.Int32Attribute{
 				Computed: true,
 			},
 		},

@@ -28,13 +28,6 @@ func newNPAPolicyGroups(sdkConfig sdkConfiguration) *NPAPolicyGroups {
 // ListObjects - Get list of npa policy groups
 // Get list of npa policy groups
 func (s *NPAPolicyGroups) ListObjects(ctx context.Context, request operations.GetNPAPolicyGroupsRequest, opts ...operations.Option) (*operations.GetNPAPolicyGroupsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getNPAPolicyGroups",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -55,6 +48,14 @@ func (s *NPAPolicyGroups) ListObjects(ctx context.Context, request operations.Ge
 	opURL, err := url.JoinPath(baseURL, "/policy/npa/policygroups")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getNPAPolicyGroups",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -180,13 +181,6 @@ func (s *NPAPolicyGroups) ListObjects(ctx context.Context, request operations.Ge
 // Create a npa policy group
 // Create a npa policy group
 func (s *NPAPolicyGroups) Create(ctx context.Context, request operations.CreateNPAPolicyGroupsRequest, opts ...operations.Option) (*operations.CreateNPAPolicyGroupsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createNPAPolicyGroups",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -209,6 +203,13 @@ func (s *NPAPolicyGroups) Create(ctx context.Context, request operations.CreateN
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createNPAPolicyGroups",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "NpaPolicygroupRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -340,13 +341,6 @@ func (s *NPAPolicyGroups) Create(ctx context.Context, request operations.CreateN
 // Delete a npa policy group
 // Delete a npa policy group with group id
 func (s *NPAPolicyGroups) Delete(ctx context.Context, request operations.DeleteNPAPolicyGroupsRequest, opts ...operations.Option) (*operations.DeleteNPAPolicyGroupsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteNPAPolicyGroups",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -367,6 +361,14 @@ func (s *NPAPolicyGroups) Delete(ctx context.Context, request operations.DeleteN
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/policy/npa/policygroups/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteNPAPolicyGroups",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -488,13 +490,6 @@ func (s *NPAPolicyGroups) Delete(ctx context.Context, request operations.DeleteN
 // Read - Get a npa policy group
 // Get a npa policy group based on group id
 func (s *NPAPolicyGroups) Read(ctx context.Context, request operations.GetNPAPolicyGroupByIDRequest, opts ...operations.Option) (*operations.GetNPAPolicyGroupByIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getNPAPolicyGroupById",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -515,6 +510,14 @@ func (s *NPAPolicyGroups) Read(ctx context.Context, request operations.GetNPAPol
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/policy/npa/policygroups/{id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getNPAPolicyGroupById",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -636,13 +639,6 @@ func (s *NPAPolicyGroups) Read(ctx context.Context, request operations.GetNPAPol
 // Update - Patch a npa policy group
 // Patch a npa policy group based on group id
 func (s *NPAPolicyGroups) Update(ctx context.Context, request operations.UpdateNPAPolicyGroupsRequest, opts ...operations.Option) (*operations.UpdateNPAPolicyGroupsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateNPAPolicyGroups",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -665,6 +661,13 @@ func (s *NPAPolicyGroups) Update(ctx context.Context, request operations.UpdateN
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateNPAPolicyGroups",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "NpaPolicygroupRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err

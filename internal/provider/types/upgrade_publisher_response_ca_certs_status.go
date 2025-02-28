@@ -6,5 +6,5 @@ import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type UpgradePublisherResponseCaCertsStatus struct {
 	Hashes       []types.String `tfsdk:"hashes"`
-	LastModified types.Int64    `tfsdk:"last_modified"`
+	LastModified types.Int32    `tfsdk:"last_modified"`
 }

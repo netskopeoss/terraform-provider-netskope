@@ -36,13 +36,6 @@ func newNPAPrivateApp(sdkConfig sdkConfiguration) *NPAPrivateApp {
 //
 // Please see *examples* of required attributes based on the type of Application you are creating.
 func (s *NPAPrivateApp) CreateNPAPrivateApps(ctx context.Context, request shared.PrivateAppsRequest, opts ...operations.Option) (*operations.CreateNPAPrivateAppsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createNPAPrivateApps",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -65,6 +58,13 @@ func (s *NPAPrivateApp) CreateNPAPrivateApps(ctx context.Context, request shared
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createNPAPrivateApps",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -192,13 +192,6 @@ func (s *NPAPrivateApp) CreateNPAPrivateApps(ctx context.Context, request shared
 // UpdateNPAPrivateApp - Patch a private application
 // Patch a private application based on private app id
 func (s *NPAPrivateApp) UpdateNPAPrivateApp(ctx context.Context, request operations.UpdateNPAPrivateAppRequest, opts ...operations.Option) (*operations.UpdateNPAPrivateAppResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateNPAPrivateApp",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -221,6 +214,13 @@ func (s *NPAPrivateApp) UpdateNPAPrivateApp(ctx context.Context, request operati
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateNPAPrivateApp",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PrivateAppsPutRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err

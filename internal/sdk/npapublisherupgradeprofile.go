@@ -34,13 +34,6 @@ func newNPAPublisherUpgradeProfile(sdkConfig sdkConfiguration) *NPAPublisherUpgr
 // This endpoint creates a publisher upgrade profiles. \
 // Please view schema for attribute descriptions.
 func (s *NPAPublisherUpgradeProfile) CreateNPAPublisherUpgradeProfile(ctx context.Context, request *shared.PublisherUpgradeProfilePostRequest, opts ...operations.Option) (*operations.CreateNPAPublisherUpgradeProfileResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createNPAPublisherUpgradeProfile",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -63,6 +56,13 @@ func (s *NPAPublisherUpgradeProfile) CreateNPAPublisherUpgradeProfile(ctx contex
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createNPAPublisherUpgradeProfile",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -196,13 +196,6 @@ func (s *NPAPublisherUpgradeProfile) CreateNPAPublisherUpgradeProfile(ctx contex
 // This endpoint deletes a publisher upgrade profile by supplying the `upgrade_profile_id` attribute of the profile.\
 // Please use the `external_id` value for the upgrade_profile_id attribute requirements.
 func (s *NPAPublisherUpgradeProfile) DeleteNPAPublisherUpgradeProfile(ctx context.Context, request operations.DeleteNPAPublisherUpgradeProfileRequest, opts ...operations.Option) (*operations.DeleteNPAPublisherUpgradeProfileResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteNPAPublisherUpgradeProfile",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -223,6 +216,14 @@ func (s *NPAPublisherUpgradeProfile) DeleteNPAPublisherUpgradeProfile(ctx contex
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publisherupgradeprofiles/{external_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteNPAPublisherUpgradeProfile",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -350,13 +351,6 @@ func (s *NPAPublisherUpgradeProfile) DeleteNPAPublisherUpgradeProfile(ctx contex
 // This endpoint returns a publisher upgrade profile by supplying the `upgrade_profile_id` attribute of the profile.
 // Please use the `external_id` value for the upgrade_profile_id attribute requirements.
 func (s *NPAPublisherUpgradeProfile) GetNPAPublisherUpgradeProfile(ctx context.Context, request operations.GetNPAPublisherUpgradeProfileRequest, opts ...operations.Option) (*operations.GetNPAPublisherUpgradeProfileResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getNPAPublisherUpgradeProfile",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -377,6 +371,14 @@ func (s *NPAPublisherUpgradeProfile) GetNPAPublisherUpgradeProfile(ctx context.C
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publisherupgradeprofiles/{external_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getNPAPublisherUpgradeProfile",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -504,13 +506,6 @@ func (s *NPAPublisherUpgradeProfile) GetNPAPublisherUpgradeProfile(ctx context.C
 // This endpoint updates a publisher upgrade profile by supplying the `upgrade_profile_id` attribute of the profile and the updated paramters.\
 // Please use the `external_id` value for the upgrade_profile_id attribute requirements.
 func (s *NPAPublisherUpgradeProfile) UpdateNPAPublisherUpgradeProfile(ctx context.Context, request operations.UpdateNPAPublisherUpgradeProfileRequest, opts ...operations.Option) (*operations.UpdateNPAPublisherUpgradeProfileResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateNPAPublisherUpgradeProfile",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -533,6 +528,13 @@ func (s *NPAPublisherUpgradeProfile) UpdateNPAPublisherUpgradeProfile(ctx contex
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateNPAPublisherUpgradeProfile",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PublisherUpgradeProfilePutRequest", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err

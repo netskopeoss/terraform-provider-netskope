@@ -33,13 +33,6 @@ func newNPAPublishersReleases(sdkConfig sdkConfiguration) *NPAPublishersReleases
 //
 // This endpoint supports the ability to list all availble publisher releases.
 func (s *NPAPublishersReleases) ListObjects(ctx context.Context, opts ...operations.Option) (*operations.GetNPAPublisherObjectsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getNPAPublisherObjects",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -60,6 +53,14 @@ func (s *NPAPublishersReleases) ListObjects(ctx context.Context, opts ...operati
 	opURL, err := url.JoinPath(baseURL, "/infrastructure/publishers/releases")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getNPAPublisherObjects",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout

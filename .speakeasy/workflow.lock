@@ -1,4 +1,4 @@
-speakeasyVersion: 1.488.0
+speakeasyVersion: 1.508.0
 sources:
     openapi:
         sourceNamespace: openapi

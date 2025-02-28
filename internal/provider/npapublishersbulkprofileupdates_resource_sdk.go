@@ -48,9 +48,9 @@ func (r *NPAPublishersBulkProfileUpdatesResourceModel) RefreshFromSharedPublishe
 			for publishersCount, publishersItem := range resp.Data.Publishers {
 				var publishers1 tfTypes.UpgradePublisherResponse
 				if publishersItem.AppsCount != nil {
-					publishers1.AppsCount = types.Int64Value(int64(*publishersItem.AppsCount))
+					publishers1.AppsCount = types.Int32Value(int32(*publishersItem.AppsCount))
 				} else {
-					publishers1.AppsCount = types.Int64Null()
+					publishers1.AppsCount = types.Int32Null()
 				}
 				if publishersItem.Assessment == nil {
 					publishers1.Assessment = nil
@@ -65,9 +65,9 @@ func (r *NPAPublishersBulkProfileUpdatesResourceModel) RefreshFromSharedPublishe
 							publishers1.Assessment.CaCertsStatus.Hashes = append(publishers1.Assessment.CaCertsStatus.Hashes, types.StringValue(v))
 						}
 						if publishersItem.Assessment.CaCertsStatus.LastModified != nil {
-							publishers1.Assessment.CaCertsStatus.LastModified = types.Int64Value(int64(*publishersItem.Assessment.CaCertsStatus.LastModified))
+							publishers1.Assessment.CaCertsStatus.LastModified = types.Int32Value(int32(*publishersItem.Assessment.CaCertsStatus.LastModified))
 						} else {
-							publishers1.Assessment.CaCertsStatus.LastModified = types.Int64Null()
+							publishers1.Assessment.CaCertsStatus.LastModified = types.Int32Null()
 						}
 					}
 					publishers1.Assessment.EeeSupport = types.BoolPointerValue(publishersItem.Assessment.EeeSupport)
@@ -75,9 +75,9 @@ func (r *NPAPublishersBulkProfileUpdatesResourceModel) RefreshFromSharedPublishe
 					publishers1.Assessment.HddTotal = types.StringPointerValue(publishersItem.Assessment.HddTotal)
 					publishers1.Assessment.IPAddress = types.StringPointerValue(publishersItem.Assessment.IPAddress)
 					if publishersItem.Assessment.Latency != nil {
-						publishers1.Assessment.Latency = types.Int64Value(int64(*publishersItem.Assessment.Latency))
+						publishers1.Assessment.Latency = types.Int32Value(int32(*publishersItem.Assessment.Latency))
 					} else {
-						publishers1.Assessment.Latency = types.Int64Null()
+						publishers1.Assessment.Latency = types.Int32Null()
 					}
 					publishers1.Assessment.Version = types.StringPointerValue(publishersItem.Assessment.Version)
 				}
@@ -105,22 +105,22 @@ func (r *NPAPublishersBulkProfileUpdatesResourceModel) RefreshFromSharedPublishe
 				publishers1.Lbrokerconnect = types.BoolPointerValue(publishersItem.Lbrokerconnect)
 				publishers1.Name = types.StringPointerValue(publishersItem.Name)
 				if publishersItem.PublisherID != nil {
-					publishers1.PublisherID = types.Int64Value(int64(*publishersItem.PublisherID))
+					publishers1.PublisherID = types.Int32Value(int32(*publishersItem.PublisherID))
 				} else {
-					publishers1.PublisherID = types.Int64Null()
+					publishers1.PublisherID = types.Int32Null()
 				}
 				if publishersItem.PublisherUpgradeProfilesID != nil {
-					publishers1.PublisherUpgradeProfilesID = types.Int64Value(int64(*publishersItem.PublisherUpgradeProfilesID))
+					publishers1.PublisherUpgradeProfilesID = types.Int32Value(int32(*publishersItem.PublisherUpgradeProfilesID))
 				} else {
-					publishers1.PublisherUpgradeProfilesID = types.Int64Null()
+					publishers1.PublisherUpgradeProfilesID = types.Int32Null()
 				}
 				publishers1.Registered = types.BoolPointerValue(publishersItem.Registered)
 				publishers1.Status = types.StringPointerValue(publishersItem.Status)
 				publishers1.SticherPop = types.StringPointerValue(publishersItem.SticherPop)
 				if publishersItem.StitcherID != nil {
-					publishers1.StitcherID = types.Int64Value(int64(*publishersItem.StitcherID))
+					publishers1.StitcherID = types.Int32Value(int32(*publishersItem.StitcherID))
 				} else {
-					publishers1.StitcherID = types.Int64Null()
+					publishers1.StitcherID = types.Int32Null()
 				}
 				if publishersItem.UpgradeFailedReason == nil {
 					publishers1.UpgradeFailedReason = nil
@@ -128,14 +128,14 @@ func (r *NPAPublishersBulkProfileUpdatesResourceModel) RefreshFromSharedPublishe
 					publishers1.UpgradeFailedReason = &tfTypes.UpgradePublisherResponseUpgradeFailedReason{}
 					publishers1.UpgradeFailedReason.Detail = types.StringPointerValue(publishersItem.UpgradeFailedReason.Detail)
 					if publishersItem.UpgradeFailedReason.ErrorCode != nil {
-						publishers1.UpgradeFailedReason.ErrorCode = types.Int64Value(int64(*publishersItem.UpgradeFailedReason.ErrorCode))
+						publishers1.UpgradeFailedReason.ErrorCode = types.Int32Value(int32(*publishersItem.UpgradeFailedReason.ErrorCode))
 					} else {
-						publishers1.UpgradeFailedReason.ErrorCode = types.Int64Null()
+						publishers1.UpgradeFailedReason.ErrorCode = types.Int32Null()
 					}
 					if publishersItem.UpgradeFailedReason.Timestamp != nil {
-						publishers1.UpgradeFailedReason.Timestamp = types.Int64Value(int64(*publishersItem.UpgradeFailedReason.Timestamp))
+						publishers1.UpgradeFailedReason.Timestamp = types.Int32Value(int32(*publishersItem.UpgradeFailedReason.Timestamp))
 					} else {
-						publishers1.UpgradeFailedReason.Timestamp = types.Int64Null()
+						publishers1.UpgradeFailedReason.Timestamp = types.Int32Null()
 					}
 					publishers1.UpgradeFailedReason.Version = types.StringPointerValue(publishersItem.UpgradeFailedReason.Version)
 				}
@@ -169,9 +169,9 @@ func (r *NPAPublishersBulkProfileUpdatesResourceModel) RefreshFromSharedPublishe
 			}
 		}
 		if resp.Total != nil {
-			r.Total = types.Int64Value(int64(*resp.Total))
+			r.Total = types.Int32Value(int32(*resp.Total))
 		} else {
-			r.Total = types.Int64Null()
+			r.Total = types.Int32Null()
 		}
 	}
 }

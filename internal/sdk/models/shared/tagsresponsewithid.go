@@ -9,15 +9,15 @@ import (
 
 type TagsResponseWithIDData struct {
 	// this is the private app id.
-	ID   *string           `json:"id,omitempty"`
-	Tags []TagResponseItem `json:"tags,omitempty"`
+	TagID *int              `json:"id,omitempty"`
+	Tags  []TagResponseItem `json:"tags,omitempty"`
 }
 
-func (o *TagsResponseWithIDData) GetID() *string {
+func (o *TagsResponseWithIDData) GetTagID() *int {
 	if o == nil {
 		return nil
 	}
-	return o.ID
+	return o.TagID
 }
 
 func (o *TagsResponseWithIDData) GetTags() []TagResponseItem {

@@ -41,19 +41,19 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgr
 		r.Frequency = types.StringPointerValue(resp.Frequency)
 		r.Name = types.StringPointerValue(resp.Name)
 		if resp.NextUpdateTime != nil {
-			r.NextUpdateTime = types.Int64Value(int64(*resp.NextUpdateTime))
+			r.NextUpdateTime = types.Int32Value(int32(*resp.NextUpdateTime))
 		} else {
-			r.NextUpdateTime = types.Int64Null()
+			r.NextUpdateTime = types.Int32Null()
 		}
 		if resp.NumAssociatedPublisher != nil {
-			r.NumAssociatedPublisher = types.Int64Value(int64(*resp.NumAssociatedPublisher))
+			r.NumAssociatedPublisher = types.Int32Value(int32(*resp.NumAssociatedPublisher))
 		} else {
-			r.NumAssociatedPublisher = types.Int64Null()
+			r.NumAssociatedPublisher = types.Int32Null()
 		}
 		if resp.PublisherUpgradeProfileID != nil {
-			r.PublisherUpgradeProfileID = types.Int64Value(int64(*resp.PublisherUpgradeProfileID))
+			r.PublisherUpgradeProfileID = types.Int32Value(int32(*resp.PublisherUpgradeProfileID))
 		} else {
-			r.PublisherUpgradeProfileID = types.Int64Null()
+			r.PublisherUpgradeProfileID = types.Int32Null()
 		}
 		if resp.ReleaseType != nil {
 			r.ReleaseType = types.StringValue(string(*resp.ReleaseType))
@@ -67,9 +67,9 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgr
 		}
 		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
 		if resp.UpgradingStage != nil {
-			r.UpgradingStage = types.Int64Value(int64(*resp.UpgradingStage))
+			r.UpgradingStage = types.Int32Value(int32(*resp.UpgradingStage))
 		} else {
-			r.UpgradingStage = types.Int64Null()
+			r.UpgradingStage = types.Int32Null()
 		}
 		r.WillStart = types.BoolPointerValue(resp.WillStart)
 	}
@@ -83,19 +83,19 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgr
 		r.Frequency = types.StringPointerValue(resp.Frequency)
 		r.Name = types.StringPointerValue(resp.Name)
 		if resp.NextUpdateTime != nil {
-			r.NextUpdateTime = types.Int64Value(int64(*resp.NextUpdateTime))
+			r.NextUpdateTime = types.Int32Value(int32(*resp.NextUpdateTime))
 		} else {
-			r.NextUpdateTime = types.Int64Null()
+			r.NextUpdateTime = types.Int32Null()
 		}
 		if resp.NumAssociatedPublisher != nil {
-			r.NumAssociatedPublisher = types.Int64Value(int64(*resp.NumAssociatedPublisher))
+			r.NumAssociatedPublisher = types.Int32Value(int32(*resp.NumAssociatedPublisher))
 		} else {
-			r.NumAssociatedPublisher = types.Int64Null()
+			r.NumAssociatedPublisher = types.Int32Null()
 		}
 		if resp.PublisherUpgradeProfileID != nil {
-			r.PublisherUpgradeProfileID = types.Int64Value(int64(*resp.PublisherUpgradeProfileID))
+			r.PublisherUpgradeProfileID = types.Int32Value(int32(*resp.PublisherUpgradeProfileID))
 		} else {
-			r.PublisherUpgradeProfileID = types.Int64Null()
+			r.PublisherUpgradeProfileID = types.Int32Null()
 		}
 		if resp.ReleaseType != nil {
 			r.ReleaseType = types.StringValue(string(*resp.ReleaseType))
@@ -109,9 +109,9 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgr
 		}
 		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
 		if resp.UpgradingStage != nil {
-			r.UpgradingStage = types.Int64Value(int64(*resp.UpgradingStage))
+			r.UpgradingStage = types.Int32Value(int32(*resp.UpgradingStage))
 		} else {
-			r.UpgradingStage = types.Int64Null()
+			r.UpgradingStage = types.Int32Null()
 		}
 		r.WillStart = types.BoolPointerValue(resp.WillStart)
 	}
@@ -128,7 +128,7 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfil
 	frequency = r.Frequency.ValueString()
 
 	var publisherUpgradeProfileID int
-	publisherUpgradeProfileID = int(r.PublisherUpgradeProfileID.ValueInt64())
+	publisherUpgradeProfileID = int(r.PublisherUpgradeProfileID.ValueInt32())
 
 	var name string
 	name = r.Name.ValueString()

@@ -30,7 +30,7 @@ type NPAPublisherAppsListDataSource struct {
 // NPAPublisherAppsListDataSourceModel describes the data model.
 type NPAPublisherAppsListDataSourceModel struct {
 	Data        []tfTypes.PublishersPrivateAppsResponseData `tfsdk:"data"`
-	PublisherID types.Int64                                 `tfsdk:"publisher_id"`
+	PublisherID types.Int32                                 `tfsdk:"publisher_id"`
 }
 
 // Metadata returns the data source type name.
@@ -57,13 +57,13 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 						"clientless_access": schema.BoolAttribute{
 							Computed: true,
 						},
-						"external_id": schema.Int64Attribute{
+						"external_id": schema.Int32Attribute{
 							Computed: true,
 						},
 						"host": schema.StringAttribute{
 							Computed: true,
 						},
-						"id": schema.Int64Attribute{
+						"id": schema.Int32Attribute{
 							Computed: true,
 						},
 						"is_user_portal_app": schema.BoolAttribute{
@@ -82,13 +82,13 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 									"created_at": schema.StringAttribute{
 										Computed: true,
 									},
-									"id": schema.Int64Attribute{
+									"id": schema.Int32Attribute{
 										Computed: true,
 									},
 									"port": schema.StringAttribute{
 										Computed: true,
 									},
-									"service_id": schema.Int64Attribute{
+									"service_id": schema.Int32Attribute{
 										Computed: true,
 									},
 									"transport": schema.StringAttribute{
@@ -106,7 +106,7 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 						"reachability": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{
-								"error_code": schema.Int64Attribute{
+								"error_code": schema.Int32Attribute{
 									Computed: true,
 								},
 								"error_string": schema.StringAttribute{
@@ -127,7 +127,7 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 									"primary": schema.BoolAttribute{
 										Computed: true,
 									},
-									"publisher_external_id": schema.Int64Attribute{
+									"publisher_external_id": schema.Int32Attribute{
 										Computed: true,
 									},
 									"publisher_name": schema.StringAttribute{
@@ -136,7 +136,7 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 									"reachability": schema.SingleNestedAttribute{
 										Computed: true,
 										Attributes: map[string]schema.Attribute{
-											"error_code": schema.Int64Attribute{
+											"error_code": schema.Int32Attribute{
 												Computed: true,
 											},
 											"error_string": schema.StringAttribute{
@@ -147,7 +147,7 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 											},
 										},
 									},
-									"service_external_id": schema.Int64Attribute{
+									"service_external_id": schema.Int32Attribute{
 										Computed: true,
 									},
 								},
@@ -165,7 +165,7 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 					},
 				},
 			},
-			"publisher_id": schema.Int64Attribute{
+			"publisher_id": schema.Int32Attribute{
 				Required:    true,
 				Description: `publisher id`,
 			},
@@ -212,7 +212,7 @@ func (r *NPAPublisherAppsListDataSource) Read(ctx context.Context, req datasourc
 	}
 
 	var publisherID int
-	publisherID = int(data.PublisherID.ValueInt64())
+	publisherID = int(data.PublisherID.ValueInt32())
 
 	request := operations.GetNPAPublisherAppsRequest{
 		PublisherID: publisherID,

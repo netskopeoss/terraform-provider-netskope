@@ -52,7 +52,7 @@ type NPAPrivateAppResourceModel struct {
 	ModifyTime                  types.String                                                   `tfsdk:"modify_time"`
 	Policies                    []types.String                                                 `tfsdk:"policies"`
 	PrivateAppHostname          types.String                                                   `tfsdk:"private_app_hostname"`
-	PrivateAppID                types.Int64                                                    `tfsdk:"private_app_id"`
+	PrivateAppID                types.Int32                                                    `tfsdk:"private_app_id"`
 	PrivateAppName              types.String                                                   `tfsdk:"private_app_name"`
 	PrivateAppProtocol          types.String                                                   `tfsdk:"private_app_protocol"`
 	Protocols                   []tfTypes.ProtocolItem                                         `tfsdk:"protocols"`
@@ -133,8 +133,9 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Computed: true,
 				Optional: true,
 			},
-			"private_app_id": schema.Int64Attribute{
-				Computed: true,
+			"private_app_id": schema.Int32Attribute{
+				Computed:    true,
+				Description: `private apps id`,
 			},
 			"private_app_name": schema.StringAttribute{
 				Computed: true,
@@ -354,7 +355,7 @@ func (r *NPAPrivateAppResource) Create(ctx context.Context, req resource.CreateR
 	data.RefreshFromSharedPrivateAppsGetResponseNewData(res.PrivateAppsGetResponseNew.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	var privateAppID int
-	privateAppID = int(data.PrivateAppID.ValueInt64())
+	privateAppID = int(data.PrivateAppID.ValueInt32())
 
 	request1 := operations.GetNPAPrivateAppRequest{
 		PrivateAppID: privateAppID,
@@ -405,7 +406,7 @@ func (r *NPAPrivateAppResource) Read(ctx context.Context, req resource.ReadReque
 	}
 
 	var privateAppID int
-	privateAppID = int(data.PrivateAppID.ValueInt64())
+	privateAppID = int(data.PrivateAppID.ValueInt32())
 
 	request := operations.GetNPAPrivateAppRequest{
 		PrivateAppID: privateAppID,
@@ -455,7 +456,7 @@ func (r *NPAPrivateAppResource) Update(ctx context.Context, req resource.UpdateR
 	}
 
 	var privateAppID int
-	privateAppID = int(data.PrivateAppID.ValueInt64())
+	privateAppID = int(data.PrivateAppID.ValueInt32())
 
 	privateAppsPutRequest := *data.ToSharedPrivateAppsPutRequest()
 	request := operations.UpdateNPAPrivateAppRequest{
@@ -485,7 +486,7 @@ func (r *NPAPrivateAppResource) Update(ctx context.Context, req resource.UpdateR
 	data.RefreshFromSharedPrivateAppsResponse(res.PrivateAppsResponse)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	var privateAppId1 int
-	privateAppId1 = int(data.PrivateAppID.ValueInt64())
+	privateAppId1 = int(data.PrivateAppID.ValueInt32())
 
 	request1 := operations.GetNPAPrivateAppRequest{
 		PrivateAppID: privateAppId1,
@@ -536,7 +537,7 @@ func (r *NPAPrivateAppResource) Delete(ctx context.Context, req resource.DeleteR
 	}
 
 	var privateAppID int
-	privateAppID = int(data.PrivateAppID.ValueInt64())
+	privateAppID = int(data.PrivateAppID.ValueInt32())
 
 	request := operations.DeleteNPAPrivateAppRequest{
 		PrivateAppID: privateAppID,
@@ -566,5 +567,5 @@ func (r *NPAPrivateAppResource) ImportState(ctx context.Context, req resource.Im
 		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
 	}
 
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("private_app_id"), int64(privateAppID))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("private_app_id"), int32(privateAppID))...)
 }

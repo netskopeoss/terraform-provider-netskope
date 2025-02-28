@@ -175,9 +175,9 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 		sdkConfiguration: sdkConfiguration{
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
-			SDKVersion:        "0.4.1",
-			GenVersion:        "2.506.0",
-			UserAgent:         "speakeasy-sdk/terraform 0.4.1 2.506.0 1.0.0 github.com/netskope/terraform-provider-ns/internal/sdk",
+			SDKVersion:        "0.5.0",
+			GenVersion:        "2.536.0",
+			UserAgent:         "speakeasy-sdk/terraform 0.5.0 2.536.0 1.0.0 github.com/netskope/terraform-provider-ns/internal/sdk",
 			ServerDefaults: []map[string]string{
 				{
 					"tenant": "demo",
@@ -232,13 +232,6 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 //
 // This endpoint supports listing all NPA Private Applications.
 func (s *TerraformProviderNs) ListNPAPrivateApps(ctx context.Context, request operations.ListNPAPrivateAppsRequest, opts ...operations.Option) (*operations.ListNPAPrivateAppsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "listNPAPrivateApps",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -259,6 +252,14 @@ func (s *TerraformProviderNs) ListNPAPrivateApps(ctx context.Context, request op
 	opURL, err := url.JoinPath(baseURL, "/steering/apps/private")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "listNPAPrivateApps",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -384,13 +385,6 @@ func (s *TerraformProviderNs) ListNPAPrivateApps(ctx context.Context, request op
 // GetNPAPolicyInUse - Retrieve number of policy in use for specified private apps
 // Retrieve number of policy in use for specified private apps
 func (s *TerraformProviderNs) GetNPAPolicyInUse(ctx context.Context, request operations.GetNPAPolicyInUseRequestBody, opts ...operations.Option) (*operations.GetNPAPolicyInUseResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getNPAPolicyInUse",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -413,6 +407,13 @@ func (s *TerraformProviderNs) GetNPAPolicyInUse(ctx context.Context, request ope
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getNPAPolicyInUse",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -540,13 +541,6 @@ func (s *TerraformProviderNs) GetNPAPolicyInUse(ctx context.Context, request ope
 // DeleteNPAPrivateApp - Delete a private application
 // Delete a private application based on private app id
 func (s *TerraformProviderNs) DeleteNPAPrivateApp(ctx context.Context, request operations.DeleteNPAPrivateAppRequest, opts ...operations.Option) (*operations.DeleteNPAPrivateAppResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteNPAPrivateApp",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -567,6 +561,14 @@ func (s *TerraformProviderNs) DeleteNPAPrivateApp(ctx context.Context, request o
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/steering/apps/private/{private_app_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteNPAPrivateApp",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -688,13 +690,6 @@ func (s *TerraformProviderNs) DeleteNPAPrivateApp(ctx context.Context, request o
 // GetNPAPrivateApp - Get a private application
 // Get a private application based on private app id
 func (s *TerraformProviderNs) GetNPAPrivateApp(ctx context.Context, request operations.GetNPAPrivateAppRequest, opts ...operations.Option) (*operations.GetNPAPrivateAppResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getNPAPrivateApp",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -715,6 +710,14 @@ func (s *TerraformProviderNs) GetNPAPrivateApp(ctx context.Context, request oper
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/steering/apps/private/{private_app_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getNPAPrivateApp",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -836,13 +839,6 @@ func (s *TerraformProviderNs) GetNPAPrivateApp(ctx context.Context, request oper
 // DeleteSteeringAppsPrivateTags - Deletes private apps and tags association.
 // Deletes private apps and tags association.
 func (s *TerraformProviderNs) DeleteSteeringAppsPrivateTags(ctx context.Context, request shared.TagRequestWithIds, opts ...operations.Option) (*operations.DeleteSteeringAppsPrivateTagsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "delete_/steering/apps/private/tags",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -865,6 +861,13 @@ func (s *TerraformProviderNs) DeleteSteeringAppsPrivateTags(ctx context.Context,
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "delete_/steering/apps/private/tags",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -989,16 +992,9 @@ func (s *TerraformProviderNs) DeleteSteeringAppsPrivateTags(ctx context.Context,
 
 }
 
-// GetSteeringAppsPrivateTags - Get list of private app tags
+// ListObjects - Get list of private app tags
 // Get list of private app tags
-func (s *TerraformProviderNs) GetSteeringAppsPrivateTags(ctx context.Context, request operations.GetSteeringAppsPrivateTagsRequest, opts ...operations.Option) (*operations.GetSteeringAppsPrivateTagsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "get_/steering/apps/private/tags",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
+func (s *TerraformProviderNs) ListObjects(ctx context.Context, request operations.ListNPAPrivateTagsRequest, opts ...operations.Option) (*operations.ListNPAPrivateTagsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -1019,6 +1015,14 @@ func (s *TerraformProviderNs) GetSteeringAppsPrivateTags(ctx context.Context, re
 	opURL, err := url.JoinPath(baseURL, "/steering/apps/private/tags")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "listNPAPrivateTags",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1080,7 +1084,7 @@ func (s *TerraformProviderNs) GetSteeringAppsPrivateTags(ctx context.Context, re
 		}
 	}
 
-	res := &operations.GetSteeringAppsPrivateTagsResponse{
+	res := &operations.ListNPAPrivateTagsResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -1095,7 +1099,7 @@ func (s *TerraformProviderNs) GetSteeringAppsPrivateTags(ctx context.Context, re
 				return nil, err
 			}
 
-			var out operations.GetSteeringAppsPrivateTagsResponseBody
+			var out operations.ListNPAPrivateTagsResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -1144,13 +1148,6 @@ func (s *TerraformProviderNs) GetSteeringAppsPrivateTags(ctx context.Context, re
 // PatchSteeringAppsPrivateTags - Add tags to associate with specified private apps (bulk operation)
 // Add tags to associate with specified private apps
 func (s *TerraformProviderNs) PatchSteeringAppsPrivateTags(ctx context.Context, request shared.TagRequestWithIds, opts ...operations.Option) (*operations.PatchSteeringAppsPrivateTagsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "patch_/steering/apps/private/tags",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -1173,6 +1170,13 @@ func (s *TerraformProviderNs) PatchSteeringAppsPrivateTags(ctx context.Context, 
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "patch_/steering/apps/private/tags",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -1300,13 +1304,6 @@ func (s *TerraformProviderNs) PatchSteeringAppsPrivateTags(ctx context.Context, 
 // PutSteeringAppsPrivateTags - Replace existing tags of specified private apps with new tags (bulk operation)
 // Replace existing tags of specified private apps with new tags.
 func (s *TerraformProviderNs) PutSteeringAppsPrivateTags(ctx context.Context, request shared.TagRequestWithIds, opts ...operations.Option) (*operations.PutSteeringAppsPrivateTagsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "put_/steering/apps/private/tags",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -1329,6 +1326,13 @@ func (s *TerraformProviderNs) PutSteeringAppsPrivateTags(ctx context.Context, re
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "put_/steering/apps/private/tags",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -1453,16 +1457,9 @@ func (s *TerraformProviderNs) PutSteeringAppsPrivateTags(ctx context.Context, re
 
 }
 
-// PostSteeringAppsPrivateTags - create tags for one private app
+// CreateNPAPrivateAppTags - create tags for one private app
 // Create tags for one private app
-func (s *TerraformProviderNs) PostSteeringAppsPrivateTags(ctx context.Context, request shared.TagRequestWithID, opts ...operations.Option) (*operations.PostSteeringAppsPrivateTagsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "post_/steering/apps/private/tags",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
+func (s *TerraformProviderNs) CreateNPAPrivateAppTags(ctx context.Context, request shared.TagRequestWithID, opts ...operations.Option) (*operations.CreateNPAPrivateAppTagsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -1485,6 +1482,13 @@ func (s *TerraformProviderNs) PostSteeringAppsPrivateTags(ctx context.Context, r
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createNPAPrivateAppTags",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -1548,7 +1552,7 @@ func (s *TerraformProviderNs) PostSteeringAppsPrivateTags(ctx context.Context, r
 		}
 	}
 
-	res := &operations.PostSteeringAppsPrivateTagsResponse{
+	res := &operations.CreateNPAPrivateAppTagsResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -1612,13 +1616,6 @@ func (s *TerraformProviderNs) PostSteeringAppsPrivateTags(ctx context.Context, r
 // PostSteeringAppsPrivateTagsGetpolicyinuse - Retrieve number of policy in use for specified tags
 // Retrieve number of policy in use for specified tags
 func (s *TerraformProviderNs) PostSteeringAppsPrivateTagsGetpolicyinuse(ctx context.Context, request operations.PostSteeringAppsPrivateTagsGetpolicyinuseRequestBody, opts ...operations.Option) (*operations.PostSteeringAppsPrivateTagsGetpolicyinuseResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "post_/steering/apps/private/tags/getpolicyinuse",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -1641,6 +1638,13 @@ func (s *TerraformProviderNs) PostSteeringAppsPrivateTagsGetpolicyinuse(ctx cont
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "post_/steering/apps/private/tags/getpolicyinuse",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -1765,16 +1769,9 @@ func (s *TerraformProviderNs) PostSteeringAppsPrivateTagsGetpolicyinuse(ctx cont
 
 }
 
-// DeleteSteeringAppsPrivateTagsTagID - Delete a private app tag based on tag id
+// DeleteNPAPrivateAppTag - Delete a private app tag based on tag id
 // Delete a private app tag based on tag id
-func (s *TerraformProviderNs) DeleteSteeringAppsPrivateTagsTagID(ctx context.Context, request operations.DeleteSteeringAppsPrivateTagsTagIDRequest, opts ...operations.Option) (*operations.DeleteSteeringAppsPrivateTagsTagIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "delete_/steering/apps/private/tags/{tag_id}",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
+func (s *TerraformProviderNs) DeleteNPAPrivateAppTag(ctx context.Context, request operations.DeleteNPAPrivateAppTagRequest, opts ...operations.Option) (*operations.DeleteNPAPrivateAppTagResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -1795,6 +1792,14 @@ func (s *TerraformProviderNs) DeleteSteeringAppsPrivateTagsTagID(ctx context.Con
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/steering/apps/private/tags/{tag_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteNPAPrivateAppTag",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1852,7 +1857,7 @@ func (s *TerraformProviderNs) DeleteSteeringAppsPrivateTagsTagID(ctx context.Con
 		}
 	}
 
-	res := &operations.DeleteSteeringAppsPrivateTagsTagIDResponse{
+	res := &operations.DeleteNPAPrivateAppTagResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -1867,7 +1872,7 @@ func (s *TerraformProviderNs) DeleteSteeringAppsPrivateTagsTagID(ctx context.Con
 				return nil, err
 			}
 
-			var out operations.DeleteSteeringAppsPrivateTagsTagIDResponseBody
+			var out operations.DeleteNPAPrivateAppTagResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -1913,16 +1918,9 @@ func (s *TerraformProviderNs) DeleteSteeringAppsPrivateTagsTagID(ctx context.Con
 
 }
 
-// GetSteeringAppsPrivateTagsTagID - Get private apps associated with tag specified in tag id
+// GetNPAPrivateAppTag - Get private apps associated with tag specified in tag id
 // Get private apps associated with tag specified in tag id
-func (s *TerraformProviderNs) GetSteeringAppsPrivateTagsTagID(ctx context.Context, request operations.GetSteeringAppsPrivateTagsTagIDRequest, opts ...operations.Option) (*operations.GetSteeringAppsPrivateTagsTagIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "get_/steering/apps/private/tags/{tag_id}",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
+func (s *TerraformProviderNs) GetNPAPrivateAppTag(ctx context.Context, request operations.GetNPAPrivateAppTagRequest, opts ...operations.Option) (*operations.GetNPAPrivateAppTagResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -1943,6 +1941,14 @@ func (s *TerraformProviderNs) GetSteeringAppsPrivateTagsTagID(ctx context.Contex
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/steering/apps/private/tags/{tag_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getNPAPrivateAppTag",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -2000,7 +2006,7 @@ func (s *TerraformProviderNs) GetSteeringAppsPrivateTagsTagID(ctx context.Contex
 		}
 	}
 
-	res := &operations.GetSteeringAppsPrivateTagsTagIDResponse{
+	res := &operations.GetNPAPrivateAppTagResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -2015,7 +2021,7 @@ func (s *TerraformProviderNs) GetSteeringAppsPrivateTagsTagID(ctx context.Contex
 				return nil, err
 			}
 
-			var out operations.GetSteeringAppsPrivateTagsTagIDResponseBody
+			var out operations.GetNPAPrivateAppTagResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
@@ -2061,16 +2067,9 @@ func (s *TerraformProviderNs) GetSteeringAppsPrivateTagsTagID(ctx context.Contex
 
 }
 
-// PutSteeringAppsPrivateTagsTagID - Update a private app tag based on tag id
+// UpdateNPAPrivateAppTag - Update a private app tag based on tag id
 // Update a private app tag based on tag id
-func (s *TerraformProviderNs) PutSteeringAppsPrivateTagsTagID(ctx context.Context, request operations.PutSteeringAppsPrivateTagsTagIDRequest, opts ...operations.Option) (*operations.PutSteeringAppsPrivateTagsTagIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "put_/steering/apps/private/tags/{tag_id}",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
+func (s *TerraformProviderNs) UpdateNPAPrivateAppTag(ctx context.Context, request operations.UpdateNPAPrivateAppTagRequest, opts ...operations.Option) (*operations.UpdateNPAPrivateAppTagResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -2093,6 +2092,13 @@ func (s *TerraformProviderNs) PutSteeringAppsPrivateTagsTagID(ctx context.Contex
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateNPAPrivateAppTag",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "TagRequestItem", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -2156,7 +2162,7 @@ func (s *TerraformProviderNs) PutSteeringAppsPrivateTagsTagID(ctx context.Contex
 		}
 	}
 
-	res := &operations.PutSteeringAppsPrivateTagsTagIDResponse{
+	res := &operations.UpdateNPAPrivateAppTagResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -2225,13 +2231,6 @@ func (s *TerraformProviderNs) PutSteeringAppsPrivateTagsTagID(ctx context.Contex
 //
 // This endpoint supports the ability to retrieve publisher alert configurations.
 func (s *TerraformProviderNs) GetNPAPublisherAlerts(ctx context.Context, opts ...operations.Option) (*operations.GetNPAPublisherAlertsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getNPAPublisherAlerts",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -2252,6 +2251,14 @@ func (s *TerraformProviderNs) GetNPAPublisherAlerts(ctx context.Context, opts ..
 	opURL, err := url.JoinPath(baseURL, "/infrastructure/publishers/alertsconfiguration")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getNPAPublisherAlerts",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -2380,13 +2387,6 @@ func (s *TerraformProviderNs) GetNPAPublisherAlerts(ctx context.Context, opts ..
 //
 // Please see the examples for how to use this endpoint.
 func (s *TerraformProviderNs) CreateNPAPublisherAlerts(ctx context.Context, request shared.PublishersAlertPutRequest, opts ...operations.Option) (*operations.CreateNPAPublisherAlertsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createNPAPublisherAlerts",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -2409,6 +2409,13 @@ func (s *TerraformProviderNs) CreateNPAPublisherAlerts(ctx context.Context, requ
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createNPAPublisherAlerts",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -2543,13 +2550,6 @@ func (s *TerraformProviderNs) CreateNPAPublisherAlerts(ctx context.Context, requ
 //
 // Please see examples for how to use this endpoint.
 func (s *TerraformProviderNs) TriggerNPAPublisherUpdates(ctx context.Context, request shared.PublisherBulkRequest, opts ...operations.Option) (*operations.TriggerNPAPublisherUpdatesResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "triggerNPAPublisherUpdates",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -2572,6 +2572,13 @@ func (s *TerraformProviderNs) TriggerNPAPublisherUpdates(ctx context.Context, re
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "triggerNPAPublisherUpdates",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -2705,13 +2712,6 @@ func (s *TerraformProviderNs) TriggerNPAPublisherUpdates(ctx context.Context, re
 // This endpoint bulk updates publishers to an upgrade profile.\
 // Please use the profile `external_id` value for the profile `id` requirement.
 func (s *TerraformProviderNs) BulkupdateNPAPublishers(ctx context.Context, request shared.PublisherUpgradeProfileBulkRequest, opts ...operations.Option) (*operations.BulkupdateNPAPublishersResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "BulkupdateNPAPublishers",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -2734,6 +2734,13 @@ func (s *TerraformProviderNs) BulkupdateNPAPublishers(ctx context.Context, reque
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "BulkupdateNPAPublishers",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err

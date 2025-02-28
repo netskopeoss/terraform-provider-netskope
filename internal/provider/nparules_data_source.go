@@ -30,7 +30,7 @@ type NPARulesDataSource struct {
 // NPARulesDataSourceModel describes the data model.
 type NPARulesDataSourceModel struct {
 	Enabled    types.String               `tfsdk:"enabled"`
-	Fields     types.String               `tfsdk:"fields"`
+	Fields     types.String               `queryParam:"style=form,explode=true,name=fields" tfsdk:"fields"`
 	GroupID    types.String               `tfsdk:"group_id"`
 	ModifyBy   types.String               `tfsdk:"modify_by"`
 	ModifyTime types.String               `tfsdk:"modify_time"`

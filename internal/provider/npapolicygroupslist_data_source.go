@@ -30,12 +30,12 @@ type NPAPolicyGroupsListDataSource struct {
 // NPAPolicyGroupsListDataSourceModel describes the data model.
 type NPAPolicyGroupsListDataSourceModel struct {
 	Data      []tfTypes.NpaPolicygroupResponseItem `tfsdk:"data"`
-	Fields    types.String                         `tfsdk:"fields"`
-	Filter    types.String                         `tfsdk:"filter"`
-	Limit     types.Int64                          `tfsdk:"limit"`
-	Offset    types.Int64                          `tfsdk:"offset"`
-	Sortby    types.String                         `tfsdk:"sortby"`
-	Sortorder types.String                         `tfsdk:"sortorder"`
+	Fields    types.String                         `queryParam:"style=form,explode=true,name=fields" tfsdk:"fields"`
+	Filter    types.String                         `queryParam:"style=form,explode=true,name=filter" tfsdk:"filter"`
+	Limit     types.Int64                          `queryParam:"style=form,explode=true,name=limit" tfsdk:"limit"`
+	Offset    types.Int64                          `queryParam:"style=form,explode=true,name=offset" tfsdk:"offset"`
+	Sortby    types.String                         `queryParam:"style=form,explode=true,name=sortby" tfsdk:"sortby"`
+	Sortorder types.String                         `queryParam:"style=form,explode=true,name=sortorder" tfsdk:"sortorder"`
 	Status    types.String                         `tfsdk:"status"`
 }
 

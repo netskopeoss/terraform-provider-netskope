@@ -33,13 +33,6 @@ func newNPAPublisherUpgradeProfiles(sdkConfig sdkConfiguration) *NPAPublisherUpg
 //
 // This endpoint queries and returns all publisher upgrade profiles.
 func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, opts ...operations.Option) (*operations.ListNPAPublisherUpgradeProfilesResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "listNPAPublisherUpgradeProfiles",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -60,6 +53,14 @@ func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, opts ...o
 	opURL, err := url.JoinPath(baseURL, "/infrastructure/publisherupgradeprofiles")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "listNPAPublisherUpgradeProfiles",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout

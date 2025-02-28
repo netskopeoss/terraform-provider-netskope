@@ -32,9 +32,9 @@ func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsGetResponseNe
 		}
 		r.PrivateAppHostname = types.StringPointerValue(resp.PrivateAppHostname)
 		if resp.PrivateAppID != nil {
-			r.PrivateAppID = types.Int64Value(int64(*resp.PrivateAppID))
+			r.PrivateAppID = types.Int32Value(int32(*resp.PrivateAppID))
 		} else {
-			r.PrivateAppID = types.Int64Null()
+			r.PrivateAppID = types.Int32Null()
 		}
 		r.PrivateAppName = types.StringPointerValue(resp.PrivateAppName)
 		r.PrivateAppProtocol = types.StringPointerValue(resp.PrivateAppProtocol)

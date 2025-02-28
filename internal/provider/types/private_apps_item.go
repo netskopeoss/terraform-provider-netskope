@@ -15,7 +15,7 @@ type PrivateAppsItem struct {
 	ModifyTime                  types.String                                           `tfsdk:"modify_time"`
 	Policies                    []types.String                                         `tfsdk:"policies"`
 	PrivateAppHostname          types.String                                           `tfsdk:"private_app_hostname"`
-	PrivateAppID                types.Int64                                            `tfsdk:"private_app_id"`
+	PrivateAppID                types.Int32                                            `tfsdk:"private_app_id"`
 	PrivateAppName              types.String                                           `tfsdk:"private_app_name"`
 	PrivateAppProtocol          types.String                                           `tfsdk:"private_app_protocol"`
 	Protocols                   []ProtocolItem                                         `tfsdk:"protocols"`

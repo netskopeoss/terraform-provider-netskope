@@ -33,13 +33,13 @@ type NPAPublisherUpgradeProfileDataSourceModel struct {
 	Enabled                   types.Bool   `tfsdk:"enabled"`
 	Frequency                 types.String `tfsdk:"frequency"`
 	Name                      types.String `tfsdk:"name"`
-	NextUpdateTime            types.Int64  `tfsdk:"next_update_time"`
-	NumAssociatedPublisher    types.Int64  `tfsdk:"num_associated_publisher"`
-	PublisherUpgradeProfileID types.Int64  `tfsdk:"publisher_upgrade_profile_id"`
+	NextUpdateTime            types.Int32  `tfsdk:"next_update_time"`
+	NumAssociatedPublisher    types.Int32  `tfsdk:"num_associated_publisher"`
+	PublisherUpgradeProfileID types.Int32  `tfsdk:"publisher_upgrade_profile_id"`
 	ReleaseType               types.String `tfsdk:"release_type"`
 	Timezone                  types.String `tfsdk:"timezone"`
 	UpdatedAt                 types.String `tfsdk:"updated_at"`
-	UpgradingStage            types.Int64  `tfsdk:"upgrading_stage"`
+	UpgradingStage            types.Int32  `tfsdk:"upgrading_stage"`
 	WillStart                 types.Bool   `tfsdk:"will_start"`
 }
 
@@ -69,13 +69,13 @@ func (r *NPAPublisherUpgradeProfileDataSource) Schema(ctx context.Context, req d
 			"name": schema.StringAttribute{
 				Computed: true,
 			},
-			"next_update_time": schema.Int64Attribute{
+			"next_update_time": schema.Int32Attribute{
 				Computed: true,
 			},
-			"num_associated_publisher": schema.Int64Attribute{
+			"num_associated_publisher": schema.Int32Attribute{
 				Computed: true,
 			},
-			"publisher_upgrade_profile_id": schema.Int64Attribute{
+			"publisher_upgrade_profile_id": schema.Int32Attribute{
 				Required:    true,
 				Description: `publisher upgrade profile external_id`,
 			},
@@ -88,7 +88,7 @@ func (r *NPAPublisherUpgradeProfileDataSource) Schema(ctx context.Context, req d
 			"updated_at": schema.StringAttribute{
 				Computed: true,
 			},
-			"upgrading_stage": schema.Int64Attribute{
+			"upgrading_stage": schema.Int32Attribute{
 				Computed: true,
 			},
 			"will_start": schema.BoolAttribute{
@@ -137,7 +137,7 @@ func (r *NPAPublisherUpgradeProfileDataSource) Read(ctx context.Context, req dat
 	}
 
 	var publisherUpgradeProfileID int
-	publisherUpgradeProfileID = int(data.PublisherUpgradeProfileID.ValueInt64())
+	publisherUpgradeProfileID = int(data.PublisherUpgradeProfileID.ValueInt32())
 
 	request := operations.GetNPAPublisherUpgradeProfileRequest{
 		PublisherUpgradeProfileID: publisherUpgradeProfileID,

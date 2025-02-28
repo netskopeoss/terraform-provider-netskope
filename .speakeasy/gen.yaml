@@ -15,7 +15,7 @@ generation:
     oAuth2ClientCredentialsEnabled: true
     oAuth2PasswordEnabled: false
 terraform:
-  version: 0.3.1
+  version: 0.3.2
   additionalDataSources: []
   additionalDependencies: {}
   additionalProviderAttributes:

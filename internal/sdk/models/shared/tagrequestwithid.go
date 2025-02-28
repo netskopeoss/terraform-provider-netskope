@@ -3,16 +3,24 @@
 package shared
 
 type TagRequestWithID struct {
+	XSpeakeasyEntity any `json:"x-speakeasy-entity,omitempty"`
 	// this is the private app id.
-	ID   *string          `json:"id,omitempty"`
-	Tags []TagRequestItem `json:"tags,omitempty"`
+	TagID *int             `json:"id,omitempty"`
+	Tags  []TagRequestItem `json:"tags,omitempty"`
 }
 
-func (o *TagRequestWithID) GetID() *string {
+func (o *TagRequestWithID) GetXSpeakeasyEntity() any {
 	if o == nil {
 		return nil
 	}
-	return o.ID
+	return o.XSpeakeasyEntity
+}
+
+func (o *TagRequestWithID) GetTagID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.TagID
 }
 
 func (o *TagRequestWithID) GetTags() []TagRequestItem {

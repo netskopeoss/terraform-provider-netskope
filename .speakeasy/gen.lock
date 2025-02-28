@@ -1,19 +1,19 @@
 lockVersion: 2.0.0
 id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
-  docChecksum: 79754bee4dba0371b1f5e21a1c6bccea
+  docChecksum: 097baa95c55e14e493229570f9e2f713
   docVersion: 1.0.0
-  speakeasyVersion: 1.488.0
-  generationVersion: 2.506.0
-  releaseVersion: 0.4.1
-  configChecksum: 6376d8b4e73ce6c47816cfd7b91b85a8
+  speakeasyVersion: 1.508.0
+  generationVersion: 2.536.0
+  releaseVersion: 0.5.0
+  configChecksum: 982fa97937c6f91d0ef66c1691e9dbf1
 features:
   terraform:
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.2.0
-    core: 3.30.0
+    constsAndDefaults: 0.2.1
+    core: 3.36.0
     envVarSecurityUsage: 0.1.0
-    globalSecurity: 2.81.9
+    globalSecurity: 2.81.10
     globalServerURLs: 2.82.1
     groups: 2.81.2
     ignores: 2.81.1
@@ -26,7 +26,9 @@ generatedFiles:
   - examples/data-sources/ns_npa_policy_groups/data-source.tf
   - examples/data-sources/ns_npa_policy_groups_list/data-source.tf
   - examples/data-sources/ns_npa_private_app/data-source.tf
+  - examples/data-sources/ns_npa_private_app_tags/data-source.tf
   - examples/data-sources/ns_npa_private_apps_list/data-source.tf
+  - examples/data-sources/ns_npa_private_apps_tags_list/data-source.tf
   - examples/data-sources/ns_npa_private_policy_in_use/data-source.tf
   - examples/data-sources/ns_npa_publisher/data-source.tf
   - examples/data-sources/ns_npa_publisher_apps_list/data-source.tf
@@ -42,6 +44,8 @@ generatedFiles:
   - examples/resources/ns_npa_policy_groups/resource.tf
   - examples/resources/ns_npa_private_app/import.sh
   - examples/resources/ns_npa_private_app/resource.tf
+  - examples/resources/ns_npa_private_app_tags/import.sh
+  - examples/resources/ns_npa_private_app_tags/resource.tf
   - examples/resources/ns_npa_publisher/import.sh
   - examples/resources/ns_npa_publisher/resource.tf
   - examples/resources/ns_npa_publisher_token/resource.tf
@@ -55,7 +59,9 @@ generatedFiles:
   - go.mod
   - go.sum
   - internal/planmodifiers/boolplanmodifier/suppress_diff.go
+  - internal/planmodifiers/float32planmodifier/suppress_diff.go
   - internal/planmodifiers/float64planmodifier/suppress_diff.go
+  - internal/planmodifiers/int32planmodifier/suppress_diff.go
   - internal/planmodifiers/int64planmodifier/suppress_diff.go
   - internal/planmodifiers/listplanmodifier/suppress_diff.go
   - internal/planmodifiers/mapplanmodifier/suppress_diff.go
@@ -76,6 +82,12 @@ generatedFiles:
   - internal/provider/npaprivateapp_resource_sdk.go
   - internal/provider/npaprivateappslist_data_source.go
   - internal/provider/npaprivateappslist_data_source_sdk.go
+  - internal/provider/npaprivateappstagslist_data_source.go
+  - internal/provider/npaprivateappstagslist_data_source_sdk.go
+  - internal/provider/npaprivateapptags_data_source.go
+  - internal/provider/npaprivateapptags_data_source_sdk.go
+  - internal/provider/npaprivateapptags_resource.go
+  - internal/provider/npaprivateapptags_resource_sdk.go
   - internal/provider/npaprivatepolicyinuse_data_source.go
   - internal/provider/npaprivatepolicyinuse_data_source_sdk.go
   - internal/provider/npapublisher_data_source.go
@@ -167,6 +179,9 @@ generatedFiles:
   - internal/provider/types/rule_order.go
   - internal/provider/types/service_publisher_assignment_item.go
   - internal/provider/types/tag_item_no_id.go
+  - internal/provider/types/tag_private_apps_response.go
+  - internal/provider/types/tag_request_item.go
+  - internal/provider/types/tags.go
   - internal/provider/types/upgrade_profiles.go
   - internal/provider/types/upgrade_publisher_response.go
   - internal/provider/types/upgrade_publisher_response_assessment.go
@@ -190,22 +205,24 @@ generatedFiles:
   - internal/sdk/models/operations/bulkupdatenpapublishers.go
   - internal/sdk/models/operations/createnpapolicygroups.go
   - internal/sdk/models/operations/createnpaprivateapps.go
+  - internal/sdk/models/operations/createnpaprivateapptags.go
   - internal/sdk/models/operations/createnpapublisheralerts.go
   - internal/sdk/models/operations/createnpapublishers.go
   - internal/sdk/models/operations/createnpapublisherupgradeprofile.go
   - internal/sdk/models/operations/createnparules.go
   - internal/sdk/models/operations/deletenpapolicygroups.go
   - internal/sdk/models/operations/deletenpaprivateapp.go
+  - internal/sdk/models/operations/deletenpaprivateapptag.go
   - internal/sdk/models/operations/deletenpapublishers.go
   - internal/sdk/models/operations/deletenpapublisherupgradeprofile.go
   - internal/sdk/models/operations/deletenparules.go
   - internal/sdk/models/operations/deletesteeringappsprivatetags.go
-  - internal/sdk/models/operations/deletesteeringappsprivatetagstagid.go
   - internal/sdk/models/operations/generatenpapublishertoken.go
   - internal/sdk/models/operations/getnpapolicygroupbyid.go
   - internal/sdk/models/operations/getnpapolicygroups.go
   - internal/sdk/models/operations/getnpapolicyinuse.go
   - internal/sdk/models/operations/getnpaprivateapp.go
+  - internal/sdk/models/operations/getnpaprivateapptag.go
   - internal/sdk/models/operations/getnpapublisheralerts.go
   - internal/sdk/models/operations/getnpapublisherapps.go
   - internal/sdk/models/operations/getnpapublisherbyid.go
@@ -213,20 +230,18 @@ generatedFiles:
   - internal/sdk/models/operations/getnpapublishers.go
   - internal/sdk/models/operations/getnpapublisherupgradeprofile.go
   - internal/sdk/models/operations/getnparuleslist.go
-  - internal/sdk/models/operations/getsteeringappsprivatetags.go
-  - internal/sdk/models/operations/getsteeringappsprivatetagstagid.go
   - internal/sdk/models/operations/listnpaprivateapps.go
+  - internal/sdk/models/operations/listnpaprivatetags.go
   - internal/sdk/models/operations/listnpapublisherupgradeprofiles.go
   - internal/sdk/models/operations/nparules.go
   - internal/sdk/models/operations/options.go
   - internal/sdk/models/operations/patchsteeringappsprivatetags.go
-  - internal/sdk/models/operations/poststeeringappsprivatetags.go
   - internal/sdk/models/operations/poststeeringappsprivatetagsgetpolicyinuse.go
   - internal/sdk/models/operations/putsteeringappsprivatetags.go
-  - internal/sdk/models/operations/putsteeringappsprivatetagstagid.go
   - internal/sdk/models/operations/triggernpapublisherupdates.go
   - internal/sdk/models/operations/updatenpapolicygroups.go
   - internal/sdk/models/operations/updatenpaprivateapp.go
+  - internal/sdk/models/operations/updatenpaprivateapptag.go
   - internal/sdk/models/operations/updatenpapublisherbyid.go
   - internal/sdk/models/operations/updatenpapublisherupgradeprofile.go
   - internal/sdk/models/operations/updatenparulesbyid.go
@@ -308,7 +323,9 @@ generatedFiles:
   - internal/validators/JSONParseValidator.go
   - internal/validators/RFC3339Validator.go
   - internal/validators/boolvalidators/not_null.go
+  - internal/validators/float32validators/not_null.go
   - internal/validators/float64validators/not_null.go
+  - internal/validators/int32validators/not_null.go
   - internal/validators/int64validators/not_null.go
   - internal/validators/listvalidators/not_null.go
   - internal/validators/mapvalidators/not_null.go
@@ -791,5 +808,61 @@ examples:
           application/json: {"status": 400}
         "200":
           application/json: {}
+  listNPAPrivateTags:
+    Name has Query example:
+      parameters:
+        query:
+          query: "tag_name has testTagName"
+      responses:
+        "400":
+          application/json: {"status": 400}
+    Name starts with Query example:
+      parameters:
+        query:
+          query: "tag_name sw testTagName"
+      responses:
+        "400":
+          application/json: {"status": 400}
+  createNPAPrivateAppTags:
+    speakeasy-default-create-NPA-private-app-tags:
+      requestBody:
+        application/json: {}
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  deleteNPAPrivateAppTag:
+    speakeasy-default-delete-NPA-private-app-tag:
+      parameters:
+        path:
+          tag_id: 534577
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  getNPAPrivateAppTag:
+    speakeasy-default-get-NPA-private-app-tag:
+      parameters:
+        path:
+          tag_id: 199084
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  updateNPAPrivateAppTag:
+    speakeasy-default-update-NPA-private-app-tag:
+      parameters:
+        path:
+          tag_id: 2361
+      requestBody:
+        application/json: {}
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
 examplesVersion: 1.0.0
 generatedTests: {}

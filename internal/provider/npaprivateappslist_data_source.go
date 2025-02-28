@@ -29,10 +29,10 @@ type NPAPrivateAppsListDataSource struct {
 
 // NPAPrivateAppsListDataSourceModel describes the data model.
 type NPAPrivateAppsListDataSourceModel struct {
-	Limit       types.Int64               `tfsdk:"limit"`
-	Offset      types.Int64               `tfsdk:"offset"`
+	Limit       types.Int32               `queryParam:"style=form,explode=true,name=limit" tfsdk:"limit"`
+	Offset      types.Int32               `queryParam:"style=form,explode=true,name=offset" tfsdk:"offset"`
 	PrivateApps []tfTypes.PrivateAppsItem `tfsdk:"private_apps"`
-	Query       types.String              `tfsdk:"query"`
+	Query       types.String              `queryParam:"style=form,explode=true,name=query" tfsdk:"query"`
 }
 
 // Metadata returns the data source type name.
@@ -46,11 +46,11 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 		MarkdownDescription: "NPAPrivateAppsList DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"limit": schema.Int64Attribute{
+			"limit": schema.Int32Attribute{
 				Optional:    true,
 				Description: `Number of results to limit the output by`,
 			},
-			"offset": schema.Int64Attribute{
+			"offset": schema.Int32Attribute{
 				Optional:    true,
 				Description: `Query offset`,
 			},
@@ -90,7 +90,7 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 						"private_app_hostname": schema.StringAttribute{
 							Computed: true,
 						},
-						"private_app_id": schema.Int64Attribute{
+						"private_app_id": schema.Int32Attribute{
 							Computed: true,
 						},
 						"private_app_name": schema.StringAttribute{
@@ -264,13 +264,13 @@ func (r *NPAPrivateAppsListDataSource) Read(ctx context.Context, req datasource.
 	}
 	offset := new(int)
 	if !data.Offset.IsUnknown() && !data.Offset.IsNull() {
-		*offset = int(data.Offset.ValueInt64())
+		*offset = int(data.Offset.ValueInt32())
 	} else {
 		offset = nil
 	}
 	limit := new(int)
 	if !data.Limit.IsUnknown() && !data.Limit.IsNull() {
-		*limit = int(data.Limit.ValueInt64())
+		*limit = int(data.Limit.ValueInt32())
 	} else {
 		limit = nil
 	}

@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32default"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -35,19 +35,19 @@ type NPAPublisherResource struct {
 
 // NPAPublisherResourceModel describes the resource data model.
 type NPAPublisherResourceModel struct {
-	AppsCount                  types.Int64                                   `tfsdk:"apps_count"`
+	AppsCount                  types.Int32                                   `tfsdk:"apps_count"`
 	Assessment                 *tfTypes.PublisherResponseAssessment          `tfsdk:"assessment"`
 	Capabilities               *tfTypes.PublisherResponseCapabilities        `tfsdk:"capabilities"`
 	CommonName                 types.String                                  `tfsdk:"common_name"`
 	ConnectedApps              []types.String                                `tfsdk:"connected_apps"`
 	Lbrokerconnect             types.Bool                                    `tfsdk:"lbrokerconnect"`
-	PublisherID                types.Int64                                   `tfsdk:"publisher_id"`
+	PublisherID                types.Int32                                   `tfsdk:"publisher_id"`
 	PublisherName              types.String                                  `tfsdk:"publisher_name"`
-	PublisherUpgradeProfilesID types.Int64                                   `tfsdk:"publisher_upgrade_profiles_id"`
+	PublisherUpgradeProfilesID types.Int32                                   `tfsdk:"publisher_upgrade_profiles_id"`
 	Registered                 types.Bool                                    `tfsdk:"registered"`
 	Status                     types.String                                  `tfsdk:"status"`
 	SticherPop                 types.String                                  `tfsdk:"sticher_pop"`
-	StitcherID                 types.Int64                                   `tfsdk:"stitcher_id"`
+	StitcherID                 types.Int32                                   `tfsdk:"stitcher_id"`
 	UpgradeFailedReason        *tfTypes.PublisherResponseUpgradeFailedReason `tfsdk:"upgrade_failed_reason"`
 	UpgradeRequest             types.Bool                                    `tfsdk:"upgrade_request"`
 	UpgradeStatus              *tfTypes.PublisherResponseUpgradeStatus       `tfsdk:"upgrade_status"`
@@ -61,7 +61,7 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource supports the creation of the Publisher objects.\n\nFeatures may require additional licensing, please work with account team to enable.\n",
 		Attributes: map[string]schema.Attribute{
-			"apps_count": schema.Int64Attribute{
+			"apps_count": schema.Int32Attribute{
 				Computed: true,
 			},
 			"assessment": schema.SingleNestedAttribute{
@@ -140,7 +140,7 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 				Default:     booldefault.StaticBool(false),
 				Description: `Allow this publisher to be stitched to Local Broker. Default: false`,
 			},
-			"publisher_id": schema.Int64Attribute{
+			"publisher_id": schema.Int32Attribute{
 				Computed:    true,
 				Description: `publisher id`,
 			},
@@ -148,10 +148,10 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 				Required:    true,
 				Description: `The name of the Publisher as seen in the UI`,
 			},
-			"publisher_upgrade_profiles_id": schema.Int64Attribute{
+			"publisher_upgrade_profiles_id": schema.Int32Attribute{
 				Computed:    true,
 				Optional:    true,
-				Default:     int64default.StaticInt64(1),
+				Default:     int32default.StaticInt32(1),
 				Description: `The ID of the upgrade profile to manage this publisher. Default: 1`,
 			},
 			"registered": schema.BoolAttribute{
@@ -170,7 +170,7 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 			"sticher_pop": schema.StringAttribute{
 				Computed: true,
 			},
-			"stitcher_id": schema.Int64Attribute{
+			"stitcher_id": schema.Int32Attribute{
 				Computed: true,
 			},
 			"upgrade_failed_reason": schema.SingleNestedAttribute{
@@ -290,7 +290,7 @@ func (r *NPAPublisherResource) Read(ctx context.Context, req resource.ReadReques
 	}
 
 	var publisherID int
-	publisherID = int(data.PublisherID.ValueInt64())
+	publisherID = int(data.PublisherID.ValueInt32())
 
 	request := operations.GetNPAPublisherByIDRequest{
 		PublisherID: publisherID,
@@ -340,7 +340,7 @@ func (r *NPAPublisherResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 
 	var publisherID int
-	publisherID = int(data.PublisherID.ValueInt64())
+	publisherID = int(data.PublisherID.ValueInt32())
 
 	publisherPatchRequest := *data.ToSharedPublisherPatchRequest()
 	request := operations.UpdateNPAPublisherByIDRequest{
@@ -370,7 +370,7 @@ func (r *NPAPublisherResource) Update(ctx context.Context, req resource.UpdateRe
 	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	var publisherId1 int
-	publisherId1 = int(data.PublisherID.ValueInt64())
+	publisherId1 = int(data.PublisherID.ValueInt32())
 
 	request1 := operations.GetNPAPublisherByIDRequest{
 		PublisherID: publisherId1,
@@ -421,7 +421,7 @@ func (r *NPAPublisherResource) Delete(ctx context.Context, req resource.DeleteRe
 	}
 
 	var publisherID int
-	publisherID = int(data.PublisherID.ValueInt64())
+	publisherID = int(data.PublisherID.ValueInt32())
 
 	request := operations.DeleteNPAPublishersRequest{
 		PublisherID: publisherID,
@@ -451,5 +451,5 @@ func (r *NPAPublisherResource) ImportState(ctx context.Context, req resource.Imp
 		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
 	}
 
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("publisher_id"), int64(publisherID))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("publisher_id"), int32(publisherID))...)
 }

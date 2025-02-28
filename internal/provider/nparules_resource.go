@@ -45,7 +45,7 @@ type NPARulesResourceModel struct {
 	RuleID      types.String               `tfsdk:"rule_id"`
 	RuleName    types.String               `tfsdk:"rule_name"`
 	RuleOrder   *tfTypes.RuleOrder         `tfsdk:"rule_order"`
-	Silent      types.String               `tfsdk:"silent"`
+	Silent      types.String               `queryParam:"style=form,explode=true,name=silent" tfsdk:"silent"`
 }
 
 func (r *NPARulesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {

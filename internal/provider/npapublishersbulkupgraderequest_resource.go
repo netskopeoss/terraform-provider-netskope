@@ -53,7 +53,7 @@ func (r *NPAPublishersBulkUpgradeRequestResource) Schema(ctx context.Context, re
 						Computed: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{
-								"apps_count": schema.Int64Attribute{
+								"apps_count": schema.Int32Attribute{
 									Computed: true,
 								},
 								"assessment": schema.SingleNestedAttribute{
@@ -66,7 +66,7 @@ func (r *NPAPublishersBulkUpgradeRequestResource) Schema(ctx context.Context, re
 													Computed:    true,
 													ElementType: types.StringType,
 												},
-												"last_modified": schema.Int64Attribute{
+												"last_modified": schema.Int32Attribute{
 													Computed: true,
 												},
 											},
@@ -83,7 +83,7 @@ func (r *NPAPublishersBulkUpgradeRequestResource) Schema(ctx context.Context, re
 										"ip_address": schema.StringAttribute{
 											Computed: true,
 										},
-										"latency": schema.Int64Attribute{
+										"latency": schema.Int32Attribute{
 											Computed: true,
 										},
 										"version": schema.StringAttribute{
@@ -129,13 +129,13 @@ func (r *NPAPublishersBulkUpgradeRequestResource) Schema(ctx context.Context, re
 								"lbrokerconnect": schema.BoolAttribute{
 									Computed: true,
 								},
-								"publisher_id": schema.Int64Attribute{
+								"publisher_id": schema.Int32Attribute{
 									Computed: true,
 								},
 								"publisher_name": schema.StringAttribute{
 									Computed: true,
 								},
-								"publisher_upgrade_profiles_id": schema.Int64Attribute{
+								"publisher_upgrade_profiles_id": schema.Int32Attribute{
 									Computed: true,
 								},
 								"registered": schema.BoolAttribute{
@@ -151,7 +151,7 @@ func (r *NPAPublishersBulkUpgradeRequestResource) Schema(ctx context.Context, re
 										),
 									},
 								},
-								"stitcher_id": schema.Int64Attribute{
+								"stitcher_id": schema.Int32Attribute{
 									Computed: true,
 								},
 								"stitcher_pop": schema.StringAttribute{

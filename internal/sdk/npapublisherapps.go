@@ -36,13 +36,6 @@ func newNPAPublisherApps(sdkConfig sdkConfiguration) *NPAPublisherApps {
 // Please supply the `publisher_id` in the path to retrieve the private applications
 // associated with the publisher.
 func (s *NPAPublisherApps) ListObjects(ctx context.Context, request operations.GetNPAPublisherAppsRequest, opts ...operations.Option) (*operations.GetNPAPublisherAppsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getNPAPublisherApps",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -63,6 +56,14 @@ func (s *NPAPublisherApps) ListObjects(ctx context.Context, request operations.G
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publishers/{publisher_id}/apps", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getNPAPublisherApps",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout

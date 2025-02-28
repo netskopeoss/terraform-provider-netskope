@@ -33,13 +33,6 @@ func newNPAPublisherToken(sdkConfig sdkConfiguration) *NPAPublisherToken {
 // This endpoint supports the creation and retrival of a registration token. \
 // Please supply the `publisher_id` in the path to generate the token.
 func (s *NPAPublisherToken) Create(ctx context.Context, request operations.GenerateNPAPublisherTokenRequest, opts ...operations.Option) (*operations.GenerateNPAPublisherTokenResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "generateNPAPublisherToken",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -60,6 +53,14 @@ func (s *NPAPublisherToken) Create(ctx context.Context, request operations.Gener
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/infrastructure/publishers/{publisher_id}/registration_token", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "generateNPAPublisherToken",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
