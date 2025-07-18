@@ -3,12 +3,17 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/netskope/terraform-provider-ns/internal/provider/typeconvert"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
-func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetResponse(resp *shared.PublishersGetResponse) {
+func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetResponse(ctx context.Context, resp *shared.PublishersGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		if resp.Data == nil {
 			r.Data = nil
@@ -19,136 +24,102 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 				r.Data.Publishers = r.Data.Publishers[:len(resp.Data.Publishers)]
 			}
 			for publishersCount, publishersItem := range resp.Data.Publishers {
-				var publishers1 tfTypes.PublishersGetResponsePublishers
-				if publishersItem.AppsCount != nil {
-					publishers1.AppsCount = types.Int32Value(int32(*publishersItem.AppsCount))
-				} else {
-					publishers1.AppsCount = types.Int32Null()
-				}
+				var publishers tfTypes.PublishersGetResponsePublishers
+				publishers.AppsCount = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.AppsCount))
 				if publishersItem.Assessment == nil {
-					publishers1.Assessment = nil
+					publishers.Assessment = nil
 				} else {
-					publishers1.Assessment = &tfTypes.UpgradePublisherResponseAssessment{}
+					publishers.Assessment = &tfTypes.UpgradePublisherResponseAssessment{}
 					if publishersItem.Assessment.CaCertsStatus == nil {
-						publishers1.Assessment.CaCertsStatus = nil
+						publishers.Assessment.CaCertsStatus = nil
 					} else {
-						publishers1.Assessment.CaCertsStatus = &tfTypes.UpgradePublisherResponseCaCertsStatus{}
-						publishers1.Assessment.CaCertsStatus.Hashes = make([]types.String, 0, len(publishersItem.Assessment.CaCertsStatus.Hashes))
+						publishers.Assessment.CaCertsStatus = &tfTypes.UpgradePublisherResponseCaCertsStatus{}
+						publishers.Assessment.CaCertsStatus.Hashes = make([]types.String, 0, len(publishersItem.Assessment.CaCertsStatus.Hashes))
 						for _, v := range publishersItem.Assessment.CaCertsStatus.Hashes {
-							publishers1.Assessment.CaCertsStatus.Hashes = append(publishers1.Assessment.CaCertsStatus.Hashes, types.StringValue(v))
+							publishers.Assessment.CaCertsStatus.Hashes = append(publishers.Assessment.CaCertsStatus.Hashes, types.StringValue(v))
 						}
-						if publishersItem.Assessment.CaCertsStatus.LastModified != nil {
-							publishers1.Assessment.CaCertsStatus.LastModified = types.Int32Value(int32(*publishersItem.Assessment.CaCertsStatus.LastModified))
-						} else {
-							publishers1.Assessment.CaCertsStatus.LastModified = types.Int32Null()
-						}
+						publishers.Assessment.CaCertsStatus.LastModified = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.Assessment.CaCertsStatus.LastModified))
 					}
-					publishers1.Assessment.EeeSupport = types.BoolPointerValue(publishersItem.Assessment.EeeSupport)
-					publishers1.Assessment.HddFree = types.StringPointerValue(publishersItem.Assessment.HddFree)
-					publishers1.Assessment.HddTotal = types.StringPointerValue(publishersItem.Assessment.HddTotal)
-					publishers1.Assessment.IPAddress = types.StringPointerValue(publishersItem.Assessment.IPAddress)
-					if publishersItem.Assessment.Latency != nil {
-						publishers1.Assessment.Latency = types.Int32Value(int32(*publishersItem.Assessment.Latency))
-					} else {
-						publishers1.Assessment.Latency = types.Int32Null()
-					}
-					publishers1.Assessment.Version = types.StringPointerValue(publishersItem.Assessment.Version)
+					publishers.Assessment.EeeSupport = types.BoolPointerValue(publishersItem.Assessment.EeeSupport)
+					publishers.Assessment.HddFree = types.StringPointerValue(publishersItem.Assessment.HddFree)
+					publishers.Assessment.HddTotal = types.StringPointerValue(publishersItem.Assessment.HddTotal)
+					publishers.Assessment.IPAddress = types.StringPointerValue(publishersItem.Assessment.IPAddress)
+					publishers.Assessment.Latency = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.Assessment.Latency))
+					publishers.Assessment.Version = types.StringPointerValue(publishersItem.Assessment.Version)
 				}
 				if publishersItem.Capabilities == nil {
-					publishers1.Capabilities = nil
+					publishers.Capabilities = nil
 				} else {
-					publishers1.Capabilities = &tfTypes.PublisherResponseCapabilities{}
-					publishers1.Capabilities.AutoUpgrade = types.BoolPointerValue(publishersItem.Capabilities.AutoUpgrade)
-					publishers1.Capabilities.Dtls = types.BoolPointerValue(publishersItem.Capabilities.Dtls)
-					publishers1.Capabilities.Eee = types.BoolPointerValue(publishersItem.Capabilities.Eee)
-					publishers1.Capabilities.NwaBa = types.BoolPointerValue(publishersItem.Capabilities.NwaBa)
+					publishers.Capabilities = &tfTypes.PublisherResponseCapabilities{}
+					publishers.Capabilities.AutoUpgrade = types.BoolPointerValue(publishersItem.Capabilities.AutoUpgrade)
+					publishers.Capabilities.Dtls = types.BoolPointerValue(publishersItem.Capabilities.Dtls)
+					publishers.Capabilities.Eee = types.BoolPointerValue(publishersItem.Capabilities.Eee)
+					publishers.Capabilities.NwaBa = types.BoolPointerValue(publishersItem.Capabilities.NwaBa)
 					if publishersItem.Capabilities.PullNsconfig == nil {
-						publishers1.Capabilities.PullNsconfig = nil
+						publishers.Capabilities.PullNsconfig = nil
 					} else {
-						publishers1.Capabilities.PullNsconfig = &tfTypes.PublisherResponsePullNsconfig{}
-						publishers1.Capabilities.PullNsconfig.OrgkeyExist = types.BoolPointerValue(publishersItem.Capabilities.PullNsconfig.OrgkeyExist)
-						publishers1.Capabilities.PullNsconfig.OrguriExist = types.BoolPointerValue(publishersItem.Capabilities.PullNsconfig.OrguriExist)
+						publishers.Capabilities.PullNsconfig = &tfTypes.PublisherResponsePullNsconfig{}
+						publishers.Capabilities.PullNsconfig.OrgkeyExist = types.BoolPointerValue(publishersItem.Capabilities.PullNsconfig.OrgkeyExist)
+						publishers.Capabilities.PullNsconfig.OrguriExist = types.BoolPointerValue(publishersItem.Capabilities.PullNsconfig.OrguriExist)
 					}
 				}
-				publishers1.CommonName = types.StringPointerValue(publishersItem.CommonName)
-				publishers1.ConnectedApps = make([]types.String, 0, len(publishersItem.ConnectedApps))
+				publishers.CommonName = types.StringPointerValue(publishersItem.CommonName)
+				publishers.ConnectedApps = make([]types.String, 0, len(publishersItem.ConnectedApps))
 				for _, v := range publishersItem.ConnectedApps {
-					publishers1.ConnectedApps = append(publishers1.ConnectedApps, types.StringValue(v))
+					publishers.ConnectedApps = append(publishers.ConnectedApps, types.StringValue(v))
 				}
-				publishers1.Lbrokerconnect = types.BoolPointerValue(publishersItem.Lbrokerconnect)
-				if publishersItem.PublisherID != nil {
-					publishers1.PublisherID = types.Int32Value(int32(*publishersItem.PublisherID))
-				} else {
-					publishers1.PublisherID = types.Int32Null()
-				}
-				publishers1.PublisherName = types.StringPointerValue(publishersItem.PublisherName)
-				if publishersItem.PublisherUpgradeProfileID != nil {
-					publishers1.PublisherUpgradeProfileID = types.Int32Value(int32(*publishersItem.PublisherUpgradeProfileID))
-				} else {
-					publishers1.PublisherUpgradeProfileID = types.Int32Null()
-				}
-				publishers1.Registered = types.BoolPointerValue(publishersItem.Registered)
+				publishers.Lbrokerconnect = types.BoolPointerValue(publishersItem.Lbrokerconnect)
+				publishers.PublisherID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.PublisherID))
+				publishers.PublisherName = types.StringPointerValue(publishersItem.PublisherName)
+				publishers.PublisherUpgradeProfileID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.PublisherUpgradeProfileID))
+				publishers.Registered = types.BoolPointerValue(publishersItem.Registered)
 				if publishersItem.Status != nil {
-					publishers1.Status = types.StringValue(string(*publishersItem.Status))
+					publishers.Status = types.StringValue(string(*publishersItem.Status))
 				} else {
-					publishers1.Status = types.StringNull()
+					publishers.Status = types.StringNull()
 				}
-				if publishersItem.StitcherID != nil {
-					publishers1.StitcherID = types.Int32Value(int32(*publishersItem.StitcherID))
-				} else {
-					publishers1.StitcherID = types.Int32Null()
-				}
-				publishers1.StitcherPop = types.StringPointerValue(publishersItem.StitcherPop)
+				publishers.StitcherID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.StitcherID))
+				publishers.StitcherPop = types.StringPointerValue(publishersItem.StitcherPop)
 				if publishersItem.UpgradeFailedReason == nil {
-					publishers1.UpgradeFailedReason = nil
+					publishers.UpgradeFailedReason = nil
 				} else {
-					publishers1.UpgradeFailedReason = &tfTypes.UpgradePublisherResponseUpgradeFailedReason{}
-					publishers1.UpgradeFailedReason.Detail = types.StringPointerValue(publishersItem.UpgradeFailedReason.Detail)
-					if publishersItem.UpgradeFailedReason.ErrorCode != nil {
-						publishers1.UpgradeFailedReason.ErrorCode = types.Int32Value(int32(*publishersItem.UpgradeFailedReason.ErrorCode))
-					} else {
-						publishers1.UpgradeFailedReason.ErrorCode = types.Int32Null()
-					}
-					if publishersItem.UpgradeFailedReason.Timestamp != nil {
-						publishers1.UpgradeFailedReason.Timestamp = types.Int32Value(int32(*publishersItem.UpgradeFailedReason.Timestamp))
-					} else {
-						publishers1.UpgradeFailedReason.Timestamp = types.Int32Null()
-					}
-					publishers1.UpgradeFailedReason.Version = types.StringPointerValue(publishersItem.UpgradeFailedReason.Version)
+					publishers.UpgradeFailedReason = &tfTypes.UpgradePublisherResponseUpgradeFailedReason{}
+					publishers.UpgradeFailedReason.Detail = types.StringPointerValue(publishersItem.UpgradeFailedReason.Detail)
+					publishers.UpgradeFailedReason.ErrorCode = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.UpgradeFailedReason.ErrorCode))
+					publishers.UpgradeFailedReason.Timestamp = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.UpgradeFailedReason.Timestamp))
+					publishers.UpgradeFailedReason.Version = types.StringPointerValue(publishersItem.UpgradeFailedReason.Version)
 				}
-				publishers1.UpgradeRequest = types.BoolPointerValue(publishersItem.UpgradeRequest)
+				publishers.UpgradeRequest = types.BoolPointerValue(publishersItem.UpgradeRequest)
 				if publishersItem.UpgradeStatus == nil {
-					publishers1.UpgradeStatus = nil
+					publishers.UpgradeStatus = nil
 				} else {
-					publishers1.UpgradeStatus = &tfTypes.PublisherResponseUpgradeStatus{}
-					publishers1.UpgradeStatus.Upstat = types.StringPointerValue(publishersItem.UpgradeStatus.Upstat)
+					publishers.UpgradeStatus = &tfTypes.PublisherResponseUpgradeStatus{}
+					publishers.UpgradeStatus.Upstat = types.StringPointerValue(publishersItem.UpgradeStatus.Upstat)
 				}
 				if publishersCount+1 > len(r.Data.Publishers) {
-					r.Data.Publishers = append(r.Data.Publishers, publishers1)
+					r.Data.Publishers = append(r.Data.Publishers, publishers)
 				} else {
-					r.Data.Publishers[publishersCount].AppsCount = publishers1.AppsCount
-					r.Data.Publishers[publishersCount].Assessment = publishers1.Assessment
-					r.Data.Publishers[publishersCount].Capabilities = publishers1.Capabilities
-					r.Data.Publishers[publishersCount].CommonName = publishers1.CommonName
-					r.Data.Publishers[publishersCount].ConnectedApps = publishers1.ConnectedApps
-					r.Data.Publishers[publishersCount].Lbrokerconnect = publishers1.Lbrokerconnect
-					r.Data.Publishers[publishersCount].PublisherID = publishers1.PublisherID
-					r.Data.Publishers[publishersCount].PublisherName = publishers1.PublisherName
-					r.Data.Publishers[publishersCount].PublisherUpgradeProfileID = publishers1.PublisherUpgradeProfileID
-					r.Data.Publishers[publishersCount].Registered = publishers1.Registered
-					r.Data.Publishers[publishersCount].Status = publishers1.Status
-					r.Data.Publishers[publishersCount].StitcherID = publishers1.StitcherID
-					r.Data.Publishers[publishersCount].StitcherPop = publishers1.StitcherPop
-					r.Data.Publishers[publishersCount].UpgradeFailedReason = publishers1.UpgradeFailedReason
-					r.Data.Publishers[publishersCount].UpgradeRequest = publishers1.UpgradeRequest
-					r.Data.Publishers[publishersCount].UpgradeStatus = publishers1.UpgradeStatus
+					r.Data.Publishers[publishersCount].AppsCount = publishers.AppsCount
+					r.Data.Publishers[publishersCount].Assessment = publishers.Assessment
+					r.Data.Publishers[publishersCount].Capabilities = publishers.Capabilities
+					r.Data.Publishers[publishersCount].CommonName = publishers.CommonName
+					r.Data.Publishers[publishersCount].ConnectedApps = publishers.ConnectedApps
+					r.Data.Publishers[publishersCount].Lbrokerconnect = publishers.Lbrokerconnect
+					r.Data.Publishers[publishersCount].PublisherID = publishers.PublisherID
+					r.Data.Publishers[publishersCount].PublisherName = publishers.PublisherName
+					r.Data.Publishers[publishersCount].PublisherUpgradeProfileID = publishers.PublisherUpgradeProfileID
+					r.Data.Publishers[publishersCount].Registered = publishers.Registered
+					r.Data.Publishers[publishersCount].Status = publishers.Status
+					r.Data.Publishers[publishersCount].StitcherID = publishers.StitcherID
+					r.Data.Publishers[publishersCount].StitcherPop = publishers.StitcherPop
+					r.Data.Publishers[publishersCount].UpgradeFailedReason = publishers.UpgradeFailedReason
+					r.Data.Publishers[publishersCount].UpgradeRequest = publishers.UpgradeRequest
+					r.Data.Publishers[publishersCount].UpgradeStatus = publishers.UpgradeStatus
 				}
 			}
 		}
-		if resp.Total != nil {
-			r.Total = types.Int32Value(int32(*resp.Total))
-		} else {
-			r.Total = types.Int32Null()
-		}
+		r.Total = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.Total))
 	}
+
+	return diags
 }

@@ -3,38 +3,42 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
-func (r *NPAPolicyGroupsListDataSourceModel) RefreshFromOperationsGetNPAPolicyGroupsResponseBody(resp *operations.GetNPAPolicyGroupsResponseBody) {
+func (r *NPAPolicyGroupsListDataSourceModel) RefreshFromOperationsGetNPAPolicyGroupsResponseBody(ctx context.Context, resp *operations.GetNPAPolicyGroupsResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Data = []tfTypes.NpaPolicygroupResponseItem{}
 		if len(r.Data) > len(resp.Data) {
 			r.Data = r.Data[:len(resp.Data)]
 		}
 		for dataCount, dataItem := range resp.Data {
-			var data1 tfTypes.NpaPolicygroupResponseItem
-			data1.CanBeEditedDeleted = types.StringPointerValue(dataItem.CanBeEditedDeleted)
-			data1.GroupID = types.StringPointerValue(dataItem.GroupID)
-			data1.GroupName = types.StringPointerValue(dataItem.GroupName)
-			data1.GroupPinnedID = types.StringPointerValue(dataItem.GroupPinnedID)
-			data1.GroupProdID = types.StringPointerValue(dataItem.GroupProdID)
-			data1.GroupType = types.StringPointerValue(dataItem.GroupType)
-			data1.ModifyTime = types.StringPointerValue(dataItem.ModifyTime)
-			data1.ModifyType = types.StringPointerValue(dataItem.ModifyType)
+			var data tfTypes.NpaPolicygroupResponseItem
+			data.CanBeEditedDeleted = types.StringPointerValue(dataItem.CanBeEditedDeleted)
+			data.GroupID = types.StringPointerValue(dataItem.GroupID)
+			data.GroupName = types.StringPointerValue(dataItem.GroupName)
+			data.GroupPinnedID = types.StringPointerValue(dataItem.GroupPinnedID)
+			data.GroupProdID = types.StringPointerValue(dataItem.GroupProdID)
+			data.GroupType = types.StringPointerValue(dataItem.GroupType)
+			data.ModifyTime = types.StringPointerValue(dataItem.ModifyTime)
+			data.ModifyType = types.StringPointerValue(dataItem.ModifyType)
 			if dataCount+1 > len(r.Data) {
-				r.Data = append(r.Data, data1)
+				r.Data = append(r.Data, data)
 			} else {
-				r.Data[dataCount].CanBeEditedDeleted = data1.CanBeEditedDeleted
-				r.Data[dataCount].GroupID = data1.GroupID
-				r.Data[dataCount].GroupName = data1.GroupName
-				r.Data[dataCount].GroupPinnedID = data1.GroupPinnedID
-				r.Data[dataCount].GroupProdID = data1.GroupProdID
-				r.Data[dataCount].GroupType = data1.GroupType
-				r.Data[dataCount].ModifyTime = data1.ModifyTime
-				r.Data[dataCount].ModifyType = data1.ModifyType
+				r.Data[dataCount].CanBeEditedDeleted = data.CanBeEditedDeleted
+				r.Data[dataCount].GroupID = data.GroupID
+				r.Data[dataCount].GroupName = data.GroupName
+				r.Data[dataCount].GroupPinnedID = data.GroupPinnedID
+				r.Data[dataCount].GroupProdID = data.GroupProdID
+				r.Data[dataCount].GroupType = data.GroupType
+				r.Data[dataCount].ModifyTime = data.ModifyTime
+				r.Data[dataCount].ModifyType = data.ModifyType
 			}
 		}
 		if resp.Status != nil {
@@ -43,4 +47,57 @@ func (r *NPAPolicyGroupsListDataSourceModel) RefreshFromOperationsGetNPAPolicyGr
 			r.Status = types.StringNull()
 		}
 	}
+
+	return diags
+}
+
+func (r *NPAPolicyGroupsListDataSourceModel) ToOperationsGetNPAPolicyGroupsRequest(ctx context.Context) (*operations.GetNPAPolicyGroupsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	fields := new(string)
+	if !r.Fields.IsUnknown() && !r.Fields.IsNull() {
+		*fields = r.Fields.ValueString()
+	} else {
+		fields = nil
+	}
+	filter := new(string)
+	if !r.Filter.IsUnknown() && !r.Filter.IsNull() {
+		*filter = r.Filter.ValueString()
+	} else {
+		filter = nil
+	}
+	limit := new(int64)
+	if !r.Limit.IsUnknown() && !r.Limit.IsNull() {
+		*limit = r.Limit.ValueInt64()
+	} else {
+		limit = nil
+	}
+	offset := new(int64)
+	if !r.Offset.IsUnknown() && !r.Offset.IsNull() {
+		*offset = r.Offset.ValueInt64()
+	} else {
+		offset = nil
+	}
+	sortby := new(string)
+	if !r.Sortby.IsUnknown() && !r.Sortby.IsNull() {
+		*sortby = r.Sortby.ValueString()
+	} else {
+		sortby = nil
+	}
+	sortorder := new(string)
+	if !r.Sortorder.IsUnknown() && !r.Sortorder.IsNull() {
+		*sortorder = r.Sortorder.ValueString()
+	} else {
+		sortorder = nil
+	}
+	out := operations.GetNPAPolicyGroupsRequest{
+		Fields:    fields,
+		Filter:    filter,
+		Limit:     limit,
+		Offset:    offset,
+		Sortby:    sortby,
+		Sortorder: sortorder,
+	}
+
+	return &out, diags
 }

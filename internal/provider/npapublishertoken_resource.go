@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -25,6 +24,7 @@ func NewNPAPublisherTokenResource() resource.Resource {
 
 // NPAPublisherTokenResource defines the resource implementation.
 type NPAPublisherTokenResource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -94,13 +94,13 @@ func (r *NPAPublisherTokenResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	var publisherID int
-	publisherID = int(data.PublisherID.ValueInt32())
+	request, requestDiags := data.ToOperationsGenerateNPAPublisherTokenRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GenerateNPAPublisherTokenRequest{
-		PublisherID: publisherID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPublisherToken.Create(ctx, request)
+	res, err := r.client.NPAPublisherToken.Create(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -120,8 +120,17 @@ func (r *NPAPublisherTokenResource) Create(ctx context.Context, req resource.Cre
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGenerateNPAPublisherTokenData(&res.Object.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGenerateNPAPublisherTokenData(ctx, &res.Object.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

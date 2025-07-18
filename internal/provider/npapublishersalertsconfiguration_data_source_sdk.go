@@ -3,11 +3,15 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
-func (r *NPAPublishersAlertsConfigurationDataSourceModel) RefreshFromSharedPublishersAlertGetResponseData(resp *shared.PublishersAlertGetResponseData) {
+func (r *NPAPublishersAlertsConfigurationDataSourceModel) RefreshFromSharedPublishersAlertGetResponseData(ctx context.Context, resp *shared.PublishersAlertGetResponseData) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.AdminUsers = make([]types.String, 0, len(resp.AdminUsers))
 		for _, v := range resp.AdminUsers {
@@ -19,4 +23,6 @@ func (r *NPAPublishersAlertsConfigurationDataSourceModel) RefreshFromSharedPubli
 		}
 		r.SelectedUsers = types.StringPointerValue(resp.SelectedUsers)
 	}
+
+	return diags
 }

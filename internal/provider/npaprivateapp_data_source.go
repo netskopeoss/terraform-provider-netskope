@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -24,6 +23,7 @@ func NewNPAPrivateAppDataSource() datasource.DataSource {
 
 // NPAPrivateAppDataSource is the data source implementation.
 type NPAPrivateAppDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -258,13 +258,13 @@ func (r *NPAPrivateAppDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	var privateAppID int
-	privateAppID = int(data.PrivateAppID.ValueInt32())
+	request, requestDiags := data.ToOperationsGetNPAPrivateAppRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetNPAPrivateAppRequest{
-		PrivateAppID: privateAppID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.GetNPAPrivateApp(ctx, request)
+	res, err := r.client.GetNPAPrivateApp(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -276,10 +276,6 @@ func (r *NPAPrivateAppDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -288,7 +284,11 @@ func (r *NPAPrivateAppDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsGetResponseNewData(res.PrivateAppsGetResponseNew.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsGetResponseNewData(ctx, res.PrivateAppsGetResponseNew.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

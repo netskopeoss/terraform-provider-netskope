@@ -20,9 +20,9 @@ import (
 	speakeasy_listplanmodifier "github.com/netskope/terraform-provider-ns/internal/planmodifiers/listplanmodifier"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 	"github.com/netskope/terraform-provider-ns/internal/validators"
 	speakeasy_objectvalidators "github.com/netskope/terraform-provider-ns/internal/validators/objectvalidators"
+	"math"
 	"strconv"
 )
 
@@ -36,6 +36,7 @@ func NewNPAPrivateAppResource() resource.Resource {
 
 // NPAPrivateAppResource defines the resource implementation.
 type NPAPrivateAppResource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -331,8 +332,13 @@ func (r *NPAPrivateAppResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
-	request := *data.ToSharedPrivateAppsRequest()
-	res, err := r.client.NPAPrivateApp.CreateNPAPrivateApps(ctx, request)
+	request, requestDiags := data.ToSharedPrivateAppsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.NPAPrivateApp.CreateNPAPrivateApps(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -352,15 +358,24 @@ func (r *NPAPrivateAppResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsGetResponseNewData(res.PrivateAppsGetResponseNew.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var privateAppID int
-	privateAppID = int(data.PrivateAppID.ValueInt32())
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsGetResponseNewData(ctx, res.PrivateAppsGetResponseNew.Data)...)
 
-	request1 := operations.GetNPAPrivateAppRequest{
-		PrivateAppID: privateAppID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.GetNPAPrivateApp(ctx, request1)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsGetNPAPrivateAppRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.GetNPAPrivateApp(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -380,8 +395,17 @@ func (r *NPAPrivateAppResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsGetResponseNewData(res1.PrivateAppsGetResponseNew.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsGetResponseNewData(ctx, res1.PrivateAppsGetResponseNew.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -405,13 +429,13 @@ func (r *NPAPrivateAppResource) Read(ctx context.Context, req resource.ReadReque
 		return
 	}
 
-	var privateAppID int
-	privateAppID = int(data.PrivateAppID.ValueInt32())
+	request, requestDiags := data.ToOperationsGetNPAPrivateAppRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetNPAPrivateAppRequest{
-		PrivateAppID: privateAppID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.GetNPAPrivateApp(ctx, request)
+	res, err := r.client.GetNPAPrivateApp(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -435,7 +459,11 @@ func (r *NPAPrivateAppResource) Read(ctx context.Context, req resource.ReadReque
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsGetResponseNewData(res.PrivateAppsGetResponseNew.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsGetResponseNewData(ctx, res.PrivateAppsGetResponseNew.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -455,15 +483,13 @@ func (r *NPAPrivateAppResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 
-	var privateAppID int
-	privateAppID = int(data.PrivateAppID.ValueInt32())
+	request, requestDiags := data.ToOperationsUpdateNPAPrivateAppRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	privateAppsPutRequest := *data.ToSharedPrivateAppsPutRequest()
-	request := operations.UpdateNPAPrivateAppRequest{
-		PrivateAppID:          privateAppID,
-		PrivateAppsPutRequest: privateAppsPutRequest,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPrivateApp.UpdateNPAPrivateApp(ctx, request)
+	res, err := r.client.NPAPrivateApp.UpdateNPAPrivateApp(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -483,15 +509,24 @@ func (r *NPAPrivateAppResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsResponse(res.PrivateAppsResponse)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var privateAppId1 int
-	privateAppId1 = int(data.PrivateAppID.ValueInt32())
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsResponse(ctx, res.PrivateAppsResponse)...)
 
-	request1 := operations.GetNPAPrivateAppRequest{
-		PrivateAppID: privateAppId1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.GetNPAPrivateApp(ctx, request1)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsGetNPAPrivateAppRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.GetNPAPrivateApp(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -511,8 +546,17 @@ func (r *NPAPrivateAppResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPrivateAppsGetResponseNewData(res1.PrivateAppsGetResponseNew.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsGetResponseNewData(ctx, res1.PrivateAppsGetResponseNew.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -536,13 +580,13 @@ func (r *NPAPrivateAppResource) Delete(ctx context.Context, req resource.DeleteR
 		return
 	}
 
-	var privateAppID int
-	privateAppID = int(data.PrivateAppID.ValueInt32())
+	request, requestDiags := data.ToOperationsDeleteNPAPrivateAppRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteNPAPrivateAppRequest{
-		PrivateAppID: privateAppID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.DeleteNPAPrivateApp(ctx, request)
+	res, err := r.client.DeleteNPAPrivateApp(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -565,7 +609,13 @@ func (r *NPAPrivateAppResource) ImportState(ctx context.Context, req resource.Im
 	privateAppID, err := strconv.Atoi(req.ID)
 	if err != nil {
 		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
+		return
 	}
 
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("private_app_id"), int32(privateAppID))...)
+	if privateAppID < math.MinInt32 || privateAppID > math.MaxInt32 {
+		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an int32 but was %d", privateAppID))
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("private_app_id"), privateAppID)...)
 }

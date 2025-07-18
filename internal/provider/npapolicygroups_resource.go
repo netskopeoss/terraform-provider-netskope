@@ -14,7 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -27,6 +26,7 @@ func NewNPAPolicyGroupsResource() resource.Resource {
 
 // NPAPolicyGroupsResource defines the resource implementation.
 type NPAPolicyGroupsResource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -166,18 +166,13 @@ func (r *NPAPolicyGroupsResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 
-	silent := new(operations.CreateNPAPolicyGroupsQueryParamSilent)
-	if !data.Silent.IsUnknown() && !data.Silent.IsNull() {
-		*silent = operations.CreateNPAPolicyGroupsQueryParamSilent(data.Silent.ValueString())
-	} else {
-		silent = nil
+	request, requestDiags := data.ToOperationsCreateNPAPolicyGroupsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	npaPolicygroupRequest := *data.ToSharedNpaPolicygroupRequest()
-	request := operations.CreateNPAPolicyGroupsRequest{
-		Silent:                silent,
-		NpaPolicygroupRequest: npaPolicygroupRequest,
-	}
-	res, err := r.client.NPAPolicyGroups.Create(ctx, request)
+	res, err := r.client.NPAPolicyGroups.Create(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -197,15 +192,24 @@ func (r *NPAPolicyGroupsResource) Create(ctx context.Context, req resource.Creat
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicygroupResponseItem(res.Object.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicygroupResponseItem(ctx, res.Object.Data)...)
 
-	request1 := operations.GetNPAPolicyGroupByIDRequest{
-		GroupID: groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.NPAPolicyGroups.Read(ctx, request1)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsGetNPAPolicyGroupByIDRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.NPAPolicyGroups.Read(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -225,8 +229,17 @@ func (r *NPAPolicyGroupsResource) Create(ctx context.Context, req resource.Creat
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicygroupResponseItem(res1.Object.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicygroupResponseItem(ctx, res1.Object.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -250,13 +263,13 @@ func (r *NPAPolicyGroupsResource) Read(ctx context.Context, req resource.ReadReq
 		return
 	}
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	request, requestDiags := data.ToOperationsGetNPAPolicyGroupByIDRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetNPAPolicyGroupByIDRequest{
-		GroupID: groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPolicyGroups.Read(ctx, request)
+	res, err := r.client.NPAPolicyGroups.Read(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -280,7 +293,11 @@ func (r *NPAPolicyGroupsResource) Read(ctx context.Context, req resource.ReadReq
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicygroupResponseItem(res.Object.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicygroupResponseItem(ctx, res.Object.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -300,22 +317,13 @@ func (r *NPAPolicyGroupsResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	request, requestDiags := data.ToOperationsUpdateNPAPolicyGroupsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	silent := new(operations.UpdateNPAPolicyGroupsQueryParamSilent)
-	if !data.Silent.IsUnknown() && !data.Silent.IsNull() {
-		*silent = operations.UpdateNPAPolicyGroupsQueryParamSilent(data.Silent.ValueString())
-	} else {
-		silent = nil
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	npaPolicygroupRequest := *data.ToSharedNpaPolicygroupRequest()
-	request := operations.UpdateNPAPolicyGroupsRequest{
-		GroupID:               groupID,
-		Silent:                silent,
-		NpaPolicygroupRequest: npaPolicygroupRequest,
-	}
-	res, err := r.client.NPAPolicyGroups.Update(ctx, request)
+	res, err := r.client.NPAPolicyGroups.Update(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -335,15 +343,24 @@ func (r *NPAPolicyGroupsResource) Update(ctx context.Context, req resource.Updat
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicygroupResponseItem(res.Object.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var groupId1 string
-	groupId1 = data.GroupID.ValueString()
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicygroupResponseItem(ctx, res.Object.Data)...)
 
-	request1 := operations.GetNPAPolicyGroupByIDRequest{
-		GroupID: groupId1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.NPAPolicyGroups.Read(ctx, request1)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsGetNPAPolicyGroupByIDRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.NPAPolicyGroups.Read(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -363,8 +380,17 @@ func (r *NPAPolicyGroupsResource) Update(ctx context.Context, req resource.Updat
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicygroupResponseItem(res1.Object.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicygroupResponseItem(ctx, res1.Object.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -388,13 +414,13 @@ func (r *NPAPolicyGroupsResource) Delete(ctx context.Context, req resource.Delet
 		return
 	}
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteNPAPolicyGroupsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteNPAPolicyGroupsRequest{
-		GroupID: groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPolicyGroups.Delete(ctx, request)
+	res, err := r.client.NPAPolicyGroups.Delete(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

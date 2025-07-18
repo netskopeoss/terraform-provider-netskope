@@ -23,6 +23,7 @@ func NewNPAPrivatePolicyInUseDataSource() datasource.DataSource {
 
 // NPAPrivatePolicyInUseDataSource is the data source implementation.
 type NPAPrivatePolicyInUseDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -108,8 +109,13 @@ func (r *NPAPrivatePolicyInUseDataSource) Read(ctx context.Context, req datasour
 		return
 	}
 
-	request := *data.ToOperationsGetNPAPolicyInUseRequestBody()
-	res, err := r.client.GetNPAPolicyInUse(ctx, request)
+	request, requestDiags := data.ToOperationsGetNPAPolicyInUseRequestBody(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.GetNPAPolicyInUse(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -121,10 +127,6 @@ func (r *NPAPrivatePolicyInUseDataSource) Read(ctx context.Context, req datasour
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -133,7 +135,11 @@ func (r *NPAPrivatePolicyInUseDataSource) Read(ctx context.Context, req datasour
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromResponseBody(res.ResponseBodies)
+	resp.Diagnostics.Append(data.RefreshFromResponseBody(ctx, res.ResponseBodies)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

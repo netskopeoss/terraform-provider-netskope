@@ -161,5 +161,5 @@ Read-Only:
 Import is supported using the following syntax:
 
 ```shell
-terraform import ns_npa_private_app.my_ns_npa_private_app "0"
+terraform import ns_npa_private_app.my_ns_npa_private_app 0
 ```

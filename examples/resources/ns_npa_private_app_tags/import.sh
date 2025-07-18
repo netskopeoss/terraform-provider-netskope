@@ -1,1 +1,0 @@
-terraform import ns_npa_private_app_tags.my_ns_npa_private_app_tags "0"

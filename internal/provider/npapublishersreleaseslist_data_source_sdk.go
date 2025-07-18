@@ -3,29 +3,35 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
-func (r *NPAPublishersReleasesListDataSourceModel) RefreshFromSharedPublishersReleaseGetResponse(resp *shared.PublishersReleaseGetResponse) {
+func (r *NPAPublishersReleasesListDataSourceModel) RefreshFromSharedPublishersReleaseGetResponse(ctx context.Context, resp *shared.PublishersReleaseGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Data = []tfTypes.ReleaseItem{}
 		if len(r.Data) > len(resp.Data) {
 			r.Data = r.Data[:len(resp.Data)]
 		}
 		for dataCount, dataItem := range resp.Data {
-			var data1 tfTypes.ReleaseItem
-			data1.DockerTag = types.StringPointerValue(dataItem.DockerTag)
-			data1.Name = types.StringPointerValue(dataItem.Name)
-			data1.Version = types.StringPointerValue(dataItem.Version)
+			var data tfTypes.ReleaseItem
+			data.DockerTag = types.StringPointerValue(dataItem.DockerTag)
+			data.Name = types.StringPointerValue(dataItem.Name)
+			data.Version = types.StringPointerValue(dataItem.Version)
 			if dataCount+1 > len(r.Data) {
-				r.Data = append(r.Data, data1)
+				r.Data = append(r.Data, data)
 			} else {
-				r.Data[dataCount].DockerTag = data1.DockerTag
-				r.Data[dataCount].Name = data1.Name
-				r.Data[dataCount].Version = data1.Version
+				r.Data[dataCount].DockerTag = data.DockerTag
+				r.Data[dataCount].Name = data.Name
+				r.Data[dataCount].Version = data.Version
 			}
 		}
 	}
+
+	return diags
 }

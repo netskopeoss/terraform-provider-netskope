@@ -1,1 +1,1 @@
-terraform import ns_npa_publisher.my_ns_npa_publisher "1"
+terraform import ns_npa_publisher.my_ns_npa_publisher 1

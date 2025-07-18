@@ -14,7 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 	speakeasy_objectvalidators "github.com/netskope/terraform-provider-ns/internal/validators/objectvalidators"
 )
 
@@ -28,6 +27,7 @@ func NewNPARulesResource() resource.Resource {
 
 // NPARulesResource defines the resource implementation.
 type NPARulesResource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -412,18 +412,13 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	silent := new(operations.QueryParamSilent)
-	if !data.Silent.IsUnknown() && !data.Silent.IsNull() {
-		*silent = operations.QueryParamSilent(data.Silent.ValueString())
-	} else {
-		silent = nil
+	request, requestDiags := data.ToOperationsCreateNPARulesRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	npaPolicyRequest := *data.ToSharedNpaPolicyRequest()
-	request := operations.CreateNPARulesRequest{
-		Silent:           silent,
-		NpaPolicyRequest: npaPolicyRequest,
-	}
-	res, err := r.client.NPARules.Create(ctx, request)
+	res, err := r.client.NPARules.Create(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -443,18 +438,24 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var ruleID string
-	ruleID = data.RuleID.ValueString()
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicyResponseItem(ctx, res.Object.Data)...)
 
-	// create.npa_rules.fieldscreate.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create","NPARules#create.req"]
-	var fields *string
-	request1 := operations.NPARulesRequest{
-		RuleID: ruleID,
-		Fields: fields,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.NPARules.Read(ctx, request1)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsNPARulesRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.NPARules.Read(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -474,8 +475,17 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseItem(res1.Object.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicyResponseItem(ctx, res1.Object.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -499,16 +509,13 @@ func (r *NPARulesResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	var ruleID string
-	ruleID = data.RuleID.ValueString()
+	request, requestDiags := data.ToOperationsNPARulesRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	// read.npa_rules.fieldsread.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create","NPARules#create.req"]
-	var fields *string
-	request := operations.NPARulesRequest{
-		RuleID: ruleID,
-		Fields: fields,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPARules.Read(ctx, request)
+	res, err := r.client.NPARules.Read(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -532,7 +539,11 @@ func (r *NPARulesResource) Read(ctx context.Context, req resource.ReadRequest, r
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicyResponseItem(ctx, res.Object.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -552,22 +563,13 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
-	var ruleID string
-	ruleID = data.RuleID.ValueString()
+	request, requestDiags := data.ToOperationsUpdateNPARulesByIDRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	silent := new(operations.UpdateNPARulesByIDQueryParamSilent)
-	if !data.Silent.IsUnknown() && !data.Silent.IsNull() {
-		*silent = operations.UpdateNPARulesByIDQueryParamSilent(data.Silent.ValueString())
-	} else {
-		silent = nil
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	npaPolicyRequest := *data.ToSharedNpaPolicyRequest()
-	request := operations.UpdateNPARulesByIDRequest{
-		RuleID:           ruleID,
-		Silent:           silent,
-		NpaPolicyRequest: npaPolicyRequest,
-	}
-	res, err := r.client.NPARules.Update(ctx, request)
+	res, err := r.client.NPARules.Update(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -587,18 +589,24 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var ruleId1 string
-	ruleId1 = data.RuleID.ValueString()
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicyResponseItem(ctx, res.Object.Data)...)
 
-	// update.npa_rules.fieldsupdate.npa_rules.fields impedance mismatch: string != classtrace=["NPARules#create","NPARules#create.req"]
-	var fields *string
-	request1 := operations.NPARulesRequest{
-		RuleID: ruleId1,
-		Fields: fields,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.NPARules.Read(ctx, request1)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsNPARulesRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.NPARules.Read(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -618,8 +626,17 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseItem(res1.Object.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicyResponseItem(ctx, res1.Object.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -643,13 +660,13 @@ func (r *NPARulesResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
-	var ruleID string
-	ruleID = data.RuleID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteNPARulesRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteNPARulesRequest{
-		RuleID: ruleID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPARules.Delete(ctx, request)
+	res, err := r.client.NPARules.Delete(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -24,6 +23,7 @@ func NewNPARulesDataSource() datasource.DataSource {
 
 // NPARulesDataSource is the data source implementation.
 type NPARulesDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -283,20 +283,13 @@ func (r *NPARulesDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	var ruleID string
-	ruleID = data.RuleID.ValueString()
+	request, requestDiags := data.ToOperationsNPARulesRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	fields := new(string)
-	if !data.Fields.IsUnknown() && !data.Fields.IsNull() {
-		*fields = data.Fields.ValueString()
-	} else {
-		fields = nil
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	request := operations.NPARulesRequest{
-		RuleID: ruleID,
-		Fields: fields,
-	}
-	res, err := r.client.NPARules.Read(ctx, request)
+	res, err := r.client.NPARules.Read(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -308,10 +301,6 @@ func (r *NPARulesDataSource) Read(ctx context.Context, req datasource.ReadReques
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -320,7 +309,11 @@ func (r *NPARulesDataSource) Read(ctx context.Context, req datasource.ReadReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseItem(res.Object.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicyResponseItem(ctx, res.Object.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

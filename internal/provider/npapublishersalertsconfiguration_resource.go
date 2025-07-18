@@ -25,6 +25,7 @@ func NewNPAPublishersAlertsConfigurationResource() resource.Resource {
 
 // NPAPublishersAlertsConfigurationResource defines the resource implementation.
 type NPAPublishersAlertsConfigurationResource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -112,8 +113,13 @@ func (r *NPAPublishersAlertsConfigurationResource) Create(ctx context.Context, r
 		return
 	}
 
-	request := *data.ToSharedPublishersAlertPutRequest()
-	res, err := r.client.CreateNPAPublisherAlerts(ctx, request)
+	request, requestDiags := data.ToSharedPublishersAlertPutRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.CreateNPAPublisherAlerts(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -133,8 +139,17 @@ func (r *NPAPublishersAlertsConfigurationResource) Create(ctx context.Context, r
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublishersAlertPutResponse(res.PublishersAlertPutResponse)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublishersAlertPutResponse(ctx, res.PublishersAlertPutResponse)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	res1, err := r.client.GetNPAPublisherAlerts(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -155,7 +170,11 @@ func (r *NPAPublishersAlertsConfigurationResource) Create(ctx context.Context, r
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublishersAlertGetResponseData(res1.PublishersAlertGetResponse.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublishersAlertGetResponseData(ctx, res1.PublishersAlertGetResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -203,7 +222,11 @@ func (r *NPAPublishersAlertsConfigurationResource) Read(ctx context.Context, req
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublishersAlertGetResponseData(res.PublishersAlertGetResponse.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublishersAlertGetResponseData(ctx, res.PublishersAlertGetResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -223,8 +246,13 @@ func (r *NPAPublishersAlertsConfigurationResource) Update(ctx context.Context, r
 		return
 	}
 
-	request := *data.ToSharedPublishersAlertPutRequest()
-	res, err := r.client.CreateNPAPublisherAlerts(ctx, request)
+	request, requestDiags := data.ToSharedPublishersAlertPutRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.CreateNPAPublisherAlerts(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -244,8 +272,17 @@ func (r *NPAPublishersAlertsConfigurationResource) Update(ctx context.Context, r
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublishersAlertPutResponse(res.PublishersAlertPutResponse)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublishersAlertPutResponse(ctx, res.PublishersAlertPutResponse)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	res1, err := r.client.GetNPAPublisherAlerts(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -266,7 +303,11 @@ func (r *NPAPublishersAlertsConfigurationResource) Update(ctx context.Context, r
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublishersAlertGetResponseData(res1.PublishersAlertGetResponse.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublishersAlertGetResponseData(ctx, res1.PublishersAlertGetResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

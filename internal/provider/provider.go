@@ -5,6 +5,7 @@ package provider
 import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -14,7 +15,8 @@ import (
 	"net/http"
 )
 
-var _ provider.Provider = &NsProvider{}
+var _ provider.Provider = (*NsProvider)(nil)
+var _ provider.ProviderWithEphemeralResources = (*NsProvider)(nil)
 
 type NsProvider struct {
 	// version is set to the provider version on release, "dev" when the
@@ -38,7 +40,7 @@ func (p *NsProvider) Schema(ctx context.Context, req provider.SchemaRequest, res
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"api_key": schema.StringAttribute{
-				Optional:  true,
+				Required:  true,
 				Sensitive: true,
 			},
 			"server_url": schema.StringAttribute{
@@ -65,14 +67,17 @@ func (p *NsProvider) Configure(ctx context.Context, req provider.ConfigureReques
 		ServerURL = "https://{tenant}.goskope.com/api/v2"
 	}
 
-	apiKey := new(string)
-	if !data.APIKey.IsUnknown() && !data.APIKey.IsNull() {
-		*apiKey = data.APIKey.ValueString()
-	} else {
-		apiKey = nil
+	security := shared.Security{}
+
+	if !data.APIKey.IsUnknown() {
+		security.APIKey = data.APIKey.ValueString()
 	}
-	security := shared.Security{
-		APIKey: apiKey,
+
+	if security.APIKey == "" {
+		resp.Diagnostics.AddError(
+			"Missing Provider Security Configuration",
+			"Provider configuration api_key attribute must be configured.",
+		)
 	}
 
 	providerHTTPTransportOpts := ProviderHTTPTransportOpts{
@@ -88,9 +93,10 @@ func (p *NsProvider) Configure(ctx context.Context, req provider.ConfigureReques
 		sdk.WithSecurity(security),
 		sdk.WithClient(httpClient),
 	}
-	client := sdk.New(opts...)
 
+	client := sdk.New(opts...)
 	resp.DataSourceData = client
+	resp.EphemeralResourceData = client
 	resp.ResourceData = client
 }
 
@@ -98,7 +104,6 @@ func (p *NsProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewNPAPolicyGroupsResource,
 		NewNPAPrivateAppResource,
-		NewNPAPrivateAppTagsResource,
 		NewNPAPublisherResource,
 		NewNPAPublishersAlertsConfigurationResource,
 		NewNPAPublishersBulkProfileUpdatesResource,
@@ -115,8 +120,6 @@ func (p *NsProvider) DataSources(ctx context.Context) []func() datasource.DataSo
 		NewNPAPolicyGroupsListDataSource,
 		NewNPAPrivateAppDataSource,
 		NewNPAPrivateAppsListDataSource,
-		NewNPAPrivateAppsTagsListDataSource,
-		NewNPAPrivateAppTagsDataSource,
 		NewNPAPrivatePolicyInUseDataSource,
 		NewNPAPublisherDataSource,
 		NewNPAPublisherAppsListDataSource,
@@ -128,6 +131,10 @@ func (p *NsProvider) DataSources(ctx context.Context) []func() datasource.DataSo
 		NewNPARulesDataSource,
 		NewNPARulesListDataSource,
 	}
+}
+
+func (p *NsProvider) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
+	return []func() ephemeral.EphemeralResource{}
 }
 
 func New(version string) func() provider.Provider {

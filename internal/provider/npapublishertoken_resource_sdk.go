@@ -3,10 +3,29 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
-func (r *NPAPublisherTokenResourceModel) RefreshFromOperationsGenerateNPAPublisherTokenData(resp *operations.GenerateNPAPublisherTokenData) {
+func (r *NPAPublisherTokenResourceModel) RefreshFromOperationsGenerateNPAPublisherTokenData(ctx context.Context, resp *operations.GenerateNPAPublisherTokenData) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	r.Token = types.StringValue(resp.Token)
+
+	return diags
+}
+
+func (r *NPAPublisherTokenResourceModel) ToOperationsGenerateNPAPublisherTokenRequest(ctx context.Context) (*operations.GenerateNPAPublisherTokenRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var publisherID int
+	publisherID = int(r.PublisherID.ValueInt32())
+
+	out := operations.GenerateNPAPublisherTokenRequest{
+		PublisherID: publisherID,
+	}
+
+	return &out, diags
 }

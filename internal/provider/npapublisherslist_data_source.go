@@ -23,6 +23,7 @@ func NewNPAPublishersListDataSource() datasource.DataSource {
 
 // NPAPublishersListDataSource is the data source implementation.
 type NPAPublishersListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -237,10 +238,6 @@ func (r *NPAPublishersListDataSource) Read(ctx context.Context, req datasource.R
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -249,7 +246,11 @@ func (r *NPAPublishersListDataSource) Read(ctx context.Context, req datasource.R
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublishersGetResponse(res.PublishersGetResponse)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublishersGetResponse(ctx, res.PublishersGetResponse)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
