@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.

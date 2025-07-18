@@ -4,7 +4,7 @@ package numberplanmodifier
 
 import (
 	"context"
-	"github.com/netskope/terraform-provider-ns/internal/planmodifiers/utils"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 )

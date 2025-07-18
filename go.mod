@@ -1,4 +1,4 @@
-module github.com/netskope/terraform-provider-ns
+module github.com/netskopeoss/terraform-provider-netskope
 
 go 1.23.0
 

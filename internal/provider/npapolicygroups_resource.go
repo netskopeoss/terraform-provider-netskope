@@ -12,8 +12,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk"
+	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.

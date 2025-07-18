@@ -6,9 +6,9 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
+	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/operations"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
 func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx context.Context, resp *shared.NpaPolicyResponseItem) diag.Diagnostics {

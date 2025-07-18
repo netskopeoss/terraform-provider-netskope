@@ -13,7 +13,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/netskope/terraform-provider-ns/internal/sdk/types"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/types"
 
 	"github.com/ericlagergren/decimal"
 )

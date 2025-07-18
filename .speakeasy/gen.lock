@@ -3,10 +3,10 @@ id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
   docChecksum: d8cbe09a44e9171a1e1f7e57a5799ca9
   docVersion: 1.0.0
-  speakeasyVersion: 1.582.0
-  generationVersion: 2.657.1
+  speakeasyVersion: 1.583.0
+  generationVersion: 2.658.3
   releaseVersion: 0.3.1
-  configChecksum: 0253153145e8c4b7891210d52caa4def
+  configChecksum: eac9a52d9e2acbc690b671236554742d
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -22,35 +22,35 @@ generatedFiles:
   - .gitattributes
   - USAGE.md
   - examples/README.md
-  - examples/data-sources/ns_npa_policy_groups/data-source.tf
-  - examples/data-sources/ns_npa_policy_groups_list/data-source.tf
-  - examples/data-sources/ns_npa_private_app/data-source.tf
-  - examples/data-sources/ns_npa_private_apps_list/data-source.tf
-  - examples/data-sources/ns_npa_private_policy_in_use/data-source.tf
-  - examples/data-sources/ns_npa_publisher/data-source.tf
-  - examples/data-sources/ns_npa_publisher_apps_list/data-source.tf
-  - examples/data-sources/ns_npa_publisher_upgrade_profile/data-source.tf
-  - examples/data-sources/ns_npa_publisher_upgrade_profiles_list/data-source.tf
-  - examples/data-sources/ns_npa_publishers_alerts_configuration/data-source.tf
-  - examples/data-sources/ns_npa_publishers_list/data-source.tf
-  - examples/data-sources/ns_npa_publishers_releases_list/data-source.tf
-  - examples/data-sources/ns_npa_rules/data-source.tf
-  - examples/data-sources/ns_npa_rules_list/data-source.tf
+  - examples/data-sources/netskope_npa_policy_groups/data-source.tf
+  - examples/data-sources/netskope_npa_policy_groups_list/data-source.tf
+  - examples/data-sources/netskope_npa_private_app/data-source.tf
+  - examples/data-sources/netskope_npa_private_apps_list/data-source.tf
+  - examples/data-sources/netskope_npa_private_policy_in_use/data-source.tf
+  - examples/data-sources/netskope_npa_publisher/data-source.tf
+  - examples/data-sources/netskope_npa_publisher_apps_list/data-source.tf
+  - examples/data-sources/netskope_npa_publisher_upgrade_profile/data-source.tf
+  - examples/data-sources/netskope_npa_publisher_upgrade_profiles_list/data-source.tf
+  - examples/data-sources/netskope_npa_publishers_alerts_configuration/data-source.tf
+  - examples/data-sources/netskope_npa_publishers_list/data-source.tf
+  - examples/data-sources/netskope_npa_publishers_releases_list/data-source.tf
+  - examples/data-sources/netskope_npa_rules/data-source.tf
+  - examples/data-sources/netskope_npa_rules_list/data-source.tf
   - examples/provider/provider.tf
-  - examples/resources/ns_npa_policy_groups/import.sh
-  - examples/resources/ns_npa_policy_groups/resource.tf
-  - examples/resources/ns_npa_private_app/import.sh
-  - examples/resources/ns_npa_private_app/resource.tf
-  - examples/resources/ns_npa_publisher/import.sh
-  - examples/resources/ns_npa_publisher/resource.tf
-  - examples/resources/ns_npa_publisher_token/resource.tf
-  - examples/resources/ns_npa_publisher_upgrade_profile/import.sh
-  - examples/resources/ns_npa_publisher_upgrade_profile/resource.tf
-  - examples/resources/ns_npa_publishers_alerts_configuration/resource.tf
-  - examples/resources/ns_npa_publishers_bulk_profile_updates/resource.tf
-  - examples/resources/ns_npa_publishers_bulk_upgrade_request/resource.tf
-  - examples/resources/ns_npa_rules/import.sh
-  - examples/resources/ns_npa_rules/resource.tf
+  - examples/resources/netskope_npa_policy_groups/import.sh
+  - examples/resources/netskope_npa_policy_groups/resource.tf
+  - examples/resources/netskope_npa_private_app/import.sh
+  - examples/resources/netskope_npa_private_app/resource.tf
+  - examples/resources/netskope_npa_publisher/import.sh
+  - examples/resources/netskope_npa_publisher/resource.tf
+  - examples/resources/netskope_npa_publisher_token/resource.tf
+  - examples/resources/netskope_npa_publisher_upgrade_profile/import.sh
+  - examples/resources/netskope_npa_publisher_upgrade_profile/resource.tf
+  - examples/resources/netskope_npa_publishers_alerts_configuration/resource.tf
+  - examples/resources/netskope_npa_publishers_bulk_profile_updates/resource.tf
+  - examples/resources/netskope_npa_publishers_bulk_upgrade_request/resource.tf
+  - examples/resources/netskope_npa_rules/import.sh
+  - examples/resources/netskope_npa_rules/resource.tf
   - go.mod
   - go.sum
   - internal/planmodifiers/boolplanmodifier/suppress_diff.go

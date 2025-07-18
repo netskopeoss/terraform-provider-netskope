@@ -6,7 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/retry"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/retry"
 	"math"
 	"math/rand"
 	"net/http"

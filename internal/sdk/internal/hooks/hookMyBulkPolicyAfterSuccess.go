@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/models"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/models"
 )
 
 type myBulkPolicyResponse struct {

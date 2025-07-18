@@ -1,0 +1,1 @@
+terraform import netskope_npa_publisher.my_netskope_npa_publisher 1
