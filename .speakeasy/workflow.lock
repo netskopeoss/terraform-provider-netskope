@@ -2,16 +2,17 @@ speakeasyVersion: 1.583.0
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:aa9239db15cf867a0ee0ff9ca3c908993404953a012d49cf21d18529572f8281
-        sourceBlobDigest: sha256:c23b7ebfa178a9c513a59cc257d10227bfcf1b5db20100c980710ae7b1e9bae3
+        sourceRevisionDigest: sha256:30fc871539c7108c323b00509b9635adc117c9fc7d656dd3cfdff18eabb392ed
+        sourceBlobDigest: sha256:20c3bf9607c1b3cddca8a7c14ce91e40f729c90cc9b526759550f5282282cad9
         tags:
             - latest
+            - 1.0.0
 targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:aa9239db15cf867a0ee0ff9ca3c908993404953a012d49cf21d18529572f8281
-        sourceBlobDigest: sha256:c23b7ebfa178a9c513a59cc257d10227bfcf1b5db20100c980710ae7b1e9bae3
+        sourceRevisionDigest: sha256:30fc871539c7108c323b00509b9635adc117c9fc7d656dd3cfdff18eabb392ed
+        sourceBlobDigest: sha256:20c3bf9607c1b3cddca8a7c14ce91e40f729c90cc9b526759550f5282282cad9
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
@@ -27,7 +28,7 @@ workflow:
             overlays:
                 - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
             registry:
-                location: registry.speakeasyapi.dev/api_dev_ns/api-dev-ns/openapi
+                location: registry.speakeasyapi.dev/api-dev-ns/api-dev-ns/openapi
     targets:
         first-target:
             target: terraform

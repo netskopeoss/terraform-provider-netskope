@@ -12,8 +12,12 @@ sources:
         overlays:
             - location: /Users/jadrian/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
         registry:
-            location: registry.speakeasyapi.dev/api_dev_ns/api-dev-ns/openapi
+            location: registry.speakeasyapi.dev/api-dev-ns/api-dev-ns/openapi
 targets:
     first-target:
         target: terraform
         source: openapi
+        publish:
+            terraform:
+                gpgPrivateKey: $terraform_gpg_private_key
+                gpgPassPhrase: $terraform_gpg_passphrase

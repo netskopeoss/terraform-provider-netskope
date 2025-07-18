@@ -23,3 +23,5 @@ jobs:
     secrets:
       github_access_token: ${{ secrets.GITHUB_TOKEN }}
       speakeasy_api_key: ${{ secrets.SPEAKEASY_API_KEY }}
+      terraform_gpg_passphrase: ${{ secrets.TERRAFORM_GPG_PASSPHRASE }}
+      terraform_gpg_private_key: ${{ secrets.TERRAFORM_GPG_PRIVATE_KEY }}
