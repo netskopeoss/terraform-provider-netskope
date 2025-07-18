@@ -2,11 +2,13 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type PublisherResponseUpgradeFailedReason struct {
-	Detail    types.String `tfsdk:"detail"`
-	ErrorCode types.Number `tfsdk:"error_code"`
-	Timestamp types.Number `tfsdk:"timestamp"`
-	Version   types.String `tfsdk:"version"`
+	Detail    types.String  `tfsdk:"detail"`
+	ErrorCode types.Float64 `tfsdk:"error_code"`
+	Timestamp types.Float64 `tfsdk:"timestamp"`
+	Version   types.String  `tfsdk:"version"`
 }

@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -24,6 +23,7 @@ func NewNPAPublisherDataSource() datasource.DataSource {
 
 // NPAPublisherDataSource is the data source implementation.
 type NPAPublisherDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -71,7 +71,7 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 								Computed:    true,
 								ElementType: types.StringType,
 							},
-							"last_modified": schema.NumberAttribute{
+							"last_modified": schema.Float64Attribute{
 								Computed: true,
 							},
 						},
@@ -88,7 +88,7 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 					"ip_address": schema.StringAttribute{
 						Computed: true,
 					},
-					"latency": schema.NumberAttribute{
+					"latency": schema.Float64Attribute{
 						Computed: true,
 					},
 					"version": schema.StringAttribute{
@@ -162,10 +162,10 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 					"detail": schema.StringAttribute{
 						Computed: true,
 					},
-					"error_code": schema.NumberAttribute{
+					"error_code": schema.Float64Attribute{
 						Computed: true,
 					},
-					"timestamp": schema.NumberAttribute{
+					"timestamp": schema.Float64Attribute{
 						Computed: true,
 					},
 					"version": schema.StringAttribute{
@@ -226,13 +226,13 @@ func (r *NPAPublisherDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
-	var publisherID int
-	publisherID = int(data.PublisherID.ValueInt32())
+	request, requestDiags := data.ToOperationsGetNPAPublisherByIDRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetNPAPublisherByIDRequest{
-		PublisherID: publisherID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPublisher.Read(ctx, request)
+	res, err := r.client.NPAPublisher.Read(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -244,10 +244,6 @@ func (r *NPAPublisherDataSource) Read(ctx context.Context, req datasource.ReadRe
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -256,7 +252,11 @@ func (r *NPAPublisherDataSource) Read(ctx context.Context, req datasource.ReadRe
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherResponseData(ctx, res.PublisherResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -24,6 +23,7 @@ func NewNPARulesListDataSource() datasource.DataSource {
 
 // NPARulesListDataSource is the data source implementation.
 type NPARulesListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -297,44 +297,13 @@ func (r *NPARulesListDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
-	filter := new(string)
-	if !data.Filter.IsUnknown() && !data.Filter.IsNull() {
-		*filter = data.Filter.ValueString()
-	} else {
-		filter = nil
+	request, requestDiags := data.ToOperationsGetNPARulesListRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	limit := new(int64)
-	if !data.Limit.IsUnknown() && !data.Limit.IsNull() {
-		*limit = data.Limit.ValueInt64()
-	} else {
-		limit = nil
-	}
-	offset := new(int64)
-	if !data.Offset.IsUnknown() && !data.Offset.IsNull() {
-		*offset = data.Offset.ValueInt64()
-	} else {
-		offset = nil
-	}
-	sortby := new(string)
-	if !data.Sortby.IsUnknown() && !data.Sortby.IsNull() {
-		*sortby = data.Sortby.ValueString()
-	} else {
-		sortby = nil
-	}
-	sortorder := new(string)
-	if !data.Sortorder.IsUnknown() && !data.Sortorder.IsNull() {
-		*sortorder = data.Sortorder.ValueString()
-	} else {
-		sortorder = nil
-	}
-	request := operations.GetNPARulesListRequest{
-		Filter:    filter,
-		Limit:     limit,
-		Offset:    offset,
-		Sortby:    sortby,
-		Sortorder: sortorder,
-	}
-	res, err := r.client.NPARules.ListObjects(ctx, request)
+	res, err := r.client.NPARules.ListObjects(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -346,10 +315,6 @@ func (r *NPARulesListDataSource) Read(ctx context.Context, req datasource.ReadRe
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -358,7 +323,11 @@ func (r *NPARulesListDataSource) Read(ctx context.Context, req datasource.ReadRe
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedNpaPolicyResponseList(res.NpaPolicyResponseList)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicyResponseList(ctx, res.NpaPolicyResponseList)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

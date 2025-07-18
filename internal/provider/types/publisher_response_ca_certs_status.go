@@ -2,9 +2,11 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type PublisherResponseCaCertsStatus struct {
 	Hashes       []types.String `tfsdk:"hashes"`
-	LastModified types.Number   `tfsdk:"last_modified"`
+	LastModified types.Float64  `tfsdk:"last_modified"`
 }

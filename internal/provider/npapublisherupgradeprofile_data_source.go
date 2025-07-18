@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -23,6 +22,7 @@ func NewNPAPublisherUpgradeProfileDataSource() datasource.DataSource {
 
 // NPAPublisherUpgradeProfileDataSource is the data source implementation.
 type NPAPublisherUpgradeProfileDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -136,13 +136,13 @@ func (r *NPAPublisherUpgradeProfileDataSource) Read(ctx context.Context, req dat
 		return
 	}
 
-	var publisherUpgradeProfileID int
-	publisherUpgradeProfileID = int(data.PublisherUpgradeProfileID.ValueInt32())
+	request, requestDiags := data.ToOperationsGetNPAPublisherUpgradeProfileRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetNPAPublisherUpgradeProfileRequest{
-		PublisherUpgradeProfileID: publisherUpgradeProfileID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPublisherUpgradeProfile.GetNPAPublisherUpgradeProfile(ctx, request)
+	res, err := r.client.NPAPublisherUpgradeProfile.GetNPAPublisherUpgradeProfile(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -154,10 +154,6 @@ func (r *NPAPublisherUpgradeProfileDataSource) Read(ctx context.Context, req dat
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -166,7 +162,11 @@ func (r *NPAPublisherUpgradeProfileDataSource) Read(ctx context.Context, req dat
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherUpgradeProfileGetResponseData(res.PublisherUpgradeProfileGetResponse.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileGetResponseData(ctx, res.PublisherUpgradeProfileGetResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

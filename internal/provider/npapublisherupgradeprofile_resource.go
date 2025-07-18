@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
+	"math"
 	"strconv"
 )
 
@@ -28,6 +28,7 @@ func NewNPAPublisherUpgradeProfileResource() resource.Resource {
 
 // NPAPublisherUpgradeProfileResource defines the resource implementation.
 type NPAPublisherUpgradeProfileResource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -241,7 +242,12 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 		return
 	}
 
-	request := data.ToSharedPublisherUpgradeProfilePostRequest()
+	request, requestDiags := data.ToSharedPublisherUpgradeProfilePostRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	res, err := r.client.NPAPublisherUpgradeProfile.CreateNPAPublisherUpgradeProfile(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -262,8 +268,17 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherUpgradeProfileResponseData(res.PublisherUpgradeProfileResponse.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileResponseData(ctx, res.PublisherUpgradeProfileResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -287,13 +302,13 @@ func (r *NPAPublisherUpgradeProfileResource) Read(ctx context.Context, req resou
 		return
 	}
 
-	var publisherUpgradeProfileID int
-	publisherUpgradeProfileID = int(data.PublisherUpgradeProfileID.ValueInt32())
+	request, requestDiags := data.ToOperationsGetNPAPublisherUpgradeProfileRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetNPAPublisherUpgradeProfileRequest{
-		PublisherUpgradeProfileID: publisherUpgradeProfileID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPublisherUpgradeProfile.GetNPAPublisherUpgradeProfile(ctx, request)
+	res, err := r.client.NPAPublisherUpgradeProfile.GetNPAPublisherUpgradeProfile(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -317,7 +332,11 @@ func (r *NPAPublisherUpgradeProfileResource) Read(ctx context.Context, req resou
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherUpgradeProfileGetResponseData(res.PublisherUpgradeProfileGetResponse.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileGetResponseData(ctx, res.PublisherUpgradeProfileGetResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -337,15 +356,13 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 		return
 	}
 
-	var publisherUpgradeProfileID int
-	publisherUpgradeProfileID = int(data.PublisherUpgradeProfileID.ValueInt32())
+	request, requestDiags := data.ToOperationsUpdateNPAPublisherUpgradeProfileRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	publisherUpgradeProfilePutRequest := *data.ToSharedPublisherUpgradeProfilePutRequest()
-	request := operations.UpdateNPAPublisherUpgradeProfileRequest{
-		PublisherUpgradeProfileID:         publisherUpgradeProfileID,
-		PublisherUpgradeProfilePutRequest: publisherUpgradeProfilePutRequest,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPublisherUpgradeProfile.UpdateNPAPublisherUpgradeProfile(ctx, request)
+	res, err := r.client.NPAPublisherUpgradeProfile.UpdateNPAPublisherUpgradeProfile(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -365,8 +382,17 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherUpgradeProfileResponseData(res.PublisherUpgradeProfileResponse.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileResponseData(ctx, res.PublisherUpgradeProfileResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -390,13 +416,13 @@ func (r *NPAPublisherUpgradeProfileResource) Delete(ctx context.Context, req res
 		return
 	}
 
-	var publisherUpgradeProfileID int
-	publisherUpgradeProfileID = int(data.PublisherUpgradeProfileID.ValueInt32())
+	request, requestDiags := data.ToOperationsDeleteNPAPublisherUpgradeProfileRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteNPAPublisherUpgradeProfileRequest{
-		PublisherUpgradeProfileID: publisherUpgradeProfileID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPublisherUpgradeProfile.DeleteNPAPublisherUpgradeProfile(ctx, request)
+	res, err := r.client.NPAPublisherUpgradeProfile.DeleteNPAPublisherUpgradeProfile(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -419,7 +445,13 @@ func (r *NPAPublisherUpgradeProfileResource) ImportState(ctx context.Context, re
 	publisherUpgradeProfileID, err := strconv.Atoi(req.ID)
 	if err != nil {
 		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
+		return
 	}
 
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("publisher_upgrade_profile_id"), int32(publisherUpgradeProfileID))...)
+	if publisherUpgradeProfileID < math.MinInt32 || publisherUpgradeProfileID > math.MaxInt32 {
+		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an int32 but was %d", publisherUpgradeProfileID))
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("publisher_upgrade_profile_id"), publisherUpgradeProfileID)...)
 }

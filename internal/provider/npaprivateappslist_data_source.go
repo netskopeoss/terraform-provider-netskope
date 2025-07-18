@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -24,6 +23,7 @@ func NewNPAPrivateAppsListDataSource() datasource.DataSource {
 
 // NPAPrivateAppsListDataSource is the data source implementation.
 type NPAPrivateAppsListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -256,30 +256,13 @@ func (r *NPAPrivateAppsListDataSource) Read(ctx context.Context, req datasource.
 		return
 	}
 
-	query := new(string)
-	if !data.Query.IsUnknown() && !data.Query.IsNull() {
-		*query = data.Query.ValueString()
-	} else {
-		query = nil
+	request, requestDiags := data.ToOperationsListNPAPrivateAppsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	offset := new(int)
-	if !data.Offset.IsUnknown() && !data.Offset.IsNull() {
-		*offset = int(data.Offset.ValueInt32())
-	} else {
-		offset = nil
-	}
-	limit := new(int)
-	if !data.Limit.IsUnknown() && !data.Limit.IsNull() {
-		*limit = int(data.Limit.ValueInt32())
-	} else {
-		limit = nil
-	}
-	request := operations.ListNPAPrivateAppsRequest{
-		Query:  query,
-		Offset: offset,
-		Limit:  limit,
-	}
-	res, err := r.client.ListNPAPrivateApps(ctx, request)
+	res, err := r.client.ListNPAPrivateApps(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -291,10 +274,6 @@ func (r *NPAPrivateAppsListDataSource) Read(ctx context.Context, req datasource.
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -303,7 +282,11 @@ func (r *NPAPrivateAppsListDataSource) Read(ctx context.Context, req datasource.
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedData(res.PrivateAppsListResponse.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedData(ctx, res.PrivateAppsListResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

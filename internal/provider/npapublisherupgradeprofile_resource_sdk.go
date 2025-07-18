@@ -3,11 +3,124 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/netskope/terraform-provider-ns/internal/provider/typeconvert"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
-func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfilePostRequest() *shared.PublisherUpgradeProfilePostRequest {
+func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgradeProfileGetResponseData(ctx context.Context, resp *shared.PublisherUpgradeProfileGetResponseData) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.CreatedAt = types.StringPointerValue(resp.CreatedAt)
+		r.DockerTag = types.StringPointerValue(resp.DockerTag)
+		r.Enabled = types.BoolPointerValue(resp.Enabled)
+		r.Frequency = types.StringPointerValue(resp.Frequency)
+		r.Name = types.StringPointerValue(resp.Name)
+		r.NextUpdateTime = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.NextUpdateTime))
+		r.NumAssociatedPublisher = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.NumAssociatedPublisher))
+		r.PublisherUpgradeProfileID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PublisherUpgradeProfileID))
+		if resp.ReleaseType != nil {
+			r.ReleaseType = types.StringValue(string(*resp.ReleaseType))
+		} else {
+			r.ReleaseType = types.StringNull()
+		}
+		if resp.Timezone != nil {
+			r.Timezone = types.StringValue(string(*resp.Timezone))
+		} else {
+			r.Timezone = types.StringNull()
+		}
+		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
+		r.UpgradingStage = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.UpgradingStage))
+		r.WillStart = types.BoolPointerValue(resp.WillStart)
+	}
+
+	return diags
+}
+
+func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgradeProfileResponseData(ctx context.Context, resp *shared.PublisherUpgradeProfileResponseData) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.CreatedAt = types.StringPointerValue(resp.CreatedAt)
+		r.DockerTag = types.StringPointerValue(resp.DockerTag)
+		r.Enabled = types.BoolPointerValue(resp.Enabled)
+		r.Frequency = types.StringPointerValue(resp.Frequency)
+		r.Name = types.StringPointerValue(resp.Name)
+		r.NextUpdateTime = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.NextUpdateTime))
+		r.NumAssociatedPublisher = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.NumAssociatedPublisher))
+		r.PublisherUpgradeProfileID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PublisherUpgradeProfileID))
+		if resp.ReleaseType != nil {
+			r.ReleaseType = types.StringValue(string(*resp.ReleaseType))
+		} else {
+			r.ReleaseType = types.StringNull()
+		}
+		if resp.Timezone != nil {
+			r.Timezone = types.StringValue(string(*resp.Timezone))
+		} else {
+			r.Timezone = types.StringNull()
+		}
+		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
+		r.UpgradingStage = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.UpgradingStage))
+		r.WillStart = types.BoolPointerValue(resp.WillStart)
+	}
+
+	return diags
+}
+
+func (r *NPAPublisherUpgradeProfileResourceModel) ToOperationsDeleteNPAPublisherUpgradeProfileRequest(ctx context.Context) (*operations.DeleteNPAPublisherUpgradeProfileRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var publisherUpgradeProfileID int
+	publisherUpgradeProfileID = int(r.PublisherUpgradeProfileID.ValueInt32())
+
+	out := operations.DeleteNPAPublisherUpgradeProfileRequest{
+		PublisherUpgradeProfileID: publisherUpgradeProfileID,
+	}
+
+	return &out, diags
+}
+
+func (r *NPAPublisherUpgradeProfileResourceModel) ToOperationsGetNPAPublisherUpgradeProfileRequest(ctx context.Context) (*operations.GetNPAPublisherUpgradeProfileRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var publisherUpgradeProfileID int
+	publisherUpgradeProfileID = int(r.PublisherUpgradeProfileID.ValueInt32())
+
+	out := operations.GetNPAPublisherUpgradeProfileRequest{
+		PublisherUpgradeProfileID: publisherUpgradeProfileID,
+	}
+
+	return &out, diags
+}
+
+func (r *NPAPublisherUpgradeProfileResourceModel) ToOperationsUpdateNPAPublisherUpgradeProfileRequest(ctx context.Context) (*operations.UpdateNPAPublisherUpgradeProfileRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var publisherUpgradeProfileID int
+	publisherUpgradeProfileID = int(r.PublisherUpgradeProfileID.ValueInt32())
+
+	publisherUpgradeProfilePutRequest, publisherUpgradeProfilePutRequestDiags := r.ToSharedPublisherUpgradeProfilePutRequest(ctx)
+	diags.Append(publisherUpgradeProfilePutRequestDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	out := operations.UpdateNPAPublisherUpgradeProfileRequest{
+		PublisherUpgradeProfileID:         publisherUpgradeProfileID,
+		PublisherUpgradeProfilePutRequest: *publisherUpgradeProfilePutRequest,
+	}
+
+	return &out, diags
+}
+
+func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfilePostRequest(ctx context.Context) (*shared.PublisherUpgradeProfilePostRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var dockerTag string
 	dockerTag = r.DockerTag.ValueString()
 
@@ -30,94 +143,13 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfil
 		ReleaseType: releaseType,
 		Timezone:    timezone,
 	}
-	return &out
+
+	return &out, diags
 }
 
-func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgradeProfileResponseData(resp *shared.PublisherUpgradeProfileResponseData) {
-	if resp != nil {
-		r.CreatedAt = types.StringPointerValue(resp.CreatedAt)
-		r.DockerTag = types.StringPointerValue(resp.DockerTag)
-		r.Enabled = types.BoolPointerValue(resp.Enabled)
-		r.Frequency = types.StringPointerValue(resp.Frequency)
-		r.Name = types.StringPointerValue(resp.Name)
-		if resp.NextUpdateTime != nil {
-			r.NextUpdateTime = types.Int32Value(int32(*resp.NextUpdateTime))
-		} else {
-			r.NextUpdateTime = types.Int32Null()
-		}
-		if resp.NumAssociatedPublisher != nil {
-			r.NumAssociatedPublisher = types.Int32Value(int32(*resp.NumAssociatedPublisher))
-		} else {
-			r.NumAssociatedPublisher = types.Int32Null()
-		}
-		if resp.PublisherUpgradeProfileID != nil {
-			r.PublisherUpgradeProfileID = types.Int32Value(int32(*resp.PublisherUpgradeProfileID))
-		} else {
-			r.PublisherUpgradeProfileID = types.Int32Null()
-		}
-		if resp.ReleaseType != nil {
-			r.ReleaseType = types.StringValue(string(*resp.ReleaseType))
-		} else {
-			r.ReleaseType = types.StringNull()
-		}
-		if resp.Timezone != nil {
-			r.Timezone = types.StringValue(string(*resp.Timezone))
-		} else {
-			r.Timezone = types.StringNull()
-		}
-		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
-		if resp.UpgradingStage != nil {
-			r.UpgradingStage = types.Int32Value(int32(*resp.UpgradingStage))
-		} else {
-			r.UpgradingStage = types.Int32Null()
-		}
-		r.WillStart = types.BoolPointerValue(resp.WillStart)
-	}
-}
+func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfilePutRequest(ctx context.Context) (*shared.PublisherUpgradeProfilePutRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
 
-func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgradeProfileGetResponseData(resp *shared.PublisherUpgradeProfileGetResponseData) {
-	if resp != nil {
-		r.CreatedAt = types.StringPointerValue(resp.CreatedAt)
-		r.DockerTag = types.StringPointerValue(resp.DockerTag)
-		r.Enabled = types.BoolPointerValue(resp.Enabled)
-		r.Frequency = types.StringPointerValue(resp.Frequency)
-		r.Name = types.StringPointerValue(resp.Name)
-		if resp.NextUpdateTime != nil {
-			r.NextUpdateTime = types.Int32Value(int32(*resp.NextUpdateTime))
-		} else {
-			r.NextUpdateTime = types.Int32Null()
-		}
-		if resp.NumAssociatedPublisher != nil {
-			r.NumAssociatedPublisher = types.Int32Value(int32(*resp.NumAssociatedPublisher))
-		} else {
-			r.NumAssociatedPublisher = types.Int32Null()
-		}
-		if resp.PublisherUpgradeProfileID != nil {
-			r.PublisherUpgradeProfileID = types.Int32Value(int32(*resp.PublisherUpgradeProfileID))
-		} else {
-			r.PublisherUpgradeProfileID = types.Int32Null()
-		}
-		if resp.ReleaseType != nil {
-			r.ReleaseType = types.StringValue(string(*resp.ReleaseType))
-		} else {
-			r.ReleaseType = types.StringNull()
-		}
-		if resp.Timezone != nil {
-			r.Timezone = types.StringValue(string(*resp.Timezone))
-		} else {
-			r.Timezone = types.StringNull()
-		}
-		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
-		if resp.UpgradingStage != nil {
-			r.UpgradingStage = types.Int32Value(int32(*resp.UpgradingStage))
-		} else {
-			r.UpgradingStage = types.Int32Null()
-		}
-		r.WillStart = types.BoolPointerValue(resp.WillStart)
-	}
-}
-
-func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfilePutRequest() *shared.PublisherUpgradeProfilePutRequest {
 	var dockerTag string
 	dockerTag = r.DockerTag.ValueString()
 
@@ -144,5 +176,6 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfil
 		ReleaseType:               releaseType,
 		Timezone:                  timezone,
 	}
-	return &out
+
+	return &out, diags
 }

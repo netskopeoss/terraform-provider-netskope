@@ -1,3 +1,5 @@
+**/.speakeasy/temp/
+**/.speakeasy/logs/
 .terraform
 .terraform*
 *.tfstate*
@@ -30,4 +32,3 @@ testing/
 spec/merged.yaml
 # removing speakeasy directories from merge
 *.speakeasy/
-

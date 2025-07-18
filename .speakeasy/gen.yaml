@@ -4,6 +4,7 @@ generation:
   maintainOpenAPIOrder: true
   usageSnippets:
     optionalPropertyRendering: withExample
+    sdkInitStyle: constructor
   useClassNamesForArrayFields: true
   fixes:
     nameResolutionDec2023: true
@@ -11,18 +12,25 @@ generation:
     parameterOrderingFeb2024: true
     requestResponseComponentNamesFeb2024: true
     securityFeb2025: false
+    sharedErrorComponentsApr2025: false
   auth:
     oAuth2ClientCredentialsEnabled: true
     oAuth2PasswordEnabled: false
+  tests:
+    generateTests: true
+    generateNewTests: false
+    skipResponseBodyAssertions: false
 terraform:
-  version: 0.3.2
+  version: 0.3.1
   additionalDataSources: []
   additionalDependencies: {}
+  additionalEphemeralResources: []
   additionalProviderAttributes:
     httpHeaders: ""
   additionalResources: []
   allowUnknownFieldsInWeakUnions: false
   author: netskope
+  baseErrorName: TerraformProviderNsError
   defaultErrorName: SDKError
   enableTypeDeduplication: true
   environmentVariables: []

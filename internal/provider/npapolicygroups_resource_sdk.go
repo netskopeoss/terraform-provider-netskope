@@ -3,11 +3,111 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
-func (r *NPAPolicyGroupsResourceModel) ToSharedNpaPolicygroupRequest() *shared.NpaPolicygroupRequest {
+func (r *NPAPolicyGroupsResourceModel) RefreshFromSharedNpaPolicygroupResponseItem(ctx context.Context, resp *shared.NpaPolicygroupResponseItem) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.CanBeEditedDeleted = types.StringPointerValue(resp.CanBeEditedDeleted)
+		r.GroupID = types.StringPointerValue(resp.GroupID)
+		r.GroupName = types.StringPointerValue(resp.GroupName)
+		r.GroupPinnedID = types.StringPointerValue(resp.GroupPinnedID)
+		r.GroupProdID = types.StringPointerValue(resp.GroupProdID)
+		r.GroupType = types.StringPointerValue(resp.GroupType)
+		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
+		r.ModifyType = types.StringPointerValue(resp.ModifyType)
+	}
+
+	return diags
+}
+
+func (r *NPAPolicyGroupsResourceModel) ToOperationsCreateNPAPolicyGroupsRequest(ctx context.Context) (*operations.CreateNPAPolicyGroupsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	silent := new(operations.CreateNPAPolicyGroupsQueryParamSilent)
+	if !r.Silent.IsUnknown() && !r.Silent.IsNull() {
+		*silent = operations.CreateNPAPolicyGroupsQueryParamSilent(r.Silent.ValueString())
+	} else {
+		silent = nil
+	}
+	npaPolicygroupRequest, npaPolicygroupRequestDiags := r.ToSharedNpaPolicygroupRequest(ctx)
+	diags.Append(npaPolicygroupRequestDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	out := operations.CreateNPAPolicyGroupsRequest{
+		Silent:                silent,
+		NpaPolicygroupRequest: *npaPolicygroupRequest,
+	}
+
+	return &out, diags
+}
+
+func (r *NPAPolicyGroupsResourceModel) ToOperationsDeleteNPAPolicyGroupsRequest(ctx context.Context) (*operations.DeleteNPAPolicyGroupsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.DeleteNPAPolicyGroupsRequest{
+		GroupID: groupID,
+	}
+
+	return &out, diags
+}
+
+func (r *NPAPolicyGroupsResourceModel) ToOperationsGetNPAPolicyGroupByIDRequest(ctx context.Context) (*operations.GetNPAPolicyGroupByIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetNPAPolicyGroupByIDRequest{
+		GroupID: groupID,
+	}
+
+	return &out, diags
+}
+
+func (r *NPAPolicyGroupsResourceModel) ToOperationsUpdateNPAPolicyGroupsRequest(ctx context.Context) (*operations.UpdateNPAPolicyGroupsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	silent := new(operations.UpdateNPAPolicyGroupsQueryParamSilent)
+	if !r.Silent.IsUnknown() && !r.Silent.IsNull() {
+		*silent = operations.UpdateNPAPolicyGroupsQueryParamSilent(r.Silent.ValueString())
+	} else {
+		silent = nil
+	}
+	npaPolicygroupRequest, npaPolicygroupRequestDiags := r.ToSharedNpaPolicygroupRequest(ctx)
+	diags.Append(npaPolicygroupRequestDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	out := operations.UpdateNPAPolicyGroupsRequest{
+		GroupID:               groupID,
+		Silent:                silent,
+		NpaPolicygroupRequest: *npaPolicygroupRequest,
+	}
+
+	return &out, diags
+}
+
+func (r *NPAPolicyGroupsResourceModel) ToSharedNpaPolicygroupRequest(ctx context.Context) (*shared.NpaPolicygroupRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	groupName := new(string)
 	if !r.GroupName.IsUnknown() && !r.GroupName.IsNull() {
 		*groupName = r.GroupName.ValueString()
@@ -57,18 +157,6 @@ func (r *NPAPolicyGroupsResourceModel) ToSharedNpaPolicygroupRequest() *shared.N
 		ModifyBy:   modifyBy,
 		ModifyType: modifyType,
 	}
-	return &out
-}
 
-func (r *NPAPolicyGroupsResourceModel) RefreshFromSharedNpaPolicygroupResponseItem(resp *shared.NpaPolicygroupResponseItem) {
-	if resp != nil {
-		r.CanBeEditedDeleted = types.StringPointerValue(resp.CanBeEditedDeleted)
-		r.GroupID = types.StringPointerValue(resp.GroupID)
-		r.GroupName = types.StringPointerValue(resp.GroupName)
-		r.GroupPinnedID = types.StringPointerValue(resp.GroupPinnedID)
-		r.GroupProdID = types.StringPointerValue(resp.GroupProdID)
-		r.GroupType = types.StringPointerValue(resp.GroupType)
-		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
-		r.ModifyType = types.StringPointerValue(resp.ModifyType)
-	}
+	return &out, diags
 }

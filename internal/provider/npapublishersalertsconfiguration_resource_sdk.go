@@ -3,41 +3,15 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
-func (r *NPAPublishersAlertsConfigurationResourceModel) ToSharedPublishersAlertPutRequest() *shared.PublishersAlertPutRequest {
-	var adminUsers []string = []string{}
-	for _, adminUsersItem := range r.AdminUsers {
-		adminUsers = append(adminUsers, adminUsersItem.ValueString())
-	}
-	var eventTypes []shared.EventTypes = []shared.EventTypes{}
-	for _, eventTypesItem := range r.EventTypes {
-		eventTypes = append(eventTypes, shared.EventTypes(eventTypesItem.ValueString()))
-	}
-	var selectedUsers string
-	selectedUsers = r.SelectedUsers.ValueString()
+func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromSharedPublishersAlertGetResponseData(ctx context.Context, resp *shared.PublishersAlertGetResponseData) diag.Diagnostics {
+	var diags diag.Diagnostics
 
-	out := shared.PublishersAlertPutRequest{
-		AdminUsers:    adminUsers,
-		EventTypes:    eventTypes,
-		SelectedUsers: selectedUsers,
-	}
-	return &out
-}
-
-func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromSharedPublishersAlertPutResponse(resp *shared.PublishersAlertPutResponse) {
-	if resp != nil {
-		if resp.Status != nil {
-			r.Status = types.StringValue(string(*resp.Status))
-		} else {
-			r.Status = types.StringNull()
-		}
-	}
-}
-
-func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromSharedPublishersAlertGetResponseData(resp *shared.PublishersAlertGetResponseData) {
 	if resp != nil {
 		r.AdminUsers = make([]types.String, 0, len(resp.AdminUsers))
 		for _, v := range resp.AdminUsers {
@@ -49,4 +23,43 @@ func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromSharedPublish
 		}
 		r.SelectedUsers = types.StringPointerValue(resp.SelectedUsers)
 	}
+
+	return diags
+}
+
+func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromSharedPublishersAlertPutResponse(ctx context.Context, resp *shared.PublishersAlertPutResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if resp.Status != nil {
+			r.Status = types.StringValue(string(*resp.Status))
+		} else {
+			r.Status = types.StringNull()
+		}
+	}
+
+	return diags
+}
+
+func (r *NPAPublishersAlertsConfigurationResourceModel) ToSharedPublishersAlertPutRequest(ctx context.Context) (*shared.PublishersAlertPutRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	adminUsers := make([]string, 0, len(r.AdminUsers))
+	for _, adminUsersItem := range r.AdminUsers {
+		adminUsers = append(adminUsers, adminUsersItem.ValueString())
+	}
+	eventTypes := make([]shared.EventTypes, 0, len(r.EventTypes))
+	for _, eventTypesItem := range r.EventTypes {
+		eventTypes = append(eventTypes, shared.EventTypes(eventTypesItem.ValueString()))
+	}
+	var selectedUsers string
+	selectedUsers = r.SelectedUsers.ValueString()
+
+	out := shared.PublishersAlertPutRequest{
+		AdminUsers:    adminUsers,
+		EventTypes:    eventTypes,
+		SelectedUsers: selectedUsers,
+	}
+
+	return &out, diags
 }

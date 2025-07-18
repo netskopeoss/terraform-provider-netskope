@@ -16,7 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
+	"math"
 	"strconv"
 )
 
@@ -30,6 +30,7 @@ func NewNPAPublisherResource() resource.Resource {
 
 // NPAPublisherResource defines the resource implementation.
 type NPAPublisherResource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -74,7 +75,7 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 								Computed:    true,
 								ElementType: types.StringType,
 							},
-							"last_modified": schema.NumberAttribute{
+							"last_modified": schema.Float64Attribute{
 								Computed: true,
 							},
 						},
@@ -91,7 +92,7 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 					"ip_address": schema.StringAttribute{
 						Computed: true,
 					},
-					"latency": schema.NumberAttribute{
+					"latency": schema.Float64Attribute{
 						Computed: true,
 					},
 					"version": schema.StringAttribute{
@@ -179,10 +180,10 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 					"detail": schema.StringAttribute{
 						Computed: true,
 					},
-					"error_code": schema.NumberAttribute{
+					"error_code": schema.Float64Attribute{
 						Computed: true,
 					},
-					"timestamp": schema.NumberAttribute{
+					"timestamp": schema.Float64Attribute{
 						Computed: true,
 					},
 					"version": schema.StringAttribute{
@@ -243,8 +244,13 @@ func (r *NPAPublisherResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 
-	request := *data.ToSharedPublisherPostRequest()
-	res, err := r.client.NPAPublisher.Create(ctx, request)
+	request, requestDiags := data.ToSharedPublisherPostRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.NPAPublisher.Create(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -264,8 +270,17 @@ func (r *NPAPublisherResource) Create(ctx context.Context, req resource.CreateRe
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherResponseData(ctx, res.PublisherResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -289,13 +304,13 @@ func (r *NPAPublisherResource) Read(ctx context.Context, req resource.ReadReques
 		return
 	}
 
-	var publisherID int
-	publisherID = int(data.PublisherID.ValueInt32())
+	request, requestDiags := data.ToOperationsGetNPAPublisherByIDRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetNPAPublisherByIDRequest{
-		PublisherID: publisherID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPublisher.Read(ctx, request)
+	res, err := r.client.NPAPublisher.Read(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -319,7 +334,11 @@ func (r *NPAPublisherResource) Read(ctx context.Context, req resource.ReadReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherResponseData(ctx, res.PublisherResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -339,15 +358,13 @@ func (r *NPAPublisherResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 
-	var publisherID int
-	publisherID = int(data.PublisherID.ValueInt32())
+	request, requestDiags := data.ToOperationsUpdateNPAPublisherByIDRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	publisherPatchRequest := *data.ToSharedPublisherPatchRequest()
-	request := operations.UpdateNPAPublisherByIDRequest{
-		PublisherID:           publisherID,
-		PublisherPatchRequest: publisherPatchRequest,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPublisher.Update(ctx, request)
+	res, err := r.client.NPAPublisher.Update(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -367,15 +384,24 @@ func (r *NPAPublisherResource) Update(ctx context.Context, req resource.UpdateRe
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherResponseData(res.PublisherResponse.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var publisherId1 int
-	publisherId1 = int(data.PublisherID.ValueInt32())
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherResponseData(ctx, res.PublisherResponse.Data)...)
 
-	request1 := operations.GetNPAPublisherByIDRequest{
-		PublisherID: publisherId1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.NPAPublisher.Read(ctx, request1)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsGetNPAPublisherByIDRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.NPAPublisher.Read(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -395,8 +421,17 @@ func (r *NPAPublisherResource) Update(ctx context.Context, req resource.UpdateRe
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherResponseData(res1.PublisherResponse.Data)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherResponseData(ctx, res1.PublisherResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -420,13 +455,13 @@ func (r *NPAPublisherResource) Delete(ctx context.Context, req resource.DeleteRe
 		return
 	}
 
-	var publisherID int
-	publisherID = int(data.PublisherID.ValueInt32())
+	request, requestDiags := data.ToOperationsDeleteNPAPublishersRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteNPAPublishersRequest{
-		PublisherID: publisherID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.NPAPublisher.Delete(ctx, request)
+	res, err := r.client.NPAPublisher.Delete(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -449,7 +484,13 @@ func (r *NPAPublisherResource) ImportState(ctx context.Context, req resource.Imp
 	publisherID, err := strconv.Atoi(req.ID)
 	if err != nil {
 		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
+		return
 	}
 
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("publisher_id"), int32(publisherID))...)
+	if publisherID < math.MinInt32 || publisherID > math.MaxInt32 {
+		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an int32 but was %d", publisherID))
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("publisher_id"), publisherID)...)
 }

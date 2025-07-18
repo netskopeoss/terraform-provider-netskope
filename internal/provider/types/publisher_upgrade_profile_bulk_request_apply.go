@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type PublisherUpgradeProfileBulkRequestApply struct {
 	PublisherUpgradeProfilesID types.String `tfsdk:"publisher_upgrade_profiles_id"`

@@ -59,7 +59,7 @@ terraform {
   required_providers {
     ns = {
       source  = "netskope/ns"
-      version = "0.3.2"
+      version = "0.3.1"
     }
   }
 }
@@ -135,7 +135,6 @@ Netskope Terraform Provider: Combined specification to produce netskope terrafor
 
 * [ns_npa_policy_groups](docs/resources/npa_policy_groups.md)
 * [ns_npa_private_app](docs/resources/npa_private_app.md)
-* [ns_npa_private_app_tags](docs/resources/npa_private_app_tags.md)
 * [ns_npa_publisher](docs/resources/npa_publisher.md)
 * [ns_npa_publishers_alerts_configuration](docs/resources/npa_publishers_alerts_configuration.md)
 * [ns_npa_publishers_bulk_profile_updates](docs/resources/npa_publishers_bulk_profile_updates.md)
@@ -149,8 +148,6 @@ Netskope Terraform Provider: Combined specification to produce netskope terrafor
 * [ns_npa_policy_groups_list](docs/data-sources/npa_policy_groups_list.md)
 * [ns_npa_private_app](docs/data-sources/npa_private_app.md)
 * [ns_npa_private_apps_list](docs/data-sources/npa_private_apps_list.md)
-* [ns_npa_private_apps_tags_list](docs/data-sources/npa_private_apps_tags_list.md)
-* [ns_npa_private_app_tags](docs/data-sources/npa_private_app_tags.md)
 * [ns_npa_private_policy_in_use](docs/data-sources/npa_private_policy_in_use.md)
 * [ns_npa_publisher](docs/data-sources/npa_publisher.md)
 * [ns_npa_publisher_apps_list](docs/data-sources/npa_publisher_apps_list.md)

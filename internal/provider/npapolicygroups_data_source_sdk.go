@@ -3,11 +3,16 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
 )
 
-func (r *NPAPolicyGroupsDataSourceModel) RefreshFromSharedNpaPolicygroupResponseItem(resp *shared.NpaPolicygroupResponseItem) {
+func (r *NPAPolicyGroupsDataSourceModel) RefreshFromSharedNpaPolicygroupResponseItem(ctx context.Context, resp *shared.NpaPolicygroupResponseItem) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.CanBeEditedDeleted = types.StringPointerValue(resp.CanBeEditedDeleted)
 		r.GroupID = types.StringPointerValue(resp.GroupID)
@@ -18,4 +23,19 @@ func (r *NPAPolicyGroupsDataSourceModel) RefreshFromSharedNpaPolicygroupResponse
 		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
 		r.ModifyType = types.StringPointerValue(resp.ModifyType)
 	}
+
+	return diags
+}
+
+func (r *NPAPolicyGroupsDataSourceModel) ToOperationsGetNPAPolicyGroupByIDRequest(ctx context.Context) (*operations.GetNPAPolicyGroupByIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetNPAPolicyGroupByIDRequest{
+		GroupID: groupID,
+	}
+
+	return &out, diags
 }

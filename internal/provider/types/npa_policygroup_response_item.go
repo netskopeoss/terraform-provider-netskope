@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type NpaPolicygroupResponseItem struct {
 	CanBeEditedDeleted types.String `tfsdk:"can_be_edited_deleted"`

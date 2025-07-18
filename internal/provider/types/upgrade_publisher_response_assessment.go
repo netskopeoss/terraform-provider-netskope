@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type UpgradePublisherResponseAssessment struct {
 	CaCertsStatus *UpgradePublisherResponseCaCertsStatus `tfsdk:"ca_certs_status"`

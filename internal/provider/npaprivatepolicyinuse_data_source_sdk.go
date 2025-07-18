@@ -3,17 +3,16 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 )
 
-func (r *NPAPrivatePolicyInUseDataSourceModel) ToOperationsGetNPAPolicyInUseRequestBody() *operations.GetNPAPolicyInUseRequestBody {
-	out := operations.GetNPAPolicyInUseRequestBody{}
-	return &out
-}
+func (r *NPAPrivatePolicyInUseDataSourceModel) RefreshFromResponseBody(ctx context.Context, resp []operations.ResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
 
-func (r *NPAPrivatePolicyInUseDataSourceModel) RefreshFromResponseBody(resp []operations.ResponseBody) {
 	r.Data = []tfTypes.ResponseBody{}
 	if len(r.Data) > len(resp) {
 		r.Data = r.Data[:len(resp)]
@@ -38,4 +37,20 @@ func (r *NPAPrivatePolicyInUseDataSourceModel) RefreshFromResponseBody(resp []op
 			r.Data[dataCount].Status = data.Status
 		}
 	}
+
+	return diags
+}
+
+func (r *NPAPrivatePolicyInUseDataSourceModel) ToOperationsGetNPAPolicyInUseRequestBody(ctx context.Context) (*operations.GetNPAPolicyInUseRequestBody, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	ids := make([]string, 0, len(r.Ids))
+	for _, idsItem := range r.Ids {
+		ids = append(ids, idsItem.ValueString())
+	}
+	out := operations.GetNPAPolicyInUseRequestBody{
+		Ids: ids,
+	}
+
+	return &out, diags
 }

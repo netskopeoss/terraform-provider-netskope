@@ -3,43 +3,20 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/netskope/terraform-provider-ns/internal/provider/typeconvert"
 	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
+	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
 	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
-	"math/big"
 )
 
-func (r *NPAPublisherResourceModel) ToSharedPublisherPostRequest() *shared.PublisherPostRequest {
-	var publisherName string
-	publisherName = r.PublisherName.ValueString()
+func (r *NPAPublisherResourceModel) RefreshFromSharedPublisherResponseData(ctx context.Context, resp *shared.PublisherResponseData) diag.Diagnostics {
+	var diags diag.Diagnostics
 
-	lbrokerconnect := new(bool)
-	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
-		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
-	} else {
-		lbrokerconnect = nil
-	}
-	publisherUpgradeProfilesID := new(int)
-	if !r.PublisherUpgradeProfilesID.IsUnknown() && !r.PublisherUpgradeProfilesID.IsNull() {
-		*publisherUpgradeProfilesID = int(r.PublisherUpgradeProfilesID.ValueInt32())
-	} else {
-		publisherUpgradeProfilesID = nil
-	}
-	out := shared.PublisherPostRequest{
-		PublisherName:              publisherName,
-		Lbrokerconnect:             lbrokerconnect,
-		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
-	}
-	return &out
-}
-
-func (r *NPAPublisherResourceModel) RefreshFromSharedPublisherResponseData(resp *shared.PublisherResponseData) {
 	if resp != nil {
-		if resp.AppsCount != nil {
-			r.AppsCount = types.Int32Value(int32(*resp.AppsCount))
-		} else {
-			r.AppsCount = types.Int32Null()
-		}
+		r.AppsCount = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.AppsCount))
 		if resp.Assessment == nil {
 			r.Assessment = nil
 		} else {
@@ -52,21 +29,13 @@ func (r *NPAPublisherResourceModel) RefreshFromSharedPublisherResponseData(resp 
 				for _, v := range resp.Assessment.CaCertsStatus.Hashes {
 					r.Assessment.CaCertsStatus.Hashes = append(r.Assessment.CaCertsStatus.Hashes, types.StringValue(v))
 				}
-				if resp.Assessment.CaCertsStatus.LastModified != nil {
-					r.Assessment.CaCertsStatus.LastModified = types.NumberValue(big.NewFloat(float64(*resp.Assessment.CaCertsStatus.LastModified)))
-				} else {
-					r.Assessment.CaCertsStatus.LastModified = types.NumberNull()
-				}
+				r.Assessment.CaCertsStatus.LastModified = types.Float64PointerValue(resp.Assessment.CaCertsStatus.LastModified)
 			}
 			r.Assessment.EeeSupport = types.BoolPointerValue(resp.Assessment.EeeSupport)
 			r.Assessment.HddFree = types.StringPointerValue(resp.Assessment.HddFree)
 			r.Assessment.HddTotal = types.StringPointerValue(resp.Assessment.HddTotal)
 			r.Assessment.IPAddress = types.StringPointerValue(resp.Assessment.IPAddress)
-			if resp.Assessment.Latency != nil {
-				r.Assessment.Latency = types.NumberValue(big.NewFloat(float64(*resp.Assessment.Latency)))
-			} else {
-				r.Assessment.Latency = types.NumberNull()
-			}
+			r.Assessment.Latency = types.Float64PointerValue(resp.Assessment.Latency)
 			r.Assessment.Version = types.StringPointerValue(resp.Assessment.Version)
 		}
 		if resp.Capabilities == nil {
@@ -91,17 +60,9 @@ func (r *NPAPublisherResourceModel) RefreshFromSharedPublisherResponseData(resp 
 			r.ConnectedApps = append(r.ConnectedApps, types.StringValue(v))
 		}
 		r.Lbrokerconnect = types.BoolPointerValue(resp.Lbrokerconnect)
-		if resp.PublisherID != nil {
-			r.PublisherID = types.Int32Value(int32(*resp.PublisherID))
-		} else {
-			r.PublisherID = types.Int32Null()
-		}
+		r.PublisherID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PublisherID))
 		r.PublisherName = types.StringPointerValue(resp.PublisherName)
-		if resp.PublisherUpgradeProfilesID != nil {
-			r.PublisherUpgradeProfilesID = types.Int32Value(int32(*resp.PublisherUpgradeProfilesID))
-		} else {
-			r.PublisherUpgradeProfilesID = types.Int32Null()
-		}
+		r.PublisherUpgradeProfilesID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PublisherUpgradeProfilesID))
 		r.Registered = types.BoolPointerValue(resp.Registered)
 		if resp.Status != nil {
 			r.Status = types.StringValue(string(*resp.Status))
@@ -109,26 +70,14 @@ func (r *NPAPublisherResourceModel) RefreshFromSharedPublisherResponseData(resp 
 			r.Status = types.StringNull()
 		}
 		r.SticherPop = types.StringPointerValue(resp.SticherPop)
-		if resp.StitcherID != nil {
-			r.StitcherID = types.Int32Value(int32(*resp.StitcherID))
-		} else {
-			r.StitcherID = types.Int32Null()
-		}
+		r.StitcherID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.StitcherID))
 		if resp.UpgradeFailedReason == nil {
 			r.UpgradeFailedReason = nil
 		} else {
 			r.UpgradeFailedReason = &tfTypes.PublisherResponseUpgradeFailedReason{}
 			r.UpgradeFailedReason.Detail = types.StringPointerValue(resp.UpgradeFailedReason.Detail)
-			if resp.UpgradeFailedReason.ErrorCode != nil {
-				r.UpgradeFailedReason.ErrorCode = types.NumberValue(big.NewFloat(float64(*resp.UpgradeFailedReason.ErrorCode)))
-			} else {
-				r.UpgradeFailedReason.ErrorCode = types.NumberNull()
-			}
-			if resp.UpgradeFailedReason.Timestamp != nil {
-				r.UpgradeFailedReason.Timestamp = types.NumberValue(big.NewFloat(float64(*resp.UpgradeFailedReason.Timestamp)))
-			} else {
-				r.UpgradeFailedReason.Timestamp = types.NumberNull()
-			}
+			r.UpgradeFailedReason.ErrorCode = types.Float64PointerValue(resp.UpgradeFailedReason.ErrorCode)
+			r.UpgradeFailedReason.Timestamp = types.Float64PointerValue(resp.UpgradeFailedReason.Timestamp)
 			r.UpgradeFailedReason.Version = types.StringPointerValue(resp.UpgradeFailedReason.Version)
 		}
 		r.UpgradeRequest = types.BoolPointerValue(resp.UpgradeRequest)
@@ -139,9 +88,60 @@ func (r *NPAPublisherResourceModel) RefreshFromSharedPublisherResponseData(resp 
 			r.UpgradeStatus.Upstat = types.StringPointerValue(resp.UpgradeStatus.Upstat)
 		}
 	}
+
+	return diags
 }
 
-func (r *NPAPublisherResourceModel) ToSharedPublisherPatchRequest() *shared.PublisherPatchRequest {
+func (r *NPAPublisherResourceModel) ToOperationsDeleteNPAPublishersRequest(ctx context.Context) (*operations.DeleteNPAPublishersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var publisherID int
+	publisherID = int(r.PublisherID.ValueInt32())
+
+	out := operations.DeleteNPAPublishersRequest{
+		PublisherID: publisherID,
+	}
+
+	return &out, diags
+}
+
+func (r *NPAPublisherResourceModel) ToOperationsGetNPAPublisherByIDRequest(ctx context.Context) (*operations.GetNPAPublisherByIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var publisherID int
+	publisherID = int(r.PublisherID.ValueInt32())
+
+	out := operations.GetNPAPublisherByIDRequest{
+		PublisherID: publisherID,
+	}
+
+	return &out, diags
+}
+
+func (r *NPAPublisherResourceModel) ToOperationsUpdateNPAPublisherByIDRequest(ctx context.Context) (*operations.UpdateNPAPublisherByIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var publisherID int
+	publisherID = int(r.PublisherID.ValueInt32())
+
+	publisherPatchRequest, publisherPatchRequestDiags := r.ToSharedPublisherPatchRequest(ctx)
+	diags.Append(publisherPatchRequestDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	out := operations.UpdateNPAPublisherByIDRequest{
+		PublisherID:           publisherID,
+		PublisherPatchRequest: *publisherPatchRequest,
+	}
+
+	return &out, diags
+}
+
+func (r *NPAPublisherResourceModel) ToSharedPublisherPatchRequest(ctx context.Context) (*shared.PublisherPatchRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var publisherName string
 	publisherName = r.PublisherName.ValueString()
 
@@ -162,5 +162,33 @@ func (r *NPAPublisherResourceModel) ToSharedPublisherPatchRequest() *shared.Publ
 		Lbrokerconnect:             lbrokerconnect,
 		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *NPAPublisherResourceModel) ToSharedPublisherPostRequest(ctx context.Context) (*shared.PublisherPostRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var publisherName string
+	publisherName = r.PublisherName.ValueString()
+
+	lbrokerconnect := new(bool)
+	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
+		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
+	} else {
+		lbrokerconnect = nil
+	}
+	publisherUpgradeProfilesID := new(int)
+	if !r.PublisherUpgradeProfilesID.IsUnknown() && !r.PublisherUpgradeProfilesID.IsNull() {
+		*publisherUpgradeProfilesID = int(r.PublisherUpgradeProfilesID.ValueInt32())
+	} else {
+		publisherUpgradeProfilesID = nil
+	}
+	out := shared.PublisherPostRequest{
+		PublisherName:              publisherName,
+		Lbrokerconnect:             lbrokerconnect,
+		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
+	}
+
+	return &out, diags
 }

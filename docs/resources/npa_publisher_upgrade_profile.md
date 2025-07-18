@@ -74,5 +74,5 @@ must be one of ["Africa/Cairo", "Africa/Casablanca", "Africa/Johannesburg", "Afr
 Import is supported using the following syntax:
 
 ```shell
-terraform import ns_npa_publisher_upgrade_profile.my_ns_npa_publisher_upgrade_profile "0"
+terraform import ns_npa_publisher_upgrade_profile.my_ns_npa_publisher_upgrade_profile 0
 ```

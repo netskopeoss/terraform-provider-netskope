@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type PrivateAppsItem struct {
 	AllowUnauthenticatedCors    types.Bool                                             `tfsdk:"allow_unauthenticated_cors"`

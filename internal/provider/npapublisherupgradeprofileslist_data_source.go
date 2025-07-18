@@ -23,6 +23,7 @@ func NewNPAPublisherUpgradeProfilesListDataSource() datasource.DataSource {
 
 // NPAPublisherUpgradeProfilesListDataSource is the data source implementation.
 type NPAPublisherUpgradeProfilesListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -151,10 +152,6 @@ func (r *NPAPublisherUpgradeProfilesListDataSource) Read(ctx context.Context, re
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -163,7 +160,11 @@ func (r *NPAPublisherUpgradeProfilesListDataSource) Read(ctx context.Context, re
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherUpgradeProfileListResponse(res.PublisherUpgradeProfileListResponse)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileListResponse(ctx, res.PublisherUpgradeProfileListResponse)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

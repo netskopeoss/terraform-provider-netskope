@@ -27,6 +27,7 @@ func NewNPAPublishersBulkProfileUpdatesResource() resource.Resource {
 
 // NPAPublishersBulkProfileUpdatesResource defines the resource implementation.
 type NPAPublishersBulkProfileUpdatesResource struct {
+	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
@@ -260,8 +261,13 @@ func (r *NPAPublishersBulkProfileUpdatesResource) Create(ctx context.Context, re
 		return
 	}
 
-	request := *data.ToSharedPublisherUpgradeProfileBulkRequest()
-	res, err := r.client.BulkupdateNPAPublishers(ctx, request)
+	request, requestDiags := data.ToSharedPublisherUpgradeProfileBulkRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.BulkupdateNPAPublishers(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -281,8 +287,17 @@ func (r *NPAPublishersBulkProfileUpdatesResource) Create(ctx context.Context, re
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPublisherUpgradeProfileBulkResponse(res.PublisherUpgradeProfileBulkResponse)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileBulkResponse(ctx, res.PublisherUpgradeProfileBulkResponse)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
