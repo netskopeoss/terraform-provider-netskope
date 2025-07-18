@@ -3,7 +3,7 @@
 package shared
 
 import (
-	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/utils"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/utils"
 )
 
 type PublisherUpgradeProfileResponseData struct {

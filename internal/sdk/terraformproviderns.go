@@ -2,19 +2,19 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0.0 and generator version 2.657.1
+// Generated from OpenAPI doc version 1.0.0 and generator version 2.658.3
 
 import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/config"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/hooks"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/utils"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/errors"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/retry"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/config"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/hooks"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/utils"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/errors"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/operations"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/retry"
 	"net/http"
 	"net/url"
 	"time"
@@ -155,7 +155,7 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk := &TerraformProviderNs{
 		SDKVersion: "0.3.1",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 0.3.1 2.657.1 1.0.0 github.com/netskope/terraform-provider-ns/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 0.3.1 2.658.3 1.0.0 github.com/netskopeoss/terraform-provider-netskope/internal/sdk",
 			ServerList: ServerList,
 			ServerVariables: []map[string]string{
 				{

@@ -6,7 +6,7 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/operations"
 )
 
 func (r *NPAPublisherTokenResourceModel) RefreshFromOperationsGenerateNPAPublisherTokenData(ctx context.Context, resp *operations.GenerateNPAPublisherTokenData) diag.Diagnostics {

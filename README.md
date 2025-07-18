@@ -57,14 +57,14 @@ To install this provider, copy and paste this code into your Terraform configura
 ```hcl
 terraform {
   required_providers {
-    ns = {
-      source  = "netskope/ns"
+    netskope = {
+      source  = "netskopeoss/netskope"
       version = "0.3.1"
     }
   }
 }
 
-provider "ns" {
+provider "netskope" {
   # Configuration options
 }
 ```
@@ -92,7 +92,7 @@ TF_REATTACH_PROVIDERS=... terraform apply
 
 Terraform allows you to use local provider builds by setting a `dev_overrides` block in a configuration file called `.terraformrc`. This block overrides all other configured installation methods.
 
-1. Execute `go build` to construct a binary called `terraform-provider-ns`
+1. Execute `go build` to construct a binary called `terraform-provider-netskope`
 2. Ensure that the `.terraformrc` file is configured with a `dev_overrides` section such that your local copy of terraform can see the provider binary
 
 Terraform searches for the `.terraformrc` file in your home directory and applies any configuration settings you set.
@@ -101,7 +101,7 @@ Terraform searches for the `.terraformrc` file in your home directory and applie
 provider_installation {
 
   dev_overrides {
-      "registry.terraform.io/netskope/ns" = "<PATH>"
+      "registry.terraform.io/netskopeoss/netskope" = "<PATH>"
   }
 
   # For all other providers, install them directly from their origin provider
@@ -133,31 +133,31 @@ Netskope Terraform Provider: Combined specification to produce netskope terrafor
 
 ### Resources
 
-* [ns_npa_policy_groups](docs/resources/npa_policy_groups.md)
-* [ns_npa_private_app](docs/resources/npa_private_app.md)
-* [ns_npa_publisher](docs/resources/npa_publisher.md)
-* [ns_npa_publishers_alerts_configuration](docs/resources/npa_publishers_alerts_configuration.md)
-* [ns_npa_publishers_bulk_profile_updates](docs/resources/npa_publishers_bulk_profile_updates.md)
-* [ns_npa_publishers_bulk_upgrade_request](docs/resources/npa_publishers_bulk_upgrade_request.md)
-* [ns_npa_publisher_token](docs/resources/npa_publisher_token.md)
-* [ns_npa_publisher_upgrade_profile](docs/resources/npa_publisher_upgrade_profile.md)
-* [ns_npa_rules](docs/resources/npa_rules.md)
+* [netskope_npa_policy_groups](docs/resources/npa_policy_groups.md)
+* [netskope_npa_private_app](docs/resources/npa_private_app.md)
+* [netskope_npa_publisher](docs/resources/npa_publisher.md)
+* [netskope_npa_publishers_alerts_configuration](docs/resources/npa_publishers_alerts_configuration.md)
+* [netskope_npa_publishers_bulk_profile_updates](docs/resources/npa_publishers_bulk_profile_updates.md)
+* [netskope_npa_publishers_bulk_upgrade_request](docs/resources/npa_publishers_bulk_upgrade_request.md)
+* [netskope_npa_publisher_token](docs/resources/npa_publisher_token.md)
+* [netskope_npa_publisher_upgrade_profile](docs/resources/npa_publisher_upgrade_profile.md)
+* [netskope_npa_rules](docs/resources/npa_rules.md)
 ### Data Sources
 
-* [ns_npa_policy_groups](docs/data-sources/npa_policy_groups.md)
-* [ns_npa_policy_groups_list](docs/data-sources/npa_policy_groups_list.md)
-* [ns_npa_private_app](docs/data-sources/npa_private_app.md)
-* [ns_npa_private_apps_list](docs/data-sources/npa_private_apps_list.md)
-* [ns_npa_private_policy_in_use](docs/data-sources/npa_private_policy_in_use.md)
-* [ns_npa_publisher](docs/data-sources/npa_publisher.md)
-* [ns_npa_publisher_apps_list](docs/data-sources/npa_publisher_apps_list.md)
-* [ns_npa_publishers_alerts_configuration](docs/data-sources/npa_publishers_alerts_configuration.md)
-* [ns_npa_publishers_list](docs/data-sources/npa_publishers_list.md)
-* [ns_npa_publishers_releases_list](docs/data-sources/npa_publishers_releases_list.md)
-* [ns_npa_publisher_upgrade_profile](docs/data-sources/npa_publisher_upgrade_profile.md)
-* [ns_npa_publisher_upgrade_profiles_list](docs/data-sources/npa_publisher_upgrade_profiles_list.md)
-* [ns_npa_rules](docs/data-sources/npa_rules.md)
-* [ns_npa_rules_list](docs/data-sources/npa_rules_list.md)
+* [netskope_npa_policy_groups](docs/data-sources/npa_policy_groups.md)
+* [netskope_npa_policy_groups_list](docs/data-sources/npa_policy_groups_list.md)
+* [netskope_npa_private_app](docs/data-sources/npa_private_app.md)
+* [netskope_npa_private_apps_list](docs/data-sources/npa_private_apps_list.md)
+* [netskope_npa_private_policy_in_use](docs/data-sources/npa_private_policy_in_use.md)
+* [netskope_npa_publisher](docs/data-sources/npa_publisher.md)
+* [netskope_npa_publisher_apps_list](docs/data-sources/npa_publisher_apps_list.md)
+* [netskope_npa_publishers_alerts_configuration](docs/data-sources/npa_publishers_alerts_configuration.md)
+* [netskope_npa_publishers_list](docs/data-sources/npa_publishers_list.md)
+* [netskope_npa_publishers_releases_list](docs/data-sources/npa_publishers_releases_list.md)
+* [netskope_npa_publisher_upgrade_profile](docs/data-sources/npa_publisher_upgrade_profile.md)
+* [netskope_npa_publisher_upgrade_profiles_list](docs/data-sources/npa_publisher_upgrade_profiles_list.md)
+* [netskope_npa_rules](docs/data-sources/npa_rules.md)
+* [netskope_npa_rules_list](docs/data-sources/npa_rules_list.md)
 <!-- End Available Resources and Data Sources [operations] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->

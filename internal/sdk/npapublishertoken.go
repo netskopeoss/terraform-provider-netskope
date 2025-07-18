@@ -6,12 +6,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/config"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/hooks"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/utils"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/errors"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/operations"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/config"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/hooks"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/utils"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/errors"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/operations"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 	"net/http"
 )
 

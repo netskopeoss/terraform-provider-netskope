@@ -8,14 +8,14 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
-	"github.com/netskope/terraform-provider-ns/internal/provider"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/provider"
 )
 
 // Run "go generate" to generate the docs for the registry/website on each regeneration of the provider.
 
 // Run the docs generation tool, check its repository for more information on how it works and how docs
 // can be customized.
-//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --provider-name terraform-provider-ns --rendered-provider-name terraform-provider-ns
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --provider-name terraform-provider-netskope --rendered-provider-name terraform-provider-netskope
 
 var (
 	// these will be set by the goreleaser configuration
@@ -30,7 +30,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/netskope/ns",
+		Address: "registry.terraform.io/netskopeoss/netskope",
 		Debug:   debug,
 	}
 

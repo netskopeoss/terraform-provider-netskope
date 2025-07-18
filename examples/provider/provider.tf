@@ -1,12 +1,12 @@
 terraform {
   required_providers {
-    ns = {
-      source  = "netskope/ns"
+    netskope = {
+      source  = "netskopeoss/netskope"
       version = "0.3.1"
     }
   }
 }
 
-provider "ns" {
+provider "netskope" {
   # Configuration options
 }

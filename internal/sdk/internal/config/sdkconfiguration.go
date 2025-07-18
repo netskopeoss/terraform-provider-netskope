@@ -4,7 +4,7 @@ package config
 
 import (
 	"context"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/retry"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/retry"
 	"net/http"
 	"time"
 )

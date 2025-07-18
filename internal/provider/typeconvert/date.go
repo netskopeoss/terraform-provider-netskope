@@ -3,7 +3,7 @@
 package typeconvert
 
 import (
-	sdkTypes "github.com/netskope/terraform-provider-ns/internal/sdk/types"
+	sdkTypes "github.com/netskopeoss/terraform-provider-netskope/internal/sdk/types"
 )
 
 // Converts a date types.Date to string.

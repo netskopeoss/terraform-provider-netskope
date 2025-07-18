@@ -29,7 +29,7 @@ terraform:
     httpHeaders: ""
   additionalResources: []
   allowUnknownFieldsInWeakUnions: false
-  author: netskope
+  author: netskopeoss
   baseErrorName: TerraformProviderNsError
   defaultErrorName: SDKError
   enableTypeDeduplication: true
@@ -44,4 +44,4 @@ terraform:
       webhooks: webhooks
   inputModelSuffix: input
   outputModelSuffix: output
-  packageName: ns
+  packageName: netskope

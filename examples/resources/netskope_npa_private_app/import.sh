@@ -1,0 +1,1 @@
+terraform import netskope_npa_private_app.my_netskope_npa_private_app 0

@@ -6,9 +6,9 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netskope/terraform-provider-ns/internal/provider/typeconvert"
-	tfTypes "github.com/netskope/terraform-provider-ns/internal/provider/types"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/models/shared"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/provider/typeconvert"
+	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
 func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetResponse(ctx context.Context, resp *shared.PublishersGetResponse) diag.Diagnostics {

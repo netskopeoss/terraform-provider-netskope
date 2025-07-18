@@ -5,7 +5,7 @@ package hooks
 import (
 	"context"
 	"errors"
-	"github.com/netskope/terraform-provider-ns/internal/sdk/internal/config"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/config"
 	"net/http"
 )
 
