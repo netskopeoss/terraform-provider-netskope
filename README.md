@@ -11,9 +11,8 @@ To install this provider, copy and paste this code into your Terraform configura
 ```hcl
 terraform {
   required_providers {
-    ns = {
-      source  = "netskope/ns"
-      version = "0.3.131"
+    netskope = {
+      source  = "netskopeoss/netskope"
     }
   }
 }
