@@ -56,10 +56,10 @@ resource "netskope_npa_private_app" "my_npaprivateapp" {
 ### Optional
 
 - `allow_unauthenticated_cors` (Boolean)
-- `allow_uri_bypass` (Boolean) Requires replacement if changed.
+- `allow_uri_bypass` (Boolean)
 - `app_name` (String) Requires replacement if changed.
 - `app_option` (Attributes) (see [below for nested schema](#nestedatt--app_option))
-- `bypass_uris` (List of String) Requires replacement if changed.
+- `bypass_uris` (List of String)
 - `clientless_access` (Boolean)
 - `is_user_portal_app` (Boolean)
 - `private_app_hostname` (String)

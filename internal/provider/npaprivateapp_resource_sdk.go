@@ -200,11 +200,21 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 	} else {
 		allowUnauthenticatedCors = nil
 	}
+	allowURIBypass := new(bool)
+	if !r.AllowURIBypass.IsUnknown() && !r.AllowURIBypass.IsNull() {
+		*allowURIBypass = r.AllowURIBypass.ValueBool()
+	} else {
+		allowURIBypass = nil
+	}
 	uribypassHeaderValue := new(string)
 	if !r.UribypassHeaderValue.IsUnknown() && !r.UribypassHeaderValue.IsNull() {
 		*uribypassHeaderValue = r.UribypassHeaderValue.ValueString()
 	} else {
 		uribypassHeaderValue = nil
+	}
+	bypassUris := make([]string, 0, len(r.BypassUris))
+	for _, bypassUrisItem := range r.BypassUris {
+		bypassUris = append(bypassUris, bypassUrisItem.ValueString())
 	}
 	var appOption *shared.PrivateAppsPutRequestAppOption
 	if r.AppOption != nil {
@@ -298,7 +308,9 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 	}
 	out := shared.PrivateAppsPutRequest{
 		AllowUnauthenticatedCors: allowUnauthenticatedCors,
+		AllowURIBypass:           allowURIBypass,
 		UribypassHeaderValue:     uribypassHeaderValue,
+		BypassUris:               bypassUris,
 		AppOption:                appOption,
 		ClientlessAccess:         clientlessAccess,
 		PrivateAppHostname:       privateAppHostname,

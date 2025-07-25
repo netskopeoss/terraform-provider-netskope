@@ -1,9 +1,9 @@
-speakeasyVersion: 1.583.0
+speakeasyVersion: 1.587.1
 sources:
     openapi:
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:30fc871539c7108c323b00509b9635adc117c9fc7d656dd3cfdff18eabb392ed
-        sourceBlobDigest: sha256:20c3bf9607c1b3cddca8a7c14ce91e40f729c90cc9b526759550f5282282cad9
+        sourceRevisionDigest: sha256:4671d619fa1645e23c786363575ee4263a4de9835b5cfc9fe3cc855f78405d3a
+        sourceBlobDigest: sha256:fbfeb975cabbf6f0eff8a6efb5eefb6422683da19c373b5108f628d0be672c9a
         tags:
             - latest
             - 1.0.0
@@ -11,8 +11,8 @@ targets:
     first-target:
         source: openapi
         sourceNamespace: openapi
-        sourceRevisionDigest: sha256:30fc871539c7108c323b00509b9635adc117c9fc7d656dd3cfdff18eabb392ed
-        sourceBlobDigest: sha256:20c3bf9607c1b3cddca8a7c14ce91e40f729c90cc9b526759550f5282282cad9
+        sourceRevisionDigest: sha256:4671d619fa1645e23c786363575ee4263a4de9835b5cfc9fe3cc855f78405d3a
+        sourceBlobDigest: sha256:fbfeb975cabbf6f0eff8a6efb5eefb6422683da19c373b5108f628d0be672c9a
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
@@ -33,3 +33,7 @@ workflow:
         first-target:
             target: terraform
             source: openapi
+            publish:
+                terraform:
+                    gpgPrivateKey: $terraform_gpg_private_key
+                    gpgPassPhrase: $terraform_gpg_passphrase

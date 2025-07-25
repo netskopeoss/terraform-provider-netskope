@@ -9,15 +9,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	speakeasy_boolplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/boolplanmodifier"
-	speakeasy_listplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/listplanmodifier"
 	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/validators"
@@ -85,11 +81,6 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 			"allow_uri_bypass": schema.BoolAttribute{
 				Computed: true,
 				Optional: true,
-				PlanModifiers: []planmodifier.Bool{
-					boolplanmodifier.RequiresReplaceIfConfigured(),
-					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-				},
-				Description: `Requires replacement if changed.`,
 			},
 			"app_name": schema.StringAttribute{
 				Optional: true,
@@ -103,14 +94,9 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Optional: true,
 			},
 			"bypass_uris": schema.ListAttribute{
-				Computed: true,
-				Optional: true,
-				PlanModifiers: []planmodifier.List{
-					listplanmodifier.RequiresReplaceIfConfigured(),
-					speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-				},
+				Computed:    true,
+				Optional:    true,
 				ElementType: types.StringType,
-				Description: `Requires replacement if changed.`,
 			},
 			"clientless_access": schema.BoolAttribute{
 				Computed: true,
