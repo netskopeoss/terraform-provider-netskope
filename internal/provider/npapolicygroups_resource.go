@@ -33,17 +33,15 @@ type NPAPolicyGroupsResource struct {
 // NPAPolicyGroupsResourceModel describes the resource data model.
 type NPAPolicyGroupsResourceModel struct {
 	CanBeEditedDeleted types.String        `tfsdk:"can_be_edited_deleted"`
-	GroupID            types.String        `tfsdk:"group_id"`
 	GroupName          types.String        `tfsdk:"group_name"`
 	GroupOrder         *tfTypes.GroupOrder `tfsdk:"group_order"`
 	GroupPinnedID      types.String        `tfsdk:"group_pinned_id"`
 	GroupProdID        types.String        `tfsdk:"group_prod_id"`
 	GroupType          types.String        `tfsdk:"group_type"`
+	ID                 types.String        `tfsdk:"id"`
 	ModifyBy           types.String        `tfsdk:"modify_by"`
 	ModifyTime         types.String        `tfsdk:"modify_time"`
 	ModifyType         types.String        `tfsdk:"modify_type"`
-	Silent             types.String        `queryParam:"style=form,explode=true,name=silent" tfsdk:"silent"`
-	Status             types.String        `tfsdk:"status"`
 }
 
 func (r *NPAPolicyGroupsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -57,10 +55,6 @@ func (r *NPAPolicyGroupsResource) Schema(ctx context.Context, req resource.Schem
 			"can_be_edited_deleted": schema.StringAttribute{
 				Computed: true,
 			},
-			"group_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `policy group rule id`,
-			},
 			"group_name": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
@@ -68,22 +62,17 @@ func (r *NPAPolicyGroupsResource) Schema(ctx context.Context, req resource.Schem
 			"group_order": schema.SingleNestedAttribute{
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
-					"group_order": schema.SingleNestedAttribute{
+					"group_id": schema.StringAttribute{
 						Optional: true,
-						Attributes: map[string]schema.Attribute{
-							"group_id": schema.StringAttribute{
-								Optional: true,
-							},
-							"order": schema.StringAttribute{
-								Optional:    true,
-								Description: `must be one of ["before", "after"]`,
-								Validators: []validator.String{
-									stringvalidator.OneOf(
-										"before",
-										"after",
-									),
-								},
-							},
+					},
+					"order": schema.StringAttribute{
+						Optional:    true,
+						Description: `must be one of ["before", "after"]`,
+						Validators: []validator.String{
+							stringvalidator.OneOf(
+								"before",
+								"after",
+							),
 						},
 					},
 				},
@@ -97,6 +86,10 @@ func (r *NPAPolicyGroupsResource) Schema(ctx context.Context, req resource.Schem
 			"group_type": schema.StringAttribute{
 				Computed: true,
 			},
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: `policy group rule id`,
+			},
 			"modify_by": schema.StringAttribute{
 				Optional: true,
 			},
@@ -106,23 +99,6 @@ func (r *NPAPolicyGroupsResource) Schema(ctx context.Context, req resource.Schem
 			"modify_type": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
-			},
-			"silent": schema.StringAttribute{
-				Optional:    true,
-				Description: `flag to skip output except status code. must be one of ["1", "0"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf("1", "0"),
-				},
-			},
-			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["success", "error"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"success",
-						"error",
-					),
-				},
 			},
 		},
 	}
@@ -166,13 +142,13 @@ func (r *NPAPolicyGroupsResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 
-	request, requestDiags := data.ToOperationsCreateNPAPolicyGroupsRequest(ctx)
+	request, requestDiags := data.ToSharedNpaPolicygroupRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPAPolicyGroups.Create(ctx, *request)
+	res, err := r.client.CreateNPAPolicyGroups(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -203,13 +179,13 @@ func (r *NPAPolicyGroupsResource) Create(ctx context.Context, req resource.Creat
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request1, request1Diags := data.ToOperationsGetNPAPolicyGroupByIDRequest(ctx)
+	request1, request1Diags := data.ToOperationsGetNPAPolicyGroupsRequest(ctx)
 	resp.Diagnostics.Append(request1Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res1, err := r.client.NPAPolicyGroups.Read(ctx, *request1)
+	res1, err := r.client.GetNPAPolicyGroups(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -263,13 +239,13 @@ func (r *NPAPolicyGroupsResource) Read(ctx context.Context, req resource.ReadReq
 		return
 	}
 
-	request, requestDiags := data.ToOperationsGetNPAPolicyGroupByIDRequest(ctx)
+	request, requestDiags := data.ToOperationsGetNPAPolicyGroupsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPAPolicyGroups.Read(ctx, *request)
+	res, err := r.client.GetNPAPolicyGroups(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -323,7 +299,7 @@ func (r *NPAPolicyGroupsResource) Update(ctx context.Context, req resource.Updat
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPAPolicyGroups.Update(ctx, *request)
+	res, err := r.client.UpdateNPAPolicyGroups(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -354,13 +330,13 @@ func (r *NPAPolicyGroupsResource) Update(ctx context.Context, req resource.Updat
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request1, request1Diags := data.ToOperationsGetNPAPolicyGroupByIDRequest(ctx)
+	request1, request1Diags := data.ToOperationsGetNPAPolicyGroupsRequest(ctx)
 	resp.Diagnostics.Append(request1Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res1, err := r.client.NPAPolicyGroups.Read(ctx, *request1)
+	res1, err := r.client.GetNPAPolicyGroups(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -420,7 +396,7 @@ func (r *NPAPolicyGroupsResource) Delete(ctx context.Context, req resource.Delet
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPAPolicyGroups.Delete(ctx, *request)
+	res, err := r.client.DeleteNPAPolicyGroups(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -440,5 +416,5 @@ func (r *NPAPolicyGroupsResource) Delete(ctx context.Context, req resource.Delet
 }
 
 func (r *NPAPolicyGroupsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), req.ID)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
 }

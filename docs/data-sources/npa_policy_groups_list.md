@@ -46,10 +46,10 @@ data "netskope_npa_policy_groups_list" "my_npapolicygroupslist" {
 Read-Only:
 
 - `can_be_edited_deleted` (String)
-- `group_id` (String)
 - `group_name` (String)
 - `group_pinned_id` (String)
 - `group_prod_id` (String)
 - `group_type` (String)
+- `id` (String)
 - `modify_time` (String)
 - `modify_type` (String)

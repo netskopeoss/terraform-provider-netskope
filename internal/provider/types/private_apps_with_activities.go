@@ -7,7 +7,6 @@ import (
 )
 
 type PrivateAppsWithActivities struct {
-	Activities []Activities   `tfsdk:"activities"`
-	AppID      []types.String `tfsdk:"app_id"`
-	AppName    types.String   `tfsdk:"app_name"`
+	Activities []Activities `tfsdk:"activities"`
+	AppName    types.String `tfsdk:"app_name"`
 }

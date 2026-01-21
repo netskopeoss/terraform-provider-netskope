@@ -16,14 +16,11 @@ NPAPolicyGroups Resource
 resource "netskope_npa_policy_groups" "my_npapolicygroups" {
   group_name = "...my_group_name..."
   group_order = {
-    group_order = {
-      group_id = "1"
-      order    = "before"
-    }
+    group_id = "1"
+    order    = "after"
   }
   modify_by   = "...my_modify_by..."
   modify_type = "...my_modify_type..."
-  silent      = "1"
 }
 ```
 
@@ -36,27 +33,18 @@ resource "netskope_npa_policy_groups" "my_npapolicygroups" {
 - `group_order` (Attributes) (see [below for nested schema](#nestedatt--group_order))
 - `modify_by` (String)
 - `modify_type` (String)
-- `silent` (String) flag to skip output except status code. must be one of ["1", "0"]
 
 ### Read-Only
 
 - `can_be_edited_deleted` (String)
-- `group_id` (String) policy group rule id
 - `group_pinned_id` (String)
 - `group_prod_id` (String)
 - `group_type` (String)
+- `id` (String) policy group rule id
 - `modify_time` (String)
-- `status` (String) must be one of ["success", "error"]
 
 <a id="nestedatt--group_order"></a>
 ### Nested Schema for `group_order`
-
-Optional:
-
-- `group_order` (Attributes) (see [below for nested schema](#nestedatt--group_order--group_order))
-
-<a id="nestedatt--group_order--group_order"></a>
-### Nested Schema for `group_order.group_order`
 
 Optional:
 

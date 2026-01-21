@@ -285,7 +285,7 @@ type PublisherUpgradeProfilePostRequest struct {
 	// Frequency of updates. This frequency is in a CRON format. \
 	// ┌───────────── minute (0–59) \
 	// │ ┌───────────── hour (0–23) \
-	// │ │ ┌───────────── day of the month (1–31) \
+	//  │ │ ┌───────────── day of the month (1–31) \
 	// │ │ │ ┌───────────── month (1–12) (Leave as *) \
 	// │ │ │ │ ┌───────────── day of the week (MON, TUE, WED, THU, FRI, SAT, SUN) \
 	// 0 0 1 * TUE => (Midnight, Weekly, Tuesday)
@@ -300,7 +300,8 @@ type PublisherUpgradeProfilePostRequest struct {
 	// The timezone for which the upgrade triggers. \
 	// Please see enum for accepted values.
 	//
-	Timezone Timezone `json:"timezone"`
+	Timezone   Timezone `json:"timezone"`
+	TimezoneID *int     `json:"timezone_id,omitempty"`
 }
 
 func (o *PublisherUpgradeProfilePostRequest) GetDockerTag() string {
@@ -343,4 +344,11 @@ func (o *PublisherUpgradeProfilePostRequest) GetTimezone() Timezone {
 		return Timezone("")
 	}
 	return o.Timezone
+}
+
+func (o *PublisherUpgradeProfilePostRequest) GetTimezoneID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.TimezoneID
 }

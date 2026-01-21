@@ -12,7 +12,20 @@ func initHooks(h *Hooks) {
 	// Add hooks by calling h.register{SDKInit/BeforeRequest/AfterSuccess/AfterError}Hook
 	// with an instance of a hook that implements that specific Hook interface
 	// Hooks are registered per SDK instance, and are valid for the lifetime of the SDK instance
-	MyApp := &myAppResponse{} 
+
+	// Debug hook - uncomment to enable request logging for troubleshooting
+	// debug := &debugRequestHook{}
+	// h.registerBeforeRequestHook(debug)
+
+	// Error status hook - registered first to catch soft 404s (200 OK with "status": "error")
+	// See docs/KNOWN_API_ISSUES.md for details on this API behavior
+	errorStatus := &errorStatusResponse{}
+	h.registerAfterSuccessHook(errorStatus)
+
+	// NOTE: policyGroupResponseHook removed - OAS now correctly defines wrapped responses
+	// for policy groups and NPA rules, so SDK handles them natively
+
+	MyApp := &myAppResponse{}
 	h.registerAfterSuccessHook(MyApp)
 	MyBulkApp := &myBulkAppResponse{} 
 	h.registerAfterSuccessHook(MyBulkApp)
@@ -22,4 +35,8 @@ func initHooks(h *Hooks) {
 	h.registerAfterSuccessHook(MyBulkPolicy)
 	MyPolicyRequest :=&myPolicyRequest{}
 	h.registerBeforeRequestHook(MyPolicyRequest)
+
+	// Private app request hook - strips problematic empty fields that cause API errors
+	privateAppReq := &privateAppRequestHook{}
+	h.registerBeforeRequestHook(privateAppReq)
 }

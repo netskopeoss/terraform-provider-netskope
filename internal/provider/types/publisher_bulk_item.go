@@ -8,10 +8,11 @@ import (
 
 type PublisherBulkItem struct {
 	AppsCount                  types.Int32                           `tfsdk:"apps_count"`
-	Assessment                 *UpgradePublisherResponseAssessment   `tfsdk:"assessment"`
+	Assessment                 *Assessment                           `tfsdk:"assessment"`
 	Capabilities               *PublisherResponseCapabilities        `tfsdk:"capabilities"`
 	CommonName                 types.String                          `tfsdk:"common_name"`
 	ConnectedApps              []types.String                        `tfsdk:"connected_apps"`
+	Labels                     []PublisherResponseLabels             `tfsdk:"labels"`
 	Lbrokerconnect             types.Bool                            `tfsdk:"lbrokerconnect"`
 	PublisherID                types.Int32                           `tfsdk:"publisher_id"`
 	PublisherName              types.String                          `tfsdk:"publisher_name"`

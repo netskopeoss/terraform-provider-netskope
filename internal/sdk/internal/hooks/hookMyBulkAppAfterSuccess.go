@@ -50,6 +50,14 @@ func (i *myBulkAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.
 		for i := range responseMap.BulkApps.AppData {
 			oldAppNameValue := responseMap.BulkApps.AppData[i].AppName
 			responseMap.BulkApps.AppData[i].AppName = strings.Trim(oldAppNameValue, "[]")
+
+			// Copy transport to type for each protocol (API returns transport but schema uses type)
+			for j := range responseMap.BulkApps.AppData[i].Protocols {
+				if responseMap.BulkApps.AppData[i].Protocols[j].Type == "" && responseMap.BulkApps.AppData[i].Protocols[j].Transport != "" {
+					responseMap.BulkApps.AppData[i].Protocols[j].Type = responseMap.BulkApps.AppData[i].Protocols[j].Transport
+				}
+			}
+
 			if myBulkAppResponseDebug {
 				log.Print("--------------------")
 				log.Print(responseMap.BulkApps.AppData[i].AppName)

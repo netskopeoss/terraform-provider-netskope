@@ -14,7 +14,7 @@ NPAPolicyGroups DataSource
 
 ```terraform
 data "netskope_npa_policy_groups" "my_npapolicygroups" {
-  group_id = "...my_group_id..."
+  id = "...my_id..."
 }
 ```
 
@@ -23,7 +23,7 @@ data "netskope_npa_policy_groups" "my_npapolicygroups" {
 
 ### Required
 
-- `group_id` (String) npa policy group id
+- `id` (String) npa policy group id
 
 ### Read-Only
 
@@ -34,4 +34,3 @@ data "netskope_npa_policy_groups" "my_npapolicygroups" {
 - `group_type` (String)
 - `modify_time` (String)
 - `modify_type` (String)
-- `status` (String)

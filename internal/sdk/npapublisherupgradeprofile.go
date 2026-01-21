@@ -32,9 +32,10 @@ func newNPAPublisherUpgradeProfile(rootSDK *TerraformProviderNs, sdkConfig confi
 
 // CreateNPAPublisherUpgradeProfile - Create a publisher upgrade profile
 // The NPA Publisher is a software package that enables private application
-// connectivity between your data center and the Netskope cloud. It is a crucial
-// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
-// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+//	connectivity between your data center and the Netskope cloud. It is a crucial
+//	component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+//	network access (ZTNA) to private applications and data in hybrid IT environments.
 //
 // This endpoint creates a publisher upgrade profiles. \
 // Please view schema for attribute descriptions.
@@ -196,9 +197,10 @@ func (s *NPAPublisherUpgradeProfile) CreateNPAPublisherUpgradeProfile(ctx contex
 
 // DeleteNPAPublisherUpgradeProfile - Delete a publisher
 // The NPA Publisher is a software package that enables private application
-// connectivity between your data center and the Netskope cloud. It is a crucial
-// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
-// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+//	connectivity between your data center and the Netskope cloud. It is a crucial
+//	component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+//	network access (ZTNA) to private applications and data in hybrid IT environments.
 //
 // This endpoint deletes a publisher upgrade profile by supplying the `upgrade_profile_id` attribute of the profile.\
 // Please use the `external_id` value for the upgrade_profile_id attribute requirements.
@@ -353,9 +355,10 @@ func (s *NPAPublisherUpgradeProfile) DeleteNPAPublisherUpgradeProfile(ctx contex
 
 // GetNPAPublisherUpgradeProfile - Get a publisher upgrade profile
 // The NPA Publisher is a software package that enables private application
-// connectivity between your data center and the Netskope cloud. It is a crucial
-// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
-// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+//	connectivity between your data center and the Netskope cloud. It is a crucial
+//	component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+//	network access (ZTNA) to private applications and data in hybrid IT environments.
 //
 // This endpoint returns a publisher upgrade profile by supplying the `upgrade_profile_id` attribute of the profile.
 // Please use the `external_id` value for the upgrade_profile_id attribute requirements.
@@ -510,9 +513,10 @@ func (s *NPAPublisherUpgradeProfile) GetNPAPublisherUpgradeProfile(ctx context.C
 
 // UpdateNPAPublisherUpgradeProfile - Update a publisher upgrade profile
 // The NPA Publisher is a software package that enables private application
-// connectivity between your data center and the Netskope cloud. It is a crucial
-// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
-// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+//	connectivity between your data center and the Netskope cloud. It is a crucial
+//	component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+//	network access (ZTNA) to private applications and data in hybrid IT environments.
 //
 // This endpoint updates a publisher upgrade profile by supplying the `upgrade_profile_id` attribute of the profile and the updated paramters.\
 // Please use the `external_id` value for the upgrade_profile_id attribute requirements.

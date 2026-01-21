@@ -8,9 +8,9 @@ import (
 
 type ProtocolItem struct {
 	CreatedAt types.String `tfsdk:"created_at"`
-	ID        types.Int64  `tfsdk:"id"`
+	ID        types.Int32  `tfsdk:"id"`
 	Port      types.String `tfsdk:"port"`
 	Protocol  types.String `tfsdk:"protocol"`
-	ServiceID types.Int64  `tfsdk:"service_id"`
+	ServiceID types.Int32  `tfsdk:"service_id"`
 	UpdatedAt types.String `tfsdk:"updated_at"`
 }

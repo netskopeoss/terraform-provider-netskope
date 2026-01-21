@@ -14,6 +14,7 @@ NPAPrivateAppsList DataSource
 
 ```terraform
 data "netskope_npa_private_apps_list" "my_npaprivateappslist" {
+  fields = "app_id,app_name"
   limit  = 1
   offset = 2
   query  = "...my_query..."
@@ -25,6 +26,7 @@ data "netskope_npa_private_apps_list" "my_npaprivateappslist" {
 
 ### Optional
 
+- `fields` (String) Return values only from specified fields
 - `limit` (Number) Number of results to limit the output by
 - `offset` (Number) Query offset
 - `query` (String) Return filtered result based on query
@@ -32,6 +34,8 @@ data "netskope_npa_private_apps_list" "my_npaprivateappslist" {
 ### Read-Only
 
 - `private_apps` (Attributes List) (see [below for nested schema](#nestedatt--private_apps))
+- `status` (String)
+- `total` (Number)
 
 <a id="nestedatt--private_apps"></a>
 ### Nested Schema for `private_apps`
@@ -44,18 +48,17 @@ Read-Only:
 - `bypass_uris` (List of String)
 - `clientless_access` (Boolean)
 - `is_user_portal_app` (Boolean)
+- `labels` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--labels))
 - `modified_by` (String)
 - `modify_time` (String)
-- `policies` (List of String)
 - `private_app_hostname` (String)
 - `private_app_id` (Number)
 - `private_app_name` (String)
 - `private_app_protocol` (String)
 - `protocols` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--protocols))
 - `public_host` (String)
-- `reachability` (Attributes) (see [below for nested schema](#nestedatt--private_apps--reachability))
+- `publishers` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--publishers))
 - `real_host` (String)
-- `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--service_publisher_assignments))
 - `steering_configs` (List of String)
 - `supplement_dns_for_osx` (Boolean)
 - `tags` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--tags))
@@ -65,6 +68,10 @@ Read-Only:
 
 <a id="nestedatt--private_apps--app_option"></a>
 ### Nested Schema for `private_apps.app_option`
+
+
+<a id="nestedatt--private_apps--labels"></a>
+### Nested Schema for `private_apps.labels`
 
 
 <a id="nestedatt--private_apps--protocols"></a>
@@ -80,29 +87,19 @@ Read-Only:
 - `updated_at` (String)
 
 
-<a id="nestedatt--private_apps--reachability"></a>
-### Nested Schema for `private_apps.reachability`
+<a id="nestedatt--private_apps--publishers"></a>
+### Nested Schema for `private_apps.publishers`
 
 Read-Only:
 
-- `error_code` (Number)
-- `error_string` (String)
-- `reachable` (Boolean)
-
-
-<a id="nestedatt--private_apps--service_publisher_assignments"></a>
-### Nested Schema for `private_apps.service_publisher_assignments`
-
-Read-Only:
-
-- `primary` (String)
-- `publisher_id` (Number)
+- `primary` (Boolean)
+- `publisher_external_id` (Number)
 - `publisher_name` (String)
-- `reachability` (Attributes) (see [below for nested schema](#nestedatt--private_apps--service_publisher_assignments--reachability))
-- `service_id` (Number)
+- `reachability` (Attributes) (see [below for nested schema](#nestedatt--private_apps--publishers--reachability))
+- `service_external_id` (Number)
 
-<a id="nestedatt--private_apps--service_publisher_assignments--reachability"></a>
-### Nested Schema for `private_apps.service_publisher_assignments.reachability`
+<a id="nestedatt--private_apps--publishers--reachability"></a>
+### Nested Schema for `private_apps.publishers.reachability`
 
 Read-Only:
 
@@ -117,5 +114,5 @@ Read-Only:
 
 Read-Only:
 
-- `tag_id` (String) Parsed as JSON.
+- `tag_id` (Number)
 - `tag_name` (String)

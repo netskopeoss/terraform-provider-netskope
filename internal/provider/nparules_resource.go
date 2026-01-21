@@ -6,9 +6,14 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -37,15 +42,14 @@ type NPARulesResourceModel struct {
 	Enabled     types.String               `tfsdk:"enabled"`
 	GroupID     types.String               `tfsdk:"group_id"`
 	GroupName   types.String               `tfsdk:"group_name"`
+	ID          types.String               `tfsdk:"id"`
 	ModifyBy    types.String               `tfsdk:"modify_by"`
 	ModifyTime  types.String               `tfsdk:"modify_time"`
 	ModifyType  types.String               `tfsdk:"modify_type"`
 	PolicyType  types.String               `tfsdk:"policy_type"`
 	RuleData    *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
-	RuleID      types.String               `tfsdk:"rule_id"`
 	RuleName    types.String               `tfsdk:"rule_name"`
 	RuleOrder   *tfTypes.RuleOrder         `tfsdk:"rule_order"`
-	Silent      types.String               `queryParam:"style=form,explode=true,name=silent" tfsdk:"silent"`
 }
 
 func (r *NPARulesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -68,7 +72,12 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 				Optional: true,
 			},
 			"group_name": schema.StringAttribute{
+				Computed: true,
 				Optional: true,
+			},
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: `policy rule id`,
 			},
 			"modify_by": schema.StringAttribute{
 				Computed: true,
@@ -89,15 +98,20 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 					"access_method": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 					},
 					"b_negate_net_location": schema.BoolAttribute{
-						Computed: true,
-						Optional: true,
+						Computed:    true,
+						Optional:    true,
+						Default:     booldefault.StaticBool(false),
+						Description: `Default: false`,
 					},
 					"b_negate_src_countries": schema.BoolAttribute{
-						Computed: true,
-						Optional: true,
+						Computed:    true,
+						Optional:    true,
+						Default:     booldefault.StaticBool(false),
+						Description: `Default: false`,
 					},
 					"classification": schema.StringAttribute{
 						Computed: true,
@@ -106,6 +120,7 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 					"device_classification_id": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.Int64Type, []attr.Value{})),
 						ElementType: types.Int64Type,
 					},
 					"dlp_actions": schema.ListNestedAttribute{
@@ -129,12 +144,16 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 					},
 					"external_dlp": schema.BoolAttribute{
-						Computed: true,
-						Optional: true,
+						Computed:    true,
+						Optional:    true,
+						Default:     booldefault.StaticBool(false),
+						Description: `Default: false`,
 					},
 					"json_version": schema.Int64Attribute{
-						Computed: true,
-						Optional: true,
+						Computed:    true,
+						Optional:    true,
+						Default:     int64default.StaticInt64(3),
+						Description: `Default: 3`,
 					},
 					"match_criteria_action": schema.SingleNestedAttribute{
 						Computed: true,
@@ -156,17 +175,34 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 					"net_location_obj": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 					},
 					"organization_units": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
+					},
+					"periodic_reauth": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						Attributes: map[string]schema.Attribute{
+							"reauth_interval": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+							},
+							"reauth_interval_unit": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+							},
+						},
 					},
 					"policy_type": schema.StringAttribute{
 						Computed:    true,
 						Optional:    true,
-						Description: `must be "private-app"`,
+						Default:     stringdefault.StaticString(`private-app`),
+						Description: `Default: "private-app"; must be "private-app"`,
 						Validators: []validator.String{
 							stringvalidator.OneOf(
 								"private-app",
@@ -176,16 +212,19 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 					"private_app_tag_ids": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 					},
 					"private_app_tags": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 					},
 					"private_apps": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 					},
 					"private_apps_with_activities": schema.ListNestedAttribute{
@@ -220,11 +259,6 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 										},
 									},
 								},
-								"app_id": schema.ListAttribute{
-									Computed:    true,
-									Optional:    true,
-									ElementType: types.StringType,
-								},
 								"app_name": schema.StringAttribute{
 									Computed: true,
 									Optional: true,
@@ -233,12 +267,15 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 					},
 					"show_dlp_profile_action_table": schema.BoolAttribute{
-						Computed: true,
-						Optional: true,
+						Computed:    true,
+						Optional:    true,
+						Default:     booldefault.StaticBool(false),
+						Description: `Default: false`,
 					},
 					"src_countries": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 					},
 					"tss_actions": schema.ListNestedAttribute{
@@ -292,10 +329,9 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 										},
 									},
 								},
-								"tss_profile": schema.ListAttribute{
-									Computed:    true,
-									Optional:    true,
-									ElementType: types.StringType,
+								"tss_profile": schema.StringAttribute{
+									Computed: true,
+									Optional: true,
 								},
 							},
 						},
@@ -308,6 +344,7 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 					"user_groups": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 					},
 					"user_type": schema.StringAttribute{
@@ -321,6 +358,7 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 					"users": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 					},
 					"version": schema.Int64Attribute{
@@ -328,10 +366,6 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Optional: true,
 					},
 				},
-			},
-			"rule_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `npa policy id`,
 			},
 			"rule_name": schema.StringAttribute{
 				Computed: true,
@@ -355,19 +389,12 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 					"position": schema.Int64Attribute{
 						Optional: true,
 					},
-					"rule_id": schema.StringAttribute{
+					"rule_id": schema.Int64Attribute{
 						Optional: true,
 					},
 					"rule_name": schema.StringAttribute{
 						Optional: true,
 					},
-				},
-			},
-			"silent": schema.StringAttribute{
-				Optional:    true,
-				Description: `flag to skip output except status code. must be one of ["1", "0"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf("1", "0"),
 				},
 			},
 		},
@@ -412,13 +439,13 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	request, requestDiags := data.ToOperationsCreateNPARulesRequest(ctx)
+	request, requestDiags := data.ToSharedNpaPolicyRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPARules.Create(ctx, *request)
+	res, err := r.client.CreateNPARules(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -449,13 +476,13 @@ func (r *NPARulesResource) Create(ctx context.Context, req resource.CreateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request1, request1Diags := data.ToOperationsNPARulesRequest(ctx)
+	request1, request1Diags := data.ToOperationsGetNPARulesRequest(ctx)
 	resp.Diagnostics.Append(request1Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res1, err := r.client.NPARules.Read(ctx, *request1)
+	res1, err := r.client.GetNPARules(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -509,13 +536,13 @@ func (r *NPARulesResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	request, requestDiags := data.ToOperationsNPARulesRequest(ctx)
+	request, requestDiags := data.ToOperationsGetNPARulesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPARules.Read(ctx, *request)
+	res, err := r.client.GetNPARules(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -563,13 +590,13 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
-	request, requestDiags := data.ToOperationsUpdateNPARulesByIDRequest(ctx)
+	request, requestDiags := data.ToOperationsUpdateNPARulesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPARules.Update(ctx, *request)
+	res, err := r.client.UpdateNPARules(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -600,13 +627,13 @@ func (r *NPARulesResource) Update(ctx context.Context, req resource.UpdateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request1, request1Diags := data.ToOperationsNPARulesRequest(ctx)
+	request1, request1Diags := data.ToOperationsGetNPARulesRequest(ctx)
 	resp.Diagnostics.Append(request1Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res1, err := r.client.NPARules.Read(ctx, *request1)
+	res1, err := r.client.GetNPARules(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -666,7 +693,7 @@ func (r *NPARulesResource) Delete(ctx context.Context, req resource.DeleteReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPARules.Delete(ctx, *request)
+	res, err := r.client.DeleteNPARules(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -686,5 +713,5 @@ func (r *NPARulesResource) Delete(ctx context.Context, req resource.DeleteReques
 }
 
 func (r *NPARulesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("rule_id"), req.ID)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
 }

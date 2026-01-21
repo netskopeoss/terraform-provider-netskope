@@ -2,5 +2,5 @@
 
 package types
 
-type PrivateAppsRequestAppOption struct {
+type AppOption struct {
 }

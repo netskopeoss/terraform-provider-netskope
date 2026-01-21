@@ -33,9 +33,14 @@ func (e *Protocol) UnmarshalJSON(data []byte) error {
 	}
 }
 
+// ProtocolItem - Protocol configuration - type field for tcp/udp value
 type ProtocolItem struct {
-	Port     *string   `json:"port,omitempty"`
-	Protocol *Protocol `json:"type,omitempty"`
+	Port      *string   `json:"port,omitempty"`
+	Protocol  *Protocol `json:"type,omitempty"`
+	CreatedAt *string   `json:"created_at,omitempty"`
+	ID        *int      `json:"id,omitempty"`
+	ServiceID *int      `json:"service_id,omitempty"`
+	UpdatedAt *string   `json:"updated_at,omitempty"`
 }
 
 func (o *ProtocolItem) GetPort() *string {
@@ -50,4 +55,32 @@ func (o *ProtocolItem) GetProtocol() *Protocol {
 		return nil
 	}
 	return o.Protocol
+}
+
+func (o *ProtocolItem) GetCreatedAt() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CreatedAt
+}
+
+func (o *ProtocolItem) GetID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.ID
+}
+
+func (o *ProtocolItem) GetServiceID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.ServiceID
+}
+
+func (o *ProtocolItem) GetUpdatedAt() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UpdatedAt
 }

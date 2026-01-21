@@ -9,53 +9,6 @@ import (
 	"net/http"
 )
 
-// CreateNPAPolicyGroupsQueryParamSilent - flag to skip output except status code
-type CreateNPAPolicyGroupsQueryParamSilent string
-
-const (
-	CreateNPAPolicyGroupsQueryParamSilentOne  CreateNPAPolicyGroupsQueryParamSilent = "1"
-	CreateNPAPolicyGroupsQueryParamSilentZero CreateNPAPolicyGroupsQueryParamSilent = "0"
-)
-
-func (e CreateNPAPolicyGroupsQueryParamSilent) ToPointer() *CreateNPAPolicyGroupsQueryParamSilent {
-	return &e
-}
-func (e *CreateNPAPolicyGroupsQueryParamSilent) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "1":
-		fallthrough
-	case "0":
-		*e = CreateNPAPolicyGroupsQueryParamSilent(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for CreateNPAPolicyGroupsQueryParamSilent: %v", v)
-	}
-}
-
-type CreateNPAPolicyGroupsRequest struct {
-	// flag to skip output except status code
-	Silent                *CreateNPAPolicyGroupsQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
-	NpaPolicygroupRequest shared.NpaPolicygroupRequest           `request:"mediaType=application/json"`
-}
-
-func (o *CreateNPAPolicyGroupsRequest) GetSilent() *CreateNPAPolicyGroupsQueryParamSilent {
-	if o == nil {
-		return nil
-	}
-	return o.Silent
-}
-
-func (o *CreateNPAPolicyGroupsRequest) GetNpaPolicygroupRequest() shared.NpaPolicygroupRequest {
-	if o == nil {
-		return shared.NpaPolicygroupRequest{}
-	}
-	return o.NpaPolicygroupRequest
-}
-
 type CreateNPAPolicyGroupsStatus string
 
 const (
@@ -82,6 +35,7 @@ func (e *CreateNPAPolicyGroupsStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
+// CreateNPAPolicyGroupsResponseBody - successful operation
 type CreateNPAPolicyGroupsResponseBody struct {
 	Data   *shared.NpaPolicygroupResponseItem `json:"data,omitempty"`
 	Status *CreateNPAPolicyGroupsStatus       `json:"status,omitempty"`
@@ -108,7 +62,8 @@ type CreateNPAPolicyGroupsResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	Object      *CreateNPAPolicyGroupsResponseBody
+	// successful operation
+	Object *CreateNPAPolicyGroupsResponseBody
 	// Invalid request
 	NpaPolicygroupResponse400 *shared.NpaPolicygroupResponse400
 }

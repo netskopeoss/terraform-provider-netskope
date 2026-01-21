@@ -49,6 +49,17 @@ func (i *myAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
 		}
 		oldAppNameValue := responseMap.Data.AppName
 		responseMap.Data.AppName = strings.Trim(oldAppNameValue, "[]")
+
+		// Copy transport to type for each protocol (API returns transport but schema uses type)
+		for i := range responseMap.Data.Protocols {
+			if responseMap.Data.Protocols[i].Type == "" && responseMap.Data.Protocols[i].Transport != "" {
+				responseMap.Data.Protocols[i].Type = responseMap.Data.Protocols[i].Transport
+				if myAppResponseDebug {
+					log.Printf("Copied transport '%s' to type for protocol at index %d", responseMap.Data.Protocols[i].Transport, i)
+				}
+			}
+		}
+
 		// Marshal the modified response back to json.RawMessage
 		modifiedBody, err := json.MarshalIndent(responseMap, "", "")
 		if err != nil {

@@ -8,7 +8,8 @@ import (
 
 type PublisherPostRequest struct {
 	// The name of the Publisher as seen in the UI
-	PublisherName string `json:"name"`
+	PublisherName string   `json:"name"`
+	LabelIds      []string `json:"label_ids,omitempty"`
 	// Allow this publisher to be stitched to Local Broker
 	Lbrokerconnect *bool `default:"false" json:"lbrokerconnect"`
 	// The ID of the upgrade profile to manage this publisher
@@ -31,6 +32,13 @@ func (o *PublisherPostRequest) GetPublisherName() string {
 		return ""
 	}
 	return o.PublisherName
+}
+
+func (o *PublisherPostRequest) GetLabelIds() []string {
+	if o == nil {
+		return nil
+	}
+	return o.LabelIds
 }
 
 func (o *PublisherPostRequest) GetLbrokerconnect() *bool {

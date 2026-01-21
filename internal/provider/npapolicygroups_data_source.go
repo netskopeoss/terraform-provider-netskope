@@ -29,14 +29,13 @@ type NPAPolicyGroupsDataSource struct {
 // NPAPolicyGroupsDataSourceModel describes the data model.
 type NPAPolicyGroupsDataSourceModel struct {
 	CanBeEditedDeleted types.String `tfsdk:"can_be_edited_deleted"`
-	GroupID            types.String `tfsdk:"group_id"`
 	GroupName          types.String `tfsdk:"group_name"`
 	GroupPinnedID      types.String `tfsdk:"group_pinned_id"`
 	GroupProdID        types.String `tfsdk:"group_prod_id"`
 	GroupType          types.String `tfsdk:"group_type"`
+	ID                 types.String `tfsdk:"id"`
 	ModifyTime         types.String `tfsdk:"modify_time"`
 	ModifyType         types.String `tfsdk:"modify_type"`
-	Status             types.String `tfsdk:"status"`
 }
 
 // Metadata returns the data source type name.
@@ -53,10 +52,6 @@ func (r *NPAPolicyGroupsDataSource) Schema(ctx context.Context, req datasource.S
 			"can_be_edited_deleted": schema.StringAttribute{
 				Computed: true,
 			},
-			"group_id": schema.StringAttribute{
-				Required:    true,
-				Description: `npa policy group id`,
-			},
 			"group_name": schema.StringAttribute{
 				Computed: true,
 			},
@@ -69,13 +64,14 @@ func (r *NPAPolicyGroupsDataSource) Schema(ctx context.Context, req datasource.S
 			"group_type": schema.StringAttribute{
 				Computed: true,
 			},
+			"id": schema.StringAttribute{
+				Required:    true,
+				Description: `npa policy group id`,
+			},
 			"modify_time": schema.StringAttribute{
 				Computed: true,
 			},
 			"modify_type": schema.StringAttribute{
-				Computed: true,
-			},
-			"status": schema.StringAttribute{
 				Computed: true,
 			},
 		},
@@ -120,13 +116,13 @@ func (r *NPAPolicyGroupsDataSource) Read(ctx context.Context, req datasource.Rea
 		return
 	}
 
-	request, requestDiags := data.ToOperationsGetNPAPolicyGroupByIDRequest(ctx)
+	request, requestDiags := data.ToOperationsGetNPAPolicyGroupsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPAPolicyGroups.Read(ctx, *request)
+	res, err := r.client.GetNPAPolicyGroups(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

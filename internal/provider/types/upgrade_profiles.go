@@ -17,6 +17,7 @@ type UpgradeProfiles struct {
 	PublisherUpgradeProfileID types.Int32  `tfsdk:"publisher_upgrade_profile_id"`
 	ReleaseType               types.String `tfsdk:"release_type"`
 	Timezone                  types.String `tfsdk:"timezone"`
+	TimezoneID                types.Int64  `tfsdk:"timezone_id"`
 	UpdatedAt                 types.String `tfsdk:"updated_at"`
 	UpgradingStage            types.Int32  `tfsdk:"upgrading_stage"`
 	WillStart                 types.Bool   `tfsdk:"will_start"`

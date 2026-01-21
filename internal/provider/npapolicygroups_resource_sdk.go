@@ -15,11 +15,11 @@ func (r *NPAPolicyGroupsResourceModel) RefreshFromSharedNpaPolicygroupResponseIt
 
 	if resp != nil {
 		r.CanBeEditedDeleted = types.StringPointerValue(resp.CanBeEditedDeleted)
-		r.GroupID = types.StringPointerValue(resp.GroupID)
 		r.GroupName = types.StringPointerValue(resp.GroupName)
 		r.GroupPinnedID = types.StringPointerValue(resp.GroupPinnedID)
 		r.GroupProdID = types.StringPointerValue(resp.GroupProdID)
 		r.GroupType = types.StringPointerValue(resp.GroupType)
+		r.ID = types.StringPointerValue(resp.ID)
 		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
 		r.ModifyType = types.StringPointerValue(resp.ModifyType)
 	}
@@ -27,51 +27,27 @@ func (r *NPAPolicyGroupsResourceModel) RefreshFromSharedNpaPolicygroupResponseIt
 	return diags
 }
 
-func (r *NPAPolicyGroupsResourceModel) ToOperationsCreateNPAPolicyGroupsRequest(ctx context.Context) (*operations.CreateNPAPolicyGroupsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	silent := new(operations.CreateNPAPolicyGroupsQueryParamSilent)
-	if !r.Silent.IsUnknown() && !r.Silent.IsNull() {
-		*silent = operations.CreateNPAPolicyGroupsQueryParamSilent(r.Silent.ValueString())
-	} else {
-		silent = nil
-	}
-	npaPolicygroupRequest, npaPolicygroupRequestDiags := r.ToSharedNpaPolicygroupRequest(ctx)
-	diags.Append(npaPolicygroupRequestDiags...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	out := operations.CreateNPAPolicyGroupsRequest{
-		Silent:                silent,
-		NpaPolicygroupRequest: *npaPolicygroupRequest,
-	}
-
-	return &out, diags
-}
-
 func (r *NPAPolicyGroupsResourceModel) ToOperationsDeleteNPAPolicyGroupsRequest(ctx context.Context) (*operations.DeleteNPAPolicyGroupsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var groupID string
-	groupID = r.GroupID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
 	out := operations.DeleteNPAPolicyGroupsRequest{
-		GroupID: groupID,
+		ID: id,
 	}
 
 	return &out, diags
 }
 
-func (r *NPAPolicyGroupsResourceModel) ToOperationsGetNPAPolicyGroupByIDRequest(ctx context.Context) (*operations.GetNPAPolicyGroupByIDRequest, diag.Diagnostics) {
+func (r *NPAPolicyGroupsResourceModel) ToOperationsGetNPAPolicyGroupsRequest(ctx context.Context) (*operations.GetNPAPolicyGroupsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var groupID string
-	groupID = r.GroupID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
-	out := operations.GetNPAPolicyGroupByIDRequest{
-		GroupID: groupID,
+	out := operations.GetNPAPolicyGroupsRequest{
+		ID: id,
 	}
 
 	return &out, diags
@@ -80,15 +56,9 @@ func (r *NPAPolicyGroupsResourceModel) ToOperationsGetNPAPolicyGroupByIDRequest(
 func (r *NPAPolicyGroupsResourceModel) ToOperationsUpdateNPAPolicyGroupsRequest(ctx context.Context) (*operations.UpdateNPAPolicyGroupsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var groupID string
-	groupID = r.GroupID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
-	silent := new(operations.UpdateNPAPolicyGroupsQueryParamSilent)
-	if !r.Silent.IsUnknown() && !r.Silent.IsNull() {
-		*silent = operations.UpdateNPAPolicyGroupsQueryParamSilent(r.Silent.ValueString())
-	} else {
-		silent = nil
-	}
 	npaPolicygroupRequest, npaPolicygroupRequestDiags := r.ToSharedNpaPolicygroupRequest(ctx)
 	diags.Append(npaPolicygroupRequestDiags...)
 
@@ -97,8 +67,7 @@ func (r *NPAPolicyGroupsResourceModel) ToOperationsUpdateNPAPolicyGroupsRequest(
 	}
 
 	out := operations.UpdateNPAPolicyGroupsRequest{
-		GroupID:               groupID,
-		Silent:                silent,
+		ID:                    id,
 		NpaPolicygroupRequest: *npaPolicygroupRequest,
 	}
 
@@ -116,27 +85,21 @@ func (r *NPAPolicyGroupsResourceModel) ToSharedNpaPolicygroupRequest(ctx context
 	}
 	var groupOrder *shared.GroupOrder
 	if r.GroupOrder != nil {
-		var groupOrder1 *shared.NpaPolicygroupRequestGroupOrder
-		if r.GroupOrder.GroupOrder != nil {
-			groupID := new(string)
-			if !r.GroupOrder.GroupOrder.GroupID.IsUnknown() && !r.GroupOrder.GroupOrder.GroupID.IsNull() {
-				*groupID = r.GroupOrder.GroupOrder.GroupID.ValueString()
-			} else {
-				groupID = nil
-			}
-			order := new(shared.NpaPolicygroupRequestOrder)
-			if !r.GroupOrder.GroupOrder.Order.IsUnknown() && !r.GroupOrder.GroupOrder.Order.IsNull() {
-				*order = shared.NpaPolicygroupRequestOrder(r.GroupOrder.GroupOrder.Order.ValueString())
-			} else {
-				order = nil
-			}
-			groupOrder1 = &shared.NpaPolicygroupRequestGroupOrder{
-				GroupID: groupID,
-				Order:   order,
-			}
+		groupID := new(string)
+		if !r.GroupOrder.GroupID.IsUnknown() && !r.GroupOrder.GroupID.IsNull() {
+			*groupID = r.GroupOrder.GroupID.ValueString()
+		} else {
+			groupID = nil
+		}
+		order := new(shared.NpaPolicygroupRequestOrder)
+		if !r.GroupOrder.Order.IsUnknown() && !r.GroupOrder.Order.IsNull() {
+			*order = shared.NpaPolicygroupRequestOrder(r.GroupOrder.Order.ValueString())
+		} else {
+			order = nil
 		}
 		groupOrder = &shared.GroupOrder{
-			GroupOrder: groupOrder1,
+			GroupID: groupID,
+			Order:   order,
 		}
 	}
 	modifyBy := new(string)

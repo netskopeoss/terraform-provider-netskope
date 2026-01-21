@@ -47,7 +47,7 @@ type PublishersPrivateAppsResponseData struct {
 	IsUserPortalApp             *bool                                      `json:"is_user_portal_app,omitempty"`
 	PrivateAppName              *string                                    `json:"name,omitempty"`
 	PrivateAppProtocol          *string                                    `json:"private_app_protocol,omitempty"`
-	Protocols                   []ProtocolResponseItem                     `json:"protocols,omitempty"`
+	Protocols                   []ProtocolItem                             `json:"protocols,omitempty"`
 	PublicHost                  *string                                    `json:"public_host,omitempty"`
 	Reachability                *PublishersPrivateAppsResponseReachability `json:"reachability,omitempty"`
 	RealHost                    *string                                    `json:"real_host,omitempty"`
@@ -121,7 +121,7 @@ func (o *PublishersPrivateAppsResponseData) GetPrivateAppProtocol() *string {
 	return o.PrivateAppProtocol
 }
 
-func (o *PublishersPrivateAppsResponseData) GetProtocols() []ProtocolResponseItem {
+func (o *PublishersPrivateAppsResponseData) GetProtocols() []ProtocolItem {
 	if o == nil {
 		return nil
 	}

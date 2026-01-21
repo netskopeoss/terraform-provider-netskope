@@ -11,6 +11,7 @@ type PublisherResponseAssessment struct {
 	EeeSupport    types.Bool                      `tfsdk:"eee_support"`
 	HddFree       types.String                    `tfsdk:"hdd_free"`
 	HddTotal      types.String                    `tfsdk:"hdd_total"`
+	HostOsVersion types.String                    `tfsdk:"host_os_version"`
 	IPAddress     types.String                    `tfsdk:"ip_address"`
 	Latency       types.Float64                   `tfsdk:"latency"`
 	Version       types.String                    `tfsdk:"version"`

@@ -54,6 +54,7 @@ Read-Only:
 - `capabilities` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--capabilities))
 - `common_name` (String)
 - `connected_apps` (List of String)
+- `labels` (Attributes List) (see [below for nested schema](#nestedatt--data--publishers--labels))
 - `lbrokerconnect` (Boolean)
 - `publisher_id` (Number)
 - `publisher_name` (String)
@@ -75,6 +76,7 @@ Read-Only:
 - `eee_support` (Boolean)
 - `hdd_free` (String)
 - `hdd_total` (String)
+- `host_os_version` (String)
 - `ip_address` (String)
 - `latency` (Number)
 - `version` (String)
@@ -108,6 +110,15 @@ Read-Only:
 - `orgkey_exist` (Boolean)
 - `orguri_exist` (Boolean)
 
+
+
+<a id="nestedatt--data--publishers--labels"></a>
+### Nested Schema for `data.publishers.labels`
+
+Read-Only:
+
+- `label_id` (String)
+- `permission` (String)
 
 
 <a id="nestedatt--data--publishers--upgrade_failed_reason"></a>

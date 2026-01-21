@@ -15,11 +15,11 @@ func (r *NPAPolicyGroupsDataSourceModel) RefreshFromSharedNpaPolicygroupResponse
 
 	if resp != nil {
 		r.CanBeEditedDeleted = types.StringPointerValue(resp.CanBeEditedDeleted)
-		r.GroupID = types.StringPointerValue(resp.GroupID)
 		r.GroupName = types.StringPointerValue(resp.GroupName)
 		r.GroupPinnedID = types.StringPointerValue(resp.GroupPinnedID)
 		r.GroupProdID = types.StringPointerValue(resp.GroupProdID)
 		r.GroupType = types.StringPointerValue(resp.GroupType)
+		r.ID = types.StringPointerValue(resp.ID)
 		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
 		r.ModifyType = types.StringPointerValue(resp.ModifyType)
 	}
@@ -27,14 +27,14 @@ func (r *NPAPolicyGroupsDataSourceModel) RefreshFromSharedNpaPolicygroupResponse
 	return diags
 }
 
-func (r *NPAPolicyGroupsDataSourceModel) ToOperationsGetNPAPolicyGroupByIDRequest(ctx context.Context) (*operations.GetNPAPolicyGroupByIDRequest, diag.Diagnostics) {
+func (r *NPAPolicyGroupsDataSourceModel) ToOperationsGetNPAPolicyGroupsRequest(ctx context.Context) (*operations.GetNPAPolicyGroupsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var groupID string
-	groupID = r.GroupID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
-	out := operations.GetNPAPolicyGroupByIDRequest{
-		GroupID: groupID,
+	out := operations.GetNPAPolicyGroupsRequest{
+		ID: id,
 	}
 
 	return &out, diags

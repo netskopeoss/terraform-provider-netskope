@@ -78,6 +78,9 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 										"hdd_total": schema.StringAttribute{
 											Computed: true,
 										},
+										"host_os_version": schema.StringAttribute{
+											Computed: true,
+										},
 										"ip_address": schema.StringAttribute{
 											Computed: true,
 										},
@@ -123,6 +126,19 @@ func (r *NPAPublishersListDataSource) Schema(ctx context.Context, req datasource
 								"connected_apps": schema.ListAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
+								},
+								"labels": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"label_id": schema.StringAttribute{
+												Computed: true,
+											},
+											"permission": schema.StringAttribute{
+												Computed: true,
+											},
+										},
+									},
 								},
 								"lbrokerconnect": schema.BoolAttribute{
 									Computed: true,

@@ -20,7 +20,7 @@ resource "netskope_npa_rules" "my_nparules" {
   group_name  = "My policy group"
   rule_data = {
     access_method = [
-      "Client"
+      "Clientless"
     ]
     b_negate_net_location  = false
     b_negate_src_countries = false
@@ -47,6 +47,10 @@ resource "netskope_npa_rules" "my_nparules" {
     organization_units = [
       "..."
     ]
+    periodic_reauth = {
+      reauth_interval      = 60
+      reauth_interval_unit = "hours"
+    }
     policy_type = "private-app"
     private_app_tag_ids = [
       "..."
@@ -67,9 +71,6 @@ resource "netskope_npa_rules" "my_nparules" {
             ]
           }
         ]
-        app_id = [
-          "..."
-        ]
         app_name = "[172.31.12.135]"
       }
     ]
@@ -87,9 +88,7 @@ resource "netskope_npa_rules" "my_nparules" {
             template            = "...my_template..."
           }
         ]
-        tss_profile = [
-          "..."
-        ]
+        tss_profile = "...my_tss_profile..."
       }
     ]
     tss_profile = [
@@ -108,10 +107,9 @@ resource "netskope_npa_rules" "my_nparules" {
   rule_order = {
     order     = "before"
     position  = 5
-    rule_id   = "...my_rule_id..."
+    rule_id   = 1
     rule_name = "api-policy-managed"
   }
-  silent = "1"
 }
 ```
 
@@ -127,15 +125,14 @@ resource "netskope_npa_rules" "my_nparules" {
 - `rule_data` (Attributes) (see [below for nested schema](#nestedatt--rule_data))
 - `rule_name` (String)
 - `rule_order` (Attributes) (see [below for nested schema](#nestedatt--rule_order))
-- `silent` (String) flag to skip output except status code. must be one of ["1", "0"]
 
 ### Read-Only
 
+- `id` (String) policy rule id
 - `modify_by` (String)
 - `modify_time` (String)
 - `modify_type` (String)
 - `policy_type` (String)
-- `rule_id` (String) npa policy id
 
 <a id="nestedatt--rule_data"></a>
 ### Nested Schema for `rule_data`
@@ -143,22 +140,23 @@ resource "netskope_npa_rules" "my_nparules" {
 Optional:
 
 - `access_method` (List of String)
-- `b_negate_net_location` (Boolean)
-- `b_negate_src_countries` (Boolean)
+- `b_negate_net_location` (Boolean) Default: false
+- `b_negate_src_countries` (Boolean) Default: false
 - `classification` (String)
 - `device_classification_id` (List of Number)
 - `dlp_actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--dlp_actions))
-- `external_dlp` (Boolean)
-- `json_version` (Number)
+- `external_dlp` (Boolean) Default: false
+- `json_version` (Number) Default: 3
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
 - `net_location_obj` (List of String)
 - `organization_units` (List of String)
-- `policy_type` (String) must be "private-app"
+- `periodic_reauth` (Attributes) (see [below for nested schema](#nestedatt--rule_data--periodic_reauth))
+- `policy_type` (String) Default: "private-app"; must be "private-app"
 - `private_app_tag_ids` (List of String)
 - `private_app_tags` (List of String)
 - `private_apps` (List of String)
 - `private_apps_with_activities` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--private_apps_with_activities))
-- `show_dlp_profile_action_table` (Boolean)
+- `show_dlp_profile_action_table` (Boolean) Default: false
 - `src_countries` (List of String)
 - `tss_actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--tss_actions))
 - `tss_profile` (List of String)
@@ -184,13 +182,21 @@ Optional:
 - `action_name` (String) must be one of ["allow", "block"]
 
 
+<a id="nestedatt--rule_data--periodic_reauth"></a>
+### Nested Schema for `rule_data.periodic_reauth`
+
+Optional:
+
+- `reauth_interval` (String)
+- `reauth_interval_unit` (String)
+
+
 <a id="nestedatt--rule_data--private_apps_with_activities"></a>
 ### Nested Schema for `rule_data.private_apps_with_activities`
 
 Optional:
 
 - `activities` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--private_apps_with_activities--activities))
-- `app_id` (List of String)
 - `app_name` (String)
 
 <a id="nestedatt--rule_data--private_apps_with_activities--activities"></a>
@@ -209,7 +215,7 @@ Optional:
 Optional:
 
 - `actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--tss_actions--actions))
-- `tss_profile` (List of String)
+- `tss_profile` (String)
 
 <a id="nestedatt--rule_data--tss_actions--actions"></a>
 ### Nested Schema for `rule_data.tss_actions.actions`
@@ -231,7 +237,7 @@ Optional:
 
 - `order` (String) must be one of ["top", "bottom", "before", "after"]
 - `position` (Number)
-- `rule_id` (String)
+- `rule_id` (Number)
 - `rule_name` (String)
 
 ## Import

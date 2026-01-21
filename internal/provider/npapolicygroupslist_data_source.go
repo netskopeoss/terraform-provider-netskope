@@ -57,9 +57,6 @@ func (r *NPAPolicyGroupsListDataSource) Schema(ctx context.Context, req datasour
 						"can_be_edited_deleted": schema.StringAttribute{
 							Computed: true,
 						},
-						"group_id": schema.StringAttribute{
-							Computed: true,
-						},
 						"group_name": schema.StringAttribute{
 							Computed: true,
 						},
@@ -70,6 +67,9 @@ func (r *NPAPolicyGroupsListDataSource) Schema(ctx context.Context, req datasour
 							Computed: true,
 						},
 						"group_type": schema.StringAttribute{
+							Computed: true,
+						},
+						"id": schema.StringAttribute{
 							Computed: true,
 						},
 						"modify_time": schema.StringAttribute{
@@ -150,13 +150,13 @@ func (r *NPAPolicyGroupsListDataSource) Read(ctx context.Context, req datasource
 		return
 	}
 
-	request, requestDiags := data.ToOperationsGetNPAPolicyGroupsRequest(ctx)
+	request, requestDiags := data.ToOperationsListNPAPolicyGroupsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPAPolicyGroups.ListObjects(ctx, *request)
+	res, err := r.client.ListNPAPolicyGroups(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -172,11 +172,11 @@ func (r *NPAPolicyGroupsListDataSource) Read(ctx context.Context, req datasource
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.Object != nil) {
+	if !(res.NpaPolicygroupResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetNPAPolicyGroupsResponseBody(ctx, res.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicygroupResponse(ctx, res.NpaPolicygroupResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

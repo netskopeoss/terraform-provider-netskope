@@ -26,7 +26,7 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 			if dataItem.AppOption == nil {
 				data.AppOption = nil
 			} else {
-				data.AppOption = &tfTypes.PrivateAppsRequestAppOption{}
+				data.AppOption = &tfTypes.AppOption{}
 			}
 			data.ClientlessAccess = types.BoolPointerValue(dataItem.ClientlessAccess)
 			data.ExternalID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(dataItem.ExternalID))
@@ -35,14 +35,18 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 			data.IsUserPortalApp = types.BoolPointerValue(dataItem.IsUserPortalApp)
 			data.PrivateAppName = types.StringPointerValue(dataItem.PrivateAppName)
 			data.PrivateAppProtocol = types.StringPointerValue(dataItem.PrivateAppProtocol)
-			data.Protocols = []tfTypes.ProtocolResponseItem{}
+			data.Protocols = []tfTypes.ProtocolItem{}
 			for protocolsCount, protocolsItem := range dataItem.Protocols {
-				var protocols tfTypes.ProtocolResponseItem
+				var protocols tfTypes.ProtocolItem
 				protocols.CreatedAt = types.StringPointerValue(protocolsItem.CreatedAt)
 				protocols.ID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(protocolsItem.ID))
 				protocols.Port = types.StringPointerValue(protocolsItem.Port)
+				if protocolsItem.Protocol != nil {
+					protocols.Protocol = types.StringValue(string(*protocolsItem.Protocol))
+				} else {
+					protocols.Protocol = types.StringNull()
+				}
 				protocols.ServiceID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(protocolsItem.ServiceID))
-				protocols.Transport = types.StringPointerValue(protocolsItem.Transport)
 				protocols.UpdatedAt = types.StringPointerValue(protocolsItem.UpdatedAt)
 				if protocolsCount+1 > len(data.Protocols) {
 					data.Protocols = append(data.Protocols, protocols)
@@ -50,8 +54,8 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 					data.Protocols[protocolsCount].CreatedAt = protocols.CreatedAt
 					data.Protocols[protocolsCount].ID = protocols.ID
 					data.Protocols[protocolsCount].Port = protocols.Port
+					data.Protocols[protocolsCount].Protocol = protocols.Protocol
 					data.Protocols[protocolsCount].ServiceID = protocols.ServiceID
-					data.Protocols[protocolsCount].Transport = protocols.Transport
 					data.Protocols[protocolsCount].UpdatedAt = protocols.UpdatedAt
 				}
 			}
@@ -59,7 +63,7 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 			if dataItem.Reachability == nil {
 				data.Reachability = nil
 			} else {
-				data.Reachability = &tfTypes.PublishersPrivateAppsResponseReachability{}
+				data.Reachability = &tfTypes.ServicePublisherAssignmentItemReachability{}
 				data.Reachability.ErrorCode = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(dataItem.Reachability.ErrorCode))
 				data.Reachability.ErrorString = types.StringPointerValue(dataItem.Reachability.ErrorString)
 				data.Reachability.Reachable = types.BoolPointerValue(dataItem.Reachability.Reachable)
@@ -74,7 +78,7 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 				if servicePublisherAssignmentsItem.Reachability == nil {
 					servicePublisherAssignments.Reachability = nil
 				} else {
-					servicePublisherAssignments.Reachability = &tfTypes.PublishersPrivateAppsResponseReachability{}
+					servicePublisherAssignments.Reachability = &tfTypes.ServicePublisherAssignmentItemReachability{}
 					servicePublisherAssignments.Reachability.ErrorCode = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(servicePublisherAssignmentsItem.Reachability.ErrorCode))
 					servicePublisherAssignments.Reachability.ErrorString = types.StringPointerValue(servicePublisherAssignmentsItem.Reachability.ErrorString)
 					servicePublisherAssignments.Reachability.Reachable = types.BoolPointerValue(servicePublisherAssignmentsItem.Reachability.Reachable)
