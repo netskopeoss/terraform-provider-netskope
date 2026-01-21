@@ -17,6 +17,8 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 	if resp != nil {
 		r.Enabled = types.StringPointerValue(resp.Enabled)
 		r.GroupID = types.StringPointerValue(resp.GroupID)
+		r.GroupName = types.StringPointerValue(resp.GroupName)
+		r.ID = types.StringPointerValue(resp.ID)
 		r.ModifyBy = types.StringPointerValue(resp.ModifyBy)
 		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
 		r.ModifyType = types.StringPointerValue(resp.ModifyType)
@@ -74,6 +76,13 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
 			}
+			if resp.RuleData.PeriodicReauth == nil {
+				r.RuleData.PeriodicReauth = nil
+			} else {
+				r.RuleData.PeriodicReauth = &tfTypes.NpaPolicyRulePeriodicReauth{}
+				r.RuleData.PeriodicReauth.ReauthInterval = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthInterval)
+				r.RuleData.PeriodicReauth.ReauthIntervalUnit = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthIntervalUnit)
+			}
 			if resp.RuleData.PolicyType != nil {
 				r.RuleData.PolicyType = types.StringValue(string(*resp.RuleData.PolicyType))
 			} else {
@@ -108,16 +117,11 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 						privateAppsWithActivities.Activities[activitiesCount].ListOfConstraints = activities.ListOfConstraints
 					}
 				}
-				privateAppsWithActivities.AppID = make([]types.String, 0, len(privateAppsWithActivitiesItem.AppID))
-				for _, v := range privateAppsWithActivitiesItem.AppID {
-					privateAppsWithActivities.AppID = append(privateAppsWithActivities.AppID, types.StringValue(v))
-				}
 				privateAppsWithActivities.AppName = types.StringPointerValue(privateAppsWithActivitiesItem.AppName)
 				if privateAppsWithActivitiesCount+1 > len(r.RuleData.PrivateAppsWithActivities) {
 					r.RuleData.PrivateAppsWithActivities = append(r.RuleData.PrivateAppsWithActivities, privateAppsWithActivities)
 				} else {
 					r.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].Activities = privateAppsWithActivities.Activities
-					r.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppID = privateAppsWithActivities.AppID
 					r.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppName = privateAppsWithActivities.AppName
 				}
 			}
@@ -164,10 +168,7 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 						tssActions.Actions[actionsCount].Template = actions.Template
 					}
 				}
-				tssActions.TssProfile = make([]types.String, 0, len(tssActionsItem.TssProfile))
-				for _, v := range tssActionsItem.TssProfile {
-					tssActions.TssProfile = append(tssActions.TssProfile, types.StringValue(v))
-				}
+				tssActions.TssProfile = types.StringPointerValue(tssActionsItem.TssProfile)
 				if tssActionsCount+1 > len(r.RuleData.TssActions) {
 					r.RuleData.TssActions = append(r.RuleData.TssActions, tssActions)
 				} else {
@@ -194,28 +195,20 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			}
 			r.RuleData.Version = types.Int64PointerValue(resp.RuleData.Version)
 		}
-		r.RuleID = types.StringPointerValue(resp.RuleID)
 		r.RuleName = types.StringPointerValue(resp.RuleName)
 	}
 
 	return diags
 }
 
-func (r *NPARulesDataSourceModel) ToOperationsNPARulesRequest(ctx context.Context) (*operations.NPARulesRequest, diag.Diagnostics) {
+func (r *NPARulesDataSourceModel) ToOperationsGetNPARulesRequest(ctx context.Context) (*operations.GetNPARulesRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var ruleID string
-	ruleID = r.RuleID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
-	fields := new(string)
-	if !r.Fields.IsUnknown() && !r.Fields.IsNull() {
-		*fields = r.Fields.ValueString()
-	} else {
-		fields = nil
-	}
-	out := operations.NPARulesRequest{
-		RuleID: ruleID,
-		Fields: fields,
+	out := operations.GetNPARulesRequest{
+		ID: id,
 	}
 
 	return &out, diags

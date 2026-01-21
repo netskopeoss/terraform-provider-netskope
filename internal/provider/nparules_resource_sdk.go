@@ -17,6 +17,8 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 	if resp != nil {
 		r.Enabled = types.StringPointerValue(resp.Enabled)
 		r.GroupID = types.StringPointerValue(resp.GroupID)
+		r.GroupName = types.StringPointerValue(resp.GroupName)
+		r.ID = types.StringPointerValue(resp.ID)
 		r.ModifyBy = types.StringPointerValue(resp.ModifyBy)
 		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
 		r.ModifyType = types.StringPointerValue(resp.ModifyType)
@@ -74,6 +76,13 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
 			}
+			if resp.RuleData.PeriodicReauth == nil {
+				r.RuleData.PeriodicReauth = nil
+			} else {
+				r.RuleData.PeriodicReauth = &tfTypes.NpaPolicyRulePeriodicReauth{}
+				r.RuleData.PeriodicReauth.ReauthInterval = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthInterval)
+				r.RuleData.PeriodicReauth.ReauthIntervalUnit = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthIntervalUnit)
+			}
 			if resp.RuleData.PolicyType != nil {
 				r.RuleData.PolicyType = types.StringValue(string(*resp.RuleData.PolicyType))
 			} else {
@@ -108,16 +117,11 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 						privateAppsWithActivities.Activities[activitiesCount].ListOfConstraints = activities.ListOfConstraints
 					}
 				}
-				privateAppsWithActivities.AppID = make([]types.String, 0, len(privateAppsWithActivitiesItem.AppID))
-				for _, v := range privateAppsWithActivitiesItem.AppID {
-					privateAppsWithActivities.AppID = append(privateAppsWithActivities.AppID, types.StringValue(v))
-				}
 				privateAppsWithActivities.AppName = types.StringPointerValue(privateAppsWithActivitiesItem.AppName)
 				if privateAppsWithActivitiesCount+1 > len(r.RuleData.PrivateAppsWithActivities) {
 					r.RuleData.PrivateAppsWithActivities = append(r.RuleData.PrivateAppsWithActivities, privateAppsWithActivities)
 				} else {
 					r.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].Activities = privateAppsWithActivities.Activities
-					r.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppID = privateAppsWithActivities.AppID
 					r.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppName = privateAppsWithActivities.AppName
 				}
 			}
@@ -164,10 +168,7 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 						tssActions.Actions[actionsCount].Template = actions.Template
 					}
 				}
-				tssActions.TssProfile = make([]types.String, 0, len(tssActionsItem.TssProfile))
-				for _, v := range tssActionsItem.TssProfile {
-					tssActions.TssProfile = append(tssActions.TssProfile, types.StringValue(v))
-				}
+				tssActions.TssProfile = types.StringPointerValue(tssActionsItem.TssProfile)
 				if tssActionsCount+1 > len(r.RuleData.TssActions) {
 					r.RuleData.TssActions = append(r.RuleData.TssActions, tssActions)
 				} else {
@@ -194,75 +195,44 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			}
 			r.RuleData.Version = types.Int64PointerValue(resp.RuleData.Version)
 		}
-		r.RuleID = types.StringPointerValue(resp.RuleID)
 		r.RuleName = types.StringPointerValue(resp.RuleName)
 	}
 
 	return diags
 }
 
-func (r *NPARulesResourceModel) ToOperationsCreateNPARulesRequest(ctx context.Context) (*operations.CreateNPARulesRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	silent := new(operations.QueryParamSilent)
-	if !r.Silent.IsUnknown() && !r.Silent.IsNull() {
-		*silent = operations.QueryParamSilent(r.Silent.ValueString())
-	} else {
-		silent = nil
-	}
-	npaPolicyRequest, npaPolicyRequestDiags := r.ToSharedNpaPolicyRequest(ctx)
-	diags.Append(npaPolicyRequestDiags...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	out := operations.CreateNPARulesRequest{
-		Silent:           silent,
-		NpaPolicyRequest: *npaPolicyRequest,
-	}
-
-	return &out, diags
-}
-
 func (r *NPARulesResourceModel) ToOperationsDeleteNPARulesRequest(ctx context.Context) (*operations.DeleteNPARulesRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var ruleID string
-	ruleID = r.RuleID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
 	out := operations.DeleteNPARulesRequest{
-		RuleID: ruleID,
+		ID: id,
 	}
 
 	return &out, diags
 }
 
-func (r *NPARulesResourceModel) ToOperationsNPARulesRequest(ctx context.Context) (*operations.NPARulesRequest, diag.Diagnostics) {
+func (r *NPARulesResourceModel) ToOperationsGetNPARulesRequest(ctx context.Context) (*operations.GetNPARulesRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var ruleID string
-	ruleID = r.RuleID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
-	out := operations.NPARulesRequest{
-		RuleID: ruleID,
+	out := operations.GetNPARulesRequest{
+		ID: id,
 	}
 
 	return &out, diags
 }
 
-func (r *NPARulesResourceModel) ToOperationsUpdateNPARulesByIDRequest(ctx context.Context) (*operations.UpdateNPARulesByIDRequest, diag.Diagnostics) {
+func (r *NPARulesResourceModel) ToOperationsUpdateNPARulesRequest(ctx context.Context) (*operations.UpdateNPARulesRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var ruleID string
-	ruleID = r.RuleID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
-	silent := new(operations.UpdateNPARulesByIDQueryParamSilent)
-	if !r.Silent.IsUnknown() && !r.Silent.IsNull() {
-		*silent = operations.UpdateNPARulesByIDQueryParamSilent(r.Silent.ValueString())
-	} else {
-		silent = nil
-	}
 	npaPolicyRequest, npaPolicyRequestDiags := r.ToSharedNpaPolicyRequest(ctx)
 	diags.Append(npaPolicyRequestDiags...)
 
@@ -270,9 +240,8 @@ func (r *NPARulesResourceModel) ToOperationsUpdateNPARulesByIDRequest(ctx contex
 		return nil, diags
 	}
 
-	out := operations.UpdateNPARulesByIDRequest{
-		RuleID:           ruleID,
-		Silent:           silent,
+	out := operations.UpdateNPARulesRequest{
+		ID:               id,
 		NpaPolicyRequest: *npaPolicyRequest,
 	}
 
@@ -330,6 +299,25 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		} else {
 			classification = nil
 		}
+		var periodicReauth *shared.NpaPolicyRulePeriodicReauth
+		if r.RuleData.PeriodicReauth != nil {
+			reauthInterval := new(string)
+			if !r.RuleData.PeriodicReauth.ReauthInterval.IsUnknown() && !r.RuleData.PeriodicReauth.ReauthInterval.IsNull() {
+				*reauthInterval = r.RuleData.PeriodicReauth.ReauthInterval.ValueString()
+			} else {
+				reauthInterval = nil
+			}
+			reauthIntervalUnit := new(string)
+			if !r.RuleData.PeriodicReauth.ReauthIntervalUnit.IsUnknown() && !r.RuleData.PeriodicReauth.ReauthIntervalUnit.IsNull() {
+				*reauthIntervalUnit = r.RuleData.PeriodicReauth.ReauthIntervalUnit.ValueString()
+			} else {
+				reauthIntervalUnit = nil
+			}
+			periodicReauth = &shared.NpaPolicyRulePeriodicReauth{
+				ReauthInterval:     reauthInterval,
+				ReauthIntervalUnit: reauthIntervalUnit,
+			}
+		}
 		dlpActions := make([]shared.NpaPolicyRuleDlp, 0, len(r.RuleData.DlpActions))
 		for _, dlpActionsItem := range r.RuleData.DlpActions {
 			actions := make([]shared.Actions, 0, len(dlpActionsItem.Actions))
@@ -349,9 +337,11 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		}
 		tssActions := make([]shared.NpaPolicyRuleTss, 0, len(r.RuleData.TssActions))
 		for _, tssActionsItem := range r.RuleData.TssActions {
-			tssProfile := make([]string, 0, len(tssActionsItem.TssProfile))
-			for _, tssProfileItem := range tssActionsItem.TssProfile {
-				tssProfile = append(tssProfile, tssProfileItem.ValueString())
+			tssProfile := new(string)
+			if !tssActionsItem.TssProfile.IsUnknown() && !tssActionsItem.TssProfile.IsNull() {
+				*tssProfile = tssActionsItem.TssProfile.ValueString()
+			} else {
+				tssProfile = nil
 			}
 			actions1 := make([]shared.NpaPolicyRuleTssActions, 0, len(tssActionsItem.Actions))
 			for _, actionsItem1 := range tssActionsItem.Actions {
@@ -392,8 +382,8 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			})
 		}
 		tssProfile1 := make([]string, 0, len(r.RuleData.TssProfile))
-		for _, tssProfileItem1 := range r.RuleData.TssProfile {
-			tssProfile1 = append(tssProfile1, tssProfileItem1.ValueString())
+		for _, tssProfileItem := range r.RuleData.TssProfile {
+			tssProfile1 = append(tssProfile1, tssProfileItem.ValueString())
 		}
 		externalDlp := new(bool)
 		if !r.RuleData.ExternalDlp.IsUnknown() && !r.RuleData.ExternalDlp.IsNull() {
@@ -468,10 +458,6 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 					ListOfConstraints: listOfConstraints,
 				})
 			}
-			appID := make([]string, 0, len(privateAppsWithActivitiesItem.AppID))
-			for _, appIDItem := range privateAppsWithActivitiesItem.AppID {
-				appID = append(appID, appIDItem.ValueString())
-			}
 			appName := new(string)
 			if !privateAppsWithActivitiesItem.AppName.IsUnknown() && !privateAppsWithActivitiesItem.AppName.IsNull() {
 				*appName = privateAppsWithActivitiesItem.AppName.ValueString()
@@ -480,7 +466,6 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			}
 			privateAppsWithActivities = append(privateAppsWithActivities, shared.PrivateAppsWithActivities{
 				Activities: activities,
-				AppID:      appID,
 				AppName:    appName,
 			})
 		}
@@ -519,6 +504,7 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			BNegateNetLocation:        bNegateNetLocation,
 			BNegateSrcCountries:       bNegateSrcCountries,
 			Classification:            classification,
+			PeriodicReauth:            periodicReauth,
 			DlpActions:                dlpActions,
 			TssActions:                tssActions,
 			TssProfile:                tssProfile1,
@@ -561,9 +547,9 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		} else {
 			position = nil
 		}
-		ruleID := new(string)
+		ruleID := new(int64)
 		if !r.RuleOrder.RuleID.IsUnknown() && !r.RuleOrder.RuleID.IsNull() {
-			*ruleID = r.RuleOrder.RuleID.ValueString()
+			*ruleID = r.RuleOrder.RuleID.ValueInt64()
 		} else {
 			ruleID = nil
 		}

@@ -34,6 +34,7 @@ func (r *NPAPublisherResourceModel) RefreshFromSharedPublisherResponseData(ctx c
 			r.Assessment.EeeSupport = types.BoolPointerValue(resp.Assessment.EeeSupport)
 			r.Assessment.HddFree = types.StringPointerValue(resp.Assessment.HddFree)
 			r.Assessment.HddTotal = types.StringPointerValue(resp.Assessment.HddTotal)
+			r.Assessment.HostOsVersion = types.StringPointerValue(resp.Assessment.HostOsVersion)
 			r.Assessment.IPAddress = types.StringPointerValue(resp.Assessment.IPAddress)
 			r.Assessment.Latency = types.Float64PointerValue(resp.Assessment.Latency)
 			r.Assessment.Version = types.StringPointerValue(resp.Assessment.Version)
@@ -55,9 +56,20 @@ func (r *NPAPublisherResourceModel) RefreshFromSharedPublisherResponseData(ctx c
 			}
 		}
 		r.CommonName = types.StringPointerValue(resp.CommonName)
-		r.ConnectedApps = make([]types.String, 0, len(resp.ConnectedApps))
-		for _, v := range resp.ConnectedApps {
-			r.ConnectedApps = append(r.ConnectedApps, types.StringValue(v))
+		r.Labels = []tfTypes.PublisherResponseLabels{}
+		if len(r.Labels) > len(resp.Labels) {
+			r.Labels = r.Labels[:len(resp.Labels)]
+		}
+		for labelsCount, labelsItem := range resp.Labels {
+			var labels tfTypes.PublisherResponseLabels
+			labels.LabelID = types.StringPointerValue(labelsItem.LabelID)
+			labels.Permission = types.StringPointerValue(labelsItem.Permission)
+			if labelsCount+1 > len(r.Labels) {
+				r.Labels = append(r.Labels, labels)
+			} else {
+				r.Labels[labelsCount].LabelID = labels.LabelID
+				r.Labels[labelsCount].Permission = labels.Permission
+			}
 		}
 		r.Lbrokerconnect = types.BoolPointerValue(resp.Lbrokerconnect)
 		r.PublisherID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PublisherID))
@@ -145,6 +157,10 @@ func (r *NPAPublisherResourceModel) ToSharedPublisherPatchRequest(ctx context.Co
 	var publisherName string
 	publisherName = r.PublisherName.ValueString()
 
+	labelIds := make([]string, 0, len(r.LabelIds))
+	for _, labelIdsItem := range r.LabelIds {
+		labelIds = append(labelIds, labelIdsItem.ValueString())
+	}
 	lbrokerconnect := new(bool)
 	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
 		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
@@ -159,6 +175,7 @@ func (r *NPAPublisherResourceModel) ToSharedPublisherPatchRequest(ctx context.Co
 	}
 	out := shared.PublisherPatchRequest{
 		PublisherName:              publisherName,
+		LabelIds:                   labelIds,
 		Lbrokerconnect:             lbrokerconnect,
 		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
 	}
@@ -172,6 +189,10 @@ func (r *NPAPublisherResourceModel) ToSharedPublisherPostRequest(ctx context.Con
 	var publisherName string
 	publisherName = r.PublisherName.ValueString()
 
+	labelIds := make([]string, 0, len(r.LabelIds))
+	for _, labelIdsItem := range r.LabelIds {
+		labelIds = append(labelIds, labelIdsItem.ValueString())
+	}
 	lbrokerconnect := new(bool)
 	if !r.Lbrokerconnect.IsUnknown() && !r.Lbrokerconnect.IsNull() {
 		*lbrokerconnect = r.Lbrokerconnect.ValueBool()
@@ -186,6 +207,7 @@ func (r *NPAPublisherResourceModel) ToSharedPublisherPostRequest(ctx context.Con
 	}
 	out := shared.PublisherPostRequest{
 		PublisherName:              publisherName,
+		LabelIds:                   labelIds,
 		Lbrokerconnect:             lbrokerconnect,
 		PublisherUpgradeProfilesID: publisherUpgradeProfilesID,
 	}

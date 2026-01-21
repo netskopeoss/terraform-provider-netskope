@@ -33,34 +33,23 @@ func (e *NpaPolicygroupRequestOrder) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type NpaPolicygroupRequestGroupOrder struct {
+type GroupOrder struct {
 	GroupID *string                     `json:"group_id,omitempty"`
 	Order   *NpaPolicygroupRequestOrder `json:"order,omitempty"`
 }
 
-func (o *NpaPolicygroupRequestGroupOrder) GetGroupID() *string {
+func (o *GroupOrder) GetGroupID() *string {
 	if o == nil {
 		return nil
 	}
 	return o.GroupID
 }
 
-func (o *NpaPolicygroupRequestGroupOrder) GetOrder() *NpaPolicygroupRequestOrder {
+func (o *GroupOrder) GetOrder() *NpaPolicygroupRequestOrder {
 	if o == nil {
 		return nil
 	}
 	return o.Order
-}
-
-type GroupOrder struct {
-	GroupOrder *NpaPolicygroupRequestGroupOrder `json:"group_order,omitempty"`
-}
-
-func (o *GroupOrder) GetGroupOrder() *NpaPolicygroupRequestGroupOrder {
-	if o == nil {
-		return nil
-	}
-	return o.GroupOrder
 }
 
 type NpaPolicygroupRequest struct {

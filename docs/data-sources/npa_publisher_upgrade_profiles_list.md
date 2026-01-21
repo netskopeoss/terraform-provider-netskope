@@ -56,6 +56,7 @@ Read-Only:
 - `publisher_upgrade_profile_id` (Number)
 - `release_type` (String)
 - `timezone` (String)
+- `timezone_id` (Number)
 - `updated_at` (String)
 - `upgrading_stage` (Number)
 - `will_start` (Boolean)

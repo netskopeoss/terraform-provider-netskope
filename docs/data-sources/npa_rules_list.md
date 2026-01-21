@@ -14,6 +14,7 @@ NPARulesList DataSource
 
 ```terraform
 data "netskope_npa_rules_list" "my_nparuleslist" {
+  fields    = "...my_fields..."
   filter    = "...my_filter..."
   limit     = 0
   offset    = 5
@@ -27,6 +28,7 @@ data "netskope_npa_rules_list" "my_nparuleslist" {
 
 ### Optional
 
+- `fields` (String) Return values only from specified fields
 - `filter` (String) Query string based on query operaters
 - `limit` (Number) Max number of policies to retrieve. Default will be all policies.
 - `offset` (Number) The offset of the first policy in the list to retrieve.
@@ -36,6 +38,7 @@ data "netskope_npa_rules_list" "my_nparuleslist" {
 ### Read-Only
 
 - `data` (Attributes List) (see [below for nested schema](#nestedatt--data))
+- `status` (String)
 
 <a id="nestedatt--data"></a>
 ### Nested Schema for `data`
@@ -44,12 +47,13 @@ Read-Only:
 
 - `enabled` (String)
 - `group_id` (String)
+- `group_name` (String)
+- `id` (String)
 - `modify_by` (String)
 - `modify_time` (String)
 - `modify_type` (String)
 - `policy_type` (String)
 - `rule_data` (Attributes) (see [below for nested schema](#nestedatt--data--rule_data))
-- `rule_id` (String)
 - `rule_name` (String)
 
 <a id="nestedatt--data--rule_data"></a>
@@ -68,6 +72,7 @@ Read-Only:
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--data--rule_data--match_criteria_action))
 - `net_location_obj` (List of String)
 - `organization_units` (List of String)
+- `periodic_reauth` (Attributes) (see [below for nested schema](#nestedatt--data--rule_data--periodic_reauth))
 - `policy_type` (String)
 - `private_app_tag_ids` (List of String)
 - `private_app_tags` (List of String)
@@ -99,13 +104,21 @@ Read-Only:
 - `action_name` (String)
 
 
+<a id="nestedatt--data--rule_data--periodic_reauth"></a>
+### Nested Schema for `data.rule_data.periodic_reauth`
+
+Read-Only:
+
+- `reauth_interval` (String)
+- `reauth_interval_unit` (String)
+
+
 <a id="nestedatt--data--rule_data--private_apps_with_activities"></a>
 ### Nested Schema for `data.rule_data.private_apps_with_activities`
 
 Read-Only:
 
 - `activities` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--private_apps_with_activities--activities))
-- `app_id` (List of String)
 - `app_name` (String)
 
 <a id="nestedatt--data--rule_data--private_apps_with_activities--activities"></a>
@@ -124,7 +137,7 @@ Read-Only:
 Read-Only:
 
 - `actions` (Attributes List) (see [below for nested schema](#nestedatt--data--rule_data--tss_actions--actions))
-- `tss_profile` (List of String)
+- `tss_profile` (String)
 
 <a id="nestedatt--data--rule_data--tss_actions--actions"></a>
 ### Nested Schema for `data.rule_data.tss_actions.actions`

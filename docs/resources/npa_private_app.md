@@ -16,26 +16,28 @@ NPAPrivateApp Resource
 resource "netskope_npa_private_app" "my_npaprivateapp" {
   allow_unauthenticated_cors = false
   allow_uri_bypass           = false
-  app_name                   = "...my_app_name..."
-  app_option = {
-    # ...
-  }
   bypass_uris = [
     "..."
   ]
   clientless_access    = false
   is_user_portal_app   = true
   private_app_hostname = "...my_private_app_hostname..."
+  private_app_name     = "...my_private_app_name..."
+  private_app_protocol = "...my_private_app_protocol..."
   protocols = [
     {
-      port     = "...my_port..."
-      protocol = "udp"
+      created_at = "2022-05-19 21:03:07.125000+00:00"
+      id         = 1
+      port       = "...my_port..."
+      protocol   = "tcp"
+      service_id = 9
+      updated_at = "2022-05-19 21:03:07.125000+00:00"
     }
   ]
   publishers = [
     {
       publisher_id   = "...my_publisher_id..."
-      publisher_name = "...my_publisher_name..."
+      publisher_name = "pub01.local"
     }
   ]
   real_host = "...my_real_host..."
@@ -55,52 +57,39 @@ resource "netskope_npa_private_app" "my_npaprivateapp" {
 
 ### Optional
 
-- `allow_unauthenticated_cors` (Boolean)
-- `allow_uri_bypass` (Boolean) Requires replacement if changed.
-- `app_name` (String) Requires replacement if changed.
-- `app_option` (Attributes) (see [below for nested schema](#nestedatt--app_option))
-- `bypass_uris` (List of String) Requires replacement if changed.
-- `clientless_access` (Boolean)
-- `is_user_portal_app` (Boolean)
+- `allow_unauthenticated_cors` (Boolean) Default: false
+- `allow_uri_bypass` (Boolean)
+- `bypass_uris` (List of String)
+- `clientless_access` (Boolean) Default: false
+- `is_user_portal_app` (Boolean) Default: false
 - `private_app_hostname` (String)
+- `private_app_name` (String) Requires replacement if changed.
+- `private_app_protocol` (String) Requires replacement if changed.
 - `protocols` (Attributes List) (see [below for nested schema](#nestedatt--protocols))
 - `publishers` (Attributes List) (see [below for nested schema](#nestedatt--publishers))
 - `real_host` (String)
 - `tags` (Attributes List) (see [below for nested schema](#nestedatt--tags))
-- `trust_self_signed_certs` (Boolean)
+- `trust_self_signed_certs` (Boolean) Default: false
 - `uribypass_header_value` (String)
-- `use_publisher_dns` (Boolean)
+- `use_publisher_dns` (Boolean) Default: false
 
 ### Read-Only
 
 - `modified_by` (String)
 - `modify_time` (String)
-- `policies` (List of String)
 - `private_app_id` (Number) private apps id
-- `private_app_name` (String)
-- `private_app_protocol` (String)
 - `public_host` (String)
-- `reachability` (Attributes) (see [below for nested schema](#nestedatt--reachability))
-- `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--service_publisher_assignments))
-- `steering_configs` (List of String)
 - `supplement_dns_for_osx` (Boolean)
-
-<a id="nestedatt--app_option"></a>
-### Nested Schema for `app_option`
-
 
 <a id="nestedatt--protocols"></a>
 ### Nested Schema for `protocols`
 
 Optional:
 
-- `port` (String)
-- `protocol` (String) must be one of ["tcp", "udp"]
-
-Read-Only:
-
 - `created_at` (String)
 - `id` (Number)
+- `port` (String)
+- `protocol` (String) must be one of ["tcp", "udp"]
 - `service_id` (Number)
 - `updated_at` (String)
 
@@ -113,6 +102,23 @@ Optional:
 - `publisher_id` (String)
 - `publisher_name` (String)
 
+Read-Only:
+
+- `primary` (Boolean)
+- `publisher_external_id` (Number)
+- `reachability` (Attributes) (see [below for nested schema](#nestedatt--publishers--reachability))
+- `service_external_id` (Number)
+
+<a id="nestedatt--publishers--reachability"></a>
+### Nested Schema for `publishers.reachability`
+
+Read-Only:
+
+- `error_code` (Number)
+- `error_string` (String)
+- `reachable` (Boolean)
+
+
 
 <a id="nestedatt--tags"></a>
 ### Nested Schema for `tags`
@@ -123,38 +129,7 @@ Optional:
 
 Read-Only:
 
-- `tag_id` (String) Parsed as JSON.
-
-
-<a id="nestedatt--reachability"></a>
-### Nested Schema for `reachability`
-
-Read-Only:
-
-- `error_code` (Number)
-- `error_string` (String)
-- `reachable` (Boolean)
-
-
-<a id="nestedatt--service_publisher_assignments"></a>
-### Nested Schema for `service_publisher_assignments`
-
-Read-Only:
-
-- `primary` (String)
-- `publisher_id` (Number)
-- `publisher_name` (String)
-- `reachability` (Attributes) (see [below for nested schema](#nestedatt--service_publisher_assignments--reachability))
-- `service_id` (Number)
-
-<a id="nestedatt--service_publisher_assignments--reachability"></a>
-### Nested Schema for `service_publisher_assignments.reachability`
-
-Read-Only:
-
-- `error_code` (Number)
-- `error_string` (String)
-- `reachable` (Boolean)
+- `tag_id` (Number)
 
 ## Import
 

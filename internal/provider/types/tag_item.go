@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type NpaPolicygroupRequestGroupOrder struct {
-	GroupID types.String `tfsdk:"group_id"`
-	Order   types.String `tfsdk:"order"`
+type TagItem struct {
+	TagID   types.Int32  `tfsdk:"tag_id"`
+	TagName types.String `tfsdk:"tag_name"`
 }

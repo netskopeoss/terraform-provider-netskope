@@ -101,11 +101,11 @@ func (o *NpaPolicyRuleTssActions) GetTemplate() *string {
 }
 
 type NpaPolicyRuleTss struct {
-	TssProfile []string                  `json:"tss_profile,omitempty"`
+	TssProfile *string                   `json:"tss_profile,omitempty"`
 	Actions    []NpaPolicyRuleTssActions `json:"actions,omitempty"`
 }
 
-func (o *NpaPolicyRuleTss) GetTssProfile() []string {
+func (o *NpaPolicyRuleTss) GetTssProfile() *string {
 	if o == nil {
 		return nil
 	}

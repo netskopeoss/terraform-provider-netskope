@@ -4,7 +4,7 @@ package shared
 
 type NpaPolicygroupResponseItem struct {
 	CanBeEditedDeleted *string `json:"can_be_edited_deleted,omitempty"`
-	GroupID            *string `json:"group_id,omitempty"`
+	ID                 *string `json:"group_id,omitempty"`
 	GroupName          *string `json:"group_name,omitempty"`
 	GroupPinnedID      *string `json:"group_pinned_id,omitempty"`
 	GroupProdID        *string `json:"group_prod_id,omitempty"`
@@ -20,11 +20,11 @@ func (o *NpaPolicygroupResponseItem) GetCanBeEditedDeleted() *string {
 	return o.CanBeEditedDeleted
 }
 
-func (o *NpaPolicygroupResponseItem) GetGroupID() *string {
+func (o *NpaPolicygroupResponseItem) GetID() *string {
 	if o == nil {
 		return nil
 	}
-	return o.GroupID
+	return o.ID
 }
 
 func (o *NpaPolicygroupResponseItem) GetGroupName() *string {

@@ -7,6 +7,10 @@ import (
 )
 
 type PublisherItem struct {
-	PublisherID   types.String `tfsdk:"publisher_id"`
-	PublisherName types.String `tfsdk:"publisher_name"`
+	Primary             types.Bool                                  `tfsdk:"primary"`
+	PublisherExternalID types.Int32                                 `tfsdk:"publisher_external_id"`
+	PublisherID         types.String                                `tfsdk:"publisher_id"`
+	PublisherName       types.String                                `tfsdk:"publisher_name"`
+	Reachability        *ServicePublisherAssignmentItemReachability `tfsdk:"reachability"`
+	ServiceExternalID   types.Int32                                 `tfsdk:"service_external_id"`
 }

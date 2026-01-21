@@ -8,5 +8,5 @@ import (
 
 type NpaPolicyRuleTss struct {
 	Actions    []NpaPolicyRuleTssActions `tfsdk:"actions"`
-	TssProfile []types.String            `tfsdk:"tss_profile"`
+	TssProfile types.String              `tfsdk:"tss_profile"`
 }

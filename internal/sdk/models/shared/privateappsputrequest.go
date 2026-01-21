@@ -5,13 +5,20 @@ package shared
 type PrivateAppsPutRequestAppOption struct {
 }
 
+type PrivateAppsPutRequestLabels struct {
+}
+
 type PrivateAppsPutRequest struct {
 	AllowUnauthenticatedCors *bool                           `json:"allow_unauthenticated_cors,omitempty"`
+	AllowURIBypass           *bool                           `json:"allow_uri_bypass,omitempty"`
 	UribypassHeaderValue     *string                         `json:"uribypass_header_value,omitempty"`
+	BypassUris               []string                        `json:"bypass_uris,omitempty"`
 	AppOption                *PrivateAppsPutRequestAppOption `json:"app_option,omitempty"`
 	ClientlessAccess         *bool                           `json:"clientless_access,omitempty"`
 	PrivateAppHostname       *string                         `json:"host,omitempty"`
+	PrivateAppID             *int                            `json:"id,omitempty"`
 	IsUserPortalApp          *bool                           `json:"is_user_portal_app,omitempty"`
+	Labels                   []PrivateAppsPutRequestLabels   `json:"labels,omitempty"`
 	Protocols                []ProtocolItem                  `json:"protocols,omitempty"`
 	PublisherTags            []TagItemNoID                   `json:"publisher_tags,omitempty"`
 	Publishers               []PublisherItem                 `json:"publishers,omitempty"`
@@ -28,11 +35,25 @@ func (o *PrivateAppsPutRequest) GetAllowUnauthenticatedCors() *bool {
 	return o.AllowUnauthenticatedCors
 }
 
+func (o *PrivateAppsPutRequest) GetAllowURIBypass() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.AllowURIBypass
+}
+
 func (o *PrivateAppsPutRequest) GetUribypassHeaderValue() *string {
 	if o == nil {
 		return nil
 	}
 	return o.UribypassHeaderValue
+}
+
+func (o *PrivateAppsPutRequest) GetBypassUris() []string {
+	if o == nil {
+		return nil
+	}
+	return o.BypassUris
 }
 
 func (o *PrivateAppsPutRequest) GetAppOption() *PrivateAppsPutRequestAppOption {
@@ -56,11 +77,25 @@ func (o *PrivateAppsPutRequest) GetPrivateAppHostname() *string {
 	return o.PrivateAppHostname
 }
 
+func (o *PrivateAppsPutRequest) GetPrivateAppID() *int {
+	if o == nil {
+		return nil
+	}
+	return o.PrivateAppID
+}
+
 func (o *PrivateAppsPutRequest) GetIsUserPortalApp() *bool {
 	if o == nil {
 		return nil
 	}
 	return o.IsUserPortalApp
+}
+
+func (o *PrivateAppsPutRequest) GetLabels() []PrivateAppsPutRequestLabels {
+	if o == nil {
+		return nil
+	}
+	return o.Labels
 }
 
 func (o *PrivateAppsPutRequest) GetProtocols() []ProtocolItem {

@@ -34,6 +34,7 @@ type PublisherResponseAssessment struct {
 	IPAddress     *string                         `json:"ip_address,omitempty"`
 	Latency       *float64                        `json:"latency,omitempty"`
 	Version       *string                         `json:"version,omitempty"`
+	HostOsVersion *string                         `json:"host_os_version,omitempty"`
 }
 
 func (o *PublisherResponseAssessment) GetCaCertsStatus() *PublisherResponseCaCertsStatus {
@@ -83,6 +84,13 @@ func (o *PublisherResponseAssessment) GetVersion() *string {
 		return nil
 	}
 	return o.Version
+}
+
+func (o *PublisherResponseAssessment) GetHostOsVersion() *string {
+	if o == nil {
+		return nil
+	}
+	return o.HostOsVersion
 }
 
 type PublisherResponsePullNsconfig struct {
@@ -147,11 +155,31 @@ func (o *PublisherResponseCapabilities) GetPullNsconfig() *PublisherResponsePull
 	return o.PullNsconfig
 }
 
+type PublisherResponseLabels struct {
+	LabelID    *string `json:"label_id,omitempty"`
+	Permission *string `json:"permission,omitempty"`
+}
+
+func (o *PublisherResponseLabels) GetLabelID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.LabelID
+}
+
+func (o *PublisherResponseLabels) GetPermission() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Permission
+}
+
 type PublisherResponseStatus string
 
 const (
 	PublisherResponseStatusConnected     PublisherResponseStatus = "connected"
 	PublisherResponseStatusNotRegistered PublisherResponseStatus = "not registered"
+	PublisherResponseStatusDisconnected  PublisherResponseStatus = "disconnected"
 )
 
 func (e PublisherResponseStatus) ToPointer() *PublisherResponseStatus {
@@ -166,6 +194,8 @@ func (e *PublisherResponseStatus) UnmarshalJSON(data []byte) error {
 	case "connected":
 		fallthrough
 	case "not registered":
+		fallthrough
+	case "disconnected":
 		*e = PublisherResponseStatus(v)
 		return nil
 	default:
@@ -226,6 +256,7 @@ type PublisherResponseData struct {
 	CommonName                 *string                        `json:"common_name,omitempty"`
 	ConnectedApps              []string                       `json:"connected_apps,omitempty"`
 	PublisherID                *int                           `json:"id,omitempty"`
+	Labels                     []PublisherResponseLabels      `json:"labels,omitempty"`
 	Lbrokerconnect             *bool                          `json:"lbrokerconnect,omitempty"`
 	PublisherName              *string                        `json:"name,omitempty"`
 	PublisherUpgradeProfilesID *int                           `json:"publisher_upgrade_profiles_id,omitempty"`
@@ -281,6 +312,13 @@ func (o *PublisherResponseData) GetPublisherID() *int {
 		return nil
 	}
 	return o.PublisherID
+}
+
+func (o *PublisherResponseData) GetLabels() []PublisherResponseLabels {
+	if o == nil {
+		return nil
+	}
+	return o.Labels
 }
 
 func (o *PublisherResponseData) GetLbrokerconnect() *bool {

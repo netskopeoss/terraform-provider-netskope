@@ -2,27 +2,47 @@
 
 package shared
 
+import (
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/utils"
+)
+
 type PrivateAppsRequestAppOption struct {
+}
+
+type PrivateAppsRequestLabels struct {
 }
 
 // PrivateAppsRequest - Private APP request body
 type PrivateAppsRequest struct {
-	AllowUnauthenticatedCors *bool                        `json:"allow_unauthenticated_cors,omitempty"`
+	AllowUnauthenticatedCors *bool                        `default:"false" json:"allow_unauthenticated_cors"`
 	AllowURIBypass           *bool                        `json:"allow_uri_bypass,omitempty"`
 	UribypassHeaderValue     *string                      `json:"uribypass_header_value,omitempty"`
 	BypassUris               []string                     `json:"bypass_uris,omitempty"`
-	AppName                  *string                      `json:"app_name,omitempty"`
+	PrivateAppName           *string                      `json:"app_name,omitempty"`
 	AppOption                *PrivateAppsRequestAppOption `json:"app_option,omitempty"`
-	ClientlessAccess         *bool                        `json:"clientless_access,omitempty"`
+	ClientlessAccess         *bool                        `default:"false" json:"clientless_access"`
 	PrivateAppHostname       *string                      `json:"host,omitempty"`
-	IsUserPortalApp          *bool                        `json:"is_user_portal_app,omitempty"`
+	IsUserPortalApp          *bool                        `default:"false" json:"is_user_portal_app"`
+	Labels                   []PrivateAppsRequestLabels   `json:"labels,omitempty"`
 	Protocols                []ProtocolItem               `json:"protocols,omitempty"`
 	PublisherTags            []TagItemNoID                `json:"publisher_tags,omitempty"`
 	Publishers               []PublisherItem              `json:"publishers,omitempty"`
-	RealHost                 *string                      `json:"real_host,omitempty"`
 	Tags                     []TagItemNoID                `json:"tags,omitempty"`
-	TrustSelfSignedCerts     *bool                        `json:"trust_self_signed_certs,omitempty"`
-	UsePublisherDNS          *bool                        `json:"use_publisher_dns,omitempty"`
+	RealHost                 *string                      `json:"real_host,omitempty"`
+	PrivateAppProtocol       *string                      `json:"private_app_protocol,omitempty"`
+	TrustSelfSignedCerts     *bool                        `default:"false" json:"trust_self_signed_certs"`
+	UsePublisherDNS          *bool                        `default:"false" json:"use_publisher_dns"`
+}
+
+func (p PrivateAppsRequest) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(p, "", false)
+}
+
+func (p *PrivateAppsRequest) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &p, "", false, false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *PrivateAppsRequest) GetAllowUnauthenticatedCors() *bool {
@@ -53,11 +73,11 @@ func (o *PrivateAppsRequest) GetBypassUris() []string {
 	return o.BypassUris
 }
 
-func (o *PrivateAppsRequest) GetAppName() *string {
+func (o *PrivateAppsRequest) GetPrivateAppName() *string {
 	if o == nil {
 		return nil
 	}
-	return o.AppName
+	return o.PrivateAppName
 }
 
 func (o *PrivateAppsRequest) GetAppOption() *PrivateAppsRequestAppOption {
@@ -88,6 +108,13 @@ func (o *PrivateAppsRequest) GetIsUserPortalApp() *bool {
 	return o.IsUserPortalApp
 }
 
+func (o *PrivateAppsRequest) GetLabels() []PrivateAppsRequestLabels {
+	if o == nil {
+		return nil
+	}
+	return o.Labels
+}
+
 func (o *PrivateAppsRequest) GetProtocols() []ProtocolItem {
 	if o == nil {
 		return nil
@@ -109,6 +136,13 @@ func (o *PrivateAppsRequest) GetPublishers() []PublisherItem {
 	return o.Publishers
 }
 
+func (o *PrivateAppsRequest) GetTags() []TagItemNoID {
+	if o == nil {
+		return nil
+	}
+	return o.Tags
+}
+
 func (o *PrivateAppsRequest) GetRealHost() *string {
 	if o == nil {
 		return nil
@@ -116,11 +150,11 @@ func (o *PrivateAppsRequest) GetRealHost() *string {
 	return o.RealHost
 }
 
-func (o *PrivateAppsRequest) GetTags() []TagItemNoID {
+func (o *PrivateAppsRequest) GetPrivateAppProtocol() *string {
 	if o == nil {
 		return nil
 	}
-	return o.Tags
+	return o.PrivateAppProtocol
 }
 
 func (o *PrivateAppsRequest) GetTrustSelfSignedCerts() *bool {

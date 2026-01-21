@@ -8,9 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/operations"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
-func (r *NPAPolicyGroupsListDataSourceModel) RefreshFromOperationsGetNPAPolicyGroupsResponseBody(ctx context.Context, resp *operations.GetNPAPolicyGroupsResponseBody) diag.Diagnostics {
+func (r *NPAPolicyGroupsListDataSourceModel) RefreshFromSharedNpaPolicygroupResponse(ctx context.Context, resp *shared.NpaPolicygroupResponse) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	if resp != nil {
@@ -21,37 +22,33 @@ func (r *NPAPolicyGroupsListDataSourceModel) RefreshFromOperationsGetNPAPolicyGr
 		for dataCount, dataItem := range resp.Data {
 			var data tfTypes.NpaPolicygroupResponseItem
 			data.CanBeEditedDeleted = types.StringPointerValue(dataItem.CanBeEditedDeleted)
-			data.GroupID = types.StringPointerValue(dataItem.GroupID)
 			data.GroupName = types.StringPointerValue(dataItem.GroupName)
 			data.GroupPinnedID = types.StringPointerValue(dataItem.GroupPinnedID)
 			data.GroupProdID = types.StringPointerValue(dataItem.GroupProdID)
 			data.GroupType = types.StringPointerValue(dataItem.GroupType)
+			data.ID = types.StringPointerValue(dataItem.ID)
 			data.ModifyTime = types.StringPointerValue(dataItem.ModifyTime)
 			data.ModifyType = types.StringPointerValue(dataItem.ModifyType)
 			if dataCount+1 > len(r.Data) {
 				r.Data = append(r.Data, data)
 			} else {
 				r.Data[dataCount].CanBeEditedDeleted = data.CanBeEditedDeleted
-				r.Data[dataCount].GroupID = data.GroupID
 				r.Data[dataCount].GroupName = data.GroupName
 				r.Data[dataCount].GroupPinnedID = data.GroupPinnedID
 				r.Data[dataCount].GroupProdID = data.GroupProdID
 				r.Data[dataCount].GroupType = data.GroupType
+				r.Data[dataCount].ID = data.ID
 				r.Data[dataCount].ModifyTime = data.ModifyTime
 				r.Data[dataCount].ModifyType = data.ModifyType
 			}
 		}
-		if resp.Status != nil {
-			r.Status = types.StringValue(string(*resp.Status))
-		} else {
-			r.Status = types.StringNull()
-		}
+		r.Status = types.StringPointerValue(resp.Status)
 	}
 
 	return diags
 }
 
-func (r *NPAPolicyGroupsListDataSourceModel) ToOperationsGetNPAPolicyGroupsRequest(ctx context.Context) (*operations.GetNPAPolicyGroupsRequest, diag.Diagnostics) {
+func (r *NPAPolicyGroupsListDataSourceModel) ToOperationsListNPAPolicyGroupsRequest(ctx context.Context) (*operations.ListNPAPolicyGroupsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
 	fields := new(string)
@@ -90,7 +87,7 @@ func (r *NPAPolicyGroupsListDataSourceModel) ToOperationsGetNPAPolicyGroupsReque
 	} else {
 		sortorder = nil
 	}
-	out := operations.GetNPAPolicyGroupsRequest{
+	out := operations.ListNPAPolicyGroupsRequest{
 		Fields:    fields,
 		Filter:    filter,
 		Limit:     limit,

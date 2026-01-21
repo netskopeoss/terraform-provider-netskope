@@ -5,7 +5,7 @@ resource "netskope_npa_rules" "my_nparules" {
   group_name  = "My policy group"
   rule_data = {
     access_method = [
-      "Client"
+      "Clientless"
     ]
     b_negate_net_location  = false
     b_negate_src_countries = false
@@ -32,6 +32,10 @@ resource "netskope_npa_rules" "my_nparules" {
     organization_units = [
       "..."
     ]
+    periodic_reauth = {
+      reauth_interval      = 60
+      reauth_interval_unit = "hours"
+    }
     policy_type = "private-app"
     private_app_tag_ids = [
       "..."
@@ -52,9 +56,6 @@ resource "netskope_npa_rules" "my_nparules" {
             ]
           }
         ]
-        app_id = [
-          "..."
-        ]
         app_name = "[172.31.12.135]"
       }
     ]
@@ -72,9 +73,7 @@ resource "netskope_npa_rules" "my_nparules" {
             template            = "...my_template..."
           }
         ]
-        tss_profile = [
-          "..."
-        ]
+        tss_profile = "...my_tss_profile..."
       }
     ]
     tss_profile = [
@@ -93,8 +92,7 @@ resource "netskope_npa_rules" "my_nparules" {
   rule_order = {
     order     = "before"
     position  = 5
-    rule_id   = "...my_rule_id..."
+    rule_id   = 1
     rule_name = "api-policy-managed"
   }
-  silent = "1"
 }

@@ -32,9 +32,10 @@ func newNPAPublisherUpgradeProfiles(rootSDK *TerraformProviderNs, sdkConfig conf
 
 // ListObjects - Get list of publisher upgrade profile objects
 // The NPA Publisher is a software package that enables private application
-// connectivity between your data center and the Netskope cloud. It is a crucial
-// component of Netskope’s Private Access (NPA) solution, which provides zero-trust
-// network access (ZTNA) to private applications and data in hybrid IT environments.
+//
+//	connectivity between your data center and the Netskope cloud. It is a crucial
+//	component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+//	network access (ZTNA) to private applications and data in hybrid IT environments.
 //
 // This endpoint queries and returns all publisher upgrade profiles.
 func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, opts ...operations.Option) (*operations.ListNPAPublisherUpgradeProfilesResponse, error) {

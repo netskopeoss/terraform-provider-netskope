@@ -17,6 +17,7 @@ type PublisherUpgradeProfileResponseData struct {
 	NumAssociatedPublisher    *int    `default:"0" json:"num_associated_publisher"`
 	ReleaseType               *string `json:"release_type,omitempty"`
 	Timezone                  *string `json:"timezone,omitempty"`
+	TimezoneID                *int64  `json:"timezone_id,omitempty"`
 	UpdatedAt                 *string `json:"updated_at,omitempty"`
 	UpgradingStage            *int    `json:"upgrading_stage,omitempty"`
 	WillStart                 *bool   `json:"will_start,omitempty"`
@@ -101,6 +102,13 @@ func (o *PublisherUpgradeProfileResponseData) GetTimezone() *string {
 		return nil
 	}
 	return o.Timezone
+}
+
+func (o *PublisherUpgradeProfileResponseData) GetTimezoneID() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.TimezoneID
 }
 
 func (o *PublisherUpgradeProfileResponseData) GetUpdatedAt() *string {

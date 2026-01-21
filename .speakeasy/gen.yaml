@@ -13,6 +13,7 @@ generation:
     requestResponseComponentNamesFeb2024: true
     securityFeb2025: false
     sharedErrorComponentsApr2025: false
+    sharedNestedComponentsJan2026: false
   auth:
     oAuth2ClientCredentialsEnabled: true
     oAuth2PasswordEnabled: false
@@ -20,20 +21,34 @@ generation:
     generateTests: true
     generateNewTests: false
     skipResponseBodyAssertions: false
+  persistentEdits: {}
+  requestBodyFieldName: ""
+  schemas:
+    allOfMergeStrategy: shallowMerge
 terraform:
-  version: 0.3.2
+  version: 0.3.3
   additionalDataSources: []
   additionalDependencies: {}
   additionalEphemeralResources: []
+  additionalListResources: []
   additionalProviderAttributes:
     httpHeaders: ""
   additionalResources: []
   allowUnknownFieldsInWeakUnions: false
   author: netskopeoss
   baseErrorName: TerraformProviderNsError
+  debugLogging: {}
   defaultErrorName: SDKError
+  enableCustomCodeRegions: false
+  enableOperationSecurity: false
+  enableOperationServers: false
   enableTypeDeduplication: true
-  environmentVariables: []
+  environmentVariables:
+    - env: NETSKOPE_SERVER_URL
+      providerAttribute: server_url
+    - env: NETSKOPE_API_KEY
+      providerAttribute: api_key
+  excludeEmptyObjectSchemas: false
   imports:
     option: openapi
     paths:
@@ -42,6 +57,10 @@ terraform:
       operations: operations
       shared: shared
       webhooks: webhooks
+  includeEmptyObjects: false
+  inferUnionDiscriminators: false
   inputModelSuffix: input
   outputModelSuffix: output
   packageName: netskope
+  respectRequiredFields: false
+  unionStrategy: populated-fields

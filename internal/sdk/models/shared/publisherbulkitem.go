@@ -34,6 +34,7 @@ type Assessment struct {
 	IPAddress     *string        `json:"ip_address,omitempty"`
 	Latency       *int           `json:"latency,omitempty"`
 	Version       *string        `json:"version,omitempty"`
+	HostOsVersion *string        `json:"host_os_version,omitempty"`
 }
 
 func (o *Assessment) GetCaCertsStatus() *CaCertsStatus {
@@ -83,6 +84,13 @@ func (o *Assessment) GetVersion() *string {
 		return nil
 	}
 	return o.Version
+}
+
+func (o *Assessment) GetHostOsVersion() *string {
+	if o == nil {
+		return nil
+	}
+	return o.HostOsVersion
 }
 
 type PullNsconfig struct {
@@ -147,11 +155,31 @@ func (o *Capabilities) GetPullNsconfig() *PullNsconfig {
 	return o.PullNsconfig
 }
 
+type PublisherBulkItemLabels struct {
+	LabelID    *string `json:"label_id,omitempty"`
+	Permission *string `json:"permission,omitempty"`
+}
+
+func (o *PublisherBulkItemLabels) GetLabelID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.LabelID
+}
+
+func (o *PublisherBulkItemLabels) GetPermission() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Permission
+}
+
 type PublisherBulkItemStatus string
 
 const (
 	PublisherBulkItemStatusConnected     PublisherBulkItemStatus = "connected"
 	PublisherBulkItemStatusNotRegistered PublisherBulkItemStatus = "not registered"
+	PublisherBulkItemStatusDisconnected  PublisherBulkItemStatus = "disconnected"
 )
 
 func (e PublisherBulkItemStatus) ToPointer() *PublisherBulkItemStatus {
@@ -166,6 +194,8 @@ func (e *PublisherBulkItemStatus) UnmarshalJSON(data []byte) error {
 	case "connected":
 		fallthrough
 	case "not registered":
+		fallthrough
+	case "disconnected":
 		*e = PublisherBulkItemStatus(v)
 		return nil
 	default:
@@ -220,19 +250,20 @@ func (o *UpgradeStatus) GetUpstat() *string {
 }
 
 type PublisherBulkItem struct {
-	AppsCount                  *int                     `json:"apps_count,omitempty"`
-	Assessment                 *Assessment              `json:"assessment,omitempty"`
-	Capabilities               *Capabilities            `json:"capabilities,omitempty"`
-	CommonName                 *string                  `json:"common_name,omitempty"`
-	ConnectedApps              []string                 `json:"connected_apps,omitempty"`
-	PublisherID                *int                     `json:"id,omitempty"`
-	Lbrokerconnect             *bool                    `json:"lbrokerconnect,omitempty"`
-	PublisherName              *string                  `json:"name,omitempty"`
-	PublisherUpgradeProfilesID *int                     `json:"publisher_upgrade_profiles_id,omitempty"`
-	Registered                 *bool                    `json:"registered,omitempty"`
-	Status                     *PublisherBulkItemStatus `json:"status,omitempty"`
-	StitcherID                 *int                     `json:"stitcher_id,omitempty"`
-	StitcherPop                *string                  `json:"stitcher_pop,omitempty"`
+	AppsCount                  *int                      `json:"apps_count,omitempty"`
+	Assessment                 *Assessment               `json:"assessment,omitempty"`
+	Capabilities               *Capabilities             `json:"capabilities,omitempty"`
+	CommonName                 *string                   `json:"common_name,omitempty"`
+	ConnectedApps              []string                  `json:"connected_apps,omitempty"`
+	PublisherID                *int                      `json:"id,omitempty"`
+	Labels                     []PublisherBulkItemLabels `json:"labels,omitempty"`
+	Lbrokerconnect             *bool                     `json:"lbrokerconnect,omitempty"`
+	PublisherName              *string                   `json:"name,omitempty"`
+	PublisherUpgradeProfilesID *int                      `json:"publisher_upgrade_profiles_id,omitempty"`
+	Registered                 *bool                     `json:"registered,omitempty"`
+	Status                     *PublisherBulkItemStatus  `json:"status,omitempty"`
+	StitcherID                 *int                      `json:"stitcher_id,omitempty"`
+	StitcherPop                *string                   `json:"stitcher_pop,omitempty"`
 	// Not used at this time - please ignore
 	//
 	Tags                []TagItem            `json:"tags,omitempty"`
@@ -281,6 +312,13 @@ func (o *PublisherBulkItem) GetPublisherID() *int {
 		return nil
 	}
 	return o.PublisherID
+}
+
+func (o *PublisherBulkItem) GetLabels() []PublisherBulkItemLabels {
+	if o == nil {
+		return nil
+	}
+	return o.Labels
 }
 
 func (o *PublisherBulkItem) GetLbrokerconnect() *bool {

@@ -44,6 +44,7 @@ type NPAPublisherUpgradeProfileResourceModel struct {
 	PublisherUpgradeProfileID types.Int32  `tfsdk:"publisher_upgrade_profile_id"`
 	ReleaseType               types.String `tfsdk:"release_type"`
 	Timezone                  types.String `tfsdk:"timezone"`
+	TimezoneID                types.Int32  `tfsdk:"timezone_id"`
 	UpdatedAt                 types.String `tfsdk:"updated_at"`
 	UpgradingStage            types.Int32  `tfsdk:"upgrading_stage"`
 	WillStart                 types.Bool   `tfsdk:"will_start"`
@@ -77,7 +78,7 @@ func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req res
 				MarkdownDescription: `Frequency of updates. This frequency is in a CRON format. \` + "\n" +
 					`┌───────────── minute (0–59) \` + "\n" +
 					`│ ┌───────────── hour (0–23) \` + "\n" +
-					`│ │ ┌───────────── day of the month (1–31) \` + "\n" +
+					` │ │ ┌───────────── day of the month (1–31) \` + "\n" +
 					`│ │ │ ┌───────────── month (1–12) (Leave as *) \` + "\n" +
 					`│ │ │ │ ┌───────────── day of the week (MON, TUE, WED, THU, FRI, SAT, SUN) \` + "\n" +
 					`0 0 1 * TUE => (Midnight, Weekly, Tuesday)`,
@@ -190,6 +191,10 @@ func (r *NPAPublisherUpgradeProfileResource) Schema(ctx context.Context, req res
 						"US/Pacific",
 					),
 				},
+			},
+			"timezone_id": schema.Int32Attribute{
+				Computed: true,
+				Optional: true,
 			},
 			"updated_at": schema.StringAttribute{
 				Computed: true,

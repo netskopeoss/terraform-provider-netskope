@@ -11,7 +11,7 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
-func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponseList(ctx context.Context, resp *shared.NpaPolicyResponseList) diag.Diagnostics {
+func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx context.Context, resp *shared.NpaPolicyResponse) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	if resp != nil {
@@ -23,6 +23,8 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponseList(ctx
 			var data tfTypes.NpaPolicyResponseItem
 			data.Enabled = types.StringPointerValue(dataItem.Enabled)
 			data.GroupID = types.StringPointerValue(dataItem.GroupID)
+			data.GroupName = types.StringPointerValue(dataItem.GroupName)
+			data.ID = types.StringPointerValue(dataItem.ID)
 			data.ModifyBy = types.StringPointerValue(dataItem.ModifyBy)
 			data.ModifyTime = types.StringPointerValue(dataItem.ModifyTime)
 			data.ModifyType = types.StringPointerValue(dataItem.ModifyType)
@@ -77,6 +79,13 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponseList(ctx
 				for _, v := range dataItem.RuleData.OrganizationUnits {
 					data.RuleData.OrganizationUnits = append(data.RuleData.OrganizationUnits, types.StringValue(v))
 				}
+				if dataItem.RuleData.PeriodicReauth == nil {
+					data.RuleData.PeriodicReauth = nil
+				} else {
+					data.RuleData.PeriodicReauth = &tfTypes.NpaPolicyRulePeriodicReauth{}
+					data.RuleData.PeriodicReauth.ReauthInterval = types.StringPointerValue(dataItem.RuleData.PeriodicReauth.ReauthInterval)
+					data.RuleData.PeriodicReauth.ReauthIntervalUnit = types.StringPointerValue(dataItem.RuleData.PeriodicReauth.ReauthIntervalUnit)
+				}
 				if dataItem.RuleData.PolicyType != nil {
 					data.RuleData.PolicyType = types.StringValue(string(*dataItem.RuleData.PolicyType))
 				} else {
@@ -108,16 +117,11 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponseList(ctx
 							privateAppsWithActivities.Activities[activitiesCount].ListOfConstraints = activities.ListOfConstraints
 						}
 					}
-					privateAppsWithActivities.AppID = make([]types.String, 0, len(privateAppsWithActivitiesItem.AppID))
-					for _, v := range privateAppsWithActivitiesItem.AppID {
-						privateAppsWithActivities.AppID = append(privateAppsWithActivities.AppID, types.StringValue(v))
-					}
 					privateAppsWithActivities.AppName = types.StringPointerValue(privateAppsWithActivitiesItem.AppName)
 					if privateAppsWithActivitiesCount+1 > len(data.RuleData.PrivateAppsWithActivities) {
 						data.RuleData.PrivateAppsWithActivities = append(data.RuleData.PrivateAppsWithActivities, privateAppsWithActivities)
 					} else {
 						data.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].Activities = privateAppsWithActivities.Activities
-						data.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppID = privateAppsWithActivities.AppID
 						data.RuleData.PrivateAppsWithActivities[privateAppsWithActivitiesCount].AppName = privateAppsWithActivities.AppName
 					}
 				}
@@ -161,10 +165,7 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponseList(ctx
 							tssActions.Actions[actionsCount].Template = actions.Template
 						}
 					}
-					tssActions.TssProfile = make([]types.String, 0, len(tssActionsItem.TssProfile))
-					for _, v := range tssActionsItem.TssProfile {
-						tssActions.TssProfile = append(tssActions.TssProfile, types.StringValue(v))
-					}
+					tssActions.TssProfile = types.StringPointerValue(tssActionsItem.TssProfile)
 					if tssActionsCount+1 > len(data.RuleData.TssActions) {
 						data.RuleData.TssActions = append(data.RuleData.TssActions, tssActions)
 					} else {
@@ -191,30 +192,41 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponseList(ctx
 				}
 				data.RuleData.Version = types.Int64PointerValue(dataItem.RuleData.Version)
 			}
-			data.RuleID = types.StringPointerValue(dataItem.RuleID)
 			data.RuleName = types.StringPointerValue(dataItem.RuleName)
 			if dataCount+1 > len(r.Data) {
 				r.Data = append(r.Data, data)
 			} else {
 				r.Data[dataCount].Enabled = data.Enabled
 				r.Data[dataCount].GroupID = data.GroupID
+				r.Data[dataCount].GroupName = data.GroupName
+				r.Data[dataCount].ID = data.ID
 				r.Data[dataCount].ModifyBy = data.ModifyBy
 				r.Data[dataCount].ModifyTime = data.ModifyTime
 				r.Data[dataCount].ModifyType = data.ModifyType
 				r.Data[dataCount].PolicyType = data.PolicyType
 				r.Data[dataCount].RuleData = data.RuleData
-				r.Data[dataCount].RuleID = data.RuleID
 				r.Data[dataCount].RuleName = data.RuleName
 			}
+		}
+		if resp.Status != nil {
+			r.Status = types.StringValue(string(*resp.Status))
+		} else {
+			r.Status = types.StringNull()
 		}
 	}
 
 	return diags
 }
 
-func (r *NPARulesListDataSourceModel) ToOperationsGetNPARulesListRequest(ctx context.Context) (*operations.GetNPARulesListRequest, diag.Diagnostics) {
+func (r *NPARulesListDataSourceModel) ToOperationsListNPARulesRequest(ctx context.Context) (*operations.ListNPARulesRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	fields := new(string)
+	if !r.Fields.IsUnknown() && !r.Fields.IsNull() {
+		*fields = r.Fields.ValueString()
+	} else {
+		fields = nil
+	}
 	filter := new(string)
 	if !r.Filter.IsUnknown() && !r.Filter.IsNull() {
 		*filter = r.Filter.ValueString()
@@ -245,7 +257,8 @@ func (r *NPARulesListDataSourceModel) ToOperationsGetNPARulesListRequest(ctx con
 	} else {
 		sortorder = nil
 	}
-	out := operations.GetNPARulesListRequest{
+	out := operations.ListNPARulesRequest{
+		Fields:    fields,
 		Filter:    filter,
 		Limit:     limit,
 		Offset:    offset,

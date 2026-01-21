@@ -5,13 +5,15 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/utils"
 )
 
 type AccessMethod string
 
 const (
-	AccessMethodClient     AccessMethod = "Client"
-	AccessMethodClientless AccessMethod = "Clientless"
+	AccessMethodClient            AccessMethod = "Client"
+	AccessMethodClientless        AccessMethod = "Clientless"
+	AccessMethodEnterpriseBrowser AccessMethod = "Enterprise Browser"
 )
 
 func (e AccessMethod) ToPointer() *AccessMethod {
@@ -26,6 +28,8 @@ func (e *AccessMethod) UnmarshalJSON(data []byte) error {
 	case "Client":
 		fallthrough
 	case "Clientless":
+		fallthrough
+	case "Enterprise Browser":
 		*e = AccessMethod(v)
 		return nil
 	default:
@@ -137,7 +141,6 @@ func (o *Activities) GetListOfConstraints() []string {
 
 type PrivateAppsWithActivities struct {
 	Activities []Activities `json:"activities,omitempty"`
-	AppID      []string     `json:"appId,omitempty"`
 	AppName    *string      `json:"appName,omitempty"`
 }
 
@@ -146,13 +149,6 @@ func (o *PrivateAppsWithActivities) GetActivities() []Activities {
 		return nil
 	}
 	return o.Activities
-}
-
-func (o *PrivateAppsWithActivities) GetAppID() []string {
-	if o == nil {
-		return nil
-	}
-	return o.AppID
 }
 
 func (o *PrivateAppsWithActivities) GetAppName() *string {
@@ -186,30 +182,42 @@ func (e *UserType) UnmarshalJSON(data []byte) error {
 }
 
 type NpaPolicyRuleData struct {
-	AccessMethod              []AccessMethod              `json:"access_method,omitempty"`
-	BNegateNetLocation        *bool                       `json:"b_negateNetLocation,omitempty"`
-	BNegateSrcCountries       *bool                       `json:"b_negateSrcCountries,omitempty"`
-	Classification            *string                     `json:"classification,omitempty"`
-	DlpActions                []NpaPolicyRuleDlp          `json:"dlp_actions,omitempty"`
-	TssActions                []NpaPolicyRuleTss          `json:"tss_actions,omitempty"`
-	TssProfile                []string                    `json:"tss_profile,omitempty"`
-	ExternalDlp               *bool                       `json:"external_dlp,omitempty"`
-	JSONVersion               *int64                      `json:"json_version,omitempty"`
-	DeviceClassificationID    []int64                     `json:"device_classification_id,omitempty"`
-	MatchCriteriaAction       *MatchCriteriaAction        `json:"match_criteria_action,omitempty"`
-	NetLocationObj            []string                    `json:"net_location_obj,omitempty"`
-	OrganizationUnits         []string                    `json:"organization_units,omitempty"`
-	PolicyType                *PolicyType                 `json:"policy_type,omitempty"`
-	PrivateAppTagIds          []string                    `json:"privateAppTagIds,omitempty"`
-	PrivateAppTags            []string                    `json:"privateAppTags,omitempty"`
-	PrivateApps               []string                    `json:"privateApps,omitempty"`
-	PrivateAppsWithActivities []PrivateAppsWithActivities `json:"privateAppsWithActivities,omitempty"`
-	ShowDlpProfileActionTable *bool                       `json:"show_dlp_profile_action_table,omitempty"`
-	SrcCountries              []string                    `json:"srcCountries,omitempty"`
-	UserGroups                []string                    `json:"userGroups,omitempty"`
-	UserType                  *UserType                   `json:"userType,omitempty"`
-	Users                     []string                    `json:"users,omitempty"`
-	Version                   *int64                      `json:"version,omitempty"`
+	AccessMethod              []AccessMethod               `json:"access_method,omitempty"`
+	BNegateNetLocation        *bool                        `default:"false" json:"b_negateNetLocation"`
+	BNegateSrcCountries       *bool                        `default:"false" json:"b_negateSrcCountries"`
+	Classification            *string                      `json:"classification,omitempty"`
+	PeriodicReauth            *NpaPolicyRulePeriodicReauth `json:"periodic_reauth,omitempty"`
+	DlpActions                []NpaPolicyRuleDlp           `json:"dlp_actions,omitempty"`
+	TssActions                []NpaPolicyRuleTss           `json:"tss_actions,omitempty"`
+	TssProfile                []string                     `json:"tss_profile,omitempty"`
+	ExternalDlp               *bool                        `default:"false" json:"external_dlp"`
+	JSONVersion               *int64                       `default:"3" json:"json_version"`
+	DeviceClassificationID    []int64                      `json:"device_classification_id,omitempty"`
+	MatchCriteriaAction       *MatchCriteriaAction         `json:"match_criteria_action,omitempty"`
+	NetLocationObj            []string                     `json:"net_location_obj,omitempty"`
+	OrganizationUnits         []string                     `json:"organization_units,omitempty"`
+	PolicyType                *PolicyType                  `default:"private-app" json:"policy_type"`
+	PrivateAppTagIds          []string                     `json:"privateAppTagIds,omitempty"`
+	PrivateAppTags            []string                     `json:"privateAppTags,omitempty"`
+	PrivateApps               []string                     `json:"privateApps,omitempty"`
+	PrivateAppsWithActivities []PrivateAppsWithActivities  `json:"privateAppsWithActivities,omitempty"`
+	ShowDlpProfileActionTable *bool                        `default:"false" json:"show_dlp_profile_action_table"`
+	SrcCountries              []string                     `json:"srcCountries,omitempty"`
+	UserGroups                []string                     `json:"userGroups,omitempty"`
+	UserType                  *UserType                    `json:"userType,omitempty"`
+	Users                     []string                     `json:"users,omitempty"`
+	Version                   *int64                       `json:"version,omitempty"`
+}
+
+func (n NpaPolicyRuleData) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(n, "", false)
+}
+
+func (n *NpaPolicyRuleData) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &n, "", false, false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *NpaPolicyRuleData) GetAccessMethod() []AccessMethod {
@@ -238,6 +246,13 @@ func (o *NpaPolicyRuleData) GetClassification() *string {
 		return nil
 	}
 	return o.Classification
+}
+
+func (o *NpaPolicyRuleData) GetPeriodicReauth() *NpaPolicyRulePeriodicReauth {
+	if o == nil {
+		return nil
+	}
+	return o.PeriodicReauth
 }
 
 func (o *NpaPolicyRuleData) GetDlpActions() []NpaPolicyRuleDlp {

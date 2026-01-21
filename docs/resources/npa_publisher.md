@@ -26,6 +26,9 @@ Features may require additional licensing, please work with account team to enab
 
 ```terraform
 resource "netskope_npa_publisher" "my_npapublisher" {
+  label_ids = [
+    "..."
+  ]
   lbrokerconnect                = false
   publisher_name                = "npa_publisher_1"
   publisher_upgrade_profiles_id = 1
@@ -41,6 +44,7 @@ resource "netskope_npa_publisher" "my_npapublisher" {
 
 ### Optional
 
+- `label_ids` (List of String)
 - `lbrokerconnect` (Boolean) Allow this publisher to be stitched to Local Broker. Default: false
 - `publisher_upgrade_profiles_id` (Number) The ID of the upgrade profile to manage this publisher. Default: 1
 
@@ -50,10 +54,10 @@ resource "netskope_npa_publisher" "my_npapublisher" {
 - `assessment` (Attributes) (see [below for nested schema](#nestedatt--assessment))
 - `capabilities` (Attributes) (see [below for nested schema](#nestedatt--capabilities))
 - `common_name` (String)
-- `connected_apps` (List of String)
+- `labels` (Attributes List) (see [below for nested schema](#nestedatt--labels))
 - `publisher_id` (Number) publisher id
 - `registered` (Boolean)
-- `status` (String) must be one of ["connected", "not registered"]
+- `status` (String) must be one of ["connected", "not registered", "disconnected"]
 - `sticher_pop` (String)
 - `stitcher_id` (Number)
 - `upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--upgrade_failed_reason))
@@ -69,6 +73,7 @@ Read-Only:
 - `eee_support` (Boolean)
 - `hdd_free` (String)
 - `hdd_total` (String)
+- `host_os_version` (String)
 - `ip_address` (String)
 - `latency` (Number)
 - `version` (String)
@@ -102,6 +107,15 @@ Read-Only:
 - `orgkey_exist` (Boolean)
 - `orguri_exist` (Boolean)
 
+
+
+<a id="nestedatt--labels"></a>
+### Nested Schema for `labels`
+
+Read-Only:
+
+- `label_id` (String)
+- `permission` (String)
 
 
 <a id="nestedatt--upgrade_failed_reason"></a>

@@ -38,6 +38,7 @@ type NPAPublisherUpgradeProfileDataSourceModel struct {
 	PublisherUpgradeProfileID types.Int32  `tfsdk:"publisher_upgrade_profile_id"`
 	ReleaseType               types.String `tfsdk:"release_type"`
 	Timezone                  types.String `tfsdk:"timezone"`
+	TimezoneID                types.Int64  `tfsdk:"timezone_id"`
 	UpdatedAt                 types.String `tfsdk:"updated_at"`
 	UpgradingStage            types.Int32  `tfsdk:"upgrading_stage"`
 	WillStart                 types.Bool   `tfsdk:"will_start"`
@@ -83,6 +84,9 @@ func (r *NPAPublisherUpgradeProfileDataSource) Schema(ctx context.Context, req d
 				Computed: true,
 			},
 			"timezone": schema.StringAttribute{
+				Computed: true,
+			},
+			"timezone_id": schema.Int64Attribute{
 				Computed: true,
 			},
 			"updated_at": schema.StringAttribute{

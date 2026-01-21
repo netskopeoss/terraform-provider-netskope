@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type TagItemNoID struct {
-	TagID   types.String `tfsdk:"tag_id"`
-	TagName types.String `tfsdk:"tag_name"`
+type GetNPAPrivateAppPublicHostData struct {
+	PublicHost types.String `tfsdk:"public_host"`
 }

@@ -40,7 +40,8 @@ type NPAPublisherResourceModel struct {
 	Assessment                 *tfTypes.PublisherResponseAssessment          `tfsdk:"assessment"`
 	Capabilities               *tfTypes.PublisherResponseCapabilities        `tfsdk:"capabilities"`
 	CommonName                 types.String                                  `tfsdk:"common_name"`
-	ConnectedApps              []types.String                                `tfsdk:"connected_apps"`
+	LabelIds                   []types.String                                `tfsdk:"label_ids"`
+	Labels                     []tfTypes.PublisherResponseLabels             `tfsdk:"labels"`
 	Lbrokerconnect             types.Bool                                    `tfsdk:"lbrokerconnect"`
 	PublisherID                types.Int32                                   `tfsdk:"publisher_id"`
 	PublisherName              types.String                                  `tfsdk:"publisher_name"`
@@ -89,6 +90,9 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 					"hdd_total": schema.StringAttribute{
 						Computed: true,
 					},
+					"host_os_version": schema.StringAttribute{
+						Computed: true,
+					},
 					"ip_address": schema.StringAttribute{
 						Computed: true,
 					},
@@ -131,9 +135,22 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 			"common_name": schema.StringAttribute{
 				Computed: true,
 			},
-			"connected_apps": schema.ListAttribute{
-				Computed:    true,
+			"label_ids": schema.ListAttribute{
+				Optional:    true,
 				ElementType: types.StringType,
+			},
+			"labels": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"label_id": schema.StringAttribute{
+							Computed: true,
+						},
+						"permission": schema.StringAttribute{
+							Computed: true,
+						},
+					},
+				},
 			},
 			"lbrokerconnect": schema.BoolAttribute{
 				Computed:    true,
@@ -160,11 +177,12 @@ func (r *NPAPublisherResource) Schema(ctx context.Context, req resource.SchemaRe
 			},
 			"status": schema.StringAttribute{
 				Computed:    true,
-				Description: `must be one of ["connected", "not registered"]`,
+				Description: `must be one of ["connected", "not registered", "disconnected"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"connected",
 						"not registered",
+						"disconnected",
 					),
 				},
 			},
@@ -271,6 +289,43 @@ func (r *NPAPublisherResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 	resp.Diagnostics.Append(data.RefreshFromSharedPublisherResponseData(ctx, res.PublisherResponse.Data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsGetNPAPublisherByIDRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.NPAPublisher.Read(ctx, *request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if !(res1.PublisherResponse != nil && res1.PublisherResponse.Data != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherResponseData(ctx, res1.PublisherResponse.Data)...)
 
 	if resp.Diagnostics.HasError() {
 		return

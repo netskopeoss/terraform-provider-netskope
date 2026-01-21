@@ -88,10 +88,10 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 									"port": schema.StringAttribute{
 										Computed: true,
 									},
-									"service_id": schema.Int32Attribute{
+									"protocol": schema.StringAttribute{
 										Computed: true,
 									},
-									"transport": schema.StringAttribute{
+									"service_id": schema.Int32Attribute{
 										Computed: true,
 									},
 									"updated_at": schema.StringAttribute{

@@ -33,17 +33,17 @@ data "netskope_npa_private_app" "my_npaprivateapp" {
 - `bypass_uris` (List of String)
 - `clientless_access` (Boolean)
 - `is_user_portal_app` (Boolean)
+- `labels` (Attributes List) (see [below for nested schema](#nestedatt--labels))
 - `modified_by` (String)
 - `modify_time` (String)
-- `policies` (List of String)
 - `private_app_hostname` (String)
 - `private_app_name` (String)
 - `private_app_protocol` (String)
 - `protocols` (Attributes List) (see [below for nested schema](#nestedatt--protocols))
 - `public_host` (String)
-- `reachability` (Attributes) (see [below for nested schema](#nestedatt--reachability))
+- `publishers` (Attributes List) (see [below for nested schema](#nestedatt--publishers))
 - `real_host` (String)
-- `service_publisher_assignments` (Attributes List) (see [below for nested schema](#nestedatt--service_publisher_assignments))
+- `status` (String)
 - `steering_configs` (List of String)
 - `supplement_dns_for_osx` (Boolean)
 - `tags` (Attributes List) (see [below for nested schema](#nestedatt--tags))
@@ -53,6 +53,10 @@ data "netskope_npa_private_app" "my_npaprivateapp" {
 
 <a id="nestedatt--app_option"></a>
 ### Nested Schema for `app_option`
+
+
+<a id="nestedatt--labels"></a>
+### Nested Schema for `labels`
 
 
 <a id="nestedatt--protocols"></a>
@@ -68,29 +72,19 @@ Read-Only:
 - `updated_at` (String)
 
 
-<a id="nestedatt--reachability"></a>
-### Nested Schema for `reachability`
+<a id="nestedatt--publishers"></a>
+### Nested Schema for `publishers`
 
 Read-Only:
 
-- `error_code` (Number)
-- `error_string` (String)
-- `reachable` (Boolean)
-
-
-<a id="nestedatt--service_publisher_assignments"></a>
-### Nested Schema for `service_publisher_assignments`
-
-Read-Only:
-
-- `primary` (String)
-- `publisher_id` (Number)
+- `primary` (Boolean)
+- `publisher_external_id` (Number)
 - `publisher_name` (String)
-- `reachability` (Attributes) (see [below for nested schema](#nestedatt--service_publisher_assignments--reachability))
-- `service_id` (Number)
+- `reachability` (Attributes) (see [below for nested schema](#nestedatt--publishers--reachability))
+- `service_external_id` (Number)
 
-<a id="nestedatt--service_publisher_assignments--reachability"></a>
-### Nested Schema for `service_publisher_assignments.reachability`
+<a id="nestedatt--publishers--reachability"></a>
+### Nested Schema for `publishers.reachability`
 
 Read-Only:
 
@@ -105,5 +99,5 @@ Read-Only:
 
 Read-Only:
 
-- `tag_id` (String) Parsed as JSON.
+- `tag_id` (Number)
 - `tag_name` (String)

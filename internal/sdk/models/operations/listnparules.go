@@ -7,7 +7,9 @@ import (
 	"net/http"
 )
 
-type GetNPARulesListRequest struct {
+type ListNPARulesRequest struct {
+	// Return values only from specified fields
+	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 	// Query string based on query operaters
 	Filter *string `queryParam:"style=form,explode=true,name=filter"`
 	// Max number of policies to retrieve. Default will be all policies.
@@ -20,42 +22,49 @@ type GetNPARulesListRequest struct {
 	Sortorder *string `queryParam:"style=form,explode=true,name=sortorder"`
 }
 
-func (o *GetNPARulesListRequest) GetFilter() *string {
+func (o *ListNPARulesRequest) GetFields() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Fields
+}
+
+func (o *ListNPARulesRequest) GetFilter() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Filter
 }
 
-func (o *GetNPARulesListRequest) GetLimit() *int64 {
+func (o *ListNPARulesRequest) GetLimit() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.Limit
 }
 
-func (o *GetNPARulesListRequest) GetOffset() *int64 {
+func (o *ListNPARulesRequest) GetOffset() *int64 {
 	if o == nil {
 		return nil
 	}
 	return o.Offset
 }
 
-func (o *GetNPARulesListRequest) GetSortby() *string {
+func (o *ListNPARulesRequest) GetSortby() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Sortby
 }
 
-func (o *GetNPARulesListRequest) GetSortorder() *string {
+func (o *ListNPARulesRequest) GetSortorder() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Sortorder
 }
 
-type GetNPARulesListResponse struct {
+type ListNPARulesResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -63,40 +72,40 @@ type GetNPARulesListResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// successful operation
-	NpaPolicyResponseList *shared.NpaPolicyResponseList
+	NpaPolicyResponse *shared.NpaPolicyResponse
 	// Invalid request
 	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
 
-func (o *GetNPARulesListResponse) GetContentType() string {
+func (o *ListNPARulesResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *GetNPARulesListResponse) GetStatusCode() int {
+func (o *ListNPARulesResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *GetNPARulesListResponse) GetRawResponse() *http.Response {
+func (o *ListNPARulesResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}
 	return o.RawResponse
 }
 
-func (o *GetNPARulesListResponse) GetNpaPolicyResponseList() *shared.NpaPolicyResponseList {
+func (o *ListNPARulesResponse) GetNpaPolicyResponse() *shared.NpaPolicyResponse {
 	if o == nil {
 		return nil
 	}
-	return o.NpaPolicyResponseList
+	return o.NpaPolicyResponse
 }
 
-func (o *GetNPARulesListResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
+func (o *ListNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
 	if o == nil {
 		return nil
 	}

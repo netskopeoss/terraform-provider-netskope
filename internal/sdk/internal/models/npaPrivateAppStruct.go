@@ -38,6 +38,7 @@ type Protocol struct {
 	Port      string `json:"port"`
 	ServiceID int    `json:"service_id"`
 	Transport string `json:"transport"`
+	Type      string `json:"type"`
 	UpdatedAt string `json:"updated_at"`
 }
 type ServicePublisherAssignment struct {

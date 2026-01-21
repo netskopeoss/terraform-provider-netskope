@@ -73,8 +73,8 @@ Read-Only:
 - `created_at` (String)
 - `id` (Number)
 - `port` (String)
+- `protocol` (String)
 - `service_id` (Number)
-- `transport` (String)
 - `updated_at` (String)
 
 

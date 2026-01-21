@@ -29,30 +29,30 @@ type NPAPrivateAppDataSource struct {
 
 // NPAPrivateAppDataSourceModel describes the data model.
 type NPAPrivateAppDataSourceModel struct {
-	AllowUnauthenticatedCors    types.Bool                                                     `tfsdk:"allow_unauthenticated_cors"`
-	AllowURIBypass              types.Bool                                                     `tfsdk:"allow_uri_bypass"`
-	AppOption                   *tfTypes.PrivateAppsRequestAppOption                           `tfsdk:"app_option"`
-	BypassUris                  []types.String                                                 `tfsdk:"bypass_uris"`
-	ClientlessAccess            types.Bool                                                     `tfsdk:"clientless_access"`
-	IsUserPortalApp             types.Bool                                                     `tfsdk:"is_user_portal_app"`
-	ModifiedBy                  types.String                                                   `tfsdk:"modified_by"`
-	ModifyTime                  types.String                                                   `tfsdk:"modify_time"`
-	Policies                    []types.String                                                 `tfsdk:"policies"`
-	PrivateAppHostname          types.String                                                   `tfsdk:"private_app_hostname"`
-	PrivateAppID                types.Int32                                                    `tfsdk:"private_app_id"`
-	PrivateAppName              types.String                                                   `tfsdk:"private_app_name"`
-	PrivateAppProtocol          types.String                                                   `tfsdk:"private_app_protocol"`
-	Protocols                   []tfTypes.ProtocolItem                                         `tfsdk:"protocols"`
-	PublicHost                  types.String                                                   `tfsdk:"public_host"`
-	Reachability                *tfTypes.PrivateAppsGetResponseNewReachability                 `tfsdk:"reachability"`
-	RealHost                    types.String                                                   `tfsdk:"real_host"`
-	ServicePublisherAssignments []tfTypes.PrivateAppsGetResponseNewServicePublisherAssignments `tfsdk:"service_publisher_assignments"`
-	SteeringConfigs             []types.String                                                 `tfsdk:"steering_configs"`
-	SupplementDNSForOsx         types.Bool                                                     `tfsdk:"supplement_dns_for_osx"`
-	Tags                        []tfTypes.TagItemNoID                                          `tfsdk:"tags"`
-	TrustSelfSignedCerts        types.Bool                                                     `tfsdk:"trust_self_signed_certs"`
-	UribypassHeaderValue        types.String                                                   `tfsdk:"uribypass_header_value"`
-	UsePublisherDNS             types.Bool                                                     `tfsdk:"use_publisher_dns"`
+	AllowUnauthenticatedCors types.Bool                               `tfsdk:"allow_unauthenticated_cors"`
+	AllowURIBypass           types.Bool                               `tfsdk:"allow_uri_bypass"`
+	AppOption                *tfTypes.AppOption                       `tfsdk:"app_option"`
+	BypassUris               []types.String                           `tfsdk:"bypass_uris"`
+	ClientlessAccess         types.Bool                               `tfsdk:"clientless_access"`
+	IsUserPortalApp          types.Bool                               `tfsdk:"is_user_portal_app"`
+	Labels                   []tfTypes.AppOption                      `tfsdk:"labels"`
+	ModifiedBy               types.String                             `tfsdk:"modified_by"`
+	ModifyTime               types.String                             `tfsdk:"modify_time"`
+	PrivateAppHostname       types.String                             `tfsdk:"private_app_hostname"`
+	PrivateAppID             types.Int32                              `tfsdk:"private_app_id"`
+	PrivateAppName           types.String                             `tfsdk:"private_app_name"`
+	PrivateAppProtocol       types.String                             `tfsdk:"private_app_protocol"`
+	Protocols                []tfTypes.ProtocolItem                   `tfsdk:"protocols"`
+	PublicHost               types.String                             `tfsdk:"public_host"`
+	Publishers               []tfTypes.ServicePublisherAssignmentItem `tfsdk:"publishers"`
+	RealHost                 types.String                             `tfsdk:"real_host"`
+	Status                   types.String                             `tfsdk:"status"`
+	SteeringConfigs          []types.String                           `tfsdk:"steering_configs"`
+	SupplementDNSForOsx      types.Bool                               `tfsdk:"supplement_dns_for_osx"`
+	Tags                     []tfTypes.TagItem                        `tfsdk:"tags"`
+	TrustSelfSignedCerts     types.Bool                               `tfsdk:"trust_self_signed_certs"`
+	UribypassHeaderValue     types.String                             `tfsdk:"uribypass_header_value"`
+	UsePublisherDNS          types.Bool                               `tfsdk:"use_publisher_dns"`
 }
 
 // Metadata returns the data source type name.
@@ -85,15 +85,17 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 			"is_user_portal_app": schema.BoolAttribute{
 				Computed: true,
 			},
+			"labels": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{},
+				},
+			},
 			"modified_by": schema.StringAttribute{
 				Computed: true,
 			},
 			"modify_time": schema.StringAttribute{
 				Computed: true,
-			},
-			"policies": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
 			},
 			"private_app_hostname": schema.StringAttribute{
 				Computed: true,
@@ -115,7 +117,7 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 						"created_at": schema.StringAttribute{
 							Computed: true,
 						},
-						"id": schema.Int64Attribute{
+						"id": schema.Int32Attribute{
 							Computed: true,
 						},
 						"port": schema.StringAttribute{
@@ -124,7 +126,7 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 						"protocol": schema.StringAttribute{
 							Computed: true,
 						},
-						"service_id": schema.Int64Attribute{
+						"service_id": schema.Int32Attribute{
 							Computed: true,
 						},
 						"updated_at": schema.StringAttribute{
@@ -136,31 +138,14 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 			"public_host": schema.StringAttribute{
 				Computed: true,
 			},
-			"reachability": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"error_code": schema.Int64Attribute{
-						Computed: true,
-					},
-					"error_string": schema.StringAttribute{
-						Computed: true,
-					},
-					"reachable": schema.BoolAttribute{
-						Computed: true,
-					},
-				},
-			},
-			"real_host": schema.StringAttribute{
-				Computed: true,
-			},
-			"service_publisher_assignments": schema.ListNestedAttribute{
+			"publishers": schema.ListNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"primary": schema.StringAttribute{
+						"primary": schema.BoolAttribute{
 							Computed: true,
 						},
-						"publisher_id": schema.Int64Attribute{
+						"publisher_external_id": schema.Int32Attribute{
 							Computed: true,
 						},
 						"publisher_name": schema.StringAttribute{
@@ -169,7 +154,7 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 						"reachability": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{
-								"error_code": schema.Int64Attribute{
+								"error_code": schema.Int32Attribute{
 									Computed: true,
 								},
 								"error_string": schema.StringAttribute{
@@ -180,11 +165,17 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 								},
 							},
 						},
-						"service_id": schema.Int64Attribute{
+						"service_external_id": schema.Int32Attribute{
 							Computed: true,
 						},
 					},
 				},
+			},
+			"real_host": schema.StringAttribute{
+				Computed: true,
+			},
+			"status": schema.StringAttribute{
+				Computed: true,
 			},
 			"steering_configs": schema.ListAttribute{
 				Computed:    true,
@@ -197,9 +188,8 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"tag_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `Parsed as JSON.`,
+						"tag_id": schema.Int32Attribute{
+							Computed: true,
 						},
 						"tag_name": schema.StringAttribute{
 							Computed: true,
@@ -280,11 +270,11 @@ func (r *NPAPrivateAppDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PrivateAppsGetResponseNew != nil && res.PrivateAppsGetResponseNew.Data != nil) {
+	if !(res.PrivateAppsGetResponse != nil && res.PrivateAppsGetResponse.Data != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsGetResponseNewData(ctx, res.PrivateAppsGetResponseNew.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsItem(ctx, res.PrivateAppsGetResponse.Data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
