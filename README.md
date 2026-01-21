@@ -17,7 +17,7 @@ The official Terraform provider for [Netskope](https://www.netskope.com/), enabl
 
 ### 📚 New to this provider?
 
-Check out **[terraform-netskope-examples](https://github.com/netskopeoss/terraform-netskope-examples)** for:
+Check out **[terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples)** for:
 
 - **Getting Started** - Terraform basics, quick start guide, installation help
 - **Tutorials** - Step-by-step guides for private apps, publishers on AWS/Azure/GCP, policy-as-code
@@ -210,16 +210,16 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 
 ## Examples & Tutorials
 
-> **📚 [terraform-netskope-examples](https://github.com/netskopeoss/terraform-netskope-examples)** - Complete tutorials, guides, and working examples
+> **📚 [terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples)** - Complete tutorials, guides, and working examples
 
 | Resource | Description |
 |----------|-------------|
-| [Quick Start Guide](https://github.com/netskopeoss/terraform-netskope-examples/tree/main/getting-started) | Get up and running in minutes |
-| [Browser App Example](https://github.com/netskopeoss/terraform-netskope-examples/tree/main/examples/use-cases/browser-app) | Clientless web application access |
-| [Client App Example](https://github.com/netskopeoss/terraform-netskope-examples/tree/main/examples/use-cases/client-app) | SSH, RDP, and database access |
-| [Publisher Management](https://github.com/netskopeoss/terraform-netskope-examples/tree/main/examples/use-cases/publisher-management) | Publisher lifecycle and upgrades |
-| [Policy Rules](https://github.com/netskopeoss/terraform-netskope-examples/tree/main/examples/use-cases/policy-rules) | Access policy configuration |
-| [Full Deployment](https://github.com/netskopeoss/terraform-netskope-examples/tree/main/examples/use-cases/full-deployment) | Complete NPA setup |
+| [Quick Start Guide](https://github.com/jharris-ns/terraform-netskope-examples/tree/main/getting-started) | Get up and running in minutes |
+| [Browser App Example](https://github.com/jharris-ns/terraform-netskope-examples/tree/main/examples/use-cases/browser-app) | Clientless web application access |
+| [Client App Example](https://github.com/jharris-ns/terraform-netskope-examples/tree/main/examples/use-cases/client-app) | SSH, RDP, and database access |
+| [Publisher Management](https://github.com/jharris-ns/terraform-netskope-examples/tree/main/examples/use-cases/publisher-management) | Publisher lifecycle and upgrades |
+| [Policy Rules](https://github.com/jharris-ns/terraform-netskope-examples/tree/main/examples/use-cases/policy-rules) | Access policy configuration |
+| [Full Deployment](https://github.com/jharris-ns/terraform-netskope-examples/tree/main/examples/use-cases/full-deployment) | Complete NPA setup |
 
 ## Development
 

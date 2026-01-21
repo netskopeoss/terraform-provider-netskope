@@ -73,14 +73,14 @@ resource "netskope_npa_private_app" "example" {
 
 For detailed tutorials and complete working examples, see:
 
-**[terraform-netskope-examples](https://github.com/netskopeoss/terraform-netskope-examples)**
+**[terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples)**
 
 | Tutorial | Description |
 |----------|-------------|
-| [Quick Start](https://github.com/netskopeoss/terraform-netskope-examples/blob/main/getting-started/quick-start.md) | Create your first private app |
-| [Private App Inventory](https://github.com/netskopeoss/terraform-netskope-examples/blob/main/tutorials/private-app-inventory.md) | Manage apps at scale |
-| [Publisher on AWS](https://github.com/netskopeoss/terraform-netskope-examples/blob/main/tutorials/publisher-aws.md) | Deploy publishers in AWS |
-| [Policy as Code](https://github.com/netskopeoss/terraform-netskope-examples/blob/main/tutorials/policy-as-code.md) | Manage access rules |
+| [Quick Start](https://github.com/jharris-ns/terraform-netskope-examples/blob/main/getting-started/quick-start.md) | Create your first private app |
+| [Private App Inventory](https://github.com/jharris-ns/terraform-netskope-examples/blob/main/tutorials/private-app-inventory.md) | Manage apps at scale |
+| [Publisher on AWS](https://github.com/jharris-ns/terraform-netskope-examples/blob/main/tutorials/publisher-aws.md) | Deploy publishers in AWS |
+| [Policy as Code](https://github.com/jharris-ns/terraform-netskope-examples/blob/main/tutorials/policy-as-code.md) | Manage access rules |
 
 ## Resources
 
