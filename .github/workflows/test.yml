@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - 'release/**'
+      - '0.3.3-beta'
   pull_request:
     branches:
       - main
@@ -36,8 +37,8 @@ jobs:
     name: Acceptance Tests
     runs-on: ubuntu-latest
     needs: unit
-    # Only run on push to main, not on PRs (to avoid exposing secrets)
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Only run on push to main or 0.3.3-beta, not on PRs (to avoid exposing secrets)
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/0.3.3-beta')
     steps:
       - name: Checkout
         uses: actions/checkout@v4
