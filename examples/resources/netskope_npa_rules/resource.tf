@@ -13,15 +13,6 @@ resource "netskope_npa_rules" "my_nparules" {
     device_classification_id = [
       9
     ]
-    dlp_actions = [
-      {
-        actions = [
-          "bypass"
-        ]
-        dlp_profile = "Payment Card"
-      }
-    ]
-    external_dlp = true
     json_version = 3
     match_criteria_action = {
       action_name = "allow"
@@ -33,7 +24,7 @@ resource "netskope_npa_rules" "my_nparules" {
       "..."
     ]
     periodic_reauth = {
-      reauth_interval      = 60
+      reauth_interval      = "60"
       reauth_interval_unit = "hours"
     }
     policy_type = "private-app"
@@ -46,37 +37,7 @@ resource "netskope_npa_rules" "my_nparules" {
     private_apps = [
       "..."
     ]
-    private_apps_with_activities = [
-      {
-        activities = [
-          {
-            activity = "any"
-            list_of_constraints = [
-              "..."
-            ]
-          }
-        ]
-        app_name = "[172.31.12.135]"
-      }
-    ]
-    show_dlp_profile_action_table = true
     src_countries = [
-      "..."
-    ]
-    tss_actions = [
-      {
-        actions = [
-          {
-            action_name         = "allow"
-            remediation_profile = "...my_remediation_profile..."
-            severity            = "low"
-            template            = "...my_template..."
-          }
-        ]
-        tss_profile = "...my_tss_profile..."
-      }
-    ]
-    tss_profile = [
       "..."
     ]
     user_groups = [

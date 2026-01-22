@@ -66,37 +66,9 @@ func (r *NPAPrivateAppPublicHostResourceModel) ToOperationsGetNPAPrivateAppPubli
 		} else {
 			protocol = nil
 		}
-		createdAt := new(string)
-		if !protocolsItem.CreatedAt.IsUnknown() && !protocolsItem.CreatedAt.IsNull() {
-			*createdAt = protocolsItem.CreatedAt.ValueString()
-		} else {
-			createdAt = nil
-		}
-		id := new(int)
-		if !protocolsItem.ID.IsUnknown() && !protocolsItem.ID.IsNull() {
-			*id = int(protocolsItem.ID.ValueInt32())
-		} else {
-			id = nil
-		}
-		serviceID := new(int)
-		if !protocolsItem.ServiceID.IsUnknown() && !protocolsItem.ServiceID.IsNull() {
-			*serviceID = int(protocolsItem.ServiceID.ValueInt32())
-		} else {
-			serviceID = nil
-		}
-		updatedAt := new(string)
-		if !protocolsItem.UpdatedAt.IsUnknown() && !protocolsItem.UpdatedAt.IsNull() {
-			*updatedAt = protocolsItem.UpdatedAt.ValueString()
-		} else {
-			updatedAt = nil
-		}
 		protocols = append(protocols, shared.ProtocolItem{
-			Port:      port,
-			Protocol:  protocol,
-			CreatedAt: createdAt,
-			ID:        id,
-			ServiceID: serviceID,
-			UpdatedAt: updatedAt,
+			Port:     port,
+			Protocol: protocol,
 		})
 	}
 	realHost := new(string)
