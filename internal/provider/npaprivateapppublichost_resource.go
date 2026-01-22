@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -93,20 +92,6 @@ func (r *NPAPrivateAppPublicHostResource) Schema(ctx context.Context, req resour
 						objectplanmodifier.RequiresReplaceIfConfigured(),
 					},
 					Attributes: map[string]schema.Attribute{
-						"created_at": schema.StringAttribute{
-							Optional: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.RequiresReplaceIfConfigured(),
-							},
-							Description: `Requires replacement if changed.`,
-						},
-						"id": schema.Int32Attribute{
-							Optional: true,
-							PlanModifiers: []planmodifier.Int32{
-								int32planmodifier.RequiresReplaceIfConfigured(),
-							},
-							Description: `Requires replacement if changed.`,
-						},
 						"port": schema.StringAttribute{
 							Optional: true,
 							PlanModifiers: []planmodifier.String{
@@ -126,20 +111,6 @@ func (r *NPAPrivateAppPublicHostResource) Schema(ctx context.Context, req resour
 									"udp",
 								),
 							},
-						},
-						"service_id": schema.Int32Attribute{
-							Optional: true,
-							PlanModifiers: []planmodifier.Int32{
-								int32planmodifier.RequiresReplaceIfConfigured(),
-							},
-							Description: `Requires replacement if changed.`,
-						},
-						"updated_at": schema.StringAttribute{
-							Optional: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.RequiresReplaceIfConfigured(),
-							},
-							Description: `Requires replacement if changed.`,
 						},
 					},
 				},

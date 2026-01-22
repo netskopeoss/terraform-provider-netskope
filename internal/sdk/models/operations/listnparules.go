@@ -8,9 +8,7 @@ import (
 )
 
 type ListNPARulesRequest struct {
-	// Return values only from specified fields
-	Fields *string `queryParam:"style=form,explode=true,name=fields"`
-	// Query string based on query operaters
+	// Query string based on query operators
 	Filter *string `queryParam:"style=form,explode=true,name=filter"`
 	// Max number of policies to retrieve. Default will be all policies.
 	Limit *int64 `queryParam:"style=form,explode=true,name=limit"`
@@ -20,13 +18,6 @@ type ListNPARulesRequest struct {
 	Sortby *string `queryParam:"style=form,explode=true,name=sortby"`
 	// Sort in either asc or desc order. The default is asc order
 	Sortorder *string `queryParam:"style=form,explode=true,name=sortorder"`
-}
-
-func (o *ListNPARulesRequest) GetFields() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Fields
 }
 
 func (o *ListNPARulesRequest) GetFilter() *string {

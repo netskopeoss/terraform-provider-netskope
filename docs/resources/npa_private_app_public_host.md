@@ -19,12 +19,8 @@ resource "netskope_npa_private_app_public_host" "my_npaprivateapppublichost" {
   is_user_portal_app = true
   protocols = [
     {
-      created_at = "2022-05-19 21:03:07.125000+00:00"
-      id         = 4
-      port       = "...my_port..."
-      protocol   = "tcp"
-      service_id = 9
-      updated_at = "2022-05-19 21:03:07.125000+00:00"
+      port     = "...my_port..."
+      protocol = "tcp"
     }
   ]
   real_host = "...my_real_host..."
@@ -52,12 +48,8 @@ resource "netskope_npa_private_app_public_host" "my_npaprivateapppublichost" {
 
 Optional:
 
-- `created_at` (String) Requires replacement if changed.
-- `id` (Number) Requires replacement if changed.
 - `port` (String) Requires replacement if changed.
 - `protocol` (String) must be one of ["tcp", "udp"]; Requires replacement if changed.
-- `service_id` (Number) Requires replacement if changed.
-- `updated_at` (String) Requires replacement if changed.
 
 
 <a id="nestedatt--data"></a>

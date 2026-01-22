@@ -10,11 +10,11 @@ import (
 type Actions string
 
 const (
-	ActionsAllow       Actions = "allow"
-	ActionsBlock       Actions = "block"
-	ActionsAlert       Actions = "alert"
-	ActionsQuanrantine Actions = "quanrantine"
-	ActionsBypass      Actions = "bypass"
+	ActionsAllow      Actions = "allow"
+	ActionsBlock      Actions = "block"
+	ActionsAlert      Actions = "alert"
+	ActionsQuarantine Actions = "quarantine"
+	ActionsBypass     Actions = "bypass"
 )
 
 func (e Actions) ToPointer() *Actions {
@@ -32,7 +32,7 @@ func (e *Actions) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "alert":
 		fallthrough
-	case "quanrantine":
+	case "quarantine":
 		fallthrough
 	case "bypass":
 		*e = Actions(v)
@@ -43,15 +43,8 @@ func (e *Actions) UnmarshalJSON(data []byte) error {
 }
 
 type NpaPolicyRuleDlp struct {
-	Actions    []Actions `json:"actions,omitempty"`
 	DlpProfile *string   `json:"dlp_profile,omitempty"`
-}
-
-func (o *NpaPolicyRuleDlp) GetActions() []Actions {
-	if o == nil {
-		return nil
-	}
-	return o.Actions
+	Actions    []Actions `json:"actions,omitempty"`
 }
 
 func (o *NpaPolicyRuleDlp) GetDlpProfile() *string {
@@ -59,4 +52,11 @@ func (o *NpaPolicyRuleDlp) GetDlpProfile() *string {
 		return nil
 	}
 	return o.DlpProfile
+}
+
+func (o *NpaPolicyRuleDlp) GetActions() []Actions {
+	if o == nil {
+		return nil
+	}
+	return o.Actions
 }

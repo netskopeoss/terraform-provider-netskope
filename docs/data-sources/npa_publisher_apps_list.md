@@ -70,12 +70,8 @@ Read-Only:
 
 Read-Only:
 
-- `created_at` (String)
-- `id` (Number)
 - `port` (String)
 - `protocol` (String)
-- `service_id` (Number)
-- `updated_at` (String)
 
 
 <a id="nestedatt--data--reachability"></a>
