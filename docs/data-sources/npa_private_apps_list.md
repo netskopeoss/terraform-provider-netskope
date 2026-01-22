@@ -43,32 +43,20 @@ data "netskope_npa_private_apps_list" "my_npaprivateappslist" {
 Read-Only:
 
 - `allow_unauthenticated_cors` (Boolean)
-- `allow_uri_bypass` (Boolean)
-- `app_option` (Attributes) (see [below for nested schema](#nestedatt--private_apps--app_option))
-- `bypass_uris` (List of String)
 - `clientless_access` (Boolean)
 - `is_user_portal_app` (Boolean)
 - `labels` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--labels))
-- `modified_by` (String)
-- `modify_time` (String)
 - `private_app_hostname` (String)
 - `private_app_id` (Number)
 - `private_app_name` (String)
 - `private_app_protocol` (String)
 - `protocols` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--protocols))
-- `public_host` (String)
 - `publishers` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--publishers))
 - `real_host` (String)
 - `steering_configs` (List of String)
-- `supplement_dns_for_osx` (Boolean)
 - `tags` (Attributes List) (see [below for nested schema](#nestedatt--private_apps--tags))
 - `trust_self_signed_certs` (Boolean)
-- `uribypass_header_value` (String)
 - `use_publisher_dns` (Boolean)
-
-<a id="nestedatt--private_apps--app_option"></a>
-### Nested Schema for `private_apps.app_option`
-
 
 <a id="nestedatt--private_apps--labels"></a>
 ### Nested Schema for `private_apps.labels`
@@ -79,12 +67,8 @@ Read-Only:
 
 Read-Only:
 
-- `created_at` (String)
-- `id` (Number)
 - `port` (String)
 - `protocol` (String)
-- `service_id` (Number)
-- `updated_at` (String)
 
 
 <a id="nestedatt--private_apps--publishers"></a>

@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
-  docChecksum: bc03beca415a268c4b6270256f6e34f3
+  docChecksum: 652c1674fbabd53c095f7875fd4da63f
   docVersion: 1.0.0
   speakeasyVersion: 1.583.0
   generationVersion: 2.658.3
-  releaseVersion: 0.3.4
-  configChecksum: 2a9300034894c4557f9028fb1af0b8b8
+  releaseVersion: 0.3.5
+  configChecksum: 48ab5de9b183f099286903b6ca60bad5
   published: true
 features:
   terraform:
@@ -136,23 +136,18 @@ generatedFiles:
   - internal/provider/typeconvert/date.go
   - internal/provider/typeconvert/datetime.go
   - internal/provider/typeconvert/int.go
-  - internal/provider/types/activities.go
-  - internal/provider/types/app_option.go
   - internal/provider/types/apply.go
   - internal/provider/types/assessment.go
   - internal/provider/types/data.go
   - internal/provider/types/get_npa_private_app_public_host_data.go
   - internal/provider/types/group_order.go
+  - internal/provider/types/labels.go
   - internal/provider/types/match_criteria_action.go
   - internal/provider/types/npa_policy_response_item.go
   - internal/provider/types/npa_policy_rule_data.go
-  - internal/provider/types/npa_policy_rule_dlp.go
   - internal/provider/types/npa_policy_rule_periodic_reauth.go
-  - internal/provider/types/npa_policy_rule_tss.go
-  - internal/provider/types/npa_policy_rule_tss_actions.go
   - internal/provider/types/npa_policygroup_response_item.go
   - internal/provider/types/private_apps_item.go
-  - internal/provider/types/private_apps_with_activities.go
   - internal/provider/types/protocol_item.go
   - internal/provider/types/publisher_bulk_item.go
   - internal/provider/types/publisher_item.go
@@ -250,6 +245,7 @@ generatedFiles:
   - internal/sdk/models/shared/npapolicyruledlp.go
   - internal/sdk/models/shared/npapolicyruleperiodicreauth.go
   - internal/sdk/models/shared/npapolicyruletss.go
+  - internal/sdk/models/shared/npaschedule.go
   - internal/sdk/models/shared/privateappsgetresponse.go
   - internal/sdk/models/shared/privateappsitem.go
   - internal/sdk/models/shared/privateappslistresponse.go
@@ -584,10 +580,10 @@ examples:
   createNPARules:
     speakeasy-default-create-NPA-rules:
       requestBody:
-        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "vantest", "rule_order": {"position": 5, "rule_id": 1, "rule_name": "api-policy-managed"}}
+        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_name": "vantest", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_order": {"position": 5, "rule_id": 1, "rule_name": "api-policy-managed"}}
       responses:
         "200":
-          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": "1", "rule_name": "van-test"}}
+          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_id": "1", "rule_name": "van-test"}}
         "400":
           application/json: {"status": 400}
   deleteNPARules:
@@ -597,7 +593,7 @@ examples:
           id: "646006"
       responses:
         "200":
-          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": "1", "rule_name": "van-test"}}
+          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_id": "1", "rule_name": "van-test"}}
         "400":
           application/json: {"status": 400}
   NPARules:
@@ -974,7 +970,7 @@ examples:
     speakeasy-default-list-NPA-rules:
       responses:
         "200":
-          application/json: {"data": [{"rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": "1", "rule_name": "van-test"}]}
+          application/json: {"data": [{"rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false}, "rule_id": "1", "rule_name": "van-test"}]}
         "400":
           application/json: {"status": 400}
   getNPARules:
@@ -984,7 +980,7 @@ examples:
           id: "592773"
       responses:
         "200":
-          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": "1", "rule_name": "van-test"}}
+          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_id": "1", "rule_name": "van-test"}}
         "400":
           application/json: {"status": 400}
   updateNPARules:
@@ -993,10 +989,10 @@ examples:
         path:
           id: "317329"
       requestBody:
-        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "vantest", "rule_order": {"position": 5, "rule_id": 1, "rule_name": "api-policy-managed"}}
+        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_name": "vantest", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_order": {"position": 5, "rule_id": 1, "rule_name": "api-policy-managed"}}
       responses:
         "200":
-          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": "1", "rule_name": "van-test"}}
+          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_id": "1", "rule_name": "van-test"}}
         "400":
           application/json: {"status": 400}
   listNPAPolicyGroups:
@@ -1054,7 +1050,7 @@ trackedFiles:
   examples/data-sources/netskope_npa_rules/data-source.tf:
     last_write_checksum: sha1:7d9f60ed7c28eeb5ee19328229682dde1b0aedfc
   examples/data-sources/netskope_npa_rules_list/data-source.tf:
-    last_write_checksum: sha1:1d9cedaa4733d305901a26a33642a96a8b66f066
+    last_write_checksum: sha1:bfa95ee3cb30cb63bae55152db8777871f7f34f6
   examples/provider/provider.tf:
     last_write_checksum: sha1:af74d1c42eff49e43d9e773c91afed3502ba0796
   examples/resources/netskope_npa_policy_groups/import-by-string-id.tf:
@@ -1068,9 +1064,9 @@ trackedFiles:
   examples/resources/netskope_npa_private_app/import.sh:
     last_write_checksum: sha1:391fec2e34f38af42371045daef99ac384bf7bb4
   examples/resources/netskope_npa_private_app/resource.tf:
-    last_write_checksum: sha1:3e849b90f29dbbbe837c7360f222a41be7364413
+    last_write_checksum: sha1:0d020c5f32dc107b95c2f7af7b925469f1677035
   examples/resources/netskope_npa_private_app_public_host/resource.tf:
-    last_write_checksum: sha1:b9270d5fbe9c99f50742fdcd317d60d8cb8d64d7
+    last_write_checksum: sha1:d387f3fadc317759439164cc7f041f376686969d
   examples/resources/netskope_npa_publisher/import-by-string-id.tf:
     last_write_checksum: sha1:43c8321d4e9737c81cdbf438a503cffe838a3081
   examples/resources/netskope_npa_publisher/import.sh:
@@ -1096,7 +1092,7 @@ trackedFiles:
   examples/resources/netskope_npa_rules/import.sh:
     last_write_checksum: sha1:c9b2a865adeace7f4cc554db98d0a39d01f73f40
   examples/resources/netskope_npa_rules/resource.tf:
-    last_write_checksum: sha1:1aab2a7088044fea4c0118cb6cc4f24d187eca14
+    last_write_checksum: sha1:317fb143ce5c31167c7c8d716e9cf2a0d67ecf52
   go.mod:
     last_write_checksum: sha1:fa917cfadcfed15a7e447581c19ff12a5c0b3b6f
   internal/planmodifiers/boolplanmodifier/suppress_diff.go:
@@ -1158,21 +1154,21 @@ trackedFiles:
   internal/provider/npapolicygroupslist_data_source_sdk.go:
     last_write_checksum: sha1:e52c35c42367ecc3e2ec0abf1a2aa6a6596c9054
   internal/provider/npaprivateapp_data_source.go:
-    last_write_checksum: sha1:c298e77bf8552f9c640337b51d5494703190a977
+    last_write_checksum: sha1:f63bc3069d64deed0f7143a5061186e4b7b3081c
   internal/provider/npaprivateapp_data_source_sdk.go:
-    last_write_checksum: sha1:6369f49e36a064242cb53c3e5175bd75300ace21
+    last_write_checksum: sha1:7b6d514793c48ab2750ca7ab53ab7f32d11267f3
   internal/provider/npaprivateapp_resource.go:
-    last_write_checksum: sha1:06b23a1c5057020cc60420c58baa353cd2357a90
+    last_write_checksum: sha1:fe55431d021dc434d11a2a3126dfe195a7bc065e
   internal/provider/npaprivateapp_resource_sdk.go:
-    last_write_checksum: sha1:2a13deac20b452212b49c1983ad88cba3b04ae20
+    last_write_checksum: sha1:789da64aca87de6dd6eddd5e2314b2a65289c5af
   internal/provider/npaprivateapppublichost_resource.go:
-    last_write_checksum: sha1:db6b22c0e37c687bd0101f596cfb1c429ea39691
+    last_write_checksum: sha1:caa1df402aa7e361df48949eb67b94849075bd8d
   internal/provider/npaprivateapppublichost_resource_sdk.go:
-    last_write_checksum: sha1:d9cf088f6e0bcdb30120e92fd12de5e85e3883ff
+    last_write_checksum: sha1:98cfac27a0eb8eda1cbba7467278d1ad8ee5e85f
   internal/provider/npaprivateappslist_data_source.go:
-    last_write_checksum: sha1:773aceade46b1f1d87b07bae732eb9938800ed7a
+    last_write_checksum: sha1:591c65922bd6b483e2ca5bb7ec295ca6fbe84d46
   internal/provider/npaprivateappslist_data_source_sdk.go:
-    last_write_checksum: sha1:2469e0f15cdc2522c7ce0be5d4f3ee92c793d3a0
+    last_write_checksum: sha1:c70c5654a825b08d2a3a9965592acb05b18bc198
   internal/provider/npaprivatepolicyinuse_data_source.go:
     last_write_checksum: sha1:9952255700ec6b37d94f6bad931a883639185414
   internal/provider/npaprivatepolicyinuse_data_source_sdk.go:
@@ -1186,9 +1182,9 @@ trackedFiles:
   internal/provider/npapublisher_resource_sdk.go:
     last_write_checksum: sha1:2ba28e29736008e0e08832c38587d179d23fc866
   internal/provider/npapublisherappslist_data_source.go:
-    last_write_checksum: sha1:282f0caf7b9bf5000ebd921be792024a7fdb4511
+    last_write_checksum: sha1:e1a76245b48c1f326b20a22e6789c49b6b4c18d5
   internal/provider/npapublisherappslist_data_source_sdk.go:
-    last_write_checksum: sha1:231253287261dbb6972cb6c42157847458e30f33
+    last_write_checksum: sha1:7d1a7f98c064bb85018d46db9368a58c9a772fb8
   internal/provider/npapublishersalertsconfiguration_data_source.go:
     last_write_checksum: sha1:65e73a02b657bea59b773210563f17bd24987da2
   internal/provider/npapublishersalertsconfiguration_data_source_sdk.go:
@@ -1234,17 +1230,17 @@ trackedFiles:
   internal/provider/npapublisherupgradeprofileslist_data_source_sdk.go:
     last_write_checksum: sha1:e98c7154a78cba5750003cab6e1d71ee6fc781f1
   internal/provider/nparules_data_source.go:
-    last_write_checksum: sha1:9d0ce11be0d7cbcc90ebcb71d57e406f7c09f3c9
+    last_write_checksum: sha1:0338a295af74f05e9dcc70750dcf589d2d630a2c
   internal/provider/nparules_data_source_sdk.go:
-    last_write_checksum: sha1:d1705cddda2ca5e4d71d6816eb535a83d430d650
+    last_write_checksum: sha1:1cb1a959ae6d3f1b27e8d30e08075aa53506beea
   internal/provider/nparules_resource.go:
-    last_write_checksum: sha1:2a57b606d3886725ff4e8cdc7244cd6835264092
+    last_write_checksum: sha1:0e60850fb409e78d251991be9eb5be3d7f39044e
   internal/provider/nparules_resource_sdk.go:
-    last_write_checksum: sha1:7de0ac8a3379814a9064f727cc37bb10f7386bb7
+    last_write_checksum: sha1:506556ab730569bd729744f90aa818e8353dcd39
   internal/provider/nparuleslist_data_source.go:
-    last_write_checksum: sha1:672b0059e00e94e2a05325d704e72a014be8911f
+    last_write_checksum: sha1:b7ecc20196fb925f50179cce85d31b18aee83b1f
   internal/provider/nparuleslist_data_source_sdk.go:
-    last_write_checksum: sha1:9cc30b5aaa91ac45018b1e1abba5d0244e8756c8
+    last_write_checksum: sha1:d29d428241fdfe74f6207992057e6a15f17eb0dd
   internal/provider/provider.go:
     last_write_checksum: sha1:5cbe6096ce374ec23bb9c5ff70119a3deafc10f8
   internal/provider/reflect/diags.go:
@@ -1281,10 +1277,6 @@ trackedFiles:
     last_write_checksum: sha1:a2a20e6785f1e12c3f94c016cbc106e54942e981
   internal/provider/typeconvert/int.go:
     last_write_checksum: sha1:c28123f17006dc96a233f916a17c38408e37b71f
-  internal/provider/types/activities.go:
-    last_write_checksum: sha1:161b8f4d816b30c390019b5325d751eb886823ac
-  internal/provider/types/app_option.go:
-    last_write_checksum: sha1:1c3acd935e5030f9a7727b702646ff4493fa10d9
   internal/provider/types/apply.go:
     last_write_checksum: sha1:0d17d70b7d45af037086c61527b4260c394cbd7c
   internal/provider/types/assessment.go:
@@ -1295,28 +1287,22 @@ trackedFiles:
     last_write_checksum: sha1:e117997535dda0dceb90adbc4a0ccfacb6bfd9bc
   internal/provider/types/group_order.go:
     last_write_checksum: sha1:699c5b3e369f805b063da3686f84fae5012059d9
+  internal/provider/types/labels.go:
+    last_write_checksum: sha1:887fdd5f24a450b95659fadff8bc6b78b4e705f9
   internal/provider/types/match_criteria_action.go:
     last_write_checksum: sha1:ac2fd5988add715a0e7d7c667804b6442030bc1a
   internal/provider/types/npa_policy_response_item.go:
     last_write_checksum: sha1:c435ba7023f471f465e9501d8ad3a3302fdffaa2
   internal/provider/types/npa_policy_rule_data.go:
-    last_write_checksum: sha1:6ffe6d9cb5b66cb971f892211575e66c8aebae3c
-  internal/provider/types/npa_policy_rule_dlp.go:
-    last_write_checksum: sha1:fe81ac0a219c9522a0ccc2019ebb41af35c4d0a0
+    last_write_checksum: sha1:573d362cfb1757cca89c6df74765c4e24cbdd019
   internal/provider/types/npa_policy_rule_periodic_reauth.go:
     last_write_checksum: sha1:abda72e0a713ae085aa22b3ed140cf54ba19f0bb
-  internal/provider/types/npa_policy_rule_tss.go:
-    last_write_checksum: sha1:91b3239e8007a52edc76ec37ddc4daafb56f09e6
-  internal/provider/types/npa_policy_rule_tss_actions.go:
-    last_write_checksum: sha1:944586674eb55cb5b6be178489f71ce85308fdbf
   internal/provider/types/npa_policygroup_response_item.go:
     last_write_checksum: sha1:05e7ce1778560493ba57558b93cb579f52be1094
   internal/provider/types/private_apps_item.go:
-    last_write_checksum: sha1:48d4c9f05131a1a7fc4fdfbff006fbbc21f8dc6d
-  internal/provider/types/private_apps_with_activities.go:
-    last_write_checksum: sha1:2aff1831d0ffee4bf1df212d43a2d6d0df90078d
+    last_write_checksum: sha1:f907eadaff41faa072e0c4afe13dd23fc9927a7e
   internal/provider/types/protocol_item.go:
-    last_write_checksum: sha1:25b089fae5c6e38321919cf83454bdd478ac13f0
+    last_write_checksum: sha1:b30b1bf37853a97ef0acf905c04b99c4241f2ad5
   internal/provider/types/publisher_bulk_item.go:
     last_write_checksum: sha1:a3d64c95f53e8c888c2cd66f91b4e159f5468675
   internal/provider/types/publisher_item.go:
@@ -1354,7 +1340,7 @@ trackedFiles:
   internal/provider/types/publishers_host_os_version_get_response_data.go:
     last_write_checksum: sha1:156d5b6beac826243afc00b8addb25fa46d2dead
   internal/provider/types/publishers_private_apps_response_data.go:
-    last_write_checksum: sha1:bf31fec8d33b39f7f7222f5f9cfc6bd8a7622487
+    last_write_checksum: sha1:8a728c92979af6cc5b414d0bdbe29d1aea738064
   internal/provider/types/release_item.go:
     last_write_checksum: sha1:ec7255fa8644cc8e6d8f7b67b0300cd7414a6888
   internal/provider/types/response_body.go:
@@ -1470,7 +1456,7 @@ trackedFiles:
   internal/sdk/models/operations/listnpapublisherupgradeprofiles.go:
     last_write_checksum: sha1:fd8ad5383a49374046c17b7bf0185af5c78fc8af
   internal/sdk/models/operations/listnparules.go:
-    last_write_checksum: sha1:d9dc6fb81138fa53d93c1ebd0e050c73d8ed5860
+    last_write_checksum: sha1:1675ba44a48cfc54531d4b4d2d6fe3a1750710a0
   internal/sdk/models/operations/options.go:
     last_write_checksum: sha1:0c63dae4b8b9c6f327110494deee17e0e709e0f5
   internal/sdk/models/operations/patchsteeringappsprivateprivateappid.go:
@@ -1498,7 +1484,7 @@ trackedFiles:
   internal/sdk/models/shared/npapolicygroupresponseitem.go:
     last_write_checksum: sha1:75e8aa07fd6644aa5ba314cf39418338dddd400c
   internal/sdk/models/shared/npapolicyrequest.go:
-    last_write_checksum: sha1:4b721fea7f5c62934cd4fbeeac986646a82486bf
+    last_write_checksum: sha1:40dc773527ae78188204dd8fed850d468f599476
   internal/sdk/models/shared/npapolicyresponse.go:
     last_write_checksum: sha1:da57af13ca88087c09ea455daf8c32dea423e8ce
   internal/sdk/models/shared/npapolicyresponse400.go:
@@ -1506,13 +1492,15 @@ trackedFiles:
   internal/sdk/models/shared/npapolicyresponseitem.go:
     last_write_checksum: sha1:f43905d093a3eb8b2402b6674cc25cc8172254d4
   internal/sdk/models/shared/npapolicyruledata.go:
-    last_write_checksum: sha1:01b49acd8e84bc8c66edb8c652518099c956a3df
+    last_write_checksum: sha1:e24c5cbcf4c5fdedf62e6f418ce730d5d43bf8f0
   internal/sdk/models/shared/npapolicyruledlp.go:
-    last_write_checksum: sha1:1482db9ad6e73d0b69cd44d3f1d95afbb552815d
+    last_write_checksum: sha1:cef9f642bbcaba3a458370502561f5806ba1c225
   internal/sdk/models/shared/npapolicyruleperiodicreauth.go:
     last_write_checksum: sha1:a4a4808bbacb89a39190073560a647dcc94249ac
   internal/sdk/models/shared/npapolicyruletss.go:
-    last_write_checksum: sha1:8987c028729700078ab22ac8c41148c8f7e38292
+    last_write_checksum: sha1:1c8a73dcb1fb6c858765c501abc7f07d335d5160
+  internal/sdk/models/shared/npaschedule.go:
+    last_write_checksum: sha1:f61c36641398a7a1c76739e41973f69a815952b1
   internal/sdk/models/shared/privateappsgetresponse.go:
     last_write_checksum: sha1:09023fce89c8afd7990d0d7a2a9380fe1e765a9c
   internal/sdk/models/shared/privateappsitem.go:
@@ -1612,7 +1600,7 @@ trackedFiles:
   internal/sdk/retry/config.go:
     last_write_checksum: sha1:f565273be789ffe0e3c160de1ac72a63cfe67fbe
   internal/sdk/terraformproviderns.go:
-    last_write_checksum: sha1:589c3cfa4a0e9f89337ce4fd0680352373585e0f
+    last_write_checksum: sha1:0592b6d4a16edd050f2f0f95cd8923395006d888
   internal/sdk/types/bigint.go:
     last_write_checksum: sha1:49b004005d0461fb04b846eca062b070b0360b31
   internal/sdk/types/date.go:

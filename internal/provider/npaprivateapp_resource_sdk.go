@@ -17,17 +17,8 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsItem(ctx contex
 
 	if resp != nil {
 		r.AllowUnauthenticatedCors = types.BoolPointerValue(resp.AllowUnauthenticatedCors)
-		r.AllowURIBypass = types.BoolPointerValue(resp.AllowURIBypass)
-		if resp.BypassUris != nil {
-			r.BypassUris = make([]types.String, 0, len(resp.BypassUris))
-			for _, v := range resp.BypassUris {
-				r.BypassUris = append(r.BypassUris, types.StringValue(v))
-			}
-		}
 		r.ClientlessAccess = types.BoolPointerValue(resp.ClientlessAccess)
 		r.IsUserPortalApp = types.BoolPointerValue(resp.IsUserPortalApp)
-		r.ModifiedBy = types.StringPointerValue(resp.ModifiedBy)
-		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
 		r.PrivateAppHostname = types.StringPointerValue(resp.PrivateAppHostname)
 		r.PrivateAppID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PrivateAppID))
 		r.PrivateAppName = types.StringPointerValue(resp.PrivateAppName)
@@ -38,28 +29,19 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsItem(ctx contex
 		}
 		for protocolsCount, protocolsItem := range resp.Protocols {
 			var protocols tfTypes.ProtocolItem
-			protocols.CreatedAt = types.StringPointerValue(protocolsItem.CreatedAt)
-			protocols.ID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(protocolsItem.ID))
 			protocols.Port = types.StringPointerValue(protocolsItem.Port)
 			if protocolsItem.Protocol != nil {
 				protocols.Protocol = types.StringValue(string(*protocolsItem.Protocol))
 			} else {
 				protocols.Protocol = types.StringNull()
 			}
-			protocols.ServiceID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(protocolsItem.ServiceID))
-			protocols.UpdatedAt = types.StringPointerValue(protocolsItem.UpdatedAt)
 			if protocolsCount+1 > len(r.Protocols) {
 				r.Protocols = append(r.Protocols, protocols)
 			} else {
-				r.Protocols[protocolsCount].CreatedAt = protocols.CreatedAt
-				r.Protocols[protocolsCount].ID = protocols.ID
 				r.Protocols[protocolsCount].Port = protocols.Port
 				r.Protocols[protocolsCount].Protocol = protocols.Protocol
-				r.Protocols[protocolsCount].ServiceID = protocols.ServiceID
-				r.Protocols[protocolsCount].UpdatedAt = protocols.UpdatedAt
 			}
 		}
-		r.PublicHost = types.StringPointerValue(resp.PublicHost)
 		r.Publishers = []tfTypes.PublisherItem{}
 		if len(r.Publishers) > len(resp.Publishers) {
 			r.Publishers = r.Publishers[:len(resp.Publishers)]
@@ -91,7 +73,6 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsItem(ctx contex
 			}
 		}
 		r.RealHost = types.StringPointerValue(resp.RealHost)
-		r.SupplementDNSForOsx = types.BoolPointerValue(resp.SupplementDNSForOsx)
 		r.Tags = []tfTypes.TagItem{}
 		if len(r.Tags) > len(resp.Tags) {
 			r.Tags = r.Tags[:len(resp.Tags)]
@@ -108,7 +89,6 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsItem(ctx contex
 			}
 		}
 		r.TrustSelfSignedCerts = types.BoolPointerValue(resp.TrustSelfSignedCerts)
-		r.UribypassHeaderValue = types.StringPointerValue(resp.UribypassHeaderValue)
 		r.UsePublisherDNS = types.BoolPointerValue(resp.UsePublisherDNS)
 	}
 
@@ -120,17 +100,8 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsPostResponseDat
 
 	if resp != nil {
 		r.AllowUnauthenticatedCors = types.BoolPointerValue(resp.AllowUnauthenticatedCors)
-		r.AllowURIBypass = types.BoolPointerValue(resp.AllowURIBypass)
-		if resp.BypassUris != nil {
-			r.BypassUris = make([]types.String, 0, len(resp.BypassUris))
-			for _, v := range resp.BypassUris {
-				r.BypassUris = append(r.BypassUris, types.StringValue(v))
-			}
-		}
 		r.ClientlessAccess = types.BoolPointerValue(resp.ClientlessAccess)
 		r.IsUserPortalApp = types.BoolPointerValue(resp.IsUserPortalApp)
-		r.ModifiedBy = types.StringPointerValue(resp.ModifiedBy)
-		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
 		r.PrivateAppHostname = types.StringPointerValue(resp.PrivateAppHostname)
 		r.PrivateAppID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PrivateAppID))
 		r.PrivateAppName = types.StringPointerValue(resp.PrivateAppName)
@@ -141,30 +112,20 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsPostResponseDat
 		}
 		for protocolsCount, protocolsItem := range resp.Protocols {
 			var protocols tfTypes.ProtocolItem
-			protocols.CreatedAt = types.StringPointerValue(protocolsItem.CreatedAt)
-			protocols.ID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(protocolsItem.ID))
 			protocols.Port = types.StringPointerValue(protocolsItem.Port)
 			if protocolsItem.Protocol != nil {
 				protocols.Protocol = types.StringValue(string(*protocolsItem.Protocol))
 			} else {
 				protocols.Protocol = types.StringNull()
 			}
-			protocols.ServiceID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(protocolsItem.ServiceID))
-			protocols.UpdatedAt = types.StringPointerValue(protocolsItem.UpdatedAt)
 			if protocolsCount+1 > len(r.Protocols) {
 				r.Protocols = append(r.Protocols, protocols)
 			} else {
-				r.Protocols[protocolsCount].CreatedAt = protocols.CreatedAt
-				r.Protocols[protocolsCount].ID = protocols.ID
 				r.Protocols[protocolsCount].Port = protocols.Port
 				r.Protocols[protocolsCount].Protocol = protocols.Protocol
-				r.Protocols[protocolsCount].ServiceID = protocols.ServiceID
-				r.Protocols[protocolsCount].UpdatedAt = protocols.UpdatedAt
 			}
 		}
-		r.PublicHost = types.StringPointerValue(resp.PublicHost)
 		r.RealHost = types.StringPointerValue(resp.RealHost)
-		r.SupplementDNSForOsx = types.BoolPointerValue(resp.SupplementDNSForOsx)
 		r.Tags = []tfTypes.TagItem{}
 		if len(r.Tags) > len(resp.Tags) {
 			r.Tags = r.Tags[:len(resp.Tags)]
@@ -181,7 +142,6 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsPostResponseDat
 			}
 		}
 		r.TrustSelfSignedCerts = types.BoolPointerValue(resp.TrustSelfSignedCerts)
-		r.UribypassHeaderValue = types.StringPointerValue(resp.UribypassHeaderValue)
 		r.UsePublisherDNS = types.BoolPointerValue(resp.UsePublisherDNS)
 	}
 
@@ -244,22 +204,6 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 	} else {
 		allowUnauthenticatedCors = nil
 	}
-	allowURIBypass := new(bool)
-	if !r.AllowURIBypass.IsUnknown() && !r.AllowURIBypass.IsNull() {
-		*allowURIBypass = r.AllowURIBypass.ValueBool()
-	} else {
-		allowURIBypass = nil
-	}
-	uribypassHeaderValue := new(string)
-	if !r.UribypassHeaderValue.IsUnknown() && !r.UribypassHeaderValue.IsNull() {
-		*uribypassHeaderValue = r.UribypassHeaderValue.ValueString()
-	} else {
-		uribypassHeaderValue = nil
-	}
-	bypassUris := make([]string, 0, len(r.BypassUris))
-	for _, bypassUrisItem := range r.BypassUris {
-		bypassUris = append(bypassUris, bypassUrisItem.ValueString())
-	}
 	clientlessAccess := new(bool)
 	if !r.ClientlessAccess.IsUnknown() && !r.ClientlessAccess.IsNull() {
 		*clientlessAccess = r.ClientlessAccess.ValueBool()
@@ -298,37 +242,9 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 		} else {
 			protocol = nil
 		}
-		createdAt := new(string)
-		if !protocolsItem.CreatedAt.IsUnknown() && !protocolsItem.CreatedAt.IsNull() {
-			*createdAt = protocolsItem.CreatedAt.ValueString()
-		} else {
-			createdAt = nil
-		}
-		id := new(int)
-		if !protocolsItem.ID.IsUnknown() && !protocolsItem.ID.IsNull() {
-			*id = int(protocolsItem.ID.ValueInt32())
-		} else {
-			id = nil
-		}
-		serviceID := new(int)
-		if !protocolsItem.ServiceID.IsUnknown() && !protocolsItem.ServiceID.IsNull() {
-			*serviceID = int(protocolsItem.ServiceID.ValueInt32())
-		} else {
-			serviceID = nil
-		}
-		updatedAt := new(string)
-		if !protocolsItem.UpdatedAt.IsUnknown() && !protocolsItem.UpdatedAt.IsNull() {
-			*updatedAt = protocolsItem.UpdatedAt.ValueString()
-		} else {
-			updatedAt = nil
-		}
 		protocols = append(protocols, shared.ProtocolItem{
-			Port:      port,
-			Protocol:  protocol,
-			CreatedAt: createdAt,
-			ID:        id,
-			ServiceID: serviceID,
-			UpdatedAt: updatedAt,
+			Port:     port,
+			Protocol: protocol,
 		})
 	}
 	publishers := make([]shared.PublisherItem, 0, len(r.Publishers))
@@ -382,9 +298,6 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 	}
 	out := shared.PrivateAppsPutRequest{
 		AllowUnauthenticatedCors: allowUnauthenticatedCors,
-		AllowURIBypass:           allowURIBypass,
-		UribypassHeaderValue:     uribypassHeaderValue,
-		BypassUris:               bypassUris,
 		ClientlessAccess:         clientlessAccess,
 		PrivateAppHostname:       privateAppHostname,
 		PrivateAppID:             privateAppID,
@@ -408,25 +321,6 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 		*allowUnauthenticatedCors = r.AllowUnauthenticatedCors.ValueBool()
 	} else {
 		allowUnauthenticatedCors = nil
-	}
-	allowURIBypass := new(bool)
-	if !r.AllowURIBypass.IsUnknown() && !r.AllowURIBypass.IsNull() {
-		*allowURIBypass = r.AllowURIBypass.ValueBool()
-	} else {
-		allowURIBypass = nil
-	}
-	uribypassHeaderValue := new(string)
-	if !r.UribypassHeaderValue.IsUnknown() && !r.UribypassHeaderValue.IsNull() {
-		*uribypassHeaderValue = r.UribypassHeaderValue.ValueString()
-	} else {
-		uribypassHeaderValue = nil
-	}
-	var bypassUris []string
-	if r.BypassUris != nil {
-		bypassUris = make([]string, 0, len(r.BypassUris))
-		for _, bypassUrisItem := range r.BypassUris {
-			bypassUris = append(bypassUris, bypassUrisItem.ValueString())
-		}
 	}
 	privateAppName := new(string)
 	if !r.PrivateAppName.IsUnknown() && !r.PrivateAppName.IsNull() {
@@ -466,37 +360,9 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 		} else {
 			protocol = nil
 		}
-		createdAt := new(string)
-		if !protocolsItem.CreatedAt.IsUnknown() && !protocolsItem.CreatedAt.IsNull() {
-			*createdAt = protocolsItem.CreatedAt.ValueString()
-		} else {
-			createdAt = nil
-		}
-		id := new(int)
-		if !protocolsItem.ID.IsUnknown() && !protocolsItem.ID.IsNull() {
-			*id = int(protocolsItem.ID.ValueInt32())
-		} else {
-			id = nil
-		}
-		serviceID := new(int)
-		if !protocolsItem.ServiceID.IsUnknown() && !protocolsItem.ServiceID.IsNull() {
-			*serviceID = int(protocolsItem.ServiceID.ValueInt32())
-		} else {
-			serviceID = nil
-		}
-		updatedAt := new(string)
-		if !protocolsItem.UpdatedAt.IsUnknown() && !protocolsItem.UpdatedAt.IsNull() {
-			*updatedAt = protocolsItem.UpdatedAt.ValueString()
-		} else {
-			updatedAt = nil
-		}
 		protocols = append(protocols, shared.ProtocolItem{
-			Port:      port,
-			Protocol:  protocol,
-			CreatedAt: createdAt,
-			ID:        id,
-			ServiceID: serviceID,
-			UpdatedAt: updatedAt,
+			Port:     port,
+			Protocol: protocol,
 		})
 	}
 	publishers := make([]shared.PublisherItem, 0, len(r.Publishers))
@@ -556,9 +422,6 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 	}
 	out := shared.PrivateAppsRequest{
 		AllowUnauthenticatedCors: allowUnauthenticatedCors,
-		AllowURIBypass:           allowURIBypass,
-		UribypassHeaderValue:     uribypassHeaderValue,
-		BypassUris:               bypassUris,
 		PrivateAppName:           privateAppName,
 		ClientlessAccess:         clientlessAccess,
 		PrivateAppHostname:       privateAppHostname,
