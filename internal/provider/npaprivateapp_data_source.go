@@ -30,28 +30,20 @@ type NPAPrivateAppDataSource struct {
 // NPAPrivateAppDataSourceModel describes the data model.
 type NPAPrivateAppDataSourceModel struct {
 	AllowUnauthenticatedCors types.Bool                               `tfsdk:"allow_unauthenticated_cors"`
-	AllowURIBypass           types.Bool                               `tfsdk:"allow_uri_bypass"`
-	AppOption                *tfTypes.AppOption                       `tfsdk:"app_option"`
-	BypassUris               []types.String                           `tfsdk:"bypass_uris"`
 	ClientlessAccess         types.Bool                               `tfsdk:"clientless_access"`
 	IsUserPortalApp          types.Bool                               `tfsdk:"is_user_portal_app"`
-	Labels                   []tfTypes.AppOption                      `tfsdk:"labels"`
-	ModifiedBy               types.String                             `tfsdk:"modified_by"`
-	ModifyTime               types.String                             `tfsdk:"modify_time"`
+	Labels                   []tfTypes.Labels                         `tfsdk:"labels"`
 	PrivateAppHostname       types.String                             `tfsdk:"private_app_hostname"`
 	PrivateAppID             types.Int32                              `tfsdk:"private_app_id"`
 	PrivateAppName           types.String                             `tfsdk:"private_app_name"`
 	PrivateAppProtocol       types.String                             `tfsdk:"private_app_protocol"`
 	Protocols                []tfTypes.ProtocolItem                   `tfsdk:"protocols"`
-	PublicHost               types.String                             `tfsdk:"public_host"`
 	Publishers               []tfTypes.ServicePublisherAssignmentItem `tfsdk:"publishers"`
 	RealHost                 types.String                             `tfsdk:"real_host"`
 	Status                   types.String                             `tfsdk:"status"`
 	SteeringConfigs          []types.String                           `tfsdk:"steering_configs"`
-	SupplementDNSForOsx      types.Bool                               `tfsdk:"supplement_dns_for_osx"`
 	Tags                     []tfTypes.TagItem                        `tfsdk:"tags"`
 	TrustSelfSignedCerts     types.Bool                               `tfsdk:"trust_self_signed_certs"`
-	UribypassHeaderValue     types.String                             `tfsdk:"uribypass_header_value"`
 	UsePublisherDNS          types.Bool                               `tfsdk:"use_publisher_dns"`
 }
 
@@ -69,16 +61,6 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 			"allow_unauthenticated_cors": schema.BoolAttribute{
 				Computed: true,
 			},
-			"allow_uri_bypass": schema.BoolAttribute{
-				Computed: true,
-			},
-			"app_option": schema.SingleNestedAttribute{
-				Computed: true,
-			},
-			"bypass_uris": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
 			"clientless_access": schema.BoolAttribute{
 				Computed: true,
 			},
@@ -90,12 +72,6 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{},
 				},
-			},
-			"modified_by": schema.StringAttribute{
-				Computed: true,
-			},
-			"modify_time": schema.StringAttribute{
-				Computed: true,
 			},
 			"private_app_hostname": schema.StringAttribute{
 				Computed: true,
@@ -114,29 +90,14 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"created_at": schema.StringAttribute{
-							Computed: true,
-						},
-						"id": schema.Int32Attribute{
-							Computed: true,
-						},
 						"port": schema.StringAttribute{
 							Computed: true,
 						},
 						"protocol": schema.StringAttribute{
 							Computed: true,
 						},
-						"service_id": schema.Int32Attribute{
-							Computed: true,
-						},
-						"updated_at": schema.StringAttribute{
-							Computed: true,
-						},
 					},
 				},
-			},
-			"public_host": schema.StringAttribute{
-				Computed: true,
 			},
 			"publishers": schema.ListNestedAttribute{
 				Computed: true,
@@ -181,9 +142,6 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 				Computed:    true,
 				ElementType: types.StringType,
 			},
-			"supplement_dns_for_osx": schema.BoolAttribute{
-				Computed: true,
-			},
 			"tags": schema.ListNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
@@ -198,9 +156,6 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 				},
 			},
 			"trust_self_signed_certs": schema.BoolAttribute{
-				Computed: true,
-			},
-			"uribypass_header_value": schema.StringAttribute{
 				Computed: true,
 			},
 			"use_publisher_dns": schema.BoolAttribute{

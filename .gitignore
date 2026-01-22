@@ -51,3 +51,4 @@ api-src/
 # Log files
 *.log
 terraform-provider-netskope_v*
+/scripts/

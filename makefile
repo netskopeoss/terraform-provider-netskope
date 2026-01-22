@@ -50,4 +50,50 @@ deps:
 	@echo "Fetching dependencies..."
 	$(GOGET) -v ./...
 
-.PHONY: all build-darwin build-linux build-windows clean test deps
+# Run all acceptance tests
+.PHONY: testacc
+testacc:
+	@echo "Running acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -timeout 120m
+
+# Run acceptance tests with coverage
+.PHONY: testacc-coverage
+testacc-coverage:
+	@echo "Running acceptance tests with coverage..."
+	TF_ACC=1 $(GOTEST) -v -coverprofile=coverage-acc.out ./internal/provider/... -timeout 120m
+	$(GOCMD) tool cover -html=coverage-acc.out -o coverage-acc.html
+
+# Run specific resource tests
+.PHONY: testacc-privateapp
+testacc-privateapp:
+	@echo "Running private app acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccNPAPrivateApp -timeout 30m
+
+.PHONY: testacc-publisher
+testacc-publisher:
+	@echo "Running publisher acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccNPAPublisher -timeout 30m
+
+.PHONY: testacc-policygroups
+testacc-policygroups:
+	@echo "Running policy groups acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccNPAPolicyGroups -timeout 30m
+
+.PHONY: testacc-rules
+testacc-rules:
+	@echo "Running rules acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccNPARules -timeout 30m
+
+# Run data source tests only
+.PHONY: testacc-datasources
+testacc-datasources:
+	@echo "Running data source acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAcc.*DataSource -timeout 30m
+
+# Run with debug logging
+.PHONY: testacc-debug
+testacc-debug:
+	@echo "Running acceptance tests with debug logging..."
+	TF_ACC=1 TF_LOG=DEBUG $(GOTEST) -v ./internal/provider/... -timeout 120m 2>&1 | tee test-debug.log
+
+.PHONY: all build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug

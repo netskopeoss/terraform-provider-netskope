@@ -97,23 +97,6 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						Computed:    true,
 						ElementType: types.Int64Type,
 					},
-					"dlp_actions": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"actions": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
-								"dlp_profile": schema.StringAttribute{
-									Computed: true,
-								},
-							},
-						},
-					},
-					"external_dlp": schema.BoolAttribute{
-						Computed: true,
-					},
 					"json_version": schema.Int64Attribute{
 						Computed: true,
 					},
@@ -159,67 +142,7 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						Computed:    true,
 						ElementType: types.StringType,
 					},
-					"private_apps_with_activities": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"activities": schema.ListNestedAttribute{
-									Computed: true,
-									NestedObject: schema.NestedAttributeObject{
-										Attributes: map[string]schema.Attribute{
-											"activity": schema.StringAttribute{
-												Computed: true,
-											},
-											"list_of_constraints": schema.ListAttribute{
-												Computed:    true,
-												ElementType: types.StringType,
-											},
-										},
-									},
-								},
-								"app_name": schema.StringAttribute{
-									Computed: true,
-								},
-							},
-						},
-					},
-					"show_dlp_profile_action_table": schema.BoolAttribute{
-						Computed: true,
-					},
 					"src_countries": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"tss_actions": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"actions": schema.ListNestedAttribute{
-									Computed: true,
-									NestedObject: schema.NestedAttributeObject{
-										Attributes: map[string]schema.Attribute{
-											"action_name": schema.StringAttribute{
-												Computed: true,
-											},
-											"remediation_profile": schema.StringAttribute{
-												Computed: true,
-											},
-											"severity": schema.StringAttribute{
-												Computed: true,
-											},
-											"template": schema.StringAttribute{
-												Computed: true,
-											},
-										},
-									},
-								},
-								"tss_profile": schema.StringAttribute{
-									Computed: true,
-								},
-							},
-						},
-					},
-					"tss_profile": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
 					},

@@ -19,7 +19,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
-	speakeasy_objectvalidators "github.com/netskopeoss/terraform-provider-netskope/internal/validators/objectvalidators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -123,32 +122,6 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Default:     listdefault.StaticValue(types.ListValueMust(types.Int64Type, []attr.Value{})),
 						ElementType: types.Int64Type,
 					},
-					"dlp_actions": schema.ListNestedAttribute{
-						Computed: true,
-						Optional: true,
-						NestedObject: schema.NestedAttributeObject{
-							Validators: []validator.Object{
-								speakeasy_objectvalidators.NotNull(),
-							},
-							Attributes: map[string]schema.Attribute{
-								"actions": schema.ListAttribute{
-									Computed:    true,
-									Optional:    true,
-									ElementType: types.StringType,
-								},
-								"dlp_profile": schema.StringAttribute{
-									Computed: true,
-									Optional: true,
-								},
-							},
-						},
-					},
-					"external_dlp": schema.BoolAttribute{
-						Computed:    true,
-						Optional:    true,
-						Default:     booldefault.StaticBool(false),
-						Description: `Default: false`,
-					},
 					"json_version": schema.Int64Attribute{
 						Computed:    true,
 						Optional:    true,
@@ -227,118 +200,10 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 					},
-					"private_apps_with_activities": schema.ListNestedAttribute{
-						Computed: true,
-						Optional: true,
-						NestedObject: schema.NestedAttributeObject{
-							Validators: []validator.Object{
-								speakeasy_objectvalidators.NotNull(),
-							},
-							Attributes: map[string]schema.Attribute{
-								"activities": schema.ListNestedAttribute{
-									Computed: true,
-									Optional: true,
-									NestedObject: schema.NestedAttributeObject{
-										Validators: []validator.Object{
-											speakeasy_objectvalidators.NotNull(),
-										},
-										Attributes: map[string]schema.Attribute{
-											"activity": schema.StringAttribute{
-												Computed:    true,
-												Optional:    true,
-												Description: `must be "any"`,
-												Validators: []validator.String{
-													stringvalidator.OneOf("any"),
-												},
-											},
-											"list_of_constraints": schema.ListAttribute{
-												Computed:    true,
-												Optional:    true,
-												ElementType: types.StringType,
-											},
-										},
-									},
-								},
-								"app_name": schema.StringAttribute{
-									Computed: true,
-									Optional: true,
-								},
-							},
-						},
-					},
-					"show_dlp_profile_action_table": schema.BoolAttribute{
-						Computed:    true,
-						Optional:    true,
-						Default:     booldefault.StaticBool(false),
-						Description: `Default: false`,
-					},
 					"src_countries": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
 						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
-						ElementType: types.StringType,
-					},
-					"tss_actions": schema.ListNestedAttribute{
-						Computed: true,
-						Optional: true,
-						NestedObject: schema.NestedAttributeObject{
-							Validators: []validator.Object{
-								speakeasy_objectvalidators.NotNull(),
-							},
-							Attributes: map[string]schema.Attribute{
-								"actions": schema.ListNestedAttribute{
-									Computed: true,
-									Optional: true,
-									NestedObject: schema.NestedAttributeObject{
-										Validators: []validator.Object{
-											speakeasy_objectvalidators.NotNull(),
-										},
-										Attributes: map[string]schema.Attribute{
-											"action_name": schema.StringAttribute{
-												Computed:    true,
-												Optional:    true,
-												Description: `must be one of ["block", "alert", "allow"]`,
-												Validators: []validator.String{
-													stringvalidator.OneOf(
-														"block",
-														"alert",
-														"allow",
-													),
-												},
-											},
-											"remediation_profile": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
-											},
-											"severity": schema.StringAttribute{
-												Computed:    true,
-												Optional:    true,
-												Description: `must be one of ["low", "medium", "high"]`,
-												Validators: []validator.String{
-													stringvalidator.OneOf(
-														"low",
-														"medium",
-														"high",
-													),
-												},
-											},
-											"template": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
-											},
-										},
-									},
-								},
-								"tss_profile": schema.StringAttribute{
-									Computed: true,
-									Optional: true,
-								},
-							},
-						},
-					},
-					"tss_profile": schema.ListAttribute{
-						Computed:    true,
-						Optional:    true,
 						ElementType: types.StringType,
 					},
 					"user_groups": schema.ListAttribute{
