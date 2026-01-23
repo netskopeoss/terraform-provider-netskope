@@ -68,16 +68,6 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 						"allow_unauthenticated_cors": schema.BoolAttribute{
 							Computed: true,
 						},
-						"allow_uri_bypass": schema.BoolAttribute{
-							Computed: true,
-						},
-						"app_option": schema.SingleNestedAttribute{
-							Computed: true,
-						},
-						"bypass_uris": schema.ListAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
-						},
 						"clientless_access": schema.BoolAttribute{
 							Computed: true,
 						},
@@ -89,12 +79,6 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{},
 							},
-						},
-						"modified_by": schema.StringAttribute{
-							Computed: true,
-						},
-						"modify_time": schema.StringAttribute{
-							Computed: true,
 						},
 						"private_app_hostname": schema.StringAttribute{
 							Computed: true,
@@ -112,29 +96,14 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
-									"created_at": schema.StringAttribute{
-										Computed: true,
-									},
-									"id": schema.Int32Attribute{
-										Computed: true,
-									},
 									"port": schema.StringAttribute{
 										Computed: true,
 									},
 									"protocol": schema.StringAttribute{
 										Computed: true,
 									},
-									"service_id": schema.Int32Attribute{
-										Computed: true,
-									},
-									"updated_at": schema.StringAttribute{
-										Computed: true,
-									},
 								},
 							},
-						},
-						"public_host": schema.StringAttribute{
-							Computed: true,
 						},
 						"publishers": schema.ListNestedAttribute{
 							Computed: true,
@@ -176,9 +145,6 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 							Computed:    true,
 							ElementType: types.StringType,
 						},
-						"supplement_dns_for_osx": schema.BoolAttribute{
-							Computed: true,
-						},
 						"tags": schema.ListNestedAttribute{
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
@@ -193,9 +159,6 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 							},
 						},
 						"trust_self_signed_certs": schema.BoolAttribute{
-							Computed: true,
-						},
-						"uribypass_header_value": schema.StringAttribute{
 							Computed: true,
 						},
 						"use_publisher_dns": schema.BoolAttribute{
