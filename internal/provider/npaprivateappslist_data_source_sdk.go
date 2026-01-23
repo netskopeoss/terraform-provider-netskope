@@ -45,7 +45,7 @@ func (r *NPAPrivateAppsListDataSourceModel) RefreshFromSharedData(ctx context.Co
 					privateApps.Protocols[protocolsCount].Protocol = protocols.Protocol
 				}
 			}
-			privateApps.Publishers = []tfTypes.PublisherItem{}
+			privateApps.Publishers = []tfTypes.ServicePublisherAssignmentItem{}
 			for publishersCount, publishersItem := range privateAppsItem.Publishers {
 				var publishers tfTypes.PublisherItem
 				publishers.PublisherID = types.StringPointerValue(publishersItem.PublisherID)

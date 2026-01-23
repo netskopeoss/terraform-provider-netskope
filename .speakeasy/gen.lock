@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
-  docChecksum: f2d9b323355012849b1bd02de0434c3e
+  docChecksum: 652c1674fbabd53c095f7875fd4da63f
   docVersion: 1.0.0
   speakeasyVersion: 1.583.0
   generationVersion: 2.658.3
-  releaseVersion: 0.3.8
-  configChecksum: 168b710089482b022856a3847aade18c
+  releaseVersion: 0.3.5
+  configChecksum: 48ab5de9b183f099286903b6ca60bad5
   published: true
 features:
   terraform:
@@ -1153,21 +1153,21 @@ trackedFiles:
   internal/provider/npapolicygroupslist_data_source_sdk.go:
     last_write_checksum: sha1:e52c35c42367ecc3e2ec0abf1a2aa6a6596c9054
   internal/provider/npaprivateapp_data_source.go:
-    last_write_checksum: sha1:6a2970cc62fe107fdb796f604318789624d95b3d
+    last_write_checksum: sha1:f63bc3069d64deed0f7143a5061186e4b7b3081c
   internal/provider/npaprivateapp_data_source_sdk.go:
-    last_write_checksum: sha1:db598ea3ef856ecd96a80f8c23dda10b6b0c1e65
+    last_write_checksum: sha1:7b6d514793c48ab2750ca7ab53ab7f32d11267f3
   internal/provider/npaprivateapp_resource.go:
-    last_write_checksum: sha1:d05f9ff51ebc7a9bfd0a1a53d17e68ab4c17051a
+    last_write_checksum: sha1:fe55431d021dc434d11a2a3126dfe195a7bc065e
   internal/provider/npaprivateapp_resource_sdk.go:
-    last_write_checksum: sha1:a4c36e641e9174ba026eaf74bb75a6b74d933e09
+    last_write_checksum: sha1:789da64aca87de6dd6eddd5e2314b2a65289c5af
   internal/provider/npaprivateapppublichost_resource.go:
     last_write_checksum: sha1:caa1df402aa7e361df48949eb67b94849075bd8d
   internal/provider/npaprivateapppublichost_resource_sdk.go:
     last_write_checksum: sha1:98cfac27a0eb8eda1cbba7467278d1ad8ee5e85f
   internal/provider/npaprivateappslist_data_source.go:
-    last_write_checksum: sha1:355d8e093bc60248c9d3a74f656003ef20e10475
+    last_write_checksum: sha1:591c65922bd6b483e2ca5bb7ec295ca6fbe84d46
   internal/provider/npaprivateappslist_data_source_sdk.go:
-    last_write_checksum: sha1:23a91c88d881e5a38ef0541f25d407d3aa1033c4
+    last_write_checksum: sha1:c70c5654a825b08d2a3a9965592acb05b18bc198
   internal/provider/npaprivatepolicyinuse_data_source.go:
     last_write_checksum: sha1:9952255700ec6b37d94f6bad931a883639185414
   internal/provider/npaprivatepolicyinuse_data_source_sdk.go:
@@ -1181,9 +1181,9 @@ trackedFiles:
   internal/provider/npapublisher_resource_sdk.go:
     last_write_checksum: sha1:2ba28e29736008e0e08832c38587d179d23fc866
   internal/provider/npapublisherappslist_data_source.go:
-    last_write_checksum: sha1:bfda88eccf92d3dec1a5a07f958980b06d1d34bc
+    last_write_checksum: sha1:e1a76245b48c1f326b20a22e6789c49b6b4c18d5
   internal/provider/npapublisherappslist_data_source_sdk.go:
-    last_write_checksum: sha1:4bf30d32233c681c3c5a7cf9789394255a617be1
+    last_write_checksum: sha1:7d1a7f98c064bb85018d46db9368a58c9a772fb8
   internal/provider/npapublishersalertsconfiguration_data_source.go:
     last_write_checksum: sha1:65e73a02b657bea59b773210563f17bd24987da2
   internal/provider/npapublishersalertsconfiguration_data_source_sdk.go:
@@ -1299,7 +1299,7 @@ trackedFiles:
   internal/provider/types/npa_policygroup_response_item.go:
     last_write_checksum: sha1:05e7ce1778560493ba57558b93cb579f52be1094
   internal/provider/types/private_apps_item.go:
-    last_write_checksum: sha1:6a142c1aa3265541f6710f6fcd0b30e2116021f3
+    last_write_checksum: sha1:f907eadaff41faa072e0c4afe13dd23fc9927a7e
   internal/provider/types/protocol_item.go:
     last_write_checksum: sha1:b30b1bf37853a97ef0acf905c04b99c4241f2ad5
   internal/provider/types/publisher_bulk_item.go:
@@ -1339,9 +1339,7 @@ trackedFiles:
   internal/provider/types/publishers_host_os_version_get_response_data.go:
     last_write_checksum: sha1:156d5b6beac826243afc00b8addb25fa46d2dead
   internal/provider/types/publishers_private_apps_response_data.go:
-    last_write_checksum: sha1:3e72fc8d25cc62c13f760cb2a40b149c5bc13643
-  internal/provider/types/publishers_private_apps_response_reachability.go:
-    last_write_checksum: sha1:58dacf8aa896169198e4b717da045f5c59825ec8
+    last_write_checksum: sha1:8a728c92979af6cc5b414d0bdbe29d1aea738064
   internal/provider/types/release_item.go:
     last_write_checksum: sha1:ec7255fa8644cc8e6d8f7b67b0300cd7414a6888
   internal/provider/types/response_body.go:
