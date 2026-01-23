@@ -51,6 +51,8 @@ api-src/
 CLAUDE.md
 # Local planning/design documents
 planning_docs/
+NPA_POLICY_UPDATE_PLAN.md
+ACCEPTANCE_TEST_DESIGN_SPEC.md
 # Log files
 *.log
 terraform-provider-netskope_v*
