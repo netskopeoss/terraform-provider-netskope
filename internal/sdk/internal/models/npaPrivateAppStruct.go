@@ -43,7 +43,7 @@ type Protocol struct {
 }
 type ServicePublisherAssignment struct {
 	Primary       *bool         `json:"primary"`
-	PublisherID   int           `json:"publisher_id"`
+	PublisherID   interface{}   `json:"publisher_id"`
 	PublisherName string        `json:"publisher_name"`
 	Reachability  *Reachability `json:"reachability"`
 	ServiceID     int           `json:"service_id"`

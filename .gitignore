@@ -48,6 +48,9 @@ spec/merged.yaml
 api-src/
 # Claude Code files
 .claude/
+CLAUDE.md
+# Local planning/design documents
+planning_docs/
 # Log files
 *.log
 terraform-provider-netskope_v*

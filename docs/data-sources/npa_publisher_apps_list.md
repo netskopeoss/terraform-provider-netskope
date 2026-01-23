@@ -89,17 +89,5 @@ Read-Only:
 
 Read-Only:
 
-- `primary` (Boolean)
-- `publisher_external_id` (Number)
+- `publisher_id` (String) Publisher ID used for assignment
 - `publisher_name` (String)
-- `reachability` (Attributes) (see [below for nested schema](#nestedatt--data--service_publisher_assignments--reachability))
-- `service_external_id` (Number)
-
-<a id="nestedatt--data--service_publisher_assignments--reachability"></a>
-### Nested Schema for `data.service_publisher_assignments.reachability`
-
-Read-Only:
-
-- `error_code` (Number)
-- `error_string` (String)
-- `reachable` (Boolean)
