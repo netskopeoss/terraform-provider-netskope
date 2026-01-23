@@ -3,8 +3,6 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 	"net/http"
 )
@@ -31,35 +29,9 @@ func (o *Data) GetToken() *string {
 	return o.Token
 }
 
-type Status string
-
-const (
-	StatusSuccess  Status = "success"
-	StatusNotFound Status = "not found"
-)
-
-func (e Status) ToPointer() *Status {
-	return &e
-}
-func (e *Status) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "not found":
-		*e = Status(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for Status: %v", v)
-	}
-}
-
 type ResponseBody struct {
-	Data   *Data   `json:"data,omitempty"`
-	Status *Status `json:"status,omitempty"`
+	Data   *Data              `json:"data,omitempty"`
+	Status *shared.StatusEnum `json:"status,omitempty"`
 }
 
 func (o *ResponseBody) GetData() *Data {
@@ -69,7 +41,7 @@ func (o *ResponseBody) GetData() *Data {
 	return o.Data
 }
 
-func (o *ResponseBody) GetStatus() *Status {
+func (o *ResponseBody) GetStatus() *shared.StatusEnum {
 	if o == nil {
 		return nil
 	}

@@ -35,6 +35,7 @@ type NPARulesListDataSourceModel struct {
 	Offset    types.Int64                     `queryParam:"style=form,explode=true,name=offset" tfsdk:"offset"`
 	Sortby    types.String                    `queryParam:"style=form,explode=true,name=sortby" tfsdk:"sortby"`
 	Sortorder types.String                    `queryParam:"style=form,explode=true,name=sortorder" tfsdk:"sortorder"`
+	Status    types.String                    `tfsdk:"status"`
 }
 
 // Metadata returns the data source type name.
@@ -56,6 +57,12 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 							Computed: true,
 						},
 						"group_id": schema.StringAttribute{
+							Computed: true,
+						},
+						"group_name": schema.StringAttribute{
+							Computed: true,
+						},
+						"id": schema.StringAttribute{
 							Computed: true,
 						},
 						"modify_by": schema.StringAttribute{
@@ -90,23 +97,6 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 									Computed:    true,
 									ElementType: types.Int64Type,
 								},
-								"dlp_actions": schema.ListNestedAttribute{
-									Computed: true,
-									NestedObject: schema.NestedAttributeObject{
-										Attributes: map[string]schema.Attribute{
-											"actions": schema.ListAttribute{
-												Computed:    true,
-												ElementType: types.StringType,
-											},
-											"dlp_profile": schema.StringAttribute{
-												Computed: true,
-											},
-										},
-									},
-								},
-								"external_dlp": schema.BoolAttribute{
-									Computed: true,
-								},
 								"json_version": schema.Int64Attribute{
 									Computed: true,
 								},
@@ -126,6 +116,17 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 									Computed:    true,
 									ElementType: types.StringType,
 								},
+								"periodic_reauth": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"reauth_interval": schema.StringAttribute{
+											Computed: true,
+										},
+										"reauth_interval_unit": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+								},
 								"policy_type": schema.StringAttribute{
 									Computed: true,
 								},
@@ -141,72 +142,7 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 									Computed:    true,
 									ElementType: types.StringType,
 								},
-								"private_apps_with_activities": schema.ListNestedAttribute{
-									Computed: true,
-									NestedObject: schema.NestedAttributeObject{
-										Attributes: map[string]schema.Attribute{
-											"activities": schema.ListNestedAttribute{
-												Computed: true,
-												NestedObject: schema.NestedAttributeObject{
-													Attributes: map[string]schema.Attribute{
-														"activity": schema.StringAttribute{
-															Computed: true,
-														},
-														"list_of_constraints": schema.ListAttribute{
-															Computed:    true,
-															ElementType: types.StringType,
-														},
-													},
-												},
-											},
-											"app_id": schema.ListAttribute{
-												Computed:    true,
-												ElementType: types.StringType,
-											},
-											"app_name": schema.StringAttribute{
-												Computed: true,
-											},
-										},
-									},
-								},
-								"show_dlp_profile_action_table": schema.BoolAttribute{
-									Computed: true,
-								},
 								"src_countries": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
-								"tss_actions": schema.ListNestedAttribute{
-									Computed: true,
-									NestedObject: schema.NestedAttributeObject{
-										Attributes: map[string]schema.Attribute{
-											"actions": schema.ListNestedAttribute{
-												Computed: true,
-												NestedObject: schema.NestedAttributeObject{
-													Attributes: map[string]schema.Attribute{
-														"action_name": schema.StringAttribute{
-															Computed: true,
-														},
-														"remediation_profile": schema.StringAttribute{
-															Computed: true,
-														},
-														"severity": schema.StringAttribute{
-															Computed: true,
-														},
-														"template": schema.StringAttribute{
-															Computed: true,
-														},
-													},
-												},
-											},
-											"tss_profile": schema.ListAttribute{
-												Computed:    true,
-												ElementType: types.StringType,
-											},
-										},
-									},
-								},
-								"tss_profile": schema.ListAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
 								},
@@ -226,9 +162,6 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 								},
 							},
 						},
-						"rule_id": schema.StringAttribute{
-							Computed: true,
-						},
 						"rule_name": schema.StringAttribute{
 							Computed: true,
 						},
@@ -237,7 +170,7 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 			},
 			"filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `Query string based on query operaters`,
+				Description: `Query string based on query operators`,
 			},
 			"limit": schema.Int64Attribute{
 				Optional:    true,
@@ -254,6 +187,9 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 			"sortorder": schema.StringAttribute{
 				Optional:    true,
 				Description: `Sort in either asc or desc order. The default is asc order`,
+			},
+			"status": schema.StringAttribute{
+				Computed: true,
 			},
 		},
 	}
@@ -297,13 +233,13 @@ func (r *NPARulesListDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
-	request, requestDiags := data.ToOperationsGetNPARulesListRequest(ctx)
+	request, requestDiags := data.ToOperationsListNPARulesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPARules.ListObjects(ctx, *request)
+	res, err := r.client.ListNPARules(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -319,11 +255,11 @@ func (r *NPARulesListDataSource) Read(ctx context.Context, req datasource.ReadRe
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.NpaPolicyResponseList != nil) {
+	if !(res.NpaPolicyResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicyResponseList(ctx, res.NpaPolicyResponseList)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicyResponse(ctx, res.NpaPolicyResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

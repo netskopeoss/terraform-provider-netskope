@@ -150,12 +150,12 @@ func (s *NPAPrivateApp) CreateNPAPrivateApps(ctx context.Context, request shared
 				return nil, err
 			}
 
-			var out shared.PrivateAppsGetResponseNew
+			var out shared.PrivateAppsPostResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.PrivateAppsGetResponseNew = &out
+			res.PrivateAppsPostResponse = &out
 		default:
 			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
@@ -196,8 +196,8 @@ func (s *NPAPrivateApp) CreateNPAPrivateApps(ctx context.Context, request shared
 
 }
 
-// UpdateNPAPrivateApp - Patch a private application
-// Patch a private application based on private app id
+// UpdateNPAPrivateApp - Update a private application
+// Update a private application based on private app id
 func (s *NPAPrivateApp) UpdateNPAPrivateApp(ctx context.Context, request operations.UpdateNPAPrivateAppRequest, opts ...operations.Option) (*operations.UpdateNPAPrivateAppResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -246,7 +246,7 @@ func (s *NPAPrivateApp) UpdateNPAPrivateApp(ctx context.Context, request operati
 		defer cancel()
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "PATCH", opURL, bodyReader)
+	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
@@ -312,12 +312,12 @@ func (s *NPAPrivateApp) UpdateNPAPrivateApp(ctx context.Context, request operati
 				return nil, err
 			}
 
-			var out []shared.PrivateAppsResponse
+			var out shared.PrivateAppsGetResponse
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.PrivateAppsResponse = out
+			res.PrivateAppsGetResponse = &out
 		default:
 			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {

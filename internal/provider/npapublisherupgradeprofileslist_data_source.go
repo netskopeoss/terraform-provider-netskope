@@ -81,6 +81,9 @@ func (r *NPAPublisherUpgradeProfilesListDataSource) Schema(ctx context.Context, 
 								"timezone": schema.StringAttribute{
 									Computed: true,
 								},
+								"timezone_id": schema.Int64Attribute{
+									Computed: true,
+								},
 								"updated_at": schema.StringAttribute{
 									Computed: true,
 								},

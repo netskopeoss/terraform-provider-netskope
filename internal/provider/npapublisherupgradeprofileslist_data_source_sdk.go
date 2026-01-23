@@ -35,6 +35,7 @@ func (r *NPAPublisherUpgradeProfilesListDataSourceModel) RefreshFromSharedPublis
 				upgradeProfiles.PublisherUpgradeProfileID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(upgradeProfilesItem.PublisherUpgradeProfileID))
 				upgradeProfiles.ReleaseType = types.StringPointerValue(upgradeProfilesItem.ReleaseType)
 				upgradeProfiles.Timezone = types.StringPointerValue(upgradeProfilesItem.Timezone)
+				upgradeProfiles.TimezoneID = types.Int64PointerValue(upgradeProfilesItem.TimezoneID)
 				upgradeProfiles.UpdatedAt = types.StringPointerValue(upgradeProfilesItem.UpdatedAt)
 				upgradeProfiles.UpgradingStage = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(upgradeProfilesItem.UpgradingStage))
 				upgradeProfiles.WillStart = types.BoolPointerValue(upgradeProfilesItem.WillStart)
@@ -51,6 +52,7 @@ func (r *NPAPublisherUpgradeProfilesListDataSourceModel) RefreshFromSharedPublis
 					r.Data.UpgradeProfiles[upgradeProfilesCount].PublisherUpgradeProfileID = upgradeProfiles.PublisherUpgradeProfileID
 					r.Data.UpgradeProfiles[upgradeProfilesCount].ReleaseType = upgradeProfiles.ReleaseType
 					r.Data.UpgradeProfiles[upgradeProfilesCount].Timezone = upgradeProfiles.Timezone
+					r.Data.UpgradeProfiles[upgradeProfilesCount].TimezoneID = upgradeProfiles.TimezoneID
 					r.Data.UpgradeProfiles[upgradeProfilesCount].UpdatedAt = upgradeProfiles.UpdatedAt
 					r.Data.UpgradeProfiles[upgradeProfilesCount].UpgradingStage = upgradeProfiles.UpgradingStage
 					r.Data.UpgradeProfiles[upgradeProfilesCount].WillStart = upgradeProfiles.WillStart

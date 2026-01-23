@@ -33,6 +33,7 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgr
 		} else {
 			r.Timezone = types.StringNull()
 		}
+		r.TimezoneID = types.Int32PointerValue(typeconvert.Int64PointerToInt32Pointer(resp.TimezoneID))
 		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
 		r.UpgradingStage = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.UpgradingStage))
 		r.WillStart = types.BoolPointerValue(resp.WillStart)
@@ -63,6 +64,7 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgr
 		} else {
 			r.Timezone = types.StringNull()
 		}
+		r.TimezoneID = types.Int32PointerValue(typeconvert.Int64PointerToInt32Pointer(resp.TimezoneID))
 		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
 		r.UpgradingStage = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.UpgradingStage))
 		r.WillStart = types.BoolPointerValue(resp.WillStart)
@@ -135,6 +137,12 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfil
 
 	releaseType := shared.ReleaseType(r.ReleaseType.ValueString())
 	timezone := shared.Timezone(r.Timezone.ValueString())
+	timezoneID := new(int)
+	if !r.TimezoneID.IsUnknown() && !r.TimezoneID.IsNull() {
+		*timezoneID = int(r.TimezoneID.ValueInt32())
+	} else {
+		timezoneID = nil
+	}
 	out := shared.PublisherUpgradeProfilePostRequest{
 		DockerTag:   dockerTag,
 		Enabled:     enabled,
@@ -142,6 +150,7 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfil
 		Name:        name,
 		ReleaseType: releaseType,
 		Timezone:    timezone,
+		TimezoneID:  timezoneID,
 	}
 
 	return &out, diags
@@ -167,6 +176,12 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfil
 
 	releaseType := shared.PublisherUpgradeProfilePutRequestReleaseType(r.ReleaseType.ValueString())
 	timezone := shared.PublisherUpgradeProfilePutRequestTimezone(r.Timezone.ValueString())
+	timezoneID := new(int)
+	if !r.TimezoneID.IsUnknown() && !r.TimezoneID.IsNull() {
+		*timezoneID = int(r.TimezoneID.ValueInt32())
+	} else {
+		timezoneID = nil
+	}
 	out := shared.PublisherUpgradeProfilePutRequest{
 		DockerTag:                 dockerTag,
 		Enabled:                   enabled,
@@ -175,6 +190,7 @@ func (r *NPAPublisherUpgradeProfileResourceModel) ToSharedPublisherUpgradeProfil
 		Name:                      name,
 		ReleaseType:               releaseType,
 		Timezone:                  timezone,
+		TimezoneID:                timezoneID,
 	}
 
 	return &out, diags

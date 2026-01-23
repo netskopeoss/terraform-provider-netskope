@@ -11,14 +11,14 @@ import (
 
 type DeleteNPARulesRequest struct {
 	// npa policy id
-	RuleID string `pathParam:"style=simple,explode=false,name=id"`
+	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *DeleteNPARulesRequest) GetRuleID() string {
+func (o *DeleteNPARulesRequest) GetID() string {
 	if o == nil {
 		return ""
 	}
-	return o.RuleID
+	return o.ID
 }
 
 type DeleteNPARulesStatus string

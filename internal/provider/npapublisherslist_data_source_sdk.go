@@ -29,7 +29,7 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 				if publishersItem.Assessment == nil {
 					publishers.Assessment = nil
 				} else {
-					publishers.Assessment = &tfTypes.UpgradePublisherResponseAssessment{}
+					publishers.Assessment = &tfTypes.Assessment{}
 					if publishersItem.Assessment.CaCertsStatus == nil {
 						publishers.Assessment.CaCertsStatus = nil
 					} else {
@@ -43,6 +43,7 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 					publishers.Assessment.EeeSupport = types.BoolPointerValue(publishersItem.Assessment.EeeSupport)
 					publishers.Assessment.HddFree = types.StringPointerValue(publishersItem.Assessment.HddFree)
 					publishers.Assessment.HddTotal = types.StringPointerValue(publishersItem.Assessment.HddTotal)
+					publishers.Assessment.HostOsVersion = types.StringPointerValue(publishersItem.Assessment.HostOsVersion)
 					publishers.Assessment.IPAddress = types.StringPointerValue(publishersItem.Assessment.IPAddress)
 					publishers.Assessment.Latency = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.Assessment.Latency))
 					publishers.Assessment.Version = types.StringPointerValue(publishersItem.Assessment.Version)
@@ -67,6 +68,18 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 				publishers.ConnectedApps = make([]types.String, 0, len(publishersItem.ConnectedApps))
 				for _, v := range publishersItem.ConnectedApps {
 					publishers.ConnectedApps = append(publishers.ConnectedApps, types.StringValue(v))
+				}
+				publishers.Labels = []tfTypes.PublisherResponseLabels{}
+				for labelsCount, labelsItem := range publishersItem.Labels {
+					var labels tfTypes.PublisherResponseLabels
+					labels.LabelID = types.StringPointerValue(labelsItem.LabelID)
+					labels.Permission = types.StringPointerValue(labelsItem.Permission)
+					if labelsCount+1 > len(publishers.Labels) {
+						publishers.Labels = append(publishers.Labels, labels)
+					} else {
+						publishers.Labels[labelsCount].LabelID = labels.LabelID
+						publishers.Labels[labelsCount].Permission = labels.Permission
+					}
 				}
 				publishers.Lbrokerconnect = types.BoolPointerValue(publishersItem.Lbrokerconnect)
 				publishers.PublisherID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.PublisherID))
@@ -104,6 +117,7 @@ func (r *NPAPublishersListDataSourceModel) RefreshFromSharedPublishersGetRespons
 					r.Data.Publishers[publishersCount].Capabilities = publishers.Capabilities
 					r.Data.Publishers[publishersCount].CommonName = publishers.CommonName
 					r.Data.Publishers[publishersCount].ConnectedApps = publishers.ConnectedApps
+					r.Data.Publishers[publishersCount].Labels = publishers.Labels
 					r.Data.Publishers[publishersCount].Lbrokerconnect = publishers.Lbrokerconnect
 					r.Data.Publishers[publishersCount].PublisherID = publishers.PublisherID
 					r.Data.Publishers[publishersCount].PublisherName = publishers.PublisherName

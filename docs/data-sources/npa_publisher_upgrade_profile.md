@@ -45,6 +45,7 @@ data "netskope_npa_publisher_upgrade_profile" "my_npapublisherupgradeprofile" {
 - `num_associated_publisher` (Number)
 - `release_type` (String)
 - `timezone` (String)
+- `timezone_id` (Number)
 - `updated_at` (String)
 - `upgrading_stage` (Number)
 - `will_start` (Boolean)

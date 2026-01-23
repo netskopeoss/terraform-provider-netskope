@@ -10,60 +10,15 @@ import (
 )
 
 type GetNPAPolicyGroupsRequest struct {
-	// Return values only from specified fields
-	Fields *string `queryParam:"style=form,explode=true,name=fields"`
-	// Query string based on query operaters
-	Filter *string `queryParam:"style=form,explode=true,name=filter"`
-	// Max number of policy groups to retrieve. Default will be all policy groups.
-	Limit *int64 `queryParam:"style=form,explode=true,name=limit"`
-	// The offset of the first policy group in the list to retrieve.
-	Offset *int64 `queryParam:"style=form,explode=true,name=offset"`
-	// Sort retrieved policy group by specified field. Default is policy group id
-	Sortby *string `queryParam:"style=form,explode=true,name=sortby"`
-	// Sort in either asc or desc order. The default is asc order
-	Sortorder *string `queryParam:"style=form,explode=true,name=sortorder"`
+	// npa policy group id
+	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *GetNPAPolicyGroupsRequest) GetFields() *string {
+func (o *GetNPAPolicyGroupsRequest) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
-	return o.Fields
-}
-
-func (o *GetNPAPolicyGroupsRequest) GetFilter() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Filter
-}
-
-func (o *GetNPAPolicyGroupsRequest) GetLimit() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Limit
-}
-
-func (o *GetNPAPolicyGroupsRequest) GetOffset() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.Offset
-}
-
-func (o *GetNPAPolicyGroupsRequest) GetSortby() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Sortby
-}
-
-func (o *GetNPAPolicyGroupsRequest) GetSortorder() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Sortorder
+	return o.ID
 }
 
 type GetNPAPolicyGroupsStatus string
@@ -92,12 +47,13 @@ func (e *GetNPAPolicyGroupsStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
+// GetNPAPolicyGroupsResponseBody - successful operation
 type GetNPAPolicyGroupsResponseBody struct {
-	Data   []shared.NpaPolicygroupResponseItem `json:"data,omitempty"`
-	Status *GetNPAPolicyGroupsStatus           `json:"status,omitempty"`
+	Data   *shared.NpaPolicygroupResponseItem `json:"data,omitempty"`
+	Status *GetNPAPolicyGroupsStatus          `json:"status,omitempty"`
 }
 
-func (o *GetNPAPolicyGroupsResponseBody) GetData() []shared.NpaPolicygroupResponseItem {
+func (o *GetNPAPolicyGroupsResponseBody) GetData() *shared.NpaPolicygroupResponseItem {
 	if o == nil {
 		return nil
 	}
@@ -118,7 +74,8 @@ type GetNPAPolicyGroupsResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	Object      *GetNPAPolicyGroupsResponseBody
+	// successful operation
+	Object *GetNPAPolicyGroupsResponseBody
 	// Invalid request
 	NpaPolicygroupResponse400 *shared.NpaPolicygroupResponse400
 }

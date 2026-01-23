@@ -2,6 +2,11 @@
 
 package types
 
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
+
 type GroupOrder struct {
-	GroupOrder *NpaPolicygroupRequestGroupOrder `tfsdk:"group_order"`
+	GroupID types.String `tfsdk:"group_id"`
+	Order   types.String `tfsdk:"order"`
 }

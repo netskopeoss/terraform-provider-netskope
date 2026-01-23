@@ -8,12 +8,21 @@ import (
 )
 
 type ListNPAPrivateAppsRequest struct {
+	// Return values only from specified fields
+	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 	// Return filtered result based on query
 	Query *string `queryParam:"style=form,explode=true,name=query"`
 	// Query offset
 	Offset *int `queryParam:"style=form,explode=true,name=offset"`
 	// Number of results to limit the output by
 	Limit *int `queryParam:"style=form,explode=true,name=limit"`
+}
+
+func (o *ListNPAPrivateAppsRequest) GetFields() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Fields
 }
 
 func (o *ListNPAPrivateAppsRequest) GetQuery() *string {
