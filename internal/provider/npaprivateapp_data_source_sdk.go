@@ -17,20 +17,8 @@ func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsItem(ctx cont
 
 	if resp != nil {
 		r.AllowUnauthenticatedCors = types.BoolPointerValue(resp.AllowUnauthenticatedCors)
-		r.AllowURIBypass = types.BoolPointerValue(resp.AllowURIBypass)
-		if resp.AppOption == nil {
-			r.AppOption = nil
-		} else {
-			r.AppOption = &tfTypes.AppOption{}
-		}
-		r.BypassUris = make([]types.String, 0, len(resp.BypassUris))
-		for _, v := range resp.BypassUris {
-			r.BypassUris = append(r.BypassUris, types.StringValue(v))
-		}
 		r.ClientlessAccess = types.BoolPointerValue(resp.ClientlessAccess)
 		r.IsUserPortalApp = types.BoolPointerValue(resp.IsUserPortalApp)
-		r.ModifiedBy = types.StringPointerValue(resp.ModifiedBy)
-		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
 		r.PrivateAppHostname = types.StringPointerValue(resp.PrivateAppHostname)
 		r.PrivateAppID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PrivateAppID))
 		r.PrivateAppName = types.StringPointerValue(resp.PrivateAppName)
@@ -41,28 +29,19 @@ func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsItem(ctx cont
 		}
 		for protocolsCount, protocolsItem := range resp.Protocols {
 			var protocols tfTypes.ProtocolItem
-			protocols.CreatedAt = types.StringPointerValue(protocolsItem.CreatedAt)
-			protocols.ID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(protocolsItem.ID))
 			protocols.Port = types.StringPointerValue(protocolsItem.Port)
 			if protocolsItem.Protocol != nil {
 				protocols.Protocol = types.StringValue(string(*protocolsItem.Protocol))
 			} else {
 				protocols.Protocol = types.StringNull()
 			}
-			protocols.ServiceID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(protocolsItem.ServiceID))
-			protocols.UpdatedAt = types.StringPointerValue(protocolsItem.UpdatedAt)
 			if protocolsCount+1 > len(r.Protocols) {
 				r.Protocols = append(r.Protocols, protocols)
 			} else {
-				r.Protocols[protocolsCount].CreatedAt = protocols.CreatedAt
-				r.Protocols[protocolsCount].ID = protocols.ID
 				r.Protocols[protocolsCount].Port = protocols.Port
 				r.Protocols[protocolsCount].Protocol = protocols.Protocol
-				r.Protocols[protocolsCount].ServiceID = protocols.ServiceID
-				r.Protocols[protocolsCount].UpdatedAt = protocols.UpdatedAt
 			}
 		}
-		r.PublicHost = types.StringPointerValue(resp.PublicHost)
 		r.Publishers = []tfTypes.ServicePublisherAssignmentItem{}
 		if len(r.Publishers) > len(resp.Publishers) {
 			r.Publishers = r.Publishers[:len(resp.Publishers)]
@@ -96,7 +75,6 @@ func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsItem(ctx cont
 		for _, v := range resp.SteeringConfigs {
 			r.SteeringConfigs = append(r.SteeringConfigs, types.StringValue(v))
 		}
-		r.SupplementDNSForOsx = types.BoolPointerValue(resp.SupplementDNSForOsx)
 		r.Tags = []tfTypes.TagItem{}
 		if len(r.Tags) > len(resp.Tags) {
 			r.Tags = r.Tags[:len(resp.Tags)]
@@ -113,7 +91,6 @@ func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsItem(ctx cont
 			}
 		}
 		r.TrustSelfSignedCerts = types.BoolPointerValue(resp.TrustSelfSignedCerts)
-		r.UribypassHeaderValue = types.StringPointerValue(resp.UribypassHeaderValue)
 		r.UsePublisherDNS = types.BoolPointerValue(resp.UsePublisherDNS)
 	}
 

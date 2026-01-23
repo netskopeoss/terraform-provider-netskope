@@ -15,10 +15,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	speakeasy_boolplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/boolplanmodifier"
-	speakeasy_int32planmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/int32planmodifier"
-	speakeasy_listplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/listplanmodifier"
-	speakeasy_objectplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/objectplanmodifier"
 	speakeasy_stringplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
@@ -44,24 +40,17 @@ type NPAPrivateAppResource struct {
 // NPAPrivateAppResourceModel describes the resource data model.
 type NPAPrivateAppResourceModel struct {
 	AllowUnauthenticatedCors types.Bool              `tfsdk:"allow_unauthenticated_cors"`
-	AllowURIBypass           types.Bool              `tfsdk:"allow_uri_bypass"`
-	BypassUris               []types.String          `tfsdk:"bypass_uris"`
 	ClientlessAccess         types.Bool              `tfsdk:"clientless_access"`
 	IsUserPortalApp          types.Bool              `tfsdk:"is_user_portal_app"`
-	ModifiedBy               types.String            `tfsdk:"modified_by"`
-	ModifyTime               types.String            `tfsdk:"modify_time"`
 	PrivateAppHostname       types.String            `tfsdk:"private_app_hostname"`
 	PrivateAppID             types.Int32             `tfsdk:"private_app_id"`
 	PrivateAppName           types.String            `tfsdk:"private_app_name"`
 	PrivateAppProtocol       types.String            `tfsdk:"private_app_protocol"`
 	Protocols                []tfTypes.ProtocolItem  `tfsdk:"protocols"`
-	PublicHost               types.String            `tfsdk:"public_host"`
 	Publishers               []tfTypes.PublisherItem `tfsdk:"publishers"`
 	RealHost                 types.String            `tfsdk:"real_host"`
-	SupplementDNSForOsx      types.Bool              `tfsdk:"supplement_dns_for_osx"`
 	Tags                     []tfTypes.TagItem       `tfsdk:"tags"`
 	TrustSelfSignedCerts     types.Bool              `tfsdk:"trust_self_signed_certs"`
-	UribypassHeaderValue     types.String            `tfsdk:"uribypass_header_value"`
 	UsePublisherDNS          types.Bool              `tfsdk:"use_publisher_dns"`
 }
 
@@ -79,21 +68,6 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Default:     booldefault.StaticBool(false),
 				Description: `Default: false`,
 			},
-			"allow_uri_bypass": schema.BoolAttribute{
-				Computed: true,
-				Optional: true,
-				PlanModifiers: []planmodifier.Bool{
-					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-				},
-			},
-			"bypass_uris": schema.ListAttribute{
-				Computed: true,
-				Optional: true,
-				PlanModifiers: []planmodifier.List{
-					speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-				},
-				ElementType: types.StringType,
-			},
 			"clientless_access": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
@@ -106,27 +80,12 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Default:     booldefault.StaticBool(false),
 				Description: `Default: false`,
 			},
-			"modified_by": schema.StringAttribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.String{
-					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-				},
-			},
-			"modify_time": schema.StringAttribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.String{
-					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-				},
-			},
 			"private_app_hostname": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
 			},
 			"private_app_id": schema.Int32Attribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.Int32{
-					speakeasy_int32planmodifier.SuppressDiff(speakeasy_int32planmodifier.ExplicitSuppress),
-				},
+				Computed:    true,
 				Description: `private apps id`,
 			},
 			"private_app_name": schema.StringAttribute{
@@ -155,20 +114,6 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 						speakeasy_objectvalidators.NotNull(),
 					},
 					Attributes: map[string]schema.Attribute{
-						"created_at": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.String{
-								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-							},
-						},
-						"id": schema.Int32Attribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.Int32{
-								speakeasy_int32planmodifier.SuppressDiff(speakeasy_int32planmodifier.ExplicitSuppress),
-							},
-						},
 						"port": schema.StringAttribute{
 							Computed: true,
 							Optional: true,
@@ -184,27 +129,7 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 								),
 							},
 						},
-						"service_id": schema.Int32Attribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.Int32{
-								speakeasy_int32planmodifier.SuppressDiff(speakeasy_int32planmodifier.ExplicitSuppress),
-							},
-						},
-						"updated_at": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.String{
-								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-							},
-						},
 					},
-				},
-			},
-			"public_host": schema.StringAttribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.String{
-					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 			},
 			"publishers": schema.ListNestedAttribute{
@@ -253,38 +178,20 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Computed: true,
 				Optional: true,
 			},
-			"supplement_dns_for_osx": schema.BoolAttribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.Bool{
-					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-				},
-			},
 			"tags": schema.ListNestedAttribute{
 				Computed: true,
 				Optional: true,
-				PlanModifiers: []planmodifier.List{
-					speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-				},
 				NestedObject: schema.NestedAttributeObject{
 					Validators: []validator.Object{
 						speakeasy_objectvalidators.NotNull(),
 					},
-					PlanModifiers: []planmodifier.Object{
-						speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
-					},
 					Attributes: map[string]schema.Attribute{
 						"tag_id": schema.Int32Attribute{
 							Computed: true,
-							PlanModifiers: []planmodifier.Int32{
-								speakeasy_int32planmodifier.SuppressDiff(speakeasy_int32planmodifier.ExplicitSuppress),
-							},
 						},
 						"tag_name": schema.StringAttribute{
 							Computed: true,
 							Optional: true,
-							PlanModifiers: []planmodifier.String{
-								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-							},
 						},
 					},
 				},
@@ -294,13 +201,6 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Optional:    true,
 				Default:     booldefault.StaticBool(false),
 				Description: `Default: false`,
-			},
-			"uribypass_header_value": schema.StringAttribute{
-				Computed: true,
-				Optional: true,
-				PlanModifiers: []planmodifier.String{
-					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-				},
 			},
 			"use_publisher_dns": schema.BoolAttribute{
 				Computed:    true,

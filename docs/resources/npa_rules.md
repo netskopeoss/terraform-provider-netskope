@@ -28,15 +28,6 @@ resource "netskope_npa_rules" "my_nparules" {
     device_classification_id = [
       9
     ]
-    dlp_actions = [
-      {
-        actions = [
-          "bypass"
-        ]
-        dlp_profile = "Payment Card"
-      }
-    ]
-    external_dlp = true
     json_version = 3
     match_criteria_action = {
       action_name = "allow"
@@ -48,7 +39,7 @@ resource "netskope_npa_rules" "my_nparules" {
       "..."
     ]
     periodic_reauth = {
-      reauth_interval      = 60
+      reauth_interval      = "60"
       reauth_interval_unit = "hours"
     }
     policy_type = "private-app"
@@ -61,37 +52,7 @@ resource "netskope_npa_rules" "my_nparules" {
     private_apps = [
       "..."
     ]
-    private_apps_with_activities = [
-      {
-        activities = [
-          {
-            activity = "any"
-            list_of_constraints = [
-              "..."
-            ]
-          }
-        ]
-        app_name = "[172.31.12.135]"
-      }
-    ]
-    show_dlp_profile_action_table = true
     src_countries = [
-      "..."
-    ]
-    tss_actions = [
-      {
-        actions = [
-          {
-            action_name         = "allow"
-            remediation_profile = "...my_remediation_profile..."
-            severity            = "low"
-            template            = "...my_template..."
-          }
-        ]
-        tss_profile = "...my_tss_profile..."
-      }
-    ]
-    tss_profile = [
       "..."
     ]
     user_groups = [
@@ -144,8 +105,6 @@ Optional:
 - `b_negate_src_countries` (Boolean) Default: false
 - `classification` (String)
 - `device_classification_id` (List of Number)
-- `dlp_actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--dlp_actions))
-- `external_dlp` (Boolean) Default: false
 - `json_version` (Number) Default: 3
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
 - `net_location_obj` (List of String)
@@ -155,24 +114,11 @@ Optional:
 - `private_app_tag_ids` (List of String)
 - `private_app_tags` (List of String)
 - `private_apps` (List of String)
-- `private_apps_with_activities` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--private_apps_with_activities))
-- `show_dlp_profile_action_table` (Boolean) Default: false
 - `src_countries` (List of String)
-- `tss_actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--tss_actions))
-- `tss_profile` (List of String)
 - `user_groups` (List of String)
 - `user_type` (String) must be "user"
 - `users` (List of String)
 - `version` (Number)
-
-<a id="nestedatt--rule_data--dlp_actions"></a>
-### Nested Schema for `rule_data.dlp_actions`
-
-Optional:
-
-- `actions` (List of String)
-- `dlp_profile` (String)
-
 
 <a id="nestedatt--rule_data--match_criteria_action"></a>
 ### Nested Schema for `rule_data.match_criteria_action`
@@ -189,44 +135,6 @@ Optional:
 
 - `reauth_interval` (String)
 - `reauth_interval_unit` (String)
-
-
-<a id="nestedatt--rule_data--private_apps_with_activities"></a>
-### Nested Schema for `rule_data.private_apps_with_activities`
-
-Optional:
-
-- `activities` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--private_apps_with_activities--activities))
-- `app_name` (String)
-
-<a id="nestedatt--rule_data--private_apps_with_activities--activities"></a>
-### Nested Schema for `rule_data.private_apps_with_activities.activities`
-
-Optional:
-
-- `activity` (String) must be "any"
-- `list_of_constraints` (List of String)
-
-
-
-<a id="nestedatt--rule_data--tss_actions"></a>
-### Nested Schema for `rule_data.tss_actions`
-
-Optional:
-
-- `actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--tss_actions--actions))
-- `tss_profile` (String)
-
-<a id="nestedatt--rule_data--tss_actions--actions"></a>
-### Nested Schema for `rule_data.tss_actions.actions`
-
-Optional:
-
-- `action_name` (String) must be one of ["block", "alert", "allow"]
-- `remediation_profile` (String)
-- `severity` (String) must be one of ["low", "medium", "high"]
-- `template` (String)
-
 
 
 
