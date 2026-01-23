@@ -5,6 +5,7 @@
 # Speakeasy temp files
 **/.speakeasy/temp/
 **/.speakeasy/logs/
+**/.speakeasy/*.lock
 *.speakeasy/
 # Terraform
 .terraform
