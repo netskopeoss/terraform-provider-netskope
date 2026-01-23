@@ -168,11 +168,10 @@ generatedFiles:
   - internal/provider/types/publishers_get_response_publishers.go
   - internal/provider/types/publishers_host_os_version_get_response_data.go
   - internal/provider/types/publishers_private_apps_response_data.go
+  - internal/provider/types/publishers_private_apps_response_reachability.go
   - internal/provider/types/release_item.go
   - internal/provider/types/response_body.go
   - internal/provider/types/rule_order.go
-  - internal/provider/types/service_publisher_assignment_item.go
-  - internal/provider/types/service_publisher_assignment_item_reachability.go
   - internal/provider/types/tag_item.go
   - internal/provider/types/upgrade_profiles.go
   - internal/provider/types/upgrade_publisher_response.go
@@ -1306,7 +1305,7 @@ trackedFiles:
   internal/provider/types/publisher_bulk_item.go:
     last_write_checksum: sha1:a3d64c95f53e8c888c2cd66f91b4e159f5468675
   internal/provider/types/publisher_item.go:
-    last_write_checksum: sha1:8f4dfdc903d1d82ac23cacc377dd8de907a535ad
+    last_write_checksum: sha1:abb36fb5e85b50d1675e510ce1eb539cf1a34a8f
   internal/provider/types/publisher_response_assessment.go:
     last_write_checksum: sha1:4f1ebc15f902163f21b749962436fbf22666f2db
   internal/provider/types/publisher_response_ca_certs_status.go:
@@ -1347,10 +1346,6 @@ trackedFiles:
     last_write_checksum: sha1:f30b471ce53012d9ce222ff1297ac0f037454faa
   internal/provider/types/rule_order.go:
     last_write_checksum: sha1:55c8cddd28dcbe02cf882c25111b6bb15f123526
-  internal/provider/types/service_publisher_assignment_item.go:
-    last_write_checksum: sha1:0ca7435fb5f63a80f3af28cc530e075cd141a23d
-  internal/provider/types/service_publisher_assignment_item_reachability.go:
-    last_write_checksum: sha1:4dbafca2756f1be7123ed557432add83e5b345c3
   internal/provider/types/tag_item.go:
     last_write_checksum: sha1:77d89f6c08c192be1a3f239759358a6792d5f533
   internal/provider/types/upgrade_profiles.go:
@@ -1568,7 +1563,7 @@ trackedFiles:
   internal/sdk/models/shared/security.go:
     last_write_checksum: sha1:aead84d8e3563265fe82e536f2389bb336bb67ba
   internal/sdk/models/shared/servicepublisherassignmentitem.go:
-    last_write_checksum: sha1:ea382934637fe4a387c240acc81505b052dab269
+    last_write_checksum: sha1:2f0da031a21607b8c3feca83512e86b1966384ec
   internal/sdk/models/shared/statusenum.go:
     last_write_checksum: sha1:7dcf268445983f8cd2d504e0470c03f3d11cfd26
   internal/sdk/models/shared/tagitem.go:

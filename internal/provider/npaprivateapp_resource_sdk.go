@@ -48,28 +48,13 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsItem(ctx contex
 		}
 		for publishersCount, publishersItem := range resp.Publishers {
 			var publishers tfTypes.PublisherItem
-			publishersPriorData := publishers
-			publishers.Primary = types.BoolPointerValue(publishersItem.Primary)
-			publishers.PublisherExternalID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.PublisherExternalID))
-			publishers.PublisherID = publishersPriorData.PublisherID
+			publishers.PublisherID = types.StringPointerValue(publishersItem.PublisherID)
 			publishers.PublisherName = types.StringPointerValue(publishersItem.PublisherName)
-			if publishersItem.Reachability == nil {
-				publishers.Reachability = nil
-			} else {
-				publishers.Reachability = &tfTypes.ServicePublisherAssignmentItemReachability{}
-				publishers.Reachability.ErrorCode = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.Reachability.ErrorCode))
-				publishers.Reachability.ErrorString = types.StringPointerValue(publishersItem.Reachability.ErrorString)
-				publishers.Reachability.Reachable = types.BoolPointerValue(publishersItem.Reachability.Reachable)
-			}
-			publishers.ServiceExternalID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.ServiceExternalID))
 			if publishersCount+1 > len(r.Publishers) {
 				r.Publishers = append(r.Publishers, publishers)
 			} else {
-				r.Publishers[publishersCount].Primary = publishers.Primary
-				r.Publishers[publishersCount].PublisherExternalID = publishers.PublisherExternalID
+				r.Publishers[publishersCount].PublisherID = publishers.PublisherID
 				r.Publishers[publishersCount].PublisherName = publishers.PublisherName
-				r.Publishers[publishersCount].Reachability = publishers.Reachability
-				r.Publishers[publishersCount].ServiceExternalID = publishers.ServiceExternalID
 			}
 		}
 		r.RealHost = types.StringPointerValue(resp.RealHost)

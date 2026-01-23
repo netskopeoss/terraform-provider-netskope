@@ -112,30 +112,11 @@ func (r *NPAPublisherAppsListDataSource) Schema(ctx context.Context, req datasou
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
-									"primary": schema.BoolAttribute{
-										Computed: true,
-									},
-									"publisher_external_id": schema.Int32Attribute{
-										Computed: true,
+									"publisher_id": schema.StringAttribute{
+										Computed:    true,
+										Description: `Publisher ID used for assignment`,
 									},
 									"publisher_name": schema.StringAttribute{
-										Computed: true,
-									},
-									"reachability": schema.SingleNestedAttribute{
-										Computed: true,
-										Attributes: map[string]schema.Attribute{
-											"error_code": schema.Int32Attribute{
-												Computed: true,
-											},
-											"error_string": schema.StringAttribute{
-												Computed: true,
-											},
-											"reachable": schema.BoolAttribute{
-												Computed: true,
-											},
-										},
-									},
-									"service_external_id": schema.Int32Attribute{
 										Computed: true,
 									},
 								},

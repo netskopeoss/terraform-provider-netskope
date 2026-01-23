@@ -18,11 +18,11 @@ type myAppResponse struct {
 
 var (
 	_                  afterSuccessHook = (*myAppResponse)(nil)
-	myAppResponseDebug bool             = true
+	myAppResponseDebug bool             = false
 )
 
 func (i *myAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
-	if hookCtx.OperationID == "createNPAPrivateApps" || hookCtx.OperationID == "getNPAPrivateApp" {
+	if hookCtx.OperationID == "createNPAPrivateApps" || hookCtx.OperationID == "getNPAPrivateApp" || hookCtx.OperationID == "updateNPAPrivateApp" {
 		if myAppResponseDebug {
 			log.Print("Executing AfterSucess single app hook....")
 		}
@@ -56,6 +56,24 @@ func (i *myAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
 				responseMap.Data.Protocols[i].Type = responseMap.Data.Protocols[i].Transport
 				if myAppResponseDebug {
 					log.Printf("Copied transport '%s' to type for protocol at index %d", responseMap.Data.Protocols[i].Transport, i)
+				}
+			}
+		}
+
+		// Convert publisher_id from integer to string (API returns int, SDK expects string)
+		for i := range responseMap.Data.ServicePublisherAssignments {
+			if responseMap.Data.ServicePublisherAssignments[i].PublisherID != nil {
+				switch v := responseMap.Data.ServicePublisherAssignments[i].PublisherID.(type) {
+				case float64:
+					responseMap.Data.ServicePublisherAssignments[i].PublisherID = fmt.Sprintf("%.0f", v)
+					if myAppResponseDebug {
+						log.Printf("Converted publisher_id from float64 to string: %s", responseMap.Data.ServicePublisherAssignments[i].PublisherID)
+					}
+				case int:
+					responseMap.Data.ServicePublisherAssignments[i].PublisherID = fmt.Sprintf("%d", v)
+					if myAppResponseDebug {
+						log.Printf("Converted publisher_id from int to string: %s", responseMap.Data.ServicePublisherAssignments[i].PublisherID)
+					}
 				}
 			}
 		}

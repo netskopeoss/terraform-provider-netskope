@@ -140,12 +140,6 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 						speakeasy_objectvalidators.NotNull(),
 					},
 					Attributes: map[string]schema.Attribute{
-						"primary": schema.BoolAttribute{
-							Computed: true,
-						},
-						"publisher_external_id": schema.Int32Attribute{
-							Computed: true,
-						},
 						"publisher_id": schema.StringAttribute{
 							Computed: true,
 							Optional: true,
@@ -153,23 +147,6 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 						"publisher_name": schema.StringAttribute{
 							Computed: true,
 							Optional: true,
-						},
-						"reachability": schema.SingleNestedAttribute{
-							Computed: true,
-							Attributes: map[string]schema.Attribute{
-								"error_code": schema.Int32Attribute{
-									Computed: true,
-								},
-								"error_string": schema.StringAttribute{
-									Computed: true,
-								},
-								"reachable": schema.BoolAttribute{
-									Computed: true,
-								},
-							},
-						},
-						"service_external_id": schema.Int32Attribute{
-							Computed: true,
 						},
 					},
 				},
