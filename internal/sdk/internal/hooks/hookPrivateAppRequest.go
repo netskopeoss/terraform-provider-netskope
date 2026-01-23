@@ -17,7 +17,7 @@ type privateAppRequestHook struct{}
 
 var (
 	_                      beforeRequestHook = (*privateAppRequestHook)(nil)
-	privateAppRequestDebug bool              = false
+	privateAppRequestDebug bool              = false // Enable to debug hook execution
 )
 
 func (i *privateAppRequestHook) BeforeRequest(hookCtx BeforeRequestContext, req *http.Request) (*http.Request, error) {
@@ -46,10 +46,24 @@ func (i *privateAppRequestHook) BeforeRequest(hookCtx BeforeRequestContext, req 
 		return nil, fmt.Errorf("unable to unmarshal request: %v", err)
 	}
 
+	// Remove app_option when clientless_access is false
+	// The API rejects app_option for non-clientless (regular client) apps with error:
+	// "App_option is only available for non-web browser access"
+	clientlessAccess, hasClientless := requestMap["clientless_access"].(bool)
+	if !hasClientless || !clientlessAccess {
+		// Not a clientless app - remove app_option entirely
+		if _, exists := requestMap["app_option"]; exists {
+			if privateAppRequestDebug {
+				log.Print("Removing app_option (clientless_access is false)")
+			}
+			delete(requestMap, "app_option")
+		}
+	}
+
 	// Remove problematic empty fields that cause API errors
 	// These fields cause "Object of type bytes is not JSON serializable" errors
 	// when empty on the API backend
-	fieldsToRemove := []string{"app_option", "paths"}
+	fieldsToRemove := []string{"paths"}
 	for _, field := range fieldsToRemove {
 		if val, exists := requestMap[field]; exists {
 			// Remove if nil, empty object, or empty array
@@ -64,6 +78,18 @@ func (i *privateAppRequestHook) BeforeRequest(hookCtx BeforeRequestContext, req 
 				if len(v) == 0 {
 					delete(requestMap, field)
 				}
+			}
+		}
+	}
+
+	// Also remove empty app_option even for clientless apps (prevents serialization errors)
+	if val, exists := requestMap["app_option"]; exists {
+		switch v := val.(type) {
+		case nil:
+			delete(requestMap, "app_option")
+		case map[string]interface{}:
+			if len(v) == 0 {
+				delete(requestMap, "app_option")
 			}
 		}
 	}

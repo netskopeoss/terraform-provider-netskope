@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
-  docChecksum: 652c1674fbabd53c095f7875fd4da63f
+  docChecksum: f2d9b323355012849b1bd02de0434c3e
   docVersion: 1.0.0
   speakeasyVersion: 1.583.0
   generationVersion: 2.658.3
-  releaseVersion: 0.3.5
-  configChecksum: 48ab5de9b183f099286903b6ca60bad5
+  releaseVersion: 0.3.8
+  configChecksum: 168b710089482b022856a3847aade18c
   published: true
 features:
   terraform:
@@ -168,11 +168,10 @@ generatedFiles:
   - internal/provider/types/publishers_get_response_publishers.go
   - internal/provider/types/publishers_host_os_version_get_response_data.go
   - internal/provider/types/publishers_private_apps_response_data.go
+  - internal/provider/types/publishers_private_apps_response_reachability.go
   - internal/provider/types/release_item.go
   - internal/provider/types/response_body.go
   - internal/provider/types/rule_order.go
-  - internal/provider/types/service_publisher_assignment_item.go
-  - internal/provider/types/service_publisher_assignment_item_reachability.go
   - internal/provider/types/tag_item.go
   - internal/provider/types/upgrade_profiles.go
   - internal/provider/types/upgrade_publisher_response.go
@@ -1154,21 +1153,21 @@ trackedFiles:
   internal/provider/npapolicygroupslist_data_source_sdk.go:
     last_write_checksum: sha1:e52c35c42367ecc3e2ec0abf1a2aa6a6596c9054
   internal/provider/npaprivateapp_data_source.go:
-    last_write_checksum: sha1:f63bc3069d64deed0f7143a5061186e4b7b3081c
+    last_write_checksum: sha1:6a2970cc62fe107fdb796f604318789624d95b3d
   internal/provider/npaprivateapp_data_source_sdk.go:
-    last_write_checksum: sha1:7b6d514793c48ab2750ca7ab53ab7f32d11267f3
+    last_write_checksum: sha1:db598ea3ef856ecd96a80f8c23dda10b6b0c1e65
   internal/provider/npaprivateapp_resource.go:
-    last_write_checksum: sha1:fe55431d021dc434d11a2a3126dfe195a7bc065e
+    last_write_checksum: sha1:d05f9ff51ebc7a9bfd0a1a53d17e68ab4c17051a
   internal/provider/npaprivateapp_resource_sdk.go:
-    last_write_checksum: sha1:789da64aca87de6dd6eddd5e2314b2a65289c5af
+    last_write_checksum: sha1:a4c36e641e9174ba026eaf74bb75a6b74d933e09
   internal/provider/npaprivateapppublichost_resource.go:
     last_write_checksum: sha1:caa1df402aa7e361df48949eb67b94849075bd8d
   internal/provider/npaprivateapppublichost_resource_sdk.go:
     last_write_checksum: sha1:98cfac27a0eb8eda1cbba7467278d1ad8ee5e85f
   internal/provider/npaprivateappslist_data_source.go:
-    last_write_checksum: sha1:591c65922bd6b483e2ca5bb7ec295ca6fbe84d46
+    last_write_checksum: sha1:355d8e093bc60248c9d3a74f656003ef20e10475
   internal/provider/npaprivateappslist_data_source_sdk.go:
-    last_write_checksum: sha1:c70c5654a825b08d2a3a9965592acb05b18bc198
+    last_write_checksum: sha1:23a91c88d881e5a38ef0541f25d407d3aa1033c4
   internal/provider/npaprivatepolicyinuse_data_source.go:
     last_write_checksum: sha1:9952255700ec6b37d94f6bad931a883639185414
   internal/provider/npaprivatepolicyinuse_data_source_sdk.go:
@@ -1182,9 +1181,9 @@ trackedFiles:
   internal/provider/npapublisher_resource_sdk.go:
     last_write_checksum: sha1:2ba28e29736008e0e08832c38587d179d23fc866
   internal/provider/npapublisherappslist_data_source.go:
-    last_write_checksum: sha1:e1a76245b48c1f326b20a22e6789c49b6b4c18d5
+    last_write_checksum: sha1:bfda88eccf92d3dec1a5a07f958980b06d1d34bc
   internal/provider/npapublisherappslist_data_source_sdk.go:
-    last_write_checksum: sha1:7d1a7f98c064bb85018d46db9368a58c9a772fb8
+    last_write_checksum: sha1:4bf30d32233c681c3c5a7cf9789394255a617be1
   internal/provider/npapublishersalertsconfiguration_data_source.go:
     last_write_checksum: sha1:65e73a02b657bea59b773210563f17bd24987da2
   internal/provider/npapublishersalertsconfiguration_data_source_sdk.go:
@@ -1300,13 +1299,13 @@ trackedFiles:
   internal/provider/types/npa_policygroup_response_item.go:
     last_write_checksum: sha1:05e7ce1778560493ba57558b93cb579f52be1094
   internal/provider/types/private_apps_item.go:
-    last_write_checksum: sha1:f907eadaff41faa072e0c4afe13dd23fc9927a7e
+    last_write_checksum: sha1:6a142c1aa3265541f6710f6fcd0b30e2116021f3
   internal/provider/types/protocol_item.go:
     last_write_checksum: sha1:b30b1bf37853a97ef0acf905c04b99c4241f2ad5
   internal/provider/types/publisher_bulk_item.go:
     last_write_checksum: sha1:a3d64c95f53e8c888c2cd66f91b4e159f5468675
   internal/provider/types/publisher_item.go:
-    last_write_checksum: sha1:8f4dfdc903d1d82ac23cacc377dd8de907a535ad
+    last_write_checksum: sha1:abb36fb5e85b50d1675e510ce1eb539cf1a34a8f
   internal/provider/types/publisher_response_assessment.go:
     last_write_checksum: sha1:4f1ebc15f902163f21b749962436fbf22666f2db
   internal/provider/types/publisher_response_ca_certs_status.go:
@@ -1340,17 +1339,15 @@ trackedFiles:
   internal/provider/types/publishers_host_os_version_get_response_data.go:
     last_write_checksum: sha1:156d5b6beac826243afc00b8addb25fa46d2dead
   internal/provider/types/publishers_private_apps_response_data.go:
-    last_write_checksum: sha1:8a728c92979af6cc5b414d0bdbe29d1aea738064
+    last_write_checksum: sha1:3e72fc8d25cc62c13f760cb2a40b149c5bc13643
+  internal/provider/types/publishers_private_apps_response_reachability.go:
+    last_write_checksum: sha1:58dacf8aa896169198e4b717da045f5c59825ec8
   internal/provider/types/release_item.go:
     last_write_checksum: sha1:ec7255fa8644cc8e6d8f7b67b0300cd7414a6888
   internal/provider/types/response_body.go:
     last_write_checksum: sha1:f30b471ce53012d9ce222ff1297ac0f037454faa
   internal/provider/types/rule_order.go:
     last_write_checksum: sha1:55c8cddd28dcbe02cf882c25111b6bb15f123526
-  internal/provider/types/service_publisher_assignment_item.go:
-    last_write_checksum: sha1:0ca7435fb5f63a80f3af28cc530e075cd141a23d
-  internal/provider/types/service_publisher_assignment_item_reachability.go:
-    last_write_checksum: sha1:4dbafca2756f1be7123ed557432add83e5b345c3
   internal/provider/types/tag_item.go:
     last_write_checksum: sha1:77d89f6c08c192be1a3f239759358a6792d5f533
   internal/provider/types/upgrade_profiles.go:
@@ -1568,7 +1565,7 @@ trackedFiles:
   internal/sdk/models/shared/security.go:
     last_write_checksum: sha1:aead84d8e3563265fe82e536f2389bb336bb67ba
   internal/sdk/models/shared/servicepublisherassignmentitem.go:
-    last_write_checksum: sha1:ea382934637fe4a387c240acc81505b052dab269
+    last_write_checksum: sha1:2f0da031a21607b8c3feca83512e86b1966384ec
   internal/sdk/models/shared/statusenum.go:
     last_write_checksum: sha1:7dcf268445983f8cd2d504e0470c03f3d11cfd26
   internal/sdk/models/shared/tagitem.go:
