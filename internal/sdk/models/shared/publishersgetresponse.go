@@ -34,6 +34,7 @@ type PublishersGetResponseAssessment struct {
 	IPAddress     *string                             `json:"ip_address,omitempty"`
 	Latency       *int                                `json:"latency,omitempty"`
 	Version       *string                             `json:"version,omitempty"`
+	HostOsVersion *string                             `json:"host_os_version,omitempty"`
 }
 
 func (o *PublishersGetResponseAssessment) GetCaCertsStatus() *PublishersGetResponseCaCertsStatus {
@@ -83,6 +84,13 @@ func (o *PublishersGetResponseAssessment) GetVersion() *string {
 		return nil
 	}
 	return o.Version
+}
+
+func (o *PublishersGetResponseAssessment) GetHostOsVersion() *string {
+	if o == nil {
+		return nil
+	}
+	return o.HostOsVersion
 }
 
 type PublishersGetResponsePullNsconfig struct {
@@ -147,11 +155,31 @@ func (o *PublishersGetResponseCapabilities) GetPullNsconfig() *PublishersGetResp
 	return o.PullNsconfig
 }
 
+type PublishersGetResponseLabels struct {
+	LabelID    *string `json:"label_id,omitempty"`
+	Permission *string `json:"permission,omitempty"`
+}
+
+func (o *PublishersGetResponseLabels) GetLabelID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.LabelID
+}
+
+func (o *PublishersGetResponseLabels) GetPermission() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Permission
+}
+
 type PublishersGetResponseDataStatus string
 
 const (
 	PublishersGetResponseDataStatusConnected     PublishersGetResponseDataStatus = "connected"
 	PublishersGetResponseDataStatusNotRegistered PublishersGetResponseDataStatus = "not registered"
+	PublishersGetResponseDataStatusDisconnected  PublishersGetResponseDataStatus = "disconnected"
 )
 
 func (e PublishersGetResponseDataStatus) ToPointer() *PublishersGetResponseDataStatus {
@@ -166,6 +194,8 @@ func (e *PublishersGetResponseDataStatus) UnmarshalJSON(data []byte) error {
 	case "connected":
 		fallthrough
 	case "not registered":
+		fallthrough
+	case "disconnected":
 		*e = PublishersGetResponseDataStatus(v)
 		return nil
 	default:
@@ -173,7 +203,7 @@ func (e *PublishersGetResponseDataStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type PublishersGetResponseTags struct {
+type Tags struct {
 }
 
 type PublishersGetResponseUpgradeFailedReason struct {
@@ -228,6 +258,7 @@ type PublishersGetResponsePublishers struct {
 	Capabilities              *PublishersGetResponseCapabilities `json:"capabilities,omitempty"`
 	CommonName                *string                            `json:"common_name,omitempty"`
 	ConnectedApps             []string                           `json:"connected_apps,omitempty"`
+	Labels                    []PublishersGetResponseLabels      `json:"labels,omitempty"`
 	Lbrokerconnect            *bool                              `json:"lbrokerconnect,omitempty"`
 	PublisherID               *int                               `json:"publisher_id,omitempty"`
 	PublisherName             *string                            `json:"publisher_name,omitempty"`
@@ -238,7 +269,7 @@ type PublishersGetResponsePublishers struct {
 	StitcherPop               *string                            `json:"stitcher_pop,omitempty"`
 	// Not used at this time - please ignore
 	//
-	Tags                []PublishersGetResponseTags               `json:"tags,omitempty"`
+	Tags                []Tags                                    `json:"tags,omitempty"`
 	UpgradeFailedReason *PublishersGetResponseUpgradeFailedReason `json:"upgrade_failed_reason,omitempty"`
 	UpgradeRequest      *bool                                     `json:"upgrade_request,omitempty"`
 	UpgradeStatus       *PublishersGetResponseUpgradeStatus       `json:"upgrade_status,omitempty"`
@@ -277,6 +308,13 @@ func (o *PublishersGetResponsePublishers) GetConnectedApps() []string {
 		return nil
 	}
 	return o.ConnectedApps
+}
+
+func (o *PublishersGetResponsePublishers) GetLabels() []PublishersGetResponseLabels {
+	if o == nil {
+		return nil
+	}
+	return o.Labels
 }
 
 func (o *PublishersGetResponsePublishers) GetLbrokerconnect() *bool {
@@ -335,7 +373,7 @@ func (o *PublishersGetResponsePublishers) GetStitcherPop() *string {
 	return o.StitcherPop
 }
 
-func (o *PublishersGetResponsePublishers) GetTags() []PublishersGetResponseTags {
+func (o *PublishersGetResponsePublishers) GetTags() []Tags {
 	if o == nil {
 		return nil
 	}

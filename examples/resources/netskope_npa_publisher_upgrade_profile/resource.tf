@@ -5,4 +5,5 @@ resource "netskope_npa_publisher_upgrade_profile" "my_npapublisherupgradeprofile
   name         = "My Upgrade Profile"
   release_type = "Latest"
   timezone     = "US/Eastern"
+  timezone_id  = 1
 }

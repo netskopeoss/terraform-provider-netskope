@@ -3,8 +3,6 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 	"net/http"
 )
@@ -21,38 +19,12 @@ func (o *DeleteNPAPrivateAppRequest) GetPrivateAppID() int {
 	return o.PrivateAppID
 }
 
-type DeleteNPAPrivateAppStatus string
-
-const (
-	DeleteNPAPrivateAppStatusSuccess DeleteNPAPrivateAppStatus = "success"
-	DeleteNPAPrivateAppStatusError   DeleteNPAPrivateAppStatus = "error"
-)
-
-func (e DeleteNPAPrivateAppStatus) ToPointer() *DeleteNPAPrivateAppStatus {
-	return &e
-}
-func (e *DeleteNPAPrivateAppStatus) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "success":
-		fallthrough
-	case "error":
-		*e = DeleteNPAPrivateAppStatus(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for DeleteNPAPrivateAppStatus: %v", v)
-	}
-}
-
 // DeleteNPAPrivateAppResponseBody - successful operation
 type DeleteNPAPrivateAppResponseBody struct {
-	Status *DeleteNPAPrivateAppStatus `json:"status,omitempty"`
+	Status *shared.StatusEnum `json:"status,omitempty"`
 }
 
-func (o *DeleteNPAPrivateAppResponseBody) GetStatus() *DeleteNPAPrivateAppStatus {
+func (o *DeleteNPAPrivateAppResponseBody) GetStatus() *shared.StatusEnum {
 	if o == nil {
 		return nil
 	}

@@ -11,14 +11,14 @@ import (
 
 type DeleteNPAPolicyGroupsRequest struct {
 	// npa policy group id
-	GroupID string `pathParam:"style=simple,explode=false,name=id"`
+	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *DeleteNPAPolicyGroupsRequest) GetGroupID() string {
+func (o *DeleteNPAPolicyGroupsRequest) GetID() string {
 	if o == nil {
 		return ""
 	}
-	return o.GroupID
+	return o.ID
 }
 
 type DeleteNPAPolicyGroupsStatus string

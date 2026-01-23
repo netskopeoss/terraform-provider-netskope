@@ -9,57 +9,36 @@ import (
 	"net/http"
 )
 
-// QueryParamSilent - flag to skip output except status code
-type QueryParamSilent string
+type CreateNPARulesStatus string
 
 const (
-	QueryParamSilentOne  QueryParamSilent = "1"
-	QueryParamSilentZero QueryParamSilent = "0"
+	CreateNPARulesStatusSuccess CreateNPARulesStatus = "success"
+	CreateNPARulesStatusError   CreateNPARulesStatus = "error"
 )
 
-func (e QueryParamSilent) ToPointer() *QueryParamSilent {
+func (e CreateNPARulesStatus) ToPointer() *CreateNPARulesStatus {
 	return &e
 }
-func (e *QueryParamSilent) UnmarshalJSON(data []byte) error {
+func (e *CreateNPARulesStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
 	switch v {
-	case "1":
+	case "success":
 		fallthrough
-	case "0":
-		*e = QueryParamSilent(v)
+	case "error":
+		*e = CreateNPARulesStatus(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for QueryParamSilent: %v", v)
+		return fmt.Errorf("invalid value for CreateNPARulesStatus: %v", v)
 	}
-}
-
-type CreateNPARulesRequest struct {
-	// flag to skip output except status code
-	Silent           *QueryParamSilent       `queryParam:"style=form,explode=true,name=silent"`
-	NpaPolicyRequest shared.NpaPolicyRequest `request:"mediaType=application/json"`
-}
-
-func (o *CreateNPARulesRequest) GetSilent() *QueryParamSilent {
-	if o == nil {
-		return nil
-	}
-	return o.Silent
-}
-
-func (o *CreateNPARulesRequest) GetNpaPolicyRequest() shared.NpaPolicyRequest {
-	if o == nil {
-		return shared.NpaPolicyRequest{}
-	}
-	return o.NpaPolicyRequest
 }
 
 // CreateNPARulesResponseBody - successful operation
 type CreateNPARulesResponseBody struct {
 	Data   *shared.NpaPolicyResponseItem `json:"data,omitempty"`
-	Status *string                       `json:"status,omitempty"`
+	Status *CreateNPARulesStatus         `json:"status,omitempty"`
 }
 
 func (o *CreateNPARulesResponseBody) GetData() *shared.NpaPolicyResponseItem {
@@ -69,7 +48,7 @@ func (o *CreateNPARulesResponseBody) GetData() *shared.NpaPolicyResponseItem {
 	return o.Data
 }
 
-func (o *CreateNPARulesResponseBody) GetStatus() *string {
+func (o *CreateNPARulesResponseBody) GetStatus() *CreateNPARulesStatus {
 	if o == nil {
 		return nil
 	}

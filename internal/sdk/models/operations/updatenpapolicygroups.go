@@ -9,53 +9,17 @@ import (
 	"net/http"
 )
 
-// UpdateNPAPolicyGroupsQueryParamSilent - flag to skip output except status code
-type UpdateNPAPolicyGroupsQueryParamSilent string
-
-const (
-	UpdateNPAPolicyGroupsQueryParamSilentOne  UpdateNPAPolicyGroupsQueryParamSilent = "1"
-	UpdateNPAPolicyGroupsQueryParamSilentZero UpdateNPAPolicyGroupsQueryParamSilent = "0"
-)
-
-func (e UpdateNPAPolicyGroupsQueryParamSilent) ToPointer() *UpdateNPAPolicyGroupsQueryParamSilent {
-	return &e
-}
-func (e *UpdateNPAPolicyGroupsQueryParamSilent) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "1":
-		fallthrough
-	case "0":
-		*e = UpdateNPAPolicyGroupsQueryParamSilent(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for UpdateNPAPolicyGroupsQueryParamSilent: %v", v)
-	}
-}
-
 type UpdateNPAPolicyGroupsRequest struct {
 	// policy group rule id
-	GroupID string `pathParam:"style=simple,explode=false,name=id"`
-	// flag to skip output except status code
-	Silent                *UpdateNPAPolicyGroupsQueryParamSilent `queryParam:"style=form,explode=true,name=silent"`
-	NpaPolicygroupRequest shared.NpaPolicygroupRequest           `request:"mediaType=application/json"`
+	ID                    string                       `pathParam:"style=simple,explode=false,name=id"`
+	NpaPolicygroupRequest shared.NpaPolicygroupRequest `request:"mediaType=application/json"`
 }
 
-func (o *UpdateNPAPolicyGroupsRequest) GetGroupID() string {
+func (o *UpdateNPAPolicyGroupsRequest) GetID() string {
 	if o == nil {
 		return ""
 	}
-	return o.GroupID
-}
-
-func (o *UpdateNPAPolicyGroupsRequest) GetSilent() *UpdateNPAPolicyGroupsQueryParamSilent {
-	if o == nil {
-		return nil
-	}
-	return o.Silent
+	return o.ID
 }
 
 func (o *UpdateNPAPolicyGroupsRequest) GetNpaPolicygroupRequest() shared.NpaPolicygroupRequest {

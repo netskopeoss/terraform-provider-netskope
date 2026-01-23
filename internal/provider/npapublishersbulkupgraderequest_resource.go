@@ -81,6 +81,9 @@ func (r *NPAPublishersBulkUpgradeRequestResource) Schema(ctx context.Context, re
 										"hdd_total": schema.StringAttribute{
 											Computed: true,
 										},
+										"host_os_version": schema.StringAttribute{
+											Computed: true,
+										},
 										"ip_address": schema.StringAttribute{
 											Computed: true,
 										},
@@ -127,6 +130,19 @@ func (r *NPAPublishersBulkUpgradeRequestResource) Schema(ctx context.Context, re
 									Computed:    true,
 									ElementType: types.StringType,
 								},
+								"labels": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"label_id": schema.StringAttribute{
+												Computed: true,
+											},
+											"permission": schema.StringAttribute{
+												Computed: true,
+											},
+										},
+									},
+								},
 								"lbrokerconnect": schema.BoolAttribute{
 									Computed: true,
 								},
@@ -144,11 +160,12 @@ func (r *NPAPublishersBulkUpgradeRequestResource) Schema(ctx context.Context, re
 								},
 								"status": schema.StringAttribute{
 									Computed:    true,
-									Description: `must be one of ["connected", "not registered"]`,
+									Description: `must be one of ["connected", "not registered", "disconnected"]`,
 									Validators: []validator.String{
 										stringvalidator.OneOf(
 											"connected",
 											"not registered",
+											"disconnected",
 										),
 									},
 								},

@@ -14,8 +14,9 @@ func (o *Data) GetPrivateApps() []PrivateAppsItem {
 }
 
 type PrivateAppsListResponse struct {
-	Data   *Data   `json:"data,omitempty"`
-	Status *string `json:"status,omitempty"`
+	Data   *Data       `json:"data,omitempty"`
+	Status *StatusEnum `json:"status,omitempty"`
+	Total  *int        `json:"total,omitempty"`
 }
 
 func (o *PrivateAppsListResponse) GetData() *Data {
@@ -25,9 +26,16 @@ func (o *PrivateAppsListResponse) GetData() *Data {
 	return o.Data
 }
 
-func (o *PrivateAppsListResponse) GetStatus() *string {
+func (o *PrivateAppsListResponse) GetStatus() *StatusEnum {
 	if o == nil {
 		return nil
 	}
 	return o.Status
+}
+
+func (o *PrivateAppsListResponse) GetTotal() *int {
+	if o == nil {
+		return nil
+	}
+	return o.Total
 }

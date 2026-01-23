@@ -38,11 +38,12 @@ type Protocol struct {
 	Port      string `json:"port"`
 	ServiceID int    `json:"service_id"`
 	Transport string `json:"transport"`
+	Type      string `json:"type"`
 	UpdatedAt string `json:"updated_at"`
 }
 type ServicePublisherAssignment struct {
 	Primary       *bool         `json:"primary"`
-	PublisherID   int           `json:"publisher_id"`
+	PublisherID   interface{}   `json:"publisher_id"`
 	PublisherName string        `json:"publisher_name"`
 	Reachability  *Reachability `json:"reachability"`
 	ServiceID     int           `json:"service_id"`

@@ -25,6 +25,7 @@ func (r *NPAPublisherUpgradeProfileDataSourceModel) RefreshFromSharedPublisherUp
 		r.PublisherUpgradeProfileID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PublisherUpgradeProfileID))
 		r.ReleaseType = types.StringPointerValue(resp.ReleaseType)
 		r.Timezone = types.StringPointerValue(resp.Timezone)
+		r.TimezoneID = types.Int64PointerValue(resp.TimezoneID)
 		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
 		r.UpgradingStage = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.UpgradingStage))
 		r.WillStart = types.BoolPointerValue(resp.WillStart)

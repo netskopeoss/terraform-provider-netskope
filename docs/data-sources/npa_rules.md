@@ -14,8 +14,7 @@ NPARules DataSource
 
 ```terraform
 data "netskope_npa_rules" "my_nparules" {
-  fields  = "...my_fields..."
-  rule_id = "...my_rule_id..."
+  id = "1"
 }
 ```
 
@@ -24,23 +23,19 @@ data "netskope_npa_rules" "my_nparules" {
 
 ### Required
 
-- `rule_id` (String) npa policy id
-
-### Optional
-
-- `fields` (String) Return values only from specified fields
+- `id` (String) npa policy id
 
 ### Read-Only
 
 - `enabled` (String)
 - `group_id` (String)
+- `group_name` (String)
 - `modify_by` (String)
 - `modify_time` (String)
 - `modify_type` (String)
 - `policy_type` (String)
 - `rule_data` (Attributes) (see [below for nested schema](#nestedatt--rule_data))
 - `rule_name` (String)
-- `status` (String)
 
 <a id="nestedatt--rule_data"></a>
 ### Nested Schema for `rule_data`
@@ -52,34 +47,20 @@ Read-Only:
 - `b_negate_src_countries` (Boolean)
 - `classification` (String)
 - `device_classification_id` (List of Number)
-- `dlp_actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--dlp_actions))
-- `external_dlp` (Boolean)
 - `json_version` (Number)
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
 - `net_location_obj` (List of String)
 - `organization_units` (List of String)
+- `periodic_reauth` (Attributes) (see [below for nested schema](#nestedatt--rule_data--periodic_reauth))
 - `policy_type` (String)
 - `private_app_tag_ids` (List of String)
 - `private_app_tags` (List of String)
 - `private_apps` (List of String)
-- `private_apps_with_activities` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--private_apps_with_activities))
-- `show_dlp_profile_action_table` (Boolean)
 - `src_countries` (List of String)
-- `tss_actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--tss_actions))
-- `tss_profile` (List of String)
 - `user_groups` (List of String)
 - `user_type` (String)
 - `users` (List of String)
 - `version` (Number)
-
-<a id="nestedatt--rule_data--dlp_actions"></a>
-### Nested Schema for `rule_data.dlp_actions`
-
-Read-Only:
-
-- `actions` (List of String)
-- `dlp_profile` (String)
-
 
 <a id="nestedatt--rule_data--match_criteria_action"></a>
 ### Nested Schema for `rule_data.match_criteria_action`
@@ -89,39 +70,10 @@ Read-Only:
 - `action_name` (String)
 
 
-<a id="nestedatt--rule_data--private_apps_with_activities"></a>
-### Nested Schema for `rule_data.private_apps_with_activities`
+<a id="nestedatt--rule_data--periodic_reauth"></a>
+### Nested Schema for `rule_data.periodic_reauth`
 
 Read-Only:
 
-- `activities` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--private_apps_with_activities--activities))
-- `app_id` (List of String)
-- `app_name` (String)
-
-<a id="nestedatt--rule_data--private_apps_with_activities--activities"></a>
-### Nested Schema for `rule_data.private_apps_with_activities.activities`
-
-Read-Only:
-
-- `activity` (String)
-- `list_of_constraints` (List of String)
-
-
-
-<a id="nestedatt--rule_data--tss_actions"></a>
-### Nested Schema for `rule_data.tss_actions`
-
-Read-Only:
-
-- `actions` (Attributes List) (see [below for nested schema](#nestedatt--rule_data--tss_actions--actions))
-- `tss_profile` (List of String)
-
-<a id="nestedatt--rule_data--tss_actions--actions"></a>
-### Nested Schema for `rule_data.tss_actions.actions`
-
-Read-Only:
-
-- `action_name` (String)
-- `remediation_profile` (String)
-- `severity` (String)
-- `template` (String)
+- `reauth_interval` (String)
+- `reauth_interval_unit` (String)

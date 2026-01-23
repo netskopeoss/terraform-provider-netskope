@@ -18,7 +18,7 @@ type myBulkAppResponse struct {
 
 var (
 	_                      afterSuccessHook = (*myBulkAppResponse)(nil)
-	myBulkAppResponseDebug bool             = true
+	myBulkAppResponseDebug bool             = false
 )
 
 func (i *myBulkAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Response) (*http.Response, error) {
@@ -50,6 +50,32 @@ func (i *myBulkAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.
 		for i := range responseMap.BulkApps.AppData {
 			oldAppNameValue := responseMap.BulkApps.AppData[i].AppName
 			responseMap.BulkApps.AppData[i].AppName = strings.Trim(oldAppNameValue, "[]")
+
+			// Copy transport to type for each protocol (API returns transport but schema uses type)
+			for j := range responseMap.BulkApps.AppData[i].Protocols {
+				if responseMap.BulkApps.AppData[i].Protocols[j].Type == "" && responseMap.BulkApps.AppData[i].Protocols[j].Transport != "" {
+					responseMap.BulkApps.AppData[i].Protocols[j].Type = responseMap.BulkApps.AppData[i].Protocols[j].Transport
+				}
+			}
+
+			// Convert publisher_id from integer to string (API returns int, SDK expects string)
+			for j := range responseMap.BulkApps.AppData[i].ServicePublisherAssignments {
+				if responseMap.BulkApps.AppData[i].ServicePublisherAssignments[j].PublisherID != nil {
+					switch v := responseMap.BulkApps.AppData[i].ServicePublisherAssignments[j].PublisherID.(type) {
+					case float64:
+						responseMap.BulkApps.AppData[i].ServicePublisherAssignments[j].PublisherID = fmt.Sprintf("%.0f", v)
+						if myBulkAppResponseDebug {
+							log.Printf("Converted publisher_id from float64 to string: %s", responseMap.BulkApps.AppData[i].ServicePublisherAssignments[j].PublisherID)
+						}
+					case int:
+						responseMap.BulkApps.AppData[i].ServicePublisherAssignments[j].PublisherID = fmt.Sprintf("%d", v)
+						if myBulkAppResponseDebug {
+							log.Printf("Converted publisher_id from int to string: %s", responseMap.BulkApps.AppData[i].ServicePublisherAssignments[j].PublisherID)
+						}
+					}
+				}
+			}
+
 			if myBulkAppResponseDebug {
 				log.Print("--------------------")
 				log.Print(responseMap.BulkApps.AppData[i].AppName)

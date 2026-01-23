@@ -30,16 +30,15 @@ type NPARulesDataSource struct {
 // NPARulesDataSourceModel describes the data model.
 type NPARulesDataSourceModel struct {
 	Enabled    types.String               `tfsdk:"enabled"`
-	Fields     types.String               `queryParam:"style=form,explode=true,name=fields" tfsdk:"fields"`
 	GroupID    types.String               `tfsdk:"group_id"`
+	GroupName  types.String               `tfsdk:"group_name"`
+	ID         types.String               `tfsdk:"id"`
 	ModifyBy   types.String               `tfsdk:"modify_by"`
 	ModifyTime types.String               `tfsdk:"modify_time"`
 	ModifyType types.String               `tfsdk:"modify_type"`
 	PolicyType types.String               `tfsdk:"policy_type"`
 	RuleData   *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
-	RuleID     types.String               `tfsdk:"rule_id"`
 	RuleName   types.String               `tfsdk:"rule_name"`
-	Status     types.String               `tfsdk:"status"`
 }
 
 // Metadata returns the data source type name.
@@ -56,12 +55,15 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"enabled": schema.StringAttribute{
 				Computed: true,
 			},
-			"fields": schema.StringAttribute{
-				Optional:    true,
-				Description: `Return values only from specified fields`,
-			},
 			"group_id": schema.StringAttribute{
 				Computed: true,
+			},
+			"group_name": schema.StringAttribute{
+				Computed: true,
+			},
+			"id": schema.StringAttribute{
+				Required:    true,
+				Description: `npa policy id`,
 			},
 			"modify_by": schema.StringAttribute{
 				Computed: true,
@@ -95,23 +97,6 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						Computed:    true,
 						ElementType: types.Int64Type,
 					},
-					"dlp_actions": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"actions": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
-								"dlp_profile": schema.StringAttribute{
-									Computed: true,
-								},
-							},
-						},
-					},
-					"external_dlp": schema.BoolAttribute{
-						Computed: true,
-					},
 					"json_version": schema.Int64Attribute{
 						Computed: true,
 					},
@@ -131,6 +116,17 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						Computed:    true,
 						ElementType: types.StringType,
 					},
+					"periodic_reauth": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"reauth_interval": schema.StringAttribute{
+								Computed: true,
+							},
+							"reauth_interval_unit": schema.StringAttribute{
+								Computed: true,
+							},
+						},
+					},
 					"policy_type": schema.StringAttribute{
 						Computed: true,
 					},
@@ -146,72 +142,7 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						Computed:    true,
 						ElementType: types.StringType,
 					},
-					"private_apps_with_activities": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"activities": schema.ListNestedAttribute{
-									Computed: true,
-									NestedObject: schema.NestedAttributeObject{
-										Attributes: map[string]schema.Attribute{
-											"activity": schema.StringAttribute{
-												Computed: true,
-											},
-											"list_of_constraints": schema.ListAttribute{
-												Computed:    true,
-												ElementType: types.StringType,
-											},
-										},
-									},
-								},
-								"app_id": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
-								"app_name": schema.StringAttribute{
-									Computed: true,
-								},
-							},
-						},
-					},
-					"show_dlp_profile_action_table": schema.BoolAttribute{
-						Computed: true,
-					},
 					"src_countries": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"tss_actions": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"actions": schema.ListNestedAttribute{
-									Computed: true,
-									NestedObject: schema.NestedAttributeObject{
-										Attributes: map[string]schema.Attribute{
-											"action_name": schema.StringAttribute{
-												Computed: true,
-											},
-											"remediation_profile": schema.StringAttribute{
-												Computed: true,
-											},
-											"severity": schema.StringAttribute{
-												Computed: true,
-											},
-											"template": schema.StringAttribute{
-												Computed: true,
-											},
-										},
-									},
-								},
-								"tss_profile": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
-							},
-						},
-					},
-					"tss_profile": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
 					},
@@ -231,14 +162,7 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					},
 				},
 			},
-			"rule_id": schema.StringAttribute{
-				Required:    true,
-				Description: `npa policy id`,
-			},
 			"rule_name": schema.StringAttribute{
-				Computed: true,
-			},
-			"status": schema.StringAttribute{
 				Computed: true,
 			},
 		},
@@ -283,13 +207,13 @@ func (r *NPARulesDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	request, requestDiags := data.ToOperationsNPARulesRequest(ctx)
+	request, requestDiags := data.ToOperationsGetNPARulesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.NPARules.Read(ctx, *request)
+	res, err := r.client.GetNPARules(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

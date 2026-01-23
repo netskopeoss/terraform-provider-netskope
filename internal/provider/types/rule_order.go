@@ -9,6 +9,6 @@ import (
 type RuleOrder struct {
 	Order    types.String `tfsdk:"order"`
 	Position types.Int64  `tfsdk:"position"`
-	RuleID   types.String `tfsdk:"rule_id"`
+	RuleID   types.Int64  `tfsdk:"rule_id"`
 	RuleName types.String `tfsdk:"rule_name"`
 }

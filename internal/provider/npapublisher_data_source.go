@@ -33,7 +33,7 @@ type NPAPublisherDataSourceModel struct {
 	Assessment                 *tfTypes.PublisherResponseAssessment          `tfsdk:"assessment"`
 	Capabilities               *tfTypes.PublisherResponseCapabilities        `tfsdk:"capabilities"`
 	CommonName                 types.String                                  `tfsdk:"common_name"`
-	ConnectedApps              []types.String                                `tfsdk:"connected_apps"`
+	Labels                     []tfTypes.PublisherResponseLabels             `tfsdk:"labels"`
 	Lbrokerconnect             types.Bool                                    `tfsdk:"lbrokerconnect"`
 	PublisherID                types.Int32                                   `tfsdk:"publisher_id"`
 	PublisherName              types.String                                  `tfsdk:"publisher_name"`
@@ -85,6 +85,9 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 					"hdd_total": schema.StringAttribute{
 						Computed: true,
 					},
+					"host_os_version": schema.StringAttribute{
+						Computed: true,
+					},
 					"ip_address": schema.StringAttribute{
 						Computed: true,
 					},
@@ -127,9 +130,18 @@ func (r *NPAPublisherDataSource) Schema(ctx context.Context, req datasource.Sche
 			"common_name": schema.StringAttribute{
 				Computed: true,
 			},
-			"connected_apps": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
+			"labels": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"label_id": schema.StringAttribute{
+							Computed: true,
+						},
+						"permission": schema.StringAttribute{
+							Computed: true,
+						},
+					},
+				},
 			},
 			"lbrokerconnect": schema.BoolAttribute{
 				Computed: true,

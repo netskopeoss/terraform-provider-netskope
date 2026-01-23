@@ -13,6 +13,7 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 	"net/http"
+	"os"
 )
 
 var _ provider.Provider = (*NetskopeProvider)(nil)
@@ -40,7 +41,7 @@ func (p *NetskopeProvider) Schema(ctx context.Context, req provider.SchemaReques
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"api_key": schema.StringAttribute{
-				Required:  true,
+				Optional:  true,
 				Sensitive: true,
 			},
 			"server_url": schema.StringAttribute{
@@ -63,6 +64,9 @@ func (p *NetskopeProvider) Configure(ctx context.Context, req provider.Configure
 
 	ServerURL := data.ServerURL.ValueString()
 
+	if ServerURL == "" && len(os.Getenv("NETSKOPE_SERVER_URL")) > 0 {
+		ServerURL = os.Getenv("NETSKOPE_SERVER_URL")
+	}
 	if ServerURL == "" {
 		ServerURL = "https://{tenant}.goskope.com/api/v2"
 	}
@@ -73,10 +77,14 @@ func (p *NetskopeProvider) Configure(ctx context.Context, req provider.Configure
 		security.APIKey = data.APIKey.ValueString()
 	}
 
+	if apiKeyEnvVar := os.Getenv("NETSKOPE_API_KEY"); security.APIKey == "" && apiKeyEnvVar != "" {
+		security.APIKey = apiKeyEnvVar
+	}
+
 	if security.APIKey == "" {
 		resp.Diagnostics.AddError(
 			"Missing Provider Security Configuration",
-			"Provider configuration api_key attribute must be configured.",
+			"Either the environment variable NETSKOPE_API_KEY or provider configuration api_key attribute must be configured.",
 		)
 	}
 
@@ -104,6 +112,7 @@ func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Reso
 	return []func() resource.Resource{
 		NewNPAPolicyGroupsResource,
 		NewNPAPrivateAppResource,
+		NewNPAPrivateAppPublicHostResource,
 		NewNPAPublisherResource,
 		NewNPAPublishersAlertsConfigurationResource,
 		NewNPAPublishersBulkProfileUpdatesResource,
@@ -124,6 +133,7 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 		NewNPAPublisherDataSource,
 		NewNPAPublisherAppsListDataSource,
 		NewNPAPublishersAlertsConfigurationDataSource,
+		NewNPAPublishersHostOsVersionsDataSource,
 		NewNPAPublishersListDataSource,
 		NewNPAPublishersReleasesListDataSource,
 		NewNPAPublisherUpgradeProfileDataSource,

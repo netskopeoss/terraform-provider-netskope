@@ -4,13 +4,14 @@ package shared
 
 type NpaPolicyResponseItem struct {
 	Enabled    *string            `json:"enabled,omitempty"`
+	GroupID    *string            `json:"group_id,omitempty"`
+	GroupName  *string            `json:"group_name,omitempty"`
 	ModifyBy   *string            `json:"modify_by,omitempty"`
 	ModifyTime *string            `json:"modify_time,omitempty"`
 	ModifyType *string            `json:"modify_type,omitempty"`
 	PolicyType *string            `json:"policy_type,omitempty"`
-	GroupID    *string            `json:"group_id,omitempty"`
 	RuleData   *NpaPolicyRuleData `json:"rule_data,omitempty"`
-	RuleID     *string            `json:"rule_id,omitempty"`
+	ID         *string            `json:"rule_id,omitempty"`
 	RuleName   *string            `json:"rule_name,omitempty"`
 }
 
@@ -19,6 +20,20 @@ func (o *NpaPolicyResponseItem) GetEnabled() *string {
 		return nil
 	}
 	return o.Enabled
+}
+
+func (o *NpaPolicyResponseItem) GetGroupID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.GroupID
+}
+
+func (o *NpaPolicyResponseItem) GetGroupName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.GroupName
 }
 
 func (o *NpaPolicyResponseItem) GetModifyBy() *string {
@@ -49,13 +64,6 @@ func (o *NpaPolicyResponseItem) GetPolicyType() *string {
 	return o.PolicyType
 }
 
-func (o *NpaPolicyResponseItem) GetGroupID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupID
-}
-
 func (o *NpaPolicyResponseItem) GetRuleData() *NpaPolicyRuleData {
 	if o == nil {
 		return nil
@@ -63,11 +71,11 @@ func (o *NpaPolicyResponseItem) GetRuleData() *NpaPolicyRuleData {
 	return o.RuleData
 }
 
-func (o *NpaPolicyResponseItem) GetRuleID() *string {
+func (o *NpaPolicyResponseItem) GetID() *string {
 	if o == nil {
 		return nil
 	}
-	return o.RuleID
+	return o.ID
 }
 
 func (o *NpaPolicyResponseItem) GetRuleName() *string {

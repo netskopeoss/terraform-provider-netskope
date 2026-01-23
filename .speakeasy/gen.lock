@@ -1,12 +1,13 @@
 lockVersion: 2.0.0
 id: f565e43d-f52d-4d56-a894-ca720af67426
 management:
-  docChecksum: d8cbe09a44e9171a1e1f7e57a5799ca9
+  docChecksum: 652c1674fbabd53c095f7875fd4da63f
   docVersion: 1.0.0
   speakeasyVersion: 1.583.0
   generationVersion: 2.658.3
-  releaseVersion: 0.3.2
-  configChecksum: 8b37c336cadf76e5d0baa6bb920b8fbe
+  releaseVersion: 0.3.5
+  configChecksum: 48ab5de9b183f099286903b6ca60bad5
+  published: true
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -32,6 +33,7 @@ generatedFiles:
   - examples/data-sources/netskope_npa_publisher_upgrade_profile/data-source.tf
   - examples/data-sources/netskope_npa_publisher_upgrade_profiles_list/data-source.tf
   - examples/data-sources/netskope_npa_publishers_alerts_configuration/data-source.tf
+  - examples/data-sources/netskope_npa_publishers_host_os_versions/data-source.tf
   - examples/data-sources/netskope_npa_publishers_list/data-source.tf
   - examples/data-sources/netskope_npa_publishers_releases_list/data-source.tf
   - examples/data-sources/netskope_npa_rules/data-source.tf
@@ -41,6 +43,7 @@ generatedFiles:
   - examples/resources/netskope_npa_policy_groups/resource.tf
   - examples/resources/netskope_npa_private_app/import.sh
   - examples/resources/netskope_npa_private_app/resource.tf
+  - examples/resources/netskope_npa_private_app_public_host/resource.tf
   - examples/resources/netskope_npa_publisher/import.sh
   - examples/resources/netskope_npa_publisher/resource.tf
   - examples/resources/netskope_npa_publisher_token/resource.tf
@@ -75,6 +78,8 @@ generatedFiles:
   - internal/provider/npaprivateapp_data_source_sdk.go
   - internal/provider/npaprivateapp_resource.go
   - internal/provider/npaprivateapp_resource_sdk.go
+  - internal/provider/npaprivateapppublichost_resource.go
+  - internal/provider/npaprivateapppublichost_resource_sdk.go
   - internal/provider/npaprivateappslist_data_source.go
   - internal/provider/npaprivateappslist_data_source_sdk.go
   - internal/provider/npaprivatepolicyinuse_data_source.go
@@ -93,6 +98,8 @@ generatedFiles:
   - internal/provider/npapublishersbulkprofileupdates_resource_sdk.go
   - internal/provider/npapublishersbulkupgraderequest_resource.go
   - internal/provider/npapublishersbulkupgraderequest_resource_sdk.go
+  - internal/provider/npapublishershostosversions_data_source.go
+  - internal/provider/npapublishershostosversions_data_source_sdk.go
   - internal/provider/npapublisherslist_data_source.go
   - internal/provider/npapublisherslist_data_source_sdk.go
   - internal/provider/npapublishersreleaseslist_data_source.go
@@ -129,30 +136,25 @@ generatedFiles:
   - internal/provider/typeconvert/date.go
   - internal/provider/typeconvert/datetime.go
   - internal/provider/typeconvert/int.go
-  - internal/provider/types/activities.go
   - internal/provider/types/apply.go
+  - internal/provider/types/assessment.go
   - internal/provider/types/data.go
+  - internal/provider/types/get_npa_private_app_public_host_data.go
   - internal/provider/types/group_order.go
+  - internal/provider/types/labels.go
   - internal/provider/types/match_criteria_action.go
   - internal/provider/types/npa_policy_response_item.go
   - internal/provider/types/npa_policy_rule_data.go
-  - internal/provider/types/npa_policy_rule_dlp.go
-  - internal/provider/types/npa_policy_rule_tss.go
-  - internal/provider/types/npa_policy_rule_tss_actions.go
-  - internal/provider/types/npa_policygroup_request_group_order.go
+  - internal/provider/types/npa_policy_rule_periodic_reauth.go
   - internal/provider/types/npa_policygroup_response_item.go
-  - internal/provider/types/private_apps_get_response_new_reachability.go
-  - internal/provider/types/private_apps_get_response_new_service_publisher_assignments.go
   - internal/provider/types/private_apps_item.go
-  - internal/provider/types/private_apps_request_app_option.go
-  - internal/provider/types/private_apps_with_activities.go
   - internal/provider/types/protocol_item.go
-  - internal/provider/types/protocol_response_item.go
   - internal/provider/types/publisher_bulk_item.go
   - internal/provider/types/publisher_item.go
   - internal/provider/types/publisher_response_assessment.go
   - internal/provider/types/publisher_response_ca_certs_status.go
   - internal/provider/types/publisher_response_capabilities.go
+  - internal/provider/types/publisher_response_labels.go
   - internal/provider/types/publisher_response_pull_nsconfig.go
   - internal/provider/types/publisher_response_upgrade_failed_reason.go
   - internal/provider/types/publisher_response_upgrade_status.go
@@ -164,13 +166,13 @@ generatedFiles:
   - internal/provider/types/publishers_bulk_response_data.go
   - internal/provider/types/publishers_get_response_data.go
   - internal/provider/types/publishers_get_response_publishers.go
+  - internal/provider/types/publishers_host_os_version_get_response_data.go
   - internal/provider/types/publishers_private_apps_response_data.go
   - internal/provider/types/publishers_private_apps_response_reachability.go
   - internal/provider/types/release_item.go
   - internal/provider/types/response_body.go
   - internal/provider/types/rule_order.go
-  - internal/provider/types/service_publisher_assignment_item.go
-  - internal/provider/types/tag_item_no_id.go
+  - internal/provider/types/tag_item.go
   - internal/provider/types/upgrade_profiles.go
   - internal/provider/types/upgrade_publisher_response.go
   - internal/provider/types/upgrade_publisher_response_assessment.go
@@ -205,47 +207,53 @@ generatedFiles:
   - internal/sdk/models/operations/deletenpapublisherupgradeprofile.go
   - internal/sdk/models/operations/deletenparules.go
   - internal/sdk/models/operations/generatenpapublishertoken.go
-  - internal/sdk/models/operations/getnpapolicygroupbyid.go
   - internal/sdk/models/operations/getnpapolicygroups.go
   - internal/sdk/models/operations/getnpapolicyinuse.go
   - internal/sdk/models/operations/getnpaprivateapp.go
+  - internal/sdk/models/operations/getnpaprivateapppublichost.go
   - internal/sdk/models/operations/getnpapublisheralerts.go
   - internal/sdk/models/operations/getnpapublisherapps.go
   - internal/sdk/models/operations/getnpapublisherbyid.go
+  - internal/sdk/models/operations/getnpapublisherhostosversions.go
   - internal/sdk/models/operations/getnpapublisherobjects.go
   - internal/sdk/models/operations/getnpapublishers.go
   - internal/sdk/models/operations/getnpapublisherupgradeprofile.go
-  - internal/sdk/models/operations/getnparuleslist.go
+  - internal/sdk/models/operations/getnparules.go
+  - internal/sdk/models/operations/listnpapolicygroups.go
   - internal/sdk/models/operations/listnpaprivateapps.go
   - internal/sdk/models/operations/listnpapublisherupgradeprofiles.go
-  - internal/sdk/models/operations/nparules.go
+  - internal/sdk/models/operations/listnparules.go
   - internal/sdk/models/operations/options.go
+  - internal/sdk/models/operations/patchsteeringappsprivateprivateappid.go
   - internal/sdk/models/operations/triggernpapublisherupdates.go
   - internal/sdk/models/operations/updatenpapolicygroups.go
   - internal/sdk/models/operations/updatenpaprivateapp.go
   - internal/sdk/models/operations/updatenpapublisherbyid.go
   - internal/sdk/models/operations/updatenpapublisherupgradeprofile.go
-  - internal/sdk/models/operations/updatenparulesbyid.go
+  - internal/sdk/models/operations/updatenparules.go
   - internal/sdk/models/shared/fourhundred.go
   - internal/sdk/models/shared/npapolicygrouprequest.go
+  - internal/sdk/models/shared/npapolicygroupresponse.go
   - internal/sdk/models/shared/npapolicygroupresponse400.go
   - internal/sdk/models/shared/npapolicygroupresponseitem.go
   - internal/sdk/models/shared/npapolicyrequest.go
+  - internal/sdk/models/shared/npapolicyresponse.go
   - internal/sdk/models/shared/npapolicyresponse400.go
   - internal/sdk/models/shared/npapolicyresponseitem.go
-  - internal/sdk/models/shared/npapolicyresponselist.go
   - internal/sdk/models/shared/npapolicyruledata.go
   - internal/sdk/models/shared/npapolicyruledlp.go
+  - internal/sdk/models/shared/npapolicyruleperiodicreauth.go
   - internal/sdk/models/shared/npapolicyruletss.go
-  - internal/sdk/models/shared/privateappsgetresponsenew.go
+  - internal/sdk/models/shared/npaschedule.go
+  - internal/sdk/models/shared/privateappsgetresponse.go
   - internal/sdk/models/shared/privateappsitem.go
   - internal/sdk/models/shared/privateappslistresponse.go
+  - internal/sdk/models/shared/privateappspostresponse.go
   - internal/sdk/models/shared/privateappsputrequest.go
   - internal/sdk/models/shared/privateappsrequest.go
   - internal/sdk/models/shared/privateappsresponse.go
   - internal/sdk/models/shared/privateappsresponse400.go
   - internal/sdk/models/shared/protocolitem.go
-  - internal/sdk/models/shared/protocolresponseitem.go
   - internal/sdk/models/shared/publisherbulkitem.go
   - internal/sdk/models/shared/publisherbulkrequest.go
   - internal/sdk/models/shared/publisheritem.go
@@ -257,6 +265,7 @@ generatedFiles:
   - internal/sdk/models/shared/publishersalertputresponse.go
   - internal/sdk/models/shared/publishersbulkresponse.go
   - internal/sdk/models/shared/publishersgetresponse.go
+  - internal/sdk/models/shared/publishershostosversiongetresponse.go
   - internal/sdk/models/shared/publishersprivateappsresponse.go
   - internal/sdk/models/shared/publishersreleasegetresponse.go
   - internal/sdk/models/shared/publishersresponse400.go
@@ -270,10 +279,10 @@ generatedFiles:
   - internal/sdk/models/shared/releaseitem.go
   - internal/sdk/models/shared/security.go
   - internal/sdk/models/shared/servicepublisherassignmentitem.go
+  - internal/sdk/models/shared/statusenum.go
   - internal/sdk/models/shared/tagitem.go
   - internal/sdk/models/shared/tagitemnoid.go
   - internal/sdk/models/shared/upgradepublisherresponse.go
-  - internal/sdk/npapolicygroups.go
   - internal/sdk/npaprivateapp.go
   - internal/sdk/npapublisher.go
   - internal/sdk/npapublisherapps.go
@@ -282,7 +291,6 @@ generatedFiles:
   - internal/sdk/npapublishertoken.go
   - internal/sdk/npapublisherupgradeprofile.go
   - internal/sdk/npapublisherupgradeprofiles.go
-  - internal/sdk/nparules.go
   - internal/sdk/retry/config.go
   - internal/sdk/terraformproviderns.go
   - internal/sdk/types/bigint.go
@@ -314,27 +322,39 @@ examples:
       parameters:
         query:
           query: "name has testName"
+          fields: "app_id,app_name"
       responses:
         "200":
-          application/json: {}
+          application/json: {"data": {"private_apps": [{"protocols": [{"port": "22", "created_at": "2022-05-19 21:03:07.125000+00:00", "id": 1, "service_id": 53, "updated_at": "2022-05-19 21:03:07.125000+00:00"}], "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "supplement_dns_for_osx": false}]}}
         "400":
           application/json: {"status": 400}
     Name starts with Query example:
       parameters:
         query:
           query: "name sw testName"
+          fields: "app_id,app_name"
       responses:
         "200":
-          application/json: {}
+          application/json: {"data": {"private_apps": [{"protocols": [{"port": "22", "created_at": "2022-05-19 21:03:07.125000+00:00", "id": 1, "service_id": 53, "updated_at": "2022-05-19 21:03:07.125000+00:00"}], "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "supplement_dns_for_osx": false}]}}
         "400":
           application/json: {"status": 400}
     Multiple Filter Example:
       parameters:
         query:
           query: "name sw test and clientless_access eq true"
+          fields: "app_id,app_name"
       responses:
         "200":
-          application/json: {}
+          application/json: {"data": {"private_apps": [{"protocols": [{"port": "22", "created_at": "2022-05-19 21:03:07.125000+00:00", "id": 1, "service_id": 53, "updated_at": "2022-05-19 21:03:07.125000+00:00"}], "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "supplement_dns_for_osx": false}]}}
+        "400":
+          application/json: {"status": 400}
+    speakeasy-default-list-NPA-private-apps:
+      parameters:
+        query:
+          fields: "app_id,app_name"
+      responses:
+        "200":
+          application/json: {"data": {"private_apps": [{"protocols": [{"port": "22", "created_at": "2022-05-19 21:03:07.125000+00:00", "id": 1, "service_id": 53, "updated_at": "2022-05-19 21:03:07.125000+00:00"}], "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "supplement_dns_for_osx": false}]}}
         "400":
           application/json: {"status": 400}
   getNPAPolicyInUse:
@@ -363,7 +383,7 @@ examples:
           private_app_id: 821641
       responses:
         "200":
-          application/json: {}
+          application/json: {"data": {"protocols": [{"port": "22", "created_at": "2022-05-19 21:03:07.125000+00:00", "id": 1, "service_id": 53, "updated_at": "2022-05-19 21:03:07.125000+00:00"}], "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "supplement_dns_for_osx": false}}
         "400":
           application/json: {"status": 400}
   delete_/steering/apps/private/tags:
@@ -495,6 +515,14 @@ examples:
           application/json: {"data": {"publishers": [{"status": "not registered"}]}}
         "400":
           application/json: {"status": 400}
+    speakeasy-default-trigger-NPA-publisher-updates:
+      requestBody:
+        application/json: {"publishers": {"apply": {"upgrade_request": true}, "id": ["1"]}}
+      responses:
+        "200":
+          application/json: {"data": {"publishers": [{"status": "not registered"}]}}
+        "400":
+          application/json: {"status": 400}
   BulkupdateNPAPublishers:
     speakeasy-default-bulkupdate-NPA-publishers:
       requestBody:
@@ -507,18 +535,26 @@ examples:
   createNPAPrivateApps:
     minimum_client_app:
       requestBody:
-        application/json: {"app_name": "my_private_app", "host": "webserver.local", "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}]}
+        application/json: {"allow_unauthenticated_cors": false, "app_name": "my_private_app", "clientless_access": false, "host": "webserver.local", "is_user_portal_app": false, "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}], "trust_self_signed_certs": false, "use_publisher_dns": false}
       responses:
         "200":
-          application/json: {}
+          application/json: {"data": {"protocols": [{"port": "22", "created_at": "2022-05-19 21:03:07.125000+00:00", "id": 1, "service_id": 53, "updated_at": "2022-05-19 21:03:07.125000+00:00"}], "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}}
         "400":
           application/json: {"status": 400}
     minimum_clientless_app:
       requestBody:
-        application/json: {"app_name": "my_private_app", "clientless_access": true, "host": "webserver.local", "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}]}
+        application/json: {"allow_unauthenticated_cors": false, "app_name": "my_private_app", "clientless_access": true, "host": "webserver.local", "is_user_portal_app": false, "protocols": [{"port": "80", "type": "tcp"}], "publishers": [{"publisher_id": "10", "publisher_name": "my_publisher_1"}], "private_app_protocol": "http", "trust_self_signed_certs": false, "use_publisher_dns": false}
       responses:
         "200":
-          application/json: {}
+          application/json: {"data": {"protocols": [{"port": "22", "created_at": "2022-05-19 21:03:07.125000+00:00", "id": 1, "service_id": 53, "updated_at": "2022-05-19 21:03:07.125000+00:00"}], "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}}
+        "400":
+          application/json: {"status": 400}
+    speakeasy-default-create-NPA-private-apps:
+      requestBody:
+        application/json: {"allow_unauthenticated_cors": false, "clientless_access": false, "is_user_portal_app": false, "protocols": [{}], "trust_self_signed_certs": false, "use_publisher_dns": false}
+      responses:
+        "200":
+          application/json: {"data": {"protocols": [{"port": "22", "created_at": "2022-05-19 21:03:07.125000+00:00", "id": 1, "service_id": 53, "updated_at": "2022-05-19 21:03:07.125000+00:00"}], "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}]}}
         "400":
           application/json: {"status": 400}
   updateNPAPrivateApp:
@@ -527,10 +563,10 @@ examples:
         path:
           private_app_id: 469088
       requestBody:
-        application/json: {}
+        application/json: {"protocols": [{}]}
       responses:
         "200":
-          application/json: [{"data": {"allow_unauthenticated_cors": false, "app_id": 1, "app_name": "Webserver", "clientless_access": false, "modified_by": "admin@customer.org", "modify_time": "2024-07-26 18:11:06", "name": "[Webserver]", "policies": ["Allow_Webservers"], "private_app_protocol": "http", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "https://webserver-local-80-tenant.npaproxy.goskope.com", "reachability": {"reachable": true}, "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "steering_configs": ["Default tenant config"], "supplement_dns_for_osx": false}}]
+          application/json: {"data": {"protocols": [{"port": "22", "created_at": "2022-05-19 21:03:07.125000+00:00", "id": 1, "service_id": 53, "updated_at": "2022-05-19 21:03:07.125000+00:00"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "supplement_dns_for_osx": false}}
         "400":
           application/json: {"status": 400}
   getNPARulesList:
@@ -543,20 +579,20 @@ examples:
   createNPARules:
     speakeasy-default-create-NPA-rules:
       requestBody:
-        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "vantest", "rule_order": {"position": 5, "rule_name": "api-policy-managed"}}
+        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_name": "vantest", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_order": {"position": 5, "rule_id": 1, "rule_name": "api-policy-managed"}}
       responses:
         "200":
-          application/json: {"data": {"group_id": "1", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "van-test"}}
+          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_id": "1", "rule_name": "van-test"}}
         "400":
           application/json: {"status": 400}
   deleteNPARules:
     speakeasy-default-delete-NPA-rules:
       parameters:
         path:
-          id: "<id>"
+          id: "646006"
       responses:
         "200":
-          application/json: {"data": {"group_id": "1", "rule_data": {"dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "json_version": 3, "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "van-test"}}
+          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_id": "1", "rule_name": "van-test"}}
         "400":
           application/json: {"status": 400}
   NPARules:
@@ -583,6 +619,9 @@ examples:
           application/json: {"status": 400}
   getNPAPolicyGroups:
     speakeasy-default-get-NPA-policy-groups:
+      parameters:
+        path:
+          id: "182826"
       responses:
         "200":
           application/json: {}
@@ -591,7 +630,7 @@ examples:
   createNPAPolicyGroups:
     speakeasy-default-create-NPA-policy-groups:
       requestBody:
-        application/json: {"group_order": {"group_order": {"group_id": "1"}}}
+        application/json: {"group_order": {"group_id": "1"}}
       responses:
         "200":
           application/json: {}
@@ -601,7 +640,7 @@ examples:
     speakeasy-default-delete-NPA-policy-groups:
       parameters:
         path:
-          id: "<id>"
+          id: "379530"
       responses:
         "200":
           application/json: {}
@@ -621,9 +660,9 @@ examples:
     speakeasy-default-update-NPA-policy-groups:
       parameters:
         path:
-          id: "<id>"
+          id: "461010"
       requestBody:
-        application/json: {"group_order": {"group_order": {"group_id": "1"}}}
+        application/json: {"group_order": {"group_id": "1"}}
       responses:
         "200":
           application/json: {}
@@ -642,7 +681,7 @@ examples:
         application/json: {"name": "npa_publisher_1", "lbrokerconnect": false, "publisher_upgrade_profiles_id": 1}
       responses:
         "200":
-          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690", "host_os_version": "Ubuntu 20.04.5 LTS"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
         "400":
           application/json: {"status": 400}
     full:
@@ -650,7 +689,15 @@ examples:
         application/json: {"name": "npa_publisher_1", "lbrokerconnect": false, "publisher_upgrade_profiles_id": 1}
       responses:
         "200":
-          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690", "host_os_version": "Ubuntu 20.04.5 LTS"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+        "400":
+          application/json: {"status": 400}
+    speakeasy-default-create-NPA-publishers:
+      requestBody:
+        application/json: {"name": "npa_publisher_1", "lbrokerconnect": false, "publisher_upgrade_profiles_id": 1}
+      responses:
+        "200":
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690", "host_os_version": "Ubuntu 20.04.5 LTS"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
         "400":
           application/json: {"status": 400}
   deleteNPAPublishers:
@@ -670,7 +717,7 @@ examples:
           publisher_id: 1
       responses:
         "200":
-          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690", "host_os_version": "Ubuntu 20.04.5 LTS"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
         "400":
           application/json: {"status": 400}
   updateNPAPublisherById:
@@ -682,7 +729,7 @@ examples:
         application/json: {"name": "updated_name"}
       responses:
         "200":
-          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690", "host_os_version": "Ubuntu 20.04.5 LTS"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
         "400":
           application/json: {"status": 400}
     upgrade_profile:
@@ -693,7 +740,18 @@ examples:
         application/json: {"name": "publisher_1", "publisher_upgrade_profiles_id": 2}
       responses:
         "200":
-          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690", "host_os_version": "Ubuntu 20.04.5 LTS"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
+        "400":
+          application/json: {"status": 400}
+    speakeasy-default-update-NPA-publisher-by-id:
+      parameters:
+        path:
+          publisher_id: 1
+      requestBody:
+        application/json: {"name": "<value>"}
+      responses:
+        "200":
+          application/json: {"data": {"apps_count": 3, "assessment": {"ca_certs_status": {"hashes": ["00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00", "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"], "last_modified": 0}, "eee_support": true, "hdd_free": "7459254272Kb", "hdd_total": "15745441792Kb", "ip_address": "192.168.0.1", "latency": 21, "version": "117.0.0.8690", "host_os_version": "Ubuntu 20.04.5 LTS"}, "capabilities": {"DTLS": false, "EEE": true, "auto_upgrade": true, "nwa_ba": false, "pull_nsconfig": {"orgkey_exist": true, "orguri_exist": true}}, "common_name": "e2eabac9e9f715ff", "connected_apps": ["[Cloud Exchange]", "[WebServer]"], "id": 6, "lbrokerconnect": false, "name": "pub01.local", "publisher_upgrade_profiles_id": 1, "registered": true, "status": "connected", "stitcher_id": 319, "sticher_pop": "US-SEA1", "upgrade_failed_reason": {"error_code": 0, "timestamp": 1720591660, "version": "8690"}, "upgrade_request": true, "upgrade_status": {"upstat": "done"}}}
         "400":
           application/json: {"status": 400}
   getNPAPublisherObjects:
@@ -710,7 +768,7 @@ examples:
           publisher_id: 1
       responses:
         "200":
-          application/json: {"data": [{"allow_unauthenticated_cors": false, "clientless_access": false, "external_id": 193, "host": "192.168.1.1", "id": 3, "is_user_portal_app": false, "name": "[Web-Management]", "private_app_protocol": "", "protocols": [{"created_at": "2022-05-19T21:03:07.125Z", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "real_host": "<value>", "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "tags": [], "suppliment_dns_for_osx": false, "trust_self_signed_certs": true, "use_publisher_dns": false}]}
+          application/json: {"data": [{"allow_unauthenticated_cors": false, "clientless_access": false, "external_id": 193, "host": "192.168.1.1", "id": 3, "is_user_portal_app": false, "name": "[Web-Management]", "private_app_protocol": "", "protocols": [{"port": "22", "created_at": "2022-05-19T21:03:07.125Z", "id": 1, "service_id": 53, "updated_at": "2022-05-19T21:03:07.125Z"}], "public_host": "", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "real_host": "<value>", "service_publisher_assignments": [{"primary": false, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "tags": [], "suppliment_dns_for_osx": false, "trust_self_signed_certs": true, "use_publisher_dns": false}]}
         "400":
           application/json: {"status": 400}
   generateNPAPublisherToken:
@@ -733,10 +791,10 @@ examples:
   createNPAPublisherUpgradeProfile:
     speakeasy-default-create-NPA-publisher-upgrade-profile:
       requestBody:
-        application/json: {"docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "name": "My Upgrade Profile", "release_type": "Latest", "timezone": "US/Eastern"}
+        application/json: {"docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "name": "My Upgrade Profile", "release_type": "Latest", "timezone": "US/Eastern", "timezone_id": 1}
       responses:
         "200":
-          application/json: {"data": {"created_at": "2024-07-23T14:00:22.731Z", "docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "id": 10, "name": "My Upgrade Profile", "next_update_time": 1722312000, "num_associated_publisher": 0, "release_type": "Latest", "timezone": "US/Eastern", "updated_at": "2024-07-23T14:00:22.731Z", "upgrading_stage": 1, "will_start": false}}
+          application/json: {"data": {"created_at": "2024-07-23 14:00:22.731000+00:00", "docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "id": 10, "name": "My Upgrade Profile", "next_update_time": 1722312000, "num_associated_publisher": 0, "release_type": "Latest", "timezone": "US/Eastern", "timezone_id": 1, "updated_at": "2024-07-23 14:00:22.731000+00:00", "upgrading_stage": 1, "will_start": false}}
         "400":
           application/json: {"status": 400}
   deleteNPAPublisherUpgradeProfile:
@@ -756,7 +814,7 @@ examples:
           external_id: 82465
       responses:
         "200":
-          application/json: {"data": {"created_at": "2024-07-23T14:06:32.07Z", "docker_tag": "8691", "enabled": true, "external_id": 1, "frequency": "0 0 1 * SAT", "id": 1, "name": "My Upgrade Profile", "next_update_time": 1722052800, "num_associated_publisher": 1, "release_type": "Latest", "timezone": "US/Eastern", "updated_at": "2024-07-23T14:06:32.07Z", "upgrading_stage": 1, "will_start": false}}
+          application/json: {"data": {"created_at": "2024-07-23 14:06:32.070000+00:00", "docker_tag": "8691", "enabled": true, "external_id": 1, "frequency": "0 0 1 * SAT", "id": 1, "name": "My Upgrade Profile", "next_update_time": 1722052800, "num_associated_publisher": 1, "release_type": "Latest", "timezone": "US/Eastern", "timezone_id": 1, "updated_at": "2024-07-23 14:06:32.070000+00:00", "upgrading_stage": 1, "will_start": false}}
         "400":
           application/json: {"status": 400}
   updateNPAPublisherUpgradeProfile:
@@ -765,11 +823,820 @@ examples:
         path:
           external_id: 10
       requestBody:
-        application/json: {"docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "id": 10, "name": "My Upgrade Profile", "release_type": "Latest", "timezone": "US/Eastern"}
+        application/json: {"docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "id": 10, "name": "My Upgrade Profile", "release_type": "Latest", "timezone": "US/Eastern", "timezone_id": 1}
       responses:
         "200":
-          application/json: {"data": {"created_at": "2024-07-23T14:00:22.731Z", "docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "id": 10, "name": "My Upgrade Profile", "next_update_time": 1722312000, "num_associated_publisher": 0, "release_type": "Latest", "timezone": "US/Eastern", "updated_at": "2024-07-23T14:00:22.731Z", "upgrading_stage": 1, "will_start": false}}
+          application/json: {"data": {"created_at": "2024-07-23 14:00:22.731000+00:00", "docker_tag": "8690", "enabled": true, "frequency": "0 0 1 * TUE", "id": 10, "name": "My Upgrade Profile", "next_update_time": 1722312000, "num_associated_publisher": 0, "release_type": "Latest", "timezone": "US/Eastern", "timezone_id": 1, "updated_at": "2024-07-23 14:00:22.731000+00:00", "upgrading_stage": 1, "will_start": false}}
+        "400":
+          application/json: {"status": 400}
+  patch_/steering/steering/apps/private/{private_app_id}:
+    speakeasy-default-patch-/steering/steering/apps/private/{private-app-id}:
+      parameters:
+        path:
+          private_app_id: 619009
+      requestBody:
+        application/json: {"protocols": [{"type": "tcp"}]}
+      responses:
+        "200":
+          application/json: [{"data": {"protocols": [{"created_at": "2022-05-19 21:03:07.125000+00:00", "id": 1, "port": "22", "service_id": 53, "transport": "tcp", "updated_at": "2022-05-19 21:03:07.125000+00:00"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "supplement_dns_for_osx": false}}]
+        "400":
+          application/json: {"status": 400}
+  getNPAPrivateAppPublicHost:
+    Request sample1:
+      requestBody:
+        application/json: {"clientless_access": true, "host": "www.google.com", "is_user_portal_app": false, "protocols": [{"port": "80", "type": "tcp"}]}
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+    Response sample1:
+      requestBody:
+        application/json: {"protocols": [{}]}
+      responses:
+        "200":
+          application/json: {"data": {"public_host": "https://ns-191347bf-80-testing.npa.npaproxy.boomskope.com"}, "status": "success"}
+    Response sample2:
+      requestBody:
+        application/json: {"protocols": [{}]}
+      responses:
+        "200":
+          application/json: {"data": {"public_host": "https://www-google-com-80-testing.npa.npaproxy.boomskope.com"}, "status": "success"}
+  get_/policy/npa/rules:
+    speakeasy-default-get-/policy/npa/rules:
+      responses:
+        "200":
+          application/json: [{"rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": 1, "rule_name": "van-test"}]
+        "400":
+          application/json: {"status": 400}
+  post_/policy/npa/rules:
+    speakeasy-default-post-/policy/npa/rules:
+      requestBody:
+        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "vantest", "rule_order": {"position": 5, "rule_id": 1, "rule_name": "api-policy-managed"}}
+      responses:
+        "200":
+          application/json: {"rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": 1, "rule_name": "van-test"}
+        "400":
+          application/json: {"status": 400}
+  delete_/policy/npa/rules/{id}:
+    speakeasy-default-delete-/policy/npa/rules/{id}:
+      parameters:
+        path:
+          id: 824075
+      responses:
+        "200":
+          application/json: {"data": {"rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": 1, "rule_name": "van-test"}}
+        "400":
+          application/json: {"status": 400}
+  get_/policy/npa/rules/{id}:
+    speakeasy-default-get-/policy/npa/rules/{id}:
+      parameters:
+        path:
+          id: 994431
+      responses:
+        "200":
+          application/json: {"data": {"rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": 1, "rule_name": "van-test"}}
+        "400":
+          application/json: {"status": 400}
+  patch_/policy/npa/rules/{id}:
+    speakeasy-default-patch-/policy/npa/rules/{id}:
+      parameters:
+        path:
+          id: 920244
+      requestBody:
+        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_name": "vantest", "rule_order": {"position": 5, "rule_id": 1, "rule_name": "api-policy-managed"}}
+      responses:
+        "200":
+          application/json: {"data": {"rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "dlp_actions": [{"actions": ["allow"], "dlp_profile": "Payment Card"}], "external_dlp": false, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "privateAppsWithActivities": [{"activities": [{"list_of_constraints": []}], "appName": "[172.31.12.135]"}], "show_dlp_profile_action_table": false, "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1}, "rule_id": 1, "rule_name": "van-test"}}
+        "400":
+          application/json: {"status": 400}
+  get_/policy/policy/npa/policygroups:
+    speakeasy-default-get-/policy/policy/npa/policygroups:
+      responses:
+        "200":
+          application/json: [{}]
+        "400":
+          application/json: {"status": 400}
+  post_/policy/policy/npa/policygroups:
+    speakeasy-default-post-/policy/policy/npa/policygroups:
+      requestBody:
+        application/json: {"group_order": {"group_order": {"group_id": "1"}}}
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  delete_/policy/policy/npa/policygroups/{id}:
+    speakeasy-default-delete-/policy/policy/npa/policygroups/{id}:
+      parameters:
+        path:
+          id: 625155
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  get_/policy/policy/npa/policygroups/{id}:
+    speakeasy-default-get-/policy/policy/npa/policygroups/{id}:
+      parameters:
+        path:
+          id: 358655
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  patch_/policy/policy/npa/policygroups/{id}:
+    speakeasy-default-patch-/policy/policy/npa/policygroups/{id}:
+      parameters:
+        path:
+          id: 439737
+      requestBody:
+        application/json: {"group_order": {"group_order": {"group_id": "1"}}}
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  getNPAPublisherHostOsVersions:
+    speakeasy-default-get-NPA-publisher-host-os-versions:
+      responses:
+        "200":
+          application/json: {"data": [{"host_os_version": "Ubuntu 20.04.6 LTS", "publisher_ids": [6]}]}
+        "400":
+          application/json: {"status": 400}
+  listNPARules:
+    speakeasy-default-list-NPA-rules:
+      responses:
+        "200":
+          application/json: {"data": [{"rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false}, "rule_id": "1", "rule_name": "van-test"}]}
+        "400":
+          application/json: {"status": 400}
+  getNPARules:
+    speakeasy-default-get-NPA-rules:
+      parameters:
+        path:
+          id: "592773"
+      responses:
+        "200":
+          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_id": "1", "rule_name": "van-test"}}
+        "400":
+          application/json: {"status": 400}
+  updateNPARules:
+    speakeasy-default-update-NPA-rules:
+      parameters:
+        path:
+          id: "317329"
+      requestBody:
+        application/json: {"description": "any", "enabled": "1", "group_id": "1", "group_name": "My policy group", "rule_name": "vantest", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_order": {"position": 5, "rule_id": 1, "rule_name": "api-policy-managed"}}
+      responses:
+        "200":
+          application/json: {"data": {"enabled": "1", "group_id": "1", "group_name": "My policy group", "modify_by": "user@example.com", "modify_time": "2025-01-01 12:00:00", "modify_type": "Created", "policy_type": "private-app", "rule_data": {"access_method": [], "b_negateNetLocation": false, "b_negateSrcCountries": false, "periodic_reauth": {"reauth_interval": "60", "reauth_interval_unit": "hours"}, "json_version": 3, "device_classification_id": [], "net_location_obj": ["190.123.150.10", "190.218.0.0/16"], "organization_units": ["engineering/qa"], "policy_type": "private-app", "privateAppTagIds": ["1", "2"], "privateAppTags": ["tag1", "tag2"], "privateApps": ["app1", "app2"], "srcCountries": ["US", "AF", "CN"], "userGroups": ["usergroup/group1"], "users": ["vphan@netskope.com"], "version": 1, "dlp_actions": [{"dlp_profile": "Payment Card", "actions": ["allow"]}], "external_dlp": false, "privateAppsWithActivities": [{"appName": "[172.31.12.135]", "activities": [{"list_of_constraints": []}]}], "show_dlp_profile_action_table": false, "schedule": {"timezone": "UTC", "time_windows": [{"start_time": "09:00", "end_time": "17:00"}]}}, "rule_id": "1", "rule_name": "van-test"}}
+        "400":
+          application/json: {"status": 400}
+  listNPAPolicyGroups:
+    speakeasy-default-list-NPA-policy-groups:
+      responses:
+        "200":
+          application/json: {}
+        "400":
+          application/json: {"status": 400}
+  patch_/steering/apps/private/{private_app_id}:
+    speakeasy-default-patch-/steering/apps/private/{private-app-id}:
+      parameters:
+        path:
+          private_app_id: 508058
+      requestBody:
+        application/json: {"protocols": [{}]}
+      responses:
+        "200":
+          application/json: [{"data": {"protocols": [{"port": "22", "created_at": "2022-05-19 21:03:07.125000+00:00", "id": 1, "service_id": 53, "updated_at": "2022-05-19 21:03:07.125000+00:00"}], "service_publisher_assignments": [{"primary": true, "publisher_external_id": 1, "publisher_name": "pub01.local", "reachability": {"error_code": 0, "error_string": "", "reachable": true}, "service_external_id": 194}], "supplement_dns_for_osx": false}}]
         "400":
           application/json: {"status": 400}
 examplesVersion: 1.0.2
 generatedTests: {}
+trackedFiles:
+  .gitattributes:
+    last_write_checksum: sha1:84b0115789fc3ea52e31df701d8a27f76077e29f
+  USAGE.md:
+    last_write_checksum: sha1:02c32c9430f37507b3eacd41cdc36f080809e92d
+  examples/data-sources/netskope_npa_policy_groups/data-source.tf:
+    last_write_checksum: sha1:0fed333dc5f739d3f24f82b4a098287f8e8cfe20
+  examples/data-sources/netskope_npa_policy_groups_list/data-source.tf:
+    last_write_checksum: sha1:984d2202550424564fa0c52a20895c5500d8f242
+  examples/data-sources/netskope_npa_private_app/data-source.tf:
+    last_write_checksum: sha1:733df984ea1f9a7886714507052a301a56eba079
+  examples/data-sources/netskope_npa_private_apps_list/data-source.tf:
+    last_write_checksum: sha1:9a6c40496e5870a4ac7602f1e12a97a71a3d8fbf
+  examples/data-sources/netskope_npa_private_policy_in_use/data-source.tf:
+    last_write_checksum: sha1:642d5bde6afca242c6181fd7200fb71d1af511c7
+  examples/data-sources/netskope_npa_publisher/data-source.tf:
+    last_write_checksum: sha1:c796ea04dd02845f5d12eba40a32ea42b3ded1ca
+  examples/data-sources/netskope_npa_publisher_apps_list/data-source.tf:
+    last_write_checksum: sha1:f79c0d8d9eb8a0463e9f5dcb054021aa9f64bf70
+  examples/data-sources/netskope_npa_publisher_upgrade_profile/data-source.tf:
+    last_write_checksum: sha1:6042c413fc2a4c8c2ac877f3be5c27c31387a305
+  examples/data-sources/netskope_npa_publisher_upgrade_profiles_list/data-source.tf:
+    last_write_checksum: sha1:5cfa7729d8551eef52df784b75130dfaa0480439
+  examples/data-sources/netskope_npa_publishers_alerts_configuration/data-source.tf:
+    last_write_checksum: sha1:b8054eeb246c8d72434487fb087a4ffd0186e3b8
+  examples/data-sources/netskope_npa_publishers_host_os_versions/data-source.tf:
+    last_write_checksum: sha1:311d13ac33601a98a6c593c301c9393c5a6294a3
+  examples/data-sources/netskope_npa_publishers_list/data-source.tf:
+    last_write_checksum: sha1:efde5e1d3f719eaf56b8d946038b98aef4ee5aa8
+  examples/data-sources/netskope_npa_publishers_releases_list/data-source.tf:
+    last_write_checksum: sha1:6d3043170474e857a52d60db310a39431461f569
+  examples/data-sources/netskope_npa_rules/data-source.tf:
+    last_write_checksum: sha1:7d9f60ed7c28eeb5ee19328229682dde1b0aedfc
+  examples/data-sources/netskope_npa_rules_list/data-source.tf:
+    last_write_checksum: sha1:bfa95ee3cb30cb63bae55152db8777871f7f34f6
+  examples/provider/provider.tf:
+    last_write_checksum: sha1:af74d1c42eff49e43d9e773c91afed3502ba0796
+  examples/resources/netskope_npa_policy_groups/import-by-string-id.tf:
+    last_write_checksum: sha1:400f5d2da5f0a1c94ce5fc1cf3b9cf67e6a5637a
+  examples/resources/netskope_npa_policy_groups/import.sh:
+    last_write_checksum: sha1:308a43488373f87b4638cd1669b1a9e1d56506f3
+  examples/resources/netskope_npa_policy_groups/resource.tf:
+    last_write_checksum: sha1:3ce7993b434db9c6a43d233ba41ec7e5314fc4b9
+  examples/resources/netskope_npa_private_app/import-by-string-id.tf:
+    last_write_checksum: sha1:3efa0bbedcc33bedf955cb27b30540f9c1bc456b
+  examples/resources/netskope_npa_private_app/import.sh:
+    last_write_checksum: sha1:391fec2e34f38af42371045daef99ac384bf7bb4
+  examples/resources/netskope_npa_private_app/resource.tf:
+    last_write_checksum: sha1:0d020c5f32dc107b95c2f7af7b925469f1677035
+  examples/resources/netskope_npa_private_app_public_host/resource.tf:
+    last_write_checksum: sha1:d387f3fadc317759439164cc7f041f376686969d
+  examples/resources/netskope_npa_publisher/import-by-string-id.tf:
+    last_write_checksum: sha1:43c8321d4e9737c81cdbf438a503cffe838a3081
+  examples/resources/netskope_npa_publisher/import.sh:
+    last_write_checksum: sha1:3395d30ccbf829d8dc97de879a95955ac24cb431
+  examples/resources/netskope_npa_publisher/resource.tf:
+    last_write_checksum: sha1:68f5145f3838f3f58fd60764deb4a5c53a398f47
+  examples/resources/netskope_npa_publisher_token/resource.tf:
+    last_write_checksum: sha1:52b092a6e34f565fbb8ac649cf116a63bc2c4e76
+  examples/resources/netskope_npa_publisher_upgrade_profile/import-by-string-id.tf:
+    last_write_checksum: sha1:88e58e9ef3b918d6426adbd2621e8e2274ffc18f
+  examples/resources/netskope_npa_publisher_upgrade_profile/import.sh:
+    last_write_checksum: sha1:78686f829b927a6d0db18515055b70bba80f041f
+  examples/resources/netskope_npa_publisher_upgrade_profile/resource.tf:
+    last_write_checksum: sha1:a6e801c2263637bb3236254a7d85f090b3e0852b
+  examples/resources/netskope_npa_publishers_alerts_configuration/resource.tf:
+    last_write_checksum: sha1:e5ac97cf28816b079dafda27df339a5193934465
+  examples/resources/netskope_npa_publishers_bulk_profile_updates/resource.tf:
+    last_write_checksum: sha1:0b32089453258f36a38e9b9f583e1992ffa13d5b
+  examples/resources/netskope_npa_publishers_bulk_upgrade_request/resource.tf:
+    last_write_checksum: sha1:3b4dd66c3ded33b5d46307009067d69e8b77701f
+  examples/resources/netskope_npa_rules/import-by-string-id.tf:
+    last_write_checksum: sha1:f54016c01529ed8ff28bbeb4cc38c8dac12f0550
+  examples/resources/netskope_npa_rules/import.sh:
+    last_write_checksum: sha1:c9b2a865adeace7f4cc554db98d0a39d01f73f40
+  examples/resources/netskope_npa_rules/resource.tf:
+    last_write_checksum: sha1:317fb143ce5c31167c7c8d716e9cf2a0d67ecf52
+  go.mod:
+    last_write_checksum: sha1:fa917cfadcfed15a7e447581c19ff12a5c0b3b6f
+  internal/planmodifiers/boolplanmodifier/suppress_diff.go:
+    last_write_checksum: sha1:ab851092607247a47b90bf6fd43532bcf18136df
+  internal/planmodifiers/boolplanmodifier/use_config_value.go:
+    last_write_checksum: sha1:506e2cac3ec4075a8837403860ef0b07e19bc337
+  internal/planmodifiers/float32planmodifier/suppress_diff.go:
+    last_write_checksum: sha1:6bdddfb6759fd545906806754a8ebf3cfeb21be5
+  internal/planmodifiers/float32planmodifier/use_config_value.go:
+    last_write_checksum: sha1:2683d9de3605886cb01438a9015c8e8b02b4e069
+  internal/planmodifiers/float64planmodifier/suppress_diff.go:
+    last_write_checksum: sha1:9be7db7c6ef82e514086e5fc6633f298d827a764
+  internal/planmodifiers/float64planmodifier/use_config_value.go:
+    last_write_checksum: sha1:cc1f1cadfd17a0b9b1e729029dccc03f17d734a5
+  internal/planmodifiers/int32planmodifier/suppress_diff.go:
+    last_write_checksum: sha1:8da13eadf2edf65fd5077326468f029b75e91d3f
+  internal/planmodifiers/int32planmodifier/use_config_value.go:
+    last_write_checksum: sha1:019ba1949b00493bf1a866821f9331d50c8a1f09
+  internal/planmodifiers/int64planmodifier/suppress_diff.go:
+    last_write_checksum: sha1:2515e7cbd1a1fc47b043e13680fed6364bbff080
+  internal/planmodifiers/int64planmodifier/use_config_value.go:
+    last_write_checksum: sha1:b5a63f0c356cd72698e25e1b4f4fc3e29b35d482
+  internal/planmodifiers/listplanmodifier/suppress_diff.go:
+    last_write_checksum: sha1:b1d25637e0a89d169c1f0cc9f84915c95d7ae48e
+  internal/planmodifiers/listplanmodifier/use_config_value.go:
+    last_write_checksum: sha1:c56e2d23520ac7023f800328bb7599e7eba2f202
+  internal/planmodifiers/mapplanmodifier/suppress_diff.go:
+    last_write_checksum: sha1:fc5b1adca6b6deffb54a7e70d00f65bc11aff806
+  internal/planmodifiers/mapplanmodifier/use_config_value.go:
+    last_write_checksum: sha1:7c2163c8fa4be8e8f7e7499cdb08cc5ed1924b39
+  internal/planmodifiers/numberplanmodifier/suppress_diff.go:
+    last_write_checksum: sha1:33d51382876f1f550dc55de5788e98a442465ff9
+  internal/planmodifiers/numberplanmodifier/use_config_value.go:
+    last_write_checksum: sha1:9b92d53a4a5f57e211e6f41ebb6c36cb12357ae6
+  internal/planmodifiers/objectplanmodifier/suppress_diff.go:
+    last_write_checksum: sha1:0d46e2eb079ee66c6ed3bde8011c15092398e385
+  internal/planmodifiers/objectplanmodifier/use_config_value.go:
+    last_write_checksum: sha1:1f2b6727605c0b56ff2212ab2e2528046f05b157
+  internal/planmodifiers/setplanmodifier/suppress_diff.go:
+    last_write_checksum: sha1:cbc0b4fb79b9cfaf5b523a642c13ea44413bf0f4
+  internal/planmodifiers/setplanmodifier/use_config_value.go:
+    last_write_checksum: sha1:fe02165f8fd260bbce09f34adfa378376363422f
+  internal/planmodifiers/stringplanmodifier/suppress_diff.go:
+    last_write_checksum: sha1:94bdf83dd2e3180df8a2380d3a0dcb8aeece6ccf
+  internal/planmodifiers/stringplanmodifier/use_config_value.go:
+    last_write_checksum: sha1:250673402508661f9d12cfa026dc029d5e7855d9
+  internal/planmodifiers/utils/state_check.go:
+    last_write_checksum: sha1:acc38ad698bf4fa8c51aa662076cf57b79024bd5
+  internal/provider/npapolicygroups_data_source.go:
+    last_write_checksum: sha1:ed7fbb55fa736d021d52c37c0cd58e7e9d107166
+  internal/provider/npapolicygroups_data_source_sdk.go:
+    last_write_checksum: sha1:fd3ae4340bf9eb8a47c9ec29f7d65f4d1d0efed1
+  internal/provider/npapolicygroups_resource.go:
+    last_write_checksum: sha1:d0db79303cfd0f43bbe47fdca330b19e97b35156
+  internal/provider/npapolicygroups_resource_sdk.go:
+    last_write_checksum: sha1:891019e24a8fe71df0d50a5e87a8efae351fa2e1
+  internal/provider/npapolicygroupslist_data_source.go:
+    last_write_checksum: sha1:c670f612a17ced8a6e6213957fcaa894ccac912d
+  internal/provider/npapolicygroupslist_data_source_sdk.go:
+    last_write_checksum: sha1:e52c35c42367ecc3e2ec0abf1a2aa6a6596c9054
+  internal/provider/npaprivateapp_data_source.go:
+    last_write_checksum: sha1:f63bc3069d64deed0f7143a5061186e4b7b3081c
+  internal/provider/npaprivateapp_data_source_sdk.go:
+    last_write_checksum: sha1:7b6d514793c48ab2750ca7ab53ab7f32d11267f3
+  internal/provider/npaprivateapp_resource.go:
+    last_write_checksum: sha1:fe55431d021dc434d11a2a3126dfe195a7bc065e
+  internal/provider/npaprivateapp_resource_sdk.go:
+    last_write_checksum: sha1:789da64aca87de6dd6eddd5e2314b2a65289c5af
+  internal/provider/npaprivateapppublichost_resource.go:
+    last_write_checksum: sha1:caa1df402aa7e361df48949eb67b94849075bd8d
+  internal/provider/npaprivateapppublichost_resource_sdk.go:
+    last_write_checksum: sha1:98cfac27a0eb8eda1cbba7467278d1ad8ee5e85f
+  internal/provider/npaprivateappslist_data_source.go:
+    last_write_checksum: sha1:591c65922bd6b483e2ca5bb7ec295ca6fbe84d46
+  internal/provider/npaprivateappslist_data_source_sdk.go:
+    last_write_checksum: sha1:c70c5654a825b08d2a3a9965592acb05b18bc198
+  internal/provider/npaprivatepolicyinuse_data_source.go:
+    last_write_checksum: sha1:9952255700ec6b37d94f6bad931a883639185414
+  internal/provider/npaprivatepolicyinuse_data_source_sdk.go:
+    last_write_checksum: sha1:8063d5de14d1a7337083ec14a7c091b1d6d657df
+  internal/provider/npapublisher_data_source.go:
+    last_write_checksum: sha1:f2ea5f0102b763135013c2fe83595b75eb864c22
+  internal/provider/npapublisher_data_source_sdk.go:
+    last_write_checksum: sha1:330d9c03f2ede2cf6b768925b1b611a65db81af6
+  internal/provider/npapublisher_resource.go:
+    last_write_checksum: sha1:15c36f765cf67009d388b767b557e371bdbf3152
+  internal/provider/npapublisher_resource_sdk.go:
+    last_write_checksum: sha1:2ba28e29736008e0e08832c38587d179d23fc866
+  internal/provider/npapublisherappslist_data_source.go:
+    last_write_checksum: sha1:e1a76245b48c1f326b20a22e6789c49b6b4c18d5
+  internal/provider/npapublisherappslist_data_source_sdk.go:
+    last_write_checksum: sha1:7d1a7f98c064bb85018d46db9368a58c9a772fb8
+  internal/provider/npapublishersalertsconfiguration_data_source.go:
+    last_write_checksum: sha1:65e73a02b657bea59b773210563f17bd24987da2
+  internal/provider/npapublishersalertsconfiguration_data_source_sdk.go:
+    last_write_checksum: sha1:a6b1919dfb84409fe90e398d7bfd7e59b53d1372
+  internal/provider/npapublishersalertsconfiguration_resource.go:
+    last_write_checksum: sha1:10fb3d1306791261f26e7eb579e025730a73e8ae
+  internal/provider/npapublishersalertsconfiguration_resource_sdk.go:
+    last_write_checksum: sha1:192e0c95b0c610cd6b73cd558a863481e5e8a0fd
+  internal/provider/npapublishersbulkprofileupdates_resource.go:
+    last_write_checksum: sha1:6e3ee0cc9ed94988f8ef897a089f554144bb06cf
+  internal/provider/npapublishersbulkprofileupdates_resource_sdk.go:
+    last_write_checksum: sha1:680e95f4742b60e4d736973c3b5234498fe9a41c
+  internal/provider/npapublishersbulkupgraderequest_resource.go:
+    last_write_checksum: sha1:e45a7fa6b8b5cc6c2039958b2917ba82ea67c54a
+  internal/provider/npapublishersbulkupgraderequest_resource_sdk.go:
+    last_write_checksum: sha1:975481fbfbb9d28e6dd65ac04815133c51ce3c7c
+  internal/provider/npapublishershostosversions_data_source.go:
+    last_write_checksum: sha1:50c11b60e41c28fe1da94fb1ebf47c4aba1e7b6d
+  internal/provider/npapublishershostosversions_data_source_sdk.go:
+    last_write_checksum: sha1:eecf7ca01b39b849108395cf0c2e942fab8e0902
+  internal/provider/npapublisherslist_data_source.go:
+    last_write_checksum: sha1:dec855195034d8657d5ad33a58f9065a5809a053
+  internal/provider/npapublisherslist_data_source_sdk.go:
+    last_write_checksum: sha1:2cb645e6643b14f54223d8ad0a31672c42b47f0f
+  internal/provider/npapublishersreleaseslist_data_source.go:
+    last_write_checksum: sha1:acaee3b85695102468b4593448164e12e533fb5d
+  internal/provider/npapublishersreleaseslist_data_source_sdk.go:
+    last_write_checksum: sha1:555f1a13aa3141ee5ff5ebee341539727e6ef357
+  internal/provider/npapublishertoken_resource.go:
+    last_write_checksum: sha1:21f9c5a41d68dce71aa7ff20553329c410e7e187
+  internal/provider/npapublishertoken_resource_sdk.go:
+    last_write_checksum: sha1:21cb5b61aa198752ea58481abd9390ed2c2184b7
+  internal/provider/npapublisherupgradeprofile_data_source.go:
+    last_write_checksum: sha1:2da93637925f9670b438e322dfba781f84219a0d
+  internal/provider/npapublisherupgradeprofile_data_source_sdk.go:
+    last_write_checksum: sha1:c46a61d26950a81bb71c0c4686547097cb959e5b
+  internal/provider/npapublisherupgradeprofile_resource.go:
+    last_write_checksum: sha1:0c0fbe2744478783142f6cf4167098624726afef
+  internal/provider/npapublisherupgradeprofile_resource_sdk.go:
+    last_write_checksum: sha1:aa6b2f74e7c95c60a2aae42dd1074ccb142c9a30
+  internal/provider/npapublisherupgradeprofileslist_data_source.go:
+    last_write_checksum: sha1:db25eebc93136ea602e06d4fba0c3af7dd8798ae
+  internal/provider/npapublisherupgradeprofileslist_data_source_sdk.go:
+    last_write_checksum: sha1:e98c7154a78cba5750003cab6e1d71ee6fc781f1
+  internal/provider/nparules_data_source.go:
+    last_write_checksum: sha1:0338a295af74f05e9dcc70750dcf589d2d630a2c
+  internal/provider/nparules_data_source_sdk.go:
+    last_write_checksum: sha1:1cb1a959ae6d3f1b27e8d30e08075aa53506beea
+  internal/provider/nparules_resource.go:
+    last_write_checksum: sha1:0e60850fb409e78d251991be9eb5be3d7f39044e
+  internal/provider/nparules_resource_sdk.go:
+    last_write_checksum: sha1:506556ab730569bd729744f90aa818e8353dcd39
+  internal/provider/nparuleslist_data_source.go:
+    last_write_checksum: sha1:b7ecc20196fb925f50179cce85d31b18aee83b1f
+  internal/provider/nparuleslist_data_source_sdk.go:
+    last_write_checksum: sha1:d29d428241fdfe74f6207992057e6a15f17eb0dd
+  internal/provider/provider.go:
+    last_write_checksum: sha1:5cbe6096ce374ec23bb9c5ff70119a3deafc10f8
+  internal/provider/reflect/diags.go:
+    last_write_checksum: sha1:ace8bc53054bb1d8ee8689acf3e4323de75a6297
+  internal/provider/reflect/doc.go:
+    last_write_checksum: sha1:67814656717ff0d0ff38fd9db09872e28666642b
+  internal/provider/reflect/generic_attr_value.go:
+    last_write_checksum: sha1:33300f91738c9b79e41ea4d8f3581d6800ac06ef
+  internal/provider/reflect/helpers.go:
+    last_write_checksum: sha1:3a2083aa9f84f5a54638803f2225daf86408d360
+  internal/provider/reflect/interfaces.go:
+    last_write_checksum: sha1:e03017ee98ee8d1bd64fde7a025975638bcfaed7
+  internal/provider/reflect/into.go:
+    last_write_checksum: sha1:7a29c6e2fd31069faddc441132ff04a92a6198be
+  internal/provider/reflect/map.go:
+    last_write_checksum: sha1:803a218b09d4d9de46d27a5c0227ed3fc6617f62
+  internal/provider/reflect/number.go:
+    last_write_checksum: sha1:ff756986a30b648c423b9af8996584ffc5983514
+  internal/provider/reflect/options.go:
+    last_write_checksum: sha1:735603671bc13388dca9edeb7fefc0b229196793
+  internal/provider/reflect/outof.go:
+    last_write_checksum: sha1:46f09acf317888545161fc1cd288113bd3836ead
+  internal/provider/reflect/pointer.go:
+    last_write_checksum: sha1:92cc23f30396e1a9204f70ac68ebfe7d58cbb967
+  internal/provider/reflect/primitive.go:
+    last_write_checksum: sha1:8b7708414f8be915065952b31986869feaa2fae6
+  internal/provider/reflect/slice.go:
+    last_write_checksum: sha1:70ce36709e204b74e3ded36c4683df7e48df294f
+  internal/provider/reflect/struct.go:
+    last_write_checksum: sha1:504fa0ca7711df0887f8c265c7acb3774e89afe7
+  internal/provider/typeconvert/date.go:
+    last_write_checksum: sha1:afcb6037228d3850dff614c97b83d288ebeda6c7
+  internal/provider/typeconvert/datetime.go:
+    last_write_checksum: sha1:a2a20e6785f1e12c3f94c016cbc106e54942e981
+  internal/provider/typeconvert/int.go:
+    last_write_checksum: sha1:c28123f17006dc96a233f916a17c38408e37b71f
+  internal/provider/types/apply.go:
+    last_write_checksum: sha1:0d17d70b7d45af037086c61527b4260c394cbd7c
+  internal/provider/types/assessment.go:
+    last_write_checksum: sha1:08f4f626ad9484116eca1e68dcc3e3b7eea9eb35
+  internal/provider/types/data.go:
+    last_write_checksum: sha1:69be5d1ee58c6c8da7839e7ed0e36ccb5f4f4b3a
+  internal/provider/types/get_npa_private_app_public_host_data.go:
+    last_write_checksum: sha1:e117997535dda0dceb90adbc4a0ccfacb6bfd9bc
+  internal/provider/types/group_order.go:
+    last_write_checksum: sha1:699c5b3e369f805b063da3686f84fae5012059d9
+  internal/provider/types/labels.go:
+    last_write_checksum: sha1:887fdd5f24a450b95659fadff8bc6b78b4e705f9
+  internal/provider/types/match_criteria_action.go:
+    last_write_checksum: sha1:ac2fd5988add715a0e7d7c667804b6442030bc1a
+  internal/provider/types/npa_policy_response_item.go:
+    last_write_checksum: sha1:c435ba7023f471f465e9501d8ad3a3302fdffaa2
+  internal/provider/types/npa_policy_rule_data.go:
+    last_write_checksum: sha1:573d362cfb1757cca89c6df74765c4e24cbdd019
+  internal/provider/types/npa_policy_rule_periodic_reauth.go:
+    last_write_checksum: sha1:abda72e0a713ae085aa22b3ed140cf54ba19f0bb
+  internal/provider/types/npa_policygroup_response_item.go:
+    last_write_checksum: sha1:05e7ce1778560493ba57558b93cb579f52be1094
+  internal/provider/types/private_apps_item.go:
+    last_write_checksum: sha1:f907eadaff41faa072e0c4afe13dd23fc9927a7e
+  internal/provider/types/protocol_item.go:
+    last_write_checksum: sha1:b30b1bf37853a97ef0acf905c04b99c4241f2ad5
+  internal/provider/types/publisher_bulk_item.go:
+    last_write_checksum: sha1:a3d64c95f53e8c888c2cd66f91b4e159f5468675
+  internal/provider/types/publisher_item.go:
+    last_write_checksum: sha1:abb36fb5e85b50d1675e510ce1eb539cf1a34a8f
+  internal/provider/types/publisher_response_assessment.go:
+    last_write_checksum: sha1:4f1ebc15f902163f21b749962436fbf22666f2db
+  internal/provider/types/publisher_response_ca_certs_status.go:
+    last_write_checksum: sha1:56387e079fbe34f4f5b07c6e7e5411a19a0c0dfd
+  internal/provider/types/publisher_response_capabilities.go:
+    last_write_checksum: sha1:24081b552d75b53ef9df87d68ef20a9fb2151ec3
+  internal/provider/types/publisher_response_labels.go:
+    last_write_checksum: sha1:52942d5a5df435b1ef6dc0f8c2e596322eb34a8c
+  internal/provider/types/publisher_response_pull_nsconfig.go:
+    last_write_checksum: sha1:5a69a5998d166eb3e3854fd4ba233344ef23aba3
+  internal/provider/types/publisher_response_upgrade_failed_reason.go:
+    last_write_checksum: sha1:e1f9f7bb2e001645edee9fd11f4cdfb2c215ce9e
+  internal/provider/types/publisher_response_upgrade_status.go:
+    last_write_checksum: sha1:092a11f0083866e97953ff7f4c7d15c0c5528f06
+  internal/provider/types/publisher_upgrade_profile_bulk_request_apply.go:
+    last_write_checksum: sha1:7a14eb9419ff430d61e2164a731d4231a6bd7756
+  internal/provider/types/publisher_upgrade_profile_bulk_request_publishers.go:
+    last_write_checksum: sha1:3965ca5fc6d66e0ffe27d1226f04a2d7c29cc2b2
+  internal/provider/types/publisher_upgrade_profile_bulk_response_data.go:
+    last_write_checksum: sha1:3d43e6ac087d6f78b1d9671b0bfedf4b05733aa6
+  internal/provider/types/publisher_upgrade_profile_list_response_data.go:
+    last_write_checksum: sha1:573328930652c0389fe8fd9117e2093752ce2f4e
+  internal/provider/types/publishers.go:
+    last_write_checksum: sha1:7d91b29af91914df3371ebe31765f8187ee701db
+  internal/provider/types/publishers_bulk_response_data.go:
+    last_write_checksum: sha1:2156634c9e9e52fac02aa797912173231f27d03b
+  internal/provider/types/publishers_get_response_data.go:
+    last_write_checksum: sha1:8a66257cf2a85c4ff34f7fb0dad7dd37c5567ed6
+  internal/provider/types/publishers_get_response_publishers.go:
+    last_write_checksum: sha1:28edd6bb97f6f6f9b56712b53308a65f5c895418
+  internal/provider/types/publishers_host_os_version_get_response_data.go:
+    last_write_checksum: sha1:156d5b6beac826243afc00b8addb25fa46d2dead
+  internal/provider/types/publishers_private_apps_response_data.go:
+    last_write_checksum: sha1:8a728c92979af6cc5b414d0bdbe29d1aea738064
+  internal/provider/types/release_item.go:
+    last_write_checksum: sha1:ec7255fa8644cc8e6d8f7b67b0300cd7414a6888
+  internal/provider/types/response_body.go:
+    last_write_checksum: sha1:f30b471ce53012d9ce222ff1297ac0f037454faa
+  internal/provider/types/rule_order.go:
+    last_write_checksum: sha1:55c8cddd28dcbe02cf882c25111b6bb15f123526
+  internal/provider/types/tag_item.go:
+    last_write_checksum: sha1:77d89f6c08c192be1a3f239759358a6792d5f533
+  internal/provider/types/upgrade_profiles.go:
+    last_write_checksum: sha1:488a57246877af6a0f821c31d12525a3af4819b1
+  internal/provider/types/upgrade_publisher_response.go:
+    last_write_checksum: sha1:5801b2fbf9e07735a804916d3d93245c8c328adc
+  internal/provider/types/upgrade_publisher_response_assessment.go:
+    last_write_checksum: sha1:07c35ecf9ed7eb03b0edb713d12ececc68b7d6cf
+  internal/provider/types/upgrade_publisher_response_ca_certs_status.go:
+    last_write_checksum: sha1:403a961ffe2867c82833935a1eb81f5e71e8edfb
+  internal/provider/types/upgrade_publisher_response_upgrade_failed_reason.go:
+    last_write_checksum: sha1:bec569cffbf58a1016e945b795a865677ee6e0d6
+  internal/provider/utils.go:
+    last_write_checksum: sha1:251291bb4f48cc7603b1c2e86d85d5a6c1a9d39e
+  internal/sdk/.gitattributes:
+    last_write_checksum: sha1:84b0115789fc3ea52e31df701d8a27f76077e29f
+  internal/sdk/internal/config/sdkconfiguration.go:
+    last_write_checksum: sha1:ee4747b6fe534a2724e3d71894543e19c5c244c2
+  internal/sdk/internal/hooks/hooks.go:
+    last_write_checksum: sha1:ce13db3514ce24ede2bdf884d8b677115fe140d9
+  internal/sdk/internal/utils/contenttype.go:
+    last_write_checksum: sha1:ab5cfd860d02c6e6a37f89e2b5649a9859947fb1
+  internal/sdk/internal/utils/env.go:
+    last_write_checksum: sha1:1e0bcb2d2caed9f3657f1dbc99b55811bed0298c
+  internal/sdk/internal/utils/form.go:
+    last_write_checksum: sha1:045db076d491df1c9c98df4b1504c7e595b4d4b4
+  internal/sdk/internal/utils/headers.go:
+    last_write_checksum: sha1:f4c13370052f5aa761e2cf842731dbaf1a67e5b5
+  internal/sdk/internal/utils/json.go:
+    last_write_checksum: sha1:d0364a004f33f6a6651fecfa61ccca32c9880310
+  internal/sdk/internal/utils/pathparams.go:
+    last_write_checksum: sha1:1f0b23fd63d16ada7399ab2878fb83cfdd98b662
+  internal/sdk/internal/utils/queryparams.go:
+    last_write_checksum: sha1:6d355d84c56b01a7fbd19b8c9364c9f2a27e5e4b
+  internal/sdk/internal/utils/requestbody.go:
+    last_write_checksum: sha1:1b471747552ef6dfe6ae731c67705563c06a5569
+  internal/sdk/internal/utils/retries.go:
+    last_write_checksum: sha1:2d2cf231096377eae9aac1a252d913f1910ca793
+  internal/sdk/internal/utils/security.go:
+    last_write_checksum: sha1:bb9cc1870101f6d2a990766f3eb0ea37292f7507
+  internal/sdk/internal/utils/union.go:
+    last_write_checksum: sha1:31308d9bb0e75371f560f81aac1611267fa962ce
+  internal/sdk/internal/utils/union_test.go:
+    last_write_checksum: sha1:83ac73c1901de4c6db90f65cf5879163f3d47a00
+  internal/sdk/internal/utils/utils.go:
+    last_write_checksum: sha1:d88d96cc244301d137581432095043f27a3e17b0
+  internal/sdk/models/errors/sdkerror.go:
+    last_write_checksum: sha1:5d65fce5049df7c5113e11c9ccb1e4c46b91901c
+  internal/sdk/models/operations/bulkupdatenpapublishers.go:
+    last_write_checksum: sha1:733dc2a9ef87b43767dc394ac6b9a4d3f4fc6c1e
+  internal/sdk/models/operations/createnpapolicygroups.go:
+    last_write_checksum: sha1:58188be82759da9abd54bdc5ace2df7580b609da
+  internal/sdk/models/operations/createnpaprivateapps.go:
+    last_write_checksum: sha1:98c55a9573acb35bddbb2ec7398256ab7c30e409
+  internal/sdk/models/operations/createnpapublisheralerts.go:
+    last_write_checksum: sha1:79470706ca97ef3d4b7cd842ff8e393fc01f49ce
+  internal/sdk/models/operations/createnpapublishers.go:
+    last_write_checksum: sha1:6b10e98aa378187e7e92bb2fba267a79a7489c04
+  internal/sdk/models/operations/createnpapublisherupgradeprofile.go:
+    last_write_checksum: sha1:b9d5cedb8a12a1574f4bda3ea3b2ba9d9706028c
+  internal/sdk/models/operations/createnparules.go:
+    last_write_checksum: sha1:7ec1266d5e9050b6dba07766ff380965038ac46d
+  internal/sdk/models/operations/deletenpapolicygroups.go:
+    last_write_checksum: sha1:c10072e56168405d404994058c62c96700b05a6d
+  internal/sdk/models/operations/deletenpaprivateapp.go:
+    last_write_checksum: sha1:54b4214b63f112317fefbaa7baba67a307dbb622
+  internal/sdk/models/operations/deletenpapublishers.go:
+    last_write_checksum: sha1:eb3ea38ed16247d14687e07a5a599525da4ec149
+  internal/sdk/models/operations/deletenpapublisherupgradeprofile.go:
+    last_write_checksum: sha1:e705eaedc28111fbcdce3422f64aa14a4d88fdc7
+  internal/sdk/models/operations/deletenparules.go:
+    last_write_checksum: sha1:7406cd01c0a77fe53d4253077793f3b4afbe5faa
+  internal/sdk/models/operations/generatenpapublishertoken.go:
+    last_write_checksum: sha1:b79242f2339c04f59fd0598087c240c428343263
+  internal/sdk/models/operations/getnpapolicygroups.go:
+    last_write_checksum: sha1:4f61000e27ce921d15bd2434215a90ad6df636bc
+  internal/sdk/models/operations/getnpapolicyinuse.go:
+    last_write_checksum: sha1:88d174eb5d0d2f24f48ed0b5b6329acaf2d3f87a
+  internal/sdk/models/operations/getnpaprivateapp.go:
+    last_write_checksum: sha1:c1f56c0dd43c2c011a743af4079ed08ffd2b9ff3
+  internal/sdk/models/operations/getnpaprivateapppublichost.go:
+    last_write_checksum: sha1:00fca8dc072c5f55b279e5c7ddda913db95bfeee
+  internal/sdk/models/operations/getnpapublisheralerts.go:
+    last_write_checksum: sha1:2c9a7e59266c14c419076668169b8ec6f596bd41
+  internal/sdk/models/operations/getnpapublisherapps.go:
+    last_write_checksum: sha1:5d410a826693c2edc7f7a6845c063eaabaf1aa75
+  internal/sdk/models/operations/getnpapublisherbyid.go:
+    last_write_checksum: sha1:11c147b5b4d717af4cb87f05eace2434009b8c26
+  internal/sdk/models/operations/getnpapublisherhostosversions.go:
+    last_write_checksum: sha1:4936a1855d39c7eb0c3d23f4c2c16edfe6939f08
+  internal/sdk/models/operations/getnpapublisherobjects.go:
+    last_write_checksum: sha1:69045cff69d41620a0a5583db621789e504f8456
+  internal/sdk/models/operations/getnpapublishers.go:
+    last_write_checksum: sha1:114bcbd6dea41899666ac5917a3f60671867c708
+  internal/sdk/models/operations/getnpapublisherupgradeprofile.go:
+    last_write_checksum: sha1:a0e30452c53ef0a9e586fc693911bb84c44989ac
+  internal/sdk/models/operations/getnparules.go:
+    last_write_checksum: sha1:5c390e9ba76d84e2be62ed6dbdee50f9d0749f83
+  internal/sdk/models/operations/listnpapolicygroups.go:
+    last_write_checksum: sha1:2a89ceb7367dc35f6ca11f3e4cc259d21a0186dd
+  internal/sdk/models/operations/listnpaprivateapps.go:
+    last_write_checksum: sha1:4f23411fbee23894e0fdda99e49395f1477107e7
+  internal/sdk/models/operations/listnpapublisherupgradeprofiles.go:
+    last_write_checksum: sha1:fd8ad5383a49374046c17b7bf0185af5c78fc8af
+  internal/sdk/models/operations/listnparules.go:
+    last_write_checksum: sha1:1675ba44a48cfc54531d4b4d2d6fe3a1750710a0
+  internal/sdk/models/operations/options.go:
+    last_write_checksum: sha1:0c63dae4b8b9c6f327110494deee17e0e709e0f5
+  internal/sdk/models/operations/patchsteeringappsprivateprivateappid.go:
+    last_write_checksum: sha1:66a77338225c84bcee95dbd9201a48f3b72e2999
+  internal/sdk/models/operations/triggernpapublisherupdates.go:
+    last_write_checksum: sha1:eb51ee571d5984669492fdb143676b91f15be8c5
+  internal/sdk/models/operations/updatenpapolicygroups.go:
+    last_write_checksum: sha1:891a880edc32e4f00f577a2992746b83aed0f6d3
+  internal/sdk/models/operations/updatenpaprivateapp.go:
+    last_write_checksum: sha1:8547b9c8ed23b983b4b9750566981086c09424dc
+  internal/sdk/models/operations/updatenpapublisherbyid.go:
+    last_write_checksum: sha1:b0da6ed67f0d397329ff27e598ead09e1c621d72
+  internal/sdk/models/operations/updatenpapublisherupgradeprofile.go:
+    last_write_checksum: sha1:cc4e4e4be2f6039dff49b444a3be67b7009ee9f9
+  internal/sdk/models/operations/updatenparules.go:
+    last_write_checksum: sha1:5820e81729b228360eca3b6dd935ddf71a26386d
+  internal/sdk/models/shared/fourhundred.go:
+    last_write_checksum: sha1:5c6c09da07c39878610dadf20fad4a2aac778ca9
+  internal/sdk/models/shared/npapolicygrouprequest.go:
+    last_write_checksum: sha1:149d15418dc2df83f1cf40840e7897e3a7494f7a
+  internal/sdk/models/shared/npapolicygroupresponse.go:
+    last_write_checksum: sha1:2a40caa33d80875bf4b344e33aae3cae3c984d2a
+  internal/sdk/models/shared/npapolicygroupresponse400.go:
+    last_write_checksum: sha1:242396334abd627e7b1c709909bd8145bdbd83ce
+  internal/sdk/models/shared/npapolicygroupresponseitem.go:
+    last_write_checksum: sha1:75e8aa07fd6644aa5ba314cf39418338dddd400c
+  internal/sdk/models/shared/npapolicyrequest.go:
+    last_write_checksum: sha1:40dc773527ae78188204dd8fed850d468f599476
+  internal/sdk/models/shared/npapolicyresponse.go:
+    last_write_checksum: sha1:da57af13ca88087c09ea455daf8c32dea423e8ce
+  internal/sdk/models/shared/npapolicyresponse400.go:
+    last_write_checksum: sha1:b05744ec746c8108e894df0a7a808ee983356879
+  internal/sdk/models/shared/npapolicyresponseitem.go:
+    last_write_checksum: sha1:f43905d093a3eb8b2402b6674cc25cc8172254d4
+  internal/sdk/models/shared/npapolicyruledata.go:
+    last_write_checksum: sha1:e24c5cbcf4c5fdedf62e6f418ce730d5d43bf8f0
+  internal/sdk/models/shared/npapolicyruledlp.go:
+    last_write_checksum: sha1:cef9f642bbcaba3a458370502561f5806ba1c225
+  internal/sdk/models/shared/npapolicyruleperiodicreauth.go:
+    last_write_checksum: sha1:a4a4808bbacb89a39190073560a647dcc94249ac
+  internal/sdk/models/shared/npapolicyruletss.go:
+    last_write_checksum: sha1:1c8a73dcb1fb6c858765c501abc7f07d335d5160
+  internal/sdk/models/shared/npaschedule.go:
+    last_write_checksum: sha1:f61c36641398a7a1c76739e41973f69a815952b1
+  internal/sdk/models/shared/privateappsgetresponse.go:
+    last_write_checksum: sha1:09023fce89c8afd7990d0d7a2a9380fe1e765a9c
+  internal/sdk/models/shared/privateappsitem.go:
+    last_write_checksum: sha1:0f772ac35b614330d93a188c79e8b5f6117190c9
+  internal/sdk/models/shared/privateappslistresponse.go:
+    last_write_checksum: sha1:1c376d24c5d043c7fe584eb9c45340df48b997a4
+  internal/sdk/models/shared/privateappspostresponse.go:
+    last_write_checksum: sha1:58a4d6b64f2dfcf11acf6f3885de327ba2a17049
+  internal/sdk/models/shared/privateappsputrequest.go:
+    last_write_checksum: sha1:006dc06de2bf3caab5ba873711cdbe59edfb13e5
+  internal/sdk/models/shared/privateappsrequest.go:
+    last_write_checksum: sha1:a8dcdd7ae9066dfb0cdd85b1ab44bd9b9d73b12a
+  internal/sdk/models/shared/privateappsresponse.go:
+    last_write_checksum: sha1:ffc1efbd73f08dd24c942e08eb1cc6958cf5ab01
+  internal/sdk/models/shared/privateappsresponse400.go:
+    last_write_checksum: sha1:bb06de07e9cf5380e01d199e4d621d9a6cfade70
+  internal/sdk/models/shared/protocolitem.go:
+    last_write_checksum: sha1:3457c240ca0532d38e91e07928b7766a21d98be5
+  internal/sdk/models/shared/publisherbulkitem.go:
+    last_write_checksum: sha1:4b0f7fba65aadf68478129bc091b45a64bb57e69
+  internal/sdk/models/shared/publisherbulkrequest.go:
+    last_write_checksum: sha1:5cfe5423d5bb7bf7e85d9d388a8892adf2fdd5a5
+  internal/sdk/models/shared/publisheritem.go:
+    last_write_checksum: sha1:b3bc7ae4fc19f7eda48cfda47485fa86527adafc
+  internal/sdk/models/shared/publisherpatchrequest.go:
+    last_write_checksum: sha1:7141a508dda7eae9fb6d3748b490b5f35a7ad0b6
+  internal/sdk/models/shared/publisherpostrequest.go:
+    last_write_checksum: sha1:f12442257e78602c07d764ba8a22321025babd6b
+  internal/sdk/models/shared/publisherresponse.go:
+    last_write_checksum: sha1:010698fe766490d6ba0030c142146836fdd21293
+  internal/sdk/models/shared/publishersalertgetresponse.go:
+    last_write_checksum: sha1:e88fab02b704baae245ebb926053ec9906272811
+  internal/sdk/models/shared/publishersalertputrequest.go:
+    last_write_checksum: sha1:d71d02dd5a09bd6fc2174d3b9137a1022a6db234
+  internal/sdk/models/shared/publishersalertputresponse.go:
+    last_write_checksum: sha1:e0abc4ead65996fa58f4cae6189c4a7cfec7896b
+  internal/sdk/models/shared/publishersbulkresponse.go:
+    last_write_checksum: sha1:bce6c69697111f0e650c32fa33a6c9bc3c89c627
+  internal/sdk/models/shared/publishersgetresponse.go:
+    last_write_checksum: sha1:bffe8c6dfb9adfdb35180bce9a7c2ab68715e360
+  internal/sdk/models/shared/publishershostosversiongetresponse.go:
+    last_write_checksum: sha1:116389bf166755ea5a88e3a24ee2081a99898e3f
+  internal/sdk/models/shared/publishersprivateappsresponse.go:
+    last_write_checksum: sha1:f7b4fd8b880c244423e5bf5c7e383b21a3bb2a88
+  internal/sdk/models/shared/publishersreleasegetresponse.go:
+    last_write_checksum: sha1:fd9fbae44f1672af914dc3cc0ef6692e02efb7fa
+  internal/sdk/models/shared/publishersresponse400.go:
+    last_write_checksum: sha1:8a372363be0444a6e49c90a3222ba3774ebb5246
+  internal/sdk/models/shared/publisherupgradeprofilebulkrequest.go:
+    last_write_checksum: sha1:1e97f83f7f36c7c93f528e2e924dda21ae2b39c0
+  internal/sdk/models/shared/publisherupgradeprofilebulkresponse.go:
+    last_write_checksum: sha1:bbaae02983e8929b02960fe5e8ad98cdeeddb161
+  internal/sdk/models/shared/publisherupgradeprofilegetresponse.go:
+    last_write_checksum: sha1:e0f31785bedee03283853403c499d7871e05f407
+  internal/sdk/models/shared/publisherupgradeprofilelistresponse.go:
+    last_write_checksum: sha1:9f7265d70cd403f59eb2a61a49f8ddd6c3d47d42
+  internal/sdk/models/shared/publisherupgradeprofilepostrequest.go:
+    last_write_checksum: sha1:dd9d47e4443577dd994dfd7539904ee2a4ced23b
+  internal/sdk/models/shared/publisherupgradeprofileputrequest.go:
+    last_write_checksum: sha1:89abf05a8f751846d2c55d8d35cf6bb8e2885297
+  internal/sdk/models/shared/publisherupgradeprofileresponse.go:
+    last_write_checksum: sha1:2f83fe2be63c6c4d66ec98268c7d981c34868686
+  internal/sdk/models/shared/releaseitem.go:
+    last_write_checksum: sha1:b5e7e150c8842275a926a1b9dd62a4cc4f09a506
+  internal/sdk/models/shared/security.go:
+    last_write_checksum: sha1:aead84d8e3563265fe82e536f2389bb336bb67ba
+  internal/sdk/models/shared/servicepublisherassignmentitem.go:
+    last_write_checksum: sha1:2f0da031a21607b8c3feca83512e86b1966384ec
+  internal/sdk/models/shared/statusenum.go:
+    last_write_checksum: sha1:7dcf268445983f8cd2d504e0470c03f3d11cfd26
+  internal/sdk/models/shared/tagitem.go:
+    last_write_checksum: sha1:048cfb90228c18907e7462fbf857b347fefcf3e2
+  internal/sdk/models/shared/tagitemnoid.go:
+    last_write_checksum: sha1:378aa192cdc0770d70e253eeba89066bb23a34b2
+  internal/sdk/models/shared/upgradepublisherresponse.go:
+    last_write_checksum: sha1:a427895437c515581cfdb75200b8ff02e9ff6aed
+  internal/sdk/npaprivateapp.go:
+    last_write_checksum: sha1:cde8961e7e8613006aa28406d789d054a10053b8
+  internal/sdk/npapublisher.go:
+    last_write_checksum: sha1:5f60db7d05046ac353b8e74ce484134b38d92a53
+  internal/sdk/npapublisherapps.go:
+    last_write_checksum: sha1:3f59c38e8e8eaac99bf8204d0c7bab616f791e9f
+  internal/sdk/npapublishers.go:
+    last_write_checksum: sha1:c06064582774fdb762066e2bfe835fc0b308f2d5
+  internal/sdk/npapublishersreleases.go:
+    last_write_checksum: sha1:4a4574a8b49499a26866e75d88e042ff0c436089
+  internal/sdk/npapublishertoken.go:
+    last_write_checksum: sha1:ade3b21d124bba3f98637f8bed32d82e3f829ba6
+  internal/sdk/npapublisherupgradeprofile.go:
+    last_write_checksum: sha1:6a8dc900f0456d14c7576a6668e52b749cfe0cb8
+  internal/sdk/npapublisherupgradeprofiles.go:
+    last_write_checksum: sha1:4c18e76abc5e43f699b261d9331f143b5214a2b4
+  internal/sdk/optionalnullable/optionalnullable.go:
+    last_write_checksum: sha1:d6aff1a420c31e025ea21d46cf056e305ae76fe8
+  internal/sdk/optionalnullable/optionalnullable_test.go:
+    last_write_checksum: sha1:2e9433eff1651ac77d6678ea76880d9a4980cbc2
+  internal/sdk/retry/config.go:
+    last_write_checksum: sha1:f565273be789ffe0e3c160de1ac72a63cfe67fbe
+  internal/sdk/terraformproviderns.go:
+    last_write_checksum: sha1:0592b6d4a16edd050f2f0f95cd8923395006d888
+  internal/sdk/types/bigint.go:
+    last_write_checksum: sha1:49b004005d0461fb04b846eca062b070b0360b31
+  internal/sdk/types/date.go:
+    last_write_checksum: sha1:3036a2e1ed15a1d484c093367eba000c38f384d0
+  internal/sdk/types/datetime.go:
+    last_write_checksum: sha1:196d050af6450669214e9ae4fd28e56263ae2b5d
+  internal/sdk/types/pointers.go:
+    last_write_checksum: sha1:fc2275ea006257ba9ba4ff6f2a2cdb6205371eef
+  internal/validators/DateValidator.go:
+    last_write_checksum: sha1:cdb0d3d70f4f1c408f8c18402792190cf2f45336
+  internal/validators/ExactlyOneChild.go:
+    last_write_checksum: sha1:ab8e18d1763fbd5b262c3e7d917c81ac40ba839f
+  internal/validators/JSONParseValidator.go:
+    last_write_checksum: sha1:77af551821798350f868410aab90352f7ec7b370
+  internal/validators/RFC3339Validator.go:
+    last_write_checksum: sha1:8d9accfc3aa477a74b0f927652f5e2ae3d28061d
+  internal/validators/boolvalidators/not_null.go:
+    last_write_checksum: sha1:89a7362be9d519ed7c9fb7c4989d273a3aa5f279
+  internal/validators/float32validators/not_null.go:
+    last_write_checksum: sha1:4f0a859aa9d7348056c6559bad9ca336104beaef
+  internal/validators/float64validators/not_null.go:
+    last_write_checksum: sha1:f2436a4a1323d58ffcff3b153167c4e463325c12
+  internal/validators/int32validators/not_null.go:
+    last_write_checksum: sha1:d08335af46ab809d0076da8543b3455662fb66a0
+  internal/validators/int64validators/not_null.go:
+    last_write_checksum: sha1:b5bf5b539f2631813ee8771cf00d8ea9744c6dd3
+  internal/validators/listvalidators/not_null.go:
+    last_write_checksum: sha1:11f33dfa3cb1b9eadc7e4a8287518135ddae191e
+  internal/validators/mapvalidators/not_null.go:
+    last_write_checksum: sha1:64117afe6cdb1a0e1b57df970da8df0e18d10442
+  internal/validators/numbervalidators/not_null.go:
+    last_write_checksum: sha1:54d925f13a630f21e14709ce6181e5eaf96bd6e3
+  internal/validators/objectvalidators/not_null.go:
+    last_write_checksum: sha1:5f897f5dcd2686d43c9bd683900572a8d7ef6473
+  internal/validators/setvalidators/not_null.go:
+    last_write_checksum: sha1:de772bcb14615735a8ebd2a9ffaae06f464a86d5
+  internal/validators/stringvalidators/not_null.go:
+    last_write_checksum: sha1:df498b49dd87f9508f3eaec3a63ed0a08ae3c16e
+  main.go:
+    last_write_checksum: sha1:9fb35023b057dbf74893acd6a499b0c0dc339678
+  terraform-registry-manifest.json:
+    last_write_checksum: sha1:45b609f3f65164bc2f00b6e2b24faf64627e15b8
+  tools/tools.go:
+    last_write_checksum: sha1:8239addbb5e66af0488adc7dc4aba098e4634d88

@@ -40,6 +40,19 @@ func (i *myPolicyResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.R
 		log.Print("--------------------")
 		log.Print(responseMap)
 		log.Print("--------------------")
+		// Defensive nil checks to prevent crash if RuleData or PrivateApps is nil
+		if responseMap.Data.RuleData == nil {
+			log.Print("WARNING: RuleData is nil, skipping privateApps transformation")
+			// Restore body and return without modification
+			res.Body = io.NopCloser(strings.NewReader(string(body)))
+			return res, nil
+		}
+		if responseMap.Data.RuleData.PrivateApps == nil {
+			log.Print("INFO: PrivateApps is nil, skipping transformation")
+			// Restore body and return without modification
+			res.Body = io.NopCloser(strings.NewReader(string(body)))
+			return res, nil
+		}
 		oldPrivateAppValue := responseMap.Data.RuleData.PrivateApps
 		responseMap.Data.RuleData.PrivateApps = nil
 		for _, untrimmedApp := range oldPrivateAppValue {
