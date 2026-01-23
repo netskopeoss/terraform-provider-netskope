@@ -1,0 +1,60 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+      - 'release/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Unit tests run on every push and PR
+  unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run unit tests
+        run: go test -v ./... -timeout 10m
+
+  # Acceptance tests run on main branch pushes only (not PRs)
+  # These require real API credentials and create actual resources
+  acceptance:
+    name: Acceptance Tests
+    runs-on: ubuntu-latest
+    needs: unit
+    # Only run on push to main, not on PRs (to avoid exposing secrets)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run acceptance tests
+        env:
+          TF_ACC: "1"
+          NETSKOPE_API_KEY: ${{ secrets.NETSKOPE_API_KEY }}
+          NETSKOPE_SERVER_URL: ${{ secrets.NETSKOPE_SERVER_URL }}
+        run: go test -v ./internal/provider/... -timeout 120m -parallel 1
+        # Using -parallel 1 to avoid API rate limiting
