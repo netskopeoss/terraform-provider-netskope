@@ -30,7 +30,9 @@ func (o *ServicePublisherAssignmentItemReachability) GetReachable() *bool {
 }
 
 type ServicePublisherAssignmentItem struct {
-	Primary             *bool                                       `json:"primary,omitempty"`
+	Primary *bool `json:"primary,omitempty"`
+	// Publisher ID used for assignment
+	PublisherID         *string                                     `json:"publisher_id,omitempty"`
 	PublisherExternalID *int                                        `json:"publisher_external_id,omitempty"`
 	PublisherName       *string                                     `json:"publisher_name,omitempty"`
 	Reachability        *ServicePublisherAssignmentItemReachability `json:"reachability,omitempty"`
@@ -42,6 +44,13 @@ func (o *ServicePublisherAssignmentItem) GetPrimary() *bool {
 		return nil
 	}
 	return o.Primary
+}
+
+func (o *ServicePublisherAssignmentItem) GetPublisherID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.PublisherID
 }
 
 func (o *ServicePublisherAssignmentItem) GetPublisherExternalID() *int {

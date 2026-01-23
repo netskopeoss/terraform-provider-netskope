@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type ServicePublisherAssignmentItemReachability struct {
+type PublishersPrivateAppsResponseReachability struct {
 	ErrorCode   types.Int32  `tfsdk:"error_code"`
 	ErrorString types.String `tfsdk:"error_string"`
 	Reachable   types.Bool   `tfsdk:"reachable"`

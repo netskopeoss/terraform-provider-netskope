@@ -45,29 +45,16 @@ func (r *NPAPrivateAppsListDataSourceModel) RefreshFromSharedData(ctx context.Co
 					privateApps.Protocols[protocolsCount].Protocol = protocols.Protocol
 				}
 			}
-			privateApps.Publishers = []tfTypes.ServicePublisherAssignmentItem{}
+			privateApps.Publishers = []tfTypes.PublisherItem{}
 			for publishersCount, publishersItem := range privateAppsItem.Publishers {
-				var publishers tfTypes.ServicePublisherAssignmentItem
-				publishers.Primary = types.BoolPointerValue(publishersItem.Primary)
-				publishers.PublisherExternalID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.PublisherExternalID))
+				var publishers tfTypes.PublisherItem
+				publishers.PublisherID = types.StringPointerValue(publishersItem.PublisherID)
 				publishers.PublisherName = types.StringPointerValue(publishersItem.PublisherName)
-				if publishersItem.Reachability == nil {
-					publishers.Reachability = nil
-				} else {
-					publishers.Reachability = &tfTypes.ServicePublisherAssignmentItemReachability{}
-					publishers.Reachability.ErrorCode = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.Reachability.ErrorCode))
-					publishers.Reachability.ErrorString = types.StringPointerValue(publishersItem.Reachability.ErrorString)
-					publishers.Reachability.Reachable = types.BoolPointerValue(publishersItem.Reachability.Reachable)
-				}
-				publishers.ServiceExternalID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.ServiceExternalID))
 				if publishersCount+1 > len(privateApps.Publishers) {
 					privateApps.Publishers = append(privateApps.Publishers, publishers)
 				} else {
-					privateApps.Publishers[publishersCount].Primary = publishers.Primary
-					privateApps.Publishers[publishersCount].PublisherExternalID = publishers.PublisherExternalID
+					privateApps.Publishers[publishersCount].PublisherID = publishers.PublisherID
 					privateApps.Publishers[publishersCount].PublisherName = publishers.PublisherName
-					privateApps.Publishers[publishersCount].Reachability = publishers.Reachability
-					privateApps.Publishers[publishersCount].ServiceExternalID = publishers.ServiceExternalID
 				}
 			}
 			privateApps.RealHost = types.StringPointerValue(privateAppsItem.RealHost)

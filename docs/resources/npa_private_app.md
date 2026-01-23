@@ -82,23 +82,6 @@ Optional:
 - `publisher_id` (String)
 - `publisher_name` (String)
 
-Read-Only:
-
-- `primary` (Boolean)
-- `publisher_external_id` (Number)
-- `reachability` (Attributes) (see [below for nested schema](#nestedatt--publishers--reachability))
-- `service_external_id` (Number)
-
-<a id="nestedatt--publishers--reachability"></a>
-### Nested Schema for `publishers.reachability`
-
-Read-Only:
-
-- `error_code` (Number)
-- `error_string` (String)
-- `reachable` (Boolean)
-
-
 
 <a id="nestedatt--tags"></a>
 ### Nested Schema for `tags`
