@@ -6,6 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type Data struct {
-	Token types.String `tfsdk:"token"`
+type LbrokerConfigResponseData struct {
+	Hostname types.String `tfsdk:"hostname"`
 }

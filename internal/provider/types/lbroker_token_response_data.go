@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type ResponseBody struct {
-	Data   *LbrokerTokenResponseData `tfsdk:"data"`
-	Status types.String              `tfsdk:"status"`
+type LbrokerTokenResponseData struct {
+	Token types.String `tfsdk:"token"`
 }
