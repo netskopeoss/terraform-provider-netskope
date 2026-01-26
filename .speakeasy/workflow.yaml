@@ -9,6 +9,7 @@ sources:
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policygroup.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_publishers.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_upgrade_profiles.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/lbrokers.yaml
         overlays:
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
         registry:

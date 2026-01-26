@@ -320,7 +320,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "0.3.6"
+      version = "0.3.10"
     }
   }
 }
@@ -353,6 +353,9 @@ Available configuration:
 
 ### Resources
 
+* [netskope_npa_local_broker](docs/resources/npa_local_broker.md)
+* [netskope_npa_local_broker_config](docs/resources/npa_local_broker_config.md)
+* [netskope_npa_local_broker_token](docs/resources/npa_local_broker_token.md)
 * [netskope_npa_policy_groups](docs/resources/npa_policy_groups.md)
 * [netskope_npa_private_app](docs/resources/npa_private_app.md)
 * [netskope_npa_private_app_public_host](docs/resources/npa_private_app_public_host.md)
@@ -365,6 +368,9 @@ Available configuration:
 * [netskope_npa_rules](docs/resources/npa_rules.md)
 ### Data Sources
 
+* [netskope_npa_local_broker](docs/data-sources/npa_local_broker.md)
+* [netskope_npa_local_broker_config](docs/data-sources/npa_local_broker_config.md)
+* [netskope_npa_local_brokers_list](docs/data-sources/npa_local_brokers_list.md)
 * [netskope_npa_policy_groups](docs/data-sources/npa_policy_groups.md)
 * [netskope_npa_policy_groups_list](docs/data-sources/npa_policy_groups_list.md)
 * [netskope_npa_private_app](docs/data-sources/npa_private_app.md)
