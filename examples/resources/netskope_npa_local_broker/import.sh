@@ -1,0 +1,1 @@
+terraform import netskope_npa_local_broker.my_netskope_npa_local_broker 0
