@@ -110,6 +110,9 @@ func (p *NetskopeProvider) Configure(ctx context.Context, req provider.Configure
 
 func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		NewNPALocalBrokerResource,
+		NewNPALocalBrokerConfigResource,
+		NewNPALocalBrokerTokenResource,
 		NewNPAPolicyGroupsResource,
 		NewNPAPrivateAppResource,
 		NewNPAPrivateAppPublicHostResource,
@@ -125,6 +128,9 @@ func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Reso
 
 func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewNPALocalBrokerDataSource,
+		NewNPALocalBrokerConfigDataSource,
+		NewNPALocalBrokersListDataSource,
 		NewNPAPolicyGroupsDataSource,
 		NewNPAPolicyGroupsListDataSource,
 		NewNPAPrivateAppDataSource,
