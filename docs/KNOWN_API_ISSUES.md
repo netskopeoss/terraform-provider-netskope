@@ -4,28 +4,31 @@ This document tracks known behavioral inconsistencies and quirks in the Netskope
 
 ## Table of Contents
 
-- [Steering API Issues](#steering-api-issues)
+- [Steering API Issues (1-3)](#steering-api-issues-1-3)
   - [1. App Name Automatic Encapsulation](#1-app-name-automatic-encapsulation)
   - [2. Inconsistent Name Key in Responses](#2-inconsistent-name-key-in-responses)
   - [3. Delete Verification Returns 200 OK with Error](#3-delete-verification-returns-200-ok-with-error)
-  - [8. Empty Objects Cause SQL Serialization Error on Update](#8-empty-objects-cause-sql-serialization-error-on-update)
-  - [9. Protocol Field Name Mismatch (type vs transport)](#9-protocol-field-name-mismatch-type-vs-transport)
-  - [10. Write-Only Fields Not Returned in Response](#10-write-only-fields-not-returned-in-response)
-- [Policy API Issues](#policy-api-issues)
-  - [11. Policy Group Response Wrapper Mismatch](#11-policy-group-response-wrapper-mismatch)
-  - [12. NPA Rules Response Wrapper Mismatch](#12-npa-rules-response-wrapper-mismatch)
-- [Infrastructure API Issues](#infrastructure-api-issues)
+- [Infrastructure API Issues (4-7)](#infrastructure-api-issues-4-7)
   - [4. Missing external_id on Profile Creation](#4-missing-external_id-on-profile-creation)
   - [5. GET on Deleted Resource Returns 200 OK](#5-get-on-deleted-resource-returns-200-ok)
   - [6. id vs external_id Confusion](#6-id-vs-external_id-confusion)
   - [7. Inconsistent Publisher Field Names](#7-inconsistent-publisher-field-names)
-- [14. Protocol Ordering Causes Terraform State Drift](#14-protocol-ordering-causes-terraform-state-drift)
+- [Steering API Issues (8-10)](#steering-api-issues-8-10)
+  - [8. Empty Objects Cause SQL Serialization Error on Update](#8-empty-objects-cause-sql-serialization-error-on-update)
+  - [9. Protocol Field Name Mismatch (type vs transport)](#9-protocol-field-name-mismatch-type-vs-transport)
+  - [10. Write-Only Fields Not Returned in Response](#10-write-only-fields-not-returned-in-response)
+- [Policy API Issues (11-13)](#policy-api-issues-11-13)
+  - [11. Policy Group Response Wrapper Mismatch](#11-policy-group-response-wrapper-mismatch)
+  - [12. NPA Rules Response Wrapper Mismatch](#12-npa-rules-response-wrapper-mismatch)
+  - [13. Response Wrapper `status` Field Excluded from Terraform Schema](#13-response-wrapper-status-field-excluded-from-terraform-schema)
+- [Steering API Issues (14)](#steering-api-issues-14)
+  - [14. Protocol Ordering Causes Terraform State Drift](#14-protocol-ordering-causes-terraform-state-drift)
 - [Terraform Provider Implications](#terraform-provider-implications)
 - [General Recommendations](#general-recommendations)
 
 ---
 
-## Steering API Issues
+## Steering API Issues (1-3)
 
 ### 1. App Name Automatic Encapsulation
 
@@ -111,6 +114,140 @@ Content-Type: application/json
 **Status:** Must be handled by checking `"status": "error"` in response body
 
 ---
+
+## Infrastructure API Issues (4-7)
+
+### 4. Missing external_id on Profile Creation
+
+**Endpoint:** `POST /api/v2/infrastructure/publisherupgradeprofiles`
+
+**Issue:** The creation response only includes `id`, but all other operations (get, update, delete) require `external_id` in the URL path.
+
+**Example:**
+
+```json
+// POST response - only returns 'id'
+{"data": {"id": 29, "name": "Profile", ...}}
+
+// But GET/PUT/DELETE use external_id in path:
+// GET /api/v2/infrastructure/publisherupgradeprofiles/29
+```
+
+**Impact:** The `id` returned from POST must be used as the `external_id` for subsequent operations.
+
+**Status:** Known API behavior - Workaround: use `id` from create response as `external_id` for other operations
+
+---
+
+### 5. GET on Deleted Resource Returns 200 OK
+
+**Endpoint:** `GET /api/v2/infrastructure/publisherupgradeprofiles/{id}`
+
+**Issue:** Similar to Issue #3, querying for a deleted profile returns HTTP 200 OK with an error body instead of HTTP 404.
+
+**Actual Behavior:**
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "message": "No publisher upgrade profile with id 29 found",
+  "status": "error"
+}
+```
+
+**Status:** Must be handled by checking `"status": "error"` in response body
+
+---
+
+### 6. id vs external_id Confusion
+
+**Endpoints:**
+- `POST /api/v2/infrastructure/publisherupgradeprofiles` (create)
+- `GET /api/v2/infrastructure/publisherupgradeprofiles/{id}` (get)
+
+**Issue:** The same resource has two different IDs, and the API inconsistently labels them:
+
+**POST Response (Create):**
+```json
+{
+  "data": {
+    "id": 33,  // This is actually the external_id
+    "name": "TF_Profile"
+  }
+}
+```
+
+**GET Response (Read the same resource using id=33):**
+```json
+{
+  "data": {
+    "id": 11,          // Internal database ID
+    "external_id": 33,  // The ID from POST response
+    "name": "TF_Profile"
+  }
+}
+```
+
+**Impact:**
+- The `id` from POST is actually the `external_id`
+- The `id` in GET responses is a different, internal identifier
+- All URL paths use `external_id`, not `id`
+
+**Status:** Known API design - Use `id` from POST as `external_id` for subsequent operations
+
+---
+
+### 7. Inconsistent Publisher Field Names
+
+**Endpoints:**
+- `POST /api/v2/infrastructure/publishers` (create)
+- `GET /api/v2/infrastructure/publishers` (list)
+
+**Issue:** Different endpoints use different JSON keys for publisher ID and name:
+
+| Operation | ID Field | Name Field |
+|-----------|----------|------------|
+| Create (POST) | `id` | `name` |
+| List (GET) | `publisher_id` | `publisher_name` |
+
+**Example:**
+
+**POST Response (Create):**
+```json
+{
+  "data": {
+    "id": 405,
+    "name": "test-publisher",
+    "status": "enabled"
+  }
+}
+```
+
+**GET Response (List):**
+```json
+{
+  "data": {
+    "publishers": [
+      {
+        "publisher_id": 405,
+        "publisher_name": "test-publisher",
+        "status": "enabled"
+      }
+    ]
+  }
+}
+```
+
+**Impact:**
+- Code processing create vs list responses must handle different field names
+- Cannot reuse the same data structure for both operations
+
+**Status:** Known API inconsistency
+
+---
+
+## Steering API Issues (8-10)
 
 ### 8. Empty Objects Cause SQL Serialization Error on Update
 
@@ -221,6 +358,90 @@ resource "netskope_npa_private_app" "example" {
 **Status:** API limitation - Partial workaround via Speakeasy annotations
 
 ---
+
+## Policy API Issues (11-13)
+
+### 11. Policy Group Response Wrapper Mismatch
+
+**Endpoints:**
+- `POST /api/v2/policy/npa/policygroups` (create)
+- `PATCH /api/v2/policy/npa/policygroups/{id}` (update)
+- `GET /api/v2/policy/npa/policygroups/{id}` (read)
+
+**Issue:** The API wraps responses in a `{"data": {...}, "status": "success"}` envelope.
+
+**Example API response:**
+```json
+{
+  "data": {
+    "group_id": "145",
+    "group_name": "my-group",
+    "group_type": "0",
+    ...
+  },
+  "status": "success"
+}
+```
+
+**Resolution:** The OpenAPI specification has been updated to correctly define the wrapped response structure for all policy group endpoints. The SDK now expects and properly handles the `{"data": {...}, "status": "..."}` envelope natively.
+
+**Status:** ✅ RESOLVED - OAS correctly defines wrapped response structure
+
+---
+
+### 12. NPA Rules Response Wrapper Mismatch
+
+**Endpoints:**
+- `POST /api/v2/policy/npa/rules` (create)
+- `PATCH /api/v2/policy/npa/rules/{id}` (update)
+- `GET /api/v2/policy/npa/rules/{id}` (read)
+- `DELETE /api/v2/policy/npa/rules/{id}` (delete)
+
+**Issue:** Similar to Issue #11, the API wraps all responses in a `{"data": {...}, "status": "success"}` envelope.
+
+**Example API response:**
+```json
+{
+  "data": {
+    "rule_id": "4",
+    "rule_name": "my-rule",
+    "enabled": "1",
+    "rule_data": {...}
+  },
+  "status": "success"
+}
+```
+
+**Resolution:** The OpenAPI specification has been updated to correctly define the wrapped response structure for all NPA rules endpoints. The SDK now expects and properly handles the `{"data": {...}, "status": "..."}` envelope natively.
+
+**Status:** ✅ RESOLVED - OAS correctly defines wrapped response structure
+
+---
+
+### 13. Response Wrapper `status` Field Excluded from Terraform Schema
+
+**Endpoints:** All policy endpoints that return wrapped responses:
+- `POST/GET/PATCH/DELETE /api/v2/policy/npa/rules`
+- `POST/GET/PATCH/DELETE /api/v2/policy/npa/policygroups`
+
+**Issue:** The API response wrapper includes a `status` field (`"success"` or `"error"`) at the envelope level, not as a property of the resource itself:
+
+```json
+{
+  "data": { ...resource properties... },
+  "status": "success"  // <-- This is response-level, not resource-level
+}
+```
+
+The `status` field indicates whether the API call succeeded, not a property of the rule or policy group resource. Including it in the Terraform resource schema would be misleading and cause issues since it's not a persistent attribute of the resource.
+
+**Resolution:** The `status` field is excluded from the Terraform resource schema using `x-speakeasy-terraform-ignore: true` in the OpenAPI specification. The SDK still parses the wrapped response correctly, but the `status` field is not exposed as a Terraform attribute.
+
+**Status:** ✅ RESOLVED - `status` field excluded from Terraform schema via OAS annotation
+
+---
+
+## Steering API Issues (14)
 
 ### 14. Protocol Ordering Causes Terraform State Drift
 
@@ -373,220 +594,6 @@ protocols = [
 2. Group all UDP protocols together after TCP, sorted by port ascending (e.g., 53, 123)
 
 This ensures consistent ordering between your configuration and the API response.
-
----
-
-## Policy API Issues
-
-### 11. Policy Group Response Wrapper Mismatch
-
-**Endpoints:**
-- `POST /api/v2/policy/npa/policygroups` (create)
-- `PATCH /api/v2/policy/npa/policygroups/{id}` (update)
-- `GET /api/v2/policy/npa/policygroups/{id}` (read)
-
-**Issue:** The API wraps responses in a `{"data": {...}, "status": "success"}` envelope.
-
-**Example API response:**
-```json
-{
-  "data": {
-    "group_id": "145",
-    "group_name": "my-group",
-    "group_type": "0",
-    ...
-  },
-  "status": "success"
-}
-```
-
-**Resolution:** The OpenAPI specification has been updated to correctly define the wrapped response structure for all policy group endpoints. The SDK now expects and properly handles the `{"data": {...}, "status": "..."}` envelope natively.
-
-**Status:** ✅ RESOLVED - OAS correctly defines wrapped response structure
-
----
-
-### 12. NPA Rules Response Wrapper Mismatch
-
-**Endpoints:**
-- `POST /api/v2/policy/npa/rules` (create)
-- `PATCH /api/v2/policy/npa/rules/{id}` (update)
-- `GET /api/v2/policy/npa/rules/{id}` (read)
-- `DELETE /api/v2/policy/npa/rules/{id}` (delete)
-
-**Issue:** Similar to Issue #11, the API wraps all responses in a `{"data": {...}, "status": "success"}` envelope.
-
-**Example API response:**
-```json
-{
-  "data": {
-    "rule_id": "4",
-    "rule_name": "my-rule",
-    "enabled": "1",
-    "rule_data": {...}
-  },
-  "status": "success"
-}
-```
-
-**Resolution:** The OpenAPI specification has been updated to correctly define the wrapped response structure for all NPA rules endpoints. The SDK now expects and properly handles the `{"data": {...}, "status": "..."}` envelope natively.
-
-**Status:** ✅ RESOLVED - OAS correctly defines wrapped response structure
-
----
-
-### 13. Response Wrapper `status` Field Excluded from Terraform Schema
-
-**Endpoints:** All policy endpoints that return wrapped responses:
-- `POST/GET/PATCH/DELETE /api/v2/policy/npa/rules`
-- `POST/GET/PATCH/DELETE /api/v2/policy/npa/policygroups`
-
-**Issue:** The API response wrapper includes a `status` field (`"success"` or `"error"`) at the envelope level, not as a property of the resource itself:
-
-```json
-{
-  "data": { ...resource properties... },
-  "status": "success"  // <-- This is response-level, not resource-level
-}
-```
-
-The `status` field indicates whether the API call succeeded, not a property of the rule or policy group resource. Including it in the Terraform resource schema would be misleading and cause issues since it's not a persistent attribute of the resource.
-
-**Resolution:** The `status` field is excluded from the Terraform resource schema using `x-speakeasy-terraform-ignore: true` in the OpenAPI specification. The SDK still parses the wrapped response correctly, but the `status` field is not exposed as a Terraform attribute.
-
-**Status:** ✅ RESOLVED - `status` field excluded from Terraform schema via OAS annotation
-
----
-
-## Infrastructure API Issues
-
-### 4. Missing external_id on Profile Creation
-
-**Endpoint:** `POST /api/v2/infrastructure/publisherupgradeprofiles`
-
-**Issue:** The creation response only includes `id`, but all other operations (get, update, delete) require `external_id` in the URL path.
-
-**Example:**
-
-```json
-// POST response - only returns 'id'
-{"data": {"id": 29, "name": "Profile", ...}}
-
-// But GET/PUT/DELETE use external_id in path:
-// GET /api/v2/infrastructure/publisherupgradeprofiles/29
-```
-
-**Impact:** The `id` returned from POST must be used as the `external_id` for subsequent operations.
-
-**Status:** Known API behavior - Workaround: use `id` from create response as `external_id` for other operations
-
----
-
-### 5. GET on Deleted Resource Returns 200 OK
-
-**Endpoint:** `GET /api/v2/infrastructure/publisherupgradeprofiles/{id}`
-
-**Issue:** Similar to Issue #3, querying for a deleted profile returns HTTP 200 OK with an error body instead of HTTP 404.
-
-**Actual Behavior:**
-```
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "message": "No publisher upgrade profile with id 29 found",
-  "status": "error"
-}
-```
-
-**Status:** Must be handled by checking `"status": "error"` in response body
-
----
-
-### 6. id vs external_id Confusion
-
-**Endpoints:**
-- `POST /api/v2/infrastructure/publisherupgradeprofiles` (create)
-- `GET /api/v2/infrastructure/publisherupgradeprofiles/{id}` (get)
-
-**Issue:** The same resource has two different IDs, and the API inconsistently labels them:
-
-**POST Response (Create):**
-```json
-{
-  "data": {
-    "id": 33,  // This is actually the external_id
-    "name": "TF_Profile"
-  }
-}
-```
-
-**GET Response (Read the same resource using id=33):**
-```json
-{
-  "data": {
-    "id": 11,          // Internal database ID
-    "external_id": 33,  // The ID from POST response
-    "name": "TF_Profile"
-  }
-}
-```
-
-**Impact:**
-- The `id` from POST is actually the `external_id`
-- The `id` in GET responses is a different, internal identifier
-- All URL paths use `external_id`, not `id`
-
-**Status:** Known API design - Use `id` from POST as `external_id` for subsequent operations
-
----
-
-### 7. Inconsistent Publisher Field Names
-
-**Endpoints:**
-- `POST /api/v2/infrastructure/publishers` (create)
-- `GET /api/v2/infrastructure/publishers` (list)
-
-**Issue:** Different endpoints use different JSON keys for publisher ID and name:
-
-| Operation | ID Field | Name Field |
-|-----------|----------|------------|
-| Create (POST) | `id` | `name` |
-| List (GET) | `publisher_id` | `publisher_name` |
-
-**Example:**
-
-**POST Response (Create):**
-```json
-{
-  "data": {
-    "id": 405,
-    "name": "test-publisher",
-    "status": "enabled"
-  }
-}
-```
-
-**GET Response (List):**
-```json
-{
-  "data": {
-    "publishers": [
-      {
-        "publisher_id": 405,
-        "publisher_name": "test-publisher",
-        "status": "enabled"
-      }
-    ]
-  }
-}
-```
-
-**Impact:**
-- Code processing create vs list responses must handle different field names
-- Cannot reuse the same data structure for both operations
-
-**Status:** Known API inconsistency
 
 ---
 
