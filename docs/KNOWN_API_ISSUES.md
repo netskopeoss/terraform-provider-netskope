@@ -19,6 +19,7 @@ This document tracks known behavioral inconsistencies and quirks in the Netskope
   - [5. GET on Deleted Resource Returns 200 OK](#5-get-on-deleted-resource-returns-200-ok)
   - [6. id vs external_id Confusion](#6-id-vs-external_id-confusion)
   - [7. Inconsistent Publisher Field Names](#7-inconsistent-publisher-field-names)
+- [14. Protocol Ordering Causes Terraform State Drift](#14-protocol-ordering-causes-terraform-state-drift)
 - [Terraform Provider Implications](#terraform-provider-implications)
 - [General Recommendations](#general-recommendations)
 
@@ -218,6 +219,160 @@ resource "netskope_npa_private_app" "example" {
 - Accept minor cosmetic drift for `allow_uri_bypass` (defaults to false, functionally correct)
 
 **Status:** API limitation - Partial workaround via Speakeasy annotations
+
+---
+
+### 14. Protocol Ordering Causes Terraform State Drift
+
+**Endpoint:** `GET /api/v2/steering/apps/private/{id}`
+
+**Issue:** When a private app is configured with multiple protocols, the API returns the protocols in a potentially different order than they were specified during creation. The Terraform provider uses a list (ordered) for the `protocols` attribute, so any difference in ordering between the configuration and the API response causes Terraform to detect "drift" and propose changes on every `terraform plan`.
+
+**Example Configuration:**
+
+```hcl
+resource "netskope_npa_private_app" "example" {
+  private_app_name     = "Multi-Protocol App"
+  private_app_hostname = "app.internal.local"
+
+  protocols = [
+    {
+      port     = "443"
+      protocol = "tcp"
+    },
+    {
+      port     = "22"
+      protocol = "tcp"
+    }
+  ]
+  # ...
+}
+```
+
+**API Response (Reordered):**
+
+```json
+{
+  "protocols": [
+    {"port": "22", "transport": "tcp", "id": 123},
+    {"port": "443", "transport": "tcp", "id": 124}
+  ]
+}
+```
+
+**Terraform Plan Output (Perpetual Drift):**
+
+```
+# netskope_npa_private_app.example will be updated in-place
+~ resource "netskope_npa_private_app" "example" {
+    ~ protocols = [
+        ~ {
+            ~ port     = "22" -> "443"
+            ~ protocol = "tcp" -> "tcp"
+          },
+        ~ {
+            ~ port     = "443" -> "22"
+            ~ protocol = "tcp" -> "tcp"
+          },
+      ]
+  }
+```
+
+**Root Cause:** The API backend sorts protocols internally using a two-level sort:
+1. **Protocol type** (alphabetically: `tcp` before `udp`)
+2. **Port number** (ascending within each protocol type)
+
+This ordering is not documented and was discovered through testing. Since Terraform lists are ordered, any difference between configuration order and response order is detected as drift.
+
+**Impact:**
+- Every `terraform plan` shows changes even when no actual changes are needed
+- Running `terraform apply` repeatedly may work but clutters the audit log
+- Tests using `ExpectNonEmptyPlan: false` will fail for multi-protocol apps
+- Users may be confused about why their infrastructure shows pending changes
+
+**Workaround:** **Always specify protocols in the same order the API returns them:**
+1. All TCP protocols first, sorted by port ascending
+2. All UDP protocols second, sorted by port ascending
+
+**Correct Configuration (No Drift):**
+
+```hcl
+# Single protocol type - just sort by port
+protocols = [
+  {
+    port     = "22"       # Lower port first
+    protocol = "tcp"
+  },
+  {
+    port     = "443"      # Higher port second
+    protocol = "tcp"
+  }
+]
+
+# Mixed protocol types - TCP first (sorted), then UDP (sorted)
+protocols = [
+  {
+    port     = "22"       # TCP ports first, sorted ascending
+    protocol = "tcp"
+  },
+  {
+    port     = "443"
+    protocol = "tcp"
+  },
+  {
+    port     = "53"       # UDP ports second, sorted ascending
+    protocol = "udp"
+  },
+  {
+    port     = "123"
+    protocol = "udp"
+  }
+]
+```
+
+**Incorrect Configuration (Causes Drift):**
+
+```hcl
+# WRONG: UDP before TCP
+protocols = [
+  {
+    port     = "53"
+    protocol = "udp"      # UDP should come AFTER all TCP entries
+  },
+  {
+    port     = "443"
+    protocol = "tcp"
+  }
+]
+
+# WRONG: Ports not sorted within protocol type
+protocols = [
+  {
+    port     = "443"      # Should be 22 first
+    protocol = "tcp"
+  },
+  {
+    port     = "22"
+    protocol = "tcp"
+  }
+]
+```
+
+**Alternative Solutions (Not Implemented):**
+
+1. **Use Terraform Set Type:** Sets are unordered, so protocol ordering wouldn't matter. However, Speakeasy-generated SDKs don't currently support `x-speakeasy-terraform-custom-type: set` annotations, and changing the schema type would be a breaking change.
+
+2. **Sort in AfterSuccess Hook:** The SDK could sort protocols in the response to match the configuration order. This adds complexity and would need to handle edge cases (e.g., multiple protocols with same port but different protocol types).
+
+3. **Sort in BeforeRequest Hook:** Normalize the request payload order before sending. This would make the configuration canonical but doesn't solve the response ordering issue.
+
+**Status:** Known API behavior - Users should specify protocols in API sort order
+
+**Best Practice:** When defining multiple protocols for a private app:
+1. Group all TCP protocols together, sorted by port ascending (e.g., 22, 80, 443)
+2. Group all UDP protocols together after TCP, sorted by port ascending (e.g., 53, 123)
+
+This ensures consistent ordering between your configuration and the API response.
 
 ---
 
@@ -449,6 +604,7 @@ These API issues have specific implications for the Terraform provider:
 | Empty objects cause SQL error | Update operations fail without workaround |
 | Protocol type/transport mismatch | State mapping requires hook transformation |
 | Write-only fields | Perpetual drift in plan output for certain fields |
+| Protocol ordering | Perpetual drift for multi-protocol apps if not sorted by port |
 | Policy group response wrapper | ✅ Resolved - OAS now correctly defines wrapped response |
 | NPA rules response wrapper | ✅ Resolved - OAS now correctly defines wrapped response |
 
@@ -482,6 +638,8 @@ These API issues have specific implications for the Terraform provider:
 7. **Map Protocol Fields:** Transform `transport` to `type` when processing protocol data from responses.
 
 8. **Accept Minor Drift:** Some fields like `allow_uri_bypass` will show perpetual drift in `terraform plan` because the API doesn't return them. This is cosmetic and doesn't affect functionality.
+
+9. **Order Protocols Correctly:** When defining multiple protocols for a private app, list them in the order the API returns them: TCP protocols first (sorted by port ascending), then UDP protocols (sorted by port ascending). Example: TCP:22, TCP:443, UDP:53, UDP:123.
 
 ---
 

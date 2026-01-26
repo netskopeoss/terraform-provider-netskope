@@ -16,7 +16,7 @@ func TestAccNPARules_basic(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckNPARulesDestroy,
@@ -44,13 +44,13 @@ func TestAccNPARules_basic(t *testing.T) {
 }
 
 func TestAccNPARules_update(t *testing.T) {
-	// Skip: Provider issue with rule updates when private app is recreated
-	t.Skip("Skipping: Provider has issue with rule updates - private app reference becomes stale")
-
+	// Fixed: The BeforeRequest hook was checking for wrong operation ID "updateNPARulesById"
+	// instead of "updateNPARules". This caused brackets not to be added to private app names
+	// during updates, resulting in "Private app doesn't exist" errors.
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckNPARulesDestroy,
@@ -83,7 +83,7 @@ func TestAccNPARules_import(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckNPARulesDestroy,
@@ -109,7 +109,7 @@ func TestAccNPARules_denyRule(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckNPARulesDestroy,
