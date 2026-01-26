@@ -63,6 +63,10 @@ type TerraformProviderNs struct {
 	NPAPublisherToken           *NPAPublisherToken
 	NPAPublisherUpgradeProfiles *NPAPublisherUpgradeProfiles
 	NPAPublisherUpgradeProfile  *NPAPublisherUpgradeProfile
+	NPALocalBrokers             *NPALocalBrokers
+	NPALocalBroker              *NPALocalBroker
+	NPALocalBrokerConfig        *NPALocalBrokerConfig
+	NPALocalBrokerToken         *NPALocalBrokerToken
 
 	sdkConfiguration config.SDKConfiguration
 	hooks            *hooks.Hooks
@@ -151,9 +155,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk := &TerraformProviderNs{
-		SDKVersion: "0.3.5",
+		SDKVersion: "0.3.10",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 0.3.5 2.658.3 1.0.0 github.com/netskopeoss/terraform-provider-netskope/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 0.3.10 2.658.3 1.0.0 github.com/netskopeoss/terraform-provider-netskope/internal/sdk",
 			ServerList: ServerList,
 			ServerVariables: []map[string]string{
 				{
@@ -187,6 +191,10 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk.NPAPublisherToken = newNPAPublisherToken(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.NPAPublisherUpgradeProfiles = newNPAPublisherUpgradeProfiles(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.NPAPublisherUpgradeProfile = newNPAPublisherUpgradeProfile(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.NPALocalBrokers = newNPALocalBrokers(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.NPALocalBroker = newNPALocalBroker(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.NPALocalBrokerConfig = newNPALocalBrokerConfig(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.NPALocalBrokerToken = newNPALocalBrokerToken(sdk, sdk.sdkConfiguration, sdk.hooks)
 
 	return sdk
 }

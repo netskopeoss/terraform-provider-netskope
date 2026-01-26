@@ -15,7 +15,7 @@ func TestAccNPAPrivateAppsListDataSource_basic(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 	dataSourceName := "data.netskope_npa_private_apps_list.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -25,8 +25,6 @@ func TestAccNPAPrivateAppsListDataSource_basic(t *testing.T) {
 					// Verify the list contains private apps
 					resource.TestCheckResourceAttrSet(dataSourceName, "private_apps.#"),
 				),
-				// Known provider issue: computed fields cause plan drift
-				ExpectNonEmptyPlan: true,
 			},
 		},
 	})

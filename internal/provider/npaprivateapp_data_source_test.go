@@ -16,7 +16,7 @@ func TestAccNPAPrivateAppDataSource_basic(t *testing.T) {
 	resourceName := "netskope_npa_private_app.test"
 	dataSourceName := "data.netskope_npa_private_app.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -36,8 +36,6 @@ func TestAccNPAPrivateAppDataSource_basic(t *testing.T) {
 						resourceName, "private_app_hostname",
 					),
 				),
-				// Known provider issue: computed fields cause plan drift
-				ExpectNonEmptyPlan: true,
 			},
 		},
 	})
