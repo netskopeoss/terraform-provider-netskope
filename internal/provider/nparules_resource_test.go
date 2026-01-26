@@ -103,8 +103,9 @@ func TestAccNPARules_import(t *testing.T) {
 }
 
 func TestAccNPARules_denyRule(t *testing.T) {
-	// Skip: Block action requires template configuration not documented
-	t.Skip("Skipping: API requires template field for block action which is not documented")
+	// Skip: Block action requires a profile to be specified (DLP Profile or Threat Protection Profile)
+	// These profiles must be configured in the tenant before block rules can be created.
+	t.Skip("Skipping: Block action requires profile configuration (DLP Profile or Threat Protection Profile)")
 
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
