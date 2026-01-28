@@ -217,6 +217,174 @@ func TestAccDrift_UpgradeProfile(t *testing.T) {
 	})
 }
 
+// TestAccDrift_IPSecTunnel_Basic verifies no drift on basic IPSec tunnel
+func TestAccDrift_IPSecTunnel_Basic(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	sourceIP := fmt.Sprintf("198.51.100.%d", acctest.RandIntRange(1, 254))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftIPSecTunnelBasicConfig(rName, sourceIP),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckIPSecTunnelExists("netskope_ip_sec_tunnel.test"),
+				),
+			},
+			{
+				Config: testAccDriftIPSecTunnelBasicConfig(rName, sourceIP),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+// TestAccDrift_IPSecTunnel_WithOptions verifies no drift with IPSec options
+func TestAccDrift_IPSecTunnel_WithOptions(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	sourceIP := fmt.Sprintf("198.51.100.%d", acctest.RandIntRange(1, 254))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftIPSecTunnelWithOptionsConfig(rName, sourceIP),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckIPSecTunnelExists("netskope_ip_sec_tunnel.test"),
+				),
+			},
+			{
+				Config: testAccDriftIPSecTunnelWithOptionsConfig(rName, sourceIP),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+// TestAccDrift_IPSecTunnel_AllFields verifies no drift with all configurable fields
+func TestAccDrift_IPSecTunnel_AllFields(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	sourceIP := fmt.Sprintf("198.51.100.%d", acctest.RandIntRange(1, 254))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftIPSecTunnelAllFieldsConfig(rName, sourceIP),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckIPSecTunnelExists("netskope_ip_sec_tunnel.test"),
+				),
+			},
+			{
+				Config: testAccDriftIPSecTunnelAllFieldsConfig(rName, sourceIP),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+// TestAccDrift_GRETunnel_Basic verifies no drift on basic GRE tunnel
+func TestAccDrift_GRETunnel_Basic(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	sourceIP := fmt.Sprintf("203.0.113.%d", acctest.RandIntRange(1, 254))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckGRETunnelDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftGRETunnelBasicConfig(rName, sourceIP),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckGRETunnelExists("netskope_gre_tunnel.test"),
+				),
+			},
+			{
+				Config: testAccDriftGRETunnelBasicConfig(rName, sourceIP),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+// TestAccDrift_GRETunnel_WithOptions verifies no drift with XFF options
+func TestAccDrift_GRETunnel_WithOptions(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	sourceIP := fmt.Sprintf("203.0.113.%d", acctest.RandIntRange(1, 254))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckGRETunnelDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftGRETunnelWithOptionsConfig(rName, sourceIP),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckGRETunnelExists("netskope_gre_tunnel.test"),
+				),
+			},
+			{
+				Config: testAccDriftGRETunnelWithOptionsConfig(rName, sourceIP),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+// TestAccDrift_GRETunnel_AllFields verifies no drift with all configurable fields
+func TestAccDrift_GRETunnel_AllFields(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	sourceIP := fmt.Sprintf("203.0.113.%d", acctest.RandIntRange(1, 254))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckGRETunnelDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftGRETunnelAllFieldsConfig(rName, sourceIP),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckGRETunnelExists("netskope_gre_tunnel.test"),
+				),
+			},
+			{
+				Config: testAccDriftGRETunnelAllFieldsConfig(rName, sourceIP),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
 // =============================================================================
 // Configuration Functions
 // =============================================================================
@@ -360,4 +528,116 @@ resource "netskope_npa_publisher_upgrade_profile" "test" {
   release_type = "Beta"
 }
 `, testAccProviderConfig(), name)
+}
+
+func testAccDriftIPSecTunnelBasicConfig(name, sourceIP string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_ip_sec_tunnel" "test" {
+  site            = %q
+  source_ip       = %q
+  source_identity = "%s.example.com"
+  psk             = "TestPreSharedKey123!"
+  encryption      = "AES128-CBC"
+  pop_names       = ["lon1", "lon2"]
+}
+`, testAccProviderConfig(), name, sourceIP, name)
+}
+
+func testAccDriftIPSecTunnelWithOptionsConfig(name, sourceIP string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_ip_sec_tunnel" "test" {
+  site            = %q
+  source_ip       = %q
+  source_identity = "%s.example.com"
+  psk             = "TestPreSharedKey123!"
+  encryption      = "AES128-CBC"
+  pop_names       = ["lon1", "lon2"]
+
+  options = {
+    rekey  = true
+    reauth = true
+  }
+}
+`, testAccProviderConfig(), name, sourceIP, name)
+}
+
+func testAccDriftIPSecTunnelAllFieldsConfig(name, sourceIP string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_ip_sec_tunnel" "test" {
+  site            = %q
+  source_ip       = %q
+  source_identity = "%s.example.com"
+  psk             = "TestPreSharedKey123!"
+  encryption      = "AES256-CBC"
+  pop_names       = ["lon1", "lon2"]
+  bandwidth       = 100
+  enabled         = true
+  notes           = "Drift detection test"
+
+  options = {
+    rekey  = true
+    reauth = true
+  }
+}
+`, testAccProviderConfig(), name, sourceIP, name)
+}
+
+func testAccDriftGRETunnelBasicConfig(name, sourceIP string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_gre_tunnel" "test" {
+  site      = %q
+  source_ip = %q
+  pop_names = ["lon1", "lon2"]
+}
+`, testAccProviderConfig(), name, sourceIP)
+}
+
+func testAccDriftGRETunnelWithOptionsConfig(name, sourceIP string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_gre_tunnel" "test" {
+  site      = %q
+  source_ip = %q
+  pop_names = ["lon1", "lon2"]
+
+  options = {
+    xff = {
+      xff_enabled = true
+      xff_ip_list = ["10.0.0.1", "10.0.0.2"]
+    }
+  }
+}
+`, testAccProviderConfig(), name, sourceIP)
+}
+
+func testAccDriftGRETunnelAllFieldsConfig(name, sourceIP string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_gre_tunnel" "test" {
+  site        = %q
+  source_ip   = %q
+  source_type = "Machine"
+  pop_names   = ["lon1", "lon2"]
+  bandwidth   = 500
+  enabled     = true
+  notes       = "Drift detection test"
+
+  options = {
+    xff = {
+      xff_enabled = true
+      xff_ip_list = ["10.0.0.1", "10.0.0.2", "10.0.0.3"]
+    }
+  }
+}
+`, testAccProviderConfig(), name, sourceIP)
 }

@@ -110,6 +110,8 @@ func (p *NetskopeProvider) Configure(ctx context.Context, req provider.Configure
 
 func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		NewGRETunnelResource,
+		NewIPSecTunnelResource,
 		NewNPALocalBrokerResource,
 		NewNPALocalBrokerConfigResource,
 		NewNPALocalBrokerTokenResource,
@@ -128,6 +130,14 @@ func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Reso
 
 func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewGrepopDataSource,
+		NewGREPOPsListDataSource,
+		NewGRETunnelDataSource,
+		NewGRETunnelsListDataSource,
+		NewIPSecPOPDataSource,
+		NewIPSecPOPsListDataSource,
+		NewIPSecTunnelDataSource,
+		NewIPSecTunnelsListDataSource,
 		NewNPALocalBrokerDataSource,
 		NewNPALocalBrokerConfigDataSource,
 		NewNPALocalBrokersListDataSource,
