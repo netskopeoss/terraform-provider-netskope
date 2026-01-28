@@ -1,0 +1,1 @@
+terraform import netskope_gre_tunnel.my_netskope_gre_tunnel 0
