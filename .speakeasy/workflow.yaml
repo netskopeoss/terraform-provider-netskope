@@ -5,6 +5,8 @@ sources:
         inputs:
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/base_oas.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/steering/npa_apps_private.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/steering/ipsec_tunnels.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/steering/gre_tunnels.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policy.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policygroup.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_publishers.yaml
