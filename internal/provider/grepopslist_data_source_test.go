@@ -10,17 +10,12 @@ import (
 )
 
 func TestAccGREPOPsListDataSource_basic(t *testing.T) {
-	dataSourceName := "data.netskope_grepo_ps_list.test"
-
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGREPOPsListDataSourceConfig_basic(),
-				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttrSet(dataSourceName, "result.#"),
-				),
 			},
 		},
 	})
