@@ -7,14 +7,8 @@ import (
 )
 
 type NpaPolicyResponseItem struct {
-	Enabled    types.String       `tfsdk:"enabled"`
-	GroupID    types.String       `tfsdk:"group_id"`
-	GroupName  types.String       `tfsdk:"group_name"`
-	ID         types.String       `tfsdk:"id"`
-	ModifyBy   types.String       `tfsdk:"modify_by"`
-	ModifyTime types.String       `tfsdk:"modify_time"`
-	ModifyType types.String       `tfsdk:"modify_type"`
-	PolicyType types.String       `tfsdk:"policy_type"`
-	RuleData   *NpaPolicyRuleData `tfsdk:"rule_data"`
-	RuleName   types.String       `tfsdk:"rule_name"`
+	Enabled  types.String       `tfsdk:"enabled"`
+	ID       types.String       `tfsdk:"id"`
+	RuleData *NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleName types.String       `tfsdk:"rule_name"`
 }

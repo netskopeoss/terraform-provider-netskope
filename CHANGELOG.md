@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## [0.3.3] - 2026-01-21
+## [0.3.3] - 2026-01-29
 
 ### Fixed
 - Fixed environment variable authentication (Issue #38) - Provider now supports native environment variables:
@@ -17,15 +17,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Method 2: Terraform variables with `TF_VAR_*` environment variables
 - Fixed `netskope_npa_rules_list` data source - API response now correctly parsed as object with `data` array
 - Fixed `rule_id` type mismatch in NPA rules - changed from integer to string to match API response
-- Added missing fields to `npa_policy_response_item` schema: `enabled`, `group_id`, `group_name`, `modify_by`, `modify_time`, `modify_type`, `policy_type`
 - Fixed drift detection issues with empty objects in API responses
 - Added hooks for normalizing API response data
 - Fixed private app `publishers` and `tags` field handling
 - Fixed publisher status enum - added `disconnected` status (Issue #41)
 - Fixed protocol field mismatch - schema expected `type` but API returns `transport` (Issue #42)
 - Fixed publisher data source path in examples (`data[0]` → `data.publishers[0]`)
+- **Fixed perpetual plan drift on `netskope_npa_rules`** - Hidden response-only fields (`modify_by`, `modify_time`, `modify_type`, `policy_type`, `group_name`, `classification`, `periodic_reauth`, `userType`, `version`) from Terraform schema using `x-speakeasy-terraform-ignore`. Removed `group_id` from response schema since the GET API does not return it.
+- **Fixed perpetual plan drift on `netskope_ip_sec_tunnel`** - Unified `enable`/`enabled` field names between request and response schemas using `x-speakeasy-name-override`
+- Fixed `user_id` field reference in NPA rules tests (field does not exist in schema; was being silently ignored)
 
 ### Added
+- GRE tunnel resource and data sources (`netskope_gre_tunnel`, `netskope_gre_tunnels_list`, `netskope_grepop`, `netskope_grepo_ps_list`)
+- IPSec tunnel resource and data sources (`netskope_ip_sec_tunnel`, `netskope_ip_sec_tunnels_list`, `netskope_ip_sec_pop`, `netskope_ip_sec_po_ps_list`)
+- NPA Local Broker resources and data sources (`netskope_npa_local_broker`, `netskope_npa_local_broker_config`, `netskope_npa_local_broker_token`, `netskope_npa_local_brokers_list`)
+- Comprehensive drift detection test suite (14 tests across all resource types)
+- Acceptance test documentation (`docs/ACCEPTANCE_TESTS.md`)
 - Separate examples repository: [terraform-netskope-examples](https://github.com/netskopeoss/terraform-netskope-examples)
   - Getting started guides for Terraform beginners
   - Tutorials for private apps, publishers on AWS/Azure/GCP, policy-as-code
