@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 // =============================================================================
@@ -59,13 +58,13 @@ func TestAccNPAPrivateApp_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPrivateAppDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
 				Config: testAccNPAPrivateAppConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists(resourceName),
+					testAccCheckResourceExists(resourceName, "private_app_id"),
 					resource.TestCheckResourceAttr(resourceName, "private_app_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "private_app_hostname", "192.168.1.100"),
 					resource.TestCheckResourceAttrSet(resourceName, "private_app_id"),
@@ -80,7 +79,7 @@ func TestAccNPAPrivateApp_basic(t *testing.T) {
 				ImportState:                          true,
 				ImportStateVerify:                    true,
 				ImportStateVerifyIdentifierAttribute: "private_app_id",
-				ImportStateIdFunc:                    testAccNPAPrivateAppImportStateIdFunc(resourceName),
+				ImportStateIdFunc:                    testAccImportStateIdFunc(resourceName, "private_app_id"),
 				// Skip verification of computed fields
 				ImportStateVerifyIgnore: []string{"publishers", "real_host", "protocols"},
 			},
@@ -95,12 +94,12 @@ func TestAccNPAPrivateApp_complete(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPrivateAppDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPAPrivateAppConfig_complete(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists(resourceName),
+					testAccCheckResourceExists(resourceName, "private_app_id"),
 					resource.TestCheckResourceAttr(resourceName, "private_app_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "private_app_hostname", "192.168.1.100,192.168.1.101"),
 					resource.TestCheckResourceAttrSet(resourceName, "private_app_id"),
@@ -122,13 +121,13 @@ func TestAccNPAPrivateApp_update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPrivateAppDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
 		Steps: []resource.TestStep{
 			// Create
 			{
 				Config: testAccNPAPrivateAppConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists(resourceName),
+					testAccCheckResourceExists(resourceName, "private_app_id"),
 					resource.TestCheckResourceAttr(resourceName, "private_app_hostname", "192.168.1.100"),
 					resource.TestCheckResourceAttr(resourceName, "protocols.#", "1"),
 				),
@@ -137,7 +136,7 @@ func TestAccNPAPrivateApp_update(t *testing.T) {
 			{
 				Config: testAccNPAPrivateAppConfig_updated(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists(resourceName),
+					testAccCheckResourceExists(resourceName, "private_app_id"),
 					resource.TestCheckResourceAttr(resourceName, "private_app_hostname", "192.168.1.100,192.168.1.101"),
 					resource.TestCheckResourceAttr(resourceName, "protocols.#", "2"),
 					resource.TestCheckResourceAttr(resourceName, "trust_self_signed_certs", "true"),
@@ -154,17 +153,17 @@ func TestAccNPAPrivateApp_import(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPrivateAppDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
 		Steps: []resource.TestStep{
 			{
-				Config:             testAccNPAPrivateAppConfig_basic(rName),
+				Config: testAccNPAPrivateAppConfig_basic(rName),
 			},
 			{
 				ResourceName:                         resourceName,
 				ImportState:                          true,
 				ImportStateVerify:                    true,
 				ImportStateVerifyIdentifierAttribute: "private_app_id",
-				ImportStateIdFunc:                    testAccNPAPrivateAppImportStateIdFunc(resourceName),
+				ImportStateIdFunc:                    testAccImportStateIdFunc(resourceName, "private_app_id"),
 				ImportStateVerifyIgnore:              []string{"publishers", "real_host", "protocols"},
 			},
 		},
@@ -178,12 +177,12 @@ func TestAccNPAPrivateApp_multipleProtocols(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPrivateAppDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPAPrivateAppConfig_multipleProtocols(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists(resourceName),
+					testAccCheckResourceExists(resourceName, "private_app_id"),
 					resource.TestCheckResourceAttr(resourceName, "private_app_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "protocols.#", "3"),
 				),
@@ -200,12 +199,12 @@ func TestAccNPAPrivateApp_clientlessAccess(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPrivateAppDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPAPrivateAppConfig_clientlessAccess(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists(resourceName),
+					testAccCheckResourceExists(resourceName, "private_app_id"),
 					resource.TestCheckResourceAttr(resourceName, "private_app_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "clientless_access", "true"),
 					resource.TestCheckResourceAttr(resourceName, "real_host", "browser.internal.test"),
@@ -226,12 +225,12 @@ func TestAccNPAPrivateApp_tags(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPrivateAppDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPAPrivateAppConfig_tags(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists(resourceName),
+					testAccCheckResourceExists(resourceName, "private_app_id"),
 					resource.TestCheckResourceAttr(resourceName, "private_app_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "tags.#", "1"),
 				),
@@ -247,13 +246,13 @@ func TestAccNPAPrivateApp_updatePublishers(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPrivateAppDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
 		Steps: []resource.TestStep{
 			// Create with first publisher
 			{
 				Config: testAccNPAPrivateAppConfig_withPublisher(rName, "1"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists(resourceName),
+					testAccCheckResourceExists(resourceName, "private_app_id"),
 					resource.TestCheckResourceAttr(resourceName, "private_app_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "publishers.#", "1"),
 				),
@@ -262,7 +261,7 @@ func TestAccNPAPrivateApp_updatePublishers(t *testing.T) {
 			{
 				Config: testAccNPAPrivateAppConfig_withPublisher(rName, "2"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists(resourceName),
+					testAccCheckResourceExists(resourceName, "private_app_id"),
 					resource.TestCheckResourceAttr(resourceName, "publishers.#", "1"),
 				),
 			},
@@ -277,20 +276,20 @@ func TestAccNPAPrivateApp_disappears(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPrivateAppDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPAPrivateAppConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists(resourceName),
+					testAccCheckResourceExists(resourceName, "private_app_id"),
 				),
 			},
 			{
-				Config:             testAccNPAPrivateAppConfig_basic(rName),
+				Config: testAccNPAPrivateAppConfig_basic(rName),
 				// This test verifies that Terraform handles a resource that was
 				// deleted outside of Terraform (e.g., via the API or UI).
 				// The resource will be recreated on the next apply.
-				PlanOnly:           true,
+				PlanOnly: true,
 			},
 		},
 	})
@@ -572,57 +571,4 @@ resource "netskope_npa_private_app" "test" {
   trust_self_signed_certs = false
 }
 `, testAccProviderConfig(), name, name, name, publisherSuffix, publisherSuffix)
-}
-
-// =============================================================================
-// HELPER FUNCTIONS
-// =============================================================================
-//
-// testAccCheckNPAPrivateAppExists - Verifies resource was created in state
-// testAccCheckNPAPrivateAppDestroy - Verifies resource was deleted after test
-// testAccNPAPrivateAppImportStateIdFunc - Returns ID for import tests
-//
-// =============================================================================
-
-func testAccCheckNPAPrivateAppExists(resourceName string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[resourceName]
-		if !ok {
-			return fmt.Errorf("resource not found: %s", resourceName)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("resource ID not set")
-		}
-
-		if rs.Primary.Attributes["private_app_id"] == "" {
-			return fmt.Errorf("private_app_id not set")
-		}
-
-		return nil
-	}
-}
-
-func testAccCheckNPAPrivateAppDestroy(s *terraform.State) error {
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "netskope_npa_private_app" {
-			continue
-		}
-
-		// The acceptance test framework automatically destroys resources.
-		// This function verifies the resource no longer exists in state.
-		// In a production scenario, you would make an API call to verify
-		// the resource has been deleted from the Netskope tenant.
-	}
-	return nil
-}
-
-func testAccNPAPrivateAppImportStateIdFunc(resourceName string) resource.ImportStateIdFunc {
-	return func(s *terraform.State) (string, error) {
-		rs, ok := s.RootModule().Resources[resourceName]
-		if !ok {
-			return "", fmt.Errorf("resource not found: %s", resourceName)
-		}
-		return rs.Primary.Attributes["private_app_id"], nil
-	}
 }

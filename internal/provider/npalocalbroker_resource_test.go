@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccNPALocalBroker_basic(t *testing.T) {
@@ -19,12 +18,12 @@ func TestAccNPALocalBroker_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPALocalBrokerDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_local_broker"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPALocalBrokerConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPALocalBrokerExists(resourceName),
+					testAccCheckResourceExists(resourceName, "local_broker_id"),
 					resource.TestCheckResourceAttr(resourceName, "local_broker_name", rName),
 					resource.TestCheckResourceAttrSet(resourceName, "local_broker_id"),
 					resource.TestCheckResourceAttr(resourceName, "access_via_public_ip", "NONE"),
@@ -35,7 +34,7 @@ func TestAccNPALocalBroker_basic(t *testing.T) {
 				ImportState:                          true,
 				ImportStateVerify:                    true,
 				ImportStateVerifyIdentifierAttribute: "local_broker_id",
-				ImportStateIdFunc:                    testAccNPALocalBrokerImportStateIdFunc(resourceName),
+				ImportStateIdFunc:                    testAccImportStateIdFunc(resourceName, "local_broker_id"),
 				// label_ids is write-only, not returned by API
 				ImportStateVerifyIgnore: []string{"label_ids"},
 			},
@@ -50,12 +49,12 @@ func TestAccNPALocalBroker_fullConfig(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPALocalBrokerDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_local_broker"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPALocalBrokerConfig_full(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPALocalBrokerExists(resourceName),
+					testAccCheckResourceExists(resourceName, "local_broker_id"),
 					resource.TestCheckResourceAttr(resourceName, "local_broker_name", rName),
 					resource.TestCheckResourceAttrSet(resourceName, "local_broker_id"),
 					resource.TestCheckResourceAttr(resourceName, "city_name", "Cupertino"),
@@ -78,13 +77,13 @@ func TestAccNPALocalBroker_update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPALocalBrokerDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_local_broker"),
 		Steps: []resource.TestStep{
 			// Create with basic config
 			{
 				Config: testAccNPALocalBrokerConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPALocalBrokerExists(resourceName),
+					testAccCheckResourceExists(resourceName, "local_broker_id"),
 					resource.TestCheckResourceAttr(resourceName, "local_broker_name", rName),
 				),
 			},
@@ -92,7 +91,7 @@ func TestAccNPALocalBroker_update(t *testing.T) {
 			{
 				Config: testAccNPALocalBrokerConfig_withLocation(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPALocalBrokerExists(resourceName),
+					testAccCheckResourceExists(resourceName, "local_broker_id"),
 					resource.TestCheckResourceAttr(resourceName, "local_broker_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "city_name", "San Francisco"),
 					resource.TestCheckResourceAttr(resourceName, "region_name", "CA"),
@@ -109,7 +108,7 @@ func TestAccNPALocalBroker_import(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPALocalBrokerDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_local_broker"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPALocalBrokerConfig_basic(rName),
@@ -119,7 +118,7 @@ func TestAccNPALocalBroker_import(t *testing.T) {
 				ImportState:                          true,
 				ImportStateVerify:                    true,
 				ImportStateVerifyIdentifierAttribute: "local_broker_id",
-				ImportStateIdFunc:                    testAccNPALocalBrokerImportStateIdFunc(resourceName),
+				ImportStateIdFunc:                    testAccImportStateIdFunc(resourceName, "local_broker_id"),
 				// label_ids is write-only, not returned by API
 				ImportStateVerifyIgnore: []string{"label_ids"},
 			},
@@ -134,19 +133,19 @@ func TestAccNPALocalBroker_accessViaPublicIP(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPALocalBrokerDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_local_broker"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPALocalBrokerConfig_accessViaPublicIP(rName, "OFF_PREM"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPALocalBrokerExists(resourceName),
+					testAccCheckResourceExists(resourceName, "local_broker_id"),
 					resource.TestCheckResourceAttr(resourceName, "access_via_public_ip", "OFF_PREM"),
 				),
 			},
 			{
 				Config: testAccNPALocalBrokerConfig_accessViaPublicIP(rName, "ON_PREM"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPALocalBrokerExists(resourceName),
+					testAccCheckResourceExists(resourceName, "local_broker_id"),
 					resource.TestCheckResourceAttr(resourceName, "access_via_public_ip", "ON_PREM"),
 				),
 			},
@@ -208,49 +207,4 @@ resource "netskope_npa_local_broker" "test" {
   access_via_public_ip = %q
 }
 `, testAccProviderConfig(), name, accessMode)
-}
-
-// Helper functions
-
-func testAccCheckNPALocalBrokerExists(resourceName string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[resourceName]
-		if !ok {
-			return fmt.Errorf("resource not found: %s", resourceName)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("resource ID not set")
-		}
-
-		if rs.Primary.Attributes["local_broker_id"] == "" {
-			return fmt.Errorf("local_broker_id not set")
-		}
-
-		return nil
-	}
-}
-
-func testAccCheckNPALocalBrokerDestroy(s *terraform.State) error {
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "netskope_npa_local_broker" {
-			continue
-		}
-
-		// The acceptance test framework automatically destroys resources.
-		// This function verifies the resource no longer exists in state.
-		// In a production scenario, you would make an API call to verify
-		// the resource has been deleted from the Netskope tenant.
-	}
-	return nil
-}
-
-func testAccNPALocalBrokerImportStateIdFunc(resourceName string) resource.ImportStateIdFunc {
-	return func(s *terraform.State) (string, error) {
-		rs, ok := s.RootModule().Resources[resourceName]
-		if !ok {
-			return "", fmt.Errorf("resource not found: %s", resourceName)
-		}
-		return rs.Primary.Attributes["local_broker_id"], nil
-	}
 }

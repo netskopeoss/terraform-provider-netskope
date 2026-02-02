@@ -30,6 +30,7 @@ type GREPOPsListDataSource struct {
 // GREPOPsListDataSourceModel describes the data model.
 type GREPOPsListDataSourceModel struct {
 	Result []tfTypes.GrePopListItem `tfsdk:"result"`
+	Total  types.Int32              `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -85,6 +86,9 @@ func (r *GREPOPsListDataSource) Schema(ctx context.Context, req datasource.Schem
 						},
 					},
 				},
+			},
+			"total": schema.Int32Attribute{
+				Computed: true,
 			},
 		},
 	}
@@ -150,11 +154,11 @@ func (r *GREPOPsListDataSource) Read(ctx context.Context, req datasource.ReadReq
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.GrePopListResponse != nil && res.GrePopListResponse.Result != nil) {
+	if !(res.GrePopListResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGrePopListItem(ctx, res.GrePopListResponse.Result)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedGrePopListResponse(ctx, res.GrePopListResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

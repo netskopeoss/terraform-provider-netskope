@@ -25,8 +25,6 @@ func TestAccNPARulesListDataSource_basic(t *testing.T) {
 					// Verify the list contains at least one rule (the one we created)
 					resource.TestCheckResourceAttrSet(dataSourceName, "data.#"),
 				),
-				// Known provider issue: computed fields cause plan drift
-				ExpectNonEmptyPlan: true,
 			},
 		},
 	})
@@ -84,7 +82,6 @@ resource "netskope_npa_rules" "test" {
       action_name = "allow"
     }
 
-    user_id       = ["*"]
     private_apps  = [netskope_npa_private_app.test.private_app_name]
     access_method = ["Client"]
   }

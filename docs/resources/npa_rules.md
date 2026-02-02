@@ -17,14 +17,12 @@ resource "netskope_npa_rules" "my_nparules" {
   description = "any"
   enabled     = "1"
   group_id    = "1"
-  group_name  = "My policy group"
   rule_data = {
     access_method = [
       "Clientless"
     ]
     b_negate_net_location  = false
     b_negate_src_countries = false
-    classification         = "...my_classification..."
     device_classification_id = [
       9
     ]
@@ -38,10 +36,6 @@ resource "netskope_npa_rules" "my_nparules" {
     organization_units = [
       "..."
     ]
-    periodic_reauth = {
-      reauth_interval      = "60"
-      reauth_interval_unit = "hours"
-    }
     policy_type = "private-app"
     private_app_tag_ids = [
       "..."
@@ -58,11 +52,9 @@ resource "netskope_npa_rules" "my_nparules" {
     user_groups = [
       "..."
     ]
-    user_type = "user"
     users = [
       "..."
     ]
-    version = 1
   }
   rule_name = "vantest"
   rule_order = {
@@ -82,7 +74,6 @@ resource "netskope_npa_rules" "my_nparules" {
 - `description` (String)
 - `enabled` (String)
 - `group_id` (String)
-- `group_name` (String)
 - `rule_data` (Attributes) (see [below for nested schema](#nestedatt--rule_data))
 - `rule_name` (String)
 - `rule_order` (Attributes) (see [below for nested schema](#nestedatt--rule_order))
@@ -90,10 +81,6 @@ resource "netskope_npa_rules" "my_nparules" {
 ### Read-Only
 
 - `id` (String) policy rule id
-- `modify_by` (String)
-- `modify_time` (String)
-- `modify_type` (String)
-- `policy_type` (String)
 
 <a id="nestedatt--rule_data"></a>
 ### Nested Schema for `rule_data`
@@ -103,22 +90,18 @@ Optional:
 - `access_method` (List of String)
 - `b_negate_net_location` (Boolean) Default: false
 - `b_negate_src_countries` (Boolean) Default: false
-- `classification` (String)
 - `device_classification_id` (List of Number)
 - `json_version` (Number) Default: 3
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
 - `net_location_obj` (List of String)
 - `organization_units` (List of String)
-- `periodic_reauth` (Attributes) (see [below for nested schema](#nestedatt--rule_data--periodic_reauth))
 - `policy_type` (String) Default: "private-app"; must be "private-app"
 - `private_app_tag_ids` (List of String)
 - `private_app_tags` (List of String)
 - `private_apps` (List of String)
 - `src_countries` (List of String)
 - `user_groups` (List of String)
-- `user_type` (String) must be "user"
 - `users` (List of String)
-- `version` (Number)
 
 <a id="nestedatt--rule_data--match_criteria_action"></a>
 ### Nested Schema for `rule_data.match_criteria_action`
@@ -126,15 +109,6 @@ Optional:
 Optional:
 
 - `action_name` (String) must be one of ["allow", "block"]
-
-
-<a id="nestedatt--rule_data--periodic_reauth"></a>
-### Nested Schema for `rule_data.periodic_reauth`
-
-Optional:
-
-- `reauth_interval` (String)
-- `reauth_interval_unit` (String)
 
 
 

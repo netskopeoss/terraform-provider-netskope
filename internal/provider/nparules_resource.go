@@ -40,12 +40,7 @@ type NPARulesResourceModel struct {
 	Description types.String               `tfsdk:"description"`
 	Enabled     types.String               `tfsdk:"enabled"`
 	GroupID     types.String               `tfsdk:"group_id"`
-	GroupName   types.String               `tfsdk:"group_name"`
 	ID          types.String               `tfsdk:"id"`
-	ModifyBy    types.String               `tfsdk:"modify_by"`
-	ModifyTime  types.String               `tfsdk:"modify_time"`
-	ModifyType  types.String               `tfsdk:"modify_type"`
-	PolicyType  types.String               `tfsdk:"policy_type"`
 	RuleData    *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
 	RuleName    types.String               `tfsdk:"rule_name"`
 	RuleOrder   *tfTypes.RuleOrder         `tfsdk:"rule_order"`
@@ -67,28 +62,11 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 				Optional: true,
 			},
 			"group_id": schema.StringAttribute{
-				Computed: true,
-				Optional: true,
-			},
-			"group_name": schema.StringAttribute{
-				Computed: true,
 				Optional: true,
 			},
 			"id": schema.StringAttribute{
 				Computed:    true,
 				Description: `policy rule id`,
-			},
-			"modify_by": schema.StringAttribute{
-				Computed: true,
-			},
-			"modify_time": schema.StringAttribute{
-				Computed: true,
-			},
-			"modify_type": schema.StringAttribute{
-				Computed: true,
-			},
-			"policy_type": schema.StringAttribute{
-				Computed: true,
 			},
 			"rule_data": schema.SingleNestedAttribute{
 				Computed: true,
@@ -111,10 +89,6 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Optional:    true,
 						Default:     booldefault.StaticBool(false),
 						Description: `Default: false`,
-					},
-					"classification": schema.StringAttribute{
-						Computed: true,
-						Optional: true,
 					},
 					"device_classification_id": schema.ListAttribute{
 						Computed:    true,
@@ -157,20 +131,6 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 					},
-					"periodic_reauth": schema.SingleNestedAttribute{
-						Computed: true,
-						Optional: true,
-						Attributes: map[string]schema.Attribute{
-							"reauth_interval": schema.StringAttribute{
-								Computed: true,
-								Optional: true,
-							},
-							"reauth_interval_unit": schema.StringAttribute{
-								Computed: true,
-								Optional: true,
-							},
-						},
-					},
 					"policy_type": schema.StringAttribute{
 						Computed:    true,
 						Optional:    true,
@@ -212,23 +172,11 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 					},
-					"user_type": schema.StringAttribute{
-						Computed:    true,
-						Optional:    true,
-						Description: `must be "user"`,
-						Validators: []validator.String{
-							stringvalidator.OneOf("user"),
-						},
-					},
 					"users": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
 						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
-					},
-					"version": schema.Int64Attribute{
-						Computed: true,
-						Optional: true,
 					},
 				},
 			},

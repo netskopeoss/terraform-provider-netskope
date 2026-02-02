@@ -56,25 +56,7 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 						"enabled": schema.StringAttribute{
 							Computed: true,
 						},
-						"group_id": schema.StringAttribute{
-							Computed: true,
-						},
-						"group_name": schema.StringAttribute{
-							Computed: true,
-						},
 						"id": schema.StringAttribute{
-							Computed: true,
-						},
-						"modify_by": schema.StringAttribute{
-							Computed: true,
-						},
-						"modify_time": schema.StringAttribute{
-							Computed: true,
-						},
-						"modify_type": schema.StringAttribute{
-							Computed: true,
-						},
-						"policy_type": schema.StringAttribute{
 							Computed: true,
 						},
 						"rule_data": schema.SingleNestedAttribute{
@@ -88,9 +70,6 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 									Computed: true,
 								},
 								"b_negate_src_countries": schema.BoolAttribute{
-									Computed: true,
-								},
-								"classification": schema.StringAttribute{
 									Computed: true,
 								},
 								"device_classification_id": schema.ListAttribute{
@@ -116,17 +95,6 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 									Computed:    true,
 									ElementType: types.StringType,
 								},
-								"periodic_reauth": schema.SingleNestedAttribute{
-									Computed: true,
-									Attributes: map[string]schema.Attribute{
-										"reauth_interval": schema.StringAttribute{
-											Computed: true,
-										},
-										"reauth_interval_unit": schema.StringAttribute{
-											Computed: true,
-										},
-									},
-								},
 								"policy_type": schema.StringAttribute{
 									Computed: true,
 								},
@@ -150,15 +118,9 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 									Computed:    true,
 									ElementType: types.StringType,
 								},
-								"user_type": schema.StringAttribute{
-									Computed: true,
-								},
 								"users": schema.ListAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
-								},
-								"version": schema.Int64Attribute{
-									Computed: true,
 								},
 							},
 						},
