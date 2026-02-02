@@ -4,27 +4,31 @@ This document tracks known behavioral inconsistencies and quirks in the Netskope
 
 ## Table of Contents
 
-- [Steering API Issues](#steering-api-issues)
+- [Steering API Issues (1-3)](#steering-api-issues-1-3)
   - [1. App Name Automatic Encapsulation](#1-app-name-automatic-encapsulation)
   - [2. Inconsistent Name Key in Responses](#2-inconsistent-name-key-in-responses)
   - [3. Delete Verification Returns 200 OK with Error](#3-delete-verification-returns-200-ok-with-error)
-  - [8. Empty Objects Cause SQL Serialization Error on Update](#8-empty-objects-cause-sql-serialization-error-on-update)
-  - [9. Protocol Field Name Mismatch (type vs transport)](#9-protocol-field-name-mismatch-type-vs-transport)
-  - [10. Write-Only Fields Not Returned in Response](#10-write-only-fields-not-returned-in-response)
-- [Policy API Issues](#policy-api-issues)
-  - [11. Policy Group Response Wrapper Mismatch](#11-policy-group-response-wrapper-mismatch)
-  - [12. NPA Rules Response Wrapper Mismatch](#12-npa-rules-response-wrapper-mismatch)
-- [Infrastructure API Issues](#infrastructure-api-issues)
+- [Infrastructure API Issues (4-7)](#infrastructure-api-issues-4-7)
   - [4. Missing external_id on Profile Creation](#4-missing-external_id-on-profile-creation)
   - [5. GET on Deleted Resource Returns 200 OK](#5-get-on-deleted-resource-returns-200-ok)
   - [6. id vs external_id Confusion](#6-id-vs-external_id-confusion)
   - [7. Inconsistent Publisher Field Names](#7-inconsistent-publisher-field-names)
+- [Steering API Issues (8-10)](#steering-api-issues-8-10)
+  - [8. Empty Objects Cause SQL Serialization Error on Update](#8-empty-objects-cause-sql-serialization-error-on-update)
+  - [9. Protocol Field Name Mismatch (type vs transport)](#9-protocol-field-name-mismatch-type-vs-transport)
+  - [10. Write-Only Fields Not Returned in Response](#10-write-only-fields-not-returned-in-response)
+- [Policy API Issues (11-13)](#policy-api-issues-11-13)
+  - [11. Policy Group Response Wrapper Mismatch](#11-policy-group-response-wrapper-mismatch)
+  - [12. NPA Rules Response Wrapper Mismatch](#12-npa-rules-response-wrapper-mismatch)
+  - [13. Response Wrapper `status` Field Excluded from Terraform Schema](#13-response-wrapper-status-field-excluded-from-terraform-schema)
+- [Steering API Issues (14)](#steering-api-issues-14)
+  - [14. Protocol Ordering Causes Terraform State Drift](#14-protocol-ordering-causes-terraform-state-drift)
 - [Terraform Provider Implications](#terraform-provider-implications)
 - [General Recommendations](#general-recommendations)
 
 ---
 
-## Steering API Issues
+## Steering API Issues (1-3)
 
 ### 1. App Name Automatic Encapsulation
 
@@ -111,199 +115,7 @@ Content-Type: application/json
 
 ---
 
-### 8. Empty Objects Cause SQL Serialization Error on Update
-
-**Endpoint:** `PUT /api/v2/steering/apps/private/{id}`
-
-**Issue:** When updating a private app, if the request includes empty objects (`{}`) or empty arrays (`[]`) for certain fields (`app_option`, `paths`), the API backend fails with a SQL serialization error. The backend incorrectly converts these empty JSON values to Python bytes objects.
-
-**Error Message:**
-```
-(raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
-(builtins.TypeError) Object of type bytes is not JSON serializable
-[SQL: UPDATE private_apps SET modify_time=%(modify_time)s, app_option=%(app_option)s, paths=%(paths)s WHERE private_apps.app_id = %(private_apps_app_id)s]
-[parameters: [{'app_option': b'{}', 'paths': b'[]', 'private_apps_app_id': 525}]]
-```
-
-**Affected Fields:**
-- `app_option` - empty object `{}`
-- `paths` - empty array `[]`
-- `uribypass_header_value` - null/empty string
-
-**Impact:**
-- All private app update operations fail if these fields are included with empty values
-- Even though the JSON payload is valid, the API backend mishandles it
-
-**Workaround:** The Terraform provider uses a BeforeRequest hook (`hookPrivateAppRequest.go`) to strip these fields from PUT requests when they are empty.
-
-**Status:** API backend bug - Workaround implemented in provider via SDK hook
-
----
-
-### 9. Protocol Field Name Mismatch (type vs transport)
-
-**Endpoints:**
-- `POST /api/v2/steering/apps/private` (create)
-- `GET /api/v2/steering/apps/private/{id}` (read)
-
-**Issue:** The protocol field uses different names in requests vs responses:
-
-| Operation | Field Name |
-|-----------|------------|
-| Request (POST/PUT) | `type` |
-| Response (GET) | `transport` |
-
-**Example:**
-
-**Request:**
-```json
-{
-  "protocols": [
-    {"type": "tcp", "ports": ["443"]}
-  ]
-}
-```
-
-**Response:**
-```json
-{
-  "protocols": [
-    {"transport": "tcp", "port": "443", "id": 123, ...}
-  ]
-}
-```
-
-**Impact:**
-- Cannot use the same data structure for requests and responses
-- Terraform state mapping requires transformation between `type` and `transport`
-
-**Workaround:** The provider uses an AfterSuccess hook (`hookMyAppAfterSuccess.go`) to map `transport` to `type` in responses, maintaining consistency with the request schema.
-
-**Status:** Known API inconsistency - Handled via SDK hook
-
----
-
-### 10. Write-Only Fields Not Returned in Response
-
-**Endpoint:** `GET /api/v2/steering/apps/private/{id}`
-
-**Issue:** Several fields that can be set during create/update are not returned in GET responses:
-
-| Field | Accepted in Request | Returned in Response |
-|-------|---------------------|---------------------|
-| `allow_uri_bypass` | Yes | No |
-| `app_option` | Yes | Empty `{}` only |
-| `paths` | Yes | Empty `[]` only |
-
-**Impact:**
-- Terraform cannot track the actual state of these fields
-- Causes perpetual drift in `terraform plan` output
-- Even if explicitly set in configuration, the next plan shows changes
-
-**Example:**
-```hcl
-# Configuration
-resource "netskope_npa_private_app" "example" {
-  allow_uri_bypass = false  # Set explicitly
-  ...
-}
-
-# Plan output (perpetual drift)
-+ allow_uri_bypass = false  # Always shows as addition
-```
-
-**Workaround:**
-- Use `x-speakeasy-param-suppress-computed-diff: true` in OpenAPI spec for these fields
-- Mark `app_option` as `x-speakeasy-terraform-ignore: true` to exclude from schema
-- Accept minor cosmetic drift for `allow_uri_bypass` (defaults to false, functionally correct)
-
-**Status:** API limitation - Partial workaround via Speakeasy annotations
-
----
-
-## Policy API Issues
-
-### 11. Policy Group Response Wrapper Mismatch
-
-**Endpoints:**
-- `POST /api/v2/policy/npa/policygroups` (create)
-- `PATCH /api/v2/policy/npa/policygroups/{id}` (update)
-- `GET /api/v2/policy/npa/policygroups/{id}` (read)
-
-**Issue:** The API wraps responses in a `{"data": {...}, "status": "success"}` envelope.
-
-**Example API response:**
-```json
-{
-  "data": {
-    "group_id": "145",
-    "group_name": "my-group",
-    "group_type": "0",
-    ...
-  },
-  "status": "success"
-}
-```
-
-**Resolution:** The OpenAPI specification has been updated to correctly define the wrapped response structure for all policy group endpoints. The SDK now expects and properly handles the `{"data": {...}, "status": "..."}` envelope natively.
-
-**Status:** ✅ RESOLVED - OAS correctly defines wrapped response structure
-
----
-
-### 12. NPA Rules Response Wrapper Mismatch
-
-**Endpoints:**
-- `POST /api/v2/policy/npa/rules` (create)
-- `PATCH /api/v2/policy/npa/rules/{id}` (update)
-- `GET /api/v2/policy/npa/rules/{id}` (read)
-- `DELETE /api/v2/policy/npa/rules/{id}` (delete)
-
-**Issue:** Similar to Issue #11, the API wraps all responses in a `{"data": {...}, "status": "success"}` envelope.
-
-**Example API response:**
-```json
-{
-  "data": {
-    "rule_id": "4",
-    "rule_name": "my-rule",
-    "enabled": "1",
-    "rule_data": {...}
-  },
-  "status": "success"
-}
-```
-
-**Resolution:** The OpenAPI specification has been updated to correctly define the wrapped response structure for all NPA rules endpoints. The SDK now expects and properly handles the `{"data": {...}, "status": "..."}` envelope natively.
-
-**Status:** ✅ RESOLVED - OAS correctly defines wrapped response structure
-
----
-
-### 13. Response Wrapper `status` Field Excluded from Terraform Schema
-
-**Endpoints:** All policy endpoints that return wrapped responses:
-- `POST/GET/PATCH/DELETE /api/v2/policy/npa/rules`
-- `POST/GET/PATCH/DELETE /api/v2/policy/npa/policygroups`
-
-**Issue:** The API response wrapper includes a `status` field (`"success"` or `"error"`) at the envelope level, not as a property of the resource itself:
-
-```json
-{
-  "data": { ...resource properties... },
-  "status": "success"  // <-- This is response-level, not resource-level
-}
-```
-
-The `status` field indicates whether the API call succeeded, not a property of the rule or policy group resource. Including it in the Terraform resource schema would be misleading and cause issues since it's not a persistent attribute of the resource.
-
-**Resolution:** The `status` field is excluded from the Terraform resource schema using `x-speakeasy-terraform-ignore: true` in the OpenAPI specification. The SDK still parses the wrapped response correctly, but the `status` field is not exposed as a Terraform attribute.
-
-**Status:** ✅ RESOLVED - `status` field excluded from Terraform schema via OAS annotation
-
----
-
-## Infrastructure API Issues
+## Infrastructure API Issues (4-7)
 
 ### 4. Missing external_id on Profile Creation
 
@@ -435,6 +247,356 @@ Content-Type: application/json
 
 ---
 
+## Steering API Issues (8-10)
+
+### 8. Empty Objects Cause SQL Serialization Error on Update
+
+**Endpoint:** `PUT /api/v2/steering/apps/private/{id}`
+
+**Issue:** When updating a private app, if the request includes empty objects (`{}`) or empty arrays (`[]`) for certain fields (`app_option`, `paths`), the API backend fails with a SQL serialization error. The backend incorrectly converts these empty JSON values to Python bytes objects.
+
+**Error Message:**
+```
+(raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(builtins.TypeError) Object of type bytes is not JSON serializable
+[SQL: UPDATE private_apps SET modify_time=%(modify_time)s, app_option=%(app_option)s, paths=%(paths)s WHERE private_apps.app_id = %(private_apps_app_id)s]
+[parameters: [{'app_option': b'{}', 'paths': b'[]', 'private_apps_app_id': 525}]]
+```
+
+**Affected Fields:**
+- `app_option` - empty object `{}`
+- `paths` - empty array `[]`
+- `uribypass_header_value` - null/empty string
+
+**Impact:**
+- All private app update operations fail if these fields are included with empty values
+- Even though the JSON payload is valid, the API backend mishandles it
+
+**Workaround:** The Terraform provider uses a BeforeRequest hook (`hookPrivateAppRequest.go`) to strip these fields from PUT requests when they are empty.
+
+**Status:** API backend bug - Workaround implemented in provider via SDK hook
+
+---
+
+### 9. Protocol Field Name Mismatch (type vs transport)
+
+**Endpoints:**
+- `POST /api/v2/steering/apps/private` (create)
+- `GET /api/v2/steering/apps/private/{id}` (read)
+
+**Issue:** The protocol field uses different names in requests vs responses:
+
+| Operation | Field Name |
+|-----------|------------|
+| Request (POST/PUT) | `type` |
+| Response (GET) | `transport` |
+
+**Example:**
+
+**Request:**
+```json
+{
+  "protocols": [
+    {"type": "tcp", "ports": ["443"]}
+  ]
+}
+```
+
+**Response:**
+```json
+{
+  "protocols": [
+    {"transport": "tcp", "port": "443", "id": 123, ...}
+  ]
+}
+```
+
+**Impact:**
+- Cannot use the same data structure for requests and responses
+- Terraform state mapping requires transformation between `type` and `transport`
+
+**Workaround:** The provider uses an AfterSuccess hook (`hookMyAppAfterSuccess.go`) to map `transport` to `type` in responses, maintaining consistency with the request schema.
+
+**Status:** Known API inconsistency - Handled via SDK hook
+
+---
+
+### 10. Write-Only Fields Not Returned in Response
+
+**Endpoint:** `GET /api/v2/steering/apps/private/{id}`
+
+**Issue:** Several fields that can be set during create/update are not returned in GET responses:
+
+| Field | Accepted in Request | Returned in Response |
+|-------|---------------------|---------------------|
+| `allow_uri_bypass` | Yes | No |
+| `app_option` | Yes | Empty `{}` only |
+| `paths` | Yes | Empty `[]` only |
+
+**Impact:**
+- Terraform cannot track the actual state of these fields
+- Causes perpetual drift in `terraform plan` output
+- Even if explicitly set in configuration, the next plan shows changes
+
+**Example:**
+```hcl
+# Configuration
+resource "netskope_npa_private_app" "example" {
+  allow_uri_bypass = false  # Set explicitly
+  ...
+}
+
+# Plan output (perpetual drift)
++ allow_uri_bypass = false  # Always shows as addition
+```
+
+**Workaround:**
+- Use `x-speakeasy-param-suppress-computed-diff: true` in OpenAPI spec for these fields
+- Mark `app_option` as `x-speakeasy-terraform-ignore: true` to exclude from schema
+- Accept minor cosmetic drift for `allow_uri_bypass` (defaults to false, functionally correct)
+
+**Status:** API limitation - Partial workaround via Speakeasy annotations
+
+---
+
+## Policy API Issues (11-13)
+
+### 11. Policy Group Response Wrapper Mismatch
+
+**Endpoints:**
+- `POST /api/v2/policy/npa/policygroups` (create)
+- `PATCH /api/v2/policy/npa/policygroups/{id}` (update)
+- `GET /api/v2/policy/npa/policygroups/{id}` (read)
+
+**Issue:** The API wraps responses in a `{"data": {...}, "status": "success"}` envelope.
+
+**Example API response:**
+```json
+{
+  "data": {
+    "group_id": "145",
+    "group_name": "my-group",
+    "group_type": "0",
+    ...
+  },
+  "status": "success"
+}
+```
+
+**Resolution:** The OpenAPI specification has been updated to correctly define the wrapped response structure for all policy group endpoints. The SDK now expects and properly handles the `{"data": {...}, "status": "..."}` envelope natively.
+
+**Status:** ✅ RESOLVED - OAS correctly defines wrapped response structure
+
+---
+
+### 12. NPA Rules Response Wrapper Mismatch
+
+**Endpoints:**
+- `POST /api/v2/policy/npa/rules` (create)
+- `PATCH /api/v2/policy/npa/rules/{id}` (update)
+- `GET /api/v2/policy/npa/rules/{id}` (read)
+- `DELETE /api/v2/policy/npa/rules/{id}` (delete)
+
+**Issue:** Similar to Issue #11, the API wraps all responses in a `{"data": {...}, "status": "success"}` envelope.
+
+**Example API response:**
+```json
+{
+  "data": {
+    "rule_id": "4",
+    "rule_name": "my-rule",
+    "enabled": "1",
+    "rule_data": {...}
+  },
+  "status": "success"
+}
+```
+
+**Resolution:** The OpenAPI specification has been updated to correctly define the wrapped response structure for all NPA rules endpoints. The SDK now expects and properly handles the `{"data": {...}, "status": "..."}` envelope natively.
+
+**Status:** ✅ RESOLVED - OAS correctly defines wrapped response structure
+
+---
+
+### 13. Response Wrapper `status` Field Excluded from Terraform Schema
+
+**Endpoints:** All policy endpoints that return wrapped responses:
+- `POST/GET/PATCH/DELETE /api/v2/policy/npa/rules`
+- `POST/GET/PATCH/DELETE /api/v2/policy/npa/policygroups`
+
+**Issue:** The API response wrapper includes a `status` field (`"success"` or `"error"`) at the envelope level, not as a property of the resource itself:
+
+```json
+{
+  "data": { ...resource properties... },
+  "status": "success"  // <-- This is response-level, not resource-level
+}
+```
+
+The `status` field indicates whether the API call succeeded, not a property of the rule or policy group resource. Including it in the Terraform resource schema would be misleading and cause issues since it's not a persistent attribute of the resource.
+
+**Resolution:** The `status` field is excluded from the Terraform resource schema using `x-speakeasy-terraform-ignore: true` in the OpenAPI specification. The SDK still parses the wrapped response correctly, but the `status` field is not exposed as a Terraform attribute.
+
+**Status:** ✅ RESOLVED - `status` field excluded from Terraform schema via OAS annotation
+
+---
+
+## Steering API Issues (14)
+
+### 14. Protocol Ordering Causes Terraform State Drift
+
+**Endpoint:** `GET /api/v2/steering/apps/private/{id}`
+
+**Issue:** When a private app is configured with multiple protocols, the API returns the protocols in a potentially different order than they were specified during creation. The Terraform provider uses a list (ordered) for the `protocols` attribute, so any difference in ordering between the configuration and the API response causes Terraform to detect "drift" and propose changes on every `terraform plan`.
+
+**Example Configuration:**
+
+```hcl
+resource "netskope_npa_private_app" "example" {
+  private_app_name     = "Multi-Protocol App"
+  private_app_hostname = "app.internal.local"
+
+  protocols = [
+    {
+      port     = "443"
+      protocol = "tcp"
+    },
+    {
+      port     = "22"
+      protocol = "tcp"
+    }
+  ]
+  # ...
+}
+```
+
+**API Response (Reordered):**
+
+```json
+{
+  "protocols": [
+    {"port": "22", "transport": "tcp", "id": 123},
+    {"port": "443", "transport": "tcp", "id": 124}
+  ]
+}
+```
+
+**Terraform Plan Output (Perpetual Drift):**
+
+```
+# netskope_npa_private_app.example will be updated in-place
+~ resource "netskope_npa_private_app" "example" {
+    ~ protocols = [
+        ~ {
+            ~ port     = "22" -> "443"
+            ~ protocol = "tcp" -> "tcp"
+          },
+        ~ {
+            ~ port     = "443" -> "22"
+            ~ protocol = "tcp" -> "tcp"
+          },
+      ]
+  }
+```
+
+**Root Cause:** The API backend sorts protocols internally using a two-level sort:
+1. **Protocol type** (alphabetically: `tcp` before `udp`)
+2. **Port number** (ascending within each protocol type)
+
+This ordering is not documented and was discovered through testing. Since Terraform lists are ordered, any difference between configuration order and response order is detected as drift.
+
+**Impact:**
+- Every `terraform plan` shows changes even when no actual changes are needed
+- Running `terraform apply` repeatedly may work but clutters the audit log
+- Tests using `ExpectNonEmptyPlan: false` will fail for multi-protocol apps
+- Users may be confused about why their infrastructure shows pending changes
+
+**Workaround:** **Always specify protocols in the same order the API returns them:**
+1. All TCP protocols first, sorted by port ascending
+2. All UDP protocols second, sorted by port ascending
+
+**Correct Configuration (No Drift):**
+
+```hcl
+# Single protocol type - just sort by port
+protocols = [
+  {
+    port     = "22"       # Lower port first
+    protocol = "tcp"
+  },
+  {
+    port     = "443"      # Higher port second
+    protocol = "tcp"
+  }
+]
+
+# Mixed protocol types - TCP first (sorted), then UDP (sorted)
+protocols = [
+  {
+    port     = "22"       # TCP ports first, sorted ascending
+    protocol = "tcp"
+  },
+  {
+    port     = "443"
+    protocol = "tcp"
+  },
+  {
+    port     = "53"       # UDP ports second, sorted ascending
+    protocol = "udp"
+  },
+  {
+    port     = "123"
+    protocol = "udp"
+  }
+]
+```
+
+**Incorrect Configuration (Causes Drift):**
+
+```hcl
+# WRONG: UDP before TCP
+protocols = [
+  {
+    port     = "53"
+    protocol = "udp"      # UDP should come AFTER all TCP entries
+  },
+  {
+    port     = "443"
+    protocol = "tcp"
+  }
+]
+
+# WRONG: Ports not sorted within protocol type
+protocols = [
+  {
+    port     = "443"      # Should be 22 first
+    protocol = "tcp"
+  },
+  {
+    port     = "22"
+    protocol = "tcp"
+  }
+]
+```
+
+**Alternative Solutions (Not Implemented):**
+
+1. **Use Terraform Set Type:** Sets are unordered, so protocol ordering wouldn't matter. However, Speakeasy-generated SDKs don't currently support `x-speakeasy-terraform-custom-type: set` annotations, and changing the schema type would be a breaking change.
+
+2. **Sort in AfterSuccess Hook:** The SDK could sort protocols in the response to match the configuration order. This adds complexity and would need to handle edge cases (e.g., multiple protocols with same port but different protocol types).
+
+3. **Sort in BeforeRequest Hook:** Normalize the request payload order before sending. This would make the configuration canonical but doesn't solve the response ordering issue.
+
+**Status:** Known API behavior - Users should specify protocols in API sort order
+
+**Best Practice:** When defining multiple protocols for a private app:
+1. Group all TCP protocols together, sorted by port ascending (e.g., 22, 80, 443)
+2. Group all UDP protocols together after TCP, sorted by port ascending (e.g., 53, 123)
+
+This ensures consistent ordering between your configuration and the API response.
+
+---
+
 ## Terraform Provider Implications
 
 These API issues have specific implications for the Terraform provider:
@@ -449,6 +611,7 @@ These API issues have specific implications for the Terraform provider:
 | Empty objects cause SQL error | Update operations fail without workaround |
 | Protocol type/transport mismatch | State mapping requires hook transformation |
 | Write-only fields | Perpetual drift in plan output for certain fields |
+| Protocol ordering | Perpetual drift for multi-protocol apps if not sorted by port |
 | Policy group response wrapper | ✅ Resolved - OAS now correctly defines wrapped response |
 | NPA rules response wrapper | ✅ Resolved - OAS now correctly defines wrapped response |
 
@@ -482,6 +645,8 @@ These API issues have specific implications for the Terraform provider:
 7. **Map Protocol Fields:** Transform `transport` to `type` when processing protocol data from responses.
 
 8. **Accept Minor Drift:** Some fields like `allow_uri_bypass` will show perpetual drift in `terraform plan` because the API doesn't return them. This is cosmetic and doesn't affect functionality.
+
+9. **Order Protocols Correctly:** When defining multiple protocols for a private app, list them in the order the API returns them: TCP protocols first (sorted by port ascending), then UDP protocols (sorted by port ascending). Example: TCP:22, TCP:443, UDP:53, UDP:123.
 
 ---
 

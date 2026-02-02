@@ -16,7 +16,7 @@ func TestAccNPAPolicyGroups_basic(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_policy_groups.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckNPAPolicyGroupsDestroy,
@@ -47,7 +47,7 @@ func TestAccNPAPolicyGroups_update(t *testing.T) {
 	rNameUpdated := fmt.Sprintf("%s-updated", rName)
 	resourceName := "netskope_npa_policy_groups.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckNPAPolicyGroupsDestroy,
@@ -76,7 +76,7 @@ func TestAccNPAPolicyGroups_import(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_policy_groups.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckNPAPolicyGroupsDestroy,

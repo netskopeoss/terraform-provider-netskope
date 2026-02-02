@@ -42,7 +42,7 @@ func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsItem(ctx cont
 				r.Protocols[protocolsCount].Protocol = protocols.Protocol
 			}
 		}
-		r.Publishers = []tfTypes.ServicePublisherAssignmentItem{}
+		r.Publishers = []tfTypes.PublisherItem{}
 		if len(r.Publishers) > len(resp.Publishers) {
 			r.Publishers = r.Publishers[:len(resp.Publishers)]
 		}
