@@ -181,7 +181,7 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 
 ## Examples and Tutorials
 
-See **[terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples)** for:
+See **[terraform-netskope-examples](https://github.com/netskopeoss/terraform-netskope-examples)** for:
 
 - Getting started guides for Terraform beginners
 - Step-by-step tutorials for private apps, publishers on AWS/Azure/GCP, policy-as-code
