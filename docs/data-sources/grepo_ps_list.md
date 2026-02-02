@@ -23,6 +23,7 @@ data "netskope_grepo_ps_list" "my_grepopslist" {
 ### Read-Only
 
 - `result` (Attributes List) (see [below for nested schema](#nestedatt--result))
+- `total` (Number)
 
 <a id="nestedatt--result"></a>
 ### Nested Schema for `result`

@@ -22,13 +22,7 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 		for dataCount, dataItem := range resp.Data {
 			var data tfTypes.NpaPolicyResponseItem
 			data.Enabled = types.StringPointerValue(dataItem.Enabled)
-			data.GroupID = types.StringPointerValue(dataItem.GroupID)
-			data.GroupName = types.StringPointerValue(dataItem.GroupName)
 			data.ID = types.StringPointerValue(dataItem.ID)
-			data.ModifyBy = types.StringPointerValue(dataItem.ModifyBy)
-			data.ModifyTime = types.StringPointerValue(dataItem.ModifyTime)
-			data.ModifyType = types.StringPointerValue(dataItem.ModifyType)
-			data.PolicyType = types.StringPointerValue(dataItem.PolicyType)
 			if dataItem.RuleData == nil {
 				data.RuleData = nil
 			} else {
@@ -39,7 +33,6 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 				}
 				data.RuleData.BNegateNetLocation = types.BoolPointerValue(dataItem.RuleData.BNegateNetLocation)
 				data.RuleData.BNegateSrcCountries = types.BoolPointerValue(dataItem.RuleData.BNegateSrcCountries)
-				data.RuleData.Classification = types.StringPointerValue(dataItem.RuleData.Classification)
 				data.RuleData.DeviceClassificationID = make([]types.Int64, 0, len(dataItem.RuleData.DeviceClassificationID))
 				for _, v := range dataItem.RuleData.DeviceClassificationID {
 					data.RuleData.DeviceClassificationID = append(data.RuleData.DeviceClassificationID, types.Int64Value(v))
@@ -62,13 +55,6 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 				data.RuleData.OrganizationUnits = make([]types.String, 0, len(dataItem.RuleData.OrganizationUnits))
 				for _, v := range dataItem.RuleData.OrganizationUnits {
 					data.RuleData.OrganizationUnits = append(data.RuleData.OrganizationUnits, types.StringValue(v))
-				}
-				if dataItem.RuleData.PeriodicReauth == nil {
-					data.RuleData.PeriodicReauth = nil
-				} else {
-					data.RuleData.PeriodicReauth = &tfTypes.NpaPolicyRulePeriodicReauth{}
-					data.RuleData.PeriodicReauth.ReauthInterval = types.StringPointerValue(dataItem.RuleData.PeriodicReauth.ReauthInterval)
-					data.RuleData.PeriodicReauth.ReauthIntervalUnit = types.StringPointerValue(dataItem.RuleData.PeriodicReauth.ReauthIntervalUnit)
 				}
 				if dataItem.RuleData.PolicyType != nil {
 					data.RuleData.PolicyType = types.StringValue(string(*dataItem.RuleData.PolicyType))
@@ -99,25 +85,13 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 				for _, v := range dataItem.RuleData.Users {
 					data.RuleData.Users = append(data.RuleData.Users, types.StringValue(v))
 				}
-				if dataItem.RuleData.UserType != nil {
-					data.RuleData.UserType = types.StringValue(string(*dataItem.RuleData.UserType))
-				} else {
-					data.RuleData.UserType = types.StringNull()
-				}
-				data.RuleData.Version = types.Int64PointerValue(dataItem.RuleData.Version)
 			}
 			data.RuleName = types.StringPointerValue(dataItem.RuleName)
 			if dataCount+1 > len(r.Data) {
 				r.Data = append(r.Data, data)
 			} else {
 				r.Data[dataCount].Enabled = data.Enabled
-				r.Data[dataCount].GroupID = data.GroupID
-				r.Data[dataCount].GroupName = data.GroupName
 				r.Data[dataCount].ID = data.ID
-				r.Data[dataCount].ModifyBy = data.ModifyBy
-				r.Data[dataCount].ModifyTime = data.ModifyTime
-				r.Data[dataCount].ModifyType = data.ModifyType
-				r.Data[dataCount].PolicyType = data.PolicyType
 				r.Data[dataCount].RuleData = data.RuleData
 				r.Data[dataCount].RuleName = data.RuleName
 			}

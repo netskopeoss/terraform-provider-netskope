@@ -16,13 +16,7 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 
 	if resp != nil {
 		r.Enabled = types.StringPointerValue(resp.Enabled)
-		r.GroupID = types.StringPointerValue(resp.GroupID)
-		r.GroupName = types.StringPointerValue(resp.GroupName)
 		r.ID = types.StringPointerValue(resp.ID)
-		r.ModifyBy = types.StringPointerValue(resp.ModifyBy)
-		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
-		r.ModifyType = types.StringPointerValue(resp.ModifyType)
-		r.PolicyType = types.StringPointerValue(resp.PolicyType)
 		if resp.RuleData == nil {
 			r.RuleData = nil
 		} else {
@@ -33,7 +27,6 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			}
 			r.RuleData.BNegateNetLocation = types.BoolPointerValue(resp.RuleData.BNegateNetLocation)
 			r.RuleData.BNegateSrcCountries = types.BoolPointerValue(resp.RuleData.BNegateSrcCountries)
-			r.RuleData.Classification = types.StringPointerValue(resp.RuleData.Classification)
 			r.RuleData.DeviceClassificationID = make([]types.Int64, 0, len(resp.RuleData.DeviceClassificationID))
 			for _, v := range resp.RuleData.DeviceClassificationID {
 				r.RuleData.DeviceClassificationID = append(r.RuleData.DeviceClassificationID, types.Int64Value(v))
@@ -56,13 +49,6 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			r.RuleData.OrganizationUnits = make([]types.String, 0, len(resp.RuleData.OrganizationUnits))
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
-			}
-			if resp.RuleData.PeriodicReauth == nil {
-				r.RuleData.PeriodicReauth = nil
-			} else {
-				r.RuleData.PeriodicReauth = &tfTypes.NpaPolicyRulePeriodicReauth{}
-				r.RuleData.PeriodicReauth.ReauthInterval = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthInterval)
-				r.RuleData.PeriodicReauth.ReauthIntervalUnit = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthIntervalUnit)
 			}
 			if resp.RuleData.PolicyType != nil {
 				r.RuleData.PolicyType = types.StringValue(string(*resp.RuleData.PolicyType))
@@ -93,12 +79,6 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			for _, v := range resp.RuleData.Users {
 				r.RuleData.Users = append(r.RuleData.Users, types.StringValue(v))
 			}
-			if resp.RuleData.UserType != nil {
-				r.RuleData.UserType = types.StringValue(string(*resp.RuleData.UserType))
-			} else {
-				r.RuleData.UserType = types.StringNull()
-			}
-			r.RuleData.Version = types.Int64PointerValue(resp.RuleData.Version)
 		}
 		r.RuleName = types.StringPointerValue(resp.RuleName)
 	}
@@ -174,12 +154,6 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 	} else {
 		groupID = nil
 	}
-	groupName := new(string)
-	if !r.GroupName.IsUnknown() && !r.GroupName.IsNull() {
-		*groupName = r.GroupName.ValueString()
-	} else {
-		groupName = nil
-	}
 	ruleName := new(string)
 	if !r.RuleName.IsUnknown() && !r.RuleName.IsNull() {
 		*ruleName = r.RuleName.ValueString()
@@ -203,31 +177,6 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			*bNegateSrcCountries = r.RuleData.BNegateSrcCountries.ValueBool()
 		} else {
 			bNegateSrcCountries = nil
-		}
-		classification := new(string)
-		if !r.RuleData.Classification.IsUnknown() && !r.RuleData.Classification.IsNull() {
-			*classification = r.RuleData.Classification.ValueString()
-		} else {
-			classification = nil
-		}
-		var periodicReauth *shared.NpaPolicyRulePeriodicReauth
-		if r.RuleData.PeriodicReauth != nil {
-			reauthInterval := new(string)
-			if !r.RuleData.PeriodicReauth.ReauthInterval.IsUnknown() && !r.RuleData.PeriodicReauth.ReauthInterval.IsNull() {
-				*reauthInterval = r.RuleData.PeriodicReauth.ReauthInterval.ValueString()
-			} else {
-				reauthInterval = nil
-			}
-			reauthIntervalUnit := new(string)
-			if !r.RuleData.PeriodicReauth.ReauthIntervalUnit.IsUnknown() && !r.RuleData.PeriodicReauth.ReauthIntervalUnit.IsNull() {
-				*reauthIntervalUnit = r.RuleData.PeriodicReauth.ReauthIntervalUnit.ValueString()
-			} else {
-				reauthIntervalUnit = nil
-			}
-			periodicReauth = &shared.NpaPolicyRulePeriodicReauth{
-				ReauthInterval:     reauthInterval,
-				ReauthIntervalUnit: reauthIntervalUnit,
-			}
 		}
 		jsonVersion := new(int64)
 		if !r.RuleData.JSONVersion.IsUnknown() && !r.RuleData.JSONVersion.IsNull() {
@@ -285,28 +234,14 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		for _, userGroupsItem := range r.RuleData.UserGroups {
 			userGroups = append(userGroups, userGroupsItem.ValueString())
 		}
-		userType := new(shared.UserType)
-		if !r.RuleData.UserType.IsUnknown() && !r.RuleData.UserType.IsNull() {
-			*userType = shared.UserType(r.RuleData.UserType.ValueString())
-		} else {
-			userType = nil
-		}
 		users := make([]string, 0, len(r.RuleData.Users))
 		for _, usersItem := range r.RuleData.Users {
 			users = append(users, usersItem.ValueString())
-		}
-		version := new(int64)
-		if !r.RuleData.Version.IsUnknown() && !r.RuleData.Version.IsNull() {
-			*version = r.RuleData.Version.ValueInt64()
-		} else {
-			version = nil
 		}
 		ruleData = &shared.NpaPolicyRuleData{
 			AccessMethod:           accessMethod,
 			BNegateNetLocation:     bNegateNetLocation,
 			BNegateSrcCountries:    bNegateSrcCountries,
-			Classification:         classification,
-			PeriodicReauth:         periodicReauth,
 			JSONVersion:            jsonVersion,
 			DeviceClassificationID: deviceClassificationID,
 			MatchCriteriaAction:    matchCriteriaAction,
@@ -318,9 +253,7 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			PrivateApps:            privateApps,
 			SrcCountries:           srcCountries,
 			UserGroups:             userGroups,
-			UserType:               userType,
 			Users:                  users,
-			Version:                version,
 		}
 	}
 	var ruleOrder *shared.RuleOrder
@@ -360,7 +293,6 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		Description: description,
 		Enabled:     enabled,
 		GroupID:     groupID,
-		GroupName:   groupName,
 		RuleName:    ruleName,
 		RuleData:    ruleData,
 		RuleOrder:   ruleOrder,

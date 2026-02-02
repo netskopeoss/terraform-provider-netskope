@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccNPAPublisherToken_basic(t *testing.T) {
@@ -24,7 +23,7 @@ func TestAccNPAPublisherToken_basic(t *testing.T) {
 			{
 				Config: testAccNPAPublisherTokenConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPublisherTokenExists(resourceName),
+					testAccCheckResourceExists(resourceName, "publisher_id", "token"),
 					resource.TestCheckResourceAttrSet(resourceName, "publisher_id"),
 					resource.TestCheckResourceAttrSet(resourceName, "token"),
 				),
@@ -47,25 +46,4 @@ resource "netskope_npa_publisher_token" "test" {
   publisher_id = netskope_npa_publisher.test.publisher_id
 }
 `, testAccProviderConfig(), name)
-}
-
-// Helper functions
-
-func testAccCheckNPAPublisherTokenExists(resourceName string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[resourceName]
-		if !ok {
-			return fmt.Errorf("resource not found: %s", resourceName)
-		}
-
-		if rs.Primary.Attributes["publisher_id"] == "" {
-			return fmt.Errorf("publisher_id not set")
-		}
-
-		if rs.Primary.Attributes["token"] == "" {
-			return fmt.Errorf("token not set")
-		}
-
-		return nil
-	}
 }

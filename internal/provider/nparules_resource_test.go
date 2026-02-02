@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccNPARules_basic(t *testing.T) {
@@ -19,19 +18,17 @@ func TestAccNPARules_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPARulesDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPARulesConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPARulesExists(resourceName),
+					testAccCheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "rule_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "1"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "group_id"),
 				),
-				// Known provider issue: computed fields in private_app cause plan drift
-				ExpectNonEmptyPlan: true,
 			},
 			{
 				ResourceName:            resourceName,
@@ -53,27 +50,25 @@ func TestAccNPARules_update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPARulesDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
 		Steps: []resource.TestStep{
 			// Create with allow action
 			{
 				Config: testAccNPARulesConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPARulesExists(resourceName),
+					testAccCheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "rule_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "1"),
 				),
-				ExpectNonEmptyPlan: true,
 			},
 			// Update - disable the rule
 			{
 				Config: testAccNPARulesConfig_disabled(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPARulesExists(resourceName),
+					testAccCheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "rule_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "0"),
 				),
-				ExpectNonEmptyPlan: true,
 			},
 		},
 	})
@@ -86,11 +81,10 @@ func TestAccNPARules_import(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPARulesDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
 		Steps: []resource.TestStep{
 			{
-				Config:             testAccNPARulesConfig_basic(rName),
-				ExpectNonEmptyPlan: true,
+				Config: testAccNPARulesConfig_basic(rName),
 			},
 			{
 				ResourceName:            resourceName,
@@ -113,17 +107,15 @@ func TestAccNPARules_denyRule(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPARulesDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPARulesConfig_denyRule(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPARulesExists(resourceName),
+					testAccCheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "rule_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "1"),
 				),
-				// Known provider issue: computed fields cause plan drift
-				ExpectNonEmptyPlan: true,
 			},
 		},
 	})
@@ -183,7 +175,6 @@ resource "netskope_npa_rules" "test" {
       action_name = "allow"
     }
 
-    user_id       = ["*"]
     private_apps  = [netskope_npa_private_app.test.private_app_name]
     access_method = ["Client"]
   }
@@ -243,7 +234,6 @@ resource "netskope_npa_rules" "test" {
       action_name = "allow"
     }
 
-    user_id       = ["*"]
     private_apps  = [netskope_npa_private_app.test.private_app_name]
     access_method = ["Client"]
   }
@@ -303,41 +293,9 @@ resource "netskope_npa_rules" "test" {
       action_name = "block"
     }
 
-    user_id       = ["*"]
     private_apps  = [netskope_npa_private_app.test.private_app_name]
     access_method = ["Client"]
   }
 }
 `, testAccProviderConfig(), name, name, name, name)
-}
-
-// Helper functions
-
-func testAccCheckNPARulesExists(resourceName string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[resourceName]
-		if !ok {
-			return fmt.Errorf("resource not found: %s", resourceName)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("resource ID not set")
-		}
-
-		return nil
-	}
-}
-
-func testAccCheckNPARulesDestroy(s *terraform.State) error {
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "netskope_npa_rules" {
-			continue
-		}
-
-		// The acceptance test framework automatically destroys resources.
-		// This function verifies the resource no longer exists in state.
-		// In a production scenario, you would make an API call to verify
-		// the resource has been deleted from the Netskope tenant.
-	}
-	return nil
 }

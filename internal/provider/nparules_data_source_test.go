@@ -32,8 +32,6 @@ func TestAccNPARulesDataSource_basic(t *testing.T) {
 						resourceName, "rule_name",
 					),
 				),
-				// Known provider issue: computed fields cause plan drift
-				ExpectNonEmptyPlan: true,
 			},
 		},
 	})
@@ -91,7 +89,6 @@ resource "netskope_npa_rules" "test" {
       action_name = "allow"
     }
 
-    user_id       = ["*"]
     private_apps  = [netskope_npa_private_app.test.private_app_name]
     access_method = ["Client"]
   }

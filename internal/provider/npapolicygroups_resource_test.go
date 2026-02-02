@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccNPAPolicyGroups_basic(t *testing.T) {
@@ -19,12 +18,12 @@ func TestAccNPAPolicyGroups_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPolicyGroupsDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_policy_groups"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPAPolicyGroupsConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPolicyGroupsExists(resourceName),
+					testAccCheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "group_name", rName),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 				),
@@ -50,13 +49,13 @@ func TestAccNPAPolicyGroups_update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPolicyGroupsDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_policy_groups"),
 		Steps: []resource.TestStep{
 			// Create
 			{
 				Config: testAccNPAPolicyGroupsConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPolicyGroupsExists(resourceName),
+					testAccCheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "group_name", rName),
 				),
 			},
@@ -64,7 +63,7 @@ func TestAccNPAPolicyGroups_update(t *testing.T) {
 			{
 				Config: testAccNPAPolicyGroupsConfig_basic(rNameUpdated),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPolicyGroupsExists(resourceName),
+					testAccCheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "group_name", rNameUpdated),
 				),
 			},
@@ -79,7 +78,7 @@ func TestAccNPAPolicyGroups_import(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPolicyGroupsDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_policy_groups"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNPAPolicyGroupsConfig_basic(rName),
@@ -110,35 +109,4 @@ resource "netskope_npa_policy_groups" "test" {
   }
 }
 `, testAccProviderConfig(), name)
-}
-
-// Helper functions
-
-func testAccCheckNPAPolicyGroupsExists(resourceName string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[resourceName]
-		if !ok {
-			return fmt.Errorf("resource not found: %s", resourceName)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("resource ID not set")
-		}
-
-		return nil
-	}
-}
-
-func testAccCheckNPAPolicyGroupsDestroy(s *terraform.State) error {
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "netskope_npa_policy_groups" {
-			continue
-		}
-
-		// The acceptance test framework automatically destroys resources.
-		// This function verifies the resource no longer exists in state.
-		// In a production scenario, you would make an API call to verify
-		// the resource has been deleted from the Netskope tenant.
-	}
-	return nil
 }

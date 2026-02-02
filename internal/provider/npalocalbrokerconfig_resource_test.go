@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccNPALocalBrokerConfig_basic(t *testing.T) {
@@ -23,7 +22,7 @@ func TestAccNPALocalBrokerConfig_basic(t *testing.T) {
 			{
 				Config: testAccNPALocalBrokerConfigConfig_basic(rHostname),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPALocalBrokerConfigExists(resourceName),
+					testAccCheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "hostname", rHostname),
 					resource.TestCheckResourceAttr(resourceName, "data.hostname", rHostname),
 				),
@@ -45,7 +44,7 @@ func TestAccNPALocalBrokerConfig_update(t *testing.T) {
 			{
 				Config: testAccNPALocalBrokerConfigConfig_basic(rHostname),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPALocalBrokerConfigExists(resourceName),
+					testAccCheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "hostname", rHostname),
 				),
 			},
@@ -53,7 +52,7 @@ func TestAccNPALocalBrokerConfig_update(t *testing.T) {
 			{
 				Config: testAccNPALocalBrokerConfigConfig_basic(rHostnameUpdated),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPALocalBrokerConfigExists(resourceName),
+					testAccCheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "hostname", rHostnameUpdated),
 				),
 			},
@@ -71,21 +70,4 @@ resource "netskope_npa_local_broker_config" "test" {
   hostname = %q
 }
 `, testAccProviderConfig(), hostname)
-}
-
-// Helper functions
-
-func testAccCheckNPALocalBrokerConfigExists(resourceName string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[resourceName]
-		if !ok {
-			return fmt.Errorf("resource not found: %s", resourceName)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("resource ID not set")
-		}
-
-		return nil
-	}
 }
