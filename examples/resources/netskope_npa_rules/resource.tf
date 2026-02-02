@@ -2,14 +2,12 @@ resource "netskope_npa_rules" "my_nparules" {
   description = "any"
   enabled     = "1"
   group_id    = "1"
-  group_name  = "My policy group"
   rule_data = {
     access_method = [
       "Clientless"
     ]
     b_negate_net_location  = false
     b_negate_src_countries = false
-    classification         = "...my_classification..."
     device_classification_id = [
       9
     ]
@@ -23,10 +21,6 @@ resource "netskope_npa_rules" "my_nparules" {
     organization_units = [
       "..."
     ]
-    periodic_reauth = {
-      reauth_interval      = "60"
-      reauth_interval_unit = "hours"
-    }
     policy_type = "private-app"
     private_app_tag_ids = [
       "..."
@@ -43,11 +37,9 @@ resource "netskope_npa_rules" "my_nparules" {
     user_groups = [
       "..."
     ]
-    user_type = "user"
     users = [
       "..."
     ]
-    version = 1
   }
   rule_name = "vantest"
   rule_order = {

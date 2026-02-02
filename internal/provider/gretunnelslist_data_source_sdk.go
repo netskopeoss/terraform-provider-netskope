@@ -5,12 +5,48 @@ package provider
 import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/provider/typeconvert"
+	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/operations"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
-func (r *GRETunnelsListDataSourceModel) RefreshFromSharedGreTunnelListItem(ctx context.Context, resp []shared.GreTunnelListItem) diag.Diagnostics {
+func (r *GRETunnelsListDataSourceModel) RefreshFromSharedGreTunnelListResponse(ctx context.Context, resp *shared.GreTunnelListResponse) diag.Diagnostics {
 	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.Result = []tfTypes.GreTunnelListItem{}
+		if len(r.Result) > len(resp.Result) {
+			r.Result = r.Result[:len(resp.Result)]
+		}
+		for resultCount, resultItem := range resp.Result {
+			var result tfTypes.GreTunnelListItem
+			result.Bandwidth = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resultItem.Bandwidth))
+			result.Enabled = types.BoolPointerValue(resultItem.Enabled)
+			result.Notes = types.StringPointerValue(resultItem.Notes)
+			result.Site = types.StringPointerValue(resultItem.Site)
+			result.SourceIP = types.StringPointerValue(resultItem.SourceIP)
+			result.SourceType = types.StringPointerValue(resultItem.SourceType)
+			result.Template = types.StringPointerValue(resultItem.Template)
+			result.TunnelID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resultItem.TunnelID))
+			result.Vendor = types.StringPointerValue(resultItem.Vendor)
+			if resultCount+1 > len(r.Result) {
+				r.Result = append(r.Result, result)
+			} else {
+				r.Result[resultCount].Bandwidth = result.Bandwidth
+				r.Result[resultCount].Enabled = result.Enabled
+				r.Result[resultCount].Notes = result.Notes
+				r.Result[resultCount].Site = result.Site
+				r.Result[resultCount].SourceIP = result.SourceIP
+				r.Result[resultCount].SourceType = result.SourceType
+				r.Result[resultCount].Template = result.Template
+				r.Result[resultCount].TunnelID = result.TunnelID
+				r.Result[resultCount].Vendor = result.Vendor
+			}
+		}
+		r.Total = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.Total))
+	}
 
 	return diags
 }

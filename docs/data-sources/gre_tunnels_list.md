@@ -23,6 +23,7 @@ data "netskope_gre_tunnels_list" "my_gretunnelslist" {
 ### Read-Only
 
 - `result` (Attributes List) (see [below for nested schema](#nestedatt--result))
+- `total` (Number)
 
 <a id="nestedatt--result"></a>
 ### Nested Schema for `result`
