@@ -17,12 +17,10 @@ This document tracks known behavioral inconsistencies and quirks in the Netskope
   - [8. Empty Objects Cause SQL Serialization Error on Update](#8-empty-objects-cause-sql-serialization-error-on-update)
   - [9. Protocol Field Name Mismatch (type vs transport)](#9-protocol-field-name-mismatch-type-vs-transport)
   - [10. Write-Only Fields Not Returned in Response](#10-write-only-fields-not-returned-in-response)
-- [Policy API Issues (11-13)](#policy-api-issues-11-13)
-  - [11. Policy Group Response Wrapper Mismatch](#11-policy-group-response-wrapper-mismatch)
-  - [12. NPA Rules Response Wrapper Mismatch](#12-npa-rules-response-wrapper-mismatch)
-  - [13. Response Wrapper `status` Field Excluded from Terraform Schema](#13-response-wrapper-status-field-excluded-from-terraform-schema)
-- [Steering API Issues (14)](#steering-api-issues-14)
-  - [14. Protocol Ordering Causes Terraform State Drift](#14-protocol-ordering-causes-terraform-state-drift)
+- [Steering API Issues (11)](#steering-api-issues-11)
+  - [11. Protocol Ordering Causes Terraform State Drift](#11-protocol-ordering-causes-terraform-state-drift)
+- [Policy API Issues (12)](#policy-api-issues-12)
+  - [12. NPA Rules `group_id` is Write-Only](#12-npa-rules-group_id-is-write-only)
 - [Terraform Provider Implications](#terraform-provider-implications)
 - [General Recommendations](#general-recommendations)
 
@@ -359,91 +357,9 @@ resource "netskope_npa_private_app" "example" {
 
 ---
 
-## Policy API Issues (11-13)
+## Steering API Issues (11)
 
-### 11. Policy Group Response Wrapper Mismatch
-
-**Endpoints:**
-- `POST /api/v2/policy/npa/policygroups` (create)
-- `PATCH /api/v2/policy/npa/policygroups/{id}` (update)
-- `GET /api/v2/policy/npa/policygroups/{id}` (read)
-
-**Issue:** The API wraps responses in a `{"data": {...}, "status": "success"}` envelope.
-
-**Example API response:**
-```json
-{
-  "data": {
-    "group_id": "145",
-    "group_name": "my-group",
-    "group_type": "0",
-    ...
-  },
-  "status": "success"
-}
-```
-
-**Resolution:** The OpenAPI specification has been updated to correctly define the wrapped response structure for all policy group endpoints. The SDK now expects and properly handles the `{"data": {...}, "status": "..."}` envelope natively.
-
-**Status:** ✅ RESOLVED - OAS correctly defines wrapped response structure
-
----
-
-### 12. NPA Rules Response Wrapper Mismatch
-
-**Endpoints:**
-- `POST /api/v2/policy/npa/rules` (create)
-- `PATCH /api/v2/policy/npa/rules/{id}` (update)
-- `GET /api/v2/policy/npa/rules/{id}` (read)
-- `DELETE /api/v2/policy/npa/rules/{id}` (delete)
-
-**Issue:** Similar to Issue #11, the API wraps all responses in a `{"data": {...}, "status": "success"}` envelope.
-
-**Example API response:**
-```json
-{
-  "data": {
-    "rule_id": "4",
-    "rule_name": "my-rule",
-    "enabled": "1",
-    "rule_data": {...}
-  },
-  "status": "success"
-}
-```
-
-**Resolution:** The OpenAPI specification has been updated to correctly define the wrapped response structure for all NPA rules endpoints. The SDK now expects and properly handles the `{"data": {...}, "status": "..."}` envelope natively.
-
-**Status:** ✅ RESOLVED - OAS correctly defines wrapped response structure
-
----
-
-### 13. Response Wrapper `status` Field Excluded from Terraform Schema
-
-**Endpoints:** All policy endpoints that return wrapped responses:
-- `POST/GET/PATCH/DELETE /api/v2/policy/npa/rules`
-- `POST/GET/PATCH/DELETE /api/v2/policy/npa/policygroups`
-
-**Issue:** The API response wrapper includes a `status` field (`"success"` or `"error"`) at the envelope level, not as a property of the resource itself:
-
-```json
-{
-  "data": { ...resource properties... },
-  "status": "success"  // <-- This is response-level, not resource-level
-}
-```
-
-The `status` field indicates whether the API call succeeded, not a property of the rule or policy group resource. Including it in the Terraform resource schema would be misleading and cause issues since it's not a persistent attribute of the resource.
-
-**Resolution:** The `status` field is excluded from the Terraform resource schema using `x-speakeasy-terraform-ignore: true` in the OpenAPI specification. The SDK still parses the wrapped response correctly, but the `status` field is not exposed as a Terraform attribute.
-
-**Status:** ✅ RESOLVED - `status` field excluded from Terraform schema via OAS annotation
-
----
-
-## Steering API Issues (14)
-
-### 14. Protocol Ordering Causes Terraform State Drift
+### 11. Protocol Ordering Causes Terraform State Drift
 
 **Endpoint:** `GET /api/v2/steering/apps/private/{id}`
 
@@ -597,6 +513,53 @@ This ensures consistent ordering between your configuration and the API response
 
 ---
 
+## Policy API Issues (12)
+
+### 12. NPA Rules `group_id` is Write-Only
+
+**Endpoints:**
+- `POST /api/v2/policy/npa/rules` (create)
+- `GET /api/v2/policy/npa/rules/{id}` (read)
+
+**Issue:** The `group_id` field is accepted in create and update requests but is **not returned** in the GET response. This makes it a write-only field.
+
+**Example:**
+
+**Request (Create):**
+```json
+{
+  "rule_name": "my-rule",
+  "group_id": "873",
+  "enabled": "1",
+  "rule_data": {...}
+}
+```
+
+**Response (GET):**
+```json
+{
+  "data": {
+    "rule_id": "4",
+    "rule_name": "my-rule",
+    "enabled": "1",
+    "rule_data": {...}
+    // Note: group_id is NOT present in the response
+  },
+  "status": "success"
+}
+```
+
+**Impact:**
+- Terraform cannot verify `group_id` after creation since it's not in the GET response
+- Import operations cannot recover the `group_id` value
+- If included in the response schema, RefreshFrom would set it to null, causing perpetual drift
+
+**Workaround:** The `group_id` field has been removed from the response schema (`npa_policy_response_item`) in the OpenAPI spec. This preserves the user-configured value in Terraform state without being overwritten by the null response. The field is excluded from import state verification (`ImportStateVerifyIgnore`).
+
+**Status:** API limitation - Workaround implemented in OAS (0.3.3)
+
+---
+
 ## Terraform Provider Implications
 
 These API issues have specific implications for the Terraform provider:
@@ -612,8 +575,7 @@ These API issues have specific implications for the Terraform provider:
 | Protocol type/transport mismatch | State mapping requires hook transformation |
 | Write-only fields | Perpetual drift in plan output for certain fields |
 | Protocol ordering | Perpetual drift for multi-protocol apps if not sorted by port |
-| Policy group response wrapper | ✅ Resolved - OAS now correctly defines wrapped response |
-| NPA rules response wrapper | ✅ Resolved - OAS now correctly defines wrapped response |
+| NPA rules `group_id` write-only | `group_id` removed from response schema to preserve state (0.3.3) |
 
 ### Implemented Mitigations
 

@@ -38,12 +38,12 @@ func TestAccDrift_LocalBroker(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPALocalBrokerDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_local_broker"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDriftLocalBrokerConfig(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPALocalBrokerExists("netskope_npa_local_broker.test"),
+					testAccCheckResourceExists("netskope_npa_local_broker.test", "local_broker_id"),
 				),
 			},
 			{
@@ -67,10 +67,10 @@ func TestAccDrift_LocalBrokerConfig(t *testing.T) {
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDriftLocalBrokerConfigConfig(rHostname),
+				Config: testAccNPALocalBrokerConfigConfig_basic(rHostname),
 			},
 			{
-				Config: testAccDriftLocalBrokerConfigConfig(rHostname),
+				Config: testAccNPALocalBrokerConfigConfig_basic(rHostname),
 				ConfigPlanChecks: resource.ConfigPlanChecks{
 					PreApply: []plancheck.PlanCheck{
 						plancheck.ExpectEmptyPlan(),
@@ -88,12 +88,12 @@ func TestAccDrift_Publisher(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPublisherDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_publisher"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDriftPublisherConfig(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPublisherExists("netskope_npa_publisher.test"),
+					testAccCheckResourceExists("netskope_npa_publisher.test", "publisher_id"),
 				),
 			},
 			{
@@ -115,12 +115,12 @@ func TestAccDrift_PrivateApp_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPrivateAppDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDriftPrivateAppBasicConfig(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists("netskope_npa_private_app.test"),
+					testAccCheckResourceExists("netskope_npa_private_app.test", "private_app_id"),
 				),
 			},
 			{
@@ -143,12 +143,12 @@ func TestAccDrift_PrivateApp_MultiProtocol(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPrivateAppDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDriftPrivateAppMultiProtocolConfig(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPrivateAppExists("netskope_npa_private_app.test"),
+					testAccCheckResourceExists("netskope_npa_private_app.test", "private_app_id"),
 				),
 			},
 			{
@@ -170,16 +170,43 @@ func TestAccDrift_PolicyGroup(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPolicyGroupsDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_policy_groups"),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDriftPolicyGroupConfig(rName),
+				Config: testAccNPAPolicyGroupsConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPolicyGroupsExists("netskope_npa_policy_groups.test"),
+					testAccCheckResourceExists("netskope_npa_policy_groups.test"),
 				),
 			},
 			{
-				Config: testAccDriftPolicyGroupConfig(rName),
+				Config: testAccNPAPolicyGroupsConfig_basic(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+// TestAccDrift_NPARules_Basic verifies no drift on NPA rules
+func TestAccDrift_NPARules_Basic(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftNPARulesBasicConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_npa_rules.test"),
+				),
+			},
+			{
+				Config: testAccDriftNPARulesBasicConfig(rName),
 				ConfigPlanChecks: resource.ConfigPlanChecks{
 					PreApply: []plancheck.PlanCheck{
 						plancheck.ExpectEmptyPlan(),
@@ -197,16 +224,16 @@ func TestAccDrift_UpgradeProfile(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNPAPublisherUpgradeProfileDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_publisher_upgrade_profile"),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDriftUpgradeProfileConfig(rName),
+				Config: testAccNPAPublisherUpgradeProfileConfig_basic(rName),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckNPAPublisherUpgradeProfileExists("netskope_npa_publisher_upgrade_profile.test"),
+					testAccCheckResourceExists("netskope_npa_publisher_upgrade_profile.test", "publisher_upgrade_profile_id"),
 				),
 			},
 			{
-				Config: testAccDriftUpgradeProfileConfig(rName),
+				Config: testAccNPAPublisherUpgradeProfileConfig_basic(rName),
 				ConfigPlanChecks: resource.ConfigPlanChecks{
 					PreApply: []plancheck.PlanCheck{
 						plancheck.ExpectEmptyPlan(),
@@ -225,16 +252,16 @@ func TestAccDrift_IPSecTunnel_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_ip_sec_tunnel"),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDriftIPSecTunnelBasicConfig(rName, sourceIP),
+				Config: testAccIPSecTunnelConfig_basic(rName, sourceIP),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckIPSecTunnelExists("netskope_ip_sec_tunnel.test"),
+					testAccCheckResourceExists("netskope_ip_sec_tunnel.test", "tunnel_id"),
 				),
 			},
 			{
-				Config: testAccDriftIPSecTunnelBasicConfig(rName, sourceIP),
+				Config: testAccIPSecTunnelConfig_basic(rName, sourceIP),
 				ConfigPlanChecks: resource.ConfigPlanChecks{
 					PreApply: []plancheck.PlanCheck{
 						plancheck.ExpectEmptyPlan(),
@@ -253,16 +280,16 @@ func TestAccDrift_IPSecTunnel_WithOptions(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_ip_sec_tunnel"),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDriftIPSecTunnelWithOptionsConfig(rName, sourceIP),
+				Config: testAccIPSecTunnelConfig_withOptions(rName, sourceIP),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckIPSecTunnelExists("netskope_ip_sec_tunnel.test"),
+					testAccCheckResourceExists("netskope_ip_sec_tunnel.test", "tunnel_id"),
 				),
 			},
 			{
-				Config: testAccDriftIPSecTunnelWithOptionsConfig(rName, sourceIP),
+				Config: testAccIPSecTunnelConfig_withOptions(rName, sourceIP),
 				ConfigPlanChecks: resource.ConfigPlanChecks{
 					PreApply: []plancheck.PlanCheck{
 						plancheck.ExpectEmptyPlan(),
@@ -281,12 +308,12 @@ func TestAccDrift_IPSecTunnel_AllFields(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_ip_sec_tunnel"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDriftIPSecTunnelAllFieldsConfig(rName, sourceIP),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckIPSecTunnelExists("netskope_ip_sec_tunnel.test"),
+					testAccCheckResourceExists("netskope_ip_sec_tunnel.test", "tunnel_id"),
 				),
 			},
 			{
@@ -309,12 +336,12 @@ func TestAccDrift_GRETunnel_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckGRETunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_gre_tunnel"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDriftGRETunnelBasicConfig(rName, sourceIP),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckGRETunnelExists("netskope_gre_tunnel.test"),
+					testAccCheckResourceExists("netskope_gre_tunnel.test", "tunnel_id"),
 				),
 			},
 			{
@@ -337,12 +364,12 @@ func TestAccDrift_GRETunnel_WithOptions(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckGRETunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_gre_tunnel"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDriftGRETunnelWithOptionsConfig(rName, sourceIP),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckGRETunnelExists("netskope_gre_tunnel.test"),
+					testAccCheckResourceExists("netskope_gre_tunnel.test", "tunnel_id"),
 				),
 			},
 			{
@@ -365,12 +392,12 @@ func TestAccDrift_GRETunnel_AllFields(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckGRETunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_gre_tunnel"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDriftGRETunnelAllFieldsConfig(rName, sourceIP),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckGRETunnelExists("netskope_gre_tunnel.test"),
+					testAccCheckResourceExists("netskope_gre_tunnel.test", "tunnel_id"),
 				),
 			},
 			{
@@ -388,6 +415,18 @@ func TestAccDrift_GRETunnel_AllFields(t *testing.T) {
 // =============================================================================
 // Configuration Functions
 // =============================================================================
+//
+// The following configs are kept because they have deliberate differences from
+// the resource test configs (explicit lbrokerconnect, different protocol combos,
+// explicit IP parameters, unique AllFields variants).
+//
+// Configs reused from resource tests:
+//   testAccNPAPolicyGroupsConfig_basic (from npapolicygroups_resource_test.go)
+//   testAccNPALocalBrokerConfigConfig_basic (from npalocalbrokerconfig_resource_test.go)
+//   testAccNPAPublisherUpgradeProfileConfig_basic (from npapublisherupgradeprofile_resource_test.go)
+//   testAccIPSecTunnelConfig_basic (from ipsectunnel_resource_test.go)
+//   testAccIPSecTunnelConfig_withOptions (from ipsectunnel_resource_test.go)
+// =============================================================================
 
 func testAccDriftLocalBrokerConfig(name string) string {
 	return fmt.Sprintf(`
@@ -404,16 +443,6 @@ resource "netskope_npa_local_broker" "test" {
   access_via_public_ip = "NONE"
 }
 `, testAccProviderConfig(), name)
-}
-
-func testAccDriftLocalBrokerConfigConfig(hostname string) string {
-	return fmt.Sprintf(`
-%s
-
-resource "netskope_npa_local_broker_config" "test" {
-  hostname = %q
-}
-`, testAccProviderConfig(), hostname)
 }
 
 func testAccDriftPublisherConfig(name string) string {
@@ -498,71 +527,63 @@ resource "netskope_npa_private_app" "test" {
 `, testAccProviderConfig(), name, name)
 }
 
-func testAccDriftPolicyGroupConfig(name string) string {
+func testAccDriftNPARulesBasicConfig(name string) string {
 	return fmt.Sprintf(`
 %s
 
 resource "netskope_npa_policy_groups" "test" {
-  group_name = %q
+  group_name = "%s-group"
 
   group_order = {
     group_id = "2"
     order    = "after"
   }
 }
-`, testAccProviderConfig(), name)
+
+resource "netskope_npa_publisher" "test" {
+  publisher_name = "%s-publisher"
 }
 
-func testAccDriftUpgradeProfileConfig(name string) string {
-	return fmt.Sprintf(`
-%s
+resource "netskope_npa_private_app" "test" {
+  private_app_name     = "%s-app"
+  private_app_hostname = "192.168.1.100"
 
-data "netskope_npa_publishers_releases_list" "releases" {}
+  protocols = [
+    {
+      port     = "443"
+      protocol = "tcp"
+    }
+  ]
 
-resource "netskope_npa_publisher_upgrade_profile" "test" {
-  name         = %q
-  enabled      = true
-  docker_tag   = data.netskope_npa_publishers_releases_list.releases.data[0].docker_tag
-  frequency    = "0 0 * * *"
-  timezone     = "US/Pacific"
-  release_type = "Beta"
-}
-`, testAccProviderConfig(), name)
-}
+  publishers = [
+    {
+      publisher_id   = tostring(netskope_npa_publisher.test.publisher_id)
+      publisher_name = netskope_npa_publisher.test.publisher_name
+    }
+  ]
 
-func testAccDriftIPSecTunnelBasicConfig(name, sourceIP string) string {
-	return fmt.Sprintf(`
-%s
-
-resource "netskope_ip_sec_tunnel" "test" {
-  site            = %q
-  source_ip       = %q
-  source_identity = "%s.example.com"
-  psk             = "TestPreSharedKey123!"
-  encryption      = "AES128-CBC"
-  pop_names       = ["lon1", "lon2"]
-}
-`, testAccProviderConfig(), name, sourceIP, name)
+  use_publisher_dns       = true
+  trust_self_signed_certs = false
 }
 
-func testAccDriftIPSecTunnelWithOptionsConfig(name, sourceIP string) string {
-	return fmt.Sprintf(`
-%s
+resource "netskope_npa_rules" "test" {
+  rule_name   = %q
+  description = "Drift detection test rule"
+  enabled     = "1"
+  group_id    = netskope_npa_policy_groups.test.id
 
-resource "netskope_ip_sec_tunnel" "test" {
-  site            = %q
-  source_ip       = %q
-  source_identity = "%s.example.com"
-  psk             = "TestPreSharedKey123!"
-  encryption      = "AES128-CBC"
-  pop_names       = ["lon1", "lon2"]
+  rule_data = {
+    policy_type = "private-app"
 
-  options = {
-    rekey  = true
-    reauth = true
+    match_criteria_action = {
+      action_name = "allow"
+    }
+
+    private_apps  = [netskope_npa_private_app.test.private_app_name]
+    access_method = ["Client"]
   }
 }
-`, testAccProviderConfig(), name, sourceIP, name)
+`, testAccProviderConfig(), name, name, name, name)
 }
 
 func testAccDriftIPSecTunnelAllFieldsConfig(name, sourceIP string) string {

@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccIPSecTunnel_basic(t *testing.T) {
@@ -20,12 +19,12 @@ func TestAccIPSecTunnel_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_ip_sec_tunnel"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIPSecTunnelConfig_basic(rName, sourceIP),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckIPSecTunnelExists(resourceName),
+					testAccCheckResourceExists(resourceName, "tunnel_id"),
 					resource.TestCheckResourceAttr(resourceName, "site", rName),
 					resource.TestCheckResourceAttrSet(resourceName, "tunnel_id"),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "true"),
@@ -37,7 +36,7 @@ func TestAccIPSecTunnel_basic(t *testing.T) {
 				ImportState:                          true,
 				ImportStateVerify:                    true,
 				ImportStateVerifyIdentifierAttribute: "tunnel_id",
-				ImportStateIdFunc:                    testAccIPSecTunnelImportStateIdFunc(resourceName),
+				ImportStateIdFunc:                    testAccImportStateIdFunc(resourceName, "tunnel_id"),
 				// pop_names and psk are not returned by the API in the same format
 				ImportStateVerifyIgnore: []string{"pop_names", "psk"},
 			},
@@ -54,13 +53,13 @@ func TestAccIPSecTunnel_update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_ip_sec_tunnel"),
 		Steps: []resource.TestStep{
 			// Create
 			{
 				Config: testAccIPSecTunnelConfig_withIP(rName, sourceIP),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckIPSecTunnelExists(resourceName),
+					testAccCheckResourceExists(resourceName, "tunnel_id"),
 					resource.TestCheckResourceAttr(resourceName, "site", rName),
 					resource.TestCheckResourceAttr(resourceName, "bandwidth", "50"),
 				),
@@ -69,7 +68,7 @@ func TestAccIPSecTunnel_update(t *testing.T) {
 			{
 				Config: testAccIPSecTunnelConfig_updated(rNameUpdated, sourceIP),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckIPSecTunnelExists(resourceName),
+					testAccCheckResourceExists(resourceName, "tunnel_id"),
 					resource.TestCheckResourceAttr(resourceName, "site", rNameUpdated),
 					resource.TestCheckResourceAttr(resourceName, "bandwidth", "100"),
 					resource.TestCheckResourceAttr(resourceName, "notes", "Updated by acceptance test"),
@@ -87,12 +86,12 @@ func TestAccIPSecTunnel_withEncryption(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_ip_sec_tunnel"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIPSecTunnelConfig_withEncryption(rName, sourceIP, "AES256-CBC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckIPSecTunnelExists(resourceName),
+					testAccCheckResourceExists(resourceName, "tunnel_id"),
 					resource.TestCheckResourceAttr(resourceName, "site", rName),
 					resource.TestCheckResourceAttr(resourceName, "encryption", "AES256-CBC"),
 				),
@@ -109,12 +108,12 @@ func TestAccIPSecTunnel_withOptions(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_ip_sec_tunnel"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIPSecTunnelConfig_withOptions(rName, sourceIP),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckIPSecTunnelExists(resourceName),
+					testAccCheckResourceExists(resourceName, "tunnel_id"),
 					resource.TestCheckResourceAttr(resourceName, "site", rName),
 					resource.TestCheckResourceAttr(resourceName, "options.rekey", "true"),
 					resource.TestCheckResourceAttr(resourceName, "options.reauth", "true"),
@@ -132,7 +131,7 @@ func TestAccIPSecTunnel_import(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_ip_sec_tunnel"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIPSecTunnelConfig_basic(rName, sourceIP),
@@ -142,7 +141,7 @@ func TestAccIPSecTunnel_import(t *testing.T) {
 				ImportState:                          true,
 				ImportStateVerify:                    true,
 				ImportStateVerifyIdentifierAttribute: "tunnel_id",
-				ImportStateIdFunc:                    testAccIPSecTunnelImportStateIdFunc(resourceName),
+				ImportStateIdFunc:                    testAccImportStateIdFunc(resourceName, "tunnel_id"),
 				// pop_names and psk are not returned by the API in the same format
 				ImportStateVerifyIgnore: []string{"pop_names", "psk"},
 			},
@@ -158,12 +157,12 @@ func TestAccIPSecTunnel_disabled(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckIPSecTunnelDestroy,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_ip_sec_tunnel"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIPSecTunnelConfig_disabled(rName, sourceIP),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckIPSecTunnelExists(resourceName),
+					testAccCheckResourceExists(resourceName, "tunnel_id"),
 					resource.TestCheckResourceAttr(resourceName, "site", rName),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "false"),
 				),
@@ -271,47 +270,4 @@ resource "netskope_ip_sec_tunnel" "test" {
   enabled         = false
 }
 `, testAccProviderConfig(), name, sourceIP, name)
-}
-
-// Helper functions
-
-func testAccCheckIPSecTunnelExists(resourceName string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[resourceName]
-		if !ok {
-			return fmt.Errorf("resource not found: %s", resourceName)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("resource ID not set")
-		}
-
-		if rs.Primary.Attributes["tunnel_id"] == "" {
-			return fmt.Errorf("tunnel_id not set")
-		}
-
-		return nil
-	}
-}
-
-func testAccCheckIPSecTunnelDestroy(s *terraform.State) error {
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "netskope_ip_sec_tunnel" {
-			continue
-		}
-
-		// The acceptance test framework automatically destroys resources.
-		// This function verifies the resource no longer exists in state.
-	}
-	return nil
-}
-
-func testAccIPSecTunnelImportStateIdFunc(resourceName string) resource.ImportStateIdFunc {
-	return func(s *terraform.State) (string, error) {
-		rs, ok := s.RootModule().Resources[resourceName]
-		if !ok {
-			return "", fmt.Errorf("resource not found: %s", resourceName)
-		}
-		return rs.Primary.Attributes["tunnel_id"], nil
-	}
 }
