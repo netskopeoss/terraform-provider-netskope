@@ -16,7 +16,7 @@ func TestAccNPARulesDataSource_basic(t *testing.T) {
 	resourceName := "netskope_npa_rules.test"
 	dataSourceName := "data.netskope_npa_rules.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

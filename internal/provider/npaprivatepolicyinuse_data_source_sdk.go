@@ -22,7 +22,7 @@ func (r *NPAPrivatePolicyInUseDataSourceModel) RefreshFromResponseBody(ctx conte
 		if dataItem.Data == nil {
 			data.Data = nil
 		} else {
-			data.Data = &tfTypes.Data{}
+			data.Data = &tfTypes.LbrokerTokenResponseData{}
 			data.Data.Token = types.StringPointerValue(dataItem.Data.Token)
 		}
 		if dataItem.Status != nil {
