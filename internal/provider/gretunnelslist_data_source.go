@@ -30,6 +30,7 @@ type GRETunnelsListDataSource struct {
 // GRETunnelsListDataSourceModel describes the data model.
 type GRETunnelsListDataSourceModel struct {
 	Result []tfTypes.GreTunnelListItem `tfsdk:"result"`
+	Total  types.Int32                 `tfsdk:"total"`
 }
 
 // Metadata returns the data source type name.
@@ -85,6 +86,9 @@ func (r *GRETunnelsListDataSource) Schema(ctx context.Context, req datasource.Sc
 						},
 					},
 				},
+			},
+			"total": schema.Int32Attribute{
+				Computed: true,
 			},
 		},
 	}
@@ -150,11 +154,11 @@ func (r *GRETunnelsListDataSource) Read(ctx context.Context, req datasource.Read
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.GreTunnelListResponse != nil && res.GreTunnelListResponse.Result != nil) {
+	if !(res.GreTunnelListResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelListItem(ctx, res.GreTunnelListResponse.Result)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelListResponse(ctx, res.GreTunnelListResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

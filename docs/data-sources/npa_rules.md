@@ -28,12 +28,6 @@ data "netskope_npa_rules" "my_nparules" {
 ### Read-Only
 
 - `enabled` (String)
-- `group_id` (String)
-- `group_name` (String)
-- `modify_by` (String)
-- `modify_time` (String)
-- `modify_type` (String)
-- `policy_type` (String)
 - `rule_data` (Attributes) (see [below for nested schema](#nestedatt--rule_data))
 - `rule_name` (String)
 
@@ -45,22 +39,18 @@ Read-Only:
 - `access_method` (List of String)
 - `b_negate_net_location` (Boolean)
 - `b_negate_src_countries` (Boolean)
-- `classification` (String)
 - `device_classification_id` (List of Number)
 - `json_version` (Number)
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
 - `net_location_obj` (List of String)
 - `organization_units` (List of String)
-- `periodic_reauth` (Attributes) (see [below for nested schema](#nestedatt--rule_data--periodic_reauth))
 - `policy_type` (String)
 - `private_app_tag_ids` (List of String)
 - `private_app_tags` (List of String)
 - `private_apps` (List of String)
 - `src_countries` (List of String)
 - `user_groups` (List of String)
-- `user_type` (String)
 - `users` (List of String)
-- `version` (Number)
 
 <a id="nestedatt--rule_data--match_criteria_action"></a>
 ### Nested Schema for `rule_data.match_criteria_action`
@@ -68,12 +58,3 @@ Read-Only:
 Read-Only:
 
 - `action_name` (String)
-
-
-<a id="nestedatt--rule_data--periodic_reauth"></a>
-### Nested Schema for `rule_data.periodic_reauth`
-
-Read-Only:
-
-- `reauth_interval` (String)
-- `reauth_interval_unit` (String)

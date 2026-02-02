@@ -16,13 +16,7 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 
 	if resp != nil {
 		r.Enabled = types.StringPointerValue(resp.Enabled)
-		r.GroupID = types.StringPointerValue(resp.GroupID)
-		r.GroupName = types.StringPointerValue(resp.GroupName)
 		r.ID = types.StringPointerValue(resp.ID)
-		r.ModifyBy = types.StringPointerValue(resp.ModifyBy)
-		r.ModifyTime = types.StringPointerValue(resp.ModifyTime)
-		r.ModifyType = types.StringPointerValue(resp.ModifyType)
-		r.PolicyType = types.StringPointerValue(resp.PolicyType)
 		if resp.RuleData == nil {
 			r.RuleData = nil
 		} else {
@@ -33,7 +27,6 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			}
 			r.RuleData.BNegateNetLocation = types.BoolPointerValue(resp.RuleData.BNegateNetLocation)
 			r.RuleData.BNegateSrcCountries = types.BoolPointerValue(resp.RuleData.BNegateSrcCountries)
-			r.RuleData.Classification = types.StringPointerValue(resp.RuleData.Classification)
 			r.RuleData.DeviceClassificationID = make([]types.Int64, 0, len(resp.RuleData.DeviceClassificationID))
 			for _, v := range resp.RuleData.DeviceClassificationID {
 				r.RuleData.DeviceClassificationID = append(r.RuleData.DeviceClassificationID, types.Int64Value(v))
@@ -56,13 +49,6 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			r.RuleData.OrganizationUnits = make([]types.String, 0, len(resp.RuleData.OrganizationUnits))
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
-			}
-			if resp.RuleData.PeriodicReauth == nil {
-				r.RuleData.PeriodicReauth = nil
-			} else {
-				r.RuleData.PeriodicReauth = &tfTypes.NpaPolicyRulePeriodicReauth{}
-				r.RuleData.PeriodicReauth.ReauthInterval = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthInterval)
-				r.RuleData.PeriodicReauth.ReauthIntervalUnit = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthIntervalUnit)
 			}
 			if resp.RuleData.PolicyType != nil {
 				r.RuleData.PolicyType = types.StringValue(string(*resp.RuleData.PolicyType))
@@ -93,12 +79,6 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			for _, v := range resp.RuleData.Users {
 				r.RuleData.Users = append(r.RuleData.Users, types.StringValue(v))
 			}
-			if resp.RuleData.UserType != nil {
-				r.RuleData.UserType = types.StringValue(string(*resp.RuleData.UserType))
-			} else {
-				r.RuleData.UserType = types.StringNull()
-			}
-			r.RuleData.Version = types.Int64PointerValue(resp.RuleData.Version)
 		}
 		r.RuleName = types.StringPointerValue(resp.RuleName)
 	}

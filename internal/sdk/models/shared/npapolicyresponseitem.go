@@ -4,7 +4,6 @@ package shared
 
 type NpaPolicyResponseItem struct {
 	Enabled    *string            `json:"enabled,omitempty"`
-	GroupID    *string            `json:"group_id,omitempty"`
 	GroupName  *string            `json:"group_name,omitempty"`
 	ModifyBy   *string            `json:"modify_by,omitempty"`
 	ModifyTime *string            `json:"modify_time,omitempty"`
@@ -20,13 +19,6 @@ func (o *NpaPolicyResponseItem) GetEnabled() *string {
 		return nil
 	}
 	return o.Enabled
-}
-
-func (o *NpaPolicyResponseItem) GetGroupID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupID
 }
 
 func (o *NpaPolicyResponseItem) GetGroupName() *string {

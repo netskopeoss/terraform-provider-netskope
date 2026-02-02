@@ -29,16 +29,10 @@ type NPARulesDataSource struct {
 
 // NPARulesDataSourceModel describes the data model.
 type NPARulesDataSourceModel struct {
-	Enabled    types.String               `tfsdk:"enabled"`
-	GroupID    types.String               `tfsdk:"group_id"`
-	GroupName  types.String               `tfsdk:"group_name"`
-	ID         types.String               `tfsdk:"id"`
-	ModifyBy   types.String               `tfsdk:"modify_by"`
-	ModifyTime types.String               `tfsdk:"modify_time"`
-	ModifyType types.String               `tfsdk:"modify_type"`
-	PolicyType types.String               `tfsdk:"policy_type"`
-	RuleData   *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
-	RuleName   types.String               `tfsdk:"rule_name"`
+	Enabled  types.String               `tfsdk:"enabled"`
+	ID       types.String               `tfsdk:"id"`
+	RuleData *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleName types.String               `tfsdk:"rule_name"`
 }
 
 // Metadata returns the data source type name.
@@ -55,27 +49,9 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"enabled": schema.StringAttribute{
 				Computed: true,
 			},
-			"group_id": schema.StringAttribute{
-				Computed: true,
-			},
-			"group_name": schema.StringAttribute{
-				Computed: true,
-			},
 			"id": schema.StringAttribute{
 				Required:    true,
 				Description: `npa policy id`,
-			},
-			"modify_by": schema.StringAttribute{
-				Computed: true,
-			},
-			"modify_time": schema.StringAttribute{
-				Computed: true,
-			},
-			"modify_type": schema.StringAttribute{
-				Computed: true,
-			},
-			"policy_type": schema.StringAttribute{
-				Computed: true,
 			},
 			"rule_data": schema.SingleNestedAttribute{
 				Computed: true,
@@ -88,9 +64,6 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						Computed: true,
 					},
 					"b_negate_src_countries": schema.BoolAttribute{
-						Computed: true,
-					},
-					"classification": schema.StringAttribute{
 						Computed: true,
 					},
 					"device_classification_id": schema.ListAttribute{
@@ -116,17 +89,6 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						Computed:    true,
 						ElementType: types.StringType,
 					},
-					"periodic_reauth": schema.SingleNestedAttribute{
-						Computed: true,
-						Attributes: map[string]schema.Attribute{
-							"reauth_interval": schema.StringAttribute{
-								Computed: true,
-							},
-							"reauth_interval_unit": schema.StringAttribute{
-								Computed: true,
-							},
-						},
-					},
 					"policy_type": schema.StringAttribute{
 						Computed: true,
 					},
@@ -150,15 +112,9 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						Computed:    true,
 						ElementType: types.StringType,
 					},
-					"user_type": schema.StringAttribute{
-						Computed: true,
-					},
 					"users": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
-					},
-					"version": schema.Int64Attribute{
-						Computed: true,
 					},
 				},
 			},
