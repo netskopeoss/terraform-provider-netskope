@@ -7,6 +7,6 @@ import (
 )
 
 type ResponseBody struct {
-	Data   *Data        `tfsdk:"data"`
-	Status types.String `tfsdk:"status"`
+	Data   *LbrokerTokenResponseData `tfsdk:"data"`
+	Status types.String              `tfsdk:"status"`
 }

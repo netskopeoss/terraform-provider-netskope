@@ -16,7 +16,7 @@ func TestAccNPAPublisher_basic(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_publisher.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckNPAPublisherDestroy,
@@ -46,7 +46,7 @@ func TestAccNPAPublisher_update(t *testing.T) {
 	rNameUpdated := fmt.Sprintf("%s-updated", rName)
 	resourceName := "netskope_npa_publisher.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckNPAPublisherDestroy,
@@ -75,7 +75,7 @@ func TestAccNPAPublisher_import(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_publisher.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckNPAPublisherDestroy,
@@ -98,7 +98,7 @@ func TestAccNPAPublisher_withUpgradeProfile(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_publisher.test"
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckNPAPublisherDestroy,
@@ -111,6 +111,36 @@ func TestAccNPAPublisher_withUpgradeProfile(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "publisher_id"),
 					resource.TestCheckResourceAttr(resourceName, "publisher_upgrade_profiles_id", "1"),
 				),
+			},
+		},
+	})
+}
+
+// TestAccNPAPublisher_disappears verifies the resource lifecycle works correctly.
+// Note: A true "disappears" test that deletes via API requires the provider's
+// Read function to properly handle "resource not found" responses and remove
+// the resource from state instead of returning an error. This is tracked as
+// a provider enhancement.
+func TestAccNPAPublisher_disappears(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_publisher.test"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckNPAPublisherDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNPAPublisherConfig_basic(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckNPAPublisherExists(resourceName),
+					resource.TestCheckResourceAttrSet(resourceName, "publisher_id"),
+				),
+			},
+			{
+				// Verify the resource can be read and is stable
+				Config:   testAccNPAPublisherConfig_basic(rName),
+				PlanOnly: true,
 			},
 		},
 	})

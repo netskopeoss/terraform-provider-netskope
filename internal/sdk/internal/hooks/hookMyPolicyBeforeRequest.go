@@ -96,7 +96,7 @@ var (
 )
 
 func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.Request) (*http.Request, error) {
-	if hookCtx.OperationID == "createNPARules" || hookCtx.OperationID == "updateNPARulesById" {
+	if hookCtx.OperationID == "createNPARules" || hookCtx.OperationID == "updateNPARules" {
 		if myPolicyRequestDebug {
 			log.Print("Executing BeforeRequest hook....")
 		}
