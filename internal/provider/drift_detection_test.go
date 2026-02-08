@@ -163,6 +163,40 @@ func TestAccDrift_PrivateApp_MultiProtocol(t *testing.T) {
 	})
 }
 
+// TestAccDrift_PrivateApp_MultiPublisherWithTags verifies no drift with multiple
+// publishers, mixed protocols (TCP/UDP), and tags.
+// This is a regression test for BUG-001: the API returns publishers and tags in
+// non-deterministic order, causing perpetual diffs. The fix sorts these lists
+// in AfterSuccess hooks. See docs/bugs/BUG-001-publishers-perpetual-diff.md.
+func TestAccDrift_PrivateApp_MultiPublisherWithTags(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftPrivateAppMultiPublisherWithTagsConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_npa_private_app.test", "private_app_id"),
+					resource.TestCheckResourceAttr("netskope_npa_private_app.test", "publishers.#", "2"),
+					resource.TestCheckResourceAttr("netskope_npa_private_app.test", "protocols.#", "3"),
+					resource.TestCheckResourceAttr("netskope_npa_private_app.test", "tags.#", "2"),
+				),
+			},
+			{
+				Config: testAccDriftPrivateAppMultiPublisherWithTagsConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
 // TestAccDrift_PolicyGroup verifies no drift on policy group resources
 func TestAccDrift_PolicyGroup(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
@@ -525,6 +559,75 @@ resource "netskope_npa_private_app" "test" {
   ]
 }
 `, testAccProviderConfig(), name, name)
+}
+
+// testAccDriftPrivateAppMultiPublisherWithTagsConfig creates a private app with
+// multiple publishers, mixed TCP/UDP protocols, and multiple tags.
+// This is a regression test for BUG-001 (perpetual diff on list attributes).
+// The config uses sorted order to match hook output:
+// - Publishers: sorted by publisher_id ascending
+// - Protocols: sorted by type (tcp before udp), then port ascending
+// - Tags: sorted by tag_id ascending (API assigns IDs)
+func testAccDriftPrivateAppMultiPublisherWithTagsConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_npa_publisher" "test1" {
+  publisher_name = "%s-pub1"
+  lbrokerconnect = false
+}
+
+resource "netskope_npa_publisher" "test2" {
+  publisher_name = "%s-pub2"
+  lbrokerconnect = false
+}
+
+resource "netskope_npa_private_app" "test" {
+  private_app_name     = %q
+  private_app_hostname = "192.168.1.100"
+  use_publisher_dns    = true
+
+  # Protocols sorted: tcp by port ascending, then udp by port ascending
+  protocols = [
+    {
+      port     = "22"
+      protocol = "tcp"
+    },
+    {
+      port     = "443"
+      protocol = "tcp"
+    },
+    {
+      port     = "53"
+      protocol = "udp"
+    }
+  ]
+
+  # Publishers will be sorted by publisher_id by the hook.
+  # We reference both publishers; order in state will be normalized.
+  publishers = [
+    {
+      publisher_id   = tostring(netskope_npa_publisher.test1.publisher_id)
+      publisher_name = netskope_npa_publisher.test1.publisher_name
+    },
+    {
+      publisher_id   = tostring(netskope_npa_publisher.test2.publisher_id)
+      publisher_name = netskope_npa_publisher.test2.publisher_name
+    }
+  ]
+
+  # Tags will be sorted by tag_id by the hook.
+  # API assigns tag_id on creation; order in state will be normalized.
+  tags = [
+    {
+      tag_name = "%s-tag1"
+    },
+    {
+      tag_name = "%s-tag2"
+    }
+  ]
+}
+`, testAccProviderConfig(), name, name, name, name, name)
 }
 
 func testAccDriftNPARulesBasicConfig(name string) string {

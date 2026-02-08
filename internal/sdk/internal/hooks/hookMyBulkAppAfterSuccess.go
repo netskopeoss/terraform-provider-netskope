@@ -6,6 +6,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/internal/models"
@@ -51,14 +53,38 @@ func (i *myBulkAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.
 			oldAppNameValue := responseMap.BulkApps.AppData[i].AppName
 			responseMap.BulkApps.AppData[i].AppName = strings.Trim(oldAppNameValue, "[]")
 
-			// Copy transport to type for each protocol (API returns transport but schema uses type)
+			// Copy transport to type for each protocol.
+			// API inconsistency: POST/PUT requests use "type", but GET responses return "transport".
+			// The Terraform schema expects "type", so we copy transport→type on read.
+			// See docs/KNOWN_API_ISSUES.md #9 for details.
 			for j := range responseMap.BulkApps.AppData[i].Protocols {
 				if responseMap.BulkApps.AppData[i].Protocols[j].Type == "" && responseMap.BulkApps.AppData[i].Protocols[j].Transport != "" {
 					responseMap.BulkApps.AppData[i].Protocols[j].Type = responseMap.BulkApps.AppData[i].Protocols[j].Transport
 				}
 			}
 
+			// Sort protocols by type (alphabetically) then port (numerically) to ensure
+			// deterministic ordering. The API returns protocols in non-deterministic order,
+			// which causes perpetual drift because the schema uses ListNestedAttribute.
+			// Sort order: tcp before udp (alphabetical), then port ascending (22, 443, 8080).
+			// Users should configure HCL in this same order to avoid drift.
+			// See docs/bugs/BUG-001-publishers-perpetual-diff.md for details.
+			sort.Slice(responseMap.BulkApps.AppData[i].Protocols, func(a, b int) bool {
+				ta := responseMap.BulkApps.AppData[i].Protocols[a].Type
+				tb := responseMap.BulkApps.AppData[i].Protocols[b].Type
+				if ta != tb {
+					return ta < tb
+				}
+				pa, errA := strconv.Atoi(responseMap.BulkApps.AppData[i].Protocols[a].Port)
+				pb, errB := strconv.Atoi(responseMap.BulkApps.AppData[i].Protocols[b].Port)
+				if errA == nil && errB == nil {
+					return pa < pb
+				}
+				return responseMap.BulkApps.AppData[i].Protocols[a].Port < responseMap.BulkApps.AppData[i].Protocols[b].Port
+			})
+
 			// Convert publisher_id from integer to string (API returns int, SDK expects string)
+			// and trim whitespace from publisher_name (API sometimes returns leading spaces)
 			for j := range responseMap.BulkApps.AppData[i].ServicePublisherAssignments {
 				if responseMap.BulkApps.AppData[i].ServicePublisherAssignments[j].PublisherID != nil {
 					switch v := responseMap.BulkApps.AppData[i].ServicePublisherAssignments[j].PublisherID.(type) {
@@ -74,7 +100,30 @@ func (i *myBulkAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.
 						}
 					}
 				}
+				responseMap.BulkApps.AppData[i].ServicePublisherAssignments[j].PublisherName = strings.TrimSpace(responseMap.BulkApps.AppData[i].ServicePublisherAssignments[j].PublisherName)
 			}
+
+			// Sort publishers by publisher_id to ensure deterministic ordering.
+			// The API returns publishers in non-deterministic order, which causes
+			// perpetual diffs because the schema uses ListNestedAttribute (order-sensitive).
+			// See docs/bugs/BUG-001-publishers-perpetual-diff.md for details.
+			sort.Slice(responseMap.BulkApps.AppData[i].ServicePublisherAssignments, func(a, b int) bool {
+				idA := fmt.Sprintf("%v", responseMap.BulkApps.AppData[i].ServicePublisherAssignments[a].PublisherID)
+				idB := fmt.Sprintf("%v", responseMap.BulkApps.AppData[i].ServicePublisherAssignments[b].PublisherID)
+				numA, errA := strconv.Atoi(idA)
+				numB, errB := strconv.Atoi(idB)
+				if errA == nil && errB == nil {
+					return numA < numB
+				}
+				return idA < idB
+			})
+
+			// Sort tags by tag_id to ensure deterministic ordering.
+			// The API returns tags in non-deterministic order, which causes
+			// perpetual diffs because the schema uses ListNestedAttribute (order-sensitive).
+			sort.Slice(responseMap.BulkApps.AppData[i].Tags, func(a, b int) bool {
+				return responseMap.BulkApps.AppData[i].Tags[a].TagID < responseMap.BulkApps.AppData[i].Tags[b].TagID
+			})
 
 			if myBulkAppResponseDebug {
 				log.Print("--------------------")
