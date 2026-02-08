@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.3.4] - TBD
+
+### Fixed
+- **Fixed perpetual plan drift on `netskope_npa_private_app` publishers attribute** — The API returns `service_publisher_assignments` in non-deterministic order and sometimes includes leading whitespace in `publisher_name`. Since `publishers` is a list (order-sensitive), every plan showed an update. Fixed by sorting publishers by `publisher_id` and trimming whitespace in the AfterSuccess hooks. ([BUG-001](docs/bugs/BUG-001-publishers-perpetual-diff.md))
+- **Fixed perpetual plan drift on `netskope_npa_private_app` protocols attribute** — The API returns protocols sorted by type then port internally, but this ordering was undocumented and not enforced by the provider. Users previously had to manually order protocols in their HCL to match the API sort order (KNOWN_API_ISSUES #11). Now sorted automatically in AfterSuccess hooks.
+- **Fixed potential plan drift on `netskope_npa_private_app` tags attribute** — Tags are now sorted by `tag_id` in AfterSuccess hooks to ensure deterministic ordering regardless of API return order.
+
+### Added
+- Unit tests for list ordering normalization (publishers, protocols, tags), whitespace trimming, and edge cases in SDK hooks (19 tests)
+- Acceptance test `TestAccDrift_PrivateApp_MultiPublisherWithTags` to verify BUG-001 fix with multiple publishers, mixed protocols, and tags
+
 ## [0.3.3] - 2026-01-29
 
 ### Fixed
