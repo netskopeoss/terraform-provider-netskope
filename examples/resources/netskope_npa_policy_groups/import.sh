@@ -1,1 +1,1 @@
-terraform import netskope_npa_policy_groups.my_netskope_npa_policy_groups ""
+terraform import netskope_npa_policy_groups.my_netskope_npa_policy_groups "..."

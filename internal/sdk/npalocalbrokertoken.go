@@ -60,7 +60,7 @@ func (s *NPALocalBrokerToken) Create(ctx context.Context, request operations.Gen
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "generateNPALocalBrokerToken",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 

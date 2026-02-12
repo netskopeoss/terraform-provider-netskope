@@ -20,37 +20,37 @@ type CreateNPAPrivateAppsResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *CreateNPAPrivateAppsResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateNPAPrivateAppsResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateNPAPrivateAppsResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateNPAPrivateAppsResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateNPAPrivateAppsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateNPAPrivateAppsResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }
 
-func (o *CreateNPAPrivateAppsResponse) GetPrivateAppsPostResponse() *shared.PrivateAppsPostResponse {
-	if o == nil {
+func (c *CreateNPAPrivateAppsResponse) GetPrivateAppsPostResponse() *shared.PrivateAppsPostResponse {
+	if c == nil {
 		return nil
 	}
-	return o.PrivateAppsPostResponse
+	return c.PrivateAppsPostResponse
 }
 
-func (o *CreateNPAPrivateAppsResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
-	if o == nil {
+func (c *CreateNPAPrivateAppsResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+	if c == nil {
 		return nil
 	}
-	return o.PrivateAppsResponse400
+	return c.PrivateAppsResponse400
 }

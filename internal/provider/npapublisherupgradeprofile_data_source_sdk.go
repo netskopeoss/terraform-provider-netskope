@@ -11,6 +11,21 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *NPAPublisherUpgradeProfileDataSourceModel) RefreshFromSharedPublisherUpgradeProfileGetResponse(ctx context.Context, resp *shared.PublisherUpgradeProfileGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedPublisherUpgradeProfileGetResponseData(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPAPublisherUpgradeProfileDataSourceModel) RefreshFromSharedPublisherUpgradeProfileGetResponseData(ctx context.Context, resp *shared.PublisherUpgradeProfileGetResponseData) diag.Diagnostics {
 	var diags diag.Diagnostics
 

@@ -220,48 +220,11 @@ func (r *IPSecTunnelResource) Create(ctx context.Context, req resource.CreateReq
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.IpsecTunnelCreateResponse != nil && res.IpsecTunnelCreateResponse.Data != nil && len(res.IpsecTunnelCreateResponse.Data) > 0) {
+	if !(res.IpsecTunnelCreateResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedIpsecTunnelItem(ctx, &res.IpsecTunnelCreateResponse.Data[0])...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	request1, request1Diags := data.ToOperationsGetIPSecTunnelRequest(ctx)
-	resp.Diagnostics.Append(request1Diags...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	res1, err := r.client.GetIPSecTunnel(ctx, *request1)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
-		}
-		return
-	}
-	if res1 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
-		return
-	}
-	if !(res1.IpsecTunnelGetResponse != nil && res1.IpsecTunnelGetResponse.Result != nil && len(res1.IpsecTunnelGetResponse.Result) > 0) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedIpsecTunnelItem(ctx, &res1.IpsecTunnelGetResponse.Result[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedIpsecTunnelCreateResponse(ctx, res.IpsecTunnelCreateResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -321,11 +284,11 @@ func (r *IPSecTunnelResource) Read(ctx context.Context, req resource.ReadRequest
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.IpsecTunnelGetResponse != nil && res.IpsecTunnelGetResponse.Result != nil && len(res.IpsecTunnelGetResponse.Result) > 0) {
+	if !(res.IpsecTunnelGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedIpsecTunnelItem(ctx, &res.IpsecTunnelGetResponse.Result[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedIpsecTunnelGetResponse(ctx, res.IpsecTunnelGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -371,48 +334,11 @@ func (r *IPSecTunnelResource) Update(ctx context.Context, req resource.UpdateReq
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.IpsecTunnelCreateResponse != nil && res.IpsecTunnelCreateResponse.Data != nil && len(res.IpsecTunnelCreateResponse.Data) > 0) {
+	if !(res.IpsecTunnelCreateResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedIpsecTunnelItem(ctx, &res.IpsecTunnelCreateResponse.Data[0])...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	request1, request1Diags := data.ToOperationsGetIPSecTunnelRequest(ctx)
-	resp.Diagnostics.Append(request1Diags...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	res1, err := r.client.GetIPSecTunnel(ctx, *request1)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
-		}
-		return
-	}
-	if res1 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
-		return
-	}
-	if !(res1.IpsecTunnelGetResponse != nil && res1.IpsecTunnelGetResponse.Result != nil && len(res1.IpsecTunnelGetResponse.Result) > 0) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedIpsecTunnelItem(ctx, &res1.IpsecTunnelGetResponse.Result[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedIpsecTunnelCreateResponse(ctx, res.IpsecTunnelCreateResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -464,7 +390,10 @@ func (r *IPSecTunnelResource) Delete(ctx context.Context, req resource.DeleteReq
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode != 200 {
+	switch res.StatusCode {
+	case 200, 404:
+		break
+	default:
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}

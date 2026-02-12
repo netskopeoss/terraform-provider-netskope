@@ -12,6 +12,26 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsGetResponse(ctx context.Context, resp *shared.PrivateAppsGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedPrivateAppsItem(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+		if resp.Status != nil {
+			r.Status = types.StringValue(string(*resp.Status))
+		} else {
+			r.Status = types.StringNull()
+		}
+	}
+
+	return diags
+}
+
 func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsItem(ctx context.Context, resp *shared.PrivateAppsItem) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -24,58 +44,43 @@ func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsItem(ctx cont
 		r.PrivateAppName = types.StringPointerValue(resp.PrivateAppName)
 		r.PrivateAppProtocol = types.StringPointerValue(resp.PrivateAppProtocol)
 		r.Protocols = []tfTypes.ProtocolItem{}
-		if len(r.Protocols) > len(resp.Protocols) {
-			r.Protocols = r.Protocols[:len(resp.Protocols)]
-		}
-		for protocolsCount, protocolsItem := range resp.Protocols {
+
+		for _, protocolsItem := range resp.Protocols {
 			var protocols tfTypes.ProtocolItem
+
 			protocols.Port = types.StringPointerValue(protocolsItem.Port)
 			if protocolsItem.Protocol != nil {
 				protocols.Protocol = types.StringValue(string(*protocolsItem.Protocol))
 			} else {
 				protocols.Protocol = types.StringNull()
 			}
-			if protocolsCount+1 > len(r.Protocols) {
-				r.Protocols = append(r.Protocols, protocols)
-			} else {
-				r.Protocols[protocolsCount].Port = protocols.Port
-				r.Protocols[protocolsCount].Protocol = protocols.Protocol
-			}
+
+			r.Protocols = append(r.Protocols, protocols)
 		}
 		r.Publishers = []tfTypes.PublisherItem{}
-		if len(r.Publishers) > len(resp.Publishers) {
-			r.Publishers = r.Publishers[:len(resp.Publishers)]
-		}
-		for publishersCount, publishersItem := range resp.Publishers {
+
+		for _, publishersItem := range resp.Publishers {
 			var publishers tfTypes.PublisherItem
+
 			publishers.PublisherID = types.StringPointerValue(publishersItem.PublisherID)
 			publishers.PublisherName = types.StringPointerValue(publishersItem.PublisherName)
-			if publishersCount+1 > len(r.Publishers) {
-				r.Publishers = append(r.Publishers, publishers)
-			} else {
-				r.Publishers[publishersCount].PublisherID = publishers.PublisherID
-				r.Publishers[publishersCount].PublisherName = publishers.PublisherName
-			}
+
+			r.Publishers = append(r.Publishers, publishers)
 		}
 		r.RealHost = types.StringPointerValue(resp.RealHost)
 		r.SteeringConfigs = make([]types.String, 0, len(resp.SteeringConfigs))
 		for _, v := range resp.SteeringConfigs {
 			r.SteeringConfigs = append(r.SteeringConfigs, types.StringValue(v))
 		}
-		r.Tags = []tfTypes.TagItem{}
-		if len(r.Tags) > len(resp.Tags) {
-			r.Tags = r.Tags[:len(resp.Tags)]
-		}
-		for tagsCount, tagsItem := range resp.Tags {
-			var tags tfTypes.TagItem
+		r.Tags = []tfTypes.Tags{}
+
+		for _, tagsItem := range resp.Tags {
+			var tags tfTypes.Tags
+
 			tags.TagID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(tagsItem.TagID))
 			tags.TagName = types.StringPointerValue(tagsItem.TagName)
-			if tagsCount+1 > len(r.Tags) {
-				r.Tags = append(r.Tags, tags)
-			} else {
-				r.Tags[tagsCount].TagID = tags.TagID
-				r.Tags[tagsCount].TagName = tags.TagName
-			}
+
+			r.Tags = append(r.Tags, tags)
 		}
 		r.TrustSelfSignedCerts = types.BoolPointerValue(resp.TrustSelfSignedCerts)
 		r.UsePublisherDNS = types.BoolPointerValue(resp.UsePublisherDNS)

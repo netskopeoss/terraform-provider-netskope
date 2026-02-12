@@ -83,25 +83,25 @@ type TimeWindows struct {
 	EndTime *string `json:"end_time,omitempty"`
 }
 
-func (o *TimeWindows) GetDays() []Days {
-	if o == nil {
+func (t *TimeWindows) GetDays() []Days {
+	if t == nil {
 		return nil
 	}
-	return o.Days
+	return t.Days
 }
 
-func (o *TimeWindows) GetStartTime() *string {
-	if o == nil {
+func (t *TimeWindows) GetStartTime() *string {
+	if t == nil {
 		return nil
 	}
-	return o.StartTime
+	return t.StartTime
 }
 
-func (o *TimeWindows) GetEndTime() *string {
-	if o == nil {
+func (t *TimeWindows) GetEndTime() *string {
+	if t == nil {
 		return nil
 	}
-	return o.EndTime
+	return t.EndTime
 }
 
 // NpaSchedule - Schedule configuration for policy enforcement timing
@@ -116,30 +116,30 @@ type NpaSchedule struct {
 	TimeWindows []TimeWindows `json:"time_windows,omitempty"`
 }
 
-func (o *NpaSchedule) GetEnabled() *bool {
-	if o == nil {
+func (n *NpaSchedule) GetEnabled() *bool {
+	if n == nil {
 		return nil
 	}
-	return o.Enabled
+	return n.Enabled
 }
 
-func (o *NpaSchedule) GetTimezone() *string {
-	if o == nil {
+func (n *NpaSchedule) GetTimezone() *string {
+	if n == nil {
 		return nil
 	}
-	return o.Timezone
+	return n.Timezone
 }
 
-func (o *NpaSchedule) GetScheduleType() *ScheduleType {
-	if o == nil {
+func (n *NpaSchedule) GetScheduleType() *ScheduleType {
+	if n == nil {
 		return nil
 	}
-	return o.ScheduleType
+	return n.ScheduleType
 }
 
-func (o *NpaSchedule) GetTimeWindows() []TimeWindows {
-	if o == nil {
+func (n *NpaSchedule) GetTimeWindows() []TimeWindows {
+	if n == nil {
 		return nil
 	}
-	return o.TimeWindows
+	return n.TimeWindows
 }

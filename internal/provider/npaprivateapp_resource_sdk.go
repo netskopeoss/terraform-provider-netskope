@@ -12,6 +12,21 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsGetResponse(ctx context.Context, resp *shared.PrivateAppsGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedPrivateAppsItem(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsItem(ctx context.Context, resp *shared.PrivateAppsItem) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -24,57 +39,57 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsItem(ctx contex
 		r.PrivateAppName = types.StringPointerValue(resp.PrivateAppName)
 		r.PrivateAppProtocol = types.StringPointerValue(resp.PrivateAppProtocol)
 		r.Protocols = []tfTypes.ProtocolItem{}
-		if len(r.Protocols) > len(resp.Protocols) {
-			r.Protocols = r.Protocols[:len(resp.Protocols)]
-		}
-		for protocolsCount, protocolsItem := range resp.Protocols {
+
+		for _, protocolsItem := range resp.Protocols {
 			var protocols tfTypes.ProtocolItem
+
 			protocols.Port = types.StringPointerValue(protocolsItem.Port)
 			if protocolsItem.Protocol != nil {
 				protocols.Protocol = types.StringValue(string(*protocolsItem.Protocol))
 			} else {
 				protocols.Protocol = types.StringNull()
 			}
-			if protocolsCount+1 > len(r.Protocols) {
-				r.Protocols = append(r.Protocols, protocols)
-			} else {
-				r.Protocols[protocolsCount].Port = protocols.Port
-				r.Protocols[protocolsCount].Protocol = protocols.Protocol
-			}
+
+			r.Protocols = append(r.Protocols, protocols)
 		}
 		r.Publishers = []tfTypes.PublisherItem{}
-		if len(r.Publishers) > len(resp.Publishers) {
-			r.Publishers = r.Publishers[:len(resp.Publishers)]
-		}
-		for publishersCount, publishersItem := range resp.Publishers {
+
+		for _, publishersItem := range resp.Publishers {
 			var publishers tfTypes.PublisherItem
+
 			publishers.PublisherID = types.StringPointerValue(publishersItem.PublisherID)
 			publishers.PublisherName = types.StringPointerValue(publishersItem.PublisherName)
-			if publishersCount+1 > len(r.Publishers) {
-				r.Publishers = append(r.Publishers, publishers)
-			} else {
-				r.Publishers[publishersCount].PublisherID = publishers.PublisherID
-				r.Publishers[publishersCount].PublisherName = publishers.PublisherName
-			}
+
+			r.Publishers = append(r.Publishers, publishers)
 		}
 		r.RealHost = types.StringPointerValue(resp.RealHost)
-		r.Tags = []tfTypes.TagItem{}
-		if len(r.Tags) > len(resp.Tags) {
-			r.Tags = r.Tags[:len(resp.Tags)]
-		}
-		for tagsCount, tagsItem := range resp.Tags {
-			var tags tfTypes.TagItem
+		r.Tags = []tfTypes.Tags{}
+
+		for _, tagsItem := range resp.Tags {
+			var tags tfTypes.Tags
+
 			tags.TagID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(tagsItem.TagID))
 			tags.TagName = types.StringPointerValue(tagsItem.TagName)
-			if tagsCount+1 > len(r.Tags) {
-				r.Tags = append(r.Tags, tags)
-			} else {
-				r.Tags[tagsCount].TagID = tags.TagID
-				r.Tags[tagsCount].TagName = tags.TagName
-			}
+
+			r.Tags = append(r.Tags, tags)
 		}
 		r.TrustSelfSignedCerts = types.BoolPointerValue(resp.TrustSelfSignedCerts)
 		r.UsePublisherDNS = types.BoolPointerValue(resp.UsePublisherDNS)
+	}
+
+	return diags
+}
+
+func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsPostResponse(ctx context.Context, resp *shared.PrivateAppsPostResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedPrivateAppsPostResponseData(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
 	}
 
 	return diags
@@ -92,39 +107,29 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsPostResponseDat
 		r.PrivateAppName = types.StringPointerValue(resp.PrivateAppName)
 		r.PrivateAppProtocol = types.StringPointerValue(resp.PrivateAppProtocol)
 		r.Protocols = []tfTypes.ProtocolItem{}
-		if len(r.Protocols) > len(resp.Protocols) {
-			r.Protocols = r.Protocols[:len(resp.Protocols)]
-		}
-		for protocolsCount, protocolsItem := range resp.Protocols {
+
+		for _, protocolsItem := range resp.Protocols {
 			var protocols tfTypes.ProtocolItem
+
 			protocols.Port = types.StringPointerValue(protocolsItem.Port)
 			if protocolsItem.Protocol != nil {
 				protocols.Protocol = types.StringValue(string(*protocolsItem.Protocol))
 			} else {
 				protocols.Protocol = types.StringNull()
 			}
-			if protocolsCount+1 > len(r.Protocols) {
-				r.Protocols = append(r.Protocols, protocols)
-			} else {
-				r.Protocols[protocolsCount].Port = protocols.Port
-				r.Protocols[protocolsCount].Protocol = protocols.Protocol
-			}
+
+			r.Protocols = append(r.Protocols, protocols)
 		}
 		r.RealHost = types.StringPointerValue(resp.RealHost)
-		r.Tags = []tfTypes.TagItem{}
-		if len(r.Tags) > len(resp.Tags) {
-			r.Tags = r.Tags[:len(resp.Tags)]
-		}
-		for tagsCount, tagsItem := range resp.Tags {
-			var tags tfTypes.TagItem
+		r.Tags = []tfTypes.Tags{}
+
+		for _, tagsItem := range resp.Tags {
+			var tags tfTypes.Tags
+
 			tags.TagID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(tagsItem.TagID))
 			tags.TagName = types.StringPointerValue(tagsItem.TagName)
-			if tagsCount+1 > len(r.Tags) {
-				r.Tags = append(r.Tags, tags)
-			} else {
-				r.Tags[tagsCount].TagID = tags.TagID
-				r.Tags[tagsCount].TagName = tags.TagName
-			}
+
+			r.Tags = append(r.Tags, tags)
 		}
 		r.TrustSelfSignedCerts = types.BoolPointerValue(resp.TrustSelfSignedCerts)
 		r.UsePublisherDNS = types.BoolPointerValue(resp.UsePublisherDNS)
@@ -214,16 +219,16 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 		isUserPortalApp = nil
 	}
 	protocols := make([]shared.ProtocolItem, 0, len(r.Protocols))
-	for _, protocolsItem := range r.Protocols {
+	for protocolsIndex := range r.Protocols {
 		port := new(string)
-		if !protocolsItem.Port.IsUnknown() && !protocolsItem.Port.IsNull() {
-			*port = protocolsItem.Port.ValueString()
+		if !r.Protocols[protocolsIndex].Port.IsUnknown() && !r.Protocols[protocolsIndex].Port.IsNull() {
+			*port = r.Protocols[protocolsIndex].Port.ValueString()
 		} else {
 			port = nil
 		}
 		protocol := new(shared.Protocol)
-		if !protocolsItem.Protocol.IsUnknown() && !protocolsItem.Protocol.IsNull() {
-			*protocol = shared.Protocol(protocolsItem.Protocol.ValueString())
+		if !r.Protocols[protocolsIndex].Protocol.IsUnknown() && !r.Protocols[protocolsIndex].Protocol.IsNull() {
+			*protocol = shared.Protocol(r.Protocols[protocolsIndex].Protocol.ValueString())
 		} else {
 			protocol = nil
 		}
@@ -233,16 +238,16 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 		})
 	}
 	publishers := make([]shared.PublisherItem, 0, len(r.Publishers))
-	for _, publishersItem := range r.Publishers {
+	for publishersIndex := range r.Publishers {
 		publisherID := new(string)
-		if !publishersItem.PublisherID.IsUnknown() && !publishersItem.PublisherID.IsNull() {
-			*publisherID = publishersItem.PublisherID.ValueString()
+		if !r.Publishers[publishersIndex].PublisherID.IsUnknown() && !r.Publishers[publishersIndex].PublisherID.IsNull() {
+			*publisherID = r.Publishers[publishersIndex].PublisherID.ValueString()
 		} else {
 			publisherID = nil
 		}
 		publisherName := new(string)
-		if !publishersItem.PublisherName.IsUnknown() && !publishersItem.PublisherName.IsNull() {
-			*publisherName = publishersItem.PublisherName.ValueString()
+		if !r.Publishers[publishersIndex].PublisherName.IsUnknown() && !r.Publishers[publishersIndex].PublisherName.IsNull() {
+			*publisherName = r.Publishers[publishersIndex].PublisherName.ValueString()
 		} else {
 			publisherName = nil
 		}
@@ -257,15 +262,15 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 	} else {
 		realHost = nil
 	}
-	tags := make([]shared.TagItemNoID, 0, len(r.Tags))
-	for _, tagsItem := range r.Tags {
+	tags := make([]shared.PrivateAppsPutRequestTags, 0, len(r.Tags))
+	for tagsIndex := range r.Tags {
 		tagName := new(string)
-		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
-			*tagName = tagsItem.TagName.ValueString()
+		if !r.Tags[tagsIndex].TagName.IsUnknown() && !r.Tags[tagsIndex].TagName.IsNull() {
+			*tagName = r.Tags[tagsIndex].TagName.ValueString()
 		} else {
 			tagName = nil
 		}
-		tags = append(tags, shared.TagItemNoID{
+		tags = append(tags, shared.PrivateAppsPutRequestTags{
 			TagName: tagName,
 		})
 	}
@@ -332,16 +337,16 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 		isUserPortalApp = nil
 	}
 	protocols := make([]shared.ProtocolItem, 0, len(r.Protocols))
-	for _, protocolsItem := range r.Protocols {
+	for protocolsIndex := range r.Protocols {
 		port := new(string)
-		if !protocolsItem.Port.IsUnknown() && !protocolsItem.Port.IsNull() {
-			*port = protocolsItem.Port.ValueString()
+		if !r.Protocols[protocolsIndex].Port.IsUnknown() && !r.Protocols[protocolsIndex].Port.IsNull() {
+			*port = r.Protocols[protocolsIndex].Port.ValueString()
 		} else {
 			port = nil
 		}
 		protocol := new(shared.Protocol)
-		if !protocolsItem.Protocol.IsUnknown() && !protocolsItem.Protocol.IsNull() {
-			*protocol = shared.Protocol(protocolsItem.Protocol.ValueString())
+		if !r.Protocols[protocolsIndex].Protocol.IsUnknown() && !r.Protocols[protocolsIndex].Protocol.IsNull() {
+			*protocol = shared.Protocol(r.Protocols[protocolsIndex].Protocol.ValueString())
 		} else {
 			protocol = nil
 		}
@@ -351,16 +356,16 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 		})
 	}
 	publishers := make([]shared.PublisherItem, 0, len(r.Publishers))
-	for _, publishersItem := range r.Publishers {
+	for publishersIndex := range r.Publishers {
 		publisherID := new(string)
-		if !publishersItem.PublisherID.IsUnknown() && !publishersItem.PublisherID.IsNull() {
-			*publisherID = publishersItem.PublisherID.ValueString()
+		if !r.Publishers[publishersIndex].PublisherID.IsUnknown() && !r.Publishers[publishersIndex].PublisherID.IsNull() {
+			*publisherID = r.Publishers[publishersIndex].PublisherID.ValueString()
 		} else {
 			publisherID = nil
 		}
 		publisherName := new(string)
-		if !publishersItem.PublisherName.IsUnknown() && !publishersItem.PublisherName.IsNull() {
-			*publisherName = publishersItem.PublisherName.ValueString()
+		if !r.Publishers[publishersIndex].PublisherName.IsUnknown() && !r.Publishers[publishersIndex].PublisherName.IsNull() {
+			*publisherName = r.Publishers[publishersIndex].PublisherName.ValueString()
 		} else {
 			publisherName = nil
 		}
@@ -369,15 +374,15 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 			PublisherName: publisherName,
 		})
 	}
-	tags := make([]shared.TagItemNoID, 0, len(r.Tags))
-	for _, tagsItem := range r.Tags {
+	tags := make([]shared.PrivateAppsRequestTags, 0, len(r.Tags))
+	for tagsIndex := range r.Tags {
 		tagName := new(string)
-		if !tagsItem.TagName.IsUnknown() && !tagsItem.TagName.IsNull() {
-			*tagName = tagsItem.TagName.ValueString()
+		if !r.Tags[tagsIndex].TagName.IsUnknown() && !r.Tags[tagsIndex].TagName.IsNull() {
+			*tagName = r.Tags[tagsIndex].TagName.ValueString()
 		} else {
 			tagName = nil
 		}
-		tags = append(tags, shared.TagItemNoID{
+		tags = append(tags, shared.PrivateAppsRequestTags{
 			TagName: tagName,
 		})
 	}

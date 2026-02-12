@@ -48,11 +48,11 @@ type LbrokerItemAssessment struct {
 	Status *string `json:"status,omitempty"`
 }
 
-func (o *LbrokerItemAssessment) GetStatus() *string {
-	if o == nil {
+func (l *LbrokerItemAssessment) GetStatus() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Status
+	return l.Status
 }
 
 type LbrokerItem struct {
@@ -98,183 +98,183 @@ func (l LbrokerItem) MarshalJSON() ([]byte, error) {
 }
 
 func (l *LbrokerItem) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &l, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &l, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *LbrokerItem) GetCommonName() *string {
-	if o == nil {
+func (l *LbrokerItem) GetCommonName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.CommonName
+	return l.CommonName
 }
 
-func (o *LbrokerItem) GetLocalBrokerID() *int {
-	if o == nil {
+func (l *LbrokerItem) GetLocalBrokerID() *int {
+	if l == nil {
 		return nil
 	}
-	return o.LocalBrokerID
+	return l.LocalBrokerID
 }
 
-func (o *LbrokerItem) GetLocalBrokerName() *string {
-	if o == nil {
+func (l *LbrokerItem) GetLocalBrokerName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.LocalBrokerName
+	return l.LocalBrokerName
 }
 
-func (o *LbrokerItem) GetRegistered() *bool {
-	if o == nil {
+func (l *LbrokerItem) GetRegistered() *bool {
+	if l == nil {
 		return nil
 	}
-	return o.Registered
+	return l.Registered
 }
 
-func (o *LbrokerItem) GetCityName() *string {
-	if o == nil {
+func (l *LbrokerItem) GetCityName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.CityName
+	return l.CityName
 }
 
-func (o *LbrokerItem) GetRegionName() *string {
-	if o == nil {
+func (l *LbrokerItem) GetRegionName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.RegionName
+	return l.RegionName
 }
 
-func (o *LbrokerItem) GetCountryName() *string {
-	if o == nil {
+func (l *LbrokerItem) GetCountryName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.CountryName
+	return l.CountryName
 }
 
-func (o *LbrokerItem) GetCountryCode() *string {
-	if o == nil {
+func (l *LbrokerItem) GetCountryCode() *string {
+	if l == nil {
 		return nil
 	}
-	return o.CountryCode
+	return l.CountryCode
 }
 
-func (o *LbrokerItem) GetLocationID() *string {
-	if o == nil {
+func (l *LbrokerItem) GetLocationID() *string {
+	if l == nil {
 		return nil
 	}
-	return o.LocationID
+	return l.LocationID
 }
 
-func (o *LbrokerItem) GetDiscoveredPublicIP() *string {
-	if o == nil {
+func (l *LbrokerItem) GetDiscoveredPublicIP() *string {
+	if l == nil {
 		return nil
 	}
-	return o.DiscoveredPublicIP
+	return l.DiscoveredPublicIP
 }
 
-func (o *LbrokerItem) GetDiscoveredPrivateIP() *string {
-	if o == nil {
+func (l *LbrokerItem) GetDiscoveredPrivateIP() *string {
+	if l == nil {
 		return nil
 	}
-	return o.DiscoveredPrivateIP
+	return l.DiscoveredPrivateIP
 }
 
-func (o *LbrokerItem) GetCustomPublicIP() *string {
-	if o == nil {
+func (l *LbrokerItem) GetCustomPublicIP() *string {
+	if l == nil {
 		return nil
 	}
-	return o.CustomPublicIP
+	return l.CustomPublicIP
 }
 
-func (o *LbrokerItem) GetCustomPrivateIP() *string {
-	if o == nil {
+func (l *LbrokerItem) GetCustomPrivateIP() *string {
+	if l == nil {
 		return nil
 	}
-	return o.CustomPrivateIP
+	return l.CustomPrivateIP
 }
 
-func (o *LbrokerItem) GetLatitude() *float32 {
-	if o == nil {
+func (l *LbrokerItem) GetLatitude() *float32 {
+	if l == nil {
 		return nil
 	}
-	return o.Latitude
+	return l.Latitude
 }
 
-func (o *LbrokerItem) GetLongitude() *float32 {
-	if o == nil {
+func (l *LbrokerItem) GetLongitude() *float32 {
+	if l == nil {
 		return nil
 	}
-	return o.Longitude
+	return l.Longitude
 }
 
-func (o *LbrokerItem) GetAccessViaPublicIP() *AccessViaPublicIP {
-	if o == nil {
+func (l *LbrokerItem) GetAccessViaPublicIP() *AccessViaPublicIP {
+	if l == nil {
 		return nil
 	}
-	return o.AccessViaPublicIP
+	return l.AccessViaPublicIP
 }
 
-func (o *LbrokerItem) GetAssessment() *LbrokerItemAssessment {
-	if o == nil {
+func (l *LbrokerItem) GetAssessment() *LbrokerItemAssessment {
+	if l == nil {
 		return nil
 	}
-	return o.Assessment
+	return l.Assessment
 }
 
-func (o *LbrokerItem) GetCreatedAt() *time.Time {
-	if o == nil {
+func (l *LbrokerItem) GetCreatedAt() *time.Time {
+	if l == nil {
 		return nil
 	}
-	return o.CreatedAt
+	return l.CreatedAt
 }
 
-func (o *LbrokerItem) GetDNSHost() *string {
-	if o == nil {
+func (l *LbrokerItem) GetDNSHost() *string {
+	if l == nil {
 		return nil
 	}
-	return o.DNSHost
+	return l.DNSHost
 }
 
-func (o *LbrokerItem) GetGslbUUID() *string {
-	if o == nil {
+func (l *LbrokerItem) GetGslbUUID() *string {
+	if l == nil {
 		return nil
 	}
-	return o.GslbUUID
+	return l.GslbUUID
 }
 
-func (o *LbrokerItem) GetHostPort() *int {
-	if o == nil {
+func (l *LbrokerItem) GetHostPort() *int {
+	if l == nil {
 		return nil
 	}
-	return o.HostPort
+	return l.HostPort
 }
 
-func (o *LbrokerItem) GetPopName() *string {
-	if o == nil {
+func (l *LbrokerItem) GetPopName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.PopName
+	return l.PopName
 }
 
-func (o *LbrokerItem) GetReachableByClient() *bool {
-	if o == nil {
+func (l *LbrokerItem) GetReachableByClient() *bool {
+	if l == nil {
 		return nil
 	}
-	return o.ReachableByClient
+	return l.ReachableByClient
 }
 
-func (o *LbrokerItem) GetRegisteredAt() *time.Time {
-	if o == nil {
+func (l *LbrokerItem) GetRegisteredAt() *time.Time {
+	if l == nil {
 		return nil
 	}
-	return o.RegisteredAt
+	return l.RegisteredAt
 }
 
-func (o *LbrokerItem) GetUpdatedAt() *time.Time {
-	if o == nil {
+func (l *LbrokerItem) GetUpdatedAt() *time.Time {
+	if l == nil {
 		return nil
 	}
-	return o.UpdatedAt
+	return l.UpdatedAt
 }

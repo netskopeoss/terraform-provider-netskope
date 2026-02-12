@@ -16,24 +16,24 @@ func (i IpsecTunnelRequestXff) MarshalJSON() ([]byte, error) {
 }
 
 func (i *IpsecTunnelRequestXff) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &i, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &i, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *IpsecTunnelRequestXff) GetEnabled() *bool {
-	if o == nil {
+func (i *IpsecTunnelRequestXff) GetEnabled() *bool {
+	if i == nil {
 		return nil
 	}
-	return o.Enabled
+	return i.Enabled
 }
 
-func (o *IpsecTunnelRequestXff) GetIplist() []string {
-	if o == nil {
+func (i *IpsecTunnelRequestXff) GetIplist() []string {
+	if i == nil {
 		return nil
 	}
-	return o.Iplist
+	return i.Iplist
 }
 
 type IpsecTunnelRequestOptions struct {
@@ -47,31 +47,31 @@ func (i IpsecTunnelRequestOptions) MarshalJSON() ([]byte, error) {
 }
 
 func (i *IpsecTunnelRequestOptions) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &i, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &i, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *IpsecTunnelRequestOptions) GetReauth() *bool {
-	if o == nil {
+func (i *IpsecTunnelRequestOptions) GetReauth() *bool {
+	if i == nil {
 		return nil
 	}
-	return o.Reauth
+	return i.Reauth
 }
 
-func (o *IpsecTunnelRequestOptions) GetRekey() *bool {
-	if o == nil {
+func (i *IpsecTunnelRequestOptions) GetRekey() *bool {
+	if i == nil {
 		return nil
 	}
-	return o.Rekey
+	return i.Rekey
 }
 
-func (o *IpsecTunnelRequestOptions) GetXff() *IpsecTunnelRequestXff {
-	if o == nil {
+func (i *IpsecTunnelRequestOptions) GetXff() *IpsecTunnelRequestXff {
+	if i == nil {
 		return nil
 	}
-	return o.Xff
+	return i.Xff
 }
 
 type IpsecTunnelRequest struct {
@@ -107,99 +107,99 @@ func (i IpsecTunnelRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (i *IpsecTunnelRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &i, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &i, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *IpsecTunnelRequest) GetSite() string {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetSite() string {
+	if i == nil {
 		return ""
 	}
-	return o.Site
+	return i.Site
 }
 
-func (o *IpsecTunnelRequest) GetSourceIP() string {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetSourceIP() string {
+	if i == nil {
 		return ""
 	}
-	return o.SourceIP
+	return i.SourceIP
 }
 
-func (o *IpsecTunnelRequest) GetSourceIdentity() *string {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetSourceIdentity() *string {
+	if i == nil {
 		return nil
 	}
-	return o.SourceIdentity
+	return i.SourceIdentity
 }
 
-func (o *IpsecTunnelRequest) GetSourceType() *string {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetSourceType() *string {
+	if i == nil {
 		return nil
 	}
-	return o.SourceType
+	return i.SourceType
 }
 
-func (o *IpsecTunnelRequest) GetEnabled() *bool {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetEnabled() *bool {
+	if i == nil {
 		return nil
 	}
-	return o.Enabled
+	return i.Enabled
 }
 
-func (o *IpsecTunnelRequest) GetBandwidth() *int {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetBandwidth() *int {
+	if i == nil {
 		return nil
 	}
-	return o.Bandwidth
+	return i.Bandwidth
 }
 
-func (o *IpsecTunnelRequest) GetEncryption() *string {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetEncryption() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Encryption
+	return i.Encryption
 }
 
-func (o *IpsecTunnelRequest) GetPsk() *string {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetPsk() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Psk
+	return i.Psk
 }
 
-func (o *IpsecTunnelRequest) GetTemplate() *string {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetTemplate() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Template
+	return i.Template
 }
 
-func (o *IpsecTunnelRequest) GetVendor() *string {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetVendor() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Vendor
+	return i.Vendor
 }
 
-func (o *IpsecTunnelRequest) GetNotes() *string {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetNotes() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Notes
+	return i.Notes
 }
 
-func (o *IpsecTunnelRequest) GetPopNames() []string {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetPopNames() []string {
+	if i == nil {
 		return []string{}
 	}
-	return o.PopNames
+	return i.PopNames
 }
 
-func (o *IpsecTunnelRequest) GetOptions() *IpsecTunnelRequestOptions {
-	if o == nil {
+func (i *IpsecTunnelRequest) GetOptions() *IpsecTunnelRequestOptions {
+	if i == nil {
 		return nil
 	}
-	return o.Options
+	return i.Options
 }

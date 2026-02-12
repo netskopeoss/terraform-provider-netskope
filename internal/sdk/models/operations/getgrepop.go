@@ -12,11 +12,11 @@ type GetGREPOPRequest struct {
 	PopID string `pathParam:"style=simple,explode=false,name=pop_id"`
 }
 
-func (o *GetGREPOPRequest) GetPopID() string {
-	if o == nil {
+func (g *GetGREPOPRequest) GetPopID() string {
+	if g == nil {
 		return ""
 	}
-	return o.PopID
+	return g.PopID
 }
 
 type GetGREPOPResponse struct {
@@ -32,37 +32,37 @@ type GetGREPOPResponse struct {
 	GreResponse400 *shared.GreResponse400
 }
 
-func (o *GetGREPOPResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGREPOPResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGREPOPResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGREPOPResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGREPOPResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGREPOPResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetGREPOPResponse) GetGrePopGetResponse() *shared.GrePopGetResponse {
-	if o == nil {
+func (g *GetGREPOPResponse) GetGrePopGetResponse() *shared.GrePopGetResponse {
+	if g == nil {
 		return nil
 	}
-	return o.GrePopGetResponse
+	return g.GrePopGetResponse
 }
 
-func (o *GetGREPOPResponse) GetGreResponse400() *shared.GreResponse400 {
-	if o == nil {
+func (g *GetGREPOPResponse) GetGreResponse400() *shared.GreResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.GreResponse400
+	return g.GreResponse400
 }

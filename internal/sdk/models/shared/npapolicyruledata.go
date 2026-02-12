@@ -67,11 +67,11 @@ type MatchCriteriaAction struct {
 	ActionName *ActionName `json:"action_name,omitempty"`
 }
 
-func (o *MatchCriteriaAction) GetActionName() *ActionName {
-	if o == nil {
+func (m *MatchCriteriaAction) GetActionName() *ActionName {
+	if m == nil {
 		return nil
 	}
-	return o.ActionName
+	return m.ActionName
 }
 
 type PolicyType string
@@ -148,18 +148,18 @@ type Activities struct {
 	ListOfConstraints []string  `json:"list_of_constraints,omitempty"`
 }
 
-func (o *Activities) GetActivity() *Activity {
-	if o == nil {
+func (a *Activities) GetActivity() *Activity {
+	if a == nil {
 		return nil
 	}
-	return o.Activity
+	return a.Activity
 }
 
-func (o *Activities) GetListOfConstraints() []string {
-	if o == nil {
+func (a *Activities) GetListOfConstraints() []string {
+	if a == nil {
 		return nil
 	}
-	return o.ListOfConstraints
+	return a.ListOfConstraints
 }
 
 type PrivateAppsWithActivities struct {
@@ -167,18 +167,18 @@ type PrivateAppsWithActivities struct {
 	Activities []Activities `json:"activities,omitempty"`
 }
 
-func (o *PrivateAppsWithActivities) GetAppName() *string {
-	if o == nil {
+func (p *PrivateAppsWithActivities) GetAppName() *string {
+	if p == nil {
 		return nil
 	}
-	return o.AppName
+	return p.AppName
 }
 
-func (o *PrivateAppsWithActivities) GetActivities() []Activities {
-	if o == nil {
+func (p *PrivateAppsWithActivities) GetActivities() []Activities {
+	if p == nil {
 		return nil
 	}
-	return o.Activities
+	return p.Activities
 }
 
 type NpaPolicyRuleData struct {
@@ -216,190 +216,190 @@ func (n NpaPolicyRuleData) MarshalJSON() ([]byte, error) {
 }
 
 func (n *NpaPolicyRuleData) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &n, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &n, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *NpaPolicyRuleData) GetAccessMethod() []AccessMethod {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetAccessMethod() []AccessMethod {
+	if n == nil {
 		return nil
 	}
-	return o.AccessMethod
+	return n.AccessMethod
 }
 
-func (o *NpaPolicyRuleData) GetBNegateNetLocation() *bool {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetBNegateNetLocation() *bool {
+	if n == nil {
 		return nil
 	}
-	return o.BNegateNetLocation
+	return n.BNegateNetLocation
 }
 
-func (o *NpaPolicyRuleData) GetBNegateSrcCountries() *bool {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetBNegateSrcCountries() *bool {
+	if n == nil {
 		return nil
 	}
-	return o.BNegateSrcCountries
+	return n.BNegateSrcCountries
 }
 
-func (o *NpaPolicyRuleData) GetClassification() *string {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetClassification() *string {
+	if n == nil {
 		return nil
 	}
-	return o.Classification
+	return n.Classification
 }
 
-func (o *NpaPolicyRuleData) GetPeriodicReauth() *NpaPolicyRulePeriodicReauth {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetPeriodicReauth() *NpaPolicyRulePeriodicReauth {
+	if n == nil {
 		return nil
 	}
-	return o.PeriodicReauth
+	return n.PeriodicReauth
 }
 
-func (o *NpaPolicyRuleData) GetJSONVersion() *int64 {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetJSONVersion() *int64 {
+	if n == nil {
 		return nil
 	}
-	return o.JSONVersion
+	return n.JSONVersion
 }
 
-func (o *NpaPolicyRuleData) GetDeviceClassificationID() []int64 {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetDeviceClassificationID() []int64 {
+	if n == nil {
 		return nil
 	}
-	return o.DeviceClassificationID
+	return n.DeviceClassificationID
 }
 
-func (o *NpaPolicyRuleData) GetMatchCriteriaAction() *MatchCriteriaAction {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetMatchCriteriaAction() *MatchCriteriaAction {
+	if n == nil {
 		return nil
 	}
-	return o.MatchCriteriaAction
+	return n.MatchCriteriaAction
 }
 
-func (o *NpaPolicyRuleData) GetNetLocationObj() []string {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetNetLocationObj() []string {
+	if n == nil {
 		return nil
 	}
-	return o.NetLocationObj
+	return n.NetLocationObj
 }
 
-func (o *NpaPolicyRuleData) GetOrganizationUnits() []string {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetOrganizationUnits() []string {
+	if n == nil {
 		return nil
 	}
-	return o.OrganizationUnits
+	return n.OrganizationUnits
 }
 
-func (o *NpaPolicyRuleData) GetPolicyType() *PolicyType {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetPolicyType() *PolicyType {
+	if n == nil {
 		return nil
 	}
-	return o.PolicyType
+	return n.PolicyType
 }
 
-func (o *NpaPolicyRuleData) GetPrivateAppTagIds() []string {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetPrivateAppTagIds() []string {
+	if n == nil {
 		return nil
 	}
-	return o.PrivateAppTagIds
+	return n.PrivateAppTagIds
 }
 
-func (o *NpaPolicyRuleData) GetPrivateAppTags() []string {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetPrivateAppTags() []string {
+	if n == nil {
 		return nil
 	}
-	return o.PrivateAppTags
+	return n.PrivateAppTags
 }
 
-func (o *NpaPolicyRuleData) GetPrivateApps() []string {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetPrivateApps() []string {
+	if n == nil {
 		return nil
 	}
-	return o.PrivateApps
+	return n.PrivateApps
 }
 
-func (o *NpaPolicyRuleData) GetSrcCountries() []string {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetSrcCountries() []string {
+	if n == nil {
 		return nil
 	}
-	return o.SrcCountries
+	return n.SrcCountries
 }
 
-func (o *NpaPolicyRuleData) GetUserGroups() []string {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetUserGroups() []string {
+	if n == nil {
 		return nil
 	}
-	return o.UserGroups
+	return n.UserGroups
 }
 
-func (o *NpaPolicyRuleData) GetUserType() *UserType {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetUserType() *UserType {
+	if n == nil {
 		return nil
 	}
-	return o.UserType
+	return n.UserType
 }
 
-func (o *NpaPolicyRuleData) GetUsers() []string {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetUsers() []string {
+	if n == nil {
 		return nil
 	}
-	return o.Users
+	return n.Users
 }
 
-func (o *NpaPolicyRuleData) GetVersion() *int64 {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetVersion() *int64 {
+	if n == nil {
 		return nil
 	}
-	return o.Version
+	return n.Version
 }
 
-func (o *NpaPolicyRuleData) GetDlpActions() []NpaPolicyRuleDlp {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetDlpActions() []NpaPolicyRuleDlp {
+	if n == nil {
 		return nil
 	}
-	return o.DlpActions
+	return n.DlpActions
 }
 
-func (o *NpaPolicyRuleData) GetTssActions() []NpaPolicyRuleTss {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetTssActions() []NpaPolicyRuleTss {
+	if n == nil {
 		return nil
 	}
-	return o.TssActions
+	return n.TssActions
 }
 
-func (o *NpaPolicyRuleData) GetTssProfile() []string {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetTssProfile() []string {
+	if n == nil {
 		return nil
 	}
-	return o.TssProfile
+	return n.TssProfile
 }
 
-func (o *NpaPolicyRuleData) GetExternalDlp() *bool {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetExternalDlp() *bool {
+	if n == nil {
 		return nil
 	}
-	return o.ExternalDlp
+	return n.ExternalDlp
 }
 
-func (o *NpaPolicyRuleData) GetPrivateAppsWithActivities() []PrivateAppsWithActivities {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetPrivateAppsWithActivities() []PrivateAppsWithActivities {
+	if n == nil {
 		return nil
 	}
-	return o.PrivateAppsWithActivities
+	return n.PrivateAppsWithActivities
 }
 
-func (o *NpaPolicyRuleData) GetShowDlpProfileActionTable() *bool {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetShowDlpProfileActionTable() *bool {
+	if n == nil {
 		return nil
 	}
-	return o.ShowDlpProfileActionTable
+	return n.ShowDlpProfileActionTable
 }
 
-func (o *NpaPolicyRuleData) GetSchedule() *NpaSchedule {
-	if o == nil {
+func (n *NpaPolicyRuleData) GetSchedule() *NpaSchedule {
+	if n == nil {
 		return nil
 	}
-	return o.Schedule
+	return n.Schedule
 }

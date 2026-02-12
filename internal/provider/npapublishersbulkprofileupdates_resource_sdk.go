@@ -20,11 +20,10 @@ func (r *NPAPublishersBulkProfileUpdatesResourceModel) RefreshFromSharedPublishe
 		} else {
 			r.Data = &tfTypes.PublisherUpgradeProfileBulkResponseData{}
 			r.Data.Publishers = []tfTypes.UpgradePublisherResponse{}
-			if len(r.Data.Publishers) > len(resp.Data.Publishers) {
-				r.Data.Publishers = r.Data.Publishers[:len(resp.Data.Publishers)]
-			}
-			for publishersCount, publishersItem := range resp.Data.Publishers {
+
+			for _, publishersItem := range resp.Data.Publishers {
 				var publishers tfTypes.UpgradePublisherResponse
+
 				publishers.AppsCount = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.AppsCount))
 				if publishersItem.Assessment == nil {
 					publishers.Assessment = nil
@@ -92,26 +91,8 @@ func (r *NPAPublishersBulkProfileUpdatesResourceModel) RefreshFromSharedPublishe
 					publishers.UpgradeStatus = &tfTypes.PublisherResponseUpgradeStatus{}
 					publishers.UpgradeStatus.Upstat = types.StringPointerValue(publishersItem.UpgradeStatus.Upstat)
 				}
-				if publishersCount+1 > len(r.Data.Publishers) {
-					r.Data.Publishers = append(r.Data.Publishers, publishers)
-				} else {
-					r.Data.Publishers[publishersCount].AppsCount = publishers.AppsCount
-					r.Data.Publishers[publishersCount].Assessment = publishers.Assessment
-					r.Data.Publishers[publishersCount].Capabilities = publishers.Capabilities
-					r.Data.Publishers[publishersCount].CommonName = publishers.CommonName
-					r.Data.Publishers[publishersCount].ConnectedApps = publishers.ConnectedApps
-					r.Data.Publishers[publishersCount].Lbrokerconnect = publishers.Lbrokerconnect
-					r.Data.Publishers[publishersCount].Name = publishers.Name
-					r.Data.Publishers[publishersCount].PublisherID = publishers.PublisherID
-					r.Data.Publishers[publishersCount].PublisherUpgradeProfilesID = publishers.PublisherUpgradeProfilesID
-					r.Data.Publishers[publishersCount].Registered = publishers.Registered
-					r.Data.Publishers[publishersCount].Status = publishers.Status
-					r.Data.Publishers[publishersCount].SticherPop = publishers.SticherPop
-					r.Data.Publishers[publishersCount].StitcherID = publishers.StitcherID
-					r.Data.Publishers[publishersCount].UpgradeFailedReason = publishers.UpgradeFailedReason
-					r.Data.Publishers[publishersCount].UpgradeRequest = publishers.UpgradeRequest
-					r.Data.Publishers[publishersCount].UpgradeStatus = publishers.UpgradeStatus
-				}
+
+				r.Data.Publishers = append(r.Data.Publishers, publishers)
 			}
 		}
 		r.Total = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.Total))
@@ -135,8 +116,8 @@ func (r *NPAPublishersBulkProfileUpdatesResourceModel) ToSharedPublisherUpgradeP
 			}
 		}
 		publisherID := make([]string, 0, len(r.Publishers.PublisherID))
-		for _, publisherIDItem := range r.Publishers.PublisherID {
-			publisherID = append(publisherID, publisherIDItem.ValueString())
+		for publisherIDIndex := range r.Publishers.PublisherID {
+			publisherID = append(publisherID, r.Publishers.PublisherID[publisherIDIndex].ValueString())
 		}
 		publishers = &shared.PublisherUpgradeProfileBulkRequestPublishers{
 			Apply:       apply,

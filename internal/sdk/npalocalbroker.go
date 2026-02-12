@@ -61,7 +61,7 @@ func (s *NPALocalBroker) Create(ctx context.Context, request shared.LbrokerPostR
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createNPALocalBroker",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -219,7 +219,7 @@ func (s *NPALocalBroker) Delete(ctx context.Context, request operations.DeleteNP
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteNPALocalBroker",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -327,6 +327,7 @@ func (s *NPALocalBroker) Delete(ctx context.Context, request operations.DeleteNP
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -370,7 +371,7 @@ func (s *NPALocalBroker) Read(ctx context.Context, request operations.GetNPALoca
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getNPALocalBrokerById",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -478,6 +479,7 @@ func (s *NPALocalBroker) Read(ctx context.Context, request operations.GetNPALoca
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -521,7 +523,7 @@ func (s *NPALocalBroker) Update(ctx context.Context, request operations.UpdateNP
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateNPALocalBrokerById",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "LbrokerPutRequest", "json", `request:"mediaType=application/json"`)

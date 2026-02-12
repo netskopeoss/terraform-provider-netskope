@@ -28,52 +28,52 @@ func (l ListIPSecTunnelsRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListIPSecTunnelsRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &l, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &l, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *ListIPSecTunnelsRequest) GetSite() *string {
-	if o == nil {
+func (l *ListIPSecTunnelsRequest) GetSite() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Site
+	return l.Site
 }
 
-func (o *ListIPSecTunnelsRequest) GetSrcipidentity() *string {
-	if o == nil {
+func (l *ListIPSecTunnelsRequest) GetSrcipidentity() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Srcipidentity
+	return l.Srcipidentity
 }
 
-func (o *ListIPSecTunnelsRequest) GetPop() *string {
-	if o == nil {
+func (l *ListIPSecTunnelsRequest) GetPop() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Pop
+	return l.Pop
 }
 
-func (o *ListIPSecTunnelsRequest) GetStatusFilter() *string {
-	if o == nil {
+func (l *ListIPSecTunnelsRequest) GetStatusFilter() *string {
+	if l == nil {
 		return nil
 	}
-	return o.StatusFilter
+	return l.StatusFilter
 }
 
-func (o *ListIPSecTunnelsRequest) GetOffset() *int {
-	if o == nil {
+func (l *ListIPSecTunnelsRequest) GetOffset() *int {
+	if l == nil {
 		return nil
 	}
-	return o.Offset
+	return l.Offset
 }
 
-func (o *ListIPSecTunnelsRequest) GetLimit() *int {
-	if o == nil {
+func (l *ListIPSecTunnelsRequest) GetLimit() *int {
+	if l == nil {
 		return nil
 	}
-	return o.Limit
+	return l.Limit
 }
 
 type ListIPSecTunnelsResponse struct {
@@ -89,37 +89,37 @@ type ListIPSecTunnelsResponse struct {
 	IpsecResponse400 *shared.IpsecResponse400
 }
 
-func (o *ListIPSecTunnelsResponse) GetContentType() string {
-	if o == nil {
+func (l *ListIPSecTunnelsResponse) GetContentType() string {
+	if l == nil {
 		return ""
 	}
-	return o.ContentType
+	return l.ContentType
 }
 
-func (o *ListIPSecTunnelsResponse) GetStatusCode() int {
-	if o == nil {
+func (l *ListIPSecTunnelsResponse) GetStatusCode() int {
+	if l == nil {
 		return 0
 	}
-	return o.StatusCode
+	return l.StatusCode
 }
 
-func (o *ListIPSecTunnelsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (l *ListIPSecTunnelsResponse) GetRawResponse() *http.Response {
+	if l == nil {
 		return nil
 	}
-	return o.RawResponse
+	return l.RawResponse
 }
 
-func (o *ListIPSecTunnelsResponse) GetIpsecTunnelListResponse() *shared.IpsecTunnelListResponse {
-	if o == nil {
+func (l *ListIPSecTunnelsResponse) GetIpsecTunnelListResponse() *shared.IpsecTunnelListResponse {
+	if l == nil {
 		return nil
 	}
-	return o.IpsecTunnelListResponse
+	return l.IpsecTunnelListResponse
 }
 
-func (o *ListIPSecTunnelsResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
-	if o == nil {
+func (l *ListIPSecTunnelsResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
+	if l == nil {
 		return nil
 	}
-	return o.IpsecResponse400
+	return l.IpsecResponse400
 }

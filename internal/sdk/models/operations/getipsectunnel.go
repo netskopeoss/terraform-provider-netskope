@@ -12,11 +12,11 @@ type GetIPSecTunnelRequest struct {
 	TunnelID int `pathParam:"style=simple,explode=false,name=tunnel_id"`
 }
 
-func (o *GetIPSecTunnelRequest) GetTunnelID() int {
-	if o == nil {
+func (g *GetIPSecTunnelRequest) GetTunnelID() int {
+	if g == nil {
 		return 0
 	}
-	return o.TunnelID
+	return g.TunnelID
 }
 
 type GetIPSecTunnelResponse struct {
@@ -32,37 +32,37 @@ type GetIPSecTunnelResponse struct {
 	IpsecResponse400 *shared.IpsecResponse400
 }
 
-func (o *GetIPSecTunnelResponse) GetContentType() string {
-	if o == nil {
+func (g *GetIPSecTunnelResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetIPSecTunnelResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetIPSecTunnelResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetIPSecTunnelResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetIPSecTunnelResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetIPSecTunnelResponse) GetIpsecTunnelGetResponse() *shared.IpsecTunnelGetResponse {
-	if o == nil {
+func (g *GetIPSecTunnelResponse) GetIpsecTunnelGetResponse() *shared.IpsecTunnelGetResponse {
+	if g == nil {
 		return nil
 	}
-	return o.IpsecTunnelGetResponse
+	return g.IpsecTunnelGetResponse
 }
 
-func (o *GetIPSecTunnelResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
-	if o == nil {
+func (g *GetIPSecTunnelResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.IpsecResponse400
+	return g.IpsecResponse400
 }

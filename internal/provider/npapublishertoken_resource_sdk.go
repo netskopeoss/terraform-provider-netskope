@@ -17,6 +17,21 @@ func (r *NPAPublisherTokenResourceModel) RefreshFromOperationsGenerateNPAPublish
 	return diags
 }
 
+func (r *NPAPublisherTokenResourceModel) RefreshFromOperationsGenerateNPAPublisherTokenResponseBody(ctx context.Context, resp *operations.GenerateNPAPublisherTokenResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromOperationsGenerateNPAPublisherTokenData(ctx, &resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPAPublisherTokenResourceModel) ToOperationsGenerateNPAPublisherTokenRequest(ctx context.Context) (*operations.GenerateNPAPublisherTokenRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 

@@ -14,65 +14,65 @@ type NpaPolicyResponseItem struct {
 	RuleName   *string            `json:"rule_name,omitempty"`
 }
 
-func (o *NpaPolicyResponseItem) GetEnabled() *string {
-	if o == nil {
+func (n *NpaPolicyResponseItem) GetEnabled() *string {
+	if n == nil {
 		return nil
 	}
-	return o.Enabled
+	return n.Enabled
 }
 
-func (o *NpaPolicyResponseItem) GetGroupName() *string {
-	if o == nil {
+func (n *NpaPolicyResponseItem) GetGroupName() *string {
+	if n == nil {
 		return nil
 	}
-	return o.GroupName
+	return n.GroupName
 }
 
-func (o *NpaPolicyResponseItem) GetModifyBy() *string {
-	if o == nil {
+func (n *NpaPolicyResponseItem) GetModifyBy() *string {
+	if n == nil {
 		return nil
 	}
-	return o.ModifyBy
+	return n.ModifyBy
 }
 
-func (o *NpaPolicyResponseItem) GetModifyTime() *string {
-	if o == nil {
+func (n *NpaPolicyResponseItem) GetModifyTime() *string {
+	if n == nil {
 		return nil
 	}
-	return o.ModifyTime
+	return n.ModifyTime
 }
 
-func (o *NpaPolicyResponseItem) GetModifyType() *string {
-	if o == nil {
+func (n *NpaPolicyResponseItem) GetModifyType() *string {
+	if n == nil {
 		return nil
 	}
-	return o.ModifyType
+	return n.ModifyType
 }
 
-func (o *NpaPolicyResponseItem) GetPolicyType() *string {
-	if o == nil {
+func (n *NpaPolicyResponseItem) GetPolicyType() *string {
+	if n == nil {
 		return nil
 	}
-	return o.PolicyType
+	return n.PolicyType
 }
 
-func (o *NpaPolicyResponseItem) GetRuleData() *NpaPolicyRuleData {
-	if o == nil {
+func (n *NpaPolicyResponseItem) GetRuleData() *NpaPolicyRuleData {
+	if n == nil {
 		return nil
 	}
-	return o.RuleData
+	return n.RuleData
 }
 
-func (o *NpaPolicyResponseItem) GetID() *string {
-	if o == nil {
+func (n *NpaPolicyResponseItem) GetID() *string {
+	if n == nil {
 		return nil
 	}
-	return o.ID
+	return n.ID
 }
 
-func (o *NpaPolicyResponseItem) GetRuleName() *string {
-	if o == nil {
+func (n *NpaPolicyResponseItem) GetRuleName() *string {
+	if n == nil {
 		return nil
 	}
-	return o.RuleName
+	return n.RuleName
 }

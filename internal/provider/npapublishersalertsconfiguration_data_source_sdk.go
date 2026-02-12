@@ -9,6 +9,21 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *NPAPublishersAlertsConfigurationDataSourceModel) RefreshFromSharedPublishersAlertGetResponse(ctx context.Context, resp *shared.PublishersAlertGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedPublishersAlertGetResponseData(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPAPublishersAlertsConfigurationDataSourceModel) RefreshFromSharedPublishersAlertGetResponseData(ctx context.Context, resp *shared.PublishersAlertGetResponseData) diag.Diagnostics {
 	var diags diag.Diagnostics
 

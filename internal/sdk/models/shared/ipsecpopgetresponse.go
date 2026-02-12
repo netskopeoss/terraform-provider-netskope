@@ -7,16 +7,16 @@ type IpsecPopGetResponse struct {
 	Status *int64         `json:"status,omitempty"`
 }
 
-func (o *IpsecPopGetResponse) GetResult() []IpsecPopItem {
-	if o == nil {
+func (i *IpsecPopGetResponse) GetResult() []IpsecPopItem {
+	if i == nil {
 		return nil
 	}
-	return o.Result
+	return i.Result
 }
 
-func (o *IpsecPopGetResponse) GetStatus() *int64 {
-	if o == nil {
+func (i *IpsecPopGetResponse) GetStatus() *int64 {
+	if i == nil {
 		return nil
 	}
-	return o.Status
+	return i.Status
 }

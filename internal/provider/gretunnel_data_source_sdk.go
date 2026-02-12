@@ -12,6 +12,26 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *GRETunnelDataSourceModel) RefreshFromSharedGreTunnelGetResponse(ctx context.Context, resp *shared.GreTunnelGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if len(resp.Result) == 0 {
+			diags.AddError("Unexpected response from API", "Missing response body array data.")
+			return diags
+		}
+
+		diags.Append(r.RefreshFromSharedGreTunnelItem(ctx, &resp.Result[0])...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *GRETunnelDataSourceModel) RefreshFromSharedGreTunnelItem(ctx context.Context, resp *shared.GreTunnelItem) diag.Diagnostics {
 	var diags diag.Diagnostics
 

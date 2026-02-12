@@ -38,16 +38,16 @@ type PublishersReleaseGetResponse struct {
 	Status *PublishersReleaseGetResponseStatus `json:"status,omitempty"`
 }
 
-func (o *PublishersReleaseGetResponse) GetData() []ReleaseItem {
-	if o == nil {
+func (p *PublishersReleaseGetResponse) GetData() []ReleaseItem {
+	if p == nil {
 		return nil
 	}
-	return o.Data
+	return p.Data
 }
 
-func (o *PublishersReleaseGetResponse) GetStatus() *PublishersReleaseGetResponseStatus {
-	if o == nil {
+func (p *PublishersReleaseGetResponse) GetStatus() *PublishersReleaseGetResponseStatus {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }

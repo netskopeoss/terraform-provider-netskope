@@ -8,25 +8,25 @@ type ServicePublisherAssignmentItemReachability struct {
 	Reachable   *bool   `json:"reachable,omitempty"`
 }
 
-func (o *ServicePublisherAssignmentItemReachability) GetErrorCode() *int {
-	if o == nil {
+func (s *ServicePublisherAssignmentItemReachability) GetErrorCode() *int {
+	if s == nil {
 		return nil
 	}
-	return o.ErrorCode
+	return s.ErrorCode
 }
 
-func (o *ServicePublisherAssignmentItemReachability) GetErrorString() *string {
-	if o == nil {
+func (s *ServicePublisherAssignmentItemReachability) GetErrorString() *string {
+	if s == nil {
 		return nil
 	}
-	return o.ErrorString
+	return s.ErrorString
 }
 
-func (o *ServicePublisherAssignmentItemReachability) GetReachable() *bool {
-	if o == nil {
+func (s *ServicePublisherAssignmentItemReachability) GetReachable() *bool {
+	if s == nil {
 		return nil
 	}
-	return o.Reachable
+	return s.Reachable
 }
 
 type ServicePublisherAssignmentItem struct {
@@ -39,44 +39,44 @@ type ServicePublisherAssignmentItem struct {
 	ServiceExternalID   *int                                        `json:"service_external_id,omitempty"`
 }
 
-func (o *ServicePublisherAssignmentItem) GetPrimary() *bool {
-	if o == nil {
+func (s *ServicePublisherAssignmentItem) GetPrimary() *bool {
+	if s == nil {
 		return nil
 	}
-	return o.Primary
+	return s.Primary
 }
 
-func (o *ServicePublisherAssignmentItem) GetPublisherID() *string {
-	if o == nil {
+func (s *ServicePublisherAssignmentItem) GetPublisherID() *string {
+	if s == nil {
 		return nil
 	}
-	return o.PublisherID
+	return s.PublisherID
 }
 
-func (o *ServicePublisherAssignmentItem) GetPublisherExternalID() *int {
-	if o == nil {
+func (s *ServicePublisherAssignmentItem) GetPublisherExternalID() *int {
+	if s == nil {
 		return nil
 	}
-	return o.PublisherExternalID
+	return s.PublisherExternalID
 }
 
-func (o *ServicePublisherAssignmentItem) GetPublisherName() *string {
-	if o == nil {
+func (s *ServicePublisherAssignmentItem) GetPublisherName() *string {
+	if s == nil {
 		return nil
 	}
-	return o.PublisherName
+	return s.PublisherName
 }
 
-func (o *ServicePublisherAssignmentItem) GetReachability() *ServicePublisherAssignmentItemReachability {
-	if o == nil {
+func (s *ServicePublisherAssignmentItem) GetReachability() *ServicePublisherAssignmentItemReachability {
+	if s == nil {
 		return nil
 	}
-	return o.Reachability
+	return s.Reachability
 }
 
-func (o *ServicePublisherAssignmentItem) GetServiceExternalID() *int {
-	if o == nil {
+func (s *ServicePublisherAssignmentItem) GetServiceExternalID() *int {
+	if s == nil {
 		return nil
 	}
-	return o.ServiceExternalID
+	return s.ServiceExternalID
 }

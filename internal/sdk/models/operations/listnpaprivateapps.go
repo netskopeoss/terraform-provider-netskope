@@ -18,32 +18,32 @@ type ListNPAPrivateAppsRequest struct {
 	Limit *int `queryParam:"style=form,explode=true,name=limit"`
 }
 
-func (o *ListNPAPrivateAppsRequest) GetFields() *string {
-	if o == nil {
+func (l *ListNPAPrivateAppsRequest) GetFields() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Fields
+	return l.Fields
 }
 
-func (o *ListNPAPrivateAppsRequest) GetQuery() *string {
-	if o == nil {
+func (l *ListNPAPrivateAppsRequest) GetQuery() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Query
+	return l.Query
 }
 
-func (o *ListNPAPrivateAppsRequest) GetOffset() *int {
-	if o == nil {
+func (l *ListNPAPrivateAppsRequest) GetOffset() *int {
+	if l == nil {
 		return nil
 	}
-	return o.Offset
+	return l.Offset
 }
 
-func (o *ListNPAPrivateAppsRequest) GetLimit() *int {
-	if o == nil {
+func (l *ListNPAPrivateAppsRequest) GetLimit() *int {
+	if l == nil {
 		return nil
 	}
-	return o.Limit
+	return l.Limit
 }
 
 type ListNPAPrivateAppsResponse struct {
@@ -59,37 +59,37 @@ type ListNPAPrivateAppsResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *ListNPAPrivateAppsResponse) GetContentType() string {
-	if o == nil {
+func (l *ListNPAPrivateAppsResponse) GetContentType() string {
+	if l == nil {
 		return ""
 	}
-	return o.ContentType
+	return l.ContentType
 }
 
-func (o *ListNPAPrivateAppsResponse) GetStatusCode() int {
-	if o == nil {
+func (l *ListNPAPrivateAppsResponse) GetStatusCode() int {
+	if l == nil {
 		return 0
 	}
-	return o.StatusCode
+	return l.StatusCode
 }
 
-func (o *ListNPAPrivateAppsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (l *ListNPAPrivateAppsResponse) GetRawResponse() *http.Response {
+	if l == nil {
 		return nil
 	}
-	return o.RawResponse
+	return l.RawResponse
 }
 
-func (o *ListNPAPrivateAppsResponse) GetPrivateAppsListResponse() *shared.PrivateAppsListResponse {
-	if o == nil {
+func (l *ListNPAPrivateAppsResponse) GetPrivateAppsListResponse() *shared.PrivateAppsListResponse {
+	if l == nil {
 		return nil
 	}
-	return o.PrivateAppsListResponse
+	return l.PrivateAppsListResponse
 }
 
-func (o *ListNPAPrivateAppsResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
-	if o == nil {
+func (l *ListNPAPrivateAppsResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+	if l == nil {
 		return nil
 	}
-	return o.PrivateAppsResponse400
+	return l.PrivateAppsResponse400
 }

@@ -21,36 +21,36 @@ func (p PublisherPostRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PublisherPostRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &p, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &p, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *PublisherPostRequest) GetPublisherName() string {
-	if o == nil {
+func (p *PublisherPostRequest) GetPublisherName() string {
+	if p == nil {
 		return ""
 	}
-	return o.PublisherName
+	return p.PublisherName
 }
 
-func (o *PublisherPostRequest) GetLabelIds() []string {
-	if o == nil {
+func (p *PublisherPostRequest) GetLabelIds() []string {
+	if p == nil {
 		return nil
 	}
-	return o.LabelIds
+	return p.LabelIds
 }
 
-func (o *PublisherPostRequest) GetLbrokerconnect() *bool {
-	if o == nil {
+func (p *PublisherPostRequest) GetLbrokerconnect() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.Lbrokerconnect
+	return p.Lbrokerconnect
 }
 
-func (o *PublisherPostRequest) GetPublisherUpgradeProfilesID() *int {
-	if o == nil {
+func (p *PublisherPostRequest) GetPublisherUpgradeProfilesID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfilesID
+	return p.PublisherUpgradeProfilesID
 }

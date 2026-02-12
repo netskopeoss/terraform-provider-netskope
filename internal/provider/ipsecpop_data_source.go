@@ -142,11 +142,11 @@ func (r *IPSecPOPDataSource) Read(ctx context.Context, req datasource.ReadReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.IpsecPopGetResponse != nil && res.IpsecPopGetResponse.Result != nil && len(res.IpsecPopGetResponse.Result) > 0) {
+	if !(res.IpsecPopGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedIpsecPopItem(ctx, &res.IpsecPopGetResponse.Result[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedIpsecPopGetResponse(ctx, res.IpsecPopGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

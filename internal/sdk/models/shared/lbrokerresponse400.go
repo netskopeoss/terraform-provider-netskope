@@ -7,16 +7,16 @@ type LbrokerResponse400 struct {
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *LbrokerResponse400) GetResult() *string {
-	if o == nil {
+func (l *LbrokerResponse400) GetResult() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Result
+	return l.Result
 }
 
-func (o *LbrokerResponse400) GetStatus() *int64 {
-	if o == nil {
+func (l *LbrokerResponse400) GetStatus() *int64 {
+	if l == nil {
 		return nil
 	}
-	return o.Status
+	return l.Status
 }

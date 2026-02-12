@@ -23,65 +23,65 @@ type GrePopItem struct {
 	AcceptingTunnels *bool `json:"acceptingtunnels,omitempty"`
 }
 
-func (o *GrePopItem) GetPopID() *string {
-	if o == nil {
+func (g *GrePopItem) GetPopID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.PopID
+	return g.PopID
 }
 
-func (o *GrePopItem) GetPopName() *string {
-	if o == nil {
+func (g *GrePopItem) GetPopName() *string {
+	if g == nil {
 		return nil
 	}
-	return o.PopName
+	return g.PopName
 }
 
-func (o *GrePopItem) GetLocation() *string {
-	if o == nil {
+func (g *GrePopItem) GetLocation() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Location
+	return g.Location
 }
 
-func (o *GrePopItem) GetRegion() *string {
-	if o == nil {
+func (g *GrePopItem) GetRegion() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Region
+	return g.Region
 }
 
-func (o *GrePopItem) GetGateway() *string {
-	if o == nil {
+func (g *GrePopItem) GetGateway() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Gateway
+	return g.Gateway
 }
 
-func (o *GrePopItem) GetProbeIP() *string {
-	if o == nil {
+func (g *GrePopItem) GetProbeIP() *string {
+	if g == nil {
 		return nil
 	}
-	return o.ProbeIP
+	return g.ProbeIP
 }
 
-func (o *GrePopItem) GetBandwidth() *string {
-	if o == nil {
+func (g *GrePopItem) GetBandwidth() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Bandwidth
+	return g.Bandwidth
 }
 
-func (o *GrePopItem) GetDistance() *string {
-	if o == nil {
+func (g *GrePopItem) GetDistance() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Distance
+	return g.Distance
 }
 
-func (o *GrePopItem) GetAcceptingTunnels() *bool {
-	if o == nil {
+func (g *GrePopItem) GetAcceptingTunnels() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.AcceptingTunnels
+	return g.AcceptingTunnels
 }

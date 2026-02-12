@@ -223,11 +223,11 @@ func (r *NPALocalBrokerDataSource) Read(ctx context.Context, req datasource.Read
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.LbrokerResponse != nil && res.LbrokerResponse.Data != nil) {
+	if !(res.LbrokerResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedLbrokerItem(ctx, res.LbrokerResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedLbrokerResponse(ctx, res.LbrokerResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

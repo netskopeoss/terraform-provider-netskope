@@ -20,39 +20,39 @@ type ListNPARulesRequest struct {
 	Sortorder *string `queryParam:"style=form,explode=true,name=sortorder"`
 }
 
-func (o *ListNPARulesRequest) GetFilter() *string {
-	if o == nil {
+func (l *ListNPARulesRequest) GetFilter() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Filter
+	return l.Filter
 }
 
-func (o *ListNPARulesRequest) GetLimit() *int64 {
-	if o == nil {
+func (l *ListNPARulesRequest) GetLimit() *int64 {
+	if l == nil {
 		return nil
 	}
-	return o.Limit
+	return l.Limit
 }
 
-func (o *ListNPARulesRequest) GetOffset() *int64 {
-	if o == nil {
+func (l *ListNPARulesRequest) GetOffset() *int64 {
+	if l == nil {
 		return nil
 	}
-	return o.Offset
+	return l.Offset
 }
 
-func (o *ListNPARulesRequest) GetSortby() *string {
-	if o == nil {
+func (l *ListNPARulesRequest) GetSortby() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Sortby
+	return l.Sortby
 }
 
-func (o *ListNPARulesRequest) GetSortorder() *string {
-	if o == nil {
+func (l *ListNPARulesRequest) GetSortorder() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Sortorder
+	return l.Sortorder
 }
 
 type ListNPARulesResponse struct {
@@ -68,37 +68,37 @@ type ListNPARulesResponse struct {
 	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
 
-func (o *ListNPARulesResponse) GetContentType() string {
-	if o == nil {
+func (l *ListNPARulesResponse) GetContentType() string {
+	if l == nil {
 		return ""
 	}
-	return o.ContentType
+	return l.ContentType
 }
 
-func (o *ListNPARulesResponse) GetStatusCode() int {
-	if o == nil {
+func (l *ListNPARulesResponse) GetStatusCode() int {
+	if l == nil {
 		return 0
 	}
-	return o.StatusCode
+	return l.StatusCode
 }
 
-func (o *ListNPARulesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (l *ListNPARulesResponse) GetRawResponse() *http.Response {
+	if l == nil {
 		return nil
 	}
-	return o.RawResponse
+	return l.RawResponse
 }
 
-func (o *ListNPARulesResponse) GetNpaPolicyResponse() *shared.NpaPolicyResponse {
-	if o == nil {
+func (l *ListNPARulesResponse) GetNpaPolicyResponse() *shared.NpaPolicyResponse {
+	if l == nil {
 		return nil
 	}
-	return o.NpaPolicyResponse
+	return l.NpaPolicyResponse
 }
 
-func (o *ListNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
-	if o == nil {
+func (l *ListNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
+	if l == nil {
 		return nil
 	}
-	return o.NpaPolicyResponse400
+	return l.NpaPolicyResponse400
 }

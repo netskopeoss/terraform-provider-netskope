@@ -7,16 +7,16 @@ type GreResponse400 struct {
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *GreResponse400) GetResult() *string {
-	if o == nil {
+func (g *GreResponse400) GetResult() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Result
+	return g.Result
 }
 
-func (o *GreResponse400) GetStatus() *int64 {
-	if o == nil {
+func (g *GreResponse400) GetStatus() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.Status
+	return g.Status
 }

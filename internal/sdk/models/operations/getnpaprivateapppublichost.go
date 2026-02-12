@@ -17,50 +17,50 @@ type GetNPAPrivateAppPublicHostRequestBody struct {
 	RealHost         *string               `json:"real_host,omitempty"`
 }
 
-func (o *GetNPAPrivateAppPublicHostRequestBody) GetClientlessAccess() *bool {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostRequestBody) GetClientlessAccess() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.ClientlessAccess
+	return g.ClientlessAccess
 }
 
-func (o *GetNPAPrivateAppPublicHostRequestBody) GetHost() *string {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostRequestBody) GetHost() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Host
+	return g.Host
 }
 
-func (o *GetNPAPrivateAppPublicHostRequestBody) GetIsUserPortalApp() *bool {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostRequestBody) GetIsUserPortalApp() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.IsUserPortalApp
+	return g.IsUserPortalApp
 }
 
-func (o *GetNPAPrivateAppPublicHostRequestBody) GetProtocols() []shared.ProtocolItem {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostRequestBody) GetProtocols() []shared.ProtocolItem {
+	if g == nil {
 		return nil
 	}
-	return o.Protocols
+	return g.Protocols
 }
 
-func (o *GetNPAPrivateAppPublicHostRequestBody) GetRealHost() *string {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostRequestBody) GetRealHost() *string {
+	if g == nil {
 		return nil
 	}
-	return o.RealHost
+	return g.RealHost
 }
 
 type GetNPAPrivateAppPublicHostData struct {
 	PublicHost *string `json:"public_host,omitempty"`
 }
 
-func (o *GetNPAPrivateAppPublicHostData) GetPublicHost() *string {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostData) GetPublicHost() *string {
+	if g == nil {
 		return nil
 	}
-	return o.PublicHost
+	return g.PublicHost
 }
 
 type Status string
@@ -95,18 +95,18 @@ type GetNPAPrivateAppPublicHostResponseBody struct {
 	Status *Status                         `json:"status,omitempty"`
 }
 
-func (o *GetNPAPrivateAppPublicHostResponseBody) GetData() *GetNPAPrivateAppPublicHostData {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostResponseBody) GetData() *GetNPAPrivateAppPublicHostData {
+	if g == nil {
 		return nil
 	}
-	return o.Data
+	return g.Data
 }
 
-func (o *GetNPAPrivateAppPublicHostResponseBody) GetStatus() *Status {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostResponseBody) GetStatus() *Status {
+	if g == nil {
 		return nil
 	}
-	return o.Status
+	return g.Status
 }
 
 type GetNPAPrivateAppPublicHostResponse struct {
@@ -122,37 +122,37 @@ type GetNPAPrivateAppPublicHostResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *GetNPAPrivateAppPublicHostResponse) GetContentType() string {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetNPAPrivateAppPublicHostResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetNPAPrivateAppPublicHostResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetNPAPrivateAppPublicHostResponse) GetObject() *GetNPAPrivateAppPublicHostResponseBody {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostResponse) GetObject() *GetNPAPrivateAppPublicHostResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.Object
+	return g.Object
 }
 
-func (o *GetNPAPrivateAppPublicHostResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
-	if o == nil {
+func (g *GetNPAPrivateAppPublicHostResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.PrivateAppsResponse400
+	return g.PrivateAppsResponse400
 }

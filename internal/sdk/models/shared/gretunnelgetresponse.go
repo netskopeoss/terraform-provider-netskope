@@ -7,16 +7,16 @@ type GreTunnelGetResponse struct {
 	Status *int64          `json:"status,omitempty"`
 }
 
-func (o *GreTunnelGetResponse) GetResult() []GreTunnelItem {
-	if o == nil {
+func (g *GreTunnelGetResponse) GetResult() []GreTunnelItem {
+	if g == nil {
 		return nil
 	}
-	return o.Result
+	return g.Result
 }
 
-func (o *GreTunnelGetResponse) GetStatus() *int64 {
-	if o == nil {
+func (g *GreTunnelGetResponse) GetStatus() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.Status
+	return g.Status
 }

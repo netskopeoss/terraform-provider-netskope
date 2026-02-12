@@ -8,23 +8,23 @@ type IpsecTunnelListResponse struct {
 	Total  *int              `json:"total,omitempty"`
 }
 
-func (o *IpsecTunnelListResponse) GetResult() []IpsecTunnelItem {
-	if o == nil {
+func (i *IpsecTunnelListResponse) GetResult() []IpsecTunnelItem {
+	if i == nil {
 		return nil
 	}
-	return o.Result
+	return i.Result
 }
 
-func (o *IpsecTunnelListResponse) GetStatus() *int64 {
-	if o == nil {
+func (i *IpsecTunnelListResponse) GetStatus() *int64 {
+	if i == nil {
 		return nil
 	}
-	return o.Status
+	return i.Status
 }
 
-func (o *IpsecTunnelListResponse) GetTotal() *int {
-	if o == nil {
+func (i *IpsecTunnelListResponse) GetTotal() *int {
+	if i == nil {
 		return nil
 	}
-	return o.Total
+	return i.Total
 }

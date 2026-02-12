@@ -20,37 +20,37 @@ type CreateNPAPublishersResponse struct {
 	PublishersResponse400 *shared.PublishersResponse400
 }
 
-func (o *CreateNPAPublishersResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateNPAPublishersResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateNPAPublishersResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateNPAPublishersResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateNPAPublishersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateNPAPublishersResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }
 
-func (o *CreateNPAPublishersResponse) GetPublisherResponse() *shared.PublisherResponse {
-	if o == nil {
+func (c *CreateNPAPublishersResponse) GetPublisherResponse() *shared.PublisherResponse {
+	if c == nil {
 		return nil
 	}
-	return o.PublisherResponse
+	return c.PublisherResponse
 }
 
-func (o *CreateNPAPublishersResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
-	if o == nil {
+func (c *CreateNPAPublishersResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if c == nil {
 		return nil
 	}
-	return o.PublishersResponse400
+	return c.PublishersResponse400
 }
