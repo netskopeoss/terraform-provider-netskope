@@ -7,16 +7,16 @@ type PrivateAppsResponse400 struct {
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *PrivateAppsResponse400) GetResult() *string {
-	if o == nil {
+func (p *PrivateAppsResponse400) GetResult() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Result
+	return p.Result
 }
 
-func (o *PrivateAppsResponse400) GetStatus() *int64 {
-	if o == nil {
+func (p *PrivateAppsResponse400) GetStatus() *int64 {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }

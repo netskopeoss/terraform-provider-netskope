@@ -47,16 +47,16 @@ type NpaPolicyRuleDlp struct {
 	Actions    []Actions `json:"actions,omitempty"`
 }
 
-func (o *NpaPolicyRuleDlp) GetDlpProfile() *string {
-	if o == nil {
+func (n *NpaPolicyRuleDlp) GetDlpProfile() *string {
+	if n == nil {
 		return nil
 	}
-	return o.DlpProfile
+	return n.DlpProfile
 }
 
-func (o *NpaPolicyRuleDlp) GetActions() []Actions {
-	if o == nil {
+func (n *NpaPolicyRuleDlp) GetActions() []Actions {
+	if n == nil {
 		return nil
 	}
-	return o.Actions
+	return n.Actions
 }

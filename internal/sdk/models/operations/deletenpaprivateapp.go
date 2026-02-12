@@ -12,11 +12,11 @@ type DeleteNPAPrivateAppRequest struct {
 	PrivateAppID int `pathParam:"style=simple,explode=false,name=private_app_id"`
 }
 
-func (o *DeleteNPAPrivateAppRequest) GetPrivateAppID() int {
-	if o == nil {
+func (d *DeleteNPAPrivateAppRequest) GetPrivateAppID() int {
+	if d == nil {
 		return 0
 	}
-	return o.PrivateAppID
+	return d.PrivateAppID
 }
 
 // DeleteNPAPrivateAppResponseBody - successful operation
@@ -24,11 +24,11 @@ type DeleteNPAPrivateAppResponseBody struct {
 	Status *shared.StatusEnum `json:"status,omitempty"`
 }
 
-func (o *DeleteNPAPrivateAppResponseBody) GetStatus() *shared.StatusEnum {
-	if o == nil {
+func (d *DeleteNPAPrivateAppResponseBody) GetStatus() *shared.StatusEnum {
+	if d == nil {
 		return nil
 	}
-	return o.Status
+	return d.Status
 }
 
 type DeleteNPAPrivateAppResponse struct {
@@ -44,37 +44,37 @@ type DeleteNPAPrivateAppResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *DeleteNPAPrivateAppResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteNPAPrivateAppResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteNPAPrivateAppResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteNPAPrivateAppResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteNPAPrivateAppResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteNPAPrivateAppResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }
 
-func (o *DeleteNPAPrivateAppResponse) GetObject() *DeleteNPAPrivateAppResponseBody {
-	if o == nil {
+func (d *DeleteNPAPrivateAppResponse) GetObject() *DeleteNPAPrivateAppResponseBody {
+	if d == nil {
 		return nil
 	}
-	return o.Object
+	return d.Object
 }
 
-func (o *DeleteNPAPrivateAppResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
-	if o == nil {
+func (d *DeleteNPAPrivateAppResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+	if d == nil {
 		return nil
 	}
-	return o.PrivateAppsResponse400
+	return d.PrivateAppsResponse400
 }

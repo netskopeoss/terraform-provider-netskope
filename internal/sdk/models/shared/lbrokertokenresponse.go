@@ -11,11 +11,11 @@ type LbrokerTokenResponseData struct {
 	Token *string `json:"token,omitempty"`
 }
 
-func (o *LbrokerTokenResponseData) GetToken() *string {
-	if o == nil {
+func (l *LbrokerTokenResponseData) GetToken() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Token
+	return l.Token
 }
 
 type LbrokerTokenResponseStatus string
@@ -49,16 +49,16 @@ type LbrokerTokenResponse struct {
 	Status *LbrokerTokenResponseStatus `json:"status,omitempty"`
 }
 
-func (o *LbrokerTokenResponse) GetData() *LbrokerTokenResponseData {
-	if o == nil {
+func (l *LbrokerTokenResponse) GetData() *LbrokerTokenResponseData {
+	if l == nil {
 		return nil
 	}
-	return o.Data
+	return l.Data
 }
 
-func (o *LbrokerTokenResponse) GetStatus() *LbrokerTokenResponseStatus {
-	if o == nil {
+func (l *LbrokerTokenResponse) GetStatus() *LbrokerTokenResponseStatus {
+	if l == nil {
 		return nil
 	}
-	return o.Status
+	return l.Status
 }

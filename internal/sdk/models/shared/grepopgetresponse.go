@@ -7,16 +7,16 @@ type GrePopGetResponse struct {
 	Status *int64       `json:"status,omitempty"`
 }
 
-func (o *GrePopGetResponse) GetResult() []GrePopItem {
-	if o == nil {
+func (g *GrePopGetResponse) GetResult() []GrePopItem {
+	if g == nil {
 		return nil
 	}
-	return o.Result
+	return g.Result
 }
 
-func (o *GrePopGetResponse) GetStatus() *int64 {
-	if o == nil {
+func (g *GrePopGetResponse) GetStatus() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.Status
+	return g.Status
 }

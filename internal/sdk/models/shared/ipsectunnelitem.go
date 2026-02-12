@@ -7,18 +7,18 @@ type Xff struct {
 	Iplist  []string `json:"iplist,omitempty"`
 }
 
-func (o *Xff) GetEnabled() *bool {
-	if o == nil {
+func (x *Xff) GetEnabled() *bool {
+	if x == nil {
 		return nil
 	}
-	return o.Enabled
+	return x.Enabled
 }
 
-func (o *Xff) GetIplist() []string {
-	if o == nil {
+func (x *Xff) GetIplist() []string {
+	if x == nil {
 		return nil
 	}
-	return o.Iplist
+	return x.Iplist
 }
 
 type OptionsObj struct {
@@ -75,100 +75,100 @@ type IpsecTunnelItem struct {
 	Pops    []IpsecTunnelPopItem `json:"pops,omitempty"`
 }
 
-func (o *IpsecTunnelItem) GetTunnelID() *int {
-	if o == nil {
+func (i *IpsecTunnelItem) GetTunnelID() *int {
+	if i == nil {
 		return nil
 	}
-	return o.TunnelID
+	return i.TunnelID
 }
 
-func (o *IpsecTunnelItem) GetSite() *string {
-	if o == nil {
+func (i *IpsecTunnelItem) GetSite() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Site
+	return i.Site
 }
 
-func (o *IpsecTunnelItem) GetSourceIP() *string {
-	if o == nil {
+func (i *IpsecTunnelItem) GetSourceIP() *string {
+	if i == nil {
 		return nil
 	}
-	return o.SourceIP
+	return i.SourceIP
 }
 
-func (o *IpsecTunnelItem) GetSourceIdentity() *string {
-	if o == nil {
+func (i *IpsecTunnelItem) GetSourceIdentity() *string {
+	if i == nil {
 		return nil
 	}
-	return o.SourceIdentity
+	return i.SourceIdentity
 }
 
-func (o *IpsecTunnelItem) GetSourceType() *string {
-	if o == nil {
+func (i *IpsecTunnelItem) GetSourceType() *string {
+	if i == nil {
 		return nil
 	}
-	return o.SourceType
+	return i.SourceType
 }
 
-func (o *IpsecTunnelItem) GetEnabled() *bool {
-	if o == nil {
+func (i *IpsecTunnelItem) GetEnabled() *bool {
+	if i == nil {
 		return nil
 	}
-	return o.Enabled
+	return i.Enabled
 }
 
-func (o *IpsecTunnelItem) GetBandwidth() *int {
-	if o == nil {
+func (i *IpsecTunnelItem) GetBandwidth() *int {
+	if i == nil {
 		return nil
 	}
-	return o.Bandwidth
+	return i.Bandwidth
 }
 
-func (o *IpsecTunnelItem) GetEncryption() *string {
-	if o == nil {
+func (i *IpsecTunnelItem) GetEncryption() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Encryption
+	return i.Encryption
 }
 
-func (o *IpsecTunnelItem) GetTemplate() *string {
-	if o == nil {
+func (i *IpsecTunnelItem) GetTemplate() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Template
+	return i.Template
 }
 
-func (o *IpsecTunnelItem) GetVendor() *string {
-	if o == nil {
+func (i *IpsecTunnelItem) GetVendor() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Vendor
+	return i.Vendor
 }
 
-func (o *IpsecTunnelItem) GetNotes() *string {
-	if o == nil {
+func (i *IpsecTunnelItem) GetNotes() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Notes
+	return i.Notes
 }
 
-func (o *IpsecTunnelItem) GetVersion() *int {
-	if o == nil {
+func (i *IpsecTunnelItem) GetVersion() *int {
+	if i == nil {
 		return nil
 	}
-	return o.Version
+	return i.Version
 }
 
-func (o *IpsecTunnelItem) GetOptions() *OptionsObj {
-	if o == nil {
+func (i *IpsecTunnelItem) GetOptions() *OptionsObj {
+	if i == nil {
 		return nil
 	}
-	return o.Options
+	return i.Options
 }
 
-func (o *IpsecTunnelItem) GetPops() []IpsecTunnelPopItem {
-	if o == nil {
+func (i *IpsecTunnelItem) GetPops() []IpsecTunnelPopItem {
+	if i == nil {
 		return nil
 	}
-	return o.Pops
+	return i.Pops
 }

@@ -9,6 +9,21 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromSharedPublishersAlertGetResponse(ctx context.Context, resp *shared.PublishersAlertGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedPublishersAlertGetResponseData(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPAPublishersAlertsConfigurationResourceModel) RefreshFromSharedPublishersAlertGetResponseData(ctx context.Context, resp *shared.PublishersAlertGetResponseData) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -45,8 +60,8 @@ func (r *NPAPublishersAlertsConfigurationResourceModel) ToSharedPublishersAlertP
 	var diags diag.Diagnostics
 
 	adminUsers := make([]string, 0, len(r.AdminUsers))
-	for _, adminUsersItem := range r.AdminUsers {
-		adminUsers = append(adminUsers, adminUsersItem.ValueString())
+	for adminUsersIndex := range r.AdminUsers {
+		adminUsers = append(adminUsers, r.AdminUsers[adminUsersIndex].ValueString())
 	}
 	eventTypes := make([]shared.EventTypes, 0, len(r.EventTypes))
 	for _, eventTypesItem := range r.EventTypes {

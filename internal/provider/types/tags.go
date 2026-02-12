@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type TagItem struct {
+type Tags struct {
 	TagID   types.Int32  `tfsdk:"tag_id"`
 	TagName types.String `tfsdk:"tag_name"`
 }

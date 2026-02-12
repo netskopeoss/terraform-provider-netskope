@@ -66,85 +66,85 @@ func (l LbrokerPostRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (l *LbrokerPostRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &l, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &l, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *LbrokerPostRequest) GetLocalBrokerName() *string {
-	if o == nil {
+func (l *LbrokerPostRequest) GetLocalBrokerName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.LocalBrokerName
+	return l.LocalBrokerName
 }
 
-func (o *LbrokerPostRequest) GetCityName() *string {
-	if o == nil {
+func (l *LbrokerPostRequest) GetCityName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.CityName
+	return l.CityName
 }
 
-func (o *LbrokerPostRequest) GetRegionName() *string {
-	if o == nil {
+func (l *LbrokerPostRequest) GetRegionName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.RegionName
+	return l.RegionName
 }
 
-func (o *LbrokerPostRequest) GetCountryName() *string {
-	if o == nil {
+func (l *LbrokerPostRequest) GetCountryName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.CountryName
+	return l.CountryName
 }
 
-func (o *LbrokerPostRequest) GetCountryCode() *string {
-	if o == nil {
+func (l *LbrokerPostRequest) GetCountryCode() *string {
+	if l == nil {
 		return nil
 	}
-	return o.CountryCode
+	return l.CountryCode
 }
 
-func (o *LbrokerPostRequest) GetLatitude() *float32 {
-	if o == nil {
+func (l *LbrokerPostRequest) GetLatitude() *float32 {
+	if l == nil {
 		return nil
 	}
-	return o.Latitude
+	return l.Latitude
 }
 
-func (o *LbrokerPostRequest) GetLongitude() *float32 {
-	if o == nil {
+func (l *LbrokerPostRequest) GetLongitude() *float32 {
+	if l == nil {
 		return nil
 	}
-	return o.Longitude
+	return l.Longitude
 }
 
-func (o *LbrokerPostRequest) GetCustomPublicIP() *string {
-	if o == nil {
+func (l *LbrokerPostRequest) GetCustomPublicIP() *string {
+	if l == nil {
 		return nil
 	}
-	return o.CustomPublicIP
+	return l.CustomPublicIP
 }
 
-func (o *LbrokerPostRequest) GetCustomPrivateIP() *string {
-	if o == nil {
+func (l *LbrokerPostRequest) GetCustomPrivateIP() *string {
+	if l == nil {
 		return nil
 	}
-	return o.CustomPrivateIP
+	return l.CustomPrivateIP
 }
 
-func (o *LbrokerPostRequest) GetAccessViaPublicIP() *LbrokerPostRequestAccessViaPublicIP {
-	if o == nil {
+func (l *LbrokerPostRequest) GetAccessViaPublicIP() *LbrokerPostRequestAccessViaPublicIP {
+	if l == nil {
 		return nil
 	}
-	return o.AccessViaPublicIP
+	return l.AccessViaPublicIP
 }
 
-func (o *LbrokerPostRequest) GetLabelIds() []string {
-	if o == nil {
+func (l *LbrokerPostRequest) GetLabelIds() []string {
+	if l == nil {
 		return nil
 	}
-	return o.LabelIds
+	return l.LabelIds
 }

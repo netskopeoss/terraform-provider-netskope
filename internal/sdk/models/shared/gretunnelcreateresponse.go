@@ -8,23 +8,23 @@ type GreTunnelCreateResponse struct {
 	Status *int64          `json:"status,omitempty"`
 }
 
-func (o *GreTunnelCreateResponse) GetData() []GreTunnelItem {
-	if o == nil {
+func (g *GreTunnelCreateResponse) GetData() []GreTunnelItem {
+	if g == nil {
 		return nil
 	}
-	return o.Data
+	return g.Data
 }
 
-func (o *GreTunnelCreateResponse) GetResult() *string {
-	if o == nil {
+func (g *GreTunnelCreateResponse) GetResult() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Result
+	return g.Result
 }
 
-func (o *GreTunnelCreateResponse) GetStatus() *int64 {
-	if o == nil {
+func (g *GreTunnelCreateResponse) GetStatus() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.Status
+	return g.Status
 }

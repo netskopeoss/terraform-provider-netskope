@@ -13,18 +13,18 @@ type UpdateGRETunnelRequest struct {
 	GreTunnelRequest shared.GreTunnelRequest `request:"mediaType=application/json"`
 }
 
-func (o *UpdateGRETunnelRequest) GetTunnelID() int {
-	if o == nil {
+func (u *UpdateGRETunnelRequest) GetTunnelID() int {
+	if u == nil {
 		return 0
 	}
-	return o.TunnelID
+	return u.TunnelID
 }
 
-func (o *UpdateGRETunnelRequest) GetGreTunnelRequest() shared.GreTunnelRequest {
-	if o == nil {
+func (u *UpdateGRETunnelRequest) GetGreTunnelRequest() shared.GreTunnelRequest {
+	if u == nil {
 		return shared.GreTunnelRequest{}
 	}
-	return o.GreTunnelRequest
+	return u.GreTunnelRequest
 }
 
 type UpdateGRETunnelResponse struct {
@@ -40,37 +40,37 @@ type UpdateGRETunnelResponse struct {
 	GreResponse400 *shared.GreResponse400
 }
 
-func (o *UpdateGRETunnelResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateGRETunnelResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateGRETunnelResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateGRETunnelResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateGRETunnelResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateGRETunnelResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateGRETunnelResponse) GetGreTunnelCreateResponse() *shared.GreTunnelCreateResponse {
-	if o == nil {
+func (u *UpdateGRETunnelResponse) GetGreTunnelCreateResponse() *shared.GreTunnelCreateResponse {
+	if u == nil {
 		return nil
 	}
-	return o.GreTunnelCreateResponse
+	return u.GreTunnelCreateResponse
 }
 
-func (o *UpdateGRETunnelResponse) GetGreResponse400() *shared.GreResponse400 {
-	if o == nil {
+func (u *UpdateGRETunnelResponse) GetGreResponse400() *shared.GreResponse400 {
+	if u == nil {
 		return nil
 	}
-	return o.GreResponse400
+	return u.GreResponse400
 }

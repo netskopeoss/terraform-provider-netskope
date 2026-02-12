@@ -6,11 +6,11 @@ type Data struct {
 	PrivateApps []PrivateAppsItem `json:"private_apps,omitempty"`
 }
 
-func (o *Data) GetPrivateApps() []PrivateAppsItem {
-	if o == nil {
+func (d *Data) GetPrivateApps() []PrivateAppsItem {
+	if d == nil {
 		return nil
 	}
-	return o.PrivateApps
+	return d.PrivateApps
 }
 
 type PrivateAppsListResponse struct {
@@ -19,23 +19,23 @@ type PrivateAppsListResponse struct {
 	Total  *int        `json:"total,omitempty"`
 }
 
-func (o *PrivateAppsListResponse) GetData() *Data {
-	if o == nil {
+func (p *PrivateAppsListResponse) GetData() *Data {
+	if p == nil {
 		return nil
 	}
-	return o.Data
+	return p.Data
 }
 
-func (o *PrivateAppsListResponse) GetStatus() *StatusEnum {
-	if o == nil {
+func (p *PrivateAppsListResponse) GetStatus() *StatusEnum {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }
 
-func (o *PrivateAppsListResponse) GetTotal() *int {
-	if o == nil {
+func (p *PrivateAppsListResponse) GetTotal() *int {
+	if p == nil {
 		return nil
 	}
-	return o.Total
+	return p.Total
 }

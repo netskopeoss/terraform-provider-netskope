@@ -6,9 +6,9 @@ type Security struct {
 	APIKey string `security:"scheme,type=apiKey,subtype=header,name=Netskope-Api-Token"`
 }
 
-func (o *Security) GetAPIKey() string {
-	if o == nil {
+func (s *Security) GetAPIKey() string {
+	if s == nil {
 		return ""
 	}
-	return o.APIKey
+	return s.APIKey
 }

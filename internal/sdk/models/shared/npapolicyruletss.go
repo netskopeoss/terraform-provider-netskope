@@ -72,32 +72,32 @@ type NpaPolicyRuleTssActions struct {
 	Template           *string                     `json:"template,omitempty"`
 }
 
-func (o *NpaPolicyRuleTssActions) GetActionName() *NpaPolicyRuleTssActionName {
-	if o == nil {
+func (n *NpaPolicyRuleTssActions) GetActionName() *NpaPolicyRuleTssActionName {
+	if n == nil {
 		return nil
 	}
-	return o.ActionName
+	return n.ActionName
 }
 
-func (o *NpaPolicyRuleTssActions) GetRemediationProfile() *string {
-	if o == nil {
+func (n *NpaPolicyRuleTssActions) GetRemediationProfile() *string {
+	if n == nil {
 		return nil
 	}
-	return o.RemediationProfile
+	return n.RemediationProfile
 }
 
-func (o *NpaPolicyRuleTssActions) GetSeverity() *Severity {
-	if o == nil {
+func (n *NpaPolicyRuleTssActions) GetSeverity() *Severity {
+	if n == nil {
 		return nil
 	}
-	return o.Severity
+	return n.Severity
 }
 
-func (o *NpaPolicyRuleTssActions) GetTemplate() *string {
-	if o == nil {
+func (n *NpaPolicyRuleTssActions) GetTemplate() *string {
+	if n == nil {
 		return nil
 	}
-	return o.Template
+	return n.Template
 }
 
 type NpaPolicyRuleTss struct {
@@ -105,16 +105,16 @@ type NpaPolicyRuleTss struct {
 	Actions    []NpaPolicyRuleTssActions `json:"actions,omitempty"`
 }
 
-func (o *NpaPolicyRuleTss) GetTssProfile() *string {
-	if o == nil {
+func (n *NpaPolicyRuleTss) GetTssProfile() *string {
+	if n == nil {
 		return nil
 	}
-	return o.TssProfile
+	return n.TssProfile
 }
 
-func (o *NpaPolicyRuleTss) GetActions() []NpaPolicyRuleTssActions {
-	if o == nil {
+func (n *NpaPolicyRuleTss) GetActions() []NpaPolicyRuleTssActions {
+	if n == nil {
 		return nil
 	}
-	return o.Actions
+	return n.Actions
 }

@@ -20,37 +20,37 @@ type CreateGRETunnelResponse struct {
 	GreResponse400 *shared.GreResponse400
 }
 
-func (o *CreateGRETunnelResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateGRETunnelResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateGRETunnelResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateGRETunnelResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateGRETunnelResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateGRETunnelResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }
 
-func (o *CreateGRETunnelResponse) GetGreTunnelCreateResponse() *shared.GreTunnelCreateResponse {
-	if o == nil {
+func (c *CreateGRETunnelResponse) GetGreTunnelCreateResponse() *shared.GreTunnelCreateResponse {
+	if c == nil {
 		return nil
 	}
-	return o.GreTunnelCreateResponse
+	return c.GreTunnelCreateResponse
 }
 
-func (o *CreateGRETunnelResponse) GetGreResponse400() *shared.GreResponse400 {
-	if o == nil {
+func (c *CreateGRETunnelResponse) GetGreResponse400() *shared.GreResponse400 {
+	if c == nil {
 		return nil
 	}
-	return o.GreResponse400
+	return c.GreResponse400
 }

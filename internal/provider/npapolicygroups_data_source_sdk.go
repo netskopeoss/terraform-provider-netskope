@@ -10,6 +10,21 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *NPAPolicyGroupsDataSourceModel) RefreshFromOperationsGetNPAPolicyGroupsResponseBody(ctx context.Context, resp *operations.GetNPAPolicyGroupsResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedNpaPolicygroupResponseItem(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPAPolicyGroupsDataSourceModel) RefreshFromSharedNpaPolicygroupResponseItem(ctx context.Context, resp *shared.NpaPolicygroupResponseItem) diag.Diagnostics {
 	var diags diag.Diagnostics
 

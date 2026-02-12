@@ -41,18 +41,18 @@ type CreateNPARulesResponseBody struct {
 	Status *CreateNPARulesStatus         `json:"status,omitempty"`
 }
 
-func (o *CreateNPARulesResponseBody) GetData() *shared.NpaPolicyResponseItem {
-	if o == nil {
+func (c *CreateNPARulesResponseBody) GetData() *shared.NpaPolicyResponseItem {
+	if c == nil {
 		return nil
 	}
-	return o.Data
+	return c.Data
 }
 
-func (o *CreateNPARulesResponseBody) GetStatus() *CreateNPARulesStatus {
-	if o == nil {
+func (c *CreateNPARulesResponseBody) GetStatus() *CreateNPARulesStatus {
+	if c == nil {
 		return nil
 	}
-	return o.Status
+	return c.Status
 }
 
 type CreateNPARulesResponse struct {
@@ -68,37 +68,37 @@ type CreateNPARulesResponse struct {
 	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
 
-func (o *CreateNPARulesResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateNPARulesResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateNPARulesResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateNPARulesResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateNPARulesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateNPARulesResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }
 
-func (o *CreateNPARulesResponse) GetObject() *CreateNPARulesResponseBody {
-	if o == nil {
+func (c *CreateNPARulesResponse) GetObject() *CreateNPARulesResponseBody {
+	if c == nil {
 		return nil
 	}
-	return o.Object
+	return c.Object
 }
 
-func (o *CreateNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
-	if o == nil {
+func (c *CreateNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
+	if c == nil {
 		return nil
 	}
-	return o.NpaPolicyResponse400
+	return c.NpaPolicyResponse400
 }

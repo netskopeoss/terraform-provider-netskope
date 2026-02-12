@@ -11,46 +11,46 @@ type Phase1 struct {
 	Salifetime     *string `json:"salifetime,omitempty"`
 }
 
-func (o *Phase1) GetDhgroup() *string {
-	if o == nil {
+func (p *Phase1) GetDhgroup() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Dhgroup
+	return p.Dhgroup
 }
 
-func (o *Phase1) GetDpd() *bool {
-	if o == nil {
+func (p *Phase1) GetDpd() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.Dpd
+	return p.Dpd
 }
 
-func (o *Phase1) GetEncryptionalgo() *string {
-	if o == nil {
+func (p *Phase1) GetEncryptionalgo() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Encryptionalgo
+	return p.Encryptionalgo
 }
 
-func (o *Phase1) GetIkeversion() *string {
-	if o == nil {
+func (p *Phase1) GetIkeversion() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Ikeversion
+	return p.Ikeversion
 }
 
-func (o *Phase1) GetIntegrityalgo() *string {
-	if o == nil {
+func (p *Phase1) GetIntegrityalgo() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Integrityalgo
+	return p.Integrityalgo
 }
 
-func (o *Phase1) GetSalifetime() *string {
-	if o == nil {
+func (p *Phase1) GetSalifetime() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Salifetime
+	return p.Salifetime
 }
 
 type Phase2 struct {
@@ -61,39 +61,39 @@ type Phase2 struct {
 	Salifetime     *string `json:"salifetime,omitempty"`
 }
 
-func (o *Phase2) GetDhgroup() *string {
-	if o == nil {
+func (p *Phase2) GetDhgroup() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Dhgroup
+	return p.Dhgroup
 }
 
-func (o *Phase2) GetEncryptionalgo() *string {
-	if o == nil {
+func (p *Phase2) GetEncryptionalgo() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Encryptionalgo
+	return p.Encryptionalgo
 }
 
-func (o *Phase2) GetIntegrityalgo() *string {
-	if o == nil {
+func (p *Phase2) GetIntegrityalgo() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Integrityalgo
+	return p.Integrityalgo
 }
 
-func (o *Phase2) GetPfs() *bool {
-	if o == nil {
+func (p *Phase2) GetPfs() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.Pfs
+	return p.Pfs
 }
 
-func (o *Phase2) GetSalifetime() *string {
-	if o == nil {
+func (p *Phase2) GetSalifetime() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Salifetime
+	return p.Salifetime
 }
 
 type IpsecPopItemOptions struct {
@@ -101,18 +101,18 @@ type IpsecPopItemOptions struct {
 	Phase2 *Phase2 `json:"phase2,omitempty"`
 }
 
-func (o *IpsecPopItemOptions) GetPhase1() *Phase1 {
-	if o == nil {
+func (i *IpsecPopItemOptions) GetPhase1() *Phase1 {
+	if i == nil {
 		return nil
 	}
-	return o.Phase1
+	return i.Phase1
 }
 
-func (o *IpsecPopItemOptions) GetPhase2() *Phase2 {
-	if o == nil {
+func (i *IpsecPopItemOptions) GetPhase2() *Phase2 {
+	if i == nil {
 		return nil
 	}
-	return o.Phase2
+	return i.Phase2
 }
 
 type IpsecPopItem struct {
@@ -128,72 +128,72 @@ type IpsecPopItem struct {
 	Options          *IpsecPopItemOptions `json:"options,omitempty"`
 }
 
-func (o *IpsecPopItem) GetPopID() *string {
-	if o == nil {
+func (i *IpsecPopItem) GetPopID() *string {
+	if i == nil {
 		return nil
 	}
-	return o.PopID
+	return i.PopID
 }
 
-func (o *IpsecPopItem) GetPopName() *string {
-	if o == nil {
+func (i *IpsecPopItem) GetPopName() *string {
+	if i == nil {
 		return nil
 	}
-	return o.PopName
+	return i.PopName
 }
 
-func (o *IpsecPopItem) GetLocation() *string {
-	if o == nil {
+func (i *IpsecPopItem) GetLocation() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Location
+	return i.Location
 }
 
-func (o *IpsecPopItem) GetRegion() *string {
-	if o == nil {
+func (i *IpsecPopItem) GetRegion() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Region
+	return i.Region
 }
 
-func (o *IpsecPopItem) GetGateway() *string {
-	if o == nil {
+func (i *IpsecPopItem) GetGateway() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Gateway
+	return i.Gateway
 }
 
-func (o *IpsecPopItem) GetProbeIP() *string {
-	if o == nil {
+func (i *IpsecPopItem) GetProbeIP() *string {
+	if i == nil {
 		return nil
 	}
-	return o.ProbeIP
+	return i.ProbeIP
 }
 
-func (o *IpsecPopItem) GetBandwidth() *string {
-	if o == nil {
+func (i *IpsecPopItem) GetBandwidth() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Bandwidth
+	return i.Bandwidth
 }
 
-func (o *IpsecPopItem) GetDistance() *string {
-	if o == nil {
+func (i *IpsecPopItem) GetDistance() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Distance
+	return i.Distance
 }
 
-func (o *IpsecPopItem) GetAcceptingTunnels() *bool {
-	if o == nil {
+func (i *IpsecPopItem) GetAcceptingTunnels() *bool {
+	if i == nil {
 		return nil
 	}
-	return o.AcceptingTunnels
+	return i.AcceptingTunnels
 }
 
-func (o *IpsecPopItem) GetOptions() *IpsecPopItemOptions {
-	if o == nil {
+func (i *IpsecPopItem) GetOptions() *IpsecPopItemOptions {
+	if i == nil {
 		return nil
 	}
-	return o.Options
+	return i.Options
 }

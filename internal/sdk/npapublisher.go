@@ -72,7 +72,7 @@ func (s *NPAPublisher) Create(ctx context.Context, request shared.PublisherPostR
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createNPAPublishers",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -237,7 +237,7 @@ func (s *NPAPublisher) Delete(ctx context.Context, request operations.DeleteNPAP
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteNPAPublishers",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -345,6 +345,7 @@ func (s *NPAPublisher) Delete(ctx context.Context, request operations.DeleteNPAP
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -396,7 +397,7 @@ func (s *NPAPublisher) Read(ctx context.Context, request operations.GetNPAPublis
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getNPAPublisherById",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -504,6 +505,7 @@ func (s *NPAPublisher) Read(ctx context.Context, request operations.GetNPAPublis
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -557,7 +559,7 @@ func (s *NPAPublisher) Update(ctx context.Context, request operations.UpdateNPAP
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateNPAPublisherById",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PublisherPatchRequest", "json", `request:"mediaType=application/json"`)

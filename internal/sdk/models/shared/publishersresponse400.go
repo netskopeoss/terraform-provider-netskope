@@ -7,16 +7,16 @@ type PublishersResponse400 struct {
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *PublishersResponse400) GetResult() *string {
-	if o == nil {
+func (p *PublishersResponse400) GetResult() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Result
+	return p.Result
 }
 
-func (o *PublishersResponse400) GetStatus() *int64 {
-	if o == nil {
+func (p *PublishersResponse400) GetStatus() *int64 {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }

@@ -14,11 +14,11 @@ type DeleteNPAPublishersRequest struct {
 	PublisherID int `pathParam:"style=simple,explode=false,name=publisher_id"`
 }
 
-func (o *DeleteNPAPublishersRequest) GetPublisherID() int {
-	if o == nil {
+func (d *DeleteNPAPublishersRequest) GetPublisherID() int {
+	if d == nil {
 		return 0
 	}
-	return o.PublisherID
+	return d.PublisherID
 }
 
 type DeleteNPAPublishersStatus string
@@ -52,11 +52,11 @@ type DeleteNPAPublishersResponseBody struct {
 	Status *DeleteNPAPublishersStatus `json:"status,omitempty"`
 }
 
-func (o *DeleteNPAPublishersResponseBody) GetStatus() *DeleteNPAPublishersStatus {
-	if o == nil {
+func (d *DeleteNPAPublishersResponseBody) GetStatus() *DeleteNPAPublishersStatus {
+	if d == nil {
 		return nil
 	}
-	return o.Status
+	return d.Status
 }
 
 type DeleteNPAPublishersResponse struct {
@@ -72,37 +72,37 @@ type DeleteNPAPublishersResponse struct {
 	PublishersResponse400 *shared.PublishersResponse400
 }
 
-func (o *DeleteNPAPublishersResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteNPAPublishersResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteNPAPublishersResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteNPAPublishersResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteNPAPublishersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteNPAPublishersResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }
 
-func (o *DeleteNPAPublishersResponse) GetObject() *DeleteNPAPublishersResponseBody {
-	if o == nil {
+func (d *DeleteNPAPublishersResponse) GetObject() *DeleteNPAPublishersResponseBody {
+	if d == nil {
 		return nil
 	}
-	return o.Object
+	return d.Object
 }
 
-func (o *DeleteNPAPublishersResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
-	if o == nil {
+func (d *DeleteNPAPublishersResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if d == nil {
 		return nil
 	}
-	return o.PublishersResponse400
+	return d.PublishersResponse400
 }

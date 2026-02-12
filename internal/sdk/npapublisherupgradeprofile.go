@@ -68,7 +68,7 @@ func (s *NPAPublisherUpgradeProfile) CreateNPAPublisherUpgradeProfile(ctx contex
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createNPAPublisherUpgradeProfile",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "Request", "json", `request:"mediaType=application/json"`)
@@ -233,7 +233,7 @@ func (s *NPAPublisherUpgradeProfile) DeleteNPAPublisherUpgradeProfile(ctx contex
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteNPAPublisherUpgradeProfile",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -341,6 +341,7 @@ func (s *NPAPublisherUpgradeProfile) DeleteNPAPublisherUpgradeProfile(ctx contex
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -391,7 +392,7 @@ func (s *NPAPublisherUpgradeProfile) GetNPAPublisherUpgradeProfile(ctx context.C
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getNPAPublisherUpgradeProfile",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -499,6 +500,7 @@ func (s *NPAPublisherUpgradeProfile) GetNPAPublisherUpgradeProfile(ctx context.C
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -549,7 +551,7 @@ func (s *NPAPublisherUpgradeProfile) UpdateNPAPublisherUpgradeProfile(ctx contex
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateNPAPublisherUpgradeProfile",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "PublisherUpgradeProfilePutRequest", "json", `request:"mediaType=application/json"`)

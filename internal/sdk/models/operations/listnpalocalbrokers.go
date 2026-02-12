@@ -12,11 +12,11 @@ type ListNPALocalBrokersRequest struct {
 	Fields *string `queryParam:"style=form,explode=true,name=fields"`
 }
 
-func (o *ListNPALocalBrokersRequest) GetFields() *string {
-	if o == nil {
+func (l *ListNPALocalBrokersRequest) GetFields() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Fields
+	return l.Fields
 }
 
 type ListNPALocalBrokersResponse struct {
@@ -32,37 +32,37 @@ type ListNPALocalBrokersResponse struct {
 	LbrokerResponse400 *shared.LbrokerResponse400
 }
 
-func (o *ListNPALocalBrokersResponse) GetContentType() string {
-	if o == nil {
+func (l *ListNPALocalBrokersResponse) GetContentType() string {
+	if l == nil {
 		return ""
 	}
-	return o.ContentType
+	return l.ContentType
 }
 
-func (o *ListNPALocalBrokersResponse) GetStatusCode() int {
-	if o == nil {
+func (l *ListNPALocalBrokersResponse) GetStatusCode() int {
+	if l == nil {
 		return 0
 	}
-	return o.StatusCode
+	return l.StatusCode
 }
 
-func (o *ListNPALocalBrokersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (l *ListNPALocalBrokersResponse) GetRawResponse() *http.Response {
+	if l == nil {
 		return nil
 	}
-	return o.RawResponse
+	return l.RawResponse
 }
 
-func (o *ListNPALocalBrokersResponse) GetLbrokersGetResponse() *shared.LbrokersGetResponse {
-	if o == nil {
+func (l *ListNPALocalBrokersResponse) GetLbrokersGetResponse() *shared.LbrokersGetResponse {
+	if l == nil {
 		return nil
 	}
-	return o.LbrokersGetResponse
+	return l.LbrokersGetResponse
 }
 
-func (o *ListNPALocalBrokersResponse) GetLbrokerResponse400() *shared.LbrokerResponse400 {
-	if o == nil {
+func (l *ListNPALocalBrokersResponse) GetLbrokerResponse400() *shared.LbrokerResponse400 {
+	if l == nil {
 		return nil
 	}
-	return o.LbrokerResponse400
+	return l.LbrokerResponse400
 }

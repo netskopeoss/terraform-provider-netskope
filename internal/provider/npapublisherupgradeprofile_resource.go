@@ -269,11 +269,48 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublisherUpgradeProfileResponse != nil && res.PublisherUpgradeProfileResponse.Data != nil) {
+	if !(res.PublisherUpgradeProfileResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileResponseData(ctx, res.PublisherUpgradeProfileResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileResponse(ctx, res.PublisherUpgradeProfileResponse)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsGetNPAPublisherUpgradeProfileRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.NPAPublisherUpgradeProfile.GetNPAPublisherUpgradeProfile(ctx, *request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if !(res1.PublisherUpgradeProfileGetResponse != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileGetResponse(ctx, res1.PublisherUpgradeProfileGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -333,11 +370,11 @@ func (r *NPAPublisherUpgradeProfileResource) Read(ctx context.Context, req resou
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublisherUpgradeProfileGetResponse != nil && res.PublisherUpgradeProfileGetResponse.Data != nil) {
+	if !(res.PublisherUpgradeProfileGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileGetResponseData(ctx, res.PublisherUpgradeProfileGetResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileGetResponse(ctx, res.PublisherUpgradeProfileGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -383,11 +420,48 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublisherUpgradeProfileResponse != nil && res.PublisherUpgradeProfileResponse.Data != nil) {
+	if !(res.PublisherUpgradeProfileResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileResponseData(ctx, res.PublisherUpgradeProfileResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileResponse(ctx, res.PublisherUpgradeProfileResponse)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsGetNPAPublisherUpgradeProfileRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.NPAPublisherUpgradeProfile.GetNPAPublisherUpgradeProfile(ctx, *request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if !(res1.PublisherUpgradeProfileGetResponse != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileGetResponse(ctx, res1.PublisherUpgradeProfileGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -439,7 +513,10 @@ func (r *NPAPublisherUpgradeProfileResource) Delete(ctx context.Context, req res
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode != 200 {
+	switch res.StatusCode {
+	case 200, 404:
+		break
+	default:
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}

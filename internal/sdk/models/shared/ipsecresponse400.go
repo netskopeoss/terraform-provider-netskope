@@ -7,16 +7,16 @@ type IpsecResponse400 struct {
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *IpsecResponse400) GetResult() *string {
-	if o == nil {
+func (i *IpsecResponse400) GetResult() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Result
+	return i.Result
 }
 
-func (o *IpsecResponse400) GetStatus() *int64 {
-	if o == nil {
+func (i *IpsecResponse400) GetStatus() *int64 {
+	if i == nil {
 		return nil
 	}
-	return o.Status
+	return i.Status
 }

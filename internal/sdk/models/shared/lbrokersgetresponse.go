@@ -39,23 +39,23 @@ type LbrokersGetResponse struct {
 	Total  *int                       `json:"total,omitempty"`
 }
 
-func (o *LbrokersGetResponse) GetData() []LbrokerItem {
-	if o == nil {
+func (l *LbrokersGetResponse) GetData() []LbrokerItem {
+	if l == nil {
 		return nil
 	}
-	return o.Data
+	return l.Data
 }
 
-func (o *LbrokersGetResponse) GetStatus() *LbrokersGetResponseStatus {
-	if o == nil {
+func (l *LbrokersGetResponse) GetStatus() *LbrokersGetResponseStatus {
+	if l == nil {
 		return nil
 	}
-	return o.Status
+	return l.Status
 }
 
-func (o *LbrokersGetResponse) GetTotal() *int {
-	if o == nil {
+func (l *LbrokersGetResponse) GetTotal() *int {
+	if l == nil {
 		return nil
 	}
-	return o.Total
+	return l.Total
 }

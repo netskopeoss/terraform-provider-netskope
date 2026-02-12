@@ -20,37 +20,37 @@ type CreateNPAPublisherAlertsResponse struct {
 	PublishersResponse400 *shared.PublishersResponse400
 }
 
-func (o *CreateNPAPublisherAlertsResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateNPAPublisherAlertsResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateNPAPublisherAlertsResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateNPAPublisherAlertsResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateNPAPublisherAlertsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateNPAPublisherAlertsResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }
 
-func (o *CreateNPAPublisherAlertsResponse) GetPublishersAlertPutResponse() *shared.PublishersAlertPutResponse {
-	if o == nil {
+func (c *CreateNPAPublisherAlertsResponse) GetPublishersAlertPutResponse() *shared.PublishersAlertPutResponse {
+	if c == nil {
 		return nil
 	}
-	return o.PublishersAlertPutResponse
+	return c.PublishersAlertPutResponse
 }
 
-func (o *CreateNPAPublisherAlertsResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
-	if o == nil {
+func (c *CreateNPAPublisherAlertsResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if c == nil {
 		return nil
 	}
-	return o.PublishersResponse400
+	return c.PublishersResponse400
 }
