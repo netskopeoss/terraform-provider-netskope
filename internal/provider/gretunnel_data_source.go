@@ -103,7 +103,7 @@ func (r *GRETunnelDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"tunnel_id": schema.Int32Attribute{
 				Required:    true,
-				Description: `GRE tunnel ID`,
+				Description: `Unique identifier for the GRE tunnel (assigned by API)`,
 			},
 			"vendor": schema.StringAttribute{
 				Computed:    true,
@@ -173,11 +173,11 @@ func (r *GRETunnelDataSource) Read(ctx context.Context, req datasource.ReadReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.GreTunnelGetResponse != nil && res.GreTunnelGetResponse.Result != nil && len(res.GreTunnelGetResponse.Result) > 0) {
+	if !(res.GreTunnelGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelItem(ctx, &res.GreTunnelGetResponse.Result[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelGetResponse(ctx, res.GreTunnelGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

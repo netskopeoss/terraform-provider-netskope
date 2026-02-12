@@ -17,19 +17,25 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: true
     oAuth2PasswordEnabled: false
+    hoistGlobalSecurity: true
+  inferSSEOverload: true
+  sdkHooksConfigAccess: true
+  schemas:
+    allOfMergeStrategy: shallowMerge
+  requestBodyFieldName: ""
+  versioningStrategy: automatic
+  persistentEdits: {}
   tests:
     generateTests: true
     generateNewTests: false
     skipResponseBodyAssertions: false
-  persistentEdits: {}
-  requestBodyFieldName: ""
-  schemas:
-    allOfMergeStrategy: shallowMerge
 terraform:
   version: 0.3.18
+  additionalActions: []
   additionalDataSources: []
   additionalDependencies: {}
   additionalEphemeralResources: []
+  additionalFunctions: []
   additionalListResources: []
   additionalProviderAttributes:
     httpHeaders: ""
@@ -63,4 +69,5 @@ terraform:
   outputModelSuffix: output
   packageName: netskope
   respectRequiredFields: false
+  respectTitlesForPrimitiveUnionMembers: true
   unionStrategy: populated-fields

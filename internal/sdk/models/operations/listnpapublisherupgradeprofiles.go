@@ -20,37 +20,37 @@ type ListNPAPublisherUpgradeProfilesResponse struct {
 	FourHundred *shared.FourHundred
 }
 
-func (o *ListNPAPublisherUpgradeProfilesResponse) GetContentType() string {
-	if o == nil {
+func (l *ListNPAPublisherUpgradeProfilesResponse) GetContentType() string {
+	if l == nil {
 		return ""
 	}
-	return o.ContentType
+	return l.ContentType
 }
 
-func (o *ListNPAPublisherUpgradeProfilesResponse) GetStatusCode() int {
-	if o == nil {
+func (l *ListNPAPublisherUpgradeProfilesResponse) GetStatusCode() int {
+	if l == nil {
 		return 0
 	}
-	return o.StatusCode
+	return l.StatusCode
 }
 
-func (o *ListNPAPublisherUpgradeProfilesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (l *ListNPAPublisherUpgradeProfilesResponse) GetRawResponse() *http.Response {
+	if l == nil {
 		return nil
 	}
-	return o.RawResponse
+	return l.RawResponse
 }
 
-func (o *ListNPAPublisherUpgradeProfilesResponse) GetPublisherUpgradeProfileListResponse() *shared.PublisherUpgradeProfileListResponse {
-	if o == nil {
+func (l *ListNPAPublisherUpgradeProfilesResponse) GetPublisherUpgradeProfileListResponse() *shared.PublisherUpgradeProfileListResponse {
+	if l == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfileListResponse
+	return l.PublisherUpgradeProfileListResponse
 }
 
-func (o *ListNPAPublisherUpgradeProfilesResponse) GetFourHundred() *shared.FourHundred {
-	if o == nil {
+func (l *ListNPAPublisherUpgradeProfilesResponse) GetFourHundred() *shared.FourHundred {
+	if l == nil {
 		return nil
 	}
-	return o.FourHundred
+	return l.FourHundred
 }

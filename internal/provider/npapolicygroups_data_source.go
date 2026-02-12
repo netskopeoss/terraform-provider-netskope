@@ -138,11 +138,11 @@ func (r *NPAPolicyGroupsDataSource) Read(ctx context.Context, req datasource.Rea
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.Object != nil && res.Object.Data != nil) {
+	if !(res.Object != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicygroupResponseItem(ctx, res.Object.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetNPAPolicyGroupsResponseBody(ctx, res.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return

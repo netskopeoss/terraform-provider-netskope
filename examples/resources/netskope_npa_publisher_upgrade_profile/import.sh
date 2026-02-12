@@ -1,1 +1,1 @@
-terraform import netskope_npa_publisher_upgrade_profile.my_netskope_npa_publisher_upgrade_profile 0
+terraform import netskope_npa_publisher_upgrade_profile.my_netskope_npa_publisher_upgrade_profile 10

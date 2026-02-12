@@ -7,16 +7,16 @@ type NpaPolicyResponse400 struct {
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *NpaPolicyResponse400) GetResult() *string {
-	if o == nil {
+func (n *NpaPolicyResponse400) GetResult() *string {
+	if n == nil {
 		return nil
 	}
-	return o.Result
+	return n.Result
 }
 
-func (o *NpaPolicyResponse400) GetStatus() *int64 {
-	if o == nil {
+func (n *NpaPolicyResponse400) GetStatus() *int64 {
+	if n == nil {
 		return nil
 	}
-	return o.Status
+	return n.Status
 }

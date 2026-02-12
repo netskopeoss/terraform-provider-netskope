@@ -15,18 +15,18 @@ type UpdateNPARulesRequest struct {
 	NpaPolicyRequest shared.NpaPolicyRequest `request:"mediaType=application/json"`
 }
 
-func (o *UpdateNPARulesRequest) GetID() string {
-	if o == nil {
+func (u *UpdateNPARulesRequest) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
-func (o *UpdateNPARulesRequest) GetNpaPolicyRequest() shared.NpaPolicyRequest {
-	if o == nil {
+func (u *UpdateNPARulesRequest) GetNpaPolicyRequest() shared.NpaPolicyRequest {
+	if u == nil {
 		return shared.NpaPolicyRequest{}
 	}
-	return o.NpaPolicyRequest
+	return u.NpaPolicyRequest
 }
 
 type UpdateNPARulesStatus string
@@ -61,18 +61,18 @@ type UpdateNPARulesResponseBody struct {
 	Status *UpdateNPARulesStatus         `json:"status,omitempty"`
 }
 
-func (o *UpdateNPARulesResponseBody) GetData() *shared.NpaPolicyResponseItem {
-	if o == nil {
+func (u *UpdateNPARulesResponseBody) GetData() *shared.NpaPolicyResponseItem {
+	if u == nil {
 		return nil
 	}
-	return o.Data
+	return u.Data
 }
 
-func (o *UpdateNPARulesResponseBody) GetStatus() *UpdateNPARulesStatus {
-	if o == nil {
+func (u *UpdateNPARulesResponseBody) GetStatus() *UpdateNPARulesStatus {
+	if u == nil {
 		return nil
 	}
-	return o.Status
+	return u.Status
 }
 
 type UpdateNPARulesResponse struct {
@@ -88,37 +88,37 @@ type UpdateNPARulesResponse struct {
 	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
 
-func (o *UpdateNPARulesResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateNPARulesResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateNPARulesResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateNPARulesResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateNPARulesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateNPARulesResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateNPARulesResponse) GetObject() *UpdateNPARulesResponseBody {
-	if o == nil {
+func (u *UpdateNPARulesResponse) GetObject() *UpdateNPARulesResponseBody {
+	if u == nil {
 		return nil
 	}
-	return o.Object
+	return u.Object
 }
 
-func (o *UpdateNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
-	if o == nil {
+func (u *UpdateNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
+	if u == nil {
 		return nil
 	}
-	return o.NpaPolicyResponse400
+	return u.NpaPolicyResponse400
 }

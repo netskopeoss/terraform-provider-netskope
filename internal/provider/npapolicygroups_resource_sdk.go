@@ -10,6 +10,51 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *NPAPolicyGroupsResourceModel) RefreshFromOperationsCreateNPAPolicyGroupsResponseBody(ctx context.Context, resp *operations.CreateNPAPolicyGroupsResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedNpaPolicygroupResponseItem(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
+func (r *NPAPolicyGroupsResourceModel) RefreshFromOperationsGetNPAPolicyGroupsResponseBody(ctx context.Context, resp *operations.GetNPAPolicyGroupsResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedNpaPolicygroupResponseItem(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
+func (r *NPAPolicyGroupsResourceModel) RefreshFromOperationsUpdateNPAPolicyGroupsResponseBody(ctx context.Context, resp *operations.UpdateNPAPolicyGroupsResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedNpaPolicygroupResponseItem(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPAPolicyGroupsResourceModel) RefreshFromSharedNpaPolicygroupResponseItem(ctx context.Context, resp *shared.NpaPolicygroupResponseItem) diag.Diagnostics {
 	var diags diag.Diagnostics
 

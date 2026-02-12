@@ -55,6 +55,21 @@ func (r *NPALocalBrokerDataSourceModel) RefreshFromSharedLbrokerItem(ctx context
 	return diags
 }
 
+func (r *NPALocalBrokerDataSourceModel) RefreshFromSharedLbrokerResponse(ctx context.Context, resp *shared.LbrokerResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedLbrokerItem(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPALocalBrokerDataSourceModel) ToOperationsGetNPALocalBrokerByIDRequest(ctx context.Context) (*operations.GetNPALocalBrokerByIDRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 

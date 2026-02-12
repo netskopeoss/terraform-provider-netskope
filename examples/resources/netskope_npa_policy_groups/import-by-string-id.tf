@@ -1,0 +1,4 @@
+import {
+  to = netskope_npa_policy_groups.my_netskope_npa_policy_groups
+  id = "..."
+}

@@ -53,16 +53,16 @@ func (r *NPAPrivateAppPublicHostResourceModel) ToOperationsGetNPAPrivateAppPubli
 		isUserPortalApp = nil
 	}
 	protocols := make([]shared.ProtocolItem, 0, len(r.Protocols))
-	for _, protocolsItem := range r.Protocols {
+	for protocolsIndex := range r.Protocols {
 		port := new(string)
-		if !protocolsItem.Port.IsUnknown() && !protocolsItem.Port.IsNull() {
-			*port = protocolsItem.Port.ValueString()
+		if !r.Protocols[protocolsIndex].Port.IsUnknown() && !r.Protocols[protocolsIndex].Port.IsNull() {
+			*port = r.Protocols[protocolsIndex].Port.ValueString()
 		} else {
 			port = nil
 		}
 		protocol := new(shared.Protocol)
-		if !protocolsItem.Protocol.IsUnknown() && !protocolsItem.Protocol.IsNull() {
-			*protocol = shared.Protocol(protocolsItem.Protocol.ValueString())
+		if !r.Protocols[protocolsIndex].Protocol.IsUnknown() && !r.Protocols[protocolsIndex].Protocol.IsNull() {
+			*protocol = shared.Protocol(r.Protocols[protocolsIndex].Protocol.ValueString())
 		} else {
 			protocol = nil
 		}

@@ -48,23 +48,23 @@ type PublishersAlertPutRequest struct {
 	SelectedUsers string       `json:"selectedUsers"`
 }
 
-func (o *PublishersAlertPutRequest) GetAdminUsers() []string {
-	if o == nil {
+func (p *PublishersAlertPutRequest) GetAdminUsers() []string {
+	if p == nil {
 		return []string{}
 	}
-	return o.AdminUsers
+	return p.AdminUsers
 }
 
-func (o *PublishersAlertPutRequest) GetEventTypes() []EventTypes {
-	if o == nil {
+func (p *PublishersAlertPutRequest) GetEventTypes() []EventTypes {
+	if p == nil {
 		return []EventTypes{}
 	}
-	return o.EventTypes
+	return p.EventTypes
 }
 
-func (o *PublishersAlertPutRequest) GetSelectedUsers() string {
-	if o == nil {
+func (p *PublishersAlertPutRequest) GetSelectedUsers() string {
+	if p == nil {
 		return ""
 	}
-	return o.SelectedUsers
+	return p.SelectedUsers
 }

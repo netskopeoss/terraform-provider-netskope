@@ -46,32 +46,32 @@ type RuleOrder struct {
 	RuleName *string `json:"rule_name,omitempty"`
 }
 
-func (o *RuleOrder) GetOrder() *Order {
-	if o == nil {
+func (r *RuleOrder) GetOrder() *Order {
+	if r == nil {
 		return nil
 	}
-	return o.Order
+	return r.Order
 }
 
-func (o *RuleOrder) GetPosition() *int64 {
-	if o == nil {
+func (r *RuleOrder) GetPosition() *int64 {
+	if r == nil {
 		return nil
 	}
-	return o.Position
+	return r.Position
 }
 
-func (o *RuleOrder) GetRuleID() *int64 {
-	if o == nil {
+func (r *RuleOrder) GetRuleID() *int64 {
+	if r == nil {
 		return nil
 	}
-	return o.RuleID
+	return r.RuleID
 }
 
-func (o *RuleOrder) GetRuleName() *string {
-	if o == nil {
+func (r *RuleOrder) GetRuleName() *string {
+	if r == nil {
 		return nil
 	}
-	return o.RuleName
+	return r.RuleName
 }
 
 type NpaPolicyRequest struct {
@@ -84,51 +84,51 @@ type NpaPolicyRequest struct {
 	RuleOrder   *RuleOrder         `json:"rule_order,omitempty"`
 }
 
-func (o *NpaPolicyRequest) GetDescription() *string {
-	if o == nil {
+func (n *NpaPolicyRequest) GetDescription() *string {
+	if n == nil {
 		return nil
 	}
-	return o.Description
+	return n.Description
 }
 
-func (o *NpaPolicyRequest) GetEnabled() *string {
-	if o == nil {
+func (n *NpaPolicyRequest) GetEnabled() *string {
+	if n == nil {
 		return nil
 	}
-	return o.Enabled
+	return n.Enabled
 }
 
-func (o *NpaPolicyRequest) GetGroupID() *string {
-	if o == nil {
+func (n *NpaPolicyRequest) GetGroupID() *string {
+	if n == nil {
 		return nil
 	}
-	return o.GroupID
+	return n.GroupID
 }
 
-func (o *NpaPolicyRequest) GetGroupName() *string {
-	if o == nil {
+func (n *NpaPolicyRequest) GetGroupName() *string {
+	if n == nil {
 		return nil
 	}
-	return o.GroupName
+	return n.GroupName
 }
 
-func (o *NpaPolicyRequest) GetRuleName() *string {
-	if o == nil {
+func (n *NpaPolicyRequest) GetRuleName() *string {
+	if n == nil {
 		return nil
 	}
-	return o.RuleName
+	return n.RuleName
 }
 
-func (o *NpaPolicyRequest) GetRuleData() *NpaPolicyRuleData {
-	if o == nil {
+func (n *NpaPolicyRequest) GetRuleData() *NpaPolicyRuleData {
+	if n == nil {
 		return nil
 	}
-	return o.RuleData
+	return n.RuleData
 }
 
-func (o *NpaPolicyRequest) GetRuleOrder() *RuleOrder {
-	if o == nil {
+func (n *NpaPolicyRequest) GetRuleOrder() *RuleOrder {
+	if n == nil {
 		return nil
 	}
-	return o.RuleOrder
+	return n.RuleOrder
 }

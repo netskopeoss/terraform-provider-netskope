@@ -13,18 +13,18 @@ type UpdateNPALocalBrokerByIDRequest struct {
 	LbrokerPutRequest shared.LbrokerPutRequest `request:"mediaType=application/json"`
 }
 
-func (o *UpdateNPALocalBrokerByIDRequest) GetLocalBrokerID() int {
-	if o == nil {
+func (u *UpdateNPALocalBrokerByIDRequest) GetLocalBrokerID() int {
+	if u == nil {
 		return 0
 	}
-	return o.LocalBrokerID
+	return u.LocalBrokerID
 }
 
-func (o *UpdateNPALocalBrokerByIDRequest) GetLbrokerPutRequest() shared.LbrokerPutRequest {
-	if o == nil {
+func (u *UpdateNPALocalBrokerByIDRequest) GetLbrokerPutRequest() shared.LbrokerPutRequest {
+	if u == nil {
 		return shared.LbrokerPutRequest{}
 	}
-	return o.LbrokerPutRequest
+	return u.LbrokerPutRequest
 }
 
 type UpdateNPALocalBrokerByIDResponse struct {
@@ -40,37 +40,37 @@ type UpdateNPALocalBrokerByIDResponse struct {
 	LbrokerResponse400 *shared.LbrokerResponse400
 }
 
-func (o *UpdateNPALocalBrokerByIDResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateNPALocalBrokerByIDResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateNPALocalBrokerByIDResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateNPALocalBrokerByIDResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateNPALocalBrokerByIDResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateNPALocalBrokerByIDResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateNPALocalBrokerByIDResponse) GetLbrokerResponse() *shared.LbrokerResponse {
-	if o == nil {
+func (u *UpdateNPALocalBrokerByIDResponse) GetLbrokerResponse() *shared.LbrokerResponse {
+	if u == nil {
 		return nil
 	}
-	return o.LbrokerResponse
+	return u.LbrokerResponse
 }
 
-func (o *UpdateNPALocalBrokerByIDResponse) GetLbrokerResponse400() *shared.LbrokerResponse400 {
-	if o == nil {
+func (u *UpdateNPALocalBrokerByIDResponse) GetLbrokerResponse400() *shared.LbrokerResponse400 {
+	if u == nil {
 		return nil
 	}
-	return o.LbrokerResponse400
+	return u.LbrokerResponse400
 }

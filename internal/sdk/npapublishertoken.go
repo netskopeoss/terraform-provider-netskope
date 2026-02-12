@@ -68,7 +68,7 @@ func (s *NPAPublisherToken) Create(ctx context.Context, request operations.Gener
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "generateNPAPublisherToken",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 

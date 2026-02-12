@@ -185,11 +185,11 @@ func (r *NPARulesDataSource) Read(ctx context.Context, req datasource.ReadReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.Object != nil && res.Object.Data != nil) {
+	if !(res.Object != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedNpaPolicyResponseItem(ctx, res.Object.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetNPARulesResponseBody(ctx, res.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return

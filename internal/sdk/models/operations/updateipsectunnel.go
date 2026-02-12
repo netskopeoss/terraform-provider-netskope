@@ -13,18 +13,18 @@ type UpdateIPSecTunnelRequest struct {
 	IpsecTunnelRequest shared.IpsecTunnelRequest `request:"mediaType=application/json"`
 }
 
-func (o *UpdateIPSecTunnelRequest) GetTunnelID() int {
-	if o == nil {
+func (u *UpdateIPSecTunnelRequest) GetTunnelID() int {
+	if u == nil {
 		return 0
 	}
-	return o.TunnelID
+	return u.TunnelID
 }
 
-func (o *UpdateIPSecTunnelRequest) GetIpsecTunnelRequest() shared.IpsecTunnelRequest {
-	if o == nil {
+func (u *UpdateIPSecTunnelRequest) GetIpsecTunnelRequest() shared.IpsecTunnelRequest {
+	if u == nil {
 		return shared.IpsecTunnelRequest{}
 	}
-	return o.IpsecTunnelRequest
+	return u.IpsecTunnelRequest
 }
 
 type UpdateIPSecTunnelResponse struct {
@@ -40,37 +40,37 @@ type UpdateIPSecTunnelResponse struct {
 	IpsecResponse400 *shared.IpsecResponse400
 }
 
-func (o *UpdateIPSecTunnelResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateIPSecTunnelResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateIPSecTunnelResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateIPSecTunnelResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateIPSecTunnelResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateIPSecTunnelResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateIPSecTunnelResponse) GetIpsecTunnelCreateResponse() *shared.IpsecTunnelCreateResponse {
-	if o == nil {
+func (u *UpdateIPSecTunnelResponse) GetIpsecTunnelCreateResponse() *shared.IpsecTunnelCreateResponse {
+	if u == nil {
 		return nil
 	}
-	return o.IpsecTunnelCreateResponse
+	return u.IpsecTunnelCreateResponse
 }
 
-func (o *UpdateIPSecTunnelResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
-	if o == nil {
+func (u *UpdateIPSecTunnelResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
+	if u == nil {
 		return nil
 	}
-	return o.IpsecResponse400
+	return u.IpsecResponse400
 }

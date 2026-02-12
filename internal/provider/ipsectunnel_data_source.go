@@ -185,11 +185,11 @@ func (r *IPSecTunnelDataSource) Read(ctx context.Context, req datasource.ReadReq
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.IpsecTunnelGetResponse != nil && res.IpsecTunnelGetResponse.Result != nil && len(res.IpsecTunnelGetResponse.Result) > 0) {
+	if !(res.IpsecTunnelGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedIpsecTunnelItem(ctx, &res.IpsecTunnelGetResponse.Result[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedIpsecTunnelGetResponse(ctx, res.IpsecTunnelGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

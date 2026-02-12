@@ -28,52 +28,52 @@ func (l ListGRETunnelsRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListGRETunnelsRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &l, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &l, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *ListGRETunnelsRequest) GetSite() *string {
-	if o == nil {
+func (l *ListGRETunnelsRequest) GetSite() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Site
+	return l.Site
 }
 
-func (o *ListGRETunnelsRequest) GetSrcipidentity() *string {
-	if o == nil {
+func (l *ListGRETunnelsRequest) GetSrcipidentity() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Srcipidentity
+	return l.Srcipidentity
 }
 
-func (o *ListGRETunnelsRequest) GetPop() *string {
-	if o == nil {
+func (l *ListGRETunnelsRequest) GetPop() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Pop
+	return l.Pop
 }
 
-func (o *ListGRETunnelsRequest) GetStatusFilter() *string {
-	if o == nil {
+func (l *ListGRETunnelsRequest) GetStatusFilter() *string {
+	if l == nil {
 		return nil
 	}
-	return o.StatusFilter
+	return l.StatusFilter
 }
 
-func (o *ListGRETunnelsRequest) GetOffset() *int {
-	if o == nil {
+func (l *ListGRETunnelsRequest) GetOffset() *int {
+	if l == nil {
 		return nil
 	}
-	return o.Offset
+	return l.Offset
 }
 
-func (o *ListGRETunnelsRequest) GetLimit() *int {
-	if o == nil {
+func (l *ListGRETunnelsRequest) GetLimit() *int {
+	if l == nil {
 		return nil
 	}
-	return o.Limit
+	return l.Limit
 }
 
 type ListGRETunnelsResponse struct {
@@ -89,37 +89,37 @@ type ListGRETunnelsResponse struct {
 	GreResponse400 *shared.GreResponse400
 }
 
-func (o *ListGRETunnelsResponse) GetContentType() string {
-	if o == nil {
+func (l *ListGRETunnelsResponse) GetContentType() string {
+	if l == nil {
 		return ""
 	}
-	return o.ContentType
+	return l.ContentType
 }
 
-func (o *ListGRETunnelsResponse) GetStatusCode() int {
-	if o == nil {
+func (l *ListGRETunnelsResponse) GetStatusCode() int {
+	if l == nil {
 		return 0
 	}
-	return o.StatusCode
+	return l.StatusCode
 }
 
-func (o *ListGRETunnelsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (l *ListGRETunnelsResponse) GetRawResponse() *http.Response {
+	if l == nil {
 		return nil
 	}
-	return o.RawResponse
+	return l.RawResponse
 }
 
-func (o *ListGRETunnelsResponse) GetGreTunnelListResponse() *shared.GreTunnelListResponse {
-	if o == nil {
+func (l *ListGRETunnelsResponse) GetGreTunnelListResponse() *shared.GreTunnelListResponse {
+	if l == nil {
 		return nil
 	}
-	return o.GreTunnelListResponse
+	return l.GreTunnelListResponse
 }
 
-func (o *ListGRETunnelsResponse) GetGreResponse400() *shared.GreResponse400 {
-	if o == nil {
+func (l *ListGRETunnelsResponse) GetGreResponse400() *shared.GreResponse400 {
+	if l == nil {
 		return nil
 	}
-	return o.GreResponse400
+	return l.GreResponse400
 }

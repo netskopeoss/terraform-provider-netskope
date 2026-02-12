@@ -11,11 +11,11 @@ type PublishersBulkResponseData struct {
 	Publishers []PublisherBulkItem `json:"publishers,omitempty"`
 }
 
-func (o *PublishersBulkResponseData) GetPublishers() []PublisherBulkItem {
-	if o == nil {
+func (p *PublishersBulkResponseData) GetPublishers() []PublisherBulkItem {
+	if p == nil {
 		return nil
 	}
-	return o.Publishers
+	return p.Publishers
 }
 
 type PublishersBulkResponseStatus string
@@ -49,16 +49,16 @@ type PublishersBulkResponse struct {
 	Status *PublishersBulkResponseStatus `json:"status,omitempty"`
 }
 
-func (o *PublishersBulkResponse) GetData() *PublishersBulkResponseData {
-	if o == nil {
+func (p *PublishersBulkResponse) GetData() *PublishersBulkResponseData {
+	if p == nil {
 		return nil
 	}
-	return o.Data
+	return p.Data
 }
 
-func (o *PublishersBulkResponse) GetStatus() *PublishersBulkResponseStatus {
-	if o == nil {
+func (p *PublishersBulkResponse) GetStatus() *PublishersBulkResponseStatus {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }

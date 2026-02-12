@@ -13,18 +13,18 @@ type PatchSteeringAppsPrivatePrivateAppIDRequest struct {
 	PrivateAppsPutRequest shared.PrivateAppsPutRequest `request:"mediaType=application/json"`
 }
 
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequest) GetPrivateAppID() int {
-	if o == nil {
+func (p *PatchSteeringAppsPrivatePrivateAppIDRequest) GetPrivateAppID() int {
+	if p == nil {
 		return 0
 	}
-	return o.PrivateAppID
+	return p.PrivateAppID
 }
 
-func (o *PatchSteeringAppsPrivatePrivateAppIDRequest) GetPrivateAppsPutRequest() shared.PrivateAppsPutRequest {
-	if o == nil {
+func (p *PatchSteeringAppsPrivatePrivateAppIDRequest) GetPrivateAppsPutRequest() shared.PrivateAppsPutRequest {
+	if p == nil {
 		return shared.PrivateAppsPutRequest{}
 	}
-	return o.PrivateAppsPutRequest
+	return p.PrivateAppsPutRequest
 }
 
 type PatchSteeringAppsPrivatePrivateAppIDResponse struct {
@@ -40,37 +40,37 @@ type PatchSteeringAppsPrivatePrivateAppIDResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetContentType() string {
-	if o == nil {
+func (p *PatchSteeringAppsPrivatePrivateAppIDResponse) GetContentType() string {
+	if p == nil {
 		return ""
 	}
-	return o.ContentType
+	return p.ContentType
 }
 
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetStatusCode() int {
-	if o == nil {
+func (p *PatchSteeringAppsPrivatePrivateAppIDResponse) GetStatusCode() int {
+	if p == nil {
 		return 0
 	}
-	return o.StatusCode
+	return p.StatusCode
 }
 
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (p *PatchSteeringAppsPrivatePrivateAppIDResponse) GetRawResponse() *http.Response {
+	if p == nil {
 		return nil
 	}
-	return o.RawResponse
+	return p.RawResponse
 }
 
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse() []shared.PrivateAppsResponse {
-	if o == nil {
+func (p *PatchSteeringAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse() []shared.PrivateAppsResponse {
+	if p == nil {
 		return nil
 	}
-	return o.PrivateAppsResponse
+	return p.PrivateAppsResponse
 }
 
-func (o *PatchSteeringAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
-	if o == nil {
+func (p *PatchSteeringAppsPrivatePrivateAppIDResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+	if p == nil {
 		return nil
 	}
-	return o.PrivateAppsResponse400
+	return p.PrivateAppsResponse400
 }

@@ -13,18 +13,18 @@ type UpdateNPAPublisherUpgradeProfileRequest struct {
 	PublisherUpgradeProfilePutRequest shared.PublisherUpgradeProfilePutRequest `request:"mediaType=application/json"`
 }
 
-func (o *UpdateNPAPublisherUpgradeProfileRequest) GetPublisherUpgradeProfileID() int {
-	if o == nil {
+func (u *UpdateNPAPublisherUpgradeProfileRequest) GetPublisherUpgradeProfileID() int {
+	if u == nil {
 		return 0
 	}
-	return o.PublisherUpgradeProfileID
+	return u.PublisherUpgradeProfileID
 }
 
-func (o *UpdateNPAPublisherUpgradeProfileRequest) GetPublisherUpgradeProfilePutRequest() shared.PublisherUpgradeProfilePutRequest {
-	if o == nil {
+func (u *UpdateNPAPublisherUpgradeProfileRequest) GetPublisherUpgradeProfilePutRequest() shared.PublisherUpgradeProfilePutRequest {
+	if u == nil {
 		return shared.PublisherUpgradeProfilePutRequest{}
 	}
-	return o.PublisherUpgradeProfilePutRequest
+	return u.PublisherUpgradeProfilePutRequest
 }
 
 type UpdateNPAPublisherUpgradeProfileResponse struct {
@@ -40,37 +40,37 @@ type UpdateNPAPublisherUpgradeProfileResponse struct {
 	FourHundred *shared.FourHundred
 }
 
-func (o *UpdateNPAPublisherUpgradeProfileResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateNPAPublisherUpgradeProfileResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateNPAPublisherUpgradeProfileResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateNPAPublisherUpgradeProfileResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateNPAPublisherUpgradeProfileResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateNPAPublisherUpgradeProfileResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateNPAPublisherUpgradeProfileResponse) GetPublisherUpgradeProfileResponse() *shared.PublisherUpgradeProfileResponse {
-	if o == nil {
+func (u *UpdateNPAPublisherUpgradeProfileResponse) GetPublisherUpgradeProfileResponse() *shared.PublisherUpgradeProfileResponse {
+	if u == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfileResponse
+	return u.PublisherUpgradeProfileResponse
 }
 
-func (o *UpdateNPAPublisherUpgradeProfileResponse) GetFourHundred() *shared.FourHundred {
-	if o == nil {
+func (u *UpdateNPAPublisherUpgradeProfileResponse) GetFourHundred() *shared.FourHundred {
+	if u == nil {
 		return nil
 	}
-	return o.FourHundred
+	return u.FourHundred
 }

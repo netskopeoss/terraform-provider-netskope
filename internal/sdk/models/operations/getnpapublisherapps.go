@@ -12,11 +12,11 @@ type GetNPAPublisherAppsRequest struct {
 	PublisherID int `pathParam:"style=simple,explode=false,name=publisher_id"`
 }
 
-func (o *GetNPAPublisherAppsRequest) GetPublisherID() int {
-	if o == nil {
+func (g *GetNPAPublisherAppsRequest) GetPublisherID() int {
+	if g == nil {
 		return 0
 	}
-	return o.PublisherID
+	return g.PublisherID
 }
 
 type GetNPAPublisherAppsResponse struct {
@@ -32,37 +32,37 @@ type GetNPAPublisherAppsResponse struct {
 	PublishersResponse400 *shared.PublishersResponse400
 }
 
-func (o *GetNPAPublisherAppsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetNPAPublisherAppsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetNPAPublisherAppsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetNPAPublisherAppsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetNPAPublisherAppsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetNPAPublisherAppsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetNPAPublisherAppsResponse) GetPublishersPrivateAppsResponse() *shared.PublishersPrivateAppsResponse {
-	if o == nil {
+func (g *GetNPAPublisherAppsResponse) GetPublishersPrivateAppsResponse() *shared.PublishersPrivateAppsResponse {
+	if g == nil {
 		return nil
 	}
-	return o.PublishersPrivateAppsResponse
+	return g.PublishersPrivateAppsResponse
 }
 
-func (o *GetNPAPublisherAppsResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
-	if o == nil {
+func (g *GetNPAPublisherAppsResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.PublishersResponse400
+	return g.PublishersResponse400
 }

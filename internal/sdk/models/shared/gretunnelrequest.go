@@ -57,24 +57,24 @@ func (g GreTunnelRequestXff) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GreTunnelRequestXff) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &g, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &g, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *GreTunnelRequestXff) GetXffEnabled() *bool {
-	if o == nil {
+func (g *GreTunnelRequestXff) GetXffEnabled() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.XffEnabled
+	return g.XffEnabled
 }
 
-func (o *GreTunnelRequestXff) GetXffIPList() []string {
-	if o == nil {
+func (g *GreTunnelRequestXff) GetXffIPList() []string {
+	if g == nil {
 		return nil
 	}
-	return o.XffIPList
+	return g.XffIPList
 }
 
 // GreTunnelRequestOptions - Advanced tunnel options
@@ -83,11 +83,11 @@ type GreTunnelRequestOptions struct {
 	Xff *GreTunnelRequestXff `json:"xff,omitempty"`
 }
 
-func (o *GreTunnelRequestOptions) GetXff() *GreTunnelRequestXff {
-	if o == nil {
+func (g *GreTunnelRequestOptions) GetXff() *GreTunnelRequestXff {
+	if g == nil {
 		return nil
 	}
-	return o.Xff
+	return g.Xff
 }
 
 // GreTunnelRequest - Request body for creating or updating a GRE tunnel
@@ -119,78 +119,78 @@ func (g GreTunnelRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GreTunnelRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &g, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &g, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *GreTunnelRequest) GetSite() string {
-	if o == nil {
+func (g *GreTunnelRequest) GetSite() string {
+	if g == nil {
 		return ""
 	}
-	return o.Site
+	return g.Site
 }
 
-func (o *GreTunnelRequest) GetSourceIP() string {
-	if o == nil {
+func (g *GreTunnelRequest) GetSourceIP() string {
+	if g == nil {
 		return ""
 	}
-	return o.SourceIP
+	return g.SourceIP
 }
 
-func (o *GreTunnelRequest) GetSourceType() *SourceType {
-	if o == nil {
+func (g *GreTunnelRequest) GetSourceType() *SourceType {
+	if g == nil {
 		return nil
 	}
-	return o.SourceType
+	return g.SourceType
 }
 
-func (o *GreTunnelRequest) GetEnabled() *bool {
-	if o == nil {
+func (g *GreTunnelRequest) GetEnabled() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.Enabled
+	return g.Enabled
 }
 
-func (o *GreTunnelRequest) GetBandwidth() *int {
-	if o == nil {
+func (g *GreTunnelRequest) GetBandwidth() *int {
+	if g == nil {
 		return nil
 	}
-	return o.Bandwidth
+	return g.Bandwidth
 }
 
-func (o *GreTunnelRequest) GetTemplate() *string {
-	if o == nil {
+func (g *GreTunnelRequest) GetTemplate() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Template
+	return g.Template
 }
 
-func (o *GreTunnelRequest) GetVendor() *string {
-	if o == nil {
+func (g *GreTunnelRequest) GetVendor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Vendor
+	return g.Vendor
 }
 
-func (o *GreTunnelRequest) GetNotes() *string {
-	if o == nil {
+func (g *GreTunnelRequest) GetNotes() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Notes
+	return g.Notes
 }
 
-func (o *GreTunnelRequest) GetPopNames() []string {
-	if o == nil {
+func (g *GreTunnelRequest) GetPopNames() []string {
+	if g == nil {
 		return []string{}
 	}
-	return o.PopNames
+	return g.PopNames
 }
 
-func (o *GreTunnelRequest) GetOptions() *GreTunnelRequestOptions {
-	if o == nil {
+func (g *GreTunnelRequest) GetOptions() *GreTunnelRequestOptions {
+	if g == nil {
 		return nil
 	}
-	return o.Options
+	return g.Options
 }

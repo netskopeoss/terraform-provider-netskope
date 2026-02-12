@@ -11,11 +11,11 @@ type PublisherUpgradeProfileBulkResponseData struct {
 	Publishers []UpgradePublisherResponse `json:"publishers,omitempty"`
 }
 
-func (o *PublisherUpgradeProfileBulkResponseData) GetPublishers() []UpgradePublisherResponse {
-	if o == nil {
+func (p *PublisherUpgradeProfileBulkResponseData) GetPublishers() []UpgradePublisherResponse {
+	if p == nil {
 		return nil
 	}
-	return o.Publishers
+	return p.Publishers
 }
 
 type PublisherUpgradeProfileBulkResponseStatus string
@@ -50,23 +50,23 @@ type PublisherUpgradeProfileBulkResponse struct {
 	Total  *int                                       `json:"total,omitempty"`
 }
 
-func (o *PublisherUpgradeProfileBulkResponse) GetData() *PublisherUpgradeProfileBulkResponseData {
-	if o == nil {
+func (p *PublisherUpgradeProfileBulkResponse) GetData() *PublisherUpgradeProfileBulkResponseData {
+	if p == nil {
 		return nil
 	}
-	return o.Data
+	return p.Data
 }
 
-func (o *PublisherUpgradeProfileBulkResponse) GetStatus() *PublisherUpgradeProfileBulkResponseStatus {
-	if o == nil {
+func (p *PublisherUpgradeProfileBulkResponse) GetStatus() *PublisherUpgradeProfileBulkResponseStatus {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }
 
-func (o *PublisherUpgradeProfileBulkResponse) GetTotal() *int {
-	if o == nil {
+func (p *PublisherUpgradeProfileBulkResponse) GetTotal() *int {
+	if p == nil {
 		return nil
 	}
-	return o.Total
+	return p.Total
 }

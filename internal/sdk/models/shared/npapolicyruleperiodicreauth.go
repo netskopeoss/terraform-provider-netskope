@@ -7,16 +7,16 @@ type NpaPolicyRulePeriodicReauth struct {
 	ReauthIntervalUnit *string `json:"reauth_interval_unit,omitempty"`
 }
 
-func (o *NpaPolicyRulePeriodicReauth) GetReauthInterval() *string {
-	if o == nil {
+func (n *NpaPolicyRulePeriodicReauth) GetReauthInterval() *string {
+	if n == nil {
 		return nil
 	}
-	return o.ReauthInterval
+	return n.ReauthInterval
 }
 
-func (o *NpaPolicyRulePeriodicReauth) GetReauthIntervalUnit() *string {
-	if o == nil {
+func (n *NpaPolicyRulePeriodicReauth) GetReauthIntervalUnit() *string {
+	if n == nil {
 		return nil
 	}
-	return o.ReauthIntervalUnit
+	return n.ReauthIntervalUnit
 }

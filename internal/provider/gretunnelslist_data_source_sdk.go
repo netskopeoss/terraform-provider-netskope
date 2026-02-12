@@ -17,11 +17,10 @@ func (r *GRETunnelsListDataSourceModel) RefreshFromSharedGreTunnelListResponse(c
 
 	if resp != nil {
 		r.Result = []tfTypes.GreTunnelListItem{}
-		if len(r.Result) > len(resp.Result) {
-			r.Result = r.Result[:len(resp.Result)]
-		}
-		for resultCount, resultItem := range resp.Result {
+
+		for _, resultItem := range resp.Result {
 			var result tfTypes.GreTunnelListItem
+
 			result.Bandwidth = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resultItem.Bandwidth))
 			result.Enabled = types.BoolPointerValue(resultItem.Enabled)
 			result.Notes = types.StringPointerValue(resultItem.Notes)
@@ -31,19 +30,8 @@ func (r *GRETunnelsListDataSourceModel) RefreshFromSharedGreTunnelListResponse(c
 			result.Template = types.StringPointerValue(resultItem.Template)
 			result.TunnelID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resultItem.TunnelID))
 			result.Vendor = types.StringPointerValue(resultItem.Vendor)
-			if resultCount+1 > len(r.Result) {
-				r.Result = append(r.Result, result)
-			} else {
-				r.Result[resultCount].Bandwidth = result.Bandwidth
-				r.Result[resultCount].Enabled = result.Enabled
-				r.Result[resultCount].Notes = result.Notes
-				r.Result[resultCount].Site = result.Site
-				r.Result[resultCount].SourceIP = result.SourceIP
-				r.Result[resultCount].SourceType = result.SourceType
-				r.Result[resultCount].Template = result.Template
-				r.Result[resultCount].TunnelID = result.TunnelID
-				r.Result[resultCount].Vendor = result.Vendor
-			}
+
+			r.Result = append(r.Result, result)
 		}
 		r.Total = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.Total))
 	}

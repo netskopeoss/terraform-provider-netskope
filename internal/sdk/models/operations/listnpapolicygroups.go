@@ -22,46 +22,46 @@ type ListNPAPolicyGroupsRequest struct {
 	Sortorder *string `queryParam:"style=form,explode=true,name=sortorder"`
 }
 
-func (o *ListNPAPolicyGroupsRequest) GetFields() *string {
-	if o == nil {
+func (l *ListNPAPolicyGroupsRequest) GetFields() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Fields
+	return l.Fields
 }
 
-func (o *ListNPAPolicyGroupsRequest) GetFilter() *string {
-	if o == nil {
+func (l *ListNPAPolicyGroupsRequest) GetFilter() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Filter
+	return l.Filter
 }
 
-func (o *ListNPAPolicyGroupsRequest) GetLimit() *int64 {
-	if o == nil {
+func (l *ListNPAPolicyGroupsRequest) GetLimit() *int64 {
+	if l == nil {
 		return nil
 	}
-	return o.Limit
+	return l.Limit
 }
 
-func (o *ListNPAPolicyGroupsRequest) GetOffset() *int64 {
-	if o == nil {
+func (l *ListNPAPolicyGroupsRequest) GetOffset() *int64 {
+	if l == nil {
 		return nil
 	}
-	return o.Offset
+	return l.Offset
 }
 
-func (o *ListNPAPolicyGroupsRequest) GetSortby() *string {
-	if o == nil {
+func (l *ListNPAPolicyGroupsRequest) GetSortby() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Sortby
+	return l.Sortby
 }
 
-func (o *ListNPAPolicyGroupsRequest) GetSortorder() *string {
-	if o == nil {
+func (l *ListNPAPolicyGroupsRequest) GetSortorder() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Sortorder
+	return l.Sortorder
 }
 
 type ListNPAPolicyGroupsResponse struct {
@@ -77,37 +77,37 @@ type ListNPAPolicyGroupsResponse struct {
 	NpaPolicygroupResponse400 *shared.NpaPolicygroupResponse400
 }
 
-func (o *ListNPAPolicyGroupsResponse) GetContentType() string {
-	if o == nil {
+func (l *ListNPAPolicyGroupsResponse) GetContentType() string {
+	if l == nil {
 		return ""
 	}
-	return o.ContentType
+	return l.ContentType
 }
 
-func (o *ListNPAPolicyGroupsResponse) GetStatusCode() int {
-	if o == nil {
+func (l *ListNPAPolicyGroupsResponse) GetStatusCode() int {
+	if l == nil {
 		return 0
 	}
-	return o.StatusCode
+	return l.StatusCode
 }
 
-func (o *ListNPAPolicyGroupsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (l *ListNPAPolicyGroupsResponse) GetRawResponse() *http.Response {
+	if l == nil {
 		return nil
 	}
-	return o.RawResponse
+	return l.RawResponse
 }
 
-func (o *ListNPAPolicyGroupsResponse) GetNpaPolicygroupResponse() *shared.NpaPolicygroupResponse {
-	if o == nil {
+func (l *ListNPAPolicyGroupsResponse) GetNpaPolicygroupResponse() *shared.NpaPolicygroupResponse {
+	if l == nil {
 		return nil
 	}
-	return o.NpaPolicygroupResponse
+	return l.NpaPolicygroupResponse
 }
 
-func (o *ListNPAPolicyGroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
-	if o == nil {
+func (l *ListNPAPolicyGroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
+	if l == nil {
 		return nil
 	}
-	return o.NpaPolicygroupResponse400
+	return l.NpaPolicygroupResponse400
 }

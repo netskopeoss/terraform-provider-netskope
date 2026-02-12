@@ -20,37 +20,37 @@ type GetNPAPublisherHostOsVersionsResponse struct {
 	PublishersResponse400 *shared.PublishersResponse400
 }
 
-func (o *GetNPAPublisherHostOsVersionsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetNPAPublisherHostOsVersionsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetNPAPublisherHostOsVersionsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetNPAPublisherHostOsVersionsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetNPAPublisherHostOsVersionsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetNPAPublisherHostOsVersionsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetNPAPublisherHostOsVersionsResponse) GetPublishersHostOsVersionGetResponse() *shared.PublishersHostOsVersionGetResponse {
-	if o == nil {
+func (g *GetNPAPublisherHostOsVersionsResponse) GetPublishersHostOsVersionGetResponse() *shared.PublishersHostOsVersionGetResponse {
+	if g == nil {
 		return nil
 	}
-	return o.PublishersHostOsVersionGetResponse
+	return g.PublishersHostOsVersionGetResponse
 }
 
-func (o *GetNPAPublisherHostOsVersionsResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
-	if o == nil {
+func (g *GetNPAPublisherHostOsVersionsResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.PublishersResponse400
+	return g.PublishersResponse400
 }
