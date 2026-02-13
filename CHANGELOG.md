@@ -16,11 +16,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Fixed plan drift on tunnels with minimal config** — Optional computed attributes (`notes`, `source_type`, `template`, `vendor`) on `netskope_gre_tunnel` and `netskope_ip_sec_tunnel` no longer show "known after apply" when omitted from config.
 - **Fixed publisher token exposed in plain text** (Issue [#57](https://github.com/netskopeoss/terraform-provider-netskope/issues/57)) — The `token` attribute on `netskope_npa_publisher_token` is now marked `Sensitive: true`, preventing the token value from appearing in plan/apply output and CI/CD logs.
 - **Improved 409 Conflict handling on `netskope_gre_tunnel` create** — Returns a clear "Resource Already Exists" error with guidance to use Terraform import.
+- **Fixed `netskope_npa_rules` creation failure with `rule_order.rule_id`** ([BUG-003](docs/bugs/BUG-003-rule-order-type-mismatch.md)) — Creating a rule with `rule_order = { order = "after", rule_id = <id> }` failed because the BeforeRequest hook's `RuleOrder` struct had `rule_id` typed as `*string` instead of `*int64`, and lacked `omitempty` json tags causing nil fields to serialize as `null` which the API rejected.
 
 ### Added
 - `ModifyPlan` normalization framework for list attribute drift suppression across four resources
 - Unit tests for plan modifier logic (`npaprivateapp_resource_planmodify_test.go`, `nparules_resource_planmodify_test.go`)
+- Unit tests for BeforeRequest hook rule_order handling (`hookMyPolicyBeforeRequest_test.go`)
 - Acceptance test `TestAccDrift_PrivateApp_ReorderedConfig` — reproduces issue #56 scenario (reorder HCL between applies, expect empty plan)
+- Acceptance test `TestAccNPARules_ruleOrderAfter` — regression test for BUG-003 (two rules with `rule_order.rule_id` reference)
 - Acceptance tests for unsorted config drift: `TestAccDrift_PrivateApp_UnsortedProtocols`, `TestAccDrift_PrivateApp_UnsortedAllLists`, `TestAccDrift_NPARules_UnsortedLists`
 - Acceptance tests for tunnel drift: `TestAccDrift_GRETunnel_UnsortedXffIpList`, `TestAccDrift_IPSecTunnel_MinimalConfig`, `TestAccDrift_GRETunnel_MinimalConfig`
 - Generic plan modifiers package (`internal/planmodifiers/`) with `UseConfigValue` and `UseHoistedValue` for all attribute types

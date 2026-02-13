@@ -52,10 +52,10 @@ type RuleData struct {
 }
 
 type RuleOrder struct {
-	Order    *string `json:"order"`
-	Position *int64  `json:"position"`
-	RuleID   *string `json:"rule_id"`
-	RuleName *string `json:"rule_name"`
+	Order    *string `json:"order,omitempty"`
+	Position *int64  `json:"position,omitempty"`
+	RuleID   *int64  `json:"rule_id,omitempty"`
+	RuleName *string `json:"rule_name,omitempty"`
 }
 
 type NpaPolicyRuleDlp struct {
