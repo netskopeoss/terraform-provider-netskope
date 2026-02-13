@@ -16,11 +16,10 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 
 	if resp != nil {
 		r.Data = []tfTypes.NpaPolicyResponseItem{}
-		if len(r.Data) > len(resp.Data) {
-			r.Data = r.Data[:len(resp.Data)]
-		}
-		for dataCount, dataItem := range resp.Data {
+
+		for _, dataItem := range resp.Data {
 			var data tfTypes.NpaPolicyResponseItem
+
 			data.Enabled = types.StringPointerValue(dataItem.Enabled)
 			data.ID = types.StringPointerValue(dataItem.ID)
 			if dataItem.RuleData == nil {
@@ -87,14 +86,8 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 				}
 			}
 			data.RuleName = types.StringPointerValue(dataItem.RuleName)
-			if dataCount+1 > len(r.Data) {
-				r.Data = append(r.Data, data)
-			} else {
-				r.Data[dataCount].Enabled = data.Enabled
-				r.Data[dataCount].ID = data.ID
-				r.Data[dataCount].RuleData = data.RuleData
-				r.Data[dataCount].RuleName = data.RuleName
-			}
+
+			r.Data = append(r.Data, data)
 		}
 		if resp.Status != nil {
 			r.Status = types.StringValue(string(*resp.Status))

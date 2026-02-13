@@ -17,11 +17,10 @@ func (r *NPAPrivateAppsListDataSourceModel) RefreshFromSharedData(ctx context.Co
 
 	if resp != nil {
 		r.PrivateApps = []tfTypes.PrivateAppsItem{}
-		if len(r.PrivateApps) > len(resp.PrivateApps) {
-			r.PrivateApps = r.PrivateApps[:len(resp.PrivateApps)]
-		}
-		for privateAppsCount, privateAppsItem := range resp.PrivateApps {
+
+		for _, privateAppsItem := range resp.PrivateApps {
 			var privateApps tfTypes.PrivateAppsItem
+
 			privateApps.AllowUnauthenticatedCors = types.BoolPointerValue(privateAppsItem.AllowUnauthenticatedCors)
 			privateApps.ClientlessAccess = types.BoolPointerValue(privateAppsItem.ClientlessAccess)
 			privateApps.IsUserPortalApp = types.BoolPointerValue(privateAppsItem.IsUserPortalApp)
@@ -30,72 +29,70 @@ func (r *NPAPrivateAppsListDataSourceModel) RefreshFromSharedData(ctx context.Co
 			privateApps.PrivateAppName = types.StringPointerValue(privateAppsItem.PrivateAppName)
 			privateApps.PrivateAppProtocol = types.StringPointerValue(privateAppsItem.PrivateAppProtocol)
 			privateApps.Protocols = []tfTypes.ProtocolItem{}
-			for protocolsCount, protocolsItem := range privateAppsItem.Protocols {
+
+			for _, protocolsItem := range privateAppsItem.Protocols {
 				var protocols tfTypes.ProtocolItem
+
 				protocols.Port = types.StringPointerValue(protocolsItem.Port)
 				if protocolsItem.Protocol != nil {
 					protocols.Protocol = types.StringValue(string(*protocolsItem.Protocol))
 				} else {
 					protocols.Protocol = types.StringNull()
 				}
-				if protocolsCount+1 > len(privateApps.Protocols) {
-					privateApps.Protocols = append(privateApps.Protocols, protocols)
-				} else {
-					privateApps.Protocols[protocolsCount].Port = protocols.Port
-					privateApps.Protocols[protocolsCount].Protocol = protocols.Protocol
-				}
+
+				privateApps.Protocols = append(privateApps.Protocols, protocols)
 			}
 			privateApps.Publishers = []tfTypes.PublisherItem{}
-			for publishersCount, publishersItem := range privateAppsItem.Publishers {
+
+			for _, publishersItem := range privateAppsItem.Publishers {
 				var publishers tfTypes.PublisherItem
+
 				publishers.PublisherID = types.StringPointerValue(publishersItem.PublisherID)
 				publishers.PublisherName = types.StringPointerValue(publishersItem.PublisherName)
-				if publishersCount+1 > len(privateApps.Publishers) {
-					privateApps.Publishers = append(privateApps.Publishers, publishers)
-				} else {
-					privateApps.Publishers[publishersCount].PublisherID = publishers.PublisherID
-					privateApps.Publishers[publishersCount].PublisherName = publishers.PublisherName
-				}
+
+				privateApps.Publishers = append(privateApps.Publishers, publishers)
 			}
 			privateApps.RealHost = types.StringPointerValue(privateAppsItem.RealHost)
 			privateApps.SteeringConfigs = make([]types.String, 0, len(privateAppsItem.SteeringConfigs))
 			for _, v := range privateAppsItem.SteeringConfigs {
 				privateApps.SteeringConfigs = append(privateApps.SteeringConfigs, types.StringValue(v))
 			}
-			privateApps.Tags = []tfTypes.TagItem{}
-			for tagsCount, tagsItem := range privateAppsItem.Tags {
-				var tags tfTypes.TagItem
+			privateApps.Tags = []tfTypes.Tags{}
+
+			for _, tagsItem := range privateAppsItem.Tags {
+				var tags tfTypes.Tags
+
 				tags.TagID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(tagsItem.TagID))
 				tags.TagName = types.StringPointerValue(tagsItem.TagName)
-				if tagsCount+1 > len(privateApps.Tags) {
-					privateApps.Tags = append(privateApps.Tags, tags)
-				} else {
-					privateApps.Tags[tagsCount].TagID = tags.TagID
-					privateApps.Tags[tagsCount].TagName = tags.TagName
-				}
+
+				privateApps.Tags = append(privateApps.Tags, tags)
 			}
 			privateApps.TrustSelfSignedCerts = types.BoolPointerValue(privateAppsItem.TrustSelfSignedCerts)
 			privateApps.UsePublisherDNS = types.BoolPointerValue(privateAppsItem.UsePublisherDNS)
-			if privateAppsCount+1 > len(r.PrivateApps) {
-				r.PrivateApps = append(r.PrivateApps, privateApps)
-			} else {
-				r.PrivateApps[privateAppsCount].AllowUnauthenticatedCors = privateApps.AllowUnauthenticatedCors
-				r.PrivateApps[privateAppsCount].ClientlessAccess = privateApps.ClientlessAccess
-				r.PrivateApps[privateAppsCount].IsUserPortalApp = privateApps.IsUserPortalApp
-				r.PrivateApps[privateAppsCount].Labels = privateApps.Labels
-				r.PrivateApps[privateAppsCount].PrivateAppHostname = privateApps.PrivateAppHostname
-				r.PrivateApps[privateAppsCount].PrivateAppID = privateApps.PrivateAppID
-				r.PrivateApps[privateAppsCount].PrivateAppName = privateApps.PrivateAppName
-				r.PrivateApps[privateAppsCount].PrivateAppProtocol = privateApps.PrivateAppProtocol
-				r.PrivateApps[privateAppsCount].Protocols = privateApps.Protocols
-				r.PrivateApps[privateAppsCount].Publishers = privateApps.Publishers
-				r.PrivateApps[privateAppsCount].RealHost = privateApps.RealHost
-				r.PrivateApps[privateAppsCount].SteeringConfigs = privateApps.SteeringConfigs
-				r.PrivateApps[privateAppsCount].Tags = privateApps.Tags
-				r.PrivateApps[privateAppsCount].TrustSelfSignedCerts = privateApps.TrustSelfSignedCerts
-				r.PrivateApps[privateAppsCount].UsePublisherDNS = privateApps.UsePublisherDNS
-			}
+
+			r.PrivateApps = append(r.PrivateApps, privateApps)
 		}
+	}
+
+	return diags
+}
+
+func (r *NPAPrivateAppsListDataSourceModel) RefreshFromSharedPrivateAppsListResponse(ctx context.Context, resp *shared.PrivateAppsListResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedData(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+		if resp.Status != nil {
+			r.Status = types.StringValue(string(*resp.Status))
+		} else {
+			r.Status = types.StringNull()
+		}
+		r.Total = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.Total))
 	}
 
 	return diags

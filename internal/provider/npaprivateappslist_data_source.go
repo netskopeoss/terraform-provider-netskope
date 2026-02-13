@@ -222,11 +222,11 @@ func (r *NPAPrivateAppsListDataSource) Read(ctx context.Context, req datasource.
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PrivateAppsListResponse != nil && res.PrivateAppsListResponse.Data != nil) {
+	if !(res.PrivateAppsListResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedData(ctx, res.PrivateAppsListResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsListResponse(ctx, res.PrivateAppsListResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

@@ -14,11 +14,11 @@ type DeleteNPALocalBrokerRequest struct {
 	LocalBrokerID int `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *DeleteNPALocalBrokerRequest) GetLocalBrokerID() int {
-	if o == nil {
+func (d *DeleteNPALocalBrokerRequest) GetLocalBrokerID() int {
+	if d == nil {
 		return 0
 	}
-	return o.LocalBrokerID
+	return d.LocalBrokerID
 }
 
 type DeleteNPALocalBrokerNPALocalBrokerStatus string
@@ -51,11 +51,11 @@ type DeleteNPALocalBrokerData struct {
 	Status *DeleteNPALocalBrokerNPALocalBrokerStatus `json:"status,omitempty"`
 }
 
-func (o *DeleteNPALocalBrokerData) GetStatus() *DeleteNPALocalBrokerNPALocalBrokerStatus {
-	if o == nil {
+func (d *DeleteNPALocalBrokerData) GetStatus() *DeleteNPALocalBrokerNPALocalBrokerStatus {
+	if d == nil {
 		return nil
 	}
-	return o.Status
+	return d.Status
 }
 
 type DeleteNPALocalBrokerStatus string
@@ -90,18 +90,18 @@ type DeleteNPALocalBrokerResponseBody struct {
 	Status *DeleteNPALocalBrokerStatus `json:"status,omitempty"`
 }
 
-func (o *DeleteNPALocalBrokerResponseBody) GetData() *DeleteNPALocalBrokerData {
-	if o == nil {
+func (d *DeleteNPALocalBrokerResponseBody) GetData() *DeleteNPALocalBrokerData {
+	if d == nil {
 		return nil
 	}
-	return o.Data
+	return d.Data
 }
 
-func (o *DeleteNPALocalBrokerResponseBody) GetStatus() *DeleteNPALocalBrokerStatus {
-	if o == nil {
+func (d *DeleteNPALocalBrokerResponseBody) GetStatus() *DeleteNPALocalBrokerStatus {
+	if d == nil {
 		return nil
 	}
-	return o.Status
+	return d.Status
 }
 
 type DeleteNPALocalBrokerResponse struct {
@@ -117,37 +117,37 @@ type DeleteNPALocalBrokerResponse struct {
 	LbrokerResponse400 *shared.LbrokerResponse400
 }
 
-func (o *DeleteNPALocalBrokerResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteNPALocalBrokerResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteNPALocalBrokerResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteNPALocalBrokerResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteNPALocalBrokerResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteNPALocalBrokerResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }
 
-func (o *DeleteNPALocalBrokerResponse) GetObject() *DeleteNPALocalBrokerResponseBody {
-	if o == nil {
+func (d *DeleteNPALocalBrokerResponse) GetObject() *DeleteNPALocalBrokerResponseBody {
+	if d == nil {
 		return nil
 	}
-	return o.Object
+	return d.Object
 }
 
-func (o *DeleteNPALocalBrokerResponse) GetLbrokerResponse400() *shared.LbrokerResponse400 {
-	if o == nil {
+func (d *DeleteNPALocalBrokerResponse) GetLbrokerResponse400() *shared.LbrokerResponse400 {
+	if d == nil {
 		return nil
 	}
-	return o.LbrokerResponse400
+	return d.LbrokerResponse400
 }

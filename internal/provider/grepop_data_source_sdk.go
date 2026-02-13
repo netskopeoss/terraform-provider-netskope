@@ -10,6 +10,26 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *GrepopDataSourceModel) RefreshFromSharedGrePopGetResponse(ctx context.Context, resp *shared.GrePopGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if len(resp.Result) == 0 {
+			diags.AddError("Unexpected response from API", "Missing response body array data.")
+			return diags
+		}
+
+		diags.Append(r.RefreshFromSharedGrePopItem(ctx, &resp.Result[0])...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *GrepopDataSourceModel) RefreshFromSharedGrePopItem(ctx context.Context, resp *shared.GrePopItem) diag.Diagnostics {
 	var diags diag.Diagnostics
 

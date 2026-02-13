@@ -48,34 +48,34 @@ type PublishersAlertGetResponseData struct {
 	SelectedUsers *string                                `json:"selectedUsers,omitempty"`
 }
 
-func (o *PublishersAlertGetResponseData) GetAdminUsers() []string {
-	if o == nil {
+func (p *PublishersAlertGetResponseData) GetAdminUsers() []string {
+	if p == nil {
 		return nil
 	}
-	return o.AdminUsers
+	return p.AdminUsers
 }
 
-func (o *PublishersAlertGetResponseData) GetEventTypes() []PublishersAlertGetResponseEventTypes {
-	if o == nil {
+func (p *PublishersAlertGetResponseData) GetEventTypes() []PublishersAlertGetResponseEventTypes {
+	if p == nil {
 		return nil
 	}
-	return o.EventTypes
+	return p.EventTypes
 }
 
-func (o *PublishersAlertGetResponseData) GetSelectedUsers() *string {
-	if o == nil {
+func (p *PublishersAlertGetResponseData) GetSelectedUsers() *string {
+	if p == nil {
 		return nil
 	}
-	return o.SelectedUsers
+	return p.SelectedUsers
 }
 
 type PublishersAlertGetResponse struct {
 	Data *PublishersAlertGetResponseData `json:"data,omitempty"`
 }
 
-func (o *PublishersAlertGetResponse) GetData() *PublishersAlertGetResponseData {
-	if o == nil {
+func (p *PublishersAlertGetResponse) GetData() *PublishersAlertGetResponseData {
+	if p == nil {
 		return nil
 	}
-	return o.Data
+	return p.Data
 }

@@ -2,3 +2,7 @@ registration.go
 README.md
 docs/index.md
 docs/resources/npa_private_app.md
+internal/provider/npaprivateapp_resource_planmodify.go
+internal/provider/nparules_resource_planmodify.go
+internal/provider/ipsectunnel_resource_planmodify.go
+internal/provider/gretunnel_resource_planmodify.go

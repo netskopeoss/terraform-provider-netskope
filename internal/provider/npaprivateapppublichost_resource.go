@@ -124,14 +124,7 @@ func (r *NPAPrivateAppPublicHostResource) Schema(ctx context.Context, req resour
 				Description: `Requires replacement if changed.`,
 			},
 			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["success", "error"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"success",
-						"error",
-					),
-				},
+				Computed: true,
 			},
 		},
 	}

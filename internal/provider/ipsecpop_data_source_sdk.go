@@ -10,6 +10,26 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *IPSecPOPDataSourceModel) RefreshFromSharedIpsecPopGetResponse(ctx context.Context, resp *shared.IpsecPopGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if len(resp.Result) == 0 {
+			diags.AddError("Unexpected response from API", "Missing response body array data.")
+			return diags
+		}
+
+		diags.Append(r.RefreshFromSharedIpsecPopItem(ctx, &resp.Result[0])...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *IPSecPOPDataSourceModel) RefreshFromSharedIpsecPopItem(ctx context.Context, resp *shared.IpsecPopItem) diag.Diagnostics {
 	var diags diag.Diagnostics
 

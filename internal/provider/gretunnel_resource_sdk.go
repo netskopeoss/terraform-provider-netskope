@@ -12,6 +12,46 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *GRETunnelResourceModel) RefreshFromSharedGreTunnelCreateResponse(ctx context.Context, resp *shared.GreTunnelCreateResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if len(resp.Data) == 0 {
+			diags.AddError("Unexpected response from API", "Missing response body array data.")
+			return diags
+		}
+
+		diags.Append(r.RefreshFromSharedGreTunnelItem(ctx, &resp.Data[0])...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
+func (r *GRETunnelResourceModel) RefreshFromSharedGreTunnelGetResponse(ctx context.Context, resp *shared.GreTunnelGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if len(resp.Result) == 0 {
+			diags.AddError("Unexpected response from API", "Missing response body array data.")
+			return diags
+		}
+
+		diags.Append(r.RefreshFromSharedGreTunnelItem(ctx, &resp.Result[0])...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *GRETunnelResourceModel) RefreshFromSharedGreTunnelItem(ctx context.Context, resp *shared.GreTunnelItem) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -140,8 +180,8 @@ func (r *GRETunnelResourceModel) ToSharedGreTunnelRequest(ctx context.Context) (
 		notes = nil
 	}
 	popNames := make([]string, 0, len(r.PopNames))
-	for _, popNamesItem := range r.PopNames {
-		popNames = append(popNames, popNamesItem.ValueString())
+	for popNamesIndex := range r.PopNames {
+		popNames = append(popNames, r.PopNames[popNamesIndex].ValueString())
 	}
 	var optionsVar *shared.GreTunnelRequestOptions
 	if r.Options != nil {
@@ -154,8 +194,8 @@ func (r *GRETunnelResourceModel) ToSharedGreTunnelRequest(ctx context.Context) (
 				xffEnabled = nil
 			}
 			xffIPList := make([]string, 0, len(r.Options.Xff.XffIPList))
-			for _, xffIPListItem := range r.Options.Xff.XffIPList {
-				xffIPList = append(xffIPList, xffIPListItem.ValueString())
+			for xffIPListIndex := range r.Options.Xff.XffIPList {
+				xffIPList = append(xffIPList, r.Options.Xff.XffIPList[xffIPListIndex].ValueString())
 			}
 			xff = &shared.GreTunnelRequestXff{
 				XffEnabled: xffEnabled,

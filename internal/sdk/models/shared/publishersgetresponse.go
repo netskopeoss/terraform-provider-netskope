@@ -12,18 +12,18 @@ type PublishersGetResponseCaCertsStatus struct {
 	LastModified *int     `json:"last_modified,omitempty"`
 }
 
-func (o *PublishersGetResponseCaCertsStatus) GetHashes() []string {
-	if o == nil {
+func (p *PublishersGetResponseCaCertsStatus) GetHashes() []string {
+	if p == nil {
 		return nil
 	}
-	return o.Hashes
+	return p.Hashes
 }
 
-func (o *PublishersGetResponseCaCertsStatus) GetLastModified() *int {
-	if o == nil {
+func (p *PublishersGetResponseCaCertsStatus) GetLastModified() *int {
+	if p == nil {
 		return nil
 	}
-	return o.LastModified
+	return p.LastModified
 }
 
 type PublishersGetResponseAssessment struct {
@@ -37,60 +37,60 @@ type PublishersGetResponseAssessment struct {
 	HostOsVersion *string                             `json:"host_os_version,omitempty"`
 }
 
-func (o *PublishersGetResponseAssessment) GetCaCertsStatus() *PublishersGetResponseCaCertsStatus {
-	if o == nil {
+func (p *PublishersGetResponseAssessment) GetCaCertsStatus() *PublishersGetResponseCaCertsStatus {
+	if p == nil {
 		return nil
 	}
-	return o.CaCertsStatus
+	return p.CaCertsStatus
 }
 
-func (o *PublishersGetResponseAssessment) GetEeeSupport() *bool {
-	if o == nil {
+func (p *PublishersGetResponseAssessment) GetEeeSupport() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.EeeSupport
+	return p.EeeSupport
 }
 
-func (o *PublishersGetResponseAssessment) GetHddFree() *string {
-	if o == nil {
+func (p *PublishersGetResponseAssessment) GetHddFree() *string {
+	if p == nil {
 		return nil
 	}
-	return o.HddFree
+	return p.HddFree
 }
 
-func (o *PublishersGetResponseAssessment) GetHddTotal() *string {
-	if o == nil {
+func (p *PublishersGetResponseAssessment) GetHddTotal() *string {
+	if p == nil {
 		return nil
 	}
-	return o.HddTotal
+	return p.HddTotal
 }
 
-func (o *PublishersGetResponseAssessment) GetIPAddress() *string {
-	if o == nil {
+func (p *PublishersGetResponseAssessment) GetIPAddress() *string {
+	if p == nil {
 		return nil
 	}
-	return o.IPAddress
+	return p.IPAddress
 }
 
-func (o *PublishersGetResponseAssessment) GetLatency() *int {
-	if o == nil {
+func (p *PublishersGetResponseAssessment) GetLatency() *int {
+	if p == nil {
 		return nil
 	}
-	return o.Latency
+	return p.Latency
 }
 
-func (o *PublishersGetResponseAssessment) GetVersion() *string {
-	if o == nil {
+func (p *PublishersGetResponseAssessment) GetVersion() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Version
+	return p.Version
 }
 
-func (o *PublishersGetResponseAssessment) GetHostOsVersion() *string {
-	if o == nil {
+func (p *PublishersGetResponseAssessment) GetHostOsVersion() *string {
+	if p == nil {
 		return nil
 	}
-	return o.HostOsVersion
+	return p.HostOsVersion
 }
 
 type PublishersGetResponsePullNsconfig struct {
@@ -98,18 +98,18 @@ type PublishersGetResponsePullNsconfig struct {
 	OrguriExist *bool `json:"orguri_exist,omitempty"`
 }
 
-func (o *PublishersGetResponsePullNsconfig) GetOrgkeyExist() *bool {
-	if o == nil {
+func (p *PublishersGetResponsePullNsconfig) GetOrgkeyExist() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.OrgkeyExist
+	return p.OrgkeyExist
 }
 
-func (o *PublishersGetResponsePullNsconfig) GetOrguriExist() *bool {
-	if o == nil {
+func (p *PublishersGetResponsePullNsconfig) GetOrguriExist() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.OrguriExist
+	return p.OrguriExist
 }
 
 type PublishersGetResponseCapabilities struct {
@@ -120,39 +120,39 @@ type PublishersGetResponseCapabilities struct {
 	PullNsconfig *PublishersGetResponsePullNsconfig `json:"pull_nsconfig,omitempty"`
 }
 
-func (o *PublishersGetResponseCapabilities) GetDtls() *bool {
-	if o == nil {
+func (p *PublishersGetResponseCapabilities) GetDtls() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.Dtls
+	return p.Dtls
 }
 
-func (o *PublishersGetResponseCapabilities) GetEee() *bool {
-	if o == nil {
+func (p *PublishersGetResponseCapabilities) GetEee() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.Eee
+	return p.Eee
 }
 
-func (o *PublishersGetResponseCapabilities) GetAutoUpgrade() *bool {
-	if o == nil {
+func (p *PublishersGetResponseCapabilities) GetAutoUpgrade() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.AutoUpgrade
+	return p.AutoUpgrade
 }
 
-func (o *PublishersGetResponseCapabilities) GetNwaBa() *bool {
-	if o == nil {
+func (p *PublishersGetResponseCapabilities) GetNwaBa() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.NwaBa
+	return p.NwaBa
 }
 
-func (o *PublishersGetResponseCapabilities) GetPullNsconfig() *PublishersGetResponsePullNsconfig {
-	if o == nil {
+func (p *PublishersGetResponseCapabilities) GetPullNsconfig() *PublishersGetResponsePullNsconfig {
+	if p == nil {
 		return nil
 	}
-	return o.PullNsconfig
+	return p.PullNsconfig
 }
 
 type PublishersGetResponseLabels struct {
@@ -160,18 +160,18 @@ type PublishersGetResponseLabels struct {
 	Permission *string `json:"permission,omitempty"`
 }
 
-func (o *PublishersGetResponseLabels) GetLabelID() *string {
-	if o == nil {
+func (p *PublishersGetResponseLabels) GetLabelID() *string {
+	if p == nil {
 		return nil
 	}
-	return o.LabelID
+	return p.LabelID
 }
 
-func (o *PublishersGetResponseLabels) GetPermission() *string {
-	if o == nil {
+func (p *PublishersGetResponseLabels) GetPermission() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Permission
+	return p.Permission
 }
 
 type PublishersGetResponseDataStatus string
@@ -203,7 +203,7 @@ func (e *PublishersGetResponseDataStatus) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type Tags struct {
+type PublishersGetResponseTags struct {
 }
 
 type PublishersGetResponseUpgradeFailedReason struct {
@@ -213,43 +213,43 @@ type PublishersGetResponseUpgradeFailedReason struct {
 	Version   *string `json:"version,omitempty"`
 }
 
-func (o *PublishersGetResponseUpgradeFailedReason) GetDetail() *string {
-	if o == nil {
+func (p *PublishersGetResponseUpgradeFailedReason) GetDetail() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Detail
+	return p.Detail
 }
 
-func (o *PublishersGetResponseUpgradeFailedReason) GetErrorCode() *int {
-	if o == nil {
+func (p *PublishersGetResponseUpgradeFailedReason) GetErrorCode() *int {
+	if p == nil {
 		return nil
 	}
-	return o.ErrorCode
+	return p.ErrorCode
 }
 
-func (o *PublishersGetResponseUpgradeFailedReason) GetTimestamp() *int {
-	if o == nil {
+func (p *PublishersGetResponseUpgradeFailedReason) GetTimestamp() *int {
+	if p == nil {
 		return nil
 	}
-	return o.Timestamp
+	return p.Timestamp
 }
 
-func (o *PublishersGetResponseUpgradeFailedReason) GetVersion() *string {
-	if o == nil {
+func (p *PublishersGetResponseUpgradeFailedReason) GetVersion() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Version
+	return p.Version
 }
 
 type PublishersGetResponseUpgradeStatus struct {
 	Upstat *string `json:"upstat,omitempty"`
 }
 
-func (o *PublishersGetResponseUpgradeStatus) GetUpstat() *string {
-	if o == nil {
+func (p *PublishersGetResponseUpgradeStatus) GetUpstat() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Upstat
+	return p.Upstat
 }
 
 type PublishersGetResponsePublishers struct {
@@ -269,147 +269,147 @@ type PublishersGetResponsePublishers struct {
 	StitcherPop               *string                            `json:"stitcher_pop,omitempty"`
 	// Not used at this time - please ignore
 	//
-	Tags                []Tags                                    `json:"tags,omitempty"`
+	Tags                []PublishersGetResponseTags               `json:"tags,omitempty"`
 	UpgradeFailedReason *PublishersGetResponseUpgradeFailedReason `json:"upgrade_failed_reason,omitempty"`
 	UpgradeRequest      *bool                                     `json:"upgrade_request,omitempty"`
 	UpgradeStatus       *PublishersGetResponseUpgradeStatus       `json:"upgrade_status,omitempty"`
 }
 
-func (o *PublishersGetResponsePublishers) GetAppsCount() *int {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetAppsCount() *int {
+	if p == nil {
 		return nil
 	}
-	return o.AppsCount
+	return p.AppsCount
 }
 
-func (o *PublishersGetResponsePublishers) GetAssessment() *PublishersGetResponseAssessment {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetAssessment() *PublishersGetResponseAssessment {
+	if p == nil {
 		return nil
 	}
-	return o.Assessment
+	return p.Assessment
 }
 
-func (o *PublishersGetResponsePublishers) GetCapabilities() *PublishersGetResponseCapabilities {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetCapabilities() *PublishersGetResponseCapabilities {
+	if p == nil {
 		return nil
 	}
-	return o.Capabilities
+	return p.Capabilities
 }
 
-func (o *PublishersGetResponsePublishers) GetCommonName() *string {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetCommonName() *string {
+	if p == nil {
 		return nil
 	}
-	return o.CommonName
+	return p.CommonName
 }
 
-func (o *PublishersGetResponsePublishers) GetConnectedApps() []string {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetConnectedApps() []string {
+	if p == nil {
 		return nil
 	}
-	return o.ConnectedApps
+	return p.ConnectedApps
 }
 
-func (o *PublishersGetResponsePublishers) GetLabels() []PublishersGetResponseLabels {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetLabels() []PublishersGetResponseLabels {
+	if p == nil {
 		return nil
 	}
-	return o.Labels
+	return p.Labels
 }
 
-func (o *PublishersGetResponsePublishers) GetLbrokerconnect() *bool {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetLbrokerconnect() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.Lbrokerconnect
+	return p.Lbrokerconnect
 }
 
-func (o *PublishersGetResponsePublishers) GetPublisherID() *int {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetPublisherID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherID
+	return p.PublisherID
 }
 
-func (o *PublishersGetResponsePublishers) GetPublisherName() *string {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetPublisherName() *string {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherName
+	return p.PublisherName
 }
 
-func (o *PublishersGetResponsePublishers) GetPublisherUpgradeProfileID() *int {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetPublisherUpgradeProfileID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfileID
+	return p.PublisherUpgradeProfileID
 }
 
-func (o *PublishersGetResponsePublishers) GetRegistered() *bool {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetRegistered() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.Registered
+	return p.Registered
 }
 
-func (o *PublishersGetResponsePublishers) GetStatus() *PublishersGetResponseDataStatus {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetStatus() *PublishersGetResponseDataStatus {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }
 
-func (o *PublishersGetResponsePublishers) GetStitcherID() *int {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetStitcherID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.StitcherID
+	return p.StitcherID
 }
 
-func (o *PublishersGetResponsePublishers) GetStitcherPop() *string {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetStitcherPop() *string {
+	if p == nil {
 		return nil
 	}
-	return o.StitcherPop
+	return p.StitcherPop
 }
 
-func (o *PublishersGetResponsePublishers) GetTags() []Tags {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetTags() []PublishersGetResponseTags {
+	if p == nil {
 		return nil
 	}
-	return o.Tags
+	return p.Tags
 }
 
-func (o *PublishersGetResponsePublishers) GetUpgradeFailedReason() *PublishersGetResponseUpgradeFailedReason {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetUpgradeFailedReason() *PublishersGetResponseUpgradeFailedReason {
+	if p == nil {
 		return nil
 	}
-	return o.UpgradeFailedReason
+	return p.UpgradeFailedReason
 }
 
-func (o *PublishersGetResponsePublishers) GetUpgradeRequest() *bool {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetUpgradeRequest() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.UpgradeRequest
+	return p.UpgradeRequest
 }
 
-func (o *PublishersGetResponsePublishers) GetUpgradeStatus() *PublishersGetResponseUpgradeStatus {
-	if o == nil {
+func (p *PublishersGetResponsePublishers) GetUpgradeStatus() *PublishersGetResponseUpgradeStatus {
+	if p == nil {
 		return nil
 	}
-	return o.UpgradeStatus
+	return p.UpgradeStatus
 }
 
 type PublishersGetResponseData struct {
 	Publishers []PublishersGetResponsePublishers `json:"publishers,omitempty"`
 }
 
-func (o *PublishersGetResponseData) GetPublishers() []PublishersGetResponsePublishers {
-	if o == nil {
+func (p *PublishersGetResponseData) GetPublishers() []PublishersGetResponsePublishers {
+	if p == nil {
 		return nil
 	}
-	return o.Publishers
+	return p.Publishers
 }
 
 type PublishersGetResponseStatus string
@@ -444,23 +444,23 @@ type PublishersGetResponse struct {
 	Total  *int                         `json:"total,omitempty"`
 }
 
-func (o *PublishersGetResponse) GetData() *PublishersGetResponseData {
-	if o == nil {
+func (p *PublishersGetResponse) GetData() *PublishersGetResponseData {
+	if p == nil {
 		return nil
 	}
-	return o.Data
+	return p.Data
 }
 
-func (o *PublishersGetResponse) GetStatus() *PublishersGetResponseStatus {
-	if o == nil {
+func (p *PublishersGetResponse) GetStatus() *PublishersGetResponseStatus {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }
 
-func (o *PublishersGetResponse) GetTotal() *int {
-	if o == nil {
+func (p *PublishersGetResponse) GetTotal() *int {
+	if p == nil {
 		return nil
 	}
-	return o.Total
+	return p.Total
 }

@@ -14,11 +14,11 @@ type DeleteNPAPublisherUpgradeProfileRequest struct {
 	PublisherUpgradeProfileID int `pathParam:"style=simple,explode=false,name=external_id"`
 }
 
-func (o *DeleteNPAPublisherUpgradeProfileRequest) GetPublisherUpgradeProfileID() int {
-	if o == nil {
+func (d *DeleteNPAPublisherUpgradeProfileRequest) GetPublisherUpgradeProfileID() int {
+	if d == nil {
 		return 0
 	}
-	return o.PublisherUpgradeProfileID
+	return d.PublisherUpgradeProfileID
 }
 
 type DeleteNPAPublisherUpgradeProfileStatus string
@@ -52,11 +52,11 @@ type DeleteNPAPublisherUpgradeProfileResponseBody struct {
 	Status *DeleteNPAPublisherUpgradeProfileStatus `json:"status,omitempty"`
 }
 
-func (o *DeleteNPAPublisherUpgradeProfileResponseBody) GetStatus() *DeleteNPAPublisherUpgradeProfileStatus {
-	if o == nil {
+func (d *DeleteNPAPublisherUpgradeProfileResponseBody) GetStatus() *DeleteNPAPublisherUpgradeProfileStatus {
+	if d == nil {
 		return nil
 	}
-	return o.Status
+	return d.Status
 }
 
 type DeleteNPAPublisherUpgradeProfileResponse struct {
@@ -72,37 +72,37 @@ type DeleteNPAPublisherUpgradeProfileResponse struct {
 	FourHundred *shared.FourHundred
 }
 
-func (o *DeleteNPAPublisherUpgradeProfileResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteNPAPublisherUpgradeProfileResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteNPAPublisherUpgradeProfileResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteNPAPublisherUpgradeProfileResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteNPAPublisherUpgradeProfileResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteNPAPublisherUpgradeProfileResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }
 
-func (o *DeleteNPAPublisherUpgradeProfileResponse) GetObject() *DeleteNPAPublisherUpgradeProfileResponseBody {
-	if o == nil {
+func (d *DeleteNPAPublisherUpgradeProfileResponse) GetObject() *DeleteNPAPublisherUpgradeProfileResponseBody {
+	if d == nil {
 		return nil
 	}
-	return o.Object
+	return d.Object
 }
 
-func (o *DeleteNPAPublisherUpgradeProfileResponse) GetFourHundred() *shared.FourHundred {
-	if o == nil {
+func (d *DeleteNPAPublisherUpgradeProfileResponse) GetFourHundred() *shared.FourHundred {
+	if d == nil {
 		return nil
 	}
-	return o.FourHundred
+	return d.FourHundred
 }

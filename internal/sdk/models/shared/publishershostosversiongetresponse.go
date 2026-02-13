@@ -8,27 +8,27 @@ type PublishersHostOsVersionGetResponseData struct {
 	PublisherIds  []int   `json:"publisher_ids,omitempty"`
 }
 
-func (o *PublishersHostOsVersionGetResponseData) GetHostOsVersion() *string {
-	if o == nil {
+func (p *PublishersHostOsVersionGetResponseData) GetHostOsVersion() *string {
+	if p == nil {
 		return nil
 	}
-	return o.HostOsVersion
+	return p.HostOsVersion
 }
 
-func (o *PublishersHostOsVersionGetResponseData) GetPublisherIds() []int {
-	if o == nil {
+func (p *PublishersHostOsVersionGetResponseData) GetPublisherIds() []int {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherIds
+	return p.PublisherIds
 }
 
 type PublishersHostOsVersionGetResponse struct {
 	Data []PublishersHostOsVersionGetResponseData `json:"data,omitempty"`
 }
 
-func (o *PublishersHostOsVersionGetResponse) GetData() []PublishersHostOsVersionGetResponseData {
-	if o == nil {
+func (p *PublishersHostOsVersionGetResponse) GetData() []PublishersHostOsVersionGetResponseData {
+	if p == nil {
 		return nil
 	}
-	return o.Data
+	return p.Data
 }

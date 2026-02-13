@@ -12,18 +12,18 @@ type CaCertsStatus struct {
 	LastModified *int     `json:"last_modified,omitempty"`
 }
 
-func (o *CaCertsStatus) GetHashes() []string {
-	if o == nil {
+func (c *CaCertsStatus) GetHashes() []string {
+	if c == nil {
 		return nil
 	}
-	return o.Hashes
+	return c.Hashes
 }
 
-func (o *CaCertsStatus) GetLastModified() *int {
-	if o == nil {
+func (c *CaCertsStatus) GetLastModified() *int {
+	if c == nil {
 		return nil
 	}
-	return o.LastModified
+	return c.LastModified
 }
 
 type Assessment struct {
@@ -37,60 +37,60 @@ type Assessment struct {
 	HostOsVersion *string        `json:"host_os_version,omitempty"`
 }
 
-func (o *Assessment) GetCaCertsStatus() *CaCertsStatus {
-	if o == nil {
+func (a *Assessment) GetCaCertsStatus() *CaCertsStatus {
+	if a == nil {
 		return nil
 	}
-	return o.CaCertsStatus
+	return a.CaCertsStatus
 }
 
-func (o *Assessment) GetEeeSupport() *bool {
-	if o == nil {
+func (a *Assessment) GetEeeSupport() *bool {
+	if a == nil {
 		return nil
 	}
-	return o.EeeSupport
+	return a.EeeSupport
 }
 
-func (o *Assessment) GetHddFree() *string {
-	if o == nil {
+func (a *Assessment) GetHddFree() *string {
+	if a == nil {
 		return nil
 	}
-	return o.HddFree
+	return a.HddFree
 }
 
-func (o *Assessment) GetHddTotal() *string {
-	if o == nil {
+func (a *Assessment) GetHddTotal() *string {
+	if a == nil {
 		return nil
 	}
-	return o.HddTotal
+	return a.HddTotal
 }
 
-func (o *Assessment) GetIPAddress() *string {
-	if o == nil {
+func (a *Assessment) GetIPAddress() *string {
+	if a == nil {
 		return nil
 	}
-	return o.IPAddress
+	return a.IPAddress
 }
 
-func (o *Assessment) GetLatency() *int {
-	if o == nil {
+func (a *Assessment) GetLatency() *int {
+	if a == nil {
 		return nil
 	}
-	return o.Latency
+	return a.Latency
 }
 
-func (o *Assessment) GetVersion() *string {
-	if o == nil {
+func (a *Assessment) GetVersion() *string {
+	if a == nil {
 		return nil
 	}
-	return o.Version
+	return a.Version
 }
 
-func (o *Assessment) GetHostOsVersion() *string {
-	if o == nil {
+func (a *Assessment) GetHostOsVersion() *string {
+	if a == nil {
 		return nil
 	}
-	return o.HostOsVersion
+	return a.HostOsVersion
 }
 
 type PullNsconfig struct {
@@ -98,18 +98,18 @@ type PullNsconfig struct {
 	OrguriExist *bool `json:"orguri_exist,omitempty"`
 }
 
-func (o *PullNsconfig) GetOrgkeyExist() *bool {
-	if o == nil {
+func (p *PullNsconfig) GetOrgkeyExist() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.OrgkeyExist
+	return p.OrgkeyExist
 }
 
-func (o *PullNsconfig) GetOrguriExist() *bool {
-	if o == nil {
+func (p *PullNsconfig) GetOrguriExist() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.OrguriExist
+	return p.OrguriExist
 }
 
 type Capabilities struct {
@@ -120,39 +120,39 @@ type Capabilities struct {
 	PullNsconfig *PullNsconfig `json:"pull_nsconfig,omitempty"`
 }
 
-func (o *Capabilities) GetDtls() *bool {
-	if o == nil {
+func (c *Capabilities) GetDtls() *bool {
+	if c == nil {
 		return nil
 	}
-	return o.Dtls
+	return c.Dtls
 }
 
-func (o *Capabilities) GetEee() *bool {
-	if o == nil {
+func (c *Capabilities) GetEee() *bool {
+	if c == nil {
 		return nil
 	}
-	return o.Eee
+	return c.Eee
 }
 
-func (o *Capabilities) GetAutoUpgrade() *bool {
-	if o == nil {
+func (c *Capabilities) GetAutoUpgrade() *bool {
+	if c == nil {
 		return nil
 	}
-	return o.AutoUpgrade
+	return c.AutoUpgrade
 }
 
-func (o *Capabilities) GetNwaBa() *bool {
-	if o == nil {
+func (c *Capabilities) GetNwaBa() *bool {
+	if c == nil {
 		return nil
 	}
-	return o.NwaBa
+	return c.NwaBa
 }
 
-func (o *Capabilities) GetPullNsconfig() *PullNsconfig {
-	if o == nil {
+func (c *Capabilities) GetPullNsconfig() *PullNsconfig {
+	if c == nil {
 		return nil
 	}
-	return o.PullNsconfig
+	return c.PullNsconfig
 }
 
 type PublisherBulkItemLabels struct {
@@ -160,18 +160,18 @@ type PublisherBulkItemLabels struct {
 	Permission *string `json:"permission,omitempty"`
 }
 
-func (o *PublisherBulkItemLabels) GetLabelID() *string {
-	if o == nil {
+func (p *PublisherBulkItemLabels) GetLabelID() *string {
+	if p == nil {
 		return nil
 	}
-	return o.LabelID
+	return p.LabelID
 }
 
-func (o *PublisherBulkItemLabels) GetPermission() *string {
-	if o == nil {
+func (p *PublisherBulkItemLabels) GetPermission() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Permission
+	return p.Permission
 }
 
 type PublisherBulkItemStatus string
@@ -210,43 +210,43 @@ type UpgradeFailedReason struct {
 	Version   *string  `json:"version,omitempty"`
 }
 
-func (o *UpgradeFailedReason) GetDetail() *string {
-	if o == nil {
+func (u *UpgradeFailedReason) GetDetail() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Detail
+	return u.Detail
 }
 
-func (o *UpgradeFailedReason) GetErrorCode() *float64 {
-	if o == nil {
+func (u *UpgradeFailedReason) GetErrorCode() *float64 {
+	if u == nil {
 		return nil
 	}
-	return o.ErrorCode
+	return u.ErrorCode
 }
 
-func (o *UpgradeFailedReason) GetTimestamp() *float64 {
-	if o == nil {
+func (u *UpgradeFailedReason) GetTimestamp() *float64 {
+	if u == nil {
 		return nil
 	}
-	return o.Timestamp
+	return u.Timestamp
 }
 
-func (o *UpgradeFailedReason) GetVersion() *string {
-	if o == nil {
+func (u *UpgradeFailedReason) GetVersion() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Version
+	return u.Version
 }
 
 type UpgradeStatus struct {
 	Upstat *string `json:"upstat,omitempty"`
 }
 
-func (o *UpgradeStatus) GetUpstat() *string {
-	if o == nil {
+func (u *UpgradeStatus) GetUpstat() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Upstat
+	return u.Upstat
 }
 
 type PublisherBulkItem struct {
@@ -272,128 +272,128 @@ type PublisherBulkItem struct {
 	UpgradeStatus       *UpgradeStatus       `json:"upgrade_status,omitempty"`
 }
 
-func (o *PublisherBulkItem) GetAppsCount() *int {
-	if o == nil {
+func (p *PublisherBulkItem) GetAppsCount() *int {
+	if p == nil {
 		return nil
 	}
-	return o.AppsCount
+	return p.AppsCount
 }
 
-func (o *PublisherBulkItem) GetAssessment() *Assessment {
-	if o == nil {
+func (p *PublisherBulkItem) GetAssessment() *Assessment {
+	if p == nil {
 		return nil
 	}
-	return o.Assessment
+	return p.Assessment
 }
 
-func (o *PublisherBulkItem) GetCapabilities() *Capabilities {
-	if o == nil {
+func (p *PublisherBulkItem) GetCapabilities() *Capabilities {
+	if p == nil {
 		return nil
 	}
-	return o.Capabilities
+	return p.Capabilities
 }
 
-func (o *PublisherBulkItem) GetCommonName() *string {
-	if o == nil {
+func (p *PublisherBulkItem) GetCommonName() *string {
+	if p == nil {
 		return nil
 	}
-	return o.CommonName
+	return p.CommonName
 }
 
-func (o *PublisherBulkItem) GetConnectedApps() []string {
-	if o == nil {
+func (p *PublisherBulkItem) GetConnectedApps() []string {
+	if p == nil {
 		return nil
 	}
-	return o.ConnectedApps
+	return p.ConnectedApps
 }
 
-func (o *PublisherBulkItem) GetPublisherID() *int {
-	if o == nil {
+func (p *PublisherBulkItem) GetPublisherID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherID
+	return p.PublisherID
 }
 
-func (o *PublisherBulkItem) GetLabels() []PublisherBulkItemLabels {
-	if o == nil {
+func (p *PublisherBulkItem) GetLabels() []PublisherBulkItemLabels {
+	if p == nil {
 		return nil
 	}
-	return o.Labels
+	return p.Labels
 }
 
-func (o *PublisherBulkItem) GetLbrokerconnect() *bool {
-	if o == nil {
+func (p *PublisherBulkItem) GetLbrokerconnect() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.Lbrokerconnect
+	return p.Lbrokerconnect
 }
 
-func (o *PublisherBulkItem) GetPublisherName() *string {
-	if o == nil {
+func (p *PublisherBulkItem) GetPublisherName() *string {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherName
+	return p.PublisherName
 }
 
-func (o *PublisherBulkItem) GetPublisherUpgradeProfilesID() *int {
-	if o == nil {
+func (p *PublisherBulkItem) GetPublisherUpgradeProfilesID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfilesID
+	return p.PublisherUpgradeProfilesID
 }
 
-func (o *PublisherBulkItem) GetRegistered() *bool {
-	if o == nil {
+func (p *PublisherBulkItem) GetRegistered() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.Registered
+	return p.Registered
 }
 
-func (o *PublisherBulkItem) GetStatus() *PublisherBulkItemStatus {
-	if o == nil {
+func (p *PublisherBulkItem) GetStatus() *PublisherBulkItemStatus {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }
 
-func (o *PublisherBulkItem) GetStitcherID() *int {
-	if o == nil {
+func (p *PublisherBulkItem) GetStitcherID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.StitcherID
+	return p.StitcherID
 }
 
-func (o *PublisherBulkItem) GetStitcherPop() *string {
-	if o == nil {
+func (p *PublisherBulkItem) GetStitcherPop() *string {
+	if p == nil {
 		return nil
 	}
-	return o.StitcherPop
+	return p.StitcherPop
 }
 
-func (o *PublisherBulkItem) GetTags() []TagItem {
-	if o == nil {
+func (p *PublisherBulkItem) GetTags() []TagItem {
+	if p == nil {
 		return nil
 	}
-	return o.Tags
+	return p.Tags
 }
 
-func (o *PublisherBulkItem) GetUpgradeFailedReason() *UpgradeFailedReason {
-	if o == nil {
+func (p *PublisherBulkItem) GetUpgradeFailedReason() *UpgradeFailedReason {
+	if p == nil {
 		return nil
 	}
-	return o.UpgradeFailedReason
+	return p.UpgradeFailedReason
 }
 
-func (o *PublisherBulkItem) GetUpgradeRequest() *bool {
-	if o == nil {
+func (p *PublisherBulkItem) GetUpgradeRequest() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.UpgradeRequest
+	return p.UpgradeRequest
 }
 
-func (o *PublisherBulkItem) GetUpgradeStatus() *UpgradeStatus {
-	if o == nil {
+func (p *PublisherBulkItem) GetUpgradeStatus() *UpgradeStatus {
+	if p == nil {
 		return nil
 	}
-	return o.UpgradeStatus
+	return p.UpgradeStatus
 }

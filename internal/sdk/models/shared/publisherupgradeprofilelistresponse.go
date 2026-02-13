@@ -31,126 +31,126 @@ func (u UpgradeProfiles) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpgradeProfiles) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &u, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &u, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *UpgradeProfiles) GetCreatedAt() *string {
-	if o == nil {
+func (u *UpgradeProfiles) GetCreatedAt() *string {
+	if u == nil {
 		return nil
 	}
-	return o.CreatedAt
+	return u.CreatedAt
 }
 
-func (o *UpgradeProfiles) GetDockerTag() *string {
-	if o == nil {
+func (u *UpgradeProfiles) GetDockerTag() *string {
+	if u == nil {
 		return nil
 	}
-	return o.DockerTag
+	return u.DockerTag
 }
 
-func (o *UpgradeProfiles) GetEnabled() *bool {
-	if o == nil {
+func (u *UpgradeProfiles) GetEnabled() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.Enabled
+	return u.Enabled
 }
 
-func (o *UpgradeProfiles) GetPublisherUpgradeProfileID() *int {
-	if o == nil {
+func (u *UpgradeProfiles) GetPublisherUpgradeProfileID() *int {
+	if u == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfileID
+	return u.PublisherUpgradeProfileID
 }
 
-func (o *UpgradeProfiles) GetFrequency() *string {
-	if o == nil {
+func (u *UpgradeProfiles) GetFrequency() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Frequency
+	return u.Frequency
 }
 
-func (o *UpgradeProfiles) GetID() *int {
-	if o == nil {
+func (u *UpgradeProfiles) GetID() *int {
+	if u == nil {
 		return nil
 	}
-	return o.ID
+	return u.ID
 }
 
-func (o *UpgradeProfiles) GetName() *string {
-	if o == nil {
+func (u *UpgradeProfiles) GetName() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Name
+	return u.Name
 }
 
-func (o *UpgradeProfiles) GetNextUpdateTime() *int {
-	if o == nil {
+func (u *UpgradeProfiles) GetNextUpdateTime() *int {
+	if u == nil {
 		return nil
 	}
-	return o.NextUpdateTime
+	return u.NextUpdateTime
 }
 
-func (o *UpgradeProfiles) GetNumAssociatedPublisher() *int {
-	if o == nil {
+func (u *UpgradeProfiles) GetNumAssociatedPublisher() *int {
+	if u == nil {
 		return nil
 	}
-	return o.NumAssociatedPublisher
+	return u.NumAssociatedPublisher
 }
 
-func (o *UpgradeProfiles) GetReleaseType() *string {
-	if o == nil {
+func (u *UpgradeProfiles) GetReleaseType() *string {
+	if u == nil {
 		return nil
 	}
-	return o.ReleaseType
+	return u.ReleaseType
 }
 
-func (o *UpgradeProfiles) GetTimezone() *string {
-	if o == nil {
+func (u *UpgradeProfiles) GetTimezone() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Timezone
+	return u.Timezone
 }
 
-func (o *UpgradeProfiles) GetTimezoneID() *int64 {
-	if o == nil {
+func (u *UpgradeProfiles) GetTimezoneID() *int64 {
+	if u == nil {
 		return nil
 	}
-	return o.TimezoneID
+	return u.TimezoneID
 }
 
-func (o *UpgradeProfiles) GetUpdatedAt() *string {
-	if o == nil {
+func (u *UpgradeProfiles) GetUpdatedAt() *string {
+	if u == nil {
 		return nil
 	}
-	return o.UpdatedAt
+	return u.UpdatedAt
 }
 
-func (o *UpgradeProfiles) GetUpgradingStage() *int {
-	if o == nil {
+func (u *UpgradeProfiles) GetUpgradingStage() *int {
+	if u == nil {
 		return nil
 	}
-	return o.UpgradingStage
+	return u.UpgradingStage
 }
 
-func (o *UpgradeProfiles) GetWillStart() *bool {
-	if o == nil {
+func (u *UpgradeProfiles) GetWillStart() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.WillStart
+	return u.WillStart
 }
 
 type PublisherUpgradeProfileListResponseData struct {
 	UpgradeProfiles []UpgradeProfiles `json:"upgrade_profiles,omitempty"`
 }
 
-func (o *PublisherUpgradeProfileListResponseData) GetUpgradeProfiles() []UpgradeProfiles {
-	if o == nil {
+func (p *PublisherUpgradeProfileListResponseData) GetUpgradeProfiles() []UpgradeProfiles {
+	if p == nil {
 		return nil
 	}
-	return o.UpgradeProfiles
+	return p.UpgradeProfiles
 }
 
 type PublisherUpgradeProfileListResponseStatus string
@@ -185,23 +185,23 @@ type PublisherUpgradeProfileListResponse struct {
 	Total  *int                                       `json:"total,omitempty"`
 }
 
-func (o *PublisherUpgradeProfileListResponse) GetData() *PublisherUpgradeProfileListResponseData {
-	if o == nil {
+func (p *PublisherUpgradeProfileListResponse) GetData() *PublisherUpgradeProfileListResponseData {
+	if p == nil {
 		return nil
 	}
-	return o.Data
+	return p.Data
 }
 
-func (o *PublisherUpgradeProfileListResponse) GetStatus() *PublisherUpgradeProfileListResponseStatus {
-	if o == nil {
+func (p *PublisherUpgradeProfileListResponse) GetStatus() *PublisherUpgradeProfileListResponseStatus {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }
 
-func (o *PublisherUpgradeProfileListResponse) GetTotal() *int {
-	if o == nil {
+func (p *PublisherUpgradeProfileListResponse) GetTotal() *int {
+	if p == nil {
 		return nil
 	}
-	return o.Total
+	return p.Total
 }

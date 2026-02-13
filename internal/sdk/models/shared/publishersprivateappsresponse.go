@@ -16,25 +16,25 @@ type PublishersPrivateAppsResponseReachability struct {
 	Reachable   *bool   `json:"reachable,omitempty"`
 }
 
-func (o *PublishersPrivateAppsResponseReachability) GetErrorCode() *int {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseReachability) GetErrorCode() *int {
+	if p == nil {
 		return nil
 	}
-	return o.ErrorCode
+	return p.ErrorCode
 }
 
-func (o *PublishersPrivateAppsResponseReachability) GetErrorString() *string {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseReachability) GetErrorString() *string {
+	if p == nil {
 		return nil
 	}
-	return o.ErrorString
+	return p.ErrorString
 }
 
-func (o *PublishersPrivateAppsResponseReachability) GetReachable() *bool {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseReachability) GetReachable() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.Reachable
+	return p.Reachable
 }
 
 type PublishersPrivateAppsResponseData struct {
@@ -58,130 +58,130 @@ type PublishersPrivateAppsResponseData struct {
 	UsePublisherDNS             *bool                                      `json:"use_publisher_dns,omitempty"`
 }
 
-func (o *PublishersPrivateAppsResponseData) GetAllowUnauthenticatedCors() *bool {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetAllowUnauthenticatedCors() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.AllowUnauthenticatedCors
+	return p.AllowUnauthenticatedCors
 }
 
-func (o *PublishersPrivateAppsResponseData) GetAppOption() *PublishersPrivateAppsResponseAppOption {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetAppOption() *PublishersPrivateAppsResponseAppOption {
+	if p == nil {
 		return nil
 	}
-	return o.AppOption
+	return p.AppOption
 }
 
-func (o *PublishersPrivateAppsResponseData) GetClientlessAccess() *bool {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetClientlessAccess() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.ClientlessAccess
+	return p.ClientlessAccess
 }
 
-func (o *PublishersPrivateAppsResponseData) GetExternalID() *int {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetExternalID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.ExternalID
+	return p.ExternalID
 }
 
-func (o *PublishersPrivateAppsResponseData) GetHost() *string {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetHost() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Host
+	return p.Host
 }
 
-func (o *PublishersPrivateAppsResponseData) GetID() *int {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.ID
+	return p.ID
 }
 
-func (o *PublishersPrivateAppsResponseData) GetIsUserPortalApp() *bool {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetIsUserPortalApp() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.IsUserPortalApp
+	return p.IsUserPortalApp
 }
 
-func (o *PublishersPrivateAppsResponseData) GetPrivateAppName() *string {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetPrivateAppName() *string {
+	if p == nil {
 		return nil
 	}
-	return o.PrivateAppName
+	return p.PrivateAppName
 }
 
-func (o *PublishersPrivateAppsResponseData) GetPrivateAppProtocol() *string {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetPrivateAppProtocol() *string {
+	if p == nil {
 		return nil
 	}
-	return o.PrivateAppProtocol
+	return p.PrivateAppProtocol
 }
 
-func (o *PublishersPrivateAppsResponseData) GetProtocols() []ProtocolItem {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetProtocols() []ProtocolItem {
+	if p == nil {
 		return nil
 	}
-	return o.Protocols
+	return p.Protocols
 }
 
-func (o *PublishersPrivateAppsResponseData) GetPublicHost() *string {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetPublicHost() *string {
+	if p == nil {
 		return nil
 	}
-	return o.PublicHost
+	return p.PublicHost
 }
 
-func (o *PublishersPrivateAppsResponseData) GetReachability() *PublishersPrivateAppsResponseReachability {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetReachability() *PublishersPrivateAppsResponseReachability {
+	if p == nil {
 		return nil
 	}
-	return o.Reachability
+	return p.Reachability
 }
 
-func (o *PublishersPrivateAppsResponseData) GetRealHost() *string {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetRealHost() *string {
+	if p == nil {
 		return nil
 	}
-	return o.RealHost
+	return p.RealHost
 }
 
-func (o *PublishersPrivateAppsResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetServicePublisherAssignments() []ServicePublisherAssignmentItem {
+	if p == nil {
 		return nil
 	}
-	return o.ServicePublisherAssignments
+	return p.ServicePublisherAssignments
 }
 
-func (o *PublishersPrivateAppsResponseData) GetTags() []TagItem {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetTags() []TagItem {
+	if p == nil {
 		return nil
 	}
-	return o.Tags
+	return p.Tags
 }
 
-func (o *PublishersPrivateAppsResponseData) GetSupplimentDNSForOsx() *bool {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetSupplimentDNSForOsx() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.SupplimentDNSForOsx
+	return p.SupplimentDNSForOsx
 }
 
-func (o *PublishersPrivateAppsResponseData) GetTrustSelfSignedCerts() *bool {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetTrustSelfSignedCerts() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.TrustSelfSignedCerts
+	return p.TrustSelfSignedCerts
 }
 
-func (o *PublishersPrivateAppsResponseData) GetUsePublisherDNS() *bool {
-	if o == nil {
+func (p *PublishersPrivateAppsResponseData) GetUsePublisherDNS() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.UsePublisherDNS
+	return p.UsePublisherDNS
 }
 
 type PublishersPrivateAppsResponseStatus string
@@ -215,16 +215,16 @@ type PublishersPrivateAppsResponse struct {
 	Status *PublishersPrivateAppsResponseStatus `json:"status,omitempty"`
 }
 
-func (o *PublishersPrivateAppsResponse) GetData() []PublishersPrivateAppsResponseData {
-	if o == nil {
+func (p *PublishersPrivateAppsResponse) GetData() []PublishersPrivateAppsResponseData {
+	if p == nil {
 		return nil
 	}
-	return o.Data
+	return p.Data
 }
 
-func (o *PublishersPrivateAppsResponse) GetStatus() *PublishersPrivateAppsResponseStatus {
-	if o == nil {
+func (p *PublishersPrivateAppsResponse) GetStatus() *PublishersPrivateAppsResponseStatus {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }

@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -43,7 +42,7 @@ func (r *NPAPublishersAlertsConfigurationResource) Metadata(ctx context.Context,
 
 func (r *NPAPublishersAlertsConfigurationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource supports the ability to update publisher alert configurations.\n",
+		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource supports the ability to retrieve publisher alert configurations.\n",
 		Attributes: map[string]schema.Attribute{
 			"admin_users": schema.ListAttribute{
 				Required:    true,
@@ -61,15 +60,7 @@ func (r *NPAPublishersAlertsConfigurationResource) Schema(ctx context.Context, r
 				Required: true,
 			},
 			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: `must be one of ["success", "not found", "failure"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"success",
-						"not found",
-						"failure",
-					),
-				},
+				Computed: true,
 			},
 		},
 	}
@@ -150,31 +141,6 @@ func (r *NPAPublishersAlertsConfigurationResource) Create(ctx context.Context, r
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res1, err := r.client.GetNPAPublisherAlerts(ctx)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
-		}
-		return
-	}
-	if res1 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
-		return
-	}
-	if !(res1.PublishersAlertGetResponse != nil && res1.PublishersAlertGetResponse.Data != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPublishersAlertGetResponseData(ctx, res1.PublishersAlertGetResponse.Data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -218,11 +184,11 @@ func (r *NPAPublishersAlertsConfigurationResource) Read(ctx context.Context, req
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublishersAlertGetResponse != nil && res.PublishersAlertGetResponse.Data != nil) {
+	if !(res.PublishersAlertGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPublishersAlertGetResponseData(ctx, res.PublishersAlertGetResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublishersAlertGetResponse(ctx, res.PublishersAlertGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -279,31 +245,6 @@ func (r *NPAPublishersAlertsConfigurationResource) Update(ctx context.Context, r
 	}
 
 	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	res1, err := r.client.GetNPAPublisherAlerts(ctx)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
-		}
-		return
-	}
-	if res1 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
-		return
-	}
-	if !(res1.PublishersAlertGetResponse != nil && res1.PublishersAlertGetResponse.Data != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPublishersAlertGetResponseData(ctx, res1.PublishersAlertGetResponse.Data)...)
 
 	if resp.Diagnostics.HasError() {
 		return

@@ -7,16 +7,16 @@ type PrivateAppsGetResponse struct {
 	Status *StatusEnum      `json:"status,omitempty"`
 }
 
-func (o *PrivateAppsGetResponse) GetData() *PrivateAppsItem {
-	if o == nil {
+func (p *PrivateAppsGetResponse) GetData() *PrivateAppsItem {
+	if p == nil {
 		return nil
 	}
-	return o.Data
+	return p.Data
 }
 
-func (o *PrivateAppsGetResponse) GetStatus() *StatusEnum {
-	if o == nil {
+func (p *PrivateAppsGetResponse) GetStatus() *StatusEnum {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }

@@ -7,18 +7,18 @@ type UpgradePublisherResponseCaCertsStatus struct {
 	LastModified *int     `json:"last_modified,omitempty"`
 }
 
-func (o *UpgradePublisherResponseCaCertsStatus) GetHashes() []string {
-	if o == nil {
+func (u *UpgradePublisherResponseCaCertsStatus) GetHashes() []string {
+	if u == nil {
 		return nil
 	}
-	return o.Hashes
+	return u.Hashes
 }
 
-func (o *UpgradePublisherResponseCaCertsStatus) GetLastModified() *int {
-	if o == nil {
+func (u *UpgradePublisherResponseCaCertsStatus) GetLastModified() *int {
+	if u == nil {
 		return nil
 	}
-	return o.LastModified
+	return u.LastModified
 }
 
 type UpgradePublisherResponseAssessment struct {
@@ -31,53 +31,53 @@ type UpgradePublisherResponseAssessment struct {
 	Version       *string                                `json:"version,omitempty"`
 }
 
-func (o *UpgradePublisherResponseAssessment) GetCaCertsStatus() *UpgradePublisherResponseCaCertsStatus {
-	if o == nil {
+func (u *UpgradePublisherResponseAssessment) GetCaCertsStatus() *UpgradePublisherResponseCaCertsStatus {
+	if u == nil {
 		return nil
 	}
-	return o.CaCertsStatus
+	return u.CaCertsStatus
 }
 
-func (o *UpgradePublisherResponseAssessment) GetEeeSupport() *bool {
-	if o == nil {
+func (u *UpgradePublisherResponseAssessment) GetEeeSupport() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.EeeSupport
+	return u.EeeSupport
 }
 
-func (o *UpgradePublisherResponseAssessment) GetHddFree() *string {
-	if o == nil {
+func (u *UpgradePublisherResponseAssessment) GetHddFree() *string {
+	if u == nil {
 		return nil
 	}
-	return o.HddFree
+	return u.HddFree
 }
 
-func (o *UpgradePublisherResponseAssessment) GetHddTotal() *string {
-	if o == nil {
+func (u *UpgradePublisherResponseAssessment) GetHddTotal() *string {
+	if u == nil {
 		return nil
 	}
-	return o.HddTotal
+	return u.HddTotal
 }
 
-func (o *UpgradePublisherResponseAssessment) GetIPAddress() *string {
-	if o == nil {
+func (u *UpgradePublisherResponseAssessment) GetIPAddress() *string {
+	if u == nil {
 		return nil
 	}
-	return o.IPAddress
+	return u.IPAddress
 }
 
-func (o *UpgradePublisherResponseAssessment) GetLatency() *int {
-	if o == nil {
+func (u *UpgradePublisherResponseAssessment) GetLatency() *int {
+	if u == nil {
 		return nil
 	}
-	return o.Latency
+	return u.Latency
 }
 
-func (o *UpgradePublisherResponseAssessment) GetVersion() *string {
-	if o == nil {
+func (u *UpgradePublisherResponseAssessment) GetVersion() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Version
+	return u.Version
 }
 
 type UpgradePublisherResponsePullNsconfig struct {
@@ -85,18 +85,18 @@ type UpgradePublisherResponsePullNsconfig struct {
 	OrguriExist *bool `json:"orguri_exist,omitempty"`
 }
 
-func (o *UpgradePublisherResponsePullNsconfig) GetOrgkeyExist() *bool {
-	if o == nil {
+func (u *UpgradePublisherResponsePullNsconfig) GetOrgkeyExist() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.OrgkeyExist
+	return u.OrgkeyExist
 }
 
-func (o *UpgradePublisherResponsePullNsconfig) GetOrguriExist() *bool {
-	if o == nil {
+func (u *UpgradePublisherResponsePullNsconfig) GetOrguriExist() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.OrguriExist
+	return u.OrguriExist
 }
 
 type UpgradePublisherResponseCapabilities struct {
@@ -107,39 +107,39 @@ type UpgradePublisherResponseCapabilities struct {
 	PullNsconfig *UpgradePublisherResponsePullNsconfig `json:"pull_nsconfig,omitempty"`
 }
 
-func (o *UpgradePublisherResponseCapabilities) GetDtls() *bool {
-	if o == nil {
+func (u *UpgradePublisherResponseCapabilities) GetDtls() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.Dtls
+	return u.Dtls
 }
 
-func (o *UpgradePublisherResponseCapabilities) GetEee() *bool {
-	if o == nil {
+func (u *UpgradePublisherResponseCapabilities) GetEee() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.Eee
+	return u.Eee
 }
 
-func (o *UpgradePublisherResponseCapabilities) GetAutoUpgrade() *bool {
-	if o == nil {
+func (u *UpgradePublisherResponseCapabilities) GetAutoUpgrade() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.AutoUpgrade
+	return u.AutoUpgrade
 }
 
-func (o *UpgradePublisherResponseCapabilities) GetNwaBa() *bool {
-	if o == nil {
+func (u *UpgradePublisherResponseCapabilities) GetNwaBa() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.NwaBa
+	return u.NwaBa
 }
 
-func (o *UpgradePublisherResponseCapabilities) GetPullNsconfig() *UpgradePublisherResponsePullNsconfig {
-	if o == nil {
+func (u *UpgradePublisherResponseCapabilities) GetPullNsconfig() *UpgradePublisherResponsePullNsconfig {
+	if u == nil {
 		return nil
 	}
-	return o.PullNsconfig
+	return u.PullNsconfig
 }
 
 type UpgradePublisherResponseUpgradeFailedReason struct {
@@ -149,43 +149,43 @@ type UpgradePublisherResponseUpgradeFailedReason struct {
 	Version   *string `json:"version,omitempty"`
 }
 
-func (o *UpgradePublisherResponseUpgradeFailedReason) GetDetail() *string {
-	if o == nil {
+func (u *UpgradePublisherResponseUpgradeFailedReason) GetDetail() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Detail
+	return u.Detail
 }
 
-func (o *UpgradePublisherResponseUpgradeFailedReason) GetErrorCode() *int {
-	if o == nil {
+func (u *UpgradePublisherResponseUpgradeFailedReason) GetErrorCode() *int {
+	if u == nil {
 		return nil
 	}
-	return o.ErrorCode
+	return u.ErrorCode
 }
 
-func (o *UpgradePublisherResponseUpgradeFailedReason) GetTimestamp() *int {
-	if o == nil {
+func (u *UpgradePublisherResponseUpgradeFailedReason) GetTimestamp() *int {
+	if u == nil {
 		return nil
 	}
-	return o.Timestamp
+	return u.Timestamp
 }
 
-func (o *UpgradePublisherResponseUpgradeFailedReason) GetVersion() *string {
-	if o == nil {
+func (u *UpgradePublisherResponseUpgradeFailedReason) GetVersion() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Version
+	return u.Version
 }
 
 type UpgradePublisherResponseUpgradeStatus struct {
 	Upstat *string `json:"upstat,omitempty"`
 }
 
-func (o *UpgradePublisherResponseUpgradeStatus) GetUpstat() *string {
-	if o == nil {
+func (u *UpgradePublisherResponseUpgradeStatus) GetUpstat() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Upstat
+	return u.Upstat
 }
 
 type UpgradePublisherResponse struct {
@@ -208,121 +208,121 @@ type UpgradePublisherResponse struct {
 	UpgradeStatus              *UpgradePublisherResponseUpgradeStatus       `json:"upgrade_status,omitempty"`
 }
 
-func (o *UpgradePublisherResponse) GetAppsCount() *int {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetAppsCount() *int {
+	if u == nil {
 		return nil
 	}
-	return o.AppsCount
+	return u.AppsCount
 }
 
-func (o *UpgradePublisherResponse) GetAssessment() *UpgradePublisherResponseAssessment {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetAssessment() *UpgradePublisherResponseAssessment {
+	if u == nil {
 		return nil
 	}
-	return o.Assessment
+	return u.Assessment
 }
 
-func (o *UpgradePublisherResponse) GetCapabilities() *UpgradePublisherResponseCapabilities {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetCapabilities() *UpgradePublisherResponseCapabilities {
+	if u == nil {
 		return nil
 	}
-	return o.Capabilities
+	return u.Capabilities
 }
 
-func (o *UpgradePublisherResponse) GetCommonName() *string {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetCommonName() *string {
+	if u == nil {
 		return nil
 	}
-	return o.CommonName
+	return u.CommonName
 }
 
-func (o *UpgradePublisherResponse) GetConnectedApps() []string {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetConnectedApps() []string {
+	if u == nil {
 		return nil
 	}
-	return o.ConnectedApps
+	return u.ConnectedApps
 }
 
-func (o *UpgradePublisherResponse) GetPublisherID() *int {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetPublisherID() *int {
+	if u == nil {
 		return nil
 	}
-	return o.PublisherID
+	return u.PublisherID
 }
 
-func (o *UpgradePublisherResponse) GetLbrokerconnect() *bool {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetLbrokerconnect() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.Lbrokerconnect
+	return u.Lbrokerconnect
 }
 
-func (o *UpgradePublisherResponse) GetName() *string {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetName() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Name
+	return u.Name
 }
 
-func (o *UpgradePublisherResponse) GetPublisherUpgradeProfilesID() *int {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetPublisherUpgradeProfilesID() *int {
+	if u == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfilesID
+	return u.PublisherUpgradeProfilesID
 }
 
-func (o *UpgradePublisherResponse) GetRegistered() *bool {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetRegistered() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.Registered
+	return u.Registered
 }
 
-func (o *UpgradePublisherResponse) GetStatus() *string {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetStatus() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Status
+	return u.Status
 }
 
-func (o *UpgradePublisherResponse) GetStitcherID() *int {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetStitcherID() *int {
+	if u == nil {
 		return nil
 	}
-	return o.StitcherID
+	return u.StitcherID
 }
 
-func (o *UpgradePublisherResponse) GetSticherPop() *string {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetSticherPop() *string {
+	if u == nil {
 		return nil
 	}
-	return o.SticherPop
+	return u.SticherPop
 }
 
-func (o *UpgradePublisherResponse) GetTags() []TagItem {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetTags() []TagItem {
+	if u == nil {
 		return nil
 	}
-	return o.Tags
+	return u.Tags
 }
 
-func (o *UpgradePublisherResponse) GetUpgradeFailedReason() *UpgradePublisherResponseUpgradeFailedReason {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetUpgradeFailedReason() *UpgradePublisherResponseUpgradeFailedReason {
+	if u == nil {
 		return nil
 	}
-	return o.UpgradeFailedReason
+	return u.UpgradeFailedReason
 }
 
-func (o *UpgradePublisherResponse) GetUpgradeRequest() *bool {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetUpgradeRequest() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.UpgradeRequest
+	return u.UpgradeRequest
 }
 
-func (o *UpgradePublisherResponse) GetUpgradeStatus() *UpgradePublisherResponseUpgradeStatus {
-	if o == nil {
+func (u *UpgradePublisherResponse) GetUpgradeStatus() *UpgradePublisherResponseUpgradeStatus {
+	if u == nil {
 		return nil
 	}
-	return o.UpgradeStatus
+	return u.UpgradeStatus
 }

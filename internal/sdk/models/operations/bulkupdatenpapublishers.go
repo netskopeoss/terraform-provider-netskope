@@ -20,37 +20,37 @@ type BulkupdateNPAPublishersResponse struct {
 	FourHundred *shared.FourHundred
 }
 
-func (o *BulkupdateNPAPublishersResponse) GetContentType() string {
-	if o == nil {
+func (b *BulkupdateNPAPublishersResponse) GetContentType() string {
+	if b == nil {
 		return ""
 	}
-	return o.ContentType
+	return b.ContentType
 }
 
-func (o *BulkupdateNPAPublishersResponse) GetStatusCode() int {
-	if o == nil {
+func (b *BulkupdateNPAPublishersResponse) GetStatusCode() int {
+	if b == nil {
 		return 0
 	}
-	return o.StatusCode
+	return b.StatusCode
 }
 
-func (o *BulkupdateNPAPublishersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (b *BulkupdateNPAPublishersResponse) GetRawResponse() *http.Response {
+	if b == nil {
 		return nil
 	}
-	return o.RawResponse
+	return b.RawResponse
 }
 
-func (o *BulkupdateNPAPublishersResponse) GetPublisherUpgradeProfileBulkResponse() *shared.PublisherUpgradeProfileBulkResponse {
-	if o == nil {
+func (b *BulkupdateNPAPublishersResponse) GetPublisherUpgradeProfileBulkResponse() *shared.PublisherUpgradeProfileBulkResponse {
+	if b == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfileBulkResponse
+	return b.PublisherUpgradeProfileBulkResponse
 }
 
-func (o *BulkupdateNPAPublishersResponse) GetFourHundred() *shared.FourHundred {
-	if o == nil {
+func (b *BulkupdateNPAPublishersResponse) GetFourHundred() *shared.FourHundred {
+	if b == nil {
 		return nil
 	}
-	return o.FourHundred
+	return b.FourHundred
 }

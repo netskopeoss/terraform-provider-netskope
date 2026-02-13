@@ -8,23 +8,23 @@ type GrePopListResponse struct {
 	Total  *int             `json:"total,omitempty"`
 }
 
-func (o *GrePopListResponse) GetResult() []GrePopListItem {
-	if o == nil {
+func (g *GrePopListResponse) GetResult() []GrePopListItem {
+	if g == nil {
 		return nil
 	}
-	return o.Result
+	return g.Result
 }
 
-func (o *GrePopListResponse) GetStatus() *int64 {
-	if o == nil {
+func (g *GrePopListResponse) GetStatus() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.Status
+	return g.Status
 }
 
-func (o *GrePopListResponse) GetTotal() *int {
-	if o == nil {
+func (g *GrePopListResponse) GetTotal() *int {
+	if g == nil {
 		return nil
 	}
-	return o.Total
+	return g.Total
 }
