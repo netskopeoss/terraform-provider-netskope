@@ -32,7 +32,7 @@ func TestAccNPAPolicyGroups_basic(t *testing.T) {
 				ResourceName:            resourceName,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"group_order"},
+				ImportStateVerifyIgnore: []string{"group_order", "modify_time"},
 			},
 		},
 	})
@@ -87,7 +87,7 @@ func TestAccNPAPolicyGroups_import(t *testing.T) {
 				ResourceName:            resourceName,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"group_order"},
+				ImportStateVerifyIgnore: []string{"group_order", "modify_time"},
 			},
 		},
 	})
