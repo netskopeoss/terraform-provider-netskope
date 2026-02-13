@@ -3,6 +3,7 @@ package provider
 import (
 	"fmt"
 	"sort"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -186,4 +187,75 @@ func TestSortedKeysMatch_EmptyLists(t *testing.T) {
 		t.Fatal("empty lists should have same length")
 	}
 	// No elements to compare — match is trivially true.
+}
+
+// =============================================================================
+// BUG-005: Case-insensitive tag name matching
+// =============================================================================
+
+func TestTagKeysMatch_CaseInsensitive(t *testing.T) {
+	// API returns "Production" but user config says "production".
+	// Without lowercasing, sort.Strings uses ASCII order where uppercase < lowercase,
+	// so "Production" sorts before "infrastructure" but "production" sorts after it.
+	// This misaligns the lists even though they represent the same tags.
+	plan := []string{"infrastructure", "production"}
+	state := []string{"Production", "infrastructure"}
+
+	// Show that naive sort + case-sensitive compare fails:
+	sortedPlan := make([]string, len(plan))
+	sortedState := make([]string, len(state))
+	copy(sortedPlan, plan)
+	copy(sortedState, state)
+	sort.Strings(sortedPlan)
+	sort.Strings(sortedState)
+	// sortedPlan = ["infrastructure", "production"], sortedState = ["Production", "infrastructure"]
+	if sortedPlan[0] == sortedState[0] {
+		t.Fatal("naive sort should misalign these lists due to case")
+	}
+
+	// Now apply the fix: lowercase before sorting.
+	loweredPlan := make([]string, len(plan))
+	loweredState := make([]string, len(state))
+	for i, k := range plan {
+		loweredPlan[i] = strings.ToLower(k)
+	}
+	for i, k := range state {
+		loweredState[i] = strings.ToLower(k)
+	}
+	sort.Strings(loweredPlan)
+	sort.Strings(loweredState)
+
+	for i := range loweredPlan {
+		if loweredPlan[i] != loweredState[i] {
+			t.Fatalf("lowercased+sorted keys should match at position %d: %q vs %q", i, loweredPlan[i], loweredState[i])
+		}
+	}
+}
+
+func TestTagKeysMatch_CaseInsensitive_DifferentTags(t *testing.T) {
+	// Different tags should NOT match even with lowercasing.
+	plan := []string{"production", "web"}
+	state := []string{"Production", "infrastructure"}
+
+	loweredPlan := make([]string, len(plan))
+	loweredState := make([]string, len(state))
+	for i, k := range plan {
+		loweredPlan[i] = strings.ToLower(k)
+	}
+	for i, k := range state {
+		loweredState[i] = strings.ToLower(k)
+	}
+	sort.Strings(loweredPlan)
+	sort.Strings(loweredState)
+
+	match := true
+	for i := range loweredPlan {
+		if loweredPlan[i] != loweredState[i] {
+			match = false
+			break
+		}
+	}
+	if match {
+		t.Fatal("different tags should NOT match even with lowercasing")
+	}
 }
