@@ -308,58 +308,58 @@ type PublisherUpgradeProfilePutRequest struct {
 	TimezoneID *int                                      `json:"timezone_id,omitempty"`
 }
 
-func (o *PublisherUpgradeProfilePutRequest) GetDockerTag() string {
-	if o == nil {
+func (p *PublisherUpgradeProfilePutRequest) GetDockerTag() string {
+	if p == nil {
 		return ""
 	}
-	return o.DockerTag
+	return p.DockerTag
 }
 
-func (o *PublisherUpgradeProfilePutRequest) GetEnabled() bool {
-	if o == nil {
+func (p *PublisherUpgradeProfilePutRequest) GetEnabled() bool {
+	if p == nil {
 		return false
 	}
-	return o.Enabled
+	return p.Enabled
 }
 
-func (o *PublisherUpgradeProfilePutRequest) GetFrequency() string {
-	if o == nil {
+func (p *PublisherUpgradeProfilePutRequest) GetFrequency() string {
+	if p == nil {
 		return ""
 	}
-	return o.Frequency
+	return p.Frequency
 }
 
-func (o *PublisherUpgradeProfilePutRequest) GetPublisherUpgradeProfileID() int {
-	if o == nil {
+func (p *PublisherUpgradeProfilePutRequest) GetPublisherUpgradeProfileID() int {
+	if p == nil {
 		return 0
 	}
-	return o.PublisherUpgradeProfileID
+	return p.PublisherUpgradeProfileID
 }
 
-func (o *PublisherUpgradeProfilePutRequest) GetName() string {
-	if o == nil {
+func (p *PublisherUpgradeProfilePutRequest) GetName() string {
+	if p == nil {
 		return ""
 	}
-	return o.Name
+	return p.Name
 }
 
-func (o *PublisherUpgradeProfilePutRequest) GetReleaseType() PublisherUpgradeProfilePutRequestReleaseType {
-	if o == nil {
+func (p *PublisherUpgradeProfilePutRequest) GetReleaseType() PublisherUpgradeProfilePutRequestReleaseType {
+	if p == nil {
 		return PublisherUpgradeProfilePutRequestReleaseType("")
 	}
-	return o.ReleaseType
+	return p.ReleaseType
 }
 
-func (o *PublisherUpgradeProfilePutRequest) GetTimezone() PublisherUpgradeProfilePutRequestTimezone {
-	if o == nil {
+func (p *PublisherUpgradeProfilePutRequest) GetTimezone() PublisherUpgradeProfilePutRequestTimezone {
+	if p == nil {
 		return PublisherUpgradeProfilePutRequestTimezone("")
 	}
-	return o.Timezone
+	return p.Timezone
 }
 
-func (o *PublisherUpgradeProfilePutRequest) GetTimezoneID() *int {
-	if o == nil {
+func (p *PublisherUpgradeProfilePutRequest) GetTimezoneID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.TimezoneID
+	return p.TimezoneID
 }

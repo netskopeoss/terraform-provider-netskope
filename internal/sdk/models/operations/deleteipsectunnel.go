@@ -12,11 +12,11 @@ type DeleteIPSecTunnelRequest struct {
 	TunnelID int `pathParam:"style=simple,explode=false,name=tunnel_id"`
 }
 
-func (o *DeleteIPSecTunnelRequest) GetTunnelID() int {
-	if o == nil {
+func (d *DeleteIPSecTunnelRequest) GetTunnelID() int {
+	if d == nil {
 		return 0
 	}
-	return o.TunnelID
+	return d.TunnelID
 }
 
 // DeleteIPSecTunnelResponseBody - Successful operation
@@ -25,18 +25,18 @@ type DeleteIPSecTunnelResponseBody struct {
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *DeleteIPSecTunnelResponseBody) GetResult() *string {
-	if o == nil {
+func (d *DeleteIPSecTunnelResponseBody) GetResult() *string {
+	if d == nil {
 		return nil
 	}
-	return o.Result
+	return d.Result
 }
 
-func (o *DeleteIPSecTunnelResponseBody) GetStatus() *int64 {
-	if o == nil {
+func (d *DeleteIPSecTunnelResponseBody) GetStatus() *int64 {
+	if d == nil {
 		return nil
 	}
-	return o.Status
+	return d.Status
 }
 
 type DeleteIPSecTunnelResponse struct {
@@ -52,37 +52,37 @@ type DeleteIPSecTunnelResponse struct {
 	IpsecResponse400 *shared.IpsecResponse400
 }
 
-func (o *DeleteIPSecTunnelResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteIPSecTunnelResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteIPSecTunnelResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteIPSecTunnelResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteIPSecTunnelResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteIPSecTunnelResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }
 
-func (o *DeleteIPSecTunnelResponse) GetObject() *DeleteIPSecTunnelResponseBody {
-	if o == nil {
+func (d *DeleteIPSecTunnelResponse) GetObject() *DeleteIPSecTunnelResponseBody {
+	if d == nil {
 		return nil
 	}
-	return o.Object
+	return d.Object
 }
 
-func (o *DeleteIPSecTunnelResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
-	if o == nil {
+func (d *DeleteIPSecTunnelResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
+	if d == nil {
 		return nil
 	}
-	return o.IpsecResponse400
+	return d.IpsecResponse400
 }

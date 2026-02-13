@@ -8,23 +8,23 @@ type ReleaseItem struct {
 	Version   *string `json:"version,omitempty"`
 }
 
-func (o *ReleaseItem) GetDockerTag() *string {
-	if o == nil {
+func (r *ReleaseItem) GetDockerTag() *string {
+	if r == nil {
 		return nil
 	}
-	return o.DockerTag
+	return r.DockerTag
 }
 
-func (o *ReleaseItem) GetName() *string {
-	if o == nil {
+func (r *ReleaseItem) GetName() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Name
+	return r.Name
 }
 
-func (o *ReleaseItem) GetVersion() *string {
-	if o == nil {
+func (r *ReleaseItem) GetVersion() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Version
+	return r.Version
 }

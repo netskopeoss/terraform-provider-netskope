@@ -6,11 +6,11 @@ type Apply struct {
 	UpgradeRequest bool `json:"upgrade_request"`
 }
 
-func (o *Apply) GetUpgradeRequest() bool {
-	if o == nil {
+func (a *Apply) GetUpgradeRequest() bool {
+	if a == nil {
 		return false
 	}
-	return o.UpgradeRequest
+	return a.UpgradeRequest
 }
 
 type Publishers struct {
@@ -18,27 +18,27 @@ type Publishers struct {
 	PublisherID []string `json:"id"`
 }
 
-func (o *Publishers) GetApply() *Apply {
-	if o == nil {
+func (p *Publishers) GetApply() *Apply {
+	if p == nil {
 		return nil
 	}
-	return o.Apply
+	return p.Apply
 }
 
-func (o *Publishers) GetPublisherID() []string {
-	if o == nil {
+func (p *Publishers) GetPublisherID() []string {
+	if p == nil {
 		return []string{}
 	}
-	return o.PublisherID
+	return p.PublisherID
 }
 
 type PublisherBulkRequest struct {
 	Publishers *Publishers `json:"publishers,omitempty"`
 }
 
-func (o *PublisherBulkRequest) GetPublishers() *Publishers {
-	if o == nil {
+func (p *PublisherBulkRequest) GetPublishers() *Publishers {
+	if p == nil {
 		return nil
 	}
-	return o.Publishers
+	return p.Publishers
 }

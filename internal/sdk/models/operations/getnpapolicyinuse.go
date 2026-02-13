@@ -11,22 +11,22 @@ type GetNPAPolicyInUseRequestBody struct {
 	Ids []string `json:"ids,omitempty"`
 }
 
-func (o *GetNPAPolicyInUseRequestBody) GetIds() []string {
-	if o == nil {
+func (g *GetNPAPolicyInUseRequestBody) GetIds() []string {
+	if g == nil {
 		return nil
 	}
-	return o.Ids
+	return g.Ids
 }
 
 type Data struct {
 	Token *string `json:"token,omitempty"`
 }
 
-func (o *Data) GetToken() *string {
-	if o == nil {
+func (d *Data) GetToken() *string {
+	if d == nil {
 		return nil
 	}
-	return o.Token
+	return d.Token
 }
 
 type ResponseBody struct {
@@ -34,18 +34,18 @@ type ResponseBody struct {
 	Status *shared.StatusEnum `json:"status,omitempty"`
 }
 
-func (o *ResponseBody) GetData() *Data {
-	if o == nil {
+func (r *ResponseBody) GetData() *Data {
+	if r == nil {
 		return nil
 	}
-	return o.Data
+	return r.Data
 }
 
-func (o *ResponseBody) GetStatus() *shared.StatusEnum {
-	if o == nil {
+func (r *ResponseBody) GetStatus() *shared.StatusEnum {
+	if r == nil {
 		return nil
 	}
-	return o.Status
+	return r.Status
 }
 
 type GetNPAPolicyInUseResponse struct {
@@ -61,37 +61,37 @@ type GetNPAPolicyInUseResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *GetNPAPolicyInUseResponse) GetContentType() string {
-	if o == nil {
+func (g *GetNPAPolicyInUseResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetNPAPolicyInUseResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetNPAPolicyInUseResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetNPAPolicyInUseResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetNPAPolicyInUseResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetNPAPolicyInUseResponse) GetResponseBodies() []ResponseBody {
-	if o == nil {
+func (g *GetNPAPolicyInUseResponse) GetResponseBodies() []ResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.ResponseBodies
+	return g.ResponseBodies
 }
 
-func (o *GetNPAPolicyInUseResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
-	if o == nil {
+func (g *GetNPAPolicyInUseResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.PrivateAppsResponse400
+	return g.PrivateAppsResponse400
 }

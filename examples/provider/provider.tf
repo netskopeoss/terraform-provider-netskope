@@ -8,5 +8,6 @@ terraform {
 }
 
 provider "netskope" {
-  # Configuration options
+  server_url = "..." # Optional - can use NETSKOPE_SERVER_URL environment variable
+  tenant     = "..." # Optional
 }

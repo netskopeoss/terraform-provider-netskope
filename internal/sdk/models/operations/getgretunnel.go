@@ -12,11 +12,11 @@ type GetGRETunnelRequest struct {
 	TunnelID int `pathParam:"style=simple,explode=false,name=tunnel_id"`
 }
 
-func (o *GetGRETunnelRequest) GetTunnelID() int {
-	if o == nil {
+func (g *GetGRETunnelRequest) GetTunnelID() int {
+	if g == nil {
 		return 0
 	}
-	return o.TunnelID
+	return g.TunnelID
 }
 
 type GetGRETunnelResponse struct {
@@ -32,37 +32,37 @@ type GetGRETunnelResponse struct {
 	GreResponse400 *shared.GreResponse400
 }
 
-func (o *GetGRETunnelResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGRETunnelResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGRETunnelResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGRETunnelResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGRETunnelResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGRETunnelResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetGRETunnelResponse) GetGreTunnelGetResponse() *shared.GreTunnelGetResponse {
-	if o == nil {
+func (g *GetGRETunnelResponse) GetGreTunnelGetResponse() *shared.GreTunnelGetResponse {
+	if g == nil {
 		return nil
 	}
-	return o.GreTunnelGetResponse
+	return g.GreTunnelGetResponse
 }
 
-func (o *GetGRETunnelResponse) GetGreResponse400() *shared.GreResponse400 {
-	if o == nil {
+func (g *GetGRETunnelResponse) GetGreResponse400() *shared.GreResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.GreResponse400
+	return g.GreResponse400
 }

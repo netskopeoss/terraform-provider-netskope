@@ -12,11 +12,11 @@ type GenerateNPALocalBrokerTokenRequest struct {
 	LocalBrokerID int `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *GenerateNPALocalBrokerTokenRequest) GetLocalBrokerID() int {
-	if o == nil {
+func (g *GenerateNPALocalBrokerTokenRequest) GetLocalBrokerID() int {
+	if g == nil {
 		return 0
 	}
-	return o.LocalBrokerID
+	return g.LocalBrokerID
 }
 
 type GenerateNPALocalBrokerTokenResponse struct {
@@ -32,37 +32,37 @@ type GenerateNPALocalBrokerTokenResponse struct {
 	LbrokerResponse400 *shared.LbrokerResponse400
 }
 
-func (o *GenerateNPALocalBrokerTokenResponse) GetContentType() string {
-	if o == nil {
+func (g *GenerateNPALocalBrokerTokenResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GenerateNPALocalBrokerTokenResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GenerateNPALocalBrokerTokenResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GenerateNPALocalBrokerTokenResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GenerateNPALocalBrokerTokenResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GenerateNPALocalBrokerTokenResponse) GetLbrokerTokenResponse() *shared.LbrokerTokenResponse {
-	if o == nil {
+func (g *GenerateNPALocalBrokerTokenResponse) GetLbrokerTokenResponse() *shared.LbrokerTokenResponse {
+	if g == nil {
 		return nil
 	}
-	return o.LbrokerTokenResponse
+	return g.LbrokerTokenResponse
 }
 
-func (o *GenerateNPALocalBrokerTokenResponse) GetLbrokerResponse400() *shared.LbrokerResponse400 {
-	if o == nil {
+func (g *GenerateNPALocalBrokerTokenResponse) GetLbrokerResponse400() *shared.LbrokerResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.LbrokerResponse400
+	return g.LbrokerResponse400
 }

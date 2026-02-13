@@ -14,11 +14,11 @@ type GetNPARulesRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *GetNPARulesRequest) GetID() string {
-	if o == nil {
+func (g *GetNPARulesRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 type GetNPARulesStatus string
@@ -53,18 +53,18 @@ type GetNPARulesResponseBody struct {
 	Status *GetNPARulesStatus            `json:"status,omitempty"`
 }
 
-func (o *GetNPARulesResponseBody) GetData() *shared.NpaPolicyResponseItem {
-	if o == nil {
+func (g *GetNPARulesResponseBody) GetData() *shared.NpaPolicyResponseItem {
+	if g == nil {
 		return nil
 	}
-	return o.Data
+	return g.Data
 }
 
-func (o *GetNPARulesResponseBody) GetStatus() *GetNPARulesStatus {
-	if o == nil {
+func (g *GetNPARulesResponseBody) GetStatus() *GetNPARulesStatus {
+	if g == nil {
 		return nil
 	}
-	return o.Status
+	return g.Status
 }
 
 type GetNPARulesResponse struct {
@@ -80,37 +80,37 @@ type GetNPARulesResponse struct {
 	NpaPolicyResponse400 *shared.NpaPolicyResponse400
 }
 
-func (o *GetNPARulesResponse) GetContentType() string {
-	if o == nil {
+func (g *GetNPARulesResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetNPARulesResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetNPARulesResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetNPARulesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetNPARulesResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetNPARulesResponse) GetObject() *GetNPARulesResponseBody {
-	if o == nil {
+func (g *GetNPARulesResponse) GetObject() *GetNPARulesResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.Object
+	return g.Object
 }
 
-func (o *GetNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
-	if o == nil {
+func (g *GetNPARulesResponse) GetNpaPolicyResponse400() *shared.NpaPolicyResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.NpaPolicyResponse400
+	return g.NpaPolicyResponse400
 }

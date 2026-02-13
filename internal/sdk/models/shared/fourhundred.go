@@ -7,16 +7,16 @@ type FourHundred struct {
 	Status  *int64  `json:"status,omitempty"`
 }
 
-func (o *FourHundred) GetMessage() *string {
-	if o == nil {
+func (f *FourHundred) GetMessage() *string {
+	if f == nil {
 		return nil
 	}
-	return o.Message
+	return f.Message
 }
 
-func (o *FourHundred) GetStatus() *int64 {
-	if o == nil {
+func (f *FourHundred) GetStatus() *int64 {
+	if f == nil {
 		return nil
 	}
-	return o.Status
+	return f.Status
 }

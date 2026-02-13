@@ -14,22 +14,22 @@ type GenerateNPAPublisherTokenRequest struct {
 	PublisherID int `pathParam:"style=simple,explode=false,name=publisher_id"`
 }
 
-func (o *GenerateNPAPublisherTokenRequest) GetPublisherID() int {
-	if o == nil {
+func (g *GenerateNPAPublisherTokenRequest) GetPublisherID() int {
+	if g == nil {
 		return 0
 	}
-	return o.PublisherID
+	return g.PublisherID
 }
 
 type GenerateNPAPublisherTokenData struct {
 	Token string `json:"token"`
 }
 
-func (o *GenerateNPAPublisherTokenData) GetToken() string {
-	if o == nil {
+func (g *GenerateNPAPublisherTokenData) GetToken() string {
+	if g == nil {
 		return ""
 	}
-	return o.Token
+	return g.Token
 }
 
 type GenerateNPAPublisherTokenStatus string
@@ -64,18 +64,18 @@ type GenerateNPAPublisherTokenResponseBody struct {
 	Status GenerateNPAPublisherTokenStatus `json:"status"`
 }
 
-func (o *GenerateNPAPublisherTokenResponseBody) GetData() GenerateNPAPublisherTokenData {
-	if o == nil {
+func (g *GenerateNPAPublisherTokenResponseBody) GetData() GenerateNPAPublisherTokenData {
+	if g == nil {
 		return GenerateNPAPublisherTokenData{}
 	}
-	return o.Data
+	return g.Data
 }
 
-func (o *GenerateNPAPublisherTokenResponseBody) GetStatus() GenerateNPAPublisherTokenStatus {
-	if o == nil {
+func (g *GenerateNPAPublisherTokenResponseBody) GetStatus() GenerateNPAPublisherTokenStatus {
+	if g == nil {
 		return GenerateNPAPublisherTokenStatus("")
 	}
-	return o.Status
+	return g.Status
 }
 
 type GenerateNPAPublisherTokenResponse struct {
@@ -91,37 +91,37 @@ type GenerateNPAPublisherTokenResponse struct {
 	PublishersResponse400 *shared.PublishersResponse400
 }
 
-func (o *GenerateNPAPublisherTokenResponse) GetContentType() string {
-	if o == nil {
+func (g *GenerateNPAPublisherTokenResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GenerateNPAPublisherTokenResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GenerateNPAPublisherTokenResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GenerateNPAPublisherTokenResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GenerateNPAPublisherTokenResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GenerateNPAPublisherTokenResponse) GetObject() *GenerateNPAPublisherTokenResponseBody {
-	if o == nil {
+func (g *GenerateNPAPublisherTokenResponse) GetObject() *GenerateNPAPublisherTokenResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.Object
+	return g.Object
 }
 
-func (o *GenerateNPAPublisherTokenResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
-	if o == nil {
+func (g *GenerateNPAPublisherTokenResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.PublishersResponse400
+	return g.PublishersResponse400
 }

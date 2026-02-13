@@ -38,16 +38,16 @@ type LbrokerResponse struct {
 	Status *LbrokerResponseStatus `json:"status,omitempty"`
 }
 
-func (o *LbrokerResponse) GetData() *LbrokerItem {
-	if o == nil {
+func (l *LbrokerResponse) GetData() *LbrokerItem {
+	if l == nil {
 		return nil
 	}
-	return o.Data
+	return l.Data
 }
 
-func (o *LbrokerResponse) GetStatus() *LbrokerResponseStatus {
-	if o == nil {
+func (l *LbrokerResponse) GetStatus() *LbrokerResponseStatus {
+	if l == nil {
 		return nil
 	}
-	return o.Status
+	return l.Status
 }

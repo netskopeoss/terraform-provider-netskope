@@ -9,16 +9,16 @@ type TagItem struct {
 	TagName *string `json:"tag_name,omitempty"`
 }
 
-func (o *TagItem) GetTagID() *int {
-	if o == nil {
+func (t *TagItem) GetTagID() *int {
+	if t == nil {
 		return nil
 	}
-	return o.TagID
+	return t.TagID
 }
 
-func (o *TagItem) GetTagName() *string {
-	if o == nil {
+func (t *TagItem) GetTagName() *string {
+	if t == nil {
 		return nil
 	}
-	return o.TagName
+	return t.TagName
 }

@@ -72,7 +72,7 @@ func (r *GrepopDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 			},
 			"pop_id": schema.StringAttribute{
 				Required:    true,
-				Description: `POP ID`,
+				Description: `Unique identifier for the POP`,
 			},
 			"pop_name": schema.StringAttribute{
 				Computed:    true,
@@ -150,11 +150,11 @@ func (r *GrepopDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.GrePopGetResponse != nil && res.GrePopGetResponse.Result != nil && len(res.GrePopGetResponse.Result) > 0) {
+	if !(res.GrePopGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGrePopItem(ctx, &res.GrePopGetResponse.Result[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedGrePopGetResponse(ctx, res.GrePopGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

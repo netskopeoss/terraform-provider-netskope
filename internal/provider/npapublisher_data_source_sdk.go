@@ -12,6 +12,21 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *NPAPublisherDataSourceModel) RefreshFromSharedPublisherResponse(ctx context.Context, resp *shared.PublisherResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedPublisherResponseData(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPAPublisherDataSourceModel) RefreshFromSharedPublisherResponseData(ctx context.Context, resp *shared.PublisherResponseData) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -57,19 +72,14 @@ func (r *NPAPublisherDataSourceModel) RefreshFromSharedPublisherResponseData(ctx
 		}
 		r.CommonName = types.StringPointerValue(resp.CommonName)
 		r.Labels = []tfTypes.PublisherResponseLabels{}
-		if len(r.Labels) > len(resp.Labels) {
-			r.Labels = r.Labels[:len(resp.Labels)]
-		}
-		for labelsCount, labelsItem := range resp.Labels {
+
+		for _, labelsItem := range resp.Labels {
 			var labels tfTypes.PublisherResponseLabels
+
 			labels.LabelID = types.StringPointerValue(labelsItem.LabelID)
 			labels.Permission = types.StringPointerValue(labelsItem.Permission)
-			if labelsCount+1 > len(r.Labels) {
-				r.Labels = append(r.Labels, labels)
-			} else {
-				r.Labels[labelsCount].LabelID = labels.LabelID
-				r.Labels[labelsCount].Permission = labels.Permission
-			}
+
+			r.Labels = append(r.Labels, labels)
 		}
 		r.Lbrokerconnect = types.BoolPointerValue(resp.Lbrokerconnect)
 		r.PublisherID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PublisherID))

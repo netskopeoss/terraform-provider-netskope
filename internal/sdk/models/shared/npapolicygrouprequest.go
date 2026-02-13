@@ -38,18 +38,18 @@ type GroupOrder struct {
 	Order   *NpaPolicygroupRequestOrder `json:"order,omitempty"`
 }
 
-func (o *GroupOrder) GetGroupID() *string {
-	if o == nil {
+func (g *GroupOrder) GetGroupID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.GroupID
+	return g.GroupID
 }
 
-func (o *GroupOrder) GetOrder() *NpaPolicygroupRequestOrder {
-	if o == nil {
+func (g *GroupOrder) GetOrder() *NpaPolicygroupRequestOrder {
+	if g == nil {
 		return nil
 	}
-	return o.Order
+	return g.Order
 }
 
 type NpaPolicygroupRequest struct {
@@ -59,30 +59,30 @@ type NpaPolicygroupRequest struct {
 	ModifyType *string     `json:"modify_type,omitempty"`
 }
 
-func (o *NpaPolicygroupRequest) GetGroupName() *string {
-	if o == nil {
+func (n *NpaPolicygroupRequest) GetGroupName() *string {
+	if n == nil {
 		return nil
 	}
-	return o.GroupName
+	return n.GroupName
 }
 
-func (o *NpaPolicygroupRequest) GetGroupOrder() *GroupOrder {
-	if o == nil {
+func (n *NpaPolicygroupRequest) GetGroupOrder() *GroupOrder {
+	if n == nil {
 		return nil
 	}
-	return o.GroupOrder
+	return n.GroupOrder
 }
 
-func (o *NpaPolicygroupRequest) GetModifyBy() *string {
-	if o == nil {
+func (n *NpaPolicygroupRequest) GetModifyBy() *string {
+	if n == nil {
 		return nil
 	}
-	return o.ModifyBy
+	return n.ModifyBy
 }
 
-func (o *NpaPolicygroupRequest) GetModifyType() *string {
-	if o == nil {
+func (n *NpaPolicygroupRequest) GetModifyType() *string {
+	if n == nil {
 		return nil
 	}
-	return o.ModifyType
+	return n.ModifyType
 }

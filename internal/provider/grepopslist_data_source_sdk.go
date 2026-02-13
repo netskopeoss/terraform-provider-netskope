@@ -17,11 +17,10 @@ func (r *GREPOPsListDataSourceModel) RefreshFromSharedGrePopListResponse(ctx con
 
 	if resp != nil {
 		r.Result = []tfTypes.GrePopListItem{}
-		if len(r.Result) > len(resp.Result) {
-			r.Result = r.Result[:len(resp.Result)]
-		}
-		for resultCount, resultItem := range resp.Result {
+
+		for _, resultItem := range resp.Result {
 			var result tfTypes.GrePopListItem
+
 			result.AcceptingTunnels = types.BoolPointerValue(resultItem.AcceptingTunnels)
 			result.Bandwidth = types.StringPointerValue(resultItem.Bandwidth)
 			result.Distance = types.StringPointerValue(resultItem.Distance)
@@ -31,19 +30,8 @@ func (r *GREPOPsListDataSourceModel) RefreshFromSharedGrePopListResponse(ctx con
 			result.PopName = types.StringPointerValue(resultItem.PopName)
 			result.ProbeIP = types.StringPointerValue(resultItem.ProbeIP)
 			result.Region = types.StringPointerValue(resultItem.Region)
-			if resultCount+1 > len(r.Result) {
-				r.Result = append(r.Result, result)
-			} else {
-				r.Result[resultCount].AcceptingTunnels = result.AcceptingTunnels
-				r.Result[resultCount].Bandwidth = result.Bandwidth
-				r.Result[resultCount].Distance = result.Distance
-				r.Result[resultCount].Gateway = result.Gateway
-				r.Result[resultCount].Location = result.Location
-				r.Result[resultCount].PopID = result.PopID
-				r.Result[resultCount].PopName = result.PopName
-				r.Result[resultCount].ProbeIP = result.ProbeIP
-				r.Result[resultCount].Region = result.Region
-			}
+
+			r.Result = append(r.Result, result)
 		}
 		r.Total = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.Total))
 	}

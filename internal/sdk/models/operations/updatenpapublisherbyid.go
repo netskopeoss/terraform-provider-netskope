@@ -13,18 +13,18 @@ type UpdateNPAPublisherByIDRequest struct {
 	PublisherPatchRequest shared.PublisherPatchRequest `request:"mediaType=application/json"`
 }
 
-func (o *UpdateNPAPublisherByIDRequest) GetPublisherID() int {
-	if o == nil {
+func (u *UpdateNPAPublisherByIDRequest) GetPublisherID() int {
+	if u == nil {
 		return 0
 	}
-	return o.PublisherID
+	return u.PublisherID
 }
 
-func (o *UpdateNPAPublisherByIDRequest) GetPublisherPatchRequest() shared.PublisherPatchRequest {
-	if o == nil {
+func (u *UpdateNPAPublisherByIDRequest) GetPublisherPatchRequest() shared.PublisherPatchRequest {
+	if u == nil {
 		return shared.PublisherPatchRequest{}
 	}
-	return o.PublisherPatchRequest
+	return u.PublisherPatchRequest
 }
 
 type UpdateNPAPublisherByIDResponse struct {
@@ -40,37 +40,37 @@ type UpdateNPAPublisherByIDResponse struct {
 	PublishersResponse400 *shared.PublishersResponse400
 }
 
-func (o *UpdateNPAPublisherByIDResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateNPAPublisherByIDResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateNPAPublisherByIDResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateNPAPublisherByIDResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateNPAPublisherByIDResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateNPAPublisherByIDResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateNPAPublisherByIDResponse) GetPublisherResponse() *shared.PublisherResponse {
-	if o == nil {
+func (u *UpdateNPAPublisherByIDResponse) GetPublisherResponse() *shared.PublisherResponse {
+	if u == nil {
 		return nil
 	}
-	return o.PublisherResponse
+	return u.PublisherResponse
 }
 
-func (o *UpdateNPAPublisherByIDResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
-	if o == nil {
+func (u *UpdateNPAPublisherByIDResponse) GetPublishersResponse400() *shared.PublishersResponse400 {
+	if u == nil {
 		return nil
 	}
-	return o.PublishersResponse400
+	return u.PublishersResponse400
 }

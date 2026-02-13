@@ -15,18 +15,18 @@ type UpdateNPAPolicyGroupsRequest struct {
 	NpaPolicygroupRequest shared.NpaPolicygroupRequest `request:"mediaType=application/json"`
 }
 
-func (o *UpdateNPAPolicyGroupsRequest) GetID() string {
-	if o == nil {
+func (u *UpdateNPAPolicyGroupsRequest) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
-func (o *UpdateNPAPolicyGroupsRequest) GetNpaPolicygroupRequest() shared.NpaPolicygroupRequest {
-	if o == nil {
+func (u *UpdateNPAPolicyGroupsRequest) GetNpaPolicygroupRequest() shared.NpaPolicygroupRequest {
+	if u == nil {
 		return shared.NpaPolicygroupRequest{}
 	}
-	return o.NpaPolicygroupRequest
+	return u.NpaPolicygroupRequest
 }
 
 type UpdateNPAPolicyGroupsStatus string
@@ -61,18 +61,18 @@ type UpdateNPAPolicyGroupsResponseBody struct {
 	Status *UpdateNPAPolicyGroupsStatus       `json:"status,omitempty"`
 }
 
-func (o *UpdateNPAPolicyGroupsResponseBody) GetData() *shared.NpaPolicygroupResponseItem {
-	if o == nil {
+func (u *UpdateNPAPolicyGroupsResponseBody) GetData() *shared.NpaPolicygroupResponseItem {
+	if u == nil {
 		return nil
 	}
-	return o.Data
+	return u.Data
 }
 
-func (o *UpdateNPAPolicyGroupsResponseBody) GetStatus() *UpdateNPAPolicyGroupsStatus {
-	if o == nil {
+func (u *UpdateNPAPolicyGroupsResponseBody) GetStatus() *UpdateNPAPolicyGroupsStatus {
+	if u == nil {
 		return nil
 	}
-	return o.Status
+	return u.Status
 }
 
 type UpdateNPAPolicyGroupsResponse struct {
@@ -88,37 +88,37 @@ type UpdateNPAPolicyGroupsResponse struct {
 	NpaPolicygroupResponse400 *shared.NpaPolicygroupResponse400
 }
 
-func (o *UpdateNPAPolicyGroupsResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateNPAPolicyGroupsResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateNPAPolicyGroupsResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateNPAPolicyGroupsResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateNPAPolicyGroupsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateNPAPolicyGroupsResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateNPAPolicyGroupsResponse) GetObject() *UpdateNPAPolicyGroupsResponseBody {
-	if o == nil {
+func (u *UpdateNPAPolicyGroupsResponse) GetObject() *UpdateNPAPolicyGroupsResponseBody {
+	if u == nil {
 		return nil
 	}
-	return o.Object
+	return u.Object
 }
 
-func (o *UpdateNPAPolicyGroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
-	if o == nil {
+func (u *UpdateNPAPolicyGroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
+	if u == nil {
 		return nil
 	}
-	return o.NpaPolicygroupResponse400
+	return u.NpaPolicygroupResponse400
 }

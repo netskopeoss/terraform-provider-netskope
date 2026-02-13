@@ -43,44 +43,44 @@ type ProtocolItem struct {
 	UpdatedAt *string   `json:"updated_at,omitempty"`
 }
 
-func (o *ProtocolItem) GetPort() *string {
-	if o == nil {
+func (p *ProtocolItem) GetPort() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Port
+	return p.Port
 }
 
-func (o *ProtocolItem) GetProtocol() *Protocol {
-	if o == nil {
+func (p *ProtocolItem) GetProtocol() *Protocol {
+	if p == nil {
 		return nil
 	}
-	return o.Protocol
+	return p.Protocol
 }
 
-func (o *ProtocolItem) GetCreatedAt() *string {
-	if o == nil {
+func (p *ProtocolItem) GetCreatedAt() *string {
+	if p == nil {
 		return nil
 	}
-	return o.CreatedAt
+	return p.CreatedAt
 }
 
-func (o *ProtocolItem) GetID() *int {
-	if o == nil {
+func (p *ProtocolItem) GetID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.ID
+	return p.ID
 }
 
-func (o *ProtocolItem) GetServiceID() *int {
-	if o == nil {
+func (p *ProtocolItem) GetServiceID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.ServiceID
+	return p.ServiceID
 }
 
-func (o *ProtocolItem) GetUpdatedAt() *string {
-	if o == nil {
+func (p *ProtocolItem) GetUpdatedAt() *string {
+	if p == nil {
 		return nil
 	}
-	return o.UpdatedAt
+	return p.UpdatedAt
 }

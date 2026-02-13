@@ -67,7 +67,7 @@ func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, opts ...o
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "listNPAPublisherUpgradeProfiles",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -175,6 +175,7 @@ func (s *NPAPublisherUpgradeProfiles) ListObjects(ctx context.Context, opts ...o
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

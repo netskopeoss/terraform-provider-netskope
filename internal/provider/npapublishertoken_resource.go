@@ -50,7 +50,8 @@ func (r *NPAPublisherTokenResource) Schema(ctx context.Context, req resource.Sch
 				Description: `publisher id. Requires replacement if changed.`,
 			},
 			"token": schema.StringAttribute{
-				Computed: true,
+				Computed:  true,
+				Sensitive: true,
 			},
 		},
 	}
@@ -120,7 +121,7 @@ func (r *NPAPublisherTokenResource) Create(ctx context.Context, req resource.Cre
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGenerateNPAPublisherTokenData(ctx, &res.Object.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGenerateNPAPublisherTokenResponseBody(ctx, res.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return

@@ -17,11 +17,10 @@ func (r *NPALocalBrokersListDataSourceModel) RefreshFromSharedLbrokersGetRespons
 
 	if resp != nil {
 		r.Data = []tfTypes.LbrokerItem{}
-		if len(r.Data) > len(resp.Data) {
-			r.Data = r.Data[:len(resp.Data)]
-		}
-		for dataCount, dataItem := range resp.Data {
+
+		for _, dataItem := range resp.Data {
 			var data tfTypes.LbrokerItem
+
 			if dataItem.AccessViaPublicIP != nil {
 				data.AccessViaPublicIP = types.StringValue(string(*dataItem.AccessViaPublicIP))
 			} else {
@@ -56,35 +55,8 @@ func (r *NPALocalBrokersListDataSourceModel) RefreshFromSharedLbrokersGetRespons
 			data.Registered = types.BoolPointerValue(dataItem.Registered)
 			data.RegisteredAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(dataItem.RegisteredAt))
 			data.UpdatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(dataItem.UpdatedAt))
-			if dataCount+1 > len(r.Data) {
-				r.Data = append(r.Data, data)
-			} else {
-				r.Data[dataCount].AccessViaPublicIP = data.AccessViaPublicIP
-				r.Data[dataCount].Assessment = data.Assessment
-				r.Data[dataCount].CityName = data.CityName
-				r.Data[dataCount].CommonName = data.CommonName
-				r.Data[dataCount].CountryCode = data.CountryCode
-				r.Data[dataCount].CountryName = data.CountryName
-				r.Data[dataCount].CreatedAt = data.CreatedAt
-				r.Data[dataCount].CustomPrivateIP = data.CustomPrivateIP
-				r.Data[dataCount].CustomPublicIP = data.CustomPublicIP
-				r.Data[dataCount].DiscoveredPrivateIP = data.DiscoveredPrivateIP
-				r.Data[dataCount].DiscoveredPublicIP = data.DiscoveredPublicIP
-				r.Data[dataCount].DNSHost = data.DNSHost
-				r.Data[dataCount].GslbUUID = data.GslbUUID
-				r.Data[dataCount].HostPort = data.HostPort
-				r.Data[dataCount].Latitude = data.Latitude
-				r.Data[dataCount].LocalBrokerID = data.LocalBrokerID
-				r.Data[dataCount].LocalBrokerName = data.LocalBrokerName
-				r.Data[dataCount].LocationID = data.LocationID
-				r.Data[dataCount].Longitude = data.Longitude
-				r.Data[dataCount].PopName = data.PopName
-				r.Data[dataCount].ReachableByClient = data.ReachableByClient
-				r.Data[dataCount].RegionName = data.RegionName
-				r.Data[dataCount].Registered = data.Registered
-				r.Data[dataCount].RegisteredAt = data.RegisteredAt
-				r.Data[dataCount].UpdatedAt = data.UpdatedAt
-			}
+
+			r.Data = append(r.Data, data)
 		}
 	}
 

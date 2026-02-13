@@ -12,11 +12,11 @@ type GetIPSecPOPRequest struct {
 	PopID string `pathParam:"style=simple,explode=false,name=pop_id"`
 }
 
-func (o *GetIPSecPOPRequest) GetPopID() string {
-	if o == nil {
+func (g *GetIPSecPOPRequest) GetPopID() string {
+	if g == nil {
 		return ""
 	}
-	return o.PopID
+	return g.PopID
 }
 
 type GetIPSecPOPResponse struct {
@@ -32,37 +32,37 @@ type GetIPSecPOPResponse struct {
 	IpsecResponse400 *shared.IpsecResponse400
 }
 
-func (o *GetIPSecPOPResponse) GetContentType() string {
-	if o == nil {
+func (g *GetIPSecPOPResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetIPSecPOPResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetIPSecPOPResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetIPSecPOPResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetIPSecPOPResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetIPSecPOPResponse) GetIpsecPopGetResponse() *shared.IpsecPopGetResponse {
-	if o == nil {
+func (g *GetIPSecPOPResponse) GetIpsecPopGetResponse() *shared.IpsecPopGetResponse {
+	if g == nil {
 		return nil
 	}
-	return o.IpsecPopGetResponse
+	return g.IpsecPopGetResponse
 }
 
-func (o *GetIPSecPOPResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
-	if o == nil {
+func (g *GetIPSecPOPResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.IpsecResponse400
+	return g.IpsecResponse400
 }

@@ -14,11 +14,11 @@ type GetNPAPolicyGroupsRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *GetNPAPolicyGroupsRequest) GetID() string {
-	if o == nil {
+func (g *GetNPAPolicyGroupsRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 type GetNPAPolicyGroupsStatus string
@@ -53,18 +53,18 @@ type GetNPAPolicyGroupsResponseBody struct {
 	Status *GetNPAPolicyGroupsStatus          `json:"status,omitempty"`
 }
 
-func (o *GetNPAPolicyGroupsResponseBody) GetData() *shared.NpaPolicygroupResponseItem {
-	if o == nil {
+func (g *GetNPAPolicyGroupsResponseBody) GetData() *shared.NpaPolicygroupResponseItem {
+	if g == nil {
 		return nil
 	}
-	return o.Data
+	return g.Data
 }
 
-func (o *GetNPAPolicyGroupsResponseBody) GetStatus() *GetNPAPolicyGroupsStatus {
-	if o == nil {
+func (g *GetNPAPolicyGroupsResponseBody) GetStatus() *GetNPAPolicyGroupsStatus {
+	if g == nil {
 		return nil
 	}
-	return o.Status
+	return g.Status
 }
 
 type GetNPAPolicyGroupsResponse struct {
@@ -80,37 +80,37 @@ type GetNPAPolicyGroupsResponse struct {
 	NpaPolicygroupResponse400 *shared.NpaPolicygroupResponse400
 }
 
-func (o *GetNPAPolicyGroupsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetNPAPolicyGroupsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetNPAPolicyGroupsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetNPAPolicyGroupsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetNPAPolicyGroupsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetNPAPolicyGroupsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetNPAPolicyGroupsResponse) GetObject() *GetNPAPolicyGroupsResponseBody {
-	if o == nil {
+func (g *GetNPAPolicyGroupsResponse) GetObject() *GetNPAPolicyGroupsResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.Object
+	return g.Object
 }
 
-func (o *GetNPAPolicyGroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
-	if o == nil {
+func (g *GetNPAPolicyGroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.NpaPolicygroupResponse400
+	return g.NpaPolicygroupResponse400
 }

@@ -16,11 +16,10 @@ func (r *NPAPolicyGroupsListDataSourceModel) RefreshFromSharedNpaPolicygroupResp
 
 	if resp != nil {
 		r.Data = []tfTypes.NpaPolicygroupResponseItem{}
-		if len(r.Data) > len(resp.Data) {
-			r.Data = r.Data[:len(resp.Data)]
-		}
-		for dataCount, dataItem := range resp.Data {
+
+		for _, dataItem := range resp.Data {
 			var data tfTypes.NpaPolicygroupResponseItem
+
 			data.CanBeEditedDeleted = types.StringPointerValue(dataItem.CanBeEditedDeleted)
 			data.GroupName = types.StringPointerValue(dataItem.GroupName)
 			data.GroupPinnedID = types.StringPointerValue(dataItem.GroupPinnedID)
@@ -29,18 +28,8 @@ func (r *NPAPolicyGroupsListDataSourceModel) RefreshFromSharedNpaPolicygroupResp
 			data.ID = types.StringPointerValue(dataItem.ID)
 			data.ModifyTime = types.StringPointerValue(dataItem.ModifyTime)
 			data.ModifyType = types.StringPointerValue(dataItem.ModifyType)
-			if dataCount+1 > len(r.Data) {
-				r.Data = append(r.Data, data)
-			} else {
-				r.Data[dataCount].CanBeEditedDeleted = data.CanBeEditedDeleted
-				r.Data[dataCount].GroupName = data.GroupName
-				r.Data[dataCount].GroupPinnedID = data.GroupPinnedID
-				r.Data[dataCount].GroupProdID = data.GroupProdID
-				r.Data[dataCount].GroupType = data.GroupType
-				r.Data[dataCount].ID = data.ID
-				r.Data[dataCount].ModifyTime = data.ModifyTime
-				r.Data[dataCount].ModifyType = data.ModifyType
-			}
+
+			r.Data = append(r.Data, data)
 		}
 		r.Status = types.StringPointerValue(resp.Status)
 	}

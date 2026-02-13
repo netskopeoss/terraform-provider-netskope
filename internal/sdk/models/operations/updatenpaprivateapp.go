@@ -44,25 +44,25 @@ type UpdateNPAPrivateAppRequest struct {
 	PrivateAppsPutRequest shared.PrivateAppsPutRequest `request:"mediaType=application/json"`
 }
 
-func (o *UpdateNPAPrivateAppRequest) GetPrivateAppID() int {
-	if o == nil {
+func (u *UpdateNPAPrivateAppRequest) GetPrivateAppID() int {
+	if u == nil {
 		return 0
 	}
-	return o.PrivateAppID
+	return u.PrivateAppID
 }
 
-func (o *UpdateNPAPrivateAppRequest) GetSilent() *Silent {
-	if o == nil {
+func (u *UpdateNPAPrivateAppRequest) GetSilent() *Silent {
+	if u == nil {
 		return nil
 	}
-	return o.Silent
+	return u.Silent
 }
 
-func (o *UpdateNPAPrivateAppRequest) GetPrivateAppsPutRequest() shared.PrivateAppsPutRequest {
-	if o == nil {
+func (u *UpdateNPAPrivateAppRequest) GetPrivateAppsPutRequest() shared.PrivateAppsPutRequest {
+	if u == nil {
 		return shared.PrivateAppsPutRequest{}
 	}
-	return o.PrivateAppsPutRequest
+	return u.PrivateAppsPutRequest
 }
 
 type UpdateNPAPrivateAppResponse struct {
@@ -78,37 +78,37 @@ type UpdateNPAPrivateAppResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *UpdateNPAPrivateAppResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateNPAPrivateAppResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateNPAPrivateAppResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateNPAPrivateAppResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateNPAPrivateAppResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateNPAPrivateAppResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateNPAPrivateAppResponse) GetPrivateAppsGetResponse() *shared.PrivateAppsGetResponse {
-	if o == nil {
+func (u *UpdateNPAPrivateAppResponse) GetPrivateAppsGetResponse() *shared.PrivateAppsGetResponse {
+	if u == nil {
 		return nil
 	}
-	return o.PrivateAppsGetResponse
+	return u.PrivateAppsGetResponse
 }
 
-func (o *UpdateNPAPrivateAppResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
-	if o == nil {
+func (u *UpdateNPAPrivateAppResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+	if u == nil {
 		return nil
 	}
-	return o.PrivateAppsResponse400
+	return u.PrivateAppsResponse400
 }

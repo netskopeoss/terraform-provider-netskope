@@ -12,11 +12,11 @@ type GetNPAPrivateAppRequest struct {
 	PrivateAppID int `pathParam:"style=simple,explode=false,name=private_app_id"`
 }
 
-func (o *GetNPAPrivateAppRequest) GetPrivateAppID() int {
-	if o == nil {
+func (g *GetNPAPrivateAppRequest) GetPrivateAppID() int {
+	if g == nil {
 		return 0
 	}
-	return o.PrivateAppID
+	return g.PrivateAppID
 }
 
 type GetNPAPrivateAppResponse struct {
@@ -32,37 +32,37 @@ type GetNPAPrivateAppResponse struct {
 	PrivateAppsResponse400 *shared.PrivateAppsResponse400
 }
 
-func (o *GetNPAPrivateAppResponse) GetContentType() string {
-	if o == nil {
+func (g *GetNPAPrivateAppResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetNPAPrivateAppResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetNPAPrivateAppResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetNPAPrivateAppResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetNPAPrivateAppResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetNPAPrivateAppResponse) GetPrivateAppsGetResponse() *shared.PrivateAppsGetResponse {
-	if o == nil {
+func (g *GetNPAPrivateAppResponse) GetPrivateAppsGetResponse() *shared.PrivateAppsGetResponse {
+	if g == nil {
 		return nil
 	}
-	return o.PrivateAppsGetResponse
+	return g.PrivateAppsGetResponse
 }
 
-func (o *GetNPAPrivateAppResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
-	if o == nil {
+func (g *GetNPAPrivateAppResponse) GetPrivateAppsResponse400() *shared.PrivateAppsResponse400 {
+	if g == nil {
 		return nil
 	}
-	return o.PrivateAppsResponse400
+	return g.PrivateAppsResponse400
 }

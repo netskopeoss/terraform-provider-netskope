@@ -134,7 +134,7 @@ func (r *GRETunnelResource) Schema(ctx context.Context, req resource.SchemaReque
 			},
 			"tunnel_id": schema.Int32Attribute{
 				Computed:    true,
-				Description: `Unique identifier for the GRE tunnel (assigned by API)`,
+				Description: `GRE tunnel ID`,
 			},
 			"vendor": schema.StringAttribute{
 				Computed:    true,
@@ -201,52 +201,22 @@ func (r *GRETunnelResource) Create(ctx context.Context, req resource.CreateReque
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
+	if res.StatusCode == 409 {
+		resp.Diagnostics.AddError(
+			"Resource Already Exists",
+			"When creating this resource, the API indicated that this resource already exists. You can bring the existing resource under management using Terraform import functionality or retry with a unique configuration.",
+		)
+		return
+	}
 	if res.StatusCode != 201 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.GreTunnelCreateResponse != nil && res.GreTunnelCreateResponse.Data != nil && len(res.GreTunnelCreateResponse.Data) > 0) {
+	if !(res.GreTunnelCreateResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelItem(ctx, &res.GreTunnelCreateResponse.Data[0])...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	request1, request1Diags := data.ToOperationsGetGRETunnelRequest(ctx)
-	resp.Diagnostics.Append(request1Diags...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	res1, err := r.client.GetGRETunnel(ctx, *request1)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
-		}
-		return
-	}
-	if res1 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
-		return
-	}
-	if !(res1.GreTunnelGetResponse != nil && res1.GreTunnelGetResponse.Result != nil && len(res1.GreTunnelGetResponse.Result) > 0) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelItem(ctx, &res1.GreTunnelGetResponse.Result[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelCreateResponse(ctx, res.GreTunnelCreateResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -306,11 +276,11 @@ func (r *GRETunnelResource) Read(ctx context.Context, req resource.ReadRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.GreTunnelGetResponse != nil && res.GreTunnelGetResponse.Result != nil && len(res.GreTunnelGetResponse.Result) > 0) {
+	if !(res.GreTunnelGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelItem(ctx, &res.GreTunnelGetResponse.Result[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelGetResponse(ctx, res.GreTunnelGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -356,48 +326,11 @@ func (r *GRETunnelResource) Update(ctx context.Context, req resource.UpdateReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.GreTunnelCreateResponse != nil && res.GreTunnelCreateResponse.Data != nil && len(res.GreTunnelCreateResponse.Data) > 0) {
+	if !(res.GreTunnelCreateResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelItem(ctx, &res.GreTunnelCreateResponse.Data[0])...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	request1, request1Diags := data.ToOperationsGetGRETunnelRequest(ctx)
-	resp.Diagnostics.Append(request1Diags...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	res1, err := r.client.GetGRETunnel(ctx, *request1)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
-		}
-		return
-	}
-	if res1 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
-		return
-	}
-	if !(res1.GreTunnelGetResponse != nil && res1.GreTunnelGetResponse.Result != nil && len(res1.GreTunnelGetResponse.Result) > 0) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelItem(ctx, &res1.GreTunnelGetResponse.Result[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedGreTunnelCreateResponse(ctx, res.GreTunnelCreateResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -449,7 +382,10 @@ func (r *GRETunnelResource) Delete(ctx context.Context, req resource.DeleteReque
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode != 200 {
+	switch res.StatusCode {
+	case 200, 404:
+		break
+	default:
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}

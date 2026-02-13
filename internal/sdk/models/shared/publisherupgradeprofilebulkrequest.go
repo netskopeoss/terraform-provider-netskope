@@ -8,11 +8,11 @@ type PublisherUpgradeProfileBulkRequestApply struct {
 	PublisherUpgradeProfilesID string `json:"publisher_upgrade_profiles_id"`
 }
 
-func (o *PublisherUpgradeProfileBulkRequestApply) GetPublisherUpgradeProfilesID() string {
-	if o == nil {
+func (p *PublisherUpgradeProfileBulkRequestApply) GetPublisherUpgradeProfilesID() string {
+	if p == nil {
 		return ""
 	}
-	return o.PublisherUpgradeProfilesID
+	return p.PublisherUpgradeProfilesID
 }
 
 type PublisherUpgradeProfileBulkRequestPublishers struct {
@@ -22,27 +22,27 @@ type PublisherUpgradeProfileBulkRequestPublishers struct {
 	PublisherID []string `json:"id"`
 }
 
-func (o *PublisherUpgradeProfileBulkRequestPublishers) GetApply() *PublisherUpgradeProfileBulkRequestApply {
-	if o == nil {
+func (p *PublisherUpgradeProfileBulkRequestPublishers) GetApply() *PublisherUpgradeProfileBulkRequestApply {
+	if p == nil {
 		return nil
 	}
-	return o.Apply
+	return p.Apply
 }
 
-func (o *PublisherUpgradeProfileBulkRequestPublishers) GetPublisherID() []string {
-	if o == nil {
+func (p *PublisherUpgradeProfileBulkRequestPublishers) GetPublisherID() []string {
+	if p == nil {
 		return []string{}
 	}
-	return o.PublisherID
+	return p.PublisherID
 }
 
 type PublisherUpgradeProfileBulkRequest struct {
 	Publishers *PublisherUpgradeProfileBulkRequestPublishers `json:"publishers,omitempty"`
 }
 
-func (o *PublisherUpgradeProfileBulkRequest) GetPublishers() *PublisherUpgradeProfileBulkRequestPublishers {
-	if o == nil {
+func (p *PublisherUpgradeProfileBulkRequest) GetPublishers() *PublisherUpgradeProfileBulkRequestPublishers {
+	if p == nil {
 		return nil
 	}
-	return o.Publishers
+	return p.Publishers
 }

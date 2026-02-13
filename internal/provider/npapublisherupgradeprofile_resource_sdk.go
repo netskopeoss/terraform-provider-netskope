@@ -11,6 +11,21 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgradeProfileGetResponse(ctx context.Context, resp *shared.PublisherUpgradeProfileGetResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedPublisherUpgradeProfileGetResponseData(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgradeProfileGetResponseData(ctx context.Context, resp *shared.PublisherUpgradeProfileGetResponseData) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -37,6 +52,21 @@ func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgr
 		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
 		r.UpgradingStage = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.UpgradingStage))
 		r.WillStart = types.BoolPointerValue(resp.WillStart)
+	}
+
+	return diags
+}
+
+func (r *NPAPublisherUpgradeProfileResourceModel) RefreshFromSharedPublisherUpgradeProfileResponse(ctx context.Context, resp *shared.PublisherUpgradeProfileResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedPublisherUpgradeProfileResponseData(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
 	}
 
 	return diags

@@ -13,58 +13,58 @@ type NpaPolicygroupResponseItem struct {
 	ModifyType         *string `json:"modify_type,omitempty"`
 }
 
-func (o *NpaPolicygroupResponseItem) GetCanBeEditedDeleted() *string {
-	if o == nil {
+func (n *NpaPolicygroupResponseItem) GetCanBeEditedDeleted() *string {
+	if n == nil {
 		return nil
 	}
-	return o.CanBeEditedDeleted
+	return n.CanBeEditedDeleted
 }
 
-func (o *NpaPolicygroupResponseItem) GetID() *string {
-	if o == nil {
+func (n *NpaPolicygroupResponseItem) GetID() *string {
+	if n == nil {
 		return nil
 	}
-	return o.ID
+	return n.ID
 }
 
-func (o *NpaPolicygroupResponseItem) GetGroupName() *string {
-	if o == nil {
+func (n *NpaPolicygroupResponseItem) GetGroupName() *string {
+	if n == nil {
 		return nil
 	}
-	return o.GroupName
+	return n.GroupName
 }
 
-func (o *NpaPolicygroupResponseItem) GetGroupPinnedID() *string {
-	if o == nil {
+func (n *NpaPolicygroupResponseItem) GetGroupPinnedID() *string {
+	if n == nil {
 		return nil
 	}
-	return o.GroupPinnedID
+	return n.GroupPinnedID
 }
 
-func (o *NpaPolicygroupResponseItem) GetGroupProdID() *string {
-	if o == nil {
+func (n *NpaPolicygroupResponseItem) GetGroupProdID() *string {
+	if n == nil {
 		return nil
 	}
-	return o.GroupProdID
+	return n.GroupProdID
 }
 
-func (o *NpaPolicygroupResponseItem) GetGroupType() *string {
-	if o == nil {
+func (n *NpaPolicygroupResponseItem) GetGroupType() *string {
+	if n == nil {
 		return nil
 	}
-	return o.GroupType
+	return n.GroupType
 }
 
-func (o *NpaPolicygroupResponseItem) GetModifyTime() *string {
-	if o == nil {
+func (n *NpaPolicygroupResponseItem) GetModifyTime() *string {
+	if n == nil {
 		return nil
 	}
-	return o.ModifyTime
+	return n.ModifyTime
 }
 
-func (o *NpaPolicygroupResponseItem) GetModifyType() *string {
-	if o == nil {
+func (n *NpaPolicygroupResponseItem) GetModifyType() *string {
+	if n == nil {
 		return nil
 	}
-	return o.ModifyType
+	return n.ModifyType
 }

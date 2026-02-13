@@ -11,6 +11,51 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
+func (r *NPARulesResourceModel) RefreshFromOperationsCreateNPARulesResponseBody(ctx context.Context, resp *operations.CreateNPARulesResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedNpaPolicyResponseItem(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
+func (r *NPARulesResourceModel) RefreshFromOperationsGetNPARulesResponseBody(ctx context.Context, resp *operations.GetNPARulesResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedNpaPolicyResponseItem(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
+func (r *NPARulesResourceModel) RefreshFromOperationsUpdateNPARulesResponseBody(ctx context.Context, resp *operations.UpdateNPARulesResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedNpaPolicyResponseItem(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx context.Context, resp *shared.NpaPolicyResponseItem) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -185,8 +230,8 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			jsonVersion = nil
 		}
 		deviceClassificationID := make([]int64, 0, len(r.RuleData.DeviceClassificationID))
-		for _, deviceClassificationIDItem := range r.RuleData.DeviceClassificationID {
-			deviceClassificationID = append(deviceClassificationID, deviceClassificationIDItem.ValueInt64())
+		for deviceClassificationIDIndex := range r.RuleData.DeviceClassificationID {
+			deviceClassificationID = append(deviceClassificationID, r.RuleData.DeviceClassificationID[deviceClassificationIDIndex].ValueInt64())
 		}
 		var matchCriteriaAction *shared.MatchCriteriaAction
 		if r.RuleData.MatchCriteriaAction != nil {
@@ -201,12 +246,12 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			}
 		}
 		netLocationObj := make([]string, 0, len(r.RuleData.NetLocationObj))
-		for _, netLocationObjItem := range r.RuleData.NetLocationObj {
-			netLocationObj = append(netLocationObj, netLocationObjItem.ValueString())
+		for netLocationObjIndex := range r.RuleData.NetLocationObj {
+			netLocationObj = append(netLocationObj, r.RuleData.NetLocationObj[netLocationObjIndex].ValueString())
 		}
 		organizationUnits := make([]string, 0, len(r.RuleData.OrganizationUnits))
-		for _, organizationUnitsItem := range r.RuleData.OrganizationUnits {
-			organizationUnits = append(organizationUnits, organizationUnitsItem.ValueString())
+		for organizationUnitsIndex := range r.RuleData.OrganizationUnits {
+			organizationUnits = append(organizationUnits, r.RuleData.OrganizationUnits[organizationUnitsIndex].ValueString())
 		}
 		policyType := new(shared.PolicyType)
 		if !r.RuleData.PolicyType.IsUnknown() && !r.RuleData.PolicyType.IsNull() {
@@ -215,28 +260,28 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			policyType = nil
 		}
 		privateAppTagIds := make([]string, 0, len(r.RuleData.PrivateAppTagIds))
-		for _, privateAppTagIdsItem := range r.RuleData.PrivateAppTagIds {
-			privateAppTagIds = append(privateAppTagIds, privateAppTagIdsItem.ValueString())
+		for privateAppTagIdsIndex := range r.RuleData.PrivateAppTagIds {
+			privateAppTagIds = append(privateAppTagIds, r.RuleData.PrivateAppTagIds[privateAppTagIdsIndex].ValueString())
 		}
 		privateAppTags := make([]string, 0, len(r.RuleData.PrivateAppTags))
-		for _, privateAppTagsItem := range r.RuleData.PrivateAppTags {
-			privateAppTags = append(privateAppTags, privateAppTagsItem.ValueString())
+		for privateAppTagsIndex := range r.RuleData.PrivateAppTags {
+			privateAppTags = append(privateAppTags, r.RuleData.PrivateAppTags[privateAppTagsIndex].ValueString())
 		}
 		privateApps := make([]string, 0, len(r.RuleData.PrivateApps))
-		for _, privateAppsItem := range r.RuleData.PrivateApps {
-			privateApps = append(privateApps, privateAppsItem.ValueString())
+		for privateAppsIndex := range r.RuleData.PrivateApps {
+			privateApps = append(privateApps, r.RuleData.PrivateApps[privateAppsIndex].ValueString())
 		}
 		srcCountries := make([]string, 0, len(r.RuleData.SrcCountries))
-		for _, srcCountriesItem := range r.RuleData.SrcCountries {
-			srcCountries = append(srcCountries, srcCountriesItem.ValueString())
+		for srcCountriesIndex := range r.RuleData.SrcCountries {
+			srcCountries = append(srcCountries, r.RuleData.SrcCountries[srcCountriesIndex].ValueString())
 		}
 		userGroups := make([]string, 0, len(r.RuleData.UserGroups))
-		for _, userGroupsItem := range r.RuleData.UserGroups {
-			userGroups = append(userGroups, userGroupsItem.ValueString())
+		for userGroupsIndex := range r.RuleData.UserGroups {
+			userGroups = append(userGroups, r.RuleData.UserGroups[userGroupsIndex].ValueString())
 		}
 		users := make([]string, 0, len(r.RuleData.Users))
-		for _, usersItem := range r.RuleData.Users {
-			users = append(users, usersItem.ValueString())
+		for usersIndex := range r.RuleData.Users {
+			users = append(users, r.RuleData.Users[usersIndex].ValueString())
 		}
 		ruleData = &shared.NpaPolicyRuleData{
 			AccessMethod:           accessMethod,

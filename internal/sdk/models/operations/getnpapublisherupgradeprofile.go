@@ -12,11 +12,11 @@ type GetNPAPublisherUpgradeProfileRequest struct {
 	PublisherUpgradeProfileID int `pathParam:"style=simple,explode=false,name=external_id"`
 }
 
-func (o *GetNPAPublisherUpgradeProfileRequest) GetPublisherUpgradeProfileID() int {
-	if o == nil {
+func (g *GetNPAPublisherUpgradeProfileRequest) GetPublisherUpgradeProfileID() int {
+	if g == nil {
 		return 0
 	}
-	return o.PublisherUpgradeProfileID
+	return g.PublisherUpgradeProfileID
 }
 
 type GetNPAPublisherUpgradeProfileResponse struct {
@@ -32,37 +32,37 @@ type GetNPAPublisherUpgradeProfileResponse struct {
 	FourHundred *shared.FourHundred
 }
 
-func (o *GetNPAPublisherUpgradeProfileResponse) GetContentType() string {
-	if o == nil {
+func (g *GetNPAPublisherUpgradeProfileResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetNPAPublisherUpgradeProfileResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetNPAPublisherUpgradeProfileResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetNPAPublisherUpgradeProfileResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetNPAPublisherUpgradeProfileResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetNPAPublisherUpgradeProfileResponse) GetPublisherUpgradeProfileGetResponse() *shared.PublisherUpgradeProfileGetResponse {
-	if o == nil {
+func (g *GetNPAPublisherUpgradeProfileResponse) GetPublisherUpgradeProfileGetResponse() *shared.PublisherUpgradeProfileGetResponse {
+	if g == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfileGetResponse
+	return g.PublisherUpgradeProfileGetResponse
 }
 
-func (o *GetNPAPublisherUpgradeProfileResponse) GetFourHundred() *shared.FourHundred {
-	if o == nil {
+func (g *GetNPAPublisherUpgradeProfileResponse) GetFourHundred() *shared.FourHundred {
+	if g == nil {
 		return nil
 	}
-	return o.FourHundred
+	return g.FourHundred
 }

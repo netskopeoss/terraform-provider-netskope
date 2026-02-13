@@ -32,66 +32,66 @@ func (l ListGREPOPsRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListGREPOPsRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &l, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &l, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *ListGREPOPsRequest) GetName() *string {
-	if o == nil {
+func (l *ListGREPOPsRequest) GetName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Name
+	return l.Name
 }
 
-func (o *ListGREPOPsRequest) GetRegion() *string {
-	if o == nil {
+func (l *ListGREPOPsRequest) GetRegion() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Region
+	return l.Region
 }
 
-func (o *ListGREPOPsRequest) GetCountry() *string {
-	if o == nil {
+func (l *ListGREPOPsRequest) GetCountry() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Country
+	return l.Country
 }
 
-func (o *ListGREPOPsRequest) GetLat() *string {
-	if o == nil {
+func (l *ListGREPOPsRequest) GetLat() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Lat
+	return l.Lat
 }
 
-func (o *ListGREPOPsRequest) GetLong() *string {
-	if o == nil {
+func (l *ListGREPOPsRequest) GetLong() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Long
+	return l.Long
 }
 
-func (o *ListGREPOPsRequest) GetIP() *string {
-	if o == nil {
+func (l *ListGREPOPsRequest) GetIP() *string {
+	if l == nil {
 		return nil
 	}
-	return o.IP
+	return l.IP
 }
 
-func (o *ListGREPOPsRequest) GetOffset() *int {
-	if o == nil {
+func (l *ListGREPOPsRequest) GetOffset() *int {
+	if l == nil {
 		return nil
 	}
-	return o.Offset
+	return l.Offset
 }
 
-func (o *ListGREPOPsRequest) GetLimit() *int {
-	if o == nil {
+func (l *ListGREPOPsRequest) GetLimit() *int {
+	if l == nil {
 		return nil
 	}
-	return o.Limit
+	return l.Limit
 }
 
 type ListGREPOPsResponse struct {
@@ -107,37 +107,37 @@ type ListGREPOPsResponse struct {
 	GreResponse400 *shared.GreResponse400
 }
 
-func (o *ListGREPOPsResponse) GetContentType() string {
-	if o == nil {
+func (l *ListGREPOPsResponse) GetContentType() string {
+	if l == nil {
 		return ""
 	}
-	return o.ContentType
+	return l.ContentType
 }
 
-func (o *ListGREPOPsResponse) GetStatusCode() int {
-	if o == nil {
+func (l *ListGREPOPsResponse) GetStatusCode() int {
+	if l == nil {
 		return 0
 	}
-	return o.StatusCode
+	return l.StatusCode
 }
 
-func (o *ListGREPOPsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (l *ListGREPOPsResponse) GetRawResponse() *http.Response {
+	if l == nil {
 		return nil
 	}
-	return o.RawResponse
+	return l.RawResponse
 }
 
-func (o *ListGREPOPsResponse) GetGrePopListResponse() *shared.GrePopListResponse {
-	if o == nil {
+func (l *ListGREPOPsResponse) GetGrePopListResponse() *shared.GrePopListResponse {
+	if l == nil {
 		return nil
 	}
-	return o.GrePopListResponse
+	return l.GrePopListResponse
 }
 
-func (o *ListGREPOPsResponse) GetGreResponse400() *shared.GreResponse400 {
-	if o == nil {
+func (l *ListGREPOPsResponse) GetGreResponse400() *shared.GreResponse400 {
+	if l == nil {
 		return nil
 	}
-	return o.GreResponse400
+	return l.GreResponse400
 }

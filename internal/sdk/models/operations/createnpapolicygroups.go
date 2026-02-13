@@ -41,18 +41,18 @@ type CreateNPAPolicyGroupsResponseBody struct {
 	Status *CreateNPAPolicyGroupsStatus       `json:"status,omitempty"`
 }
 
-func (o *CreateNPAPolicyGroupsResponseBody) GetData() *shared.NpaPolicygroupResponseItem {
-	if o == nil {
+func (c *CreateNPAPolicyGroupsResponseBody) GetData() *shared.NpaPolicygroupResponseItem {
+	if c == nil {
 		return nil
 	}
-	return o.Data
+	return c.Data
 }
 
-func (o *CreateNPAPolicyGroupsResponseBody) GetStatus() *CreateNPAPolicyGroupsStatus {
-	if o == nil {
+func (c *CreateNPAPolicyGroupsResponseBody) GetStatus() *CreateNPAPolicyGroupsStatus {
+	if c == nil {
 		return nil
 	}
-	return o.Status
+	return c.Status
 }
 
 type CreateNPAPolicyGroupsResponse struct {
@@ -68,37 +68,37 @@ type CreateNPAPolicyGroupsResponse struct {
 	NpaPolicygroupResponse400 *shared.NpaPolicygroupResponse400
 }
 
-func (o *CreateNPAPolicyGroupsResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateNPAPolicyGroupsResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateNPAPolicyGroupsResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateNPAPolicyGroupsResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateNPAPolicyGroupsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateNPAPolicyGroupsResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }
 
-func (o *CreateNPAPolicyGroupsResponse) GetObject() *CreateNPAPolicyGroupsResponseBody {
-	if o == nil {
+func (c *CreateNPAPolicyGroupsResponse) GetObject() *CreateNPAPolicyGroupsResponseBody {
+	if c == nil {
 		return nil
 	}
-	return o.Object
+	return c.Object
 }
 
-func (o *CreateNPAPolicyGroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
-	if o == nil {
+func (c *CreateNPAPolicyGroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
+	if c == nil {
 		return nil
 	}
-	return o.NpaPolicygroupResponse400
+	return c.NpaPolicygroupResponse400
 }

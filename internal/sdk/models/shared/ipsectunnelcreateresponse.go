@@ -8,23 +8,23 @@ type IpsecTunnelCreateResponse struct {
 	Status *int64            `json:"status,omitempty"`
 }
 
-func (o *IpsecTunnelCreateResponse) GetData() []IpsecTunnelItem {
-	if o == nil {
+func (i *IpsecTunnelCreateResponse) GetData() []IpsecTunnelItem {
+	if i == nil {
 		return nil
 	}
-	return o.Data
+	return i.Data
 }
 
-func (o *IpsecTunnelCreateResponse) GetResult() *string {
-	if o == nil {
+func (i *IpsecTunnelCreateResponse) GetResult() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Result
+	return i.Result
 }
 
-func (o *IpsecTunnelCreateResponse) GetStatus() *int64 {
-	if o == nil {
+func (i *IpsecTunnelCreateResponse) GetStatus() *int64 {
+	if i == nil {
 		return nil
 	}
-	return o.Status
+	return i.Status
 }

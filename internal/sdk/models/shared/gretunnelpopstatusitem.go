@@ -24,65 +24,65 @@ type GreTunnelPopStatusItem struct {
 	Throughput *string `json:"throughput,omitempty"`
 }
 
-func (o *GreTunnelPopStatusItem) GetName() *string {
-	if o == nil {
+func (g *GreTunnelPopStatusItem) GetName() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Name
+	return g.Name
 }
 
-func (o *GreTunnelPopStatusItem) GetGateway() *string {
-	if o == nil {
+func (g *GreTunnelPopStatusItem) GetGateway() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Gateway
+	return g.Gateway
 }
 
-func (o *GreTunnelPopStatusItem) GetProbeIP() *string {
-	if o == nil {
+func (g *GreTunnelPopStatusItem) GetProbeIP() *string {
+	if g == nil {
 		return nil
 	}
-	return o.ProbeIP
+	return g.ProbeIP
 }
 
-func (o *GreTunnelPopStatusItem) GetPrimary() *bool {
-	if o == nil {
+func (g *GreTunnelPopStatusItem) GetPrimary() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.Primary
+	return g.Primary
 }
 
-func (o *GreTunnelPopStatusItem) GetKeepaliveStatus() *string {
-	if o == nil {
+func (g *GreTunnelPopStatusItem) GetKeepaliveStatus() *string {
+	if g == nil {
 		return nil
 	}
-	return o.KeepaliveStatus
+	return g.KeepaliveStatus
 }
 
-func (o *GreTunnelPopStatusItem) GetKeepaliveLast() *string {
-	if o == nil {
+func (g *GreTunnelPopStatusItem) GetKeepaliveLast() *string {
+	if g == nil {
 		return nil
 	}
-	return o.KeepaliveLast
+	return g.KeepaliveLast
 }
 
-func (o *GreTunnelPopStatusItem) GetUserTrafficStatus() *string {
-	if o == nil {
+func (g *GreTunnelPopStatusItem) GetUserTrafficStatus() *string {
+	if g == nil {
 		return nil
 	}
-	return o.UserTrafficStatus
+	return g.UserTrafficStatus
 }
 
-func (o *GreTunnelPopStatusItem) GetUserTrafficLast() *string {
-	if o == nil {
+func (g *GreTunnelPopStatusItem) GetUserTrafficLast() *string {
+	if g == nil {
 		return nil
 	}
-	return o.UserTrafficLast
+	return g.UserTrafficLast
 }
 
-func (o *GreTunnelPopStatusItem) GetThroughput() *string {
-	if o == nil {
+func (g *GreTunnelPopStatusItem) GetThroughput() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Throughput
+	return g.Throughput
 }

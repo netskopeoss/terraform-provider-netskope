@@ -40,9 +40,9 @@ type PublishersAlertPutResponse struct {
 	Status *PublishersAlertPutResponseStatus `json:"status,omitempty"`
 }
 
-func (o *PublishersAlertPutResponse) GetStatus() *PublishersAlertPutResponseStatus {
-	if o == nil {
+func (p *PublishersAlertPutResponse) GetStatus() *PublishersAlertPutResponseStatus {
+	if p == nil {
 		return nil
 	}
-	return o.Status
+	return p.Status
 }

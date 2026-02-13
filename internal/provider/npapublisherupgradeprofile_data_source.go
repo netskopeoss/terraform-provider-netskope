@@ -162,11 +162,11 @@ func (r *NPAPublisherUpgradeProfileDataSource) Read(ctx context.Context, req dat
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublisherUpgradeProfileGetResponse != nil && res.PublisherUpgradeProfileGetResponse.Data != nil) {
+	if !(res.PublisherUpgradeProfileGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileGetResponseData(ctx, res.PublisherUpgradeProfileGetResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherUpgradeProfileGetResponse(ctx, res.PublisherUpgradeProfileGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

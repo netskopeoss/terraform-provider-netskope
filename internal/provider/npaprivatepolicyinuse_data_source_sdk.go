@@ -14,11 +14,10 @@ func (r *NPAPrivatePolicyInUseDataSourceModel) RefreshFromResponseBody(ctx conte
 	var diags diag.Diagnostics
 
 	r.Data = []tfTypes.ResponseBody{}
-	if len(r.Data) > len(resp) {
-		r.Data = r.Data[:len(resp)]
-	}
-	for dataCount, dataItem := range resp {
+
+	for _, dataItem := range resp {
 		var data tfTypes.ResponseBody
+
 		if dataItem.Data == nil {
 			data.Data = nil
 		} else {
@@ -30,12 +29,8 @@ func (r *NPAPrivatePolicyInUseDataSourceModel) RefreshFromResponseBody(ctx conte
 		} else {
 			data.Status = types.StringNull()
 		}
-		if dataCount+1 > len(r.Data) {
-			r.Data = append(r.Data, data)
-		} else {
-			r.Data[dataCount].Data = data.Data
-			r.Data[dataCount].Status = data.Status
-		}
+
+		r.Data = append(r.Data, data)
 	}
 
 	return diags
@@ -45,8 +40,8 @@ func (r *NPAPrivatePolicyInUseDataSourceModel) ToOperationsGetNPAPolicyInUseRequ
 	var diags diag.Diagnostics
 
 	ids := make([]string, 0, len(r.Ids))
-	for _, idsItem := range r.Ids {
-		ids = append(ids, idsItem.ValueString())
+	for idsIndex := range r.Ids {
+		ids = append(ids, r.Ids[idsIndex].ValueString())
 	}
 	out := operations.GetNPAPolicyInUseRequestBody{
 		Ids: ids,

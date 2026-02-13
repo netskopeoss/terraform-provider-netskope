@@ -11,11 +11,11 @@ type LbrokerConfigResponseData struct {
 	Hostname *string `json:"hostname,omitempty"`
 }
 
-func (o *LbrokerConfigResponseData) GetHostname() *string {
-	if o == nil {
+func (l *LbrokerConfigResponseData) GetHostname() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Hostname
+	return l.Hostname
 }
 
 type LbrokerConfigResponseStatus string
@@ -49,16 +49,16 @@ type LbrokerConfigResponse struct {
 	Status *LbrokerConfigResponseStatus `json:"status,omitempty"`
 }
 
-func (o *LbrokerConfigResponse) GetData() *LbrokerConfigResponseData {
-	if o == nil {
+func (l *LbrokerConfigResponse) GetData() *LbrokerConfigResponseData {
+	if l == nil {
 		return nil
 	}
-	return o.Data
+	return l.Data
 }
 
-func (o *LbrokerConfigResponse) GetStatus() *LbrokerConfigResponseStatus {
-	if o == nil {
+func (l *LbrokerConfigResponse) GetStatus() *LbrokerConfigResponseStatus {
+	if l == nil {
 		return nil
 	}
-	return o.Status
+	return l.Status
 }

@@ -7,29 +7,29 @@ type GreTunnelListItemXff struct {
 	Iplist  []string `json:"iplist,omitempty"`
 }
 
-func (o *GreTunnelListItemXff) GetEnabled() *bool {
-	if o == nil {
+func (g *GreTunnelListItemXff) GetEnabled() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.Enabled
+	return g.Enabled
 }
 
-func (o *GreTunnelListItemXff) GetIplist() []string {
-	if o == nil {
+func (g *GreTunnelListItemXff) GetIplist() []string {
+	if g == nil {
 		return nil
 	}
-	return o.Iplist
+	return g.Iplist
 }
 
 type GreTunnelListItemOptions struct {
 	Xff *GreTunnelListItemXff `json:"xff,omitempty"`
 }
 
-func (o *GreTunnelListItemOptions) GetXff() *GreTunnelListItemXff {
-	if o == nil {
+func (g *GreTunnelListItemOptions) GetXff() *GreTunnelListItemXff {
+	if g == nil {
 		return nil
 	}
-	return o.Xff
+	return g.Xff
 }
 
 // GreTunnelListItem - GRE tunnel item in list response
@@ -58,86 +58,86 @@ type GreTunnelListItem struct {
 	Pops    []GreTunnelPopStatusItem  `json:"pops,omitempty"`
 }
 
-func (o *GreTunnelListItem) GetTunnelID() *int {
-	if o == nil {
+func (g *GreTunnelListItem) GetTunnelID() *int {
+	if g == nil {
 		return nil
 	}
-	return o.TunnelID
+	return g.TunnelID
 }
 
-func (o *GreTunnelListItem) GetSite() *string {
-	if o == nil {
+func (g *GreTunnelListItem) GetSite() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Site
+	return g.Site
 }
 
-func (o *GreTunnelListItem) GetSourceIP() *string {
-	if o == nil {
+func (g *GreTunnelListItem) GetSourceIP() *string {
+	if g == nil {
 		return nil
 	}
-	return o.SourceIP
+	return g.SourceIP
 }
 
-func (o *GreTunnelListItem) GetSourceType() *string {
-	if o == nil {
+func (g *GreTunnelListItem) GetSourceType() *string {
+	if g == nil {
 		return nil
 	}
-	return o.SourceType
+	return g.SourceType
 }
 
-func (o *GreTunnelListItem) GetEnabled() *bool {
-	if o == nil {
+func (g *GreTunnelListItem) GetEnabled() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.Enabled
+	return g.Enabled
 }
 
-func (o *GreTunnelListItem) GetBandwidth() *int {
-	if o == nil {
+func (g *GreTunnelListItem) GetBandwidth() *int {
+	if g == nil {
 		return nil
 	}
-	return o.Bandwidth
+	return g.Bandwidth
 }
 
-func (o *GreTunnelListItem) GetTemplate() *string {
-	if o == nil {
+func (g *GreTunnelListItem) GetTemplate() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Template
+	return g.Template
 }
 
-func (o *GreTunnelListItem) GetVendor() *string {
-	if o == nil {
+func (g *GreTunnelListItem) GetVendor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Vendor
+	return g.Vendor
 }
 
-func (o *GreTunnelListItem) GetNotes() *string {
-	if o == nil {
+func (g *GreTunnelListItem) GetNotes() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Notes
+	return g.Notes
 }
 
-func (o *GreTunnelListItem) GetVersion() *int {
-	if o == nil {
+func (g *GreTunnelListItem) GetVersion() *int {
+	if g == nil {
 		return nil
 	}
-	return o.Version
+	return g.Version
 }
 
-func (o *GreTunnelListItem) GetOptions() *GreTunnelListItemOptions {
-	if o == nil {
+func (g *GreTunnelListItem) GetOptions() *GreTunnelListItemOptions {
+	if g == nil {
 		return nil
 	}
-	return o.Options
+	return g.Options
 }
 
-func (o *GreTunnelListItem) GetPops() []GreTunnelPopStatusItem {
-	if o == nil {
+func (g *GreTunnelListItem) GetPops() []GreTunnelPopStatusItem {
+	if g == nil {
 		return nil
 	}
-	return o.Pops
+	return g.Pops
 }

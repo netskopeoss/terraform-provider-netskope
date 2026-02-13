@@ -12,6 +12,28 @@ type PrivateAppsRequestAppOption struct {
 type PrivateAppsRequestLabels struct {
 }
 
+type PublisherTags struct {
+	TagName *string `json:"tag_name,omitempty"`
+}
+
+func (p *PublisherTags) GetTagName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.TagName
+}
+
+type PrivateAppsRequestTags struct {
+	TagName *string `json:"tag_name,omitempty"`
+}
+
+func (p *PrivateAppsRequestTags) GetTagName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.TagName
+}
+
 // PrivateAppsRequest - Private APP request body
 type PrivateAppsRequest struct {
 	AllowUnauthenticatedCors *bool                        `default:"false" json:"allow_unauthenticated_cors"`
@@ -25,9 +47,9 @@ type PrivateAppsRequest struct {
 	IsUserPortalApp          *bool                        `default:"false" json:"is_user_portal_app"`
 	Labels                   []PrivateAppsRequestLabels   `json:"labels,omitempty"`
 	Protocols                []ProtocolItem               `json:"protocols,omitempty"`
-	PublisherTags            []TagItemNoID                `json:"publisher_tags,omitempty"`
+	PublisherTags            []PublisherTags              `json:"publisher_tags,omitempty"`
 	Publishers               []PublisherItem              `json:"publishers,omitempty"`
-	Tags                     []TagItemNoID                `json:"tags,omitempty"`
+	Tags                     []PrivateAppsRequestTags     `json:"tags,omitempty"`
 	RealHost                 *string                      `json:"real_host,omitempty"`
 	PrivateAppProtocol       *string                      `json:"private_app_protocol,omitempty"`
 	TrustSelfSignedCerts     *bool                        `default:"false" json:"trust_self_signed_certs"`
@@ -39,134 +61,134 @@ func (p PrivateAppsRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PrivateAppsRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &p, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &p, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *PrivateAppsRequest) GetAllowUnauthenticatedCors() *bool {
-	if o == nil {
+func (p *PrivateAppsRequest) GetAllowUnauthenticatedCors() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.AllowUnauthenticatedCors
+	return p.AllowUnauthenticatedCors
 }
 
-func (o *PrivateAppsRequest) GetAllowURIBypass() *bool {
-	if o == nil {
+func (p *PrivateAppsRequest) GetAllowURIBypass() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.AllowURIBypass
+	return p.AllowURIBypass
 }
 
-func (o *PrivateAppsRequest) GetUribypassHeaderValue() *string {
-	if o == nil {
+func (p *PrivateAppsRequest) GetUribypassHeaderValue() *string {
+	if p == nil {
 		return nil
 	}
-	return o.UribypassHeaderValue
+	return p.UribypassHeaderValue
 }
 
-func (o *PrivateAppsRequest) GetBypassUris() []string {
-	if o == nil {
+func (p *PrivateAppsRequest) GetBypassUris() []string {
+	if p == nil {
 		return nil
 	}
-	return o.BypassUris
+	return p.BypassUris
 }
 
-func (o *PrivateAppsRequest) GetPrivateAppName() *string {
-	if o == nil {
+func (p *PrivateAppsRequest) GetPrivateAppName() *string {
+	if p == nil {
 		return nil
 	}
-	return o.PrivateAppName
+	return p.PrivateAppName
 }
 
-func (o *PrivateAppsRequest) GetAppOption() *PrivateAppsRequestAppOption {
-	if o == nil {
+func (p *PrivateAppsRequest) GetAppOption() *PrivateAppsRequestAppOption {
+	if p == nil {
 		return nil
 	}
-	return o.AppOption
+	return p.AppOption
 }
 
-func (o *PrivateAppsRequest) GetClientlessAccess() *bool {
-	if o == nil {
+func (p *PrivateAppsRequest) GetClientlessAccess() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.ClientlessAccess
+	return p.ClientlessAccess
 }
 
-func (o *PrivateAppsRequest) GetPrivateAppHostname() *string {
-	if o == nil {
+func (p *PrivateAppsRequest) GetPrivateAppHostname() *string {
+	if p == nil {
 		return nil
 	}
-	return o.PrivateAppHostname
+	return p.PrivateAppHostname
 }
 
-func (o *PrivateAppsRequest) GetIsUserPortalApp() *bool {
-	if o == nil {
+func (p *PrivateAppsRequest) GetIsUserPortalApp() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.IsUserPortalApp
+	return p.IsUserPortalApp
 }
 
-func (o *PrivateAppsRequest) GetLabels() []PrivateAppsRequestLabels {
-	if o == nil {
+func (p *PrivateAppsRequest) GetLabels() []PrivateAppsRequestLabels {
+	if p == nil {
 		return nil
 	}
-	return o.Labels
+	return p.Labels
 }
 
-func (o *PrivateAppsRequest) GetProtocols() []ProtocolItem {
-	if o == nil {
+func (p *PrivateAppsRequest) GetProtocols() []ProtocolItem {
+	if p == nil {
 		return nil
 	}
-	return o.Protocols
+	return p.Protocols
 }
 
-func (o *PrivateAppsRequest) GetPublisherTags() []TagItemNoID {
-	if o == nil {
+func (p *PrivateAppsRequest) GetPublisherTags() []PublisherTags {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherTags
+	return p.PublisherTags
 }
 
-func (o *PrivateAppsRequest) GetPublishers() []PublisherItem {
-	if o == nil {
+func (p *PrivateAppsRequest) GetPublishers() []PublisherItem {
+	if p == nil {
 		return nil
 	}
-	return o.Publishers
+	return p.Publishers
 }
 
-func (o *PrivateAppsRequest) GetTags() []TagItemNoID {
-	if o == nil {
+func (p *PrivateAppsRequest) GetTags() []PrivateAppsRequestTags {
+	if p == nil {
 		return nil
 	}
-	return o.Tags
+	return p.Tags
 }
 
-func (o *PrivateAppsRequest) GetRealHost() *string {
-	if o == nil {
+func (p *PrivateAppsRequest) GetRealHost() *string {
+	if p == nil {
 		return nil
 	}
-	return o.RealHost
+	return p.RealHost
 }
 
-func (o *PrivateAppsRequest) GetPrivateAppProtocol() *string {
-	if o == nil {
+func (p *PrivateAppsRequest) GetPrivateAppProtocol() *string {
+	if p == nil {
 		return nil
 	}
-	return o.PrivateAppProtocol
+	return p.PrivateAppProtocol
 }
 
-func (o *PrivateAppsRequest) GetTrustSelfSignedCerts() *bool {
-	if o == nil {
+func (p *PrivateAppsRequest) GetTrustSelfSignedCerts() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.TrustSelfSignedCerts
+	return p.TrustSelfSignedCerts
 }
 
-func (o *PrivateAppsRequest) GetUsePublisherDNS() *bool {
-	if o == nil {
+func (p *PrivateAppsRequest) GetUsePublisherDNS() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.UsePublisherDNS
+	return p.UsePublisherDNS
 }

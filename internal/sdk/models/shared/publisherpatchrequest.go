@@ -10,37 +10,37 @@ type PublisherPatchRequest struct {
 	PublisherUpgradeProfilesID *int     `json:"publisher_upgrade_profiles_id,omitempty"`
 }
 
-func (o *PublisherPatchRequest) GetPublisherName() string {
-	if o == nil {
+func (p *PublisherPatchRequest) GetPublisherName() string {
+	if p == nil {
 		return ""
 	}
-	return o.PublisherName
+	return p.PublisherName
 }
 
-func (o *PublisherPatchRequest) GetID() *int {
-	if o == nil {
+func (p *PublisherPatchRequest) GetID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.ID
+	return p.ID
 }
 
-func (o *PublisherPatchRequest) GetLabelIds() []string {
-	if o == nil {
+func (p *PublisherPatchRequest) GetLabelIds() []string {
+	if p == nil {
 		return nil
 	}
-	return o.LabelIds
+	return p.LabelIds
 }
 
-func (o *PublisherPatchRequest) GetLbrokerconnect() *bool {
-	if o == nil {
+func (p *PublisherPatchRequest) GetLbrokerconnect() *bool {
+	if p == nil {
 		return nil
 	}
-	return o.Lbrokerconnect
+	return p.Lbrokerconnect
 }
 
-func (o *PublisherPatchRequest) GetPublisherUpgradeProfilesID() *int {
-	if o == nil {
+func (p *PublisherPatchRequest) GetPublisherUpgradeProfilesID() *int {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherUpgradeProfilesID
+	return p.PublisherUpgradeProfilesID
 }
