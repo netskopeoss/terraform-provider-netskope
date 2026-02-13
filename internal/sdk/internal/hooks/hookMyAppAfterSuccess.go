@@ -67,10 +67,8 @@ func (i *myAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
 		}
 
 		// Sort protocols by type (alphabetically) then port (numerically) to ensure
-		// deterministic ordering. The API returns protocols in non-deterministic order,
-		// which causes perpetual drift because the schema uses ListNestedAttribute.
-		// Sort order: tcp before udp (alphabetical), then port ascending (22, 443, 8080).
-		// Users should configure HCL in this same order to avoid drift.
+		// deterministic ordering. The API returns protocols in non-deterministic order.
+		// ModifyPlan handles config-vs-state order differences (BUG-002).
 		// See docs/bugs/BUG-001-publishers-perpetual-diff.md for details.
 		sort.Slice(responseMap.Data.Protocols, func(i, j int) bool {
 			ti := responseMap.Data.Protocols[i].Type

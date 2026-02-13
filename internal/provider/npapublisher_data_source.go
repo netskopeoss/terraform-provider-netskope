@@ -260,11 +260,11 @@ func (r *NPAPublisherDataSource) Read(ctx context.Context, req datasource.ReadRe
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PublisherResponse != nil && res.PublisherResponse.Data != nil) {
+	if !(res.PublisherResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPublisherResponseData(ctx, res.PublisherResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPublisherResponse(ctx, res.PublisherResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

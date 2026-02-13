@@ -20,11 +20,10 @@ func (r *NPAPublisherUpgradeProfilesListDataSourceModel) RefreshFromSharedPublis
 		} else {
 			r.Data = &tfTypes.PublisherUpgradeProfileListResponseData{}
 			r.Data.UpgradeProfiles = []tfTypes.UpgradeProfiles{}
-			if len(r.Data.UpgradeProfiles) > len(resp.Data.UpgradeProfiles) {
-				r.Data.UpgradeProfiles = r.Data.UpgradeProfiles[:len(resp.Data.UpgradeProfiles)]
-			}
-			for upgradeProfilesCount, upgradeProfilesItem := range resp.Data.UpgradeProfiles {
+
+			for _, upgradeProfilesItem := range resp.Data.UpgradeProfiles {
 				var upgradeProfiles tfTypes.UpgradeProfiles
+
 				upgradeProfiles.CreatedAt = types.StringPointerValue(upgradeProfilesItem.CreatedAt)
 				upgradeProfiles.DockerTag = types.StringPointerValue(upgradeProfilesItem.DockerTag)
 				upgradeProfiles.Enabled = types.BoolPointerValue(upgradeProfilesItem.Enabled)
@@ -39,24 +38,8 @@ func (r *NPAPublisherUpgradeProfilesListDataSourceModel) RefreshFromSharedPublis
 				upgradeProfiles.UpdatedAt = types.StringPointerValue(upgradeProfilesItem.UpdatedAt)
 				upgradeProfiles.UpgradingStage = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(upgradeProfilesItem.UpgradingStage))
 				upgradeProfiles.WillStart = types.BoolPointerValue(upgradeProfilesItem.WillStart)
-				if upgradeProfilesCount+1 > len(r.Data.UpgradeProfiles) {
-					r.Data.UpgradeProfiles = append(r.Data.UpgradeProfiles, upgradeProfiles)
-				} else {
-					r.Data.UpgradeProfiles[upgradeProfilesCount].CreatedAt = upgradeProfiles.CreatedAt
-					r.Data.UpgradeProfiles[upgradeProfilesCount].DockerTag = upgradeProfiles.DockerTag
-					r.Data.UpgradeProfiles[upgradeProfilesCount].Enabled = upgradeProfiles.Enabled
-					r.Data.UpgradeProfiles[upgradeProfilesCount].Frequency = upgradeProfiles.Frequency
-					r.Data.UpgradeProfiles[upgradeProfilesCount].Name = upgradeProfiles.Name
-					r.Data.UpgradeProfiles[upgradeProfilesCount].NextUpdateTime = upgradeProfiles.NextUpdateTime
-					r.Data.UpgradeProfiles[upgradeProfilesCount].NumAssociatedPublisher = upgradeProfiles.NumAssociatedPublisher
-					r.Data.UpgradeProfiles[upgradeProfilesCount].PublisherUpgradeProfileID = upgradeProfiles.PublisherUpgradeProfileID
-					r.Data.UpgradeProfiles[upgradeProfilesCount].ReleaseType = upgradeProfiles.ReleaseType
-					r.Data.UpgradeProfiles[upgradeProfilesCount].Timezone = upgradeProfiles.Timezone
-					r.Data.UpgradeProfiles[upgradeProfilesCount].TimezoneID = upgradeProfiles.TimezoneID
-					r.Data.UpgradeProfiles[upgradeProfilesCount].UpdatedAt = upgradeProfiles.UpdatedAt
-					r.Data.UpgradeProfiles[upgradeProfilesCount].UpgradingStage = upgradeProfiles.UpgradingStage
-					r.Data.UpgradeProfiles[upgradeProfilesCount].WillStart = upgradeProfiles.WillStart
-				}
+
+				r.Data.UpgradeProfiles = append(r.Data.UpgradeProfiles, upgradeProfiles)
 			}
 		}
 		r.Total = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.Total))

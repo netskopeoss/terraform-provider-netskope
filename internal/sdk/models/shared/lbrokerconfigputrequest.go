@@ -6,9 +6,9 @@ type LbrokerConfigPutRequest struct {
 	Hostname *string `json:"hostname,omitempty"`
 }
 
-func (o *LbrokerConfigPutRequest) GetHostname() *string {
-	if o == nil {
+func (l *LbrokerConfigPutRequest) GetHostname() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Hostname
+	return l.Hostname
 }

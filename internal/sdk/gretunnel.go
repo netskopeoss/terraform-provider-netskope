@@ -62,7 +62,7 @@ func (s *GRETunnel) CreateGRETunnel(ctx context.Context, request shared.GreTunne
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createGRETunnel",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -222,7 +222,7 @@ func (s *GRETunnel) UpdateGRETunnel(ctx context.Context, request operations.Upda
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateGRETunnel",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "GreTunnelRequest", "json", `request:"mediaType=application/json"`)

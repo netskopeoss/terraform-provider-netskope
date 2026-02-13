@@ -26,45 +26,45 @@ func (l ListIPSecPOPsRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListIPSecPOPsRequest) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &l, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &l, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *ListIPSecPOPsRequest) GetName() *string {
-	if o == nil {
+func (l *ListIPSecPOPsRequest) GetName() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Name
+	return l.Name
 }
 
-func (o *ListIPSecPOPsRequest) GetRegion() *string {
-	if o == nil {
+func (l *ListIPSecPOPsRequest) GetRegion() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Region
+	return l.Region
 }
 
-func (o *ListIPSecPOPsRequest) GetCountry() *string {
-	if o == nil {
+func (l *ListIPSecPOPsRequest) GetCountry() *string {
+	if l == nil {
 		return nil
 	}
-	return o.Country
+	return l.Country
 }
 
-func (o *ListIPSecPOPsRequest) GetOffset() *int {
-	if o == nil {
+func (l *ListIPSecPOPsRequest) GetOffset() *int {
+	if l == nil {
 		return nil
 	}
-	return o.Offset
+	return l.Offset
 }
 
-func (o *ListIPSecPOPsRequest) GetLimit() *int {
-	if o == nil {
+func (l *ListIPSecPOPsRequest) GetLimit() *int {
+	if l == nil {
 		return nil
 	}
-	return o.Limit
+	return l.Limit
 }
 
 type ListIPSecPOPsResponse struct {
@@ -80,37 +80,37 @@ type ListIPSecPOPsResponse struct {
 	IpsecResponse400 *shared.IpsecResponse400
 }
 
-func (o *ListIPSecPOPsResponse) GetContentType() string {
-	if o == nil {
+func (l *ListIPSecPOPsResponse) GetContentType() string {
+	if l == nil {
 		return ""
 	}
-	return o.ContentType
+	return l.ContentType
 }
 
-func (o *ListIPSecPOPsResponse) GetStatusCode() int {
-	if o == nil {
+func (l *ListIPSecPOPsResponse) GetStatusCode() int {
+	if l == nil {
 		return 0
 	}
-	return o.StatusCode
+	return l.StatusCode
 }
 
-func (o *ListIPSecPOPsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (l *ListIPSecPOPsResponse) GetRawResponse() *http.Response {
+	if l == nil {
 		return nil
 	}
-	return o.RawResponse
+	return l.RawResponse
 }
 
-func (o *ListIPSecPOPsResponse) GetIpsecPopListResponse() *shared.IpsecPopListResponse {
-	if o == nil {
+func (l *ListIPSecPOPsResponse) GetIpsecPopListResponse() *shared.IpsecPopListResponse {
+	if l == nil {
 		return nil
 	}
-	return o.IpsecPopListResponse
+	return l.IpsecPopListResponse
 }
 
-func (o *ListIPSecPOPsResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
-	if o == nil {
+func (l *ListIPSecPOPsResponse) GetIpsecResponse400() *shared.IpsecResponse400 {
+	if l == nil {
 		return nil
 	}
-	return o.IpsecResponse400
+	return l.IpsecResponse400
 }

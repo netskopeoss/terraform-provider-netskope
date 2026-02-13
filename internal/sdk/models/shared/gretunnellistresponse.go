@@ -8,23 +8,23 @@ type GreTunnelListResponse struct {
 	Total  *int                `json:"total,omitempty"`
 }
 
-func (o *GreTunnelListResponse) GetResult() []GreTunnelListItem {
-	if o == nil {
+func (g *GreTunnelListResponse) GetResult() []GreTunnelListItem {
+	if g == nil {
 		return nil
 	}
-	return o.Result
+	return g.Result
 }
 
-func (o *GreTunnelListResponse) GetStatus() *int64 {
-	if o == nil {
+func (g *GreTunnelListResponse) GetStatus() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.Status
+	return g.Status
 }
 
-func (o *GreTunnelListResponse) GetTotal() *int {
-	if o == nil {
+func (g *GreTunnelListResponse) GetTotal() *int {
+	if g == nil {
 		return nil
 	}
-	return o.Total
+	return g.Total
 }

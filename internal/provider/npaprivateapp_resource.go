@@ -49,7 +49,7 @@ type NPAPrivateAppResourceModel struct {
 	Protocols                []tfTypes.ProtocolItem  `tfsdk:"protocols"`
 	Publishers               []tfTypes.PublisherItem `tfsdk:"publishers"`
 	RealHost                 types.String            `tfsdk:"real_host"`
-	Tags                     []tfTypes.TagItem       `tfsdk:"tags"`
+	Tags                     []tfTypes.Tags          `tfsdk:"tags"`
 	TrustSelfSignedCerts     types.Bool              `tfsdk:"trust_self_signed_certs"`
 	UsePublisherDNS          types.Bool              `tfsdk:"use_publisher_dns"`
 }
@@ -141,8 +141,9 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 					},
 					Attributes: map[string]schema.Attribute{
 						"publisher_id": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `Publisher ID used for assignment`,
 						},
 						"publisher_name": schema.StringAttribute{
 							Computed: true,
@@ -249,11 +250,11 @@ func (r *NPAPrivateAppResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PrivateAppsPostResponse != nil && res.PrivateAppsPostResponse.Data != nil) {
+	if !(res.PrivateAppsPostResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsPostResponseData(ctx, res.PrivateAppsPostResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsPostResponse(ctx, res.PrivateAppsPostResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -286,11 +287,11 @@ func (r *NPAPrivateAppResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if !(res1.PrivateAppsGetResponse != nil && res1.PrivateAppsGetResponse.Data != nil) {
+	if !(res1.PrivateAppsGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsItem(ctx, res1.PrivateAppsGetResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsGetResponse(ctx, res1.PrivateAppsGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -350,11 +351,11 @@ func (r *NPAPrivateAppResource) Read(ctx context.Context, req resource.ReadReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PrivateAppsGetResponse != nil && res.PrivateAppsGetResponse.Data != nil) {
+	if !(res.PrivateAppsGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsItem(ctx, res.PrivateAppsGetResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsGetResponse(ctx, res.PrivateAppsGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -400,48 +401,11 @@ func (r *NPAPrivateAppResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PrivateAppsGetResponse != nil && res.PrivateAppsGetResponse.Data != nil) {
+	if !(res.PrivateAppsGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsItem(ctx, res.PrivateAppsGetResponse.Data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	request1, request1Diags := data.ToOperationsGetNPAPrivateAppRequest(ctx)
-	resp.Diagnostics.Append(request1Diags...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	res1, err := r.client.GetNPAPrivateApp(ctx, *request1)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
-		}
-		return
-	}
-	if res1 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
-		return
-	}
-	if !(res1.PrivateAppsGetResponse != nil && res1.PrivateAppsGetResponse.Data != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsItem(ctx, res1.PrivateAppsGetResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsGetResponse(ctx, res.PrivateAppsGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -493,7 +457,10 @@ func (r *NPAPrivateAppResource) Delete(ctx context.Context, req resource.DeleteR
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode != 200 {
+	switch res.StatusCode {
+	case 200, 404:
+		break
+	default:
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}

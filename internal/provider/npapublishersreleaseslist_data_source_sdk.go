@@ -15,21 +15,15 @@ func (r *NPAPublishersReleasesListDataSourceModel) RefreshFromSharedPublishersRe
 
 	if resp != nil {
 		r.Data = []tfTypes.ReleaseItem{}
-		if len(r.Data) > len(resp.Data) {
-			r.Data = r.Data[:len(resp.Data)]
-		}
-		for dataCount, dataItem := range resp.Data {
+
+		for _, dataItem := range resp.Data {
 			var data tfTypes.ReleaseItem
+
 			data.DockerTag = types.StringPointerValue(dataItem.DockerTag)
 			data.Name = types.StringPointerValue(dataItem.Name)
 			data.Version = types.StringPointerValue(dataItem.Version)
-			if dataCount+1 > len(r.Data) {
-				r.Data = append(r.Data, data)
-			} else {
-				r.Data[dataCount].DockerTag = data.DockerTag
-				r.Data[dataCount].Name = data.Name
-				r.Data[dataCount].Version = data.Version
-			}
+
+			r.Data = append(r.Data, data)
 		}
 	}
 

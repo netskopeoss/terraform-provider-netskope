@@ -42,7 +42,7 @@ type NPAPrivateAppDataSourceModel struct {
 	RealHost                 types.String            `tfsdk:"real_host"`
 	Status                   types.String            `tfsdk:"status"`
 	SteeringConfigs          []types.String          `tfsdk:"steering_configs"`
-	Tags                     []tfTypes.TagItem       `tfsdk:"tags"`
+	Tags                     []tfTypes.Tags          `tfsdk:"tags"`
 	TrustSelfSignedCerts     types.Bool              `tfsdk:"trust_self_signed_certs"`
 	UsePublisherDNS          types.Bool              `tfsdk:"use_publisher_dns"`
 }
@@ -206,11 +206,11 @@ func (r *NPAPrivateAppDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.PrivateAppsGetResponse != nil && res.PrivateAppsGetResponse.Data != nil) {
+	if !(res.PrivateAppsGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsItem(ctx, res.PrivateAppsGetResponse.Data)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedPrivateAppsGetResponse(ctx, res.PrivateAppsGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

@@ -61,7 +61,7 @@ func (s *NPALocalBrokerConfig) Read(ctx context.Context, opts ...operations.Opti
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getNPALocalBrokerConfig",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -169,6 +169,7 @@ func (s *NPALocalBrokerConfig) Read(ctx context.Context, opts ...operations.Opti
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -212,7 +213,7 @@ func (s *NPALocalBrokerConfig) Create(ctx context.Context, request shared.Lbroke
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createNPALocalBrokerConfig",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -370,7 +371,7 @@ func (s *NPALocalBrokerConfig) Update(ctx context.Context, request shared.Lbroke
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateNPALocalBrokerConfig",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)

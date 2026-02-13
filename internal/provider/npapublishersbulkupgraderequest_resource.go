@@ -5,14 +5,12 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
@@ -159,15 +157,7 @@ func (r *NPAPublishersBulkUpgradeRequestResource) Schema(ctx context.Context, re
 									Computed: true,
 								},
 								"status": schema.StringAttribute{
-									Computed:    true,
-									Description: `must be one of ["connected", "not registered", "disconnected"]`,
-									Validators: []validator.String{
-										stringvalidator.OneOf(
-											"connected",
-											"not registered",
-											"disconnected",
-										),
-									},
+									Computed: true,
 								},
 								"stitcher_id": schema.Int32Attribute{
 									Computed: true,

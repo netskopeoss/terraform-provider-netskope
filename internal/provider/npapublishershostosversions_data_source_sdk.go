@@ -15,22 +15,17 @@ func (r *NPAPublishersHostOsVersionsDataSourceModel) RefreshFromSharedPublishers
 
 	if resp != nil {
 		r.Data = []tfTypes.PublishersHostOsVersionGetResponseData{}
-		if len(r.Data) > len(resp.Data) {
-			r.Data = r.Data[:len(resp.Data)]
-		}
-		for dataCount, dataItem := range resp.Data {
+
+		for _, dataItem := range resp.Data {
 			var data tfTypes.PublishersHostOsVersionGetResponseData
+
 			data.HostOsVersion = types.StringPointerValue(dataItem.HostOsVersion)
 			data.PublisherIds = make([]types.Int32, 0, len(dataItem.PublisherIds))
 			for _, v := range dataItem.PublisherIds {
 				data.PublisherIds = append(data.PublisherIds, types.Int32Value(int32(v)))
 			}
-			if dataCount+1 > len(r.Data) {
-				r.Data = append(r.Data, data)
-			} else {
-				r.Data[dataCount].HostOsVersion = data.HostOsVersion
-				r.Data[dataCount].PublisherIds = data.PublisherIds
-			}
+
+			r.Data = append(r.Data, data)
 		}
 	}
 

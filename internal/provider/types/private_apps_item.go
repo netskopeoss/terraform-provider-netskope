@@ -19,7 +19,7 @@ type PrivateAppsItem struct {
 	Publishers               []PublisherItem `tfsdk:"publishers"`
 	RealHost                 types.String    `tfsdk:"real_host"`
 	SteeringConfigs          []types.String  `tfsdk:"steering_configs"`
-	Tags                     []TagItem       `tfsdk:"tags"`
+	Tags                     []Tags          `tfsdk:"tags"`
 	TrustSelfSignedCerts     types.Bool      `tfsdk:"trust_self_signed_certs"`
 	UsePublisherDNS          types.Bool      `tfsdk:"use_publisher_dns"`
 }

@@ -12,51 +12,51 @@ type IpsecTunnelPopItem struct {
 	Throughput *string `json:"throughput,omitempty"`
 }
 
-func (o *IpsecTunnelPopItem) GetName() *string {
-	if o == nil {
+func (i *IpsecTunnelPopItem) GetName() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Name
+	return i.Name
 }
 
-func (o *IpsecTunnelPopItem) GetGateway() *string {
-	if o == nil {
+func (i *IpsecTunnelPopItem) GetGateway() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Gateway
+	return i.Gateway
 }
 
-func (o *IpsecTunnelPopItem) GetProbeip() *string {
-	if o == nil {
+func (i *IpsecTunnelPopItem) GetProbeip() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Probeip
+	return i.Probeip
 }
 
-func (o *IpsecTunnelPopItem) GetPrimary() *bool {
-	if o == nil {
+func (i *IpsecTunnelPopItem) GetPrimary() *bool {
+	if i == nil {
 		return nil
 	}
-	return o.Primary
+	return i.Primary
 }
 
-func (o *IpsecTunnelPopItem) GetStatus() *string {
-	if o == nil {
+func (i *IpsecTunnelPopItem) GetStatus() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Status
+	return i.Status
 }
 
-func (o *IpsecTunnelPopItem) GetSince() *string {
-	if o == nil {
+func (i *IpsecTunnelPopItem) GetSince() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Since
+	return i.Since
 }
 
-func (o *IpsecTunnelPopItem) GetThroughput() *string {
-	if o == nil {
+func (i *IpsecTunnelPopItem) GetThroughput() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Throughput
+	return i.Throughput
 }

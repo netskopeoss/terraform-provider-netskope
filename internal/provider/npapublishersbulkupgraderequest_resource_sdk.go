@@ -20,11 +20,10 @@ func (r *NPAPublishersBulkUpgradeRequestResourceModel) RefreshFromSharedPublishe
 		} else {
 			r.Data = &tfTypes.PublishersBulkResponseData{}
 			r.Data.Publishers = []tfTypes.PublisherBulkItem{}
-			if len(r.Data.Publishers) > len(resp.Data.Publishers) {
-				r.Data.Publishers = r.Data.Publishers[:len(resp.Data.Publishers)]
-			}
-			for publishersCount, publishersItem := range resp.Data.Publishers {
+
+			for _, publishersItem := range resp.Data.Publishers {
 				var publishers tfTypes.PublisherBulkItem
+
 				publishers.AppsCount = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.AppsCount))
 				if publishersItem.Assessment == nil {
 					publishers.Assessment = nil
@@ -70,16 +69,14 @@ func (r *NPAPublishersBulkUpgradeRequestResourceModel) RefreshFromSharedPublishe
 					publishers.ConnectedApps = append(publishers.ConnectedApps, types.StringValue(v))
 				}
 				publishers.Labels = []tfTypes.PublisherResponseLabels{}
-				for labelsCount, labelsItem := range publishersItem.Labels {
+
+				for _, labelsItem := range publishersItem.Labels {
 					var labels tfTypes.PublisherResponseLabels
+
 					labels.LabelID = types.StringPointerValue(labelsItem.LabelID)
 					labels.Permission = types.StringPointerValue(labelsItem.Permission)
-					if labelsCount+1 > len(publishers.Labels) {
-						publishers.Labels = append(publishers.Labels, labels)
-					} else {
-						publishers.Labels[labelsCount].LabelID = labels.LabelID
-						publishers.Labels[labelsCount].Permission = labels.Permission
-					}
+
+					publishers.Labels = append(publishers.Labels, labels)
 				}
 				publishers.Lbrokerconnect = types.BoolPointerValue(publishersItem.Lbrokerconnect)
 				publishers.PublisherID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(publishersItem.PublisherID))
@@ -109,27 +106,8 @@ func (r *NPAPublishersBulkUpgradeRequestResourceModel) RefreshFromSharedPublishe
 					publishers.UpgradeStatus = &tfTypes.PublisherResponseUpgradeStatus{}
 					publishers.UpgradeStatus.Upstat = types.StringPointerValue(publishersItem.UpgradeStatus.Upstat)
 				}
-				if publishersCount+1 > len(r.Data.Publishers) {
-					r.Data.Publishers = append(r.Data.Publishers, publishers)
-				} else {
-					r.Data.Publishers[publishersCount].AppsCount = publishers.AppsCount
-					r.Data.Publishers[publishersCount].Assessment = publishers.Assessment
-					r.Data.Publishers[publishersCount].Capabilities = publishers.Capabilities
-					r.Data.Publishers[publishersCount].CommonName = publishers.CommonName
-					r.Data.Publishers[publishersCount].ConnectedApps = publishers.ConnectedApps
-					r.Data.Publishers[publishersCount].Labels = publishers.Labels
-					r.Data.Publishers[publishersCount].Lbrokerconnect = publishers.Lbrokerconnect
-					r.Data.Publishers[publishersCount].PublisherID = publishers.PublisherID
-					r.Data.Publishers[publishersCount].PublisherName = publishers.PublisherName
-					r.Data.Publishers[publishersCount].PublisherUpgradeProfilesID = publishers.PublisherUpgradeProfilesID
-					r.Data.Publishers[publishersCount].Registered = publishers.Registered
-					r.Data.Publishers[publishersCount].Status = publishers.Status
-					r.Data.Publishers[publishersCount].StitcherID = publishers.StitcherID
-					r.Data.Publishers[publishersCount].StitcherPop = publishers.StitcherPop
-					r.Data.Publishers[publishersCount].UpgradeFailedReason = publishers.UpgradeFailedReason
-					r.Data.Publishers[publishersCount].UpgradeRequest = publishers.UpgradeRequest
-					r.Data.Publishers[publishersCount].UpgradeStatus = publishers.UpgradeStatus
-				}
+
+				r.Data.Publishers = append(r.Data.Publishers, publishers)
 			}
 		}
 	}
@@ -152,8 +130,8 @@ func (r *NPAPublishersBulkUpgradeRequestResourceModel) ToSharedPublisherBulkRequ
 			}
 		}
 		publisherID := make([]string, 0, len(r.Publishers.PublisherID))
-		for _, publisherIDItem := range r.Publishers.PublisherID {
-			publisherID = append(publisherID, publisherIDItem.ValueString())
+		for publisherIDIndex := range r.Publishers.PublisherID {
+			publisherID = append(publisherID, r.Publishers.PublisherID[publisherIDIndex].ValueString())
 		}
 		publishers = &shared.Publishers{
 			Apply:       apply,

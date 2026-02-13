@@ -7,16 +7,16 @@ type NpaPolicygroupResponse struct {
 	Status *string                      `json:"status,omitempty"`
 }
 
-func (o *NpaPolicygroupResponse) GetData() []NpaPolicygroupResponseItem {
-	if o == nil {
+func (n *NpaPolicygroupResponse) GetData() []NpaPolicygroupResponseItem {
+	if n == nil {
 		return nil
 	}
-	return o.Data
+	return n.Data
 }
 
-func (o *NpaPolicygroupResponse) GetStatus() *string {
-	if o == nil {
+func (n *NpaPolicygroupResponse) GetStatus() *string {
+	if n == nil {
 		return nil
 	}
-	return o.Status
+	return n.Status
 }

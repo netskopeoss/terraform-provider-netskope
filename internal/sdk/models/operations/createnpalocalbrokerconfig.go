@@ -20,37 +20,37 @@ type CreateNPALocalBrokerConfigResponse struct {
 	LbrokerResponse400 *shared.LbrokerResponse400
 }
 
-func (o *CreateNPALocalBrokerConfigResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateNPALocalBrokerConfigResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateNPALocalBrokerConfigResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateNPALocalBrokerConfigResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateNPALocalBrokerConfigResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateNPALocalBrokerConfigResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }
 
-func (o *CreateNPALocalBrokerConfigResponse) GetLbrokerConfigResponse() *shared.LbrokerConfigResponse {
-	if o == nil {
+func (c *CreateNPALocalBrokerConfigResponse) GetLbrokerConfigResponse() *shared.LbrokerConfigResponse {
+	if c == nil {
 		return nil
 	}
-	return o.LbrokerConfigResponse
+	return c.LbrokerConfigResponse
 }
 
-func (o *CreateNPALocalBrokerConfigResponse) GetLbrokerResponse400() *shared.LbrokerResponse400 {
-	if o == nil {
+func (c *CreateNPALocalBrokerConfigResponse) GetLbrokerResponse400() *shared.LbrokerResponse400 {
+	if c == nil {
 		return nil
 	}
-	return o.LbrokerResponse400
+	return c.LbrokerResponse400
 }

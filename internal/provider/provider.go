@@ -4,8 +4,11 @@ package provider
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
+	"github.com/hashicorp/terraform-plugin-framework/function"
+	"github.com/hashicorp/terraform-plugin-framework/list"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -17,7 +20,9 @@ import (
 )
 
 var _ provider.Provider = (*NetskopeProvider)(nil)
+var _ provider.ProviderWithActions = (*NetskopeProvider)(nil)
 var _ provider.ProviderWithEphemeralResources = (*NetskopeProvider)(nil)
+var _ provider.ProviderWithFunctions = (*NetskopeProvider)(nil)
 
 type NetskopeProvider struct {
 	// version is set to the provider version on release, "dev" when the
@@ -30,6 +35,7 @@ type NetskopeProvider struct {
 type NetskopeProviderModel struct {
 	APIKey    types.String `tfsdk:"api_key"`
 	ServerURL types.String `tfsdk:"server_url"`
+	Tenant    types.String `tfsdk:"tenant"`
 }
 
 func (p *NetskopeProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -41,12 +47,17 @@ func (p *NetskopeProvider) Schema(ctx context.Context, req provider.SchemaReques
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"api_key": schema.StringAttribute{
-				Optional:  true,
-				Sensitive: true,
+				MarkdownDescription: `API Key. Configurable via environment variable ` + "`" + `NETSKOPE_API_KEY` + "`" + `.`,
+				Optional:            true,
+				Sensitive:           true,
 			},
 			"server_url": schema.StringAttribute{
 				Description: `Server URL (defaults to https://{tenant}.goskope.com/api/v2)`,
 				Optional:    true,
+			},
+			"tenant": schema.StringAttribute{
+				MarkdownDescription: `this value is assigned by Netskope, in this example ` + "`" + `demo.goskope.com` + "`" + ` (defaults to demo)`,
+				Optional:            true,
 			},
 		},
 		MarkdownDescription: `Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy`,
@@ -62,13 +73,24 @@ func (p *NetskopeProvider) Configure(ctx context.Context, req provider.Configure
 		return
 	}
 
-	ServerURL := data.ServerURL.ValueString()
+	serverUrl := data.ServerURL.ValueString()
 
-	if ServerURL == "" && len(os.Getenv("NETSKOPE_SERVER_URL")) > 0 {
-		ServerURL = os.Getenv("NETSKOPE_SERVER_URL")
+	if serverUrl == "" && os.Getenv("NETSKOPE_SERVER_URL") != "" {
+		serverUrl = os.Getenv("NETSKOPE_SERVER_URL")
 	}
-	if ServerURL == "" {
-		ServerURL = "https://{tenant}.goskope.com/api/v2"
+
+	if serverUrl == "" {
+		serverUrl = "https://{tenant}.goskope.com/api/v2"
+	}
+
+	serverUrlParams := make(map[string]string)
+
+	if data.Tenant.ValueString() != "" {
+		serverUrlParams["tenant"] = data.Tenant.ValueString()
+	}
+
+	if _, ok := serverUrlParams["tenant"]; !ok {
+		serverUrlParams["tenant"] = "demo"
 	}
 
 	security := shared.Security{}
@@ -97,15 +119,25 @@ func (p *NetskopeProvider) Configure(ctx context.Context, req provider.Configure
 	httpClient.Transport = NewProviderHTTPTransport(providerHTTPTransportOpts)
 
 	opts := []sdk.SDKOption{
-		sdk.WithServerURL(ServerURL),
+		sdk.WithTemplatedServerURL(serverUrl, serverUrlParams),
 		sdk.WithSecurity(security),
 		sdk.WithClient(httpClient),
 	}
 
 	client := sdk.New(opts...)
+	resp.ActionData = client
 	resp.DataSourceData = client
 	resp.EphemeralResourceData = client
+	resp.ListResourceData = client
 	resp.ResourceData = client
+}
+
+func (p *NetskopeProvider) Functions(_ context.Context) []func() function.Function {
+	return []func() function.Function{}
+}
+
+func (p *NetskopeProvider) Actions(_ context.Context) []func() action.Action {
+	return []func() action.Action{}
 }
 
 func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Resource {
@@ -161,6 +193,10 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 
 func (p *NetskopeProvider) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
 	return []func() ephemeral.EphemeralResource{}
+}
+
+func (p *NetskopeProvider) ListResources(ctx context.Context) []func() list.ListResource {
+	return []func() list.ListResource{}
 }
 
 func New(version string) func() provider.Provider {

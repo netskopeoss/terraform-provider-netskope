@@ -55,6 +55,21 @@ func (r *NPALocalBrokerResourceModel) RefreshFromSharedLbrokerItem(ctx context.C
 	return diags
 }
 
+func (r *NPALocalBrokerResourceModel) RefreshFromSharedLbrokerResponse(ctx context.Context, resp *shared.LbrokerResponse) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		diags.Append(r.RefreshFromSharedLbrokerItem(ctx, resp.Data)...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *NPALocalBrokerResourceModel) ToOperationsDeleteNPALocalBrokerRequest(ctx context.Context) (*operations.DeleteNPALocalBrokerRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -166,8 +181,8 @@ func (r *NPALocalBrokerResourceModel) ToSharedLbrokerPostRequest(ctx context.Con
 		accessViaPublicIP = nil
 	}
 	labelIds := make([]string, 0, len(r.LabelIds))
-	for _, labelIdsItem := range r.LabelIds {
-		labelIds = append(labelIds, labelIdsItem.ValueString())
+	for labelIdsIndex := range r.LabelIds {
+		labelIds = append(labelIds, r.LabelIds[labelIdsIndex].ValueString())
 	}
 	out := shared.LbrokerPostRequest{
 		LocalBrokerName:   localBrokerName,
@@ -250,8 +265,8 @@ func (r *NPALocalBrokerResourceModel) ToSharedLbrokerPutRequest(ctx context.Cont
 		accessViaPublicIP = nil
 	}
 	labelIds := make([]string, 0, len(r.LabelIds))
-	for _, labelIdsItem := range r.LabelIds {
-		labelIds = append(labelIds, labelIdsItem.ValueString())
+	for labelIdsIndex := range r.LabelIds {
+		labelIds = append(labelIds, r.LabelIds[labelIdsIndex].ValueString())
 	}
 	out := shared.LbrokerPutRequest{
 		LocalBrokerName:   localBrokerName,

@@ -14,11 +14,11 @@ type DeleteNPAPolicyGroupsRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *DeleteNPAPolicyGroupsRequest) GetID() string {
-	if o == nil {
+func (d *DeleteNPAPolicyGroupsRequest) GetID() string {
+	if d == nil {
 		return ""
 	}
-	return o.ID
+	return d.ID
 }
 
 type DeleteNPAPolicyGroupsStatus string
@@ -52,11 +52,11 @@ type DeleteNPAPolicyGroupsResponseBody struct {
 	Status *DeleteNPAPolicyGroupsStatus `json:"status,omitempty"`
 }
 
-func (o *DeleteNPAPolicyGroupsResponseBody) GetStatus() *DeleteNPAPolicyGroupsStatus {
-	if o == nil {
+func (d *DeleteNPAPolicyGroupsResponseBody) GetStatus() *DeleteNPAPolicyGroupsStatus {
+	if d == nil {
 		return nil
 	}
-	return o.Status
+	return d.Status
 }
 
 type DeleteNPAPolicyGroupsResponse struct {
@@ -72,37 +72,37 @@ type DeleteNPAPolicyGroupsResponse struct {
 	NpaPolicygroupResponse400 *shared.NpaPolicygroupResponse400
 }
 
-func (o *DeleteNPAPolicyGroupsResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteNPAPolicyGroupsResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteNPAPolicyGroupsResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteNPAPolicyGroupsResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteNPAPolicyGroupsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteNPAPolicyGroupsResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }
 
-func (o *DeleteNPAPolicyGroupsResponse) GetObject() *DeleteNPAPolicyGroupsResponseBody {
-	if o == nil {
+func (d *DeleteNPAPolicyGroupsResponse) GetObject() *DeleteNPAPolicyGroupsResponseBody {
+	if d == nil {
 		return nil
 	}
-	return o.Object
+	return d.Object
 }
 
-func (o *DeleteNPAPolicyGroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
-	if o == nil {
+func (d *DeleteNPAPolicyGroupsResponse) GetNpaPolicygroupResponse400() *shared.NpaPolicygroupResponse400 {
+	if d == nil {
 		return nil
 	}
-	return o.NpaPolicygroupResponse400
+	return d.NpaPolicygroupResponse400
 }

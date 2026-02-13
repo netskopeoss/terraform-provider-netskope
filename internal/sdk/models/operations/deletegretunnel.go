@@ -12,11 +12,11 @@ type DeleteGRETunnelRequest struct {
 	TunnelID int `pathParam:"style=simple,explode=false,name=tunnel_id"`
 }
 
-func (o *DeleteGRETunnelRequest) GetTunnelID() int {
-	if o == nil {
+func (d *DeleteGRETunnelRequest) GetTunnelID() int {
+	if d == nil {
 		return 0
 	}
-	return o.TunnelID
+	return d.TunnelID
 }
 
 // DeleteGRETunnelResponseBody - Successful operation
@@ -25,18 +25,18 @@ type DeleteGRETunnelResponseBody struct {
 	Status *int64  `json:"status,omitempty"`
 }
 
-func (o *DeleteGRETunnelResponseBody) GetResult() *string {
-	if o == nil {
+func (d *DeleteGRETunnelResponseBody) GetResult() *string {
+	if d == nil {
 		return nil
 	}
-	return o.Result
+	return d.Result
 }
 
-func (o *DeleteGRETunnelResponseBody) GetStatus() *int64 {
-	if o == nil {
+func (d *DeleteGRETunnelResponseBody) GetStatus() *int64 {
+	if d == nil {
 		return nil
 	}
-	return o.Status
+	return d.Status
 }
 
 type DeleteGRETunnelResponse struct {
@@ -52,37 +52,37 @@ type DeleteGRETunnelResponse struct {
 	GreResponse400 *shared.GreResponse400
 }
 
-func (o *DeleteGRETunnelResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteGRETunnelResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteGRETunnelResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteGRETunnelResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteGRETunnelResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteGRETunnelResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }
 
-func (o *DeleteGRETunnelResponse) GetObject() *DeleteGRETunnelResponseBody {
-	if o == nil {
+func (d *DeleteGRETunnelResponse) GetObject() *DeleteGRETunnelResponseBody {
+	if d == nil {
 		return nil
 	}
-	return o.Object
+	return d.Object
 }
 
-func (o *DeleteGRETunnelResponse) GetGreResponse400() *shared.GreResponse400 {
-	if o == nil {
+func (d *DeleteGRETunnelResponse) GetGreResponse400() *shared.GreResponse400 {
+	if d == nil {
 		return nil
 	}
-	return o.GreResponse400
+	return d.GreResponse400
 }

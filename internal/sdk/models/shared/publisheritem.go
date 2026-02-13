@@ -7,16 +7,16 @@ type PublisherItem struct {
 	PublisherName *string `json:"publisher_name,omitempty"`
 }
 
-func (o *PublisherItem) GetPublisherID() *string {
-	if o == nil {
+func (p *PublisherItem) GetPublisherID() *string {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherID
+	return p.PublisherID
 }
 
-func (o *PublisherItem) GetPublisherName() *string {
-	if o == nil {
+func (p *PublisherItem) GetPublisherName() *string {
+	if p == nil {
 		return nil
 	}
-	return o.PublisherName
+	return p.PublisherName
 }
