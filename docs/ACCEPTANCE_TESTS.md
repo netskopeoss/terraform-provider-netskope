@@ -3,7 +3,7 @@
 This document tracks test parameters, coverage, and dependencies across all
 acceptance tests. Update this file when adding or modifying tests.
 
-Last updated: 2026-01-29
+Last updated: 2026-02-12
 
 ---
 
@@ -27,12 +27,12 @@ Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 
 ---
 
-## Latest Results (0.3.3 - 2026-01-29)
+## Latest Results (0.3.5 - 2026-02-12)
 
 | Metric | Count |
 |--------|-------|
-| **Total Tests** | 73 |
-| **Passed** | 70 |
+| **Total Tests** | 82 |
+| **Passed** | 79 |
 | **Failed** | 0 |
 | **Skipped** | 3 |
 
@@ -260,14 +260,16 @@ Fields tested per resource across test types. Columns:
 
 | Field | C | U | I | D | O | Notes |
 |-------|---|---|---|---|---|-------|
-| rule_name | x | | x | | | |
-| description | x | | | | | Not verified on import |
-| enabled | x | x | | | | "1"/"0" string values |
-| group_id | x | | | | | Not verified on import |
-| rule_data.policy_type | x | | | | | |
-| rule_data.match_criteria_action | x | | | | | Only "allow" tested |
-| rule_data.private_apps | x | | | | | References private app |
-| rule_data.access_method | x | | | | | "Client" only |
+| rule_name | x | | x | x | | |
+| description | x | | | x | | Not verified on import |
+| enabled | x | x | | x | | "1"/"0" string values |
+| group_id | x | | | x | | Not verified on import |
+| rule_data.policy_type | x | | | x | | |
+| rule_data.match_criteria_action | x | | | x | | Only "allow" tested |
+| rule_data.private_apps | x | | | x | | References private app |
+| rule_data.access_method | x | | | x | | "Client" only |
+| rule_order.order | x | | | | x | "top" and "after" tested |
+| rule_order.rule_id | | | | | x | BUG-003 regression test |
 
 ### netskope_npa_publisher_upgrade_profile
 
@@ -342,7 +344,7 @@ Important for understanding cascading failures and cleanup.
 | `npaprivateappslist_data_source_test.go` | Publisher, Private App |
 | `npaprivateapppublichost_resource_test.go` | None (standalone) |
 | `npapublishertoken_resource_test.go` | Publisher |
-| `nparules_resource_test.go` | Policy Group, Publisher, Private App |
+| `nparules_resource_test.go` | Policy Group, Publisher, Private App (also 2nd rule for `ruleOrderAfter`) |
 | `nparules_data_source_test.go` | Policy Group, Publisher, Private App, Rule |
 | `nparuleslist_data_source_test.go` | Policy Group, Publisher, Private App, Rule |
 | `gretunnel_data_source_test.go` | GRE Tunnel |
@@ -367,7 +369,12 @@ All other tests create only the resource under test.
 |----------|-------|--------|
 | `netskope_npa_rules` | Response-only fields caused plan drift; `group_id` not returned by GET API | **Fixed** (0.3.3) - hidden response-only fields, removed `group_id` from response schema |
 | `netskope_ip_sec_tunnel` | `enable`/`enabled` field name mismatch between request/response | **Fixed** (0.3.3) - unified with `x-speakeasy-name-override` |
-| `netskope_npa_private_app` | Protocol ordering can cause drift if not sorted | **Fixed** (tests use ascending port order) |
+| `netskope_npa_private_app` | Non-deterministic publisher ordering from API | **Fixed** (0.3.4) - AfterSuccess hooks sort by publisher_id |
+| `netskope_npa_private_app` | Config element reordering caused false diffs | **Fixed** (0.3.5) - ModifyPlan normalization for protocols, publishers, tags |
+| `netskope_npa_rules` | Config element reordering caused false diffs | **Fixed** (0.3.5) - ModifyPlan normalization for private_apps, access_method |
+| `netskope_gre_tunnel` | Config element reordering caused false diffs | **Fixed** (0.3.5) - ModifyPlan normalization for xff_ip_list |
+| `netskope_ip_sec_tunnel` | Config element reordering caused false diffs | **Fixed** (0.3.5) - ModifyPlan normalization for pop_names |
+| `netskope_npa_rules` | `rule_order.rule_id` type mismatch in BeforeRequest hook | **Fixed** (0.3.5) - BUG-003, changed `*string` to `*int64`, added `omitempty` |
 
 ---
 
@@ -406,6 +413,14 @@ a second plan asserting `ExpectEmptyPlan()`.
 | `TestAccDrift_Publisher` | Publisher | publisher_name |
 | `TestAccDrift_PrivateApp_Basic` | Private App | name, hostname, protocols, publishers |
 | `TestAccDrift_PrivateApp_MultiProtocol` | Private App | + multiple TCP protocols |
+| `TestAccDrift_PrivateApp_MultiPublisherWithTags` | Private App | + 2 publishers, mixed protocols, tags (0.3.4) |
+| `TestAccDrift_PrivateApp_UnsortedProtocols` | Private App | Unsorted protocol list (0.3.5, BUG-002) |
+| `TestAccDrift_PrivateApp_UnsortedAllLists` | Private App | Unsorted protocols, publishers, tags (0.3.5, BUG-002) |
+| `TestAccDrift_PrivateApp_ReorderedConfig` | Private App | Config reorder between applies, expect empty plan (0.3.5, #56) |
 | `TestAccDrift_PolicyGroup` | Policy Group | group_name, group_order |
 | `TestAccDrift_NPARules_Basic` | NPA Rules | rule_name, description, enabled, group_id, rule_data |
+| `TestAccDrift_NPARules_UnsortedLists` | NPA Rules | Unsorted private_apps, access_method (0.3.5, BUG-002) |
 | `TestAccDrift_UpgradeProfile` | Upgrade Profile | name, enabled, docker_tag, frequency, timezone, release_type |
+| `TestAccDrift_GRETunnel_UnsortedXffIpList` | GRE Tunnel | Unsorted xff_ip_list (0.3.5, BUG-002) |
+| `TestAccDrift_GRETunnel_MinimalConfig` | GRE Tunnel | Minimal config, no optional computed drift (0.3.5) |
+| `TestAccDrift_IPSecTunnel_MinimalConfig` | IPSec Tunnel | Minimal config, no optional computed drift (0.3.5) |
