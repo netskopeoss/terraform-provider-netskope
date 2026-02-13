@@ -121,6 +121,32 @@ func TestAccNPARules_denyRule(t *testing.T) {
 	})
 }
 
+// TestAccNPARules_ruleOrderAfter verifies that creating a rule with
+// rule_order = { order = "after", rule_id = <id> } works correctly.
+// This is a regression test for BUG-003: the BeforeRequest hook's RuleOrder
+// struct had rule_id typed as *string, but the SDK serializes it as *int64.
+// The type mismatch caused json.Unmarshal to fail during the hook.
+func TestAccNPARules_ruleOrderAfter(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNPARulesConfig_ruleOrderAfter(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_npa_rules.rule1"),
+					testAccCheckResourceExists("netskope_npa_rules.rule2"),
+					resource.TestCheckResourceAttr("netskope_npa_rules.rule1", "rule_name", rName+"-rule1"),
+					resource.TestCheckResourceAttr("netskope_npa_rules.rule2", "rule_name", rName+"-rule2"),
+				),
+			},
+		},
+	})
+}
+
 // Configuration functions
 
 func testAccNPARulesConfig_basic(name string) string {
@@ -298,4 +324,93 @@ resource "netskope_npa_rules" "test" {
   }
 }
 `, testAccProviderConfig(), name, name, name, name)
+}
+
+// testAccNPARulesConfig_ruleOrderAfter creates two rules where the second
+// references the first via rule_order = { order = "after", rule_id = <id> }.
+// This is a regression test for BUG-003.
+func testAccNPARulesConfig_ruleOrderAfter(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_npa_policy_groups" "test" {
+  group_name = "%s-group"
+
+  group_order = {
+    group_id = "2"
+    order    = "after"
+  }
+}
+
+resource "netskope_npa_publisher" "test" {
+  publisher_name = "%s-publisher"
+}
+
+resource "netskope_npa_private_app" "test" {
+  private_app_name     = "%s-app"
+  private_app_hostname = "192.168.1.100"
+
+  protocols = [
+    {
+      port     = "443"
+      protocol = "tcp"
+    }
+  ]
+
+  publishers = [
+    {
+      publisher_id   = tostring(netskope_npa_publisher.test.publisher_id)
+      publisher_name = netskope_npa_publisher.test.publisher_name
+    }
+  ]
+
+  use_publisher_dns       = true
+  trust_self_signed_certs = false
+}
+
+resource "netskope_npa_rules" "rule1" {
+  rule_name   = "%s-rule1"
+  description = "BUG-003 test - first rule"
+  enabled     = "1"
+  group_id    = netskope_npa_policy_groups.test.id
+
+  rule_data = {
+    policy_type = "private-app"
+
+    match_criteria_action = {
+      action_name = "allow"
+    }
+
+    private_apps  = [netskope_npa_private_app.test.private_app_name]
+    access_method = ["Client"]
+  }
+
+  rule_order = {
+    order = "top"
+  }
+}
+
+resource "netskope_npa_rules" "rule2" {
+  rule_name   = "%s-rule2"
+  description = "BUG-003 test - second rule, ordered after first"
+  enabled     = "1"
+  group_id    = netskope_npa_policy_groups.test.id
+
+  rule_data = {
+    policy_type = "private-app"
+
+    match_criteria_action = {
+      action_name = "allow"
+    }
+
+    private_apps  = [netskope_npa_private_app.test.private_app_name]
+    access_method = ["Client"]
+  }
+
+  rule_order = {
+    order   = "after"
+    rule_id = tonumber(netskope_npa_rules.rule1.id)
+  }
+}
+`, testAccProviderConfig(), name, name, name, name, name)
 }
