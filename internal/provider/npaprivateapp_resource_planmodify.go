@@ -25,6 +25,7 @@ import (
 	"context"
 	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -48,6 +49,12 @@ func (r *NPAPrivateAppResource) ModifyPlan(ctx context.Context, req resource.Mod
 	// after apply" and cascades to make ALL Computed attributes unknown.
 	preserveStateForUnknownInt32(ctx, req, resp, path.Root("private_app_id"))
 	preserveStateForUnknownString(ctx, req, resp, path.Root("real_host"))
+
+	// BUG-004: When clientless_access is true, the API auto-generates
+	// private_app_hostname as "ns.<hash>". The user's config value is only a
+	// seed — after creation the API controls this field. Preserve the state
+	// value to suppress the false diff.
+	suppressClientlessHostnameDrift(ctx, req, resp)
 
 	// Normalize list ordering to prevent false drift from position differences.
 	normalizeProtocolsOrder(ctx, req, resp)
@@ -258,12 +265,18 @@ func normalizeTagsOrder(ctx context.Context, req resource.ModifyPlanRequest, res
 		return
 	}
 
+	// BUG-005: Lowercase keys before sorting. The API auto-capitalizes tag
+	// names (e.g. "production" → "Production"). Without lowercasing, ASCII
+	// sort order puts uppercase before lowercase, misaligning the lists:
+	//   plan:  ["infrastructure", "production"]
+	//   state: ["Production", "infrastructure"]
+	// Lowercasing both ensures they sort into matching positions.
 	planKeys := make([]string, 0, len(planList))
 	for _, t := range planList {
 		if t.TagName.IsUnknown() || t.TagName.IsNull() {
 			return
 		}
-		planKeys = append(planKeys, t.TagName.ValueString())
+		planKeys = append(planKeys, strings.ToLower(t.TagName.ValueString()))
 	}
 
 	stateKeys := make([]string, 0, len(stateList))
@@ -271,7 +284,7 @@ func normalizeTagsOrder(ctx context.Context, req resource.ModifyPlanRequest, res
 		if t.TagName.IsUnknown() || t.TagName.IsNull() {
 			return
 		}
-		stateKeys = append(stateKeys, t.TagName.ValueString())
+		stateKeys = append(stateKeys, strings.ToLower(t.TagName.ValueString()))
 	}
 
 	sort.Strings(planKeys)
@@ -284,4 +297,34 @@ func normalizeTagsOrder(ctx context.Context, req resource.ModifyPlanRequest, res
 	}
 
 	resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, path.Root("tags"), stateList)...)
+}
+
+// suppressClientlessHostnameDrift preserves the state value of
+// private_app_hostname when clientless_access is true.
+// BUG-004: The API auto-generates the hostname as "ns.<hash>" for clientless
+// apps. The user's config value is only used as a seed on creation. After
+// that, the API controls this field and the config value should not cause drift.
+func suppressClientlessHostnameDrift(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	var clientless types.Bool
+	resp.Diagnostics.Append(req.Plan.GetAttribute(ctx, path.Root("clientless_access"), &clientless)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if clientless.IsNull() || clientless.IsUnknown() || !clientless.ValueBool() {
+		return
+	}
+
+	var stateHost types.String
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("private_app_hostname"), &stateHost)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Only suppress if state has a value (not first create).
+	if stateHost.IsNull() || stateHost.IsUnknown() {
+		return
+	}
+
+	resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, path.Root("private_app_hostname"), stateHost)...)
 }
