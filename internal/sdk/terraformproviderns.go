@@ -2,7 +2,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0.0 and generator version 2.821.4
+// Generated from OpenAPI doc version 1.0.0 and generator version 2.824.1
 
 import (
 	"bytes"
@@ -159,7 +159,7 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk := &TerraformProviderNs{
 		SDKVersion: "0.3.18",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 0.3.18 2.821.4 1.0.0 github.com/netskopeoss/terraform-provider-netskope/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 0.3.18 2.824.1 1.0.0 github.com/netskopeoss/terraform-provider-netskope/internal/sdk",
 			ServerList: ServerList,
 			ServerVariables: []map[string]string{
 				{
