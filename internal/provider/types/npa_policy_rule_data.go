@@ -17,7 +17,6 @@ type NpaPolicyRuleData struct {
 	OrganizationUnits      []types.String       `tfsdk:"organization_units"`
 	PolicyType             types.String         `tfsdk:"policy_type"`
 	PrivateApps            []types.String       `tfsdk:"private_apps"`
-	PrivateAppTagIds       []types.String       `tfsdk:"private_app_tag_ids"`
 	PrivateAppTags         []types.String       `tfsdk:"private_app_tags"`
 	SrcCountries           []types.String       `tfsdk:"src_countries"`
 	UserGroups             []types.String       `tfsdk:"user_groups"`

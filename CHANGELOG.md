@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.3.6] - 2026-02-19
+
+### Fixed
+- **Fixed perpetual diff on `private_app_tag_ids` in `netskope_npa_rules`** ([BUG-006](docs/bugs/BUG-006-private-app-tag-ids-drift.md)) — When using `private_app_tags` to reference apps by tag name, the API-computed `private_app_tag_ids` field caused a plan diff on every apply. Fixed by marking `privateAppTagIds` as `x-speakeasy-terraform-ignore` in the OAS and regenerating.
+- **Fixed publisher import test failure on `upgrade_status`** — `ImportStateVerify` failed on tenants where POST omits `upgrade_status` but GET returns it. Added `ImportStateVerifyIgnore` for the computed field.
+- **Fixed policy groups import test failure on `modify_time`** — POST returns microsecond precision while GET truncates it, causing `ImportStateVerify` mismatch. Added `ImportStateVerifyIgnore` for the computed field.
+
+### Added
+- Drift detection test coverage for `private_app_tags` in `TestAccDrift_PrivateApp_MultiPublisherWithTags`
+
 ## [0.3.5] - 2026-02-12
 
 ### Fixed
