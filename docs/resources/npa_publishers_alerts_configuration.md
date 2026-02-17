@@ -7,7 +7,7 @@ description: |-
   connectivity between your data center and the Netskope cloud. It is a crucial
   component of Netskope’s Private Access (NPA) solution, which provides zero-trust
   network access (ZTNA) to private applications and data in hybrid IT environments.
-  This resource supports the ability to update publisher alert configurations.
+  This resource supports the ability to retrieve publisher alert configurations.
 ---
 
 # netskope_npa_publishers_alerts_configuration (Resource)
@@ -17,17 +17,19 @@ connectivity between your data center and the Netskope cloud. It is a crucial
 component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
 network access (ZTNA) to private applications and data in hybrid IT environments.
 
-This resource supports the ability to update publisher alert configurations.
+This resource supports the ability to retrieve publisher alert configurations.
 
 ## Example Usage
 
 ```terraform
 resource "netskope_npa_publishers_alerts_configuration" "my_npapublishersalertsconfiguration" {
   admin_users = [
-    "admin1@abc.com"
+    "admin1@abc.com",
+    "admin2@abc.com",
   ]
   event_types = [
-    "UPGRADE_SUCCEEDED"
+    "CONNECTION_FAILED",
+    "UPGRADE_STARTED",
   ]
   selected_users = "abc@xyz.com,def@xyz.com"
 }
@@ -44,4 +46,4 @@ resource "netskope_npa_publishers_alerts_configuration" "my_npapublishersalertsc
 
 ### Read-Only
 
-- `status` (String) must be one of ["success", "not found", "failure"]
+- `status` (String)

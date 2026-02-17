@@ -23,10 +23,6 @@ resource "netskope_npa_rules" "my_nparules" {
       "engineering/qa",
     ]
     policy_type = "private-app"
-    private_app_tag_ids = [
-      "1",
-      "2",
-    ]
     private_app_tags = [
       "tag1",
       "tag2",
