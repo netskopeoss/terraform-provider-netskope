@@ -98,10 +98,6 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 								"policy_type": schema.StringAttribute{
 									Computed: true,
 								},
-								"private_app_tag_ids": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
 								"private_app_tags": schema.ListAttribute{
 									Computed:    true,
 									ElementType: types.StringType,

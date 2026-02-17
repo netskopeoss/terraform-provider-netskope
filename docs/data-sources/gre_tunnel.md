@@ -30,7 +30,7 @@ data "netskope_gre_tunnel" "my_gretunnel" {
 
 ### Required
 
-- `tunnel_id` (Number) GRE tunnel ID
+- `tunnel_id` (Number) Unique identifier for the GRE tunnel (assigned by API)
 
 ### Read-Only
 

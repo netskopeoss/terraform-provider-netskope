@@ -42,7 +42,6 @@ func (r *NPARulesResource) ModifyPlan(ctx context.Context, req resource.ModifyPl
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("organization_units"))
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("net_location_obj"))
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("private_app_tags"))
-	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("private_app_tag_ids"))
 	normalizeInt64ListAttr(ctx, req, resp, path.Root("rule_data").AtName("device_classification_id"))
 }
 
