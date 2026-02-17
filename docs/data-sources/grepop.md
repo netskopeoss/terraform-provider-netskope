@@ -27,7 +27,7 @@ data "netskope_grepop" "my_grepop" {
 
 ### Required
 
-- `pop_id` (String) POP ID
+- `pop_id` (String) Unique identifier for the POP
 
 ### Read-Only
 

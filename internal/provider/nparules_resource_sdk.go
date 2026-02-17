@@ -104,10 +104,6 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			for _, v := range resp.RuleData.PrivateApps {
 				r.RuleData.PrivateApps = append(r.RuleData.PrivateApps, types.StringValue(v))
 			}
-			r.RuleData.PrivateAppTagIds = make([]types.String, 0, len(resp.RuleData.PrivateAppTagIds))
-			for _, v := range resp.RuleData.PrivateAppTagIds {
-				r.RuleData.PrivateAppTagIds = append(r.RuleData.PrivateAppTagIds, types.StringValue(v))
-			}
 			r.RuleData.PrivateAppTags = make([]types.String, 0, len(resp.RuleData.PrivateAppTags))
 			for _, v := range resp.RuleData.PrivateAppTags {
 				r.RuleData.PrivateAppTags = append(r.RuleData.PrivateAppTags, types.StringValue(v))
@@ -259,10 +255,6 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		} else {
 			policyType = nil
 		}
-		privateAppTagIds := make([]string, 0, len(r.RuleData.PrivateAppTagIds))
-		for privateAppTagIdsIndex := range r.RuleData.PrivateAppTagIds {
-			privateAppTagIds = append(privateAppTagIds, r.RuleData.PrivateAppTagIds[privateAppTagIdsIndex].ValueString())
-		}
 		privateAppTags := make([]string, 0, len(r.RuleData.PrivateAppTags))
 		for privateAppTagsIndex := range r.RuleData.PrivateAppTags {
 			privateAppTags = append(privateAppTags, r.RuleData.PrivateAppTags[privateAppTagsIndex].ValueString())
@@ -293,7 +285,6 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			NetLocationObj:         netLocationObj,
 			OrganizationUnits:      organizationUnits,
 			PolicyType:             policyType,
-			PrivateAppTagIds:       privateAppTagIds,
 			PrivateAppTags:         privateAppTags,
 			PrivateApps:            privateApps,
 			SrcCountries:           srcCountries,

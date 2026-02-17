@@ -74,10 +74,6 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			for _, v := range resp.RuleData.PrivateApps {
 				r.RuleData.PrivateApps = append(r.RuleData.PrivateApps, types.StringValue(v))
 			}
-			r.RuleData.PrivateAppTagIds = make([]types.String, 0, len(resp.RuleData.PrivateAppTagIds))
-			for _, v := range resp.RuleData.PrivateAppTagIds {
-				r.RuleData.PrivateAppTagIds = append(r.RuleData.PrivateAppTagIds, types.StringValue(v))
-			}
 			r.RuleData.PrivateAppTags = make([]types.String, 0, len(resp.RuleData.PrivateAppTags))
 			for _, v := range resp.RuleData.PrivateAppTags {
 				r.RuleData.PrivateAppTags = append(r.RuleData.PrivateAppTags, types.StringValue(v))

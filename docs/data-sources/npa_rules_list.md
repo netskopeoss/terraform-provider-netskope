@@ -62,7 +62,6 @@ Read-Only:
 - `net_location_obj` (List of String)
 - `organization_units` (List of String)
 - `policy_type` (String)
-- `private_app_tag_ids` (List of String)
 - `private_app_tags` (List of String)
 - `private_apps` (List of String)
 - `src_countries` (List of String)
