@@ -41,7 +41,7 @@ resource "netskope_npa_private_app_public_host" "my_npaprivateapppublichost" {
 ### Read-Only
 
 - `data` (Attributes) (see [below for nested schema](#nestedatt--data))
-- `status` (String) must be one of ["success", "error"]
+- `status` (String)
 
 <a id="nestedatt--protocols"></a>
 ### Nested Schema for `protocols`

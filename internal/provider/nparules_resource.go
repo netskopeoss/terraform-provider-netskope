@@ -146,13 +146,6 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 							),
 						},
 					},
-					"private_app_tag_ids": schema.ListAttribute{
-						Computed:    true,
-						Optional:    true,
-						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
-						ElementType: types.StringType,
-						Description: `Default: []`,
-					},
 					"private_app_tags": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,

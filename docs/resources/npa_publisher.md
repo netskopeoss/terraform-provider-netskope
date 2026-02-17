@@ -57,7 +57,7 @@ resource "netskope_npa_publisher" "my_npapublisher" {
 - `labels` (Attributes List) (see [below for nested schema](#nestedatt--labels))
 - `publisher_id` (Number) publisher id
 - `registered` (Boolean)
-- `status` (String) must be one of ["connected", "not registered", "disconnected"]
+- `status` (String)
 - `sticher_pop` (String)
 - `stitcher_id` (Number)
 - `upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--upgrade_failed_reason))
@@ -139,6 +139,17 @@ Read-Only:
 ## Import
 
 Import is supported using the following syntax:
+
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = netskope_npa_publisher.my_netskope_npa_publisher
+  id = 1
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
 terraform import netskope_npa_publisher.my_netskope_npa_publisher 1
