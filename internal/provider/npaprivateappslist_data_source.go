@@ -68,7 +68,23 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 						"allow_unauthenticated_cors": schema.BoolAttribute{
 							Computed: true,
 						},
+						"allow_uri_bypass": schema.BoolAttribute{
+							Computed: true,
+						},
+						"app_option": schema.SingleNestedAttribute{
+							Computed: true,
+						},
+						"bypass_uris": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+						},
 						"clientless_access": schema.BoolAttribute{
+							Computed: true,
+						},
+						"custom_host": schema.StringAttribute{
+							Computed: true,
+						},
+						"hide_app_in_portal": schema.BoolAttribute{
 							Computed: true,
 						},
 						"is_user_portal_app": schema.BoolAttribute{
@@ -79,6 +95,10 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{},
 							},
+						},
+						"paths": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
 						},
 						"private_app_hostname": schema.StringAttribute{
 							Computed: true,
@@ -140,6 +160,12 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 							},
 						},
 						"trust_self_signed_certs": schema.BoolAttribute{
+							Computed: true,
+						},
+						"upgrade_insecure_requests": schema.BoolAttribute{
+							Computed: true,
+						},
+						"uribypass_header_value": schema.StringAttribute{
 							Computed: true,
 						},
 						"use_publisher_dns": schema.BoolAttribute{
