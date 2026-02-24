@@ -231,6 +231,129 @@ func TestBeforeRequest_UpdateOperationWithRuleOrder(t *testing.T) {
 	}
 }
 
+// TestBeforeRequest_DeviceClassificationIDCoercion verifies that
+// device_classification_id string values are coerced to integers in the
+// marshalled output. The API returns strings (e.g. ["5871"]) but expects
+// integers on write (e.g. [5871]).
+func TestBeforeRequest_DeviceClassificationIDCoercion(t *testing.T) {
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "test-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {"action_name": "allow"},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"],
+			"device_classification_id": ["5871", "42"]
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+
+	// Parse as raw JSON to verify device_classification_id contains integers
+	var raw map[string]json.RawMessage
+	if err := json.Unmarshal([]byte(resultBody), &raw); err != nil {
+		t.Fatalf("failed to unmarshal result body: %v", err)
+	}
+	var ruleData map[string]json.RawMessage
+	if err := json.Unmarshal(raw["rule_data"], &ruleData); err != nil {
+		t.Fatalf("failed to unmarshal rule_data: %v", err)
+	}
+
+	var ids []json.Number
+	if err := json.Unmarshal(ruleData["device_classification_id"], &ids); err != nil {
+		t.Fatalf("failed to unmarshal device_classification_id: %v", err)
+	}
+	if len(ids) != 2 {
+		t.Fatalf("expected 2 device_classification_id values, got %d", len(ids))
+	}
+
+	// Verify they are valid integers (not quoted strings)
+	expected := []int64{5871, 42}
+	for i, id := range ids {
+		n, err := id.Int64()
+		if err != nil {
+			t.Errorf("device_classification_id[%d] = %s is not an integer: %v", i, id, err)
+		}
+		if n != expected[i] {
+			t.Errorf("device_classification_id[%d] = %d, want %d", i, n, expected[i])
+		}
+	}
+
+	// Also verify the raw JSON contains unquoted integers, not strings
+	rawDCI := string(ruleData["device_classification_id"])
+	if strings.Contains(rawDCI, `"5871"`) {
+		t.Errorf("device_classification_id should contain unquoted integers, got %s", rawDCI)
+	}
+}
+
+// TestBeforeRequest_DeviceClassificationIDEmpty verifies that an empty
+// device_classification_id is omitted from the output (omitempty).
+func TestBeforeRequest_DeviceClassificationIDEmpty(t *testing.T) {
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "test-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {"action_name": "allow"},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"]
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+
+	if strings.Contains(resultBody, "device_classification_id") {
+		t.Errorf("expected device_classification_id to be omitted when empty, got %s", resultBody)
+	}
+}
+
+// TestBeforeRequest_DeviceClassificationIDInvalidValue verifies that a
+// non-numeric device_classification_id value causes the hook to return an error.
+func TestBeforeRequest_DeviceClassificationIDInvalidValue(t *testing.T) {
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "test-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {"action_name": "allow"},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"],
+			"device_classification_id": ["not-a-number"]
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
+
+	_, err := hook.BeforeRequest(ctx, req)
+	if err == nil {
+		t.Fatal("expected error for non-numeric device_classification_id, got nil")
+	}
+	if !strings.Contains(err.Error(), "not-a-number") {
+		t.Errorf("expected error to mention the bad value, got: %v", err)
+	}
+}
+
 // TestBeforeRequest_NonMatchingOperationPassthrough verifies that operations
 // other than createNPARules/updateNPARules pass through without modification.
 func TestBeforeRequest_NonMatchingOperationPassthrough(t *testing.T) {

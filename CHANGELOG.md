@@ -9,11 +9,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.3.6] - 2026-02-19
 
 ### Fixed
+- **Fixed concurrent rule creation failure** ([#66](https://github.com/netskopeoss/terraform-provider-netskope/issues/66), [BUG-008](docs/bugs/BUG-008-rule-creation-race-condition.md)) — Creating multiple `netskope_npa_rules` resources concurrently caused intermittent duplicate primary key errors from the API. Added a `sync.Mutex`-based serialization hook (`hookRuleCreateSerializer`) that ensures only one rule creation request is in-flight at a time. Users no longer need `-parallelism=1` or `depends_on` workarounds.
+- **Fixed rule creation failure after private app creation** ([#65](https://github.com/netskopeoss/terraform-provider-netskope/issues/65), [BUG-009](docs/bugs/BUG-009-rule-after-app-eventual-consistency.md)) — Creating an NPA rule immediately after the referenced private app intermittently failed with "Private app doesn't exist" due to backend propagation delay. Added an HTTP client wrapper (`hookRuleCreateRetry`) that automatically retries with exponential backoff (up to 60s). Users no longer need `time_sleep` workarounds.
+- **Made `protocols` required on `netskope_npa_private_app`** ([BUG-007](docs/bugs/BUG-007-clientless-empty-protocols.md)) — The API requires at least one protocol for all private apps (client-based and clientless), but the schema allowed omitting it. Marked `protocols` as required with `minItems: 1` in the OAS. Terraform now rejects invalid configs at plan time instead of failing with a confusing API error. **Breaking:** users who omit `protocols` will see a plan error (their configs were already broken).
 - **Fixed perpetual diff on `private_app_tag_ids` in `netskope_npa_rules`** ([BUG-006](docs/bugs/BUG-006-private-app-tag-ids-drift.md)) — When using `private_app_tags` to reference apps by tag name, the API-computed `private_app_tag_ids` field caused a plan diff on every apply. Fixed by marking `privateAppTagIds` as `x-speakeasy-terraform-ignore` in the OAS and regenerating.
 - **Fixed publisher import test failure on `upgrade_status`** — `ImportStateVerify` failed on tenants where POST omits `upgrade_status` but GET returns it. Added `ImportStateVerifyIgnore` for the computed field.
 - **Fixed policy groups import test failure on `modify_time`** — POST returns microsecond precision while GET truncates it, causing `ImportStateVerify` mismatch. Added `ImportStateVerifyIgnore` for the computed field.
 
 ### Added
+- Rule creation serialization hook with unit tests (`hookRuleCreateSerializer.go`, `hookRuleCreateSerializer_test.go`)
+- Rule creation retry hook with unit tests (`hookRuleCreateRetry.go`, `hookRuleCreateRetry_test.go`)
 - Drift detection test coverage for `private_app_tags` in `TestAccDrift_PrivateApp_MultiPublisherWithTags`
 
 ## [0.3.5] - 2026-02-12

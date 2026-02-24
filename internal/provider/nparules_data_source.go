@@ -68,7 +68,7 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					},
 					"device_classification_id": schema.ListAttribute{
 						Computed:    true,
-						ElementType: types.Int64Type,
+						ElementType: types.StringType,
 					},
 					"json_version": schema.Int64Attribute{
 						Computed: true,

@@ -28,9 +28,15 @@ data "netskope_npa_private_app" "my_npaprivateapp" {
 ### Read-Only
 
 - `allow_unauthenticated_cors` (Boolean)
+- `allow_uri_bypass` (Boolean)
+- `app_option` (Attributes) (see [below for nested schema](#nestedatt--app_option))
+- `bypass_uris` (List of String)
 - `clientless_access` (Boolean)
+- `custom_host` (String)
+- `hide_app_in_portal` (Boolean)
 - `is_user_portal_app` (Boolean)
 - `labels` (Attributes List) (see [below for nested schema](#nestedatt--labels))
+- `paths` (List of String)
 - `private_app_hostname` (String)
 - `private_app_name` (String)
 - `private_app_protocol` (String)
@@ -41,7 +47,13 @@ data "netskope_npa_private_app" "my_npaprivateapp" {
 - `steering_configs` (List of String)
 - `tags` (Attributes List) (see [below for nested schema](#nestedatt--tags))
 - `trust_self_signed_certs` (Boolean)
+- `upgrade_insecure_requests` (Boolean)
+- `uribypass_header_value` (String)
 - `use_publisher_dns` (Boolean)
+
+<a id="nestedatt--app_option"></a>
+### Nested Schema for `app_option`
+
 
 <a id="nestedatt--labels"></a>
 ### Nested Schema for `labels`

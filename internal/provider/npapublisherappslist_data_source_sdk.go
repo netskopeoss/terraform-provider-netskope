@@ -25,7 +25,7 @@ func (r *NPAPublisherAppsListDataSourceModel) RefreshFromSharedPublishersPrivate
 			if dataItem.AppOption == nil {
 				data.AppOption = nil
 			} else {
-				data.AppOption = &tfTypes.Labels{}
+				data.AppOption = &tfTypes.PrivateAppsRequestAppOption{}
 			}
 			data.ClientlessAccess = types.BoolPointerValue(dataItem.ClientlessAccess)
 			data.ExternalID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(dataItem.ExternalID))
