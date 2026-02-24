@@ -5,6 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -39,19 +40,27 @@ type NPAPrivateAppResource struct {
 
 // NPAPrivateAppResourceModel describes the resource data model.
 type NPAPrivateAppResourceModel struct {
-	AllowUnauthenticatedCors types.Bool              `tfsdk:"allow_unauthenticated_cors"`
-	ClientlessAccess         types.Bool              `tfsdk:"clientless_access"`
-	IsUserPortalApp          types.Bool              `tfsdk:"is_user_portal_app"`
-	PrivateAppHostname       types.String            `tfsdk:"private_app_hostname"`
-	PrivateAppID             types.Int32             `tfsdk:"private_app_id"`
-	PrivateAppName           types.String            `tfsdk:"private_app_name"`
-	PrivateAppProtocol       types.String            `tfsdk:"private_app_protocol"`
-	Protocols                []tfTypes.ProtocolItem  `tfsdk:"protocols"`
-	Publishers               []tfTypes.PublisherItem `tfsdk:"publishers"`
-	RealHost                 types.String            `tfsdk:"real_host"`
-	Tags                     []tfTypes.Tags          `tfsdk:"tags"`
-	TrustSelfSignedCerts     types.Bool              `tfsdk:"trust_self_signed_certs"`
-	UsePublisherDNS          types.Bool              `tfsdk:"use_publisher_dns"`
+	AllowUnauthenticatedCors types.Bool                           `tfsdk:"allow_unauthenticated_cors"`
+	AllowURIBypass           types.Bool                           `tfsdk:"allow_uri_bypass"`
+	AppOption                *tfTypes.PrivateAppsRequestAppOption `tfsdk:"app_option"`
+	BypassUris               []types.String                       `tfsdk:"bypass_uris"`
+	ClientlessAccess         types.Bool                           `tfsdk:"clientless_access"`
+	CustomHost               types.String                         `tfsdk:"custom_host"`
+	HideAppInPortal          types.Bool                           `tfsdk:"hide_app_in_portal"`
+	IsUserPortalApp          types.Bool                           `tfsdk:"is_user_portal_app"`
+	Paths                    []types.String                       `tfsdk:"paths"`
+	PrivateAppHostname       types.String                         `tfsdk:"private_app_hostname"`
+	PrivateAppID             types.Int32                          `tfsdk:"private_app_id"`
+	PrivateAppName           types.String                         `tfsdk:"private_app_name"`
+	PrivateAppProtocol       types.String                         `tfsdk:"private_app_protocol"`
+	Protocols                []tfTypes.ProtocolItem               `tfsdk:"protocols"`
+	Publishers               []tfTypes.PublisherItem              `tfsdk:"publishers"`
+	RealHost                 types.String                         `tfsdk:"real_host"`
+	Tags                     []tfTypes.Tags                       `tfsdk:"tags"`
+	TrustSelfSignedCerts     types.Bool                           `tfsdk:"trust_self_signed_certs"`
+	UpgradeInsecureRequests  types.Bool                           `tfsdk:"upgrade_insecure_requests"`
+	UribypassHeaderValue     types.String                         `tfsdk:"uribypass_header_value"`
+	UsePublisherDNS          types.Bool                           `tfsdk:"use_publisher_dns"`
 }
 
 func (r *NPAPrivateAppResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -68,17 +77,43 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Default:     booldefault.StaticBool(false),
 				Description: `Default: false`,
 			},
+			"allow_uri_bypass": schema.BoolAttribute{
+				Computed: true,
+				Optional: true,
+			},
+			"app_option": schema.SingleNestedAttribute{
+				Computed: true,
+				Optional: true,
+			},
+			"bypass_uris": schema.ListAttribute{
+				Computed:    true,
+				Optional:    true,
+				ElementType: types.StringType,
+			},
 			"clientless_access": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
 				Default:     booldefault.StaticBool(false),
 				Description: `Default: false`,
 			},
+			"custom_host": schema.StringAttribute{
+				Computed: true,
+				Optional: true,
+			},
+			"hide_app_in_portal": schema.BoolAttribute{
+				Computed: true,
+				Optional: true,
+			},
 			"is_user_portal_app": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
 				Default:     booldefault.StaticBool(false),
 				Description: `Default: false`,
+			},
+			"paths": schema.ListAttribute{
+				Computed:    true,
+				Optional:    true,
+				ElementType: types.StringType,
 			},
 			"private_app_hostname": schema.StringAttribute{
 				Computed: true,
@@ -107,8 +142,7 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Description: `Requires replacement if changed.`,
 			},
 			"protocols": schema.ListNestedAttribute{
-				Computed: true,
-				Optional: true,
+				Required: true,
 				NestedObject: schema.NestedAttributeObject{
 					Validators: []validator.Object{
 						speakeasy_objectvalidators.NotNull(),
@@ -130,6 +164,9 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 							},
 						},
 					},
+				},
+				Validators: []validator.List{
+					listvalidator.SizeAtLeast(1),
 				},
 			},
 			"publishers": schema.ListNestedAttribute{
@@ -179,6 +216,14 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Optional:    true,
 				Default:     booldefault.StaticBool(false),
 				Description: `Default: false`,
+			},
+			"upgrade_insecure_requests": schema.BoolAttribute{
+				Computed: true,
+				Optional: true,
+			},
+			"uribypass_header_value": schema.StringAttribute{
+				Computed: true,
+				Optional: true,
 			},
 			"use_publisher_dns": schema.BoolAttribute{
 				Computed:    true,

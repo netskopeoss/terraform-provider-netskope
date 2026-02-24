@@ -22,8 +22,24 @@ func (r *NPAPrivateAppsListDataSourceModel) RefreshFromSharedData(ctx context.Co
 			var privateApps tfTypes.PrivateAppsItem
 
 			privateApps.AllowUnauthenticatedCors = types.BoolPointerValue(privateAppsItem.AllowUnauthenticatedCors)
+			privateApps.AllowURIBypass = types.BoolPointerValue(privateAppsItem.AllowURIBypass)
+			if privateAppsItem.AppOption == nil {
+				privateApps.AppOption = nil
+			} else {
+				privateApps.AppOption = &tfTypes.PrivateAppsRequestAppOption{}
+			}
+			privateApps.BypassUris = make([]types.String, 0, len(privateAppsItem.BypassUris))
+			for _, v := range privateAppsItem.BypassUris {
+				privateApps.BypassUris = append(privateApps.BypassUris, types.StringValue(v))
+			}
 			privateApps.ClientlessAccess = types.BoolPointerValue(privateAppsItem.ClientlessAccess)
+			privateApps.CustomHost = types.StringPointerValue(privateAppsItem.CustomHost)
+			privateApps.HideAppInPortal = types.BoolPointerValue(privateAppsItem.HideAppInPortal)
 			privateApps.IsUserPortalApp = types.BoolPointerValue(privateAppsItem.IsUserPortalApp)
+			privateApps.Paths = make([]types.String, 0, len(privateAppsItem.Paths))
+			for _, v := range privateAppsItem.Paths {
+				privateApps.Paths = append(privateApps.Paths, types.StringValue(v))
+			}
 			privateApps.PrivateAppHostname = types.StringPointerValue(privateAppsItem.PrivateAppHostname)
 			privateApps.PrivateAppID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(privateAppsItem.PrivateAppID))
 			privateApps.PrivateAppName = types.StringPointerValue(privateAppsItem.PrivateAppName)
@@ -68,6 +84,8 @@ func (r *NPAPrivateAppsListDataSourceModel) RefreshFromSharedData(ctx context.Co
 				privateApps.Tags = append(privateApps.Tags, tags)
 			}
 			privateApps.TrustSelfSignedCerts = types.BoolPointerValue(privateAppsItem.TrustSelfSignedCerts)
+			privateApps.UpgradeInsecureRequests = types.BoolPointerValue(privateAppsItem.UpgradeInsecureRequests)
+			privateApps.UribypassHeaderValue = types.StringPointerValue(privateAppsItem.UribypassHeaderValue)
 			privateApps.UsePublisherDNS = types.BoolPointerValue(privateAppsItem.UsePublisherDNS)
 
 			r.PrivateApps = append(r.PrivateApps, privateApps)

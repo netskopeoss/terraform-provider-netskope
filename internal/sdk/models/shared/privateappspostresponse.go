@@ -59,12 +59,16 @@ type PrivateAppsPostResponseData struct {
 	AppOption                   *PrivateAppsPostResponseAppOption    `json:"app_option,omitempty"`
 	BypassUris                  []string                             `json:"bypass_uris,omitempty"`
 	ClientlessAccess            *bool                                `json:"clientless_access,omitempty"`
+	CustomHost                  *string                              `json:"custom_host,omitempty"`
+	EnterpriseBrowser           *bool                                `json:"enterprise_browser,omitempty"`
+	HideAppInPortal             *bool                                `json:"hide_app_in_portal,omitempty"`
 	PrivateAppHostname          *string                              `json:"host,omitempty"`
 	PrivateAppID                *int                                 `json:"id,omitempty"`
 	IsUserPortalApp             *bool                                `json:"is_user_portal_app,omitempty"`
 	ModifiedBy                  *string                              `json:"modified_by,omitempty"`
 	ModifyTime                  *string                              `json:"modify_time,omitempty"`
 	Name                        *string                              `json:"name,omitempty"`
+	Paths                       []string                             `json:"paths,omitempty"`
 	Policies                    []string                             `json:"policies,omitempty"`
 	PrivateAppProtocol          *string                              `json:"private_app_protocol,omitempty"`
 	Protocols                   []ProtocolItem                       `json:"protocols,omitempty"`
@@ -76,6 +80,7 @@ type PrivateAppsPostResponseData struct {
 	SupplementDNSForOsx         *bool                                `json:"supplement_dns_for_osx,omitempty"`
 	Tags                        []PrivateAppsPostResponseTags        `json:"tags,omitempty"`
 	TrustSelfSignedCerts        *bool                                `json:"trust_self_signed_certs,omitempty"`
+	UpgradeInsecureRequests     *bool                                `json:"upgrade_insecure_requests,omitempty"`
 	UribypassHeaderValue        *string                              `json:"uribypass_header_value,omitempty"`
 	UsePublisherDNS             *bool                                `json:"use_publisher_dns,omitempty"`
 }
@@ -129,6 +134,27 @@ func (p *PrivateAppsPostResponseData) GetClientlessAccess() *bool {
 	return p.ClientlessAccess
 }
 
+func (p *PrivateAppsPostResponseData) GetCustomHost() *string {
+	if p == nil {
+		return nil
+	}
+	return p.CustomHost
+}
+
+func (p *PrivateAppsPostResponseData) GetEnterpriseBrowser() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.EnterpriseBrowser
+}
+
+func (p *PrivateAppsPostResponseData) GetHideAppInPortal() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.HideAppInPortal
+}
+
 func (p *PrivateAppsPostResponseData) GetPrivateAppHostname() *string {
 	if p == nil {
 		return nil
@@ -169,6 +195,13 @@ func (p *PrivateAppsPostResponseData) GetName() *string {
 		return nil
 	}
 	return p.Name
+}
+
+func (p *PrivateAppsPostResponseData) GetPaths() []string {
+	if p == nil {
+		return nil
+	}
+	return p.Paths
 }
 
 func (p *PrivateAppsPostResponseData) GetPolicies() []string {
@@ -246,6 +279,13 @@ func (p *PrivateAppsPostResponseData) GetTrustSelfSignedCerts() *bool {
 		return nil
 	}
 	return p.TrustSelfSignedCerts
+}
+
+func (p *PrivateAppsPostResponseData) GetUpgradeInsecureRequests() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.UpgradeInsecureRequests
 }
 
 func (p *PrivateAppsPostResponseData) GetUribypassHeaderValue() *string {

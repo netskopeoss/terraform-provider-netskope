@@ -72,9 +72,9 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			}
 			r.RuleData.BNegateNetLocation = types.BoolPointerValue(resp.RuleData.BNegateNetLocation)
 			r.RuleData.BNegateSrcCountries = types.BoolPointerValue(resp.RuleData.BNegateSrcCountries)
-			r.RuleData.DeviceClassificationID = make([]types.Int64, 0, len(resp.RuleData.DeviceClassificationID))
+			r.RuleData.DeviceClassificationID = make([]types.String, 0, len(resp.RuleData.DeviceClassificationID))
 			for _, v := range resp.RuleData.DeviceClassificationID {
-				r.RuleData.DeviceClassificationID = append(r.RuleData.DeviceClassificationID, types.Int64Value(v))
+				r.RuleData.DeviceClassificationID = append(r.RuleData.DeviceClassificationID, types.StringValue(v))
 			}
 			r.RuleData.JSONVersion = types.Int64PointerValue(resp.RuleData.JSONVersion)
 			if resp.RuleData.MatchCriteriaAction == nil {
@@ -225,9 +225,9 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		} else {
 			jsonVersion = nil
 		}
-		deviceClassificationID := make([]int64, 0, len(r.RuleData.DeviceClassificationID))
+		deviceClassificationID := make([]string, 0, len(r.RuleData.DeviceClassificationID))
 		for deviceClassificationIDIndex := range r.RuleData.DeviceClassificationID {
-			deviceClassificationID = append(deviceClassificationID, r.RuleData.DeviceClassificationID[deviceClassificationIDIndex].ValueInt64())
+			deviceClassificationID = append(deviceClassificationID, r.RuleData.DeviceClassificationID[deviceClassificationIDIndex].ValueString())
 		}
 		var matchCriteriaAction *shared.MatchCriteriaAction
 		if r.RuleData.MatchCriteriaAction != nil {

@@ -24,7 +24,7 @@ resource "netskope_npa_rules" "my_nparules" {
     b_negate_net_location  = false
     b_negate_src_countries = false
     device_classification_id = [
-      9
+      "..."
     ]
     json_version = 3
     match_criteria_action = {
@@ -92,7 +92,7 @@ Optional:
 - `access_method` (List of String) Default: []
 - `b_negate_net_location` (Boolean) Default: false
 - `b_negate_src_countries` (Boolean) Default: false
-- `device_classification_id` (List of Number) Default: []
+- `device_classification_id` (List of String) Default: []
 - `json_version` (Number) Default: 3
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
 - `net_location_obj` (List of String) Default: []
