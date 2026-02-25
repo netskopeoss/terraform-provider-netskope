@@ -16,10 +16,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Fixed publisher import test failure on `upgrade_status`** — `ImportStateVerify` failed on tenants where POST omits `upgrade_status` but GET returns it. Added `ImportStateVerifyIgnore` for the computed field.
 - **Fixed policy groups import test failure on `modify_time`** — POST returns microsecond precision while GET truncates it, causing `ImportStateVerify` mismatch. Added `ImportStateVerifyIgnore` for the computed field.
 
+- **Made `custom_host` computed-only on `netskope_npa_private_app`** ([#62](https://github.com/netskopeoss/terraform-provider-netskope/issues/62)) — `custom_host` is read-only in the v2 API, derived from the CN of a certificate uploaded via the Netskope UI. Removed from POST/PUT request schemas to prevent users setting a value the API silently ignores.
+
 ### Added
 - Rule creation serialization hook with unit tests (`hookRuleCreateSerializer.go`, `hookRuleCreateSerializer_test.go`)
 - Rule creation retry hook with unit tests (`hookRuleCreateRetry.go`, `hookRuleCreateRetry_test.go`)
 - Drift detection test coverage for `private_app_tags` in `TestAccDrift_PrivateApp_MultiPublisherWithTags`
+- Concurrent rule creation acceptance test (`TestAccNPARules_concurrentCreate`) — verifies BUG-008 fix with 3 independent rules at parallelism 10
 
 ## [0.3.5] - 2026-02-12
 

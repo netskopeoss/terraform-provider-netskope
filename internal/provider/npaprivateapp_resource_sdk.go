@@ -272,12 +272,6 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 	} else {
 		clientlessAccess = nil
 	}
-	customHost := new(string)
-	if !r.CustomHost.IsUnknown() && !r.CustomHost.IsNull() {
-		*customHost = r.CustomHost.ValueString()
-	} else {
-		customHost = nil
-	}
 	hideAppInPortal := new(bool)
 	if !r.HideAppInPortal.IsUnknown() && !r.HideAppInPortal.IsNull() {
 		*hideAppInPortal = r.HideAppInPortal.ValueBool()
@@ -387,7 +381,6 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 		BypassUris:               bypassUris,
 		AppOption:                appOption,
 		ClientlessAccess:         clientlessAccess,
-		CustomHost:               customHost,
 		HideAppInPortal:          hideAppInPortal,
 		PrivateAppHostname:       privateAppHostname,
 		PrivateAppID:             privateAppID,
@@ -448,12 +441,6 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 		*clientlessAccess = r.ClientlessAccess.ValueBool()
 	} else {
 		clientlessAccess = nil
-	}
-	customHost := new(string)
-	if !r.CustomHost.IsUnknown() && !r.CustomHost.IsNull() {
-		*customHost = r.CustomHost.ValueString()
-	} else {
-		customHost = nil
 	}
 	hideAppInPortal := new(bool)
 	if !r.HideAppInPortal.IsUnknown() && !r.HideAppInPortal.IsNull() {
@@ -568,7 +555,6 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 		PrivateAppName:           privateAppName,
 		AppOption:                appOption,
 		ClientlessAccess:         clientlessAccess,
-		CustomHost:               customHost,
 		HideAppInPortal:          hideAppInPortal,
 		PrivateAppHostname:       privateAppHostname,
 		IsUserPortalApp:          isUserPortalApp,

@@ -43,7 +43,6 @@ type PrivateAppsRequest struct {
 	PrivateAppName           *string                      `json:"app_name,omitempty"`
 	AppOption                *PrivateAppsRequestAppOption `json:"app_option,omitempty"`
 	ClientlessAccess         *bool                        `default:"false" json:"clientless_access"`
-	CustomHost               *string                      `json:"custom_host,omitempty"`
 	HideAppInPortal          *bool                        `json:"hide_app_in_portal,omitempty"`
 	PrivateAppHostname       *string                      `json:"host,omitempty"`
 	IsUserPortalApp          *bool                        `default:"false" json:"is_user_portal_app"`
@@ -118,13 +117,6 @@ func (p *PrivateAppsRequest) GetClientlessAccess() *bool {
 		return nil
 	}
 	return p.ClientlessAccess
-}
-
-func (p *PrivateAppsRequest) GetCustomHost() *string {
-	if p == nil {
-		return nil
-	}
-	return p.CustomHost
 }
 
 func (p *PrivateAppsRequest) GetHideAppInPortal() *bool {

@@ -39,7 +39,6 @@ resource "netskope_npa_private_app" "my_npaprivateapp" {
     "..."
   ]
   clientless_access  = false
-  custom_host        = "...my_custom_host..."
   hide_app_in_portal = false
   is_user_portal_app = true
   paths = [
@@ -87,7 +86,6 @@ resource "netskope_npa_private_app" "my_npaprivateapp" {
 - `app_option` (Attributes) (see [below for nested schema](#nestedatt--app_option))
 - `bypass_uris` (List of String)
 - `clientless_access` (Boolean) Default: false
-- `custom_host` (String)
 - `hide_app_in_portal` (Boolean)
 - `is_user_portal_app` (Boolean) Default: false
 - `paths` (List of String)
@@ -104,6 +102,7 @@ resource "netskope_npa_private_app" "my_npaprivateapp" {
 
 ### Read-Only
 
+- `custom_host` (String)
 - `private_app_id` (Number) private apps id
 
 <a id="nestedatt--protocols"></a>
