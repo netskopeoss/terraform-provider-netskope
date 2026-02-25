@@ -188,7 +188,7 @@ type NpaPolicyRuleData struct {
 	Classification            *string                      `json:"classification,omitempty"`
 	PeriodicReauth            *NpaPolicyRulePeriodicReauth `json:"periodic_reauth,omitempty"`
 	JSONVersion               *int64                       `default:"3" json:"json_version"`
-	DeviceClassificationID    []int64                      `json:"device_classification_id,omitempty"`
+	DeviceClassificationID    []string                     `json:"device_classification_id,omitempty"`
 	MatchCriteriaAction       *MatchCriteriaAction         `json:"match_criteria_action,omitempty"`
 	NetLocationObj            []string                     `json:"net_location_obj,omitempty"`
 	OrganizationUnits         []string                     `json:"organization_units,omitempty"`
@@ -264,7 +264,7 @@ func (n *NpaPolicyRuleData) GetJSONVersion() *int64 {
 	return n.JSONVersion
 }
 
-func (n *NpaPolicyRuleData) GetDeviceClassificationID() []int64 {
+func (n *NpaPolicyRuleData) GetDeviceClassificationID() []string {
 	if n == nil {
 		return nil
 	}
