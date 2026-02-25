@@ -98,7 +98,6 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 			},
 			"custom_host": schema.StringAttribute{
 				Computed: true,
-				Optional: true,
 			},
 			"hide_app_in_portal": schema.BoolAttribute{
 				Computed: true,

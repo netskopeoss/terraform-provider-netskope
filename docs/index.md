@@ -16,7 +16,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "0.3.20"
+      version = "0.3.6"
     }
   }
 }

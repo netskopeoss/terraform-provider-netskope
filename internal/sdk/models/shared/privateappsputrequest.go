@@ -37,7 +37,6 @@ type PrivateAppsPutRequest struct {
 	BypassUris               []string                             `json:"bypass_uris,omitempty"`
 	AppOption                *PrivateAppsPutRequestAppOption      `json:"app_option,omitempty"`
 	ClientlessAccess         *bool                                `json:"clientless_access,omitempty"`
-	CustomHost               *string                              `json:"custom_host,omitempty"`
 	HideAppInPortal          *bool                                `json:"hide_app_in_portal,omitempty"`
 	PrivateAppHostname       *string                              `json:"host,omitempty"`
 	PrivateAppID             *int                                 `json:"id,omitempty"`
@@ -94,13 +93,6 @@ func (p *PrivateAppsPutRequest) GetClientlessAccess() *bool {
 		return nil
 	}
 	return p.ClientlessAccess
-}
-
-func (p *PrivateAppsPutRequest) GetCustomHost() *string {
-	if p == nil {
-		return nil
-	}
-	return p.CustomHost
 }
 
 func (p *PrivateAppsPutRequest) GetHideAppInPortal() *bool {

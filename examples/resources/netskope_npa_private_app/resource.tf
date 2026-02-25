@@ -8,7 +8,6 @@ resource "netskope_npa_private_app" "my_npaprivateapp" {
     "..."
   ]
   clientless_access  = false
-  custom_host        = "...my_custom_host..."
   hide_app_in_portal = false
   is_user_portal_app = true
   paths = [
