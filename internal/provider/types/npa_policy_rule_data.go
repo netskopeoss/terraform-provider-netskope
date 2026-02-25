@@ -16,8 +16,8 @@ type NpaPolicyRuleData struct {
 	NetLocationObj         []types.String       `tfsdk:"net_location_obj"`
 	OrganizationUnits      []types.String       `tfsdk:"organization_units"`
 	PolicyType             types.String         `tfsdk:"policy_type"`
-	PrivateApps            []types.String       `tfsdk:"private_apps"`
 	PrivateAppTags         []types.String       `tfsdk:"private_app_tags"`
+	PrivateApps            []types.String       `tfsdk:"private_apps"`
 	SrcCountries           []types.String       `tfsdk:"src_countries"`
 	UserGroups             []types.String       `tfsdk:"user_groups"`
 	Users                  []types.String       `tfsdk:"users"`
