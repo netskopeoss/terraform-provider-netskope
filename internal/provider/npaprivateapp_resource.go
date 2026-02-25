@@ -16,6 +16,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	speakeasy_boolplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/boolplanmodifier"
+	speakeasy_listplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/listplanmodifier"
+	speakeasy_objectplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/objectplanmodifier"
 	speakeasy_stringplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
@@ -80,14 +83,23 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 			"allow_uri_bypass": schema.BoolAttribute{
 				Computed: true,
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+				},
 			},
 			"app_option": schema.SingleNestedAttribute{
 				Computed: true,
 				Optional: true,
+				PlanModifiers: []planmodifier.Object{
+					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+				},
 			},
 			"bypass_uris": schema.ListAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.List{
+					speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+				},
 				ElementType: types.StringType,
 			},
 			"clientless_access": schema.BoolAttribute{
@@ -98,10 +110,16 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 			},
 			"custom_host": schema.StringAttribute{
 				Computed: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 			},
 			"hide_app_in_portal": schema.BoolAttribute{
 				Computed: true,
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+				},
 			},
 			"is_user_portal_app": schema.BoolAttribute{
 				Computed:    true,
@@ -110,8 +128,11 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Description: `Default: false`,
 			},
 			"paths": schema.ListAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.List{
+					speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+				},
 				ElementType: types.StringType,
 			},
 			"private_app_hostname": schema.StringAttribute{
@@ -219,10 +240,16 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 			"upgrade_insecure_requests": schema.BoolAttribute{
 				Computed: true,
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+				},
 			},
 			"uribypass_header_value": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 			},
 			"use_publisher_dns": schema.BoolAttribute{
 				Computed:    true,
