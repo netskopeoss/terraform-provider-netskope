@@ -2,7 +2,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0.0 and generator version 2.835.2
+// Generated from OpenAPI doc version 1.0.0 and generator version 2.839.0
 
 import (
 	"bytes"
@@ -157,9 +157,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk := &TerraformProviderNs{
-		SDKVersion: "0.4.0",
+		SDKVersion: "0.3.6",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 0.4.0 2.835.2 1.0.0 github.com/netskopeoss/terraform-provider-netskope/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 0.3.6 2.839.0 1.0.0 github.com/netskopeoss/terraform-provider-netskope/internal/sdk",
 			ServerList: ServerList,
 			ServerVariables: []map[string]string{
 				{
