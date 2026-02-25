@@ -7,9 +7,9 @@ import (
 )
 
 type PublisherResponseCapabilities struct {
-	AutoUpgrade  types.Bool                     `tfsdk:"auto_upgrade"`
 	Dtls         types.Bool                     `tfsdk:"dtls"`
 	Eee          types.Bool                     `tfsdk:"eee"`
+	AutoUpgrade  types.Bool                     `tfsdk:"auto_upgrade"`
 	NwaBa        types.Bool                     `tfsdk:"nwa_ba"`
 	PullNsconfig *PublisherResponsePullNsconfig `tfsdk:"pull_nsconfig"`
 }
