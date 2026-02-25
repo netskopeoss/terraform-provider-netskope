@@ -74,7 +74,7 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 								},
 								"device_classification_id": schema.ListAttribute{
 									Computed:    true,
-									ElementType: types.Int64Type,
+									ElementType: types.StringType,
 								},
 								"json_version": schema.Int64Attribute{
 									Computed: true,
@@ -97,10 +97,6 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 								},
 								"policy_type": schema.StringAttribute{
 									Computed: true,
-								},
-								"private_app_tag_ids": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
 								},
 								"private_app_tags": schema.ListAttribute{
 									Computed:    true,

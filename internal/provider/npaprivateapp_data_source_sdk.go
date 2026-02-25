@@ -37,8 +37,24 @@ func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsItem(ctx cont
 
 	if resp != nil {
 		r.AllowUnauthenticatedCors = types.BoolPointerValue(resp.AllowUnauthenticatedCors)
+		r.AllowURIBypass = types.BoolPointerValue(resp.AllowURIBypass)
+		if resp.AppOption == nil {
+			r.AppOption = nil
+		} else {
+			r.AppOption = &tfTypes.PrivateAppsRequestAppOption{}
+		}
+		r.BypassUris = make([]types.String, 0, len(resp.BypassUris))
+		for _, v := range resp.BypassUris {
+			r.BypassUris = append(r.BypassUris, types.StringValue(v))
+		}
 		r.ClientlessAccess = types.BoolPointerValue(resp.ClientlessAccess)
+		r.CustomHost = types.StringPointerValue(resp.CustomHost)
+		r.HideAppInPortal = types.BoolPointerValue(resp.HideAppInPortal)
 		r.IsUserPortalApp = types.BoolPointerValue(resp.IsUserPortalApp)
+		r.Paths = make([]types.String, 0, len(resp.Paths))
+		for _, v := range resp.Paths {
+			r.Paths = append(r.Paths, types.StringValue(v))
+		}
 		r.PrivateAppHostname = types.StringPointerValue(resp.PrivateAppHostname)
 		r.PrivateAppID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PrivateAppID))
 		r.PrivateAppName = types.StringPointerValue(resp.PrivateAppName)
@@ -83,6 +99,8 @@ func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsItem(ctx cont
 			r.Tags = append(r.Tags, tags)
 		}
 		r.TrustSelfSignedCerts = types.BoolPointerValue(resp.TrustSelfSignedCerts)
+		r.UpgradeInsecureRequests = types.BoolPointerValue(resp.UpgradeInsecureRequests)
+		r.UribypassHeaderValue = types.StringPointerValue(resp.UribypassHeaderValue)
 		r.UsePublisherDNS = types.BoolPointerValue(resp.UsePublisherDNS)
 	}
 

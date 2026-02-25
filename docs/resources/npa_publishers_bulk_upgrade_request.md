@@ -88,7 +88,7 @@ Read-Only:
 - `publisher_name` (String)
 - `publisher_upgrade_profiles_id` (Number)
 - `registered` (Boolean)
-- `status` (String) must be one of ["connected", "not registered", "disconnected"]
+- `status` (String)
 - `stitcher_id` (Number)
 - `stitcher_pop` (String)
 - `upgrade_failed_reason` (Attributes) (see [below for nested schema](#nestedatt--data--publishers--upgrade_failed_reason))

@@ -43,16 +43,19 @@ type PrivateAppsRequest struct {
 	PrivateAppName           *string                      `json:"app_name,omitempty"`
 	AppOption                *PrivateAppsRequestAppOption `json:"app_option,omitempty"`
 	ClientlessAccess         *bool                        `default:"false" json:"clientless_access"`
+	HideAppInPortal          *bool                        `json:"hide_app_in_portal,omitempty"`
 	PrivateAppHostname       *string                      `json:"host,omitempty"`
 	IsUserPortalApp          *bool                        `default:"false" json:"is_user_portal_app"`
 	Labels                   []PrivateAppsRequestLabels   `json:"labels,omitempty"`
-	Protocols                []ProtocolItem               `json:"protocols,omitempty"`
+	Protocols                []ProtocolItem               `json:"protocols"`
 	PublisherTags            []PublisherTags              `json:"publisher_tags,omitempty"`
+	Paths                    []string                     `json:"paths,omitempty"`
 	Publishers               []PublisherItem              `json:"publishers,omitempty"`
 	Tags                     []PrivateAppsRequestTags     `json:"tags,omitempty"`
 	RealHost                 *string                      `json:"real_host,omitempty"`
 	PrivateAppProtocol       *string                      `json:"private_app_protocol,omitempty"`
 	TrustSelfSignedCerts     *bool                        `default:"false" json:"trust_self_signed_certs"`
+	UpgradeInsecureRequests  *bool                        `json:"upgrade_insecure_requests,omitempty"`
 	UsePublisherDNS          *bool                        `default:"false" json:"use_publisher_dns"`
 }
 
@@ -116,6 +119,13 @@ func (p *PrivateAppsRequest) GetClientlessAccess() *bool {
 	return p.ClientlessAccess
 }
 
+func (p *PrivateAppsRequest) GetHideAppInPortal() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.HideAppInPortal
+}
+
 func (p *PrivateAppsRequest) GetPrivateAppHostname() *string {
 	if p == nil {
 		return nil
@@ -139,7 +149,7 @@ func (p *PrivateAppsRequest) GetLabels() []PrivateAppsRequestLabels {
 
 func (p *PrivateAppsRequest) GetProtocols() []ProtocolItem {
 	if p == nil {
-		return nil
+		return []ProtocolItem{}
 	}
 	return p.Protocols
 }
@@ -149,6 +159,13 @@ func (p *PrivateAppsRequest) GetPublisherTags() []PublisherTags {
 		return nil
 	}
 	return p.PublisherTags
+}
+
+func (p *PrivateAppsRequest) GetPaths() []string {
+	if p == nil {
+		return nil
+	}
+	return p.Paths
 }
 
 func (p *PrivateAppsRequest) GetPublishers() []PublisherItem {
@@ -184,6 +201,13 @@ func (p *PrivateAppsRequest) GetTrustSelfSignedCerts() *bool {
 		return nil
 	}
 	return p.TrustSelfSignedCerts
+}
+
+func (p *PrivateAppsRequest) GetUpgradeInsecureRequests() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.UpgradeInsecureRequests
 }
 
 func (p *PrivateAppsRequest) GetUsePublisherDNS() *bool {

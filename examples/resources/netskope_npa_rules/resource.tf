@@ -9,7 +9,7 @@ resource "netskope_npa_rules" "my_nparules" {
     b_negate_net_location  = false
     b_negate_src_countries = false
     device_classification_id = [
-      9
+      "..."
     ]
     json_version = 3
     match_criteria_action = {
@@ -23,10 +23,6 @@ resource "netskope_npa_rules" "my_nparules" {
       "engineering/qa",
     ]
     policy_type = "private-app"
-    private_app_tag_ids = [
-      "1",
-      "2",
-    ]
     private_app_tags = [
       "tag1",
       "tag2",

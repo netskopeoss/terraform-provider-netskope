@@ -24,36 +24,38 @@ resource "netskope_npa_rules" "my_nparules" {
     b_negate_net_location  = false
     b_negate_src_countries = false
     device_classification_id = [
-      9
+      "..."
     ]
     json_version = 3
     match_criteria_action = {
       action_name = "allow"
     }
     net_location_obj = [
-      "..."
+      "190.123.150.10",
+      "190.218.0.0/16",
     ]
     organization_units = [
-      "..."
+      "engineering/qa",
     ]
     policy_type = "private-app"
-    private_app_tag_ids = [
-      "..."
-    ]
     private_app_tags = [
-      "..."
+      "tag1",
+      "tag2",
     ]
     private_apps = [
-      "..."
+      "app1",
+      "app2",
     ]
     src_countries = [
-      "..."
+      "US",
+      "AF",
+      "CN",
     ]
     user_groups = [
-      "..."
+      "usergroup/group1",
     ]
     users = [
-      "..."
+      "vphan@netskope.com",
     ]
   }
   rule_name = "vantest"
@@ -87,21 +89,20 @@ resource "netskope_npa_rules" "my_nparules" {
 
 Optional:
 
-- `access_method` (List of String)
+- `access_method` (List of String) Default: []
 - `b_negate_net_location` (Boolean) Default: false
 - `b_negate_src_countries` (Boolean) Default: false
-- `device_classification_id` (List of Number)
+- `device_classification_id` (List of String) Default: []
 - `json_version` (Number) Default: 3
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
-- `net_location_obj` (List of String)
-- `organization_units` (List of String)
+- `net_location_obj` (List of String) Default: []
+- `organization_units` (List of String) Default: []
 - `policy_type` (String) Default: "private-app"; must be "private-app"
-- `private_app_tag_ids` (List of String)
-- `private_app_tags` (List of String)
-- `private_apps` (List of String)
-- `src_countries` (List of String)
-- `user_groups` (List of String)
-- `users` (List of String)
+- `private_app_tags` (List of String) Default: []
+- `private_apps` (List of String) Default: []
+- `src_countries` (List of String) Default: []
+- `user_groups` (List of String) Default: []
+- `users` (List of String) Default: []
 
 <a id="nestedatt--rule_data--match_criteria_action"></a>
 ### Nested Schema for `rule_data.match_criteria_action`
@@ -126,6 +127,17 @@ Optional:
 
 Import is supported using the following syntax:
 
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = netskope_npa_rules.my_netskope_npa_rules
+  id = "1"
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
-terraform import netskope_npa_rules.my_netskope_npa_rules ""
+terraform import netskope_npa_rules.my_netskope_npa_rules "1"
 ```

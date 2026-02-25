@@ -17,7 +17,23 @@ func initHooks(h *Hooks) {
 	// debug := &debugRequestHook{}
 	// h.registerBeforeRequestHook(debug)
 
-	// Error status hook - registered first to catch soft 404s (200 OK with "status": "error")
+	// Retry rule creation when referenced resources haven't propagated yet (BUG-009)
+	// Wraps the HTTP client so retries happen transparently before hooks process responses.
+	// See docs/bugs/BUG-009-rule-after-app-eventual-consistency.md
+	ruleRetry := &ruleCreateRetryHook{}
+	h.registerSDKInitHook(ruleRetry)
+
+	// Serialize rule creation to prevent duplicate ID race condition (BUG-008)
+	// Registered first so the mutex is acquired before any request transformation
+	// and released after all response processing completes.
+	// See docs/bugs/BUG-008-rule-creation-race-condition.md
+	ruleSerializer := &ruleCreateSerializer{}
+	h.registerBeforeRequestHook(ruleSerializer)
+	h.registerAfterSuccessHook(ruleSerializer)
+	h.registerAfterErrorHook(ruleSerializer)
+
+	// Error status hook - registered after serializer so soft 404 detection
+	// occurs while the mutex is still held
 	// See docs/KNOWN_API_ISSUES.md for details on this API behavior
 	errorStatus := &errorStatusResponse{}
 	h.registerAfterSuccessHook(errorStatus)
