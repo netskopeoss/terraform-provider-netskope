@@ -164,10 +164,10 @@ func TestAccDrift_PrivateApp_MultiProtocol(t *testing.T) {
 }
 
 // TestAccDrift_PrivateApp_MultiPublisherWithTags verifies no drift with multiple
-// publishers, mixed protocols (TCP/UDP), and tags.
-// This is a regression test for BUG-001: the API returns publishers and tags in
-// non-deterministic order, causing perpetual diffs. The fix sorts these lists
-// in AfterSuccess hooks. See docs/bugs/BUG-001-publishers-perpetual-diff.md.
+// publishers, mixed protocols (TCP/UDP), tags, and an NPA rule referencing
+// those tags via private_app_tags.
+// This is a regression test for BUG-001 (list ordering drift) and BUG-006
+// (private_app_tag_ids drift). See docs/bugs/ for details.
 func TestAccDrift_PrivateApp_MultiPublisherWithTags(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 
@@ -183,6 +183,7 @@ func TestAccDrift_PrivateApp_MultiPublisherWithTags(t *testing.T) {
 					resource.TestCheckResourceAttr("netskope_npa_private_app.test", "publishers.#", "2"),
 					resource.TestCheckResourceAttr("netskope_npa_private_app.test", "protocols.#", "3"),
 					resource.TestCheckResourceAttr("netskope_npa_private_app.test", "tags.#", "2"),
+					testAccCheckResourceExists("netskope_npa_rules.test"),
 				),
 			},
 			{
@@ -562,8 +563,10 @@ resource "netskope_npa_private_app" "test" {
 }
 
 // testAccDriftPrivateAppMultiPublisherWithTagsConfig creates a private app with
-// multiple publishers, mixed TCP/UDP protocols, and multiple tags.
-// This is a regression test for BUG-001 (perpetual diff on list attributes).
+// multiple publishers, mixed TCP/UDP protocols, multiple tags, and an NPA rule
+// that references those tags via private_app_tags.
+// This is a regression test for BUG-001 (perpetual diff on list attributes)
+// and BUG-006 (private_app_tag_ids drift).
 // The config uses sorted order to match hook output:
 // - Publishers: sorted by publisher_id ascending
 // - Protocols: sorted by type (tcp before udp), then port ascending
@@ -627,7 +630,38 @@ resource "netskope_npa_private_app" "test" {
     }
   ]
 }
-`, testAccProviderConfig(), name, name, name, name, name)
+
+# BUG-006: NPA rule referencing tags via private_app_tags.
+# The API resolves tag names to tag IDs; before the fix the computed
+# private_app_tag_ids field caused a perpetual diff.
+resource "netskope_npa_policy_groups" "test" {
+  group_name = "%s-group"
+
+  group_order = {
+    group_id = "2"
+    order    = "after"
+  }
+}
+
+resource "netskope_npa_rules" "test" {
+  rule_name = "%s-rule"
+  enabled   = "1"
+  group_id  = netskope_npa_policy_groups.test.id
+
+  depends_on = [netskope_npa_private_app.test]
+
+  rule_data = {
+    policy_type = "private-app"
+
+    match_criteria_action = {
+      action_name = "allow"
+    }
+
+    private_app_tags = ["%s-tag1"]
+    access_method    = ["Client"]
+  }
+}
+`, testAccProviderConfig(), name, name, name, name, name, name, name, name)
 }
 
 func testAccDriftNPARulesBasicConfig(name string) string {

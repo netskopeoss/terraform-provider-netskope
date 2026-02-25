@@ -32,9 +32,9 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 				}
 				data.RuleData.BNegateNetLocation = types.BoolPointerValue(dataItem.RuleData.BNegateNetLocation)
 				data.RuleData.BNegateSrcCountries = types.BoolPointerValue(dataItem.RuleData.BNegateSrcCountries)
-				data.RuleData.DeviceClassificationID = make([]types.Int64, 0, len(dataItem.RuleData.DeviceClassificationID))
+				data.RuleData.DeviceClassificationID = make([]types.String, 0, len(dataItem.RuleData.DeviceClassificationID))
 				for _, v := range dataItem.RuleData.DeviceClassificationID {
-					data.RuleData.DeviceClassificationID = append(data.RuleData.DeviceClassificationID, types.Int64Value(v))
+					data.RuleData.DeviceClassificationID = append(data.RuleData.DeviceClassificationID, types.StringValue(v))
 				}
 				data.RuleData.JSONVersion = types.Int64PointerValue(dataItem.RuleData.JSONVersion)
 				if dataItem.RuleData.MatchCriteriaAction == nil {
@@ -63,10 +63,6 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 				data.RuleData.PrivateApps = make([]types.String, 0, len(dataItem.RuleData.PrivateApps))
 				for _, v := range dataItem.RuleData.PrivateApps {
 					data.RuleData.PrivateApps = append(data.RuleData.PrivateApps, types.StringValue(v))
-				}
-				data.RuleData.PrivateAppTagIds = make([]types.String, 0, len(dataItem.RuleData.PrivateAppTagIds))
-				for _, v := range dataItem.RuleData.PrivateAppTagIds {
-					data.RuleData.PrivateAppTagIds = append(data.RuleData.PrivateAppTagIds, types.StringValue(v))
 				}
 				data.RuleData.PrivateAppTags = make([]types.String, 0, len(dataItem.RuleData.PrivateAppTags))
 				for _, v := range dataItem.RuleData.PrivateAppTags {
