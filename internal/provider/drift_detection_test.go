@@ -1416,3 +1416,88 @@ resource "netskope_gre_tunnel" "test" {
 }
 `, testAccProviderConfig(), name, sourceIP)
 }
+
+// =============================================================================
+// Destination Profile drift detection tests
+// =============================================================================
+
+// TestAccDrift_DestinationProfile verifies no drift on destination profile
+// resources with values list and optional description.
+func TestAccDrift_DestinationProfile(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_destination_profile"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftDestinationProfileConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_destination_profile.test", "profile_id"),
+					resource.TestCheckResourceAttr("netskope_destination_profile.test", "values.#", "3"),
+				),
+			},
+			{
+				Config: testAccDriftDestinationProfileConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+// TestAccDrift_DestinationProfile_Minimal verifies no drift when only required
+// fields (name, type) are set and optional Computed fields are omitted.
+func TestAccDrift_DestinationProfile_Minimal(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_destination_profile"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftDestinationProfileMinimalConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_destination_profile.test", "profile_id"),
+				),
+			},
+			{
+				Config: testAccDriftDestinationProfileMinimalConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftDestinationProfileConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_destination_profile" "test" {
+  name        = %q
+  description = "Drift detection test"
+  type        = "insensitive"
+  values      = ["example.com", "test.example.com", "api.example.com"]
+}
+`, testAccProviderConfig(), name)
+}
+
+func testAccDriftDestinationProfileMinimalConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_destination_profile" "test" {
+  name = %q
+  type = "insensitive"
+}
+`, testAccProviderConfig(), name)
+}

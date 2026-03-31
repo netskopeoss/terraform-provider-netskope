@@ -13,6 +13,8 @@ type AppData struct {
 	Host                        string                       `json:"host"`
 	ID                          int                          `json:"id"`
 	IsUserPortalApp             bool                         `json:"is_user_portal_app"`
+	LabelIds                    []string                     `json:"label_ids,omitempty"`
+	Labels                      []AppLabel                   `json:"labels,omitempty"`
 	ModifiedBy                  string                       `json:"modified_by"`
 	ModifyTime                  string                       `json:"modify_time"`
 	Name                        string                       `json:"name"`
@@ -51,4 +53,8 @@ type ServicePublisherAssignment struct {
 type Tag struct {
 	TagID   int    `json:"tag_id"`
 	TagName string `json:"tag_name"`
+}
+type AppLabel struct {
+	LabelID    string `json:"label_id"`
+	Permission string `json:"permission"`
 }

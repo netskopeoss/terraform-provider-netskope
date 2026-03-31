@@ -10,6 +10,9 @@ resource "netskope_npa_private_app" "my_npaprivateapp" {
   clientless_access  = false
   hide_app_in_portal = false
   is_user_portal_app = true
+  label_ids = [
+    "a0df8672-0c34-45f7-a4a0-6bedd3238fa5"
+  ]
   paths = [
     "..."
   ]

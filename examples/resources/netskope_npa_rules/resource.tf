@@ -14,6 +14,8 @@ resource "netskope_npa_rules" "my_nparules" {
     json_version = 3
     match_criteria_action = {
       action_name = "allow"
+      emit_alert  = true
+      template    = "...my_template..."
     }
     net_location_obj = [
       "190.123.150.10",
