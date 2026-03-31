@@ -1,27 +1,29 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
-package provider
+package provider_test
 
 import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-testing/config"
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/provider/testutil"
 )
 
 func TestAccNPAPolicyGroupsDataSource_basic(t *testing.T) {
-	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_policy_groups.test"
 	dataSourceName := "data.netskope_npa_policy_groups.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { testAccPreCheck(t) },
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNPAPolicyGroupsDataSourceConfig_basic(rName),
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: config.Variables{
+					"name": config.StringVariable(rName),
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrPair(
 						dataSourceName, "id",
@@ -35,23 +37,4 @@ func TestAccNPAPolicyGroupsDataSource_basic(t *testing.T) {
 			},
 		},
 	})
-}
-
-func testAccNPAPolicyGroupsDataSourceConfig_basic(name string) string {
-	return fmt.Sprintf(`
-%s
-
-resource "netskope_npa_policy_groups" "test" {
-  group_name = %q
-
-  group_order = {
-    group_id = "2"
-    order    = "after"
-  }
-}
-
-data "netskope_npa_policy_groups" "test" {
-  id = netskope_npa_policy_groups.test.id
-}
-`, testAccProviderConfig(), name)
 }

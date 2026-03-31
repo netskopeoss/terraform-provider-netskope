@@ -51,6 +51,7 @@ type NPAPrivateAppResourceModel struct {
 	CustomHost               types.String                         `tfsdk:"custom_host"`
 	HideAppInPortal          types.Bool                           `tfsdk:"hide_app_in_portal"`
 	IsUserPortalApp          types.Bool                           `tfsdk:"is_user_portal_app"`
+	LabelIds                 []types.String                       `tfsdk:"label_ids"`
 	Paths                    []types.String                       `tfsdk:"paths"`
 	PrivateAppHostname       types.String                         `tfsdk:"private_app_hostname"`
 	PrivateAppID             types.Int32                          `tfsdk:"private_app_id"`
@@ -126,6 +127,15 @@ func (r *NPAPrivateAppResource) Schema(ctx context.Context, req resource.SchemaR
 				Optional:    true,
 				Default:     booldefault.StaticBool(false),
 				Description: `Default: false`,
+			},
+			"label_ids": schema.ListAttribute{
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.List{
+					speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+				},
+				ElementType: types.StringType,
+				Description: `Associated RBAC label IDs`,
 			},
 			"paths": schema.ListAttribute{
 				Computed: true,

@@ -3,7 +3,7 @@
 This document tracks test parameters, coverage, and dependencies across all
 acceptance tests. Update this file when adding or modifying tests.
 
-Last updated: 2026-02-12
+Last updated: 2026-02-25
 
 ---
 
@@ -27,14 +27,23 @@ Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 
 ---
 
-## Latest Results (0.3.5 - 2026-02-12)
+## Latest Results (0.3.6 - 2026-02-25)
 
 | Metric | Count |
 |--------|-------|
-| **Total Tests** | 82 |
-| **Passed** | 79 |
+| **Total Tests** | 110 |
+| **Passed** | 107 |
 | **Failed** | 0 |
 | **Skipped** | 3 |
+
+### Test Breakdown
+
+| Category | Count |
+|----------|-------|
+| Acceptance tests (resource CRUD) | 50 |
+| Acceptance tests (data sources) | 16 |
+| Acceptance tests (drift detection) | 22 |
+| Unit tests (plan modifier helpers) | 22 |
 
 ### Skips
 
@@ -124,6 +133,7 @@ search this table to find every test that needs updating.
 | Users | (not set) | All rules tests | Defaults to empty list; API does not accept `*` wildcard |
 | Access method | `["Client"]` | All rules tests | |
 | Enabled flag | `"1"` / `"0"` | Rules tests | String, not boolean |
+| Concurrent rules | 3 independent rules | `concurrentCreate` test | Exercises BUG-008 mutex serializer |
 
 ### NPA Publisher & Upgrade Profile
 
@@ -219,6 +229,14 @@ Fields tested per resource across test types. Columns:
 | real_host | | | | | x | Clientless access test; not verified on import |
 | private_app_protocol | | | | | x | Clientless access test |
 | tags | | | | | x | Dedicated test |
+| custom_host | | | | x | | Computed-only; derived from cert CN (0.3.6) |
+| allow_uri_bypass | | | | x | | Drift-protected; requires URI Bypass flag |
+| bypass_uris | | | | x | | Drift-protected; requires URI Bypass flag |
+| uribypass_header_value | | | | x | | Drift-protected; requires URI Bypass flag |
+| app_option | | | | x | | Drift-protected; clientless_access only |
+| hide_app_in_portal | | | | x | | Drift-protected; requires User Portal flag |
+| upgrade_insecure_requests | | | | x | | Drift-protected; requires Enterprise Browser flag |
+| paths | | | | x | | Drift-protected; requires User Portal flag |
 
 ### netskope_npa_publisher
 
@@ -268,8 +286,10 @@ Fields tested per resource across test types. Columns:
 | rule_data.match_criteria_action | x | | | x | | Only "allow" tested |
 | rule_data.private_apps | x | | | x | | References private app |
 | rule_data.access_method | x | | | x | | "Client" only |
+| rule_data.device_classification_id | | | | | | **NOT TESTED** — type mismatch fixed in 0.3.6, needs test tenant with device classifications |
 | rule_order.order | x | | | | x | "top" and "after" tested |
 | rule_order.rule_id | | | | | x | BUG-003 regression test |
+| (concurrency) | | | | | x | 3 independent rules, exercises BUG-008 mutex (0.3.6) |
 
 ### netskope_npa_publisher_upgrade_profile
 
@@ -344,7 +364,7 @@ Important for understanding cascading failures and cleanup.
 | `npaprivateappslist_data_source_test.go` | Publisher, Private App |
 | `npaprivateapppublichost_resource_test.go` | None (standalone) |
 | `npapublishertoken_resource_test.go` | Publisher |
-| `nparules_resource_test.go` | Policy Group, Publisher, Private App (also 2nd rule for `ruleOrderAfter`) |
+| `nparules_resource_test.go` | Policy Group, Publisher, Private App (2nd rule for `ruleOrderAfter`; 3 independent rules for `concurrentCreate`) |
 | `nparules_data_source_test.go` | Policy Group, Publisher, Private App, Rule |
 | `nparuleslist_data_source_test.go` | Policy Group, Publisher, Private App, Rule |
 | `gretunnel_data_source_test.go` | GRE Tunnel |
@@ -375,6 +395,13 @@ All other tests create only the resource under test.
 | `netskope_gre_tunnel` | Config element reordering caused false diffs | **Fixed** (0.3.5) - ModifyPlan normalization for xff_ip_list |
 | `netskope_ip_sec_tunnel` | Config element reordering caused false diffs | **Fixed** (0.3.5) - ModifyPlan normalization for pop_names |
 | `netskope_npa_rules` | `rule_order.rule_id` type mismatch in BeforeRequest hook | **Fixed** (0.3.5) - BUG-003, changed `*string` to `*int64`, added `omitempty` |
+| `netskope_npa_private_app` | Browser fields (`custom_host`, `allow_uri_bypass`, etc.) caused `(known after apply)` drift | **Fixed** (0.3.6) - `suppress-computed-diff` on all 8 browser fields |
+| `netskope_npa_private_app` | `custom_host` silently ignored on write, causing config/state mismatch | **Fixed** (0.3.6) - Made computed-only (removed from request schemas) |
+| `netskope_npa_rules` | `private_app_tag_ids` perpetual diff when using `private_app_tags` | **Fixed** (0.3.6) - BUG-006, `x-speakeasy-terraform-ignore` on `privateAppTagIds` |
+| `netskope_npa_rules` | Tag name case sensitivity caused false diffs | **Fixed** (0.3.6) - BUG-005, case-insensitive comparison in ModifyPlan |
+| `netskope_npa_rules` | Concurrent rule creation failed with duplicate primary key | **Fixed** (0.3.6) - BUG-008, provider-side mutex serializer |
+| `netskope_npa_rules` | Rule creation failed after app creation (eventual consistency) | **Fixed** (0.3.6) - BUG-009, retry with exponential backoff |
+| `netskope_npa_private_app` | `bypass_uris: []` on PUT caused SQL error | **Fixed** (0.3.6) - Hook strips empty `bypass_uris` from PUT requests |
 
 ---
 
@@ -424,3 +451,42 @@ a second plan asserting `ExpectEmptyPlan()`.
 | `TestAccDrift_GRETunnel_UnsortedXffIpList` | GRE Tunnel | Unsorted xff_ip_list (0.3.5, BUG-002) |
 | `TestAccDrift_GRETunnel_MinimalConfig` | GRE Tunnel | Minimal config, no optional computed drift (0.3.5) |
 | `TestAccDrift_IPSecTunnel_MinimalConfig` | IPSec Tunnel | Minimal config, no optional computed drift (0.3.5) |
+
+---
+
+## Unit Tests
+
+Plan modifier helper functions tested without API calls.
+
+### Private App Plan Modifiers (`npaprivateapp_resource_planmodify_test.go`)
+
+| Test | Function Tested | Purpose |
+|------|----------------|---------|
+| `TestProtocolKey_Basic` | `protocolKey` | TCP protocol key generation |
+| `TestProtocolKey_UDP` | `protocolKey` | UDP protocol key generation |
+| `TestPublisherKey_ByID` | `publisherKey` | Publisher key from ID |
+| `TestPublisherKey_FallbackToName` | `publisherKey` | Fallback to name when ID missing |
+| `TestPublisherKey_NullID_FallbackToName` | `publisherKey` | Null ID fallback |
+| `TestPublisherKey_BothUnknown_ReturnsEmpty` | `publisherKey` | Both fields unknown |
+| `TestTagKey_ByName` | `tagKey` | Tag key from name |
+| `TestSortedKeysMatch_SameSetDifferentOrder` | `sortedKeysMatch` | Reordered lists match |
+| `TestSortedKeysMatch_DifferentElements` | `sortedKeysMatch` | Different elements don't match |
+| `TestSortedKeysMatch_DuplicateElements` | `sortedKeysMatch` | Duplicate handling |
+| `TestSortedKeysMatch_DuplicateCountMismatch` | `sortedKeysMatch` | Different duplicate counts |
+| `TestSortedKeysMatch_EmptyLists` | `sortedKeysMatch` | Empty lists match |
+| `TestTagKeysMatch_CaseInsensitive` | `sortedKeysMatch` | Case-insensitive tag comparison (BUG-005) |
+| `TestTagKeysMatch_CaseInsensitive_DifferentTags` | `sortedKeysMatch` | Different tags don't match regardless of case |
+
+### NPA Rules Plan Modifiers (`nparules_resource_planmodify_test.go`)
+
+| Test | Function Tested | Purpose |
+|------|----------------|---------|
+| `TestStringList_SameSetDifferentOrder` | `stringListSemanticEqual` | Reordered string lists match |
+| `TestStringList_DifferentElements` | `stringListSemanticEqual` | Different elements don't match |
+| `TestStringList_DifferentLength` | `stringListSemanticEqual` | Different lengths don't match |
+| `TestStringList_EmptyLists` | `stringListSemanticEqual` | Empty lists match |
+| `TestStringList_DuplicateElements` | `stringListSemanticEqual` | Duplicate handling |
+| `TestStringList_DuplicateCountMismatch` | `stringListSemanticEqual` | Different duplicate counts |
+| `TestInt64List_SameSetDifferentOrder` | `int64ListSemanticEqual` | Reordered int lists match |
+| `TestInt64List_DifferentElements` | `int64ListSemanticEqual` | Different elements don't match |
+| `TestInt64List_EmptyLists` | `int64ListSemanticEqual` | Empty lists match |

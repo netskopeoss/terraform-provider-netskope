@@ -79,6 +79,14 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							"action_name": schema.StringAttribute{
 								Computed: true,
 							},
+							"emit_alert": schema.BoolAttribute{
+								Computed:    true,
+								Description: `Whether to emit an alert when the rule matches (required for block action)`,
+							},
+							"template": schema.StringAttribute{
+								Computed:    true,
+								Description: `Notification template name (required for block action). Use the display name (e.g. "Default Template"), not the file name.`,
+							},
 						},
 					},
 					"net_location_obj": schema.ListAttribute{

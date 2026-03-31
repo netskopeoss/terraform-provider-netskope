@@ -1,14 +1,13 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
-package provider
+package provider_test
 
 import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-testing/config"
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/provider/testutil"
 )
 
 func TestAccNPALocalBrokerConfig_basic(t *testing.T) {
@@ -16,13 +15,16 @@ func TestAccNPALocalBrokerConfig_basic(t *testing.T) {
 	resourceName := "netskope_npa_local_broker_config.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { testAccPreCheck(t) },
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNPALocalBrokerConfigConfig_basic(rHostname),
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: config.Variables{
+					"hostname": config.StringVariable(rHostname),
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckResourceExists(resourceName),
+					testutil.CheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "hostname", rHostname),
 					resource.TestCheckResourceAttr(resourceName, "data.hostname", rHostname),
 				),
@@ -37,37 +39,29 @@ func TestAccNPALocalBrokerConfig_update(t *testing.T) {
 	resourceName := "netskope_npa_local_broker_config.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { testAccPreCheck(t) },
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
-			// Create
 			{
-				Config: testAccNPALocalBrokerConfigConfig_basic(rHostname),
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: config.Variables{
+					"hostname": config.StringVariable(rHostname),
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckResourceExists(resourceName),
+					testutil.CheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "hostname", rHostname),
 				),
 			},
-			// Update hostname
 			{
-				Config: testAccNPALocalBrokerConfigConfig_basic(rHostnameUpdated),
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: config.Variables{
+					"hostname": config.StringVariable(rHostnameUpdated),
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckResourceExists(resourceName),
+					testutil.CheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "hostname", rHostnameUpdated),
 				),
 			},
 		},
 	})
-}
-
-// Configuration functions
-
-func testAccNPALocalBrokerConfigConfig_basic(hostname string) string {
-	return fmt.Sprintf(`
-%s
-
-resource "netskope_npa_local_broker_config" "test" {
-  hostname = %q
-}
-`, testAccProviderConfig(), hostname)
 }

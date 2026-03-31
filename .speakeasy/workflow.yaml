@@ -1,5 +1,5 @@
 workflowVersion: 1.0.0
-speakeasyVersion: latest
+speakeasyVersion: 1.728.0
 sources:
     openapi:
         inputs:
@@ -12,6 +12,10 @@ sources:
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_publishers.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_upgrade_profiles.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/lbrokers.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/profiles/dns_profiles_v2.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/platform/ips_status.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/profiles/destination_profiles.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/platform/rbac_labels.yaml
         overlays:
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
         registry:

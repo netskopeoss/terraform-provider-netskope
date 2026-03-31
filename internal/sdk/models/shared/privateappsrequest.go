@@ -9,9 +9,6 @@ import (
 type PrivateAppsRequestAppOption struct {
 }
 
-type PrivateAppsRequestLabels struct {
-}
-
 type PublisherTags struct {
 	TagName *string `json:"tag_name,omitempty"`
 }
@@ -46,17 +43,18 @@ type PrivateAppsRequest struct {
 	HideAppInPortal          *bool                        `json:"hide_app_in_portal,omitempty"`
 	PrivateAppHostname       *string                      `json:"host,omitempty"`
 	IsUserPortalApp          *bool                        `default:"false" json:"is_user_portal_app"`
-	Labels                   []PrivateAppsRequestLabels   `json:"labels,omitempty"`
-	Protocols                []ProtocolItem               `json:"protocols"`
-	PublisherTags            []PublisherTags              `json:"publisher_tags,omitempty"`
-	Paths                    []string                     `json:"paths,omitempty"`
-	Publishers               []PublisherItem              `json:"publishers,omitempty"`
-	Tags                     []PrivateAppsRequestTags     `json:"tags,omitempty"`
-	RealHost                 *string                      `json:"real_host,omitempty"`
-	PrivateAppProtocol       *string                      `json:"private_app_protocol,omitempty"`
-	TrustSelfSignedCerts     *bool                        `default:"false" json:"trust_self_signed_certs"`
-	UpgradeInsecureRequests  *bool                        `json:"upgrade_insecure_requests,omitempty"`
-	UsePublisherDNS          *bool                        `default:"false" json:"use_publisher_dns"`
+	// Associated RBAC label IDs
+	LabelIds                []string                 `json:"label_ids,omitempty"`
+	Protocols               []ProtocolItem           `json:"protocols"`
+	PublisherTags           []PublisherTags          `json:"publisher_tags,omitempty"`
+	Paths                   []string                 `json:"paths,omitempty"`
+	Publishers              []PublisherItem          `json:"publishers,omitempty"`
+	Tags                    []PrivateAppsRequestTags `json:"tags,omitempty"`
+	RealHost                *string                  `json:"real_host,omitempty"`
+	PrivateAppProtocol      *string                  `json:"private_app_protocol,omitempty"`
+	TrustSelfSignedCerts    *bool                    `default:"false" json:"trust_self_signed_certs"`
+	UpgradeInsecureRequests *bool                    `json:"upgrade_insecure_requests,omitempty"`
+	UsePublisherDNS         *bool                    `default:"false" json:"use_publisher_dns"`
 }
 
 func (p PrivateAppsRequest) MarshalJSON() ([]byte, error) {
@@ -140,11 +138,11 @@ func (p *PrivateAppsRequest) GetIsUserPortalApp() *bool {
 	return p.IsUserPortalApp
 }
 
-func (p *PrivateAppsRequest) GetLabels() []PrivateAppsRequestLabels {
+func (p *PrivateAppsRequest) GetLabelIds() []string {
 	if p == nil {
 		return nil
 	}
-	return p.Labels
+	return p.LabelIds
 }
 
 func (p *PrivateAppsRequest) GetProtocols() []ProtocolItem {

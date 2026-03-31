@@ -69,6 +69,12 @@ type TerraformProviderNs struct {
 	NPALocalBroker              *NPALocalBroker
 	NPALocalBrokerConfig        *NPALocalBrokerConfig
 	NPALocalBrokerToken         *NPALocalBrokerToken
+	Profiles                    *Profiles
+	DNSProfileV2                *DNSProfileV2
+	Ips                         *Ips
+	DestinationProfile          *DestinationProfile
+	Rbac                        *Rbac
+	RBACLabel                   *RBACLabel
 
 	sdkConfiguration config.SDKConfiguration
 	hooks            *hooks.Hooks
@@ -157,9 +163,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk := &TerraformProviderNs{
-		SDKVersion: "0.3.6",
+		SDKVersion: "0.3.20",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 0.3.6 2.839.0 1.0.0 github.com/netskopeoss/terraform-provider-netskope/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 0.3.20 2.839.0 1.0.0 github.com/netskopeoss/terraform-provider-netskope/internal/sdk",
 			ServerList: ServerList,
 			ServerVariables: []map[string]string{
 				{
@@ -199,6 +205,12 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk.NPALocalBroker = newNPALocalBroker(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.NPALocalBrokerConfig = newNPALocalBrokerConfig(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.NPALocalBrokerToken = newNPALocalBrokerToken(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Profiles = newProfiles(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.DNSProfileV2 = newDNSProfileV2(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Ips = newIps(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.DestinationProfile = newDestinationProfile(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Rbac = newRbac(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.RBACLabel = newRBACLabel(sdk, sdk.sdkConfiguration, sdk.hooks)
 
 	return sdk
 }

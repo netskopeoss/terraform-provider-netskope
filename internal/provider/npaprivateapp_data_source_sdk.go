@@ -51,6 +51,10 @@ func (r *NPAPrivateAppDataSourceModel) RefreshFromSharedPrivateAppsItem(ctx cont
 		r.CustomHost = types.StringPointerValue(resp.CustomHost)
 		r.HideAppInPortal = types.BoolPointerValue(resp.HideAppInPortal)
 		r.IsUserPortalApp = types.BoolPointerValue(resp.IsUserPortalApp)
+		r.LabelIds = make([]types.String, 0, len(resp.LabelIds))
+		for _, v := range resp.LabelIds {
+			r.LabelIds = append(r.LabelIds, types.StringValue(v))
+		}
 		r.Paths = make([]types.String, 0, len(resp.Paths))
 		for _, v := range resp.Paths {
 			r.Paths = append(r.Paths, types.StringValue(v))
