@@ -8,4 +8,6 @@ import (
 
 type MatchCriteriaAction struct {
 	ActionName types.String `tfsdk:"action_name"`
+	EmitAlert  types.Bool   `tfsdk:"emit_alert"`
+	Template   types.String `tfsdk:"template"`
 }

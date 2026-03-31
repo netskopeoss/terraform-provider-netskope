@@ -46,6 +46,8 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 					} else {
 						data.RuleData.MatchCriteriaAction.ActionName = types.StringNull()
 					}
+					data.RuleData.MatchCriteriaAction.EmitAlert = types.BoolPointerValue(dataItem.RuleData.MatchCriteriaAction.EmitAlert)
+					data.RuleData.MatchCriteriaAction.Template = types.StringPointerValue(dataItem.RuleData.MatchCriteriaAction.Template)
 				}
 				data.RuleData.NetLocationObj = make([]types.String, 0, len(dataItem.RuleData.NetLocationObj))
 				for _, v := range dataItem.RuleData.NetLocationObj {

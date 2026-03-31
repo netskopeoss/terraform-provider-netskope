@@ -65,6 +65,10 @@ func (e *ActionName) UnmarshalJSON(data []byte) error {
 
 type MatchCriteriaAction struct {
 	ActionName *ActionName `json:"action_name,omitempty"`
+	// Whether to emit an alert when the rule matches (required for block action)
+	EmitAlert *bool `json:"emit_alert,omitempty"`
+	// Notification template name (required for block action). Use the display name (e.g. "Default Template"), not the file name.
+	Template *string `json:"template,omitempty"`
 }
 
 func (m *MatchCriteriaAction) GetActionName() *ActionName {
@@ -72,6 +76,20 @@ func (m *MatchCriteriaAction) GetActionName() *ActionName {
 		return nil
 	}
 	return m.ActionName
+}
+
+func (m *MatchCriteriaAction) GetEmitAlert() *bool {
+	if m == nil {
+		return nil
+	}
+	return m.EmitAlert
+}
+
+func (m *MatchCriteriaAction) GetTemplate() *string {
+	if m == nil {
+		return nil
+	}
+	return m.Template
 }
 
 type PolicyType string

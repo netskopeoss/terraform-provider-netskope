@@ -50,6 +50,10 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsItem(ctx contex
 		r.CustomHost = types.StringPointerValue(resp.CustomHost)
 		r.HideAppInPortal = types.BoolPointerValue(resp.HideAppInPortal)
 		r.IsUserPortalApp = types.BoolPointerValue(resp.IsUserPortalApp)
+		r.LabelIds = make([]types.String, 0, len(resp.LabelIds))
+		for _, v := range resp.LabelIds {
+			r.LabelIds = append(r.LabelIds, types.StringValue(v))
+		}
 		if resp.Paths != nil {
 			r.Paths = make([]types.String, 0, len(resp.Paths))
 			for _, v := range resp.Paths {
@@ -296,6 +300,10 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 	} else {
 		isUserPortalApp = nil
 	}
+	labelIds := make([]string, 0, len(r.LabelIds))
+	for labelIdsIndex := range r.LabelIds {
+		labelIds = append(labelIds, r.LabelIds[labelIdsIndex].ValueString())
+	}
 	protocols := make([]shared.ProtocolItem, 0, len(r.Protocols))
 	for protocolsIndex := range r.Protocols {
 		port := new(string)
@@ -385,6 +393,7 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 		PrivateAppHostname:       privateAppHostname,
 		PrivateAppID:             privateAppID,
 		IsUserPortalApp:          isUserPortalApp,
+		LabelIds:                 labelIds,
 		Protocols:                protocols,
 		Paths:                    paths,
 		Publishers:               publishers,
@@ -459,6 +468,10 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 		*isUserPortalApp = r.IsUserPortalApp.ValueBool()
 	} else {
 		isUserPortalApp = nil
+	}
+	labelIds := make([]string, 0, len(r.LabelIds))
+	for labelIdsIndex := range r.LabelIds {
+		labelIds = append(labelIds, r.LabelIds[labelIdsIndex].ValueString())
 	}
 	protocols := make([]shared.ProtocolItem, 0, len(r.Protocols))
 	for protocolsIndex := range r.Protocols {
@@ -558,6 +571,7 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 		HideAppInPortal:          hideAppInPortal,
 		PrivateAppHostname:       privateAppHostname,
 		IsUserPortalApp:          isUserPortalApp,
+		LabelIds:                 labelIds,
 		Protocols:                protocols,
 		Paths:                    paths,
 		Publishers:               publishers,

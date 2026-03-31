@@ -96,4 +96,9 @@ testacc-debug:
 	@echo "Running acceptance tests with debug logging..."
 	TF_ACC=1 TF_LOG=DEBUG $(GOTEST) -v ./internal/provider/... -timeout 120m 2>&1 | tee test-debug.log
 
-.PHONY: all build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug
+.PHONY: testacc-rbaclabels
+testacc-rbaclabels:
+	@echo "Running RBAC labels acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccRBACLabel -timeout 30m
+
+.PHONY: all build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels

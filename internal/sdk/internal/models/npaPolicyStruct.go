@@ -45,6 +45,8 @@ type NpaPolicyRuleDlp struct {
 
 type MatchCriteriaAction struct {
 	ActionName *string `json:"action_name"`
+	EmitAlert  *bool   `json:"emit_alert,omitempty"`
+	Template   *string `json:"template,omitempty"`
 }
 
 type PrivateAppsWithActivities struct {

@@ -90,11 +90,10 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 						"is_user_portal_app": schema.BoolAttribute{
 							Computed: true,
 						},
-						"labels": schema.ListNestedAttribute{
-							Computed: true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{},
-							},
+						"label_ids": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `Associated RBAC label IDs`,
 						},
 						"paths": schema.ListAttribute{
 							Computed:    true,

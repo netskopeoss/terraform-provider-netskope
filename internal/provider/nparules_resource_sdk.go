@@ -86,6 +86,8 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 				} else {
 					r.RuleData.MatchCriteriaAction.ActionName = types.StringNull()
 				}
+				r.RuleData.MatchCriteriaAction.EmitAlert = types.BoolPointerValue(resp.RuleData.MatchCriteriaAction.EmitAlert)
+				r.RuleData.MatchCriteriaAction.Template = types.StringPointerValue(resp.RuleData.MatchCriteriaAction.Template)
 			}
 			r.RuleData.NetLocationObj = make([]types.String, 0, len(resp.RuleData.NetLocationObj))
 			for _, v := range resp.RuleData.NetLocationObj {
@@ -237,8 +239,22 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			} else {
 				actionName = nil
 			}
+			emitAlert := new(bool)
+			if !r.RuleData.MatchCriteriaAction.EmitAlert.IsUnknown() && !r.RuleData.MatchCriteriaAction.EmitAlert.IsNull() {
+				*emitAlert = r.RuleData.MatchCriteriaAction.EmitAlert.ValueBool()
+			} else {
+				emitAlert = nil
+			}
+			template := new(string)
+			if !r.RuleData.MatchCriteriaAction.Template.IsUnknown() && !r.RuleData.MatchCriteriaAction.Template.IsNull() {
+				*template = r.RuleData.MatchCriteriaAction.Template.ValueString()
+			} else {
+				template = nil
+			}
 			matchCriteriaAction = &shared.MatchCriteriaAction{
 				ActionName: actionName,
+				EmitAlert:  emitAlert,
+				Template:   template,
 			}
 		}
 		netLocationObj := make([]string, 0, len(r.RuleData.NetLocationObj))
