@@ -57,5 +57,4 @@ jobs:
           TF_ACC: "1"
           NETSKOPE_API_KEY: ${{ secrets.NETSKOPE_API_KEY }}
           NETSKOPE_SERVER_URL: ${{ secrets.NETSKOPE_SERVER_URL }}
-        run: go test -v ./internal/provider/... -timeout 120m -parallel 1
-        # Using -parallel 1 to avoid API rate limiting
+        run: go test -v ./internal/provider/... -timeout 120m -parallel 8
