@@ -99,10 +99,6 @@ func (r *NPAPrivateAppsListDataSource) Schema(ctx context.Context, req datasourc
 							Computed:    true,
 							ElementType: types.StringType,
 						},
-						"paths": schema.ListAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
-						},
 						"private_app_hostname": schema.StringAttribute{
 							Computed: true,
 						},
