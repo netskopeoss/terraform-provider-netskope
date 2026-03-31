@@ -22,7 +22,7 @@ type RuleData struct {
 	TssProfile                []string                    `json:"tss_profile,omitempty"`
 	ExternalDlp               *bool                       `json:"external_dlp,omitempty"`
 	JSONVersion               *int64                      `json:"json_version,omitempty"`
-	DeviceClassificationID    []int64                     `json:"device_classification_id,omitempty"`
+	DeviceClassificationID    []string                    `json:"device_classification_id,omitempty"`
 	MatchCriteriaAction       *MatchCriteriaAction        `json:"match_criteria_action,omitempty"`
 	NetLocationObj            []string                    `json:"net_location_obj,omitempty"`
 	OrganizationUnits         []string                    `json:"organization_units,omitempty"`

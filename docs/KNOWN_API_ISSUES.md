@@ -19,9 +19,10 @@ This document tracks known behavioral inconsistencies and quirks in the Netskope
   - [10. Write-Only Fields Not Returned in Response](#10-write-only-fields-not-returned-in-response)
 - [Steering API Issues (11)](#steering-api-issues-11)
   - [11. Protocol Ordering Causes Terraform State Drift](#11-protocol-ordering-causes-terraform-state-drift)
-- [Policy API Issues (12-13)](#policy-api-issues-12-13)
+- [Policy API Issues (12-14)](#policy-api-issues-12-14)
   - [12. NPA Rules `group_id` is Write-Only](#12-npa-rules-group_id-is-write-only)
   - [13. API Tokens Cannot Resolve User Notification Templates for Block Rules](#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules)
+  - [14. `device_classification_id` Type Mismatch (String vs Integer)](#14-device_classification_id-type-mismatch-string-vs-integer)
 - [Terraform Provider Implications](#terraform-provider-implications)
 - [General Recommendations](#general-recommendations)
 
@@ -500,7 +501,7 @@ protocols = [
 
 ---
 
-## Policy API Issues (12-13)
+## Policy API Issues (12-14)
 
 ### 12. NPA Rules `group_id` is Write-Only
 
@@ -623,6 +624,45 @@ resource "netskope_npa_rules" "block_rule" {
 
 ---
 
+### 14. `device_classification_id` Type Mismatch (String vs Integer)
+
+**Endpoints:**
+- `GET /api/v2/policy/npa/rules/{id}` (read)
+- `POST /api/v2/policy/npa/rules` (create)
+- `PUT /api/v2/policy/npa/rules/{id}` (update)
+
+**Issue:** The API returns `device_classification_id` as an array of **strings** (e.g., `["5871"]`) in GET responses, but expects an array of **integers** (e.g., `[5871]`) in POST/PUT requests.
+
+**Response (GET):**
+```json
+{
+  "data": {
+    "rule_data": {
+      "device_classification_id": ["5871"]
+    }
+  }
+}
+```
+
+**Expected Request (POST/PUT):**
+```json
+{
+  "rule_data": {
+    "device_classification_id": [5871]
+  }
+}
+```
+
+**Impact:**
+- If the OAS defines the field as `integer`, `json.Unmarshal` fails when reading GET responses because strings cannot be unmarshalled into `int64`
+- If the OAS defines the field as `string`, the API rejects POST/PUT requests because it expects integers
+
+**Workaround:** The OAS defines the field as `string` (matching GET responses). The `hookMyPolicyBeforeRequest` hook converts `["5871"]` → `[5871]` before sending POST/PUT requests. The Terraform schema uses `list(string)`, so users write `device_classification_id = ["5871"]`.
+
+**Status:** API type inconsistency - Workaround implemented via OAS (`string`) + BeforeRequest hook (string→int coercion) (0.3.6)
+
+---
+
 ## Terraform Provider Implications
 
 These API issues have specific implications for the Terraform provider:
@@ -640,6 +680,7 @@ These API issues have specific implications for the Terraform provider:
 | Protocol ordering | **Fixed in v0.4.0** — hooks sort protocols automatically |
 | NPA rules `group_id` write-only | `group_id` removed from response schema to preserve state (0.3.3) |
 | Block rule template name/filename mismatch | Create requires display name, GET returns filename — causes perpetual drift |
+| `device_classification_id` type mismatch | OAS uses `string`; BeforeRequest hook coerces to `int` for writes (0.3.6) |
 
 ### Implemented Mitigations
 
@@ -686,7 +727,7 @@ The provider implements several SDK hooks to work around API issues:
 | `hookMyAppAfterSuccess.go` | AfterSuccess | Maps protocol `transport` → `type`, sorts protocols/publishers/tags, populates `label_ids` from `labels` |
 | `hookMyBulkAppAfterSuccess.go` | AfterSuccess | Same transformations as above for bulk (list) responses |
 | `hookMyPolicyAfterSuccess.go` | AfterSuccess | Handles policy response transformations (privateApps bracket trimming) |
-| `hookMyPolicyBeforeRequest.go` | BeforeRequest | Transforms policy request payloads (bracket wrapping, preserves `emit_alert`/`template` in `match_criteria_action`) |
+| `hookMyPolicyBeforeRequest.go` | BeforeRequest | Transforms policy request payloads (bracket wrapping, preserves `emit_alert`/`template` in `match_criteria_action`, device_classification_id string→int coercion) |
 | `hookPrivateAppRequest.go` | BeforeRequest | Strips empty `app_option`, `paths`, `uribypass_header_value` from PUT requests |
 | `hookDebugRequest.go` | BeforeRequest | Debug hook for logging HTTP requests (disabled by default) |
 
