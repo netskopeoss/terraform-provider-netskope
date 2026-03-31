@@ -32,8 +32,36 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsItem(ctx contex
 
 	if resp != nil {
 		r.AllowUnauthenticatedCors = types.BoolPointerValue(resp.AllowUnauthenticatedCors)
+		r.AllowURIBypass = types.BoolPointerValue(resp.AllowURIBypass)
+		if resp.AppOption == nil {
+			r.AppOption = nil
+		} else {
+			r.AppOption = &tfTypes.PrivateAppsRequestAppOption{}
+		}
+		if resp.BypassUris != nil {
+			r.BypassUris = make([]types.String, 0, len(resp.BypassUris))
+			for _, v := range resp.BypassUris {
+				r.BypassUris = append(r.BypassUris, types.StringValue(v))
+			}
+		} else {
+			r.BypassUris = nil
+		}
 		r.ClientlessAccess = types.BoolPointerValue(resp.ClientlessAccess)
+		r.CustomHost = types.StringPointerValue(resp.CustomHost)
+		r.HideAppInPortal = types.BoolPointerValue(resp.HideAppInPortal)
 		r.IsUserPortalApp = types.BoolPointerValue(resp.IsUserPortalApp)
+		r.LabelIds = make([]types.String, 0, len(resp.LabelIds))
+		for _, v := range resp.LabelIds {
+			r.LabelIds = append(r.LabelIds, types.StringValue(v))
+		}
+		if resp.Paths != nil {
+			r.Paths = make([]types.String, 0, len(resp.Paths))
+			for _, v := range resp.Paths {
+				r.Paths = append(r.Paths, types.StringValue(v))
+			}
+		} else {
+			r.Paths = nil
+		}
 		r.PrivateAppHostname = types.StringPointerValue(resp.PrivateAppHostname)
 		r.PrivateAppID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PrivateAppID))
 		r.PrivateAppName = types.StringPointerValue(resp.PrivateAppName)
@@ -74,6 +102,8 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsItem(ctx contex
 			r.Tags = append(r.Tags, tags)
 		}
 		r.TrustSelfSignedCerts = types.BoolPointerValue(resp.TrustSelfSignedCerts)
+		r.UpgradeInsecureRequests = types.BoolPointerValue(resp.UpgradeInsecureRequests)
+		r.UribypassHeaderValue = types.StringPointerValue(resp.UribypassHeaderValue)
 		r.UsePublisherDNS = types.BoolPointerValue(resp.UsePublisherDNS)
 	}
 
@@ -100,8 +130,32 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsPostResponseDat
 
 	if resp != nil {
 		r.AllowUnauthenticatedCors = types.BoolPointerValue(resp.AllowUnauthenticatedCors)
+		r.AllowURIBypass = types.BoolPointerValue(resp.AllowURIBypass)
+		if resp.AppOption == nil {
+			r.AppOption = nil
+		} else {
+			r.AppOption = &tfTypes.PrivateAppsRequestAppOption{}
+		}
+		if resp.BypassUris != nil {
+			r.BypassUris = make([]types.String, 0, len(resp.BypassUris))
+			for _, v := range resp.BypassUris {
+				r.BypassUris = append(r.BypassUris, types.StringValue(v))
+			}
+		} else {
+			r.BypassUris = nil
+		}
 		r.ClientlessAccess = types.BoolPointerValue(resp.ClientlessAccess)
+		r.CustomHost = types.StringPointerValue(resp.CustomHost)
+		r.HideAppInPortal = types.BoolPointerValue(resp.HideAppInPortal)
 		r.IsUserPortalApp = types.BoolPointerValue(resp.IsUserPortalApp)
+		if resp.Paths != nil {
+			r.Paths = make([]types.String, 0, len(resp.Paths))
+			for _, v := range resp.Paths {
+				r.Paths = append(r.Paths, types.StringValue(v))
+			}
+		} else {
+			r.Paths = nil
+		}
 		r.PrivateAppHostname = types.StringPointerValue(resp.PrivateAppHostname)
 		r.PrivateAppID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.PrivateAppID))
 		r.PrivateAppName = types.StringPointerValue(resp.PrivateAppName)
@@ -132,6 +186,8 @@ func (r *NPAPrivateAppResourceModel) RefreshFromSharedPrivateAppsPostResponseDat
 			r.Tags = append(r.Tags, tags)
 		}
 		r.TrustSelfSignedCerts = types.BoolPointerValue(resp.TrustSelfSignedCerts)
+		r.UpgradeInsecureRequests = types.BoolPointerValue(resp.UpgradeInsecureRequests)
+		r.UribypassHeaderValue = types.StringPointerValue(resp.UribypassHeaderValue)
 		r.UsePublisherDNS = types.BoolPointerValue(resp.UsePublisherDNS)
 	}
 
@@ -194,11 +250,37 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 	} else {
 		allowUnauthenticatedCors = nil
 	}
+	allowURIBypass := new(bool)
+	if !r.AllowURIBypass.IsUnknown() && !r.AllowURIBypass.IsNull() {
+		*allowURIBypass = r.AllowURIBypass.ValueBool()
+	} else {
+		allowURIBypass = nil
+	}
+	uribypassHeaderValue := new(string)
+	if !r.UribypassHeaderValue.IsUnknown() && !r.UribypassHeaderValue.IsNull() {
+		*uribypassHeaderValue = r.UribypassHeaderValue.ValueString()
+	} else {
+		uribypassHeaderValue = nil
+	}
+	bypassUris := make([]string, 0, len(r.BypassUris))
+	for bypassUrisIndex := range r.BypassUris {
+		bypassUris = append(bypassUris, r.BypassUris[bypassUrisIndex].ValueString())
+	}
+	var appOption *shared.PrivateAppsPutRequestAppOption
+	if r.AppOption != nil {
+		appOption = &shared.PrivateAppsPutRequestAppOption{}
+	}
 	clientlessAccess := new(bool)
 	if !r.ClientlessAccess.IsUnknown() && !r.ClientlessAccess.IsNull() {
 		*clientlessAccess = r.ClientlessAccess.ValueBool()
 	} else {
 		clientlessAccess = nil
+	}
+	hideAppInPortal := new(bool)
+	if !r.HideAppInPortal.IsUnknown() && !r.HideAppInPortal.IsNull() {
+		*hideAppInPortal = r.HideAppInPortal.ValueBool()
+	} else {
+		hideAppInPortal = nil
 	}
 	privateAppHostname := new(string)
 	if !r.PrivateAppHostname.IsUnknown() && !r.PrivateAppHostname.IsNull() {
@@ -218,6 +300,10 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 	} else {
 		isUserPortalApp = nil
 	}
+	labelIds := make([]string, 0, len(r.LabelIds))
+	for labelIdsIndex := range r.LabelIds {
+		labelIds = append(labelIds, r.LabelIds[labelIdsIndex].ValueString())
+	}
 	protocols := make([]shared.ProtocolItem, 0, len(r.Protocols))
 	for protocolsIndex := range r.Protocols {
 		port := new(string)
@@ -236,6 +322,10 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 			Port:     port,
 			Protocol: protocol,
 		})
+	}
+	paths := make([]string, 0, len(r.Paths))
+	for pathsIndex := range r.Paths {
+		paths = append(paths, r.Paths[pathsIndex].ValueString())
 	}
 	publishers := make([]shared.PublisherItem, 0, len(r.Publishers))
 	for publishersIndex := range r.Publishers {
@@ -280,6 +370,12 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 	} else {
 		trustSelfSignedCerts = nil
 	}
+	upgradeInsecureRequests := new(bool)
+	if !r.UpgradeInsecureRequests.IsUnknown() && !r.UpgradeInsecureRequests.IsNull() {
+		*upgradeInsecureRequests = r.UpgradeInsecureRequests.ValueBool()
+	} else {
+		upgradeInsecureRequests = nil
+	}
 	usePublisherDNS := new(bool)
 	if !r.UsePublisherDNS.IsUnknown() && !r.UsePublisherDNS.IsNull() {
 		*usePublisherDNS = r.UsePublisherDNS.ValueBool()
@@ -288,15 +384,23 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 	}
 	out := shared.PrivateAppsPutRequest{
 		AllowUnauthenticatedCors: allowUnauthenticatedCors,
+		AllowURIBypass:           allowURIBypass,
+		UribypassHeaderValue:     uribypassHeaderValue,
+		BypassUris:               bypassUris,
+		AppOption:                appOption,
 		ClientlessAccess:         clientlessAccess,
+		HideAppInPortal:          hideAppInPortal,
 		PrivateAppHostname:       privateAppHostname,
 		PrivateAppID:             privateAppID,
 		IsUserPortalApp:          isUserPortalApp,
+		LabelIds:                 labelIds,
 		Protocols:                protocols,
+		Paths:                    paths,
 		Publishers:               publishers,
 		RealHost:                 realHost,
 		Tags:                     tags,
 		TrustSelfSignedCerts:     trustSelfSignedCerts,
+		UpgradeInsecureRequests:  upgradeInsecureRequests,
 		UsePublisherDNS:          usePublisherDNS,
 	}
 
@@ -312,17 +416,46 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 	} else {
 		allowUnauthenticatedCors = nil
 	}
+	allowURIBypass := new(bool)
+	if !r.AllowURIBypass.IsUnknown() && !r.AllowURIBypass.IsNull() {
+		*allowURIBypass = r.AllowURIBypass.ValueBool()
+	} else {
+		allowURIBypass = nil
+	}
+	uribypassHeaderValue := new(string)
+	if !r.UribypassHeaderValue.IsUnknown() && !r.UribypassHeaderValue.IsNull() {
+		*uribypassHeaderValue = r.UribypassHeaderValue.ValueString()
+	} else {
+		uribypassHeaderValue = nil
+	}
+	var bypassUris []string
+	if r.BypassUris != nil {
+		bypassUris = make([]string, 0, len(r.BypassUris))
+		for bypassUrisIndex := range r.BypassUris {
+			bypassUris = append(bypassUris, r.BypassUris[bypassUrisIndex].ValueString())
+		}
+	}
 	privateAppName := new(string)
 	if !r.PrivateAppName.IsUnknown() && !r.PrivateAppName.IsNull() {
 		*privateAppName = r.PrivateAppName.ValueString()
 	} else {
 		privateAppName = nil
 	}
+	var appOption *shared.PrivateAppsRequestAppOption
+	if r.AppOption != nil {
+		appOption = &shared.PrivateAppsRequestAppOption{}
+	}
 	clientlessAccess := new(bool)
 	if !r.ClientlessAccess.IsUnknown() && !r.ClientlessAccess.IsNull() {
 		*clientlessAccess = r.ClientlessAccess.ValueBool()
 	} else {
 		clientlessAccess = nil
+	}
+	hideAppInPortal := new(bool)
+	if !r.HideAppInPortal.IsUnknown() && !r.HideAppInPortal.IsNull() {
+		*hideAppInPortal = r.HideAppInPortal.ValueBool()
+	} else {
+		hideAppInPortal = nil
 	}
 	privateAppHostname := new(string)
 	if !r.PrivateAppHostname.IsUnknown() && !r.PrivateAppHostname.IsNull() {
@@ -335,6 +468,10 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 		*isUserPortalApp = r.IsUserPortalApp.ValueBool()
 	} else {
 		isUserPortalApp = nil
+	}
+	labelIds := make([]string, 0, len(r.LabelIds))
+	for labelIdsIndex := range r.LabelIds {
+		labelIds = append(labelIds, r.LabelIds[labelIdsIndex].ValueString())
 	}
 	protocols := make([]shared.ProtocolItem, 0, len(r.Protocols))
 	for protocolsIndex := range r.Protocols {
@@ -354,6 +491,13 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 			Port:     port,
 			Protocol: protocol,
 		})
+	}
+	var paths []string
+	if r.Paths != nil {
+		paths = make([]string, 0, len(r.Paths))
+		for pathsIndex := range r.Paths {
+			paths = append(paths, r.Paths[pathsIndex].ValueString())
+		}
 	}
 	publishers := make([]shared.PublisherItem, 0, len(r.Publishers))
 	for publishersIndex := range r.Publishers {
@@ -404,6 +548,12 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 	} else {
 		trustSelfSignedCerts = nil
 	}
+	upgradeInsecureRequests := new(bool)
+	if !r.UpgradeInsecureRequests.IsUnknown() && !r.UpgradeInsecureRequests.IsNull() {
+		*upgradeInsecureRequests = r.UpgradeInsecureRequests.ValueBool()
+	} else {
+		upgradeInsecureRequests = nil
+	}
 	usePublisherDNS := new(bool)
 	if !r.UsePublisherDNS.IsUnknown() && !r.UsePublisherDNS.IsNull() {
 		*usePublisherDNS = r.UsePublisherDNS.ValueBool()
@@ -412,16 +562,24 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 	}
 	out := shared.PrivateAppsRequest{
 		AllowUnauthenticatedCors: allowUnauthenticatedCors,
+		AllowURIBypass:           allowURIBypass,
+		UribypassHeaderValue:     uribypassHeaderValue,
+		BypassUris:               bypassUris,
 		PrivateAppName:           privateAppName,
+		AppOption:                appOption,
 		ClientlessAccess:         clientlessAccess,
+		HideAppInPortal:          hideAppInPortal,
 		PrivateAppHostname:       privateAppHostname,
 		IsUserPortalApp:          isUserPortalApp,
+		LabelIds:                 labelIds,
 		Protocols:                protocols,
+		Paths:                    paths,
 		Publishers:               publishers,
 		Tags:                     tags,
 		RealHost:                 realHost,
 		PrivateAppProtocol:       privateAppProtocol,
 		TrustSelfSignedCerts:     trustSelfSignedCerts,
+		UpgradeInsecureRequests:  upgradeInsecureRequests,
 		UsePublisherDNS:          usePublisherDNS,
 	}
 

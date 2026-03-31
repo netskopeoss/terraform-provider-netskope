@@ -74,7 +74,7 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 								},
 								"device_classification_id": schema.ListAttribute{
 									Computed:    true,
-									ElementType: types.Int64Type,
+									ElementType: types.StringType,
 								},
 								"json_version": schema.Int64Attribute{
 									Computed: true,
@@ -84,6 +84,14 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 									Attributes: map[string]schema.Attribute{
 										"action_name": schema.StringAttribute{
 											Computed: true,
+										},
+										"emit_alert": schema.BoolAttribute{
+											Computed:    true,
+											Description: `Whether to emit an alert when the rule matches (required for block action)`,
+										},
+										"template": schema.StringAttribute{
+											Computed:    true,
+											Description: `Notification template name (required for block action). Use the display name (e.g. "Default Template"), not the file name.`,
 										},
 									},
 								},

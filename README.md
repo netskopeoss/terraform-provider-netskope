@@ -6,12 +6,121 @@
 
 The official Terraform provider for [Netskope](https://www.netskope.com/), enabling infrastructure-as-code management of Netskope resources.
 
+## Upgrading to v0.4.0
+
+If you are upgrading from v0.3.x, review the following changes before running `terraform plan`.
+
+### What's New
+
+- **RBAC Labels** — Full CRUD resource (`netskope_rbac_label`) and data sources for Label Based Access Control. Create labels, look them up by name, and assign them to resources via `label_ids`. See [RBAC Labels](#rbac-labels) for examples.
+- **`label_ids` on Private Apps** — You can now assign RBAC labels to private applications directly in Terraform.
+- **Block Rule Support** — NPA rules now support `emit_alert` and `template` fields in `match_criteria_action` for block actions.
+- **Destination Profiles** — New resource and data sources for managing destination profiles.
+- **DNS Profiles** — New resource and data sources for managing DNS security profiles.
+
+### One-Time Protocol Reorder Diff
+
+In v0.3.x, private apps with multiple protocols could show perpetual drift if protocols were not specified in the exact order the API returned them. v0.4.0 fixes this by automatically sorting protocols in API responses.
+
+**On your first `terraform plan` after upgrading**, you may see a one-time diff that reorders protocols. This is cosmetic — no actual infrastructure change occurs. Run `terraform apply` once to normalize the state. Subsequent plans will be clean.
+
+```
+# Example one-time diff (safe to apply):
+~ protocols = [
+    ~ { port = "443" -> "22", protocol = "tcp" },
+    ~ { port = "22" -> "443", protocol = "tcp" },
+  ]
+```
+
+### Block Rules Require `lifecycle` Workaround
+
+NPA block rules can now be created via Terraform using `match_criteria_action` with `action_name = "block"`. However, the Netskope API has an inconsistency where the `template` field accepts a **display name** on create (e.g. `"Default Template"`) but returns a **file name** on read (e.g. `"block_page.html"`). This causes Terraform to detect a diff on every plan.
+
+**You must add a `lifecycle` block to any block rule** to prevent perpetual drift:
+
+```hcl
+resource "netskope_npa_rules" "block_example" {
+  rule_name = "Block Unauthorized Access"
+  enabled   = "1"
+  group_id  = netskope_npa_policy_groups.default.id
+
+  rule_data = {
+    policy_type = "private-app"
+
+    match_criteria_action = {
+      action_name = "block"
+      template    = "Default Template"  # Use the display name, not the file name
+      emit_alert  = true
+    }
+
+    private_apps  = [netskope_npa_private_app.example.private_app_name]
+    access_method = ["Client"]
+  }
+
+  # Required: The API returns the template file name (e.g. "block_page.html") on read,
+  # which differs from the display name used on create. This lifecycle block prevents
+  # Terraform from detecting a false diff on every plan.
+  lifecycle {
+    ignore_changes = [rule_data]
+  }
+}
+```
+
+> **Note:** This workaround means Terraform will not detect changes to `rule_data` after initial creation. If you need to update rule_data fields, use `terraform taint` or remove the lifecycle block temporarily. This limitation will be removed once the API returns consistent template values. See [KNOWN_API_ISSUES.md](docs/KNOWN_API_ISSUES.md#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules) for details.
+
+> **Allow rules are not affected** — only block rules that use the `template` field need this workaround.
+
+### RBAC Labels
+
+Labels enable Label Based Access Control (LBAC) for managing object-level permissions. You can create labels, build hierarchies, and assign them to publishers, private apps, destination profiles, local brokers, and policy groups.
+
+```hcl
+# Create a label
+resource "netskope_rbac_label" "engineering" {
+  name  = "Engineering"
+  color = "#0294C9"
+}
+
+# Create a child label (hierarchy up to 4 levels)
+resource "netskope_rbac_label" "backend" {
+  name      = "Backend"
+  parent_id = netskope_rbac_label.engineering.label_id
+  color     = "#FF5733"
+}
+
+# Look up an existing label by name
+data "netskope_rbac_label_list" "all" {}
+
+locals {
+  ops_label = one([
+    for label in data.netskope_rbac_label_list.all.labels
+    : label if label.name == "Operations"
+  ])
+}
+
+# Assign labels to resources
+resource "netskope_npa_private_app" "app" {
+  private_app_name     = "My App"
+  private_app_hostname = "app.internal.example.com"
+  label_ids            = [netskope_rbac_label.backend.label_id]
+  # ...
+}
+
+resource "netskope_npa_publisher" "pub" {
+  publisher_name = "my-publisher"
+  label_ids      = [local.ops_label.label_id]
+}
+```
+
 ## Features
 
-- **Private Applications** - Create and manage private applications accessible via browser (clientless) or NPA client
+- **RBAC Labels** - Create and manage labels for Label Based Access Control (LBAC), with hierarchy support up to 4 levels
+- **Private Applications** - Create and manage private applications accessible via browser (clientless) or NPA client, with label assignment via `label_ids` (new in v0.4.0)
 - **Publishers** - Deploy and configure NPA publishers with upgrade profiles, alerting, and bulk operations
 - **Local Brokers** - Manage NPA local brokers and their configurations
-- **Access Policies** - Define policy groups and rules for zero-trust access control
+- **Access Policies** - Define policy groups and rules for zero-trust access control, including block rules with notification templates
+- **Destination Profiles** - Manage destination profiles with label assignment
+- **DNS Profiles** - Manage DNS security profiles with category actions, custom configs, and tunnel settings
 - **GRE Tunnels** - Manage GRE tunnel configurations and PoPs
 - **IPSec Tunnels** - Manage IPSec tunnel configurations and PoPs
 - **Full Lifecycle Management** - Create, read, update, delete, and import for all supported resources
@@ -30,7 +139,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "~> 0.3.3"
+      version = "~> 0.4.0"
     }
   }
 }
@@ -147,6 +256,9 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_npa_local_broker_token](docs/resources/npa_local_broker_token.md) | Local broker registration tokens |
 | [netskope_gre_tunnel](docs/resources/gre_tunnel.md) | GRE tunnels |
 | [netskope_ip_sec_tunnel](docs/resources/ip_sec_tunnel.md) | IPSec tunnels |
+| [netskope_rbac_label](docs/resources/rbac_label.md) | RBAC labels for Label Based Access Control |
+| [netskope_destination_profile](docs/resources/destination_profile.md) | Destination profiles |
+| [netskope_dns_profile_v2](docs/resources/dns_profile_v2.md) | DNS security profiles |
 
 ### Data Sources
 
@@ -178,6 +290,13 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_ip_sec_tunnels_list](docs/data-sources/ip_sec_tunnels_list.md) | List IPSec tunnels |
 | [netskope_ip_sec_pop](docs/data-sources/ip_sec_pop.md) | Look up an IPSec PoP |
 | [netskope_ip_sec_po_ps_list](docs/data-sources/ip_sec_po_ps_list.md) | List IPSec PoPs |
+| [netskope_rbac_label](docs/data-sources/rbac_label.md) | Look up an RBAC label by ID |
+| [netskope_rbac_label_list](docs/data-sources/rbac_label_list.md) | List all RBAC labels |
+| [netskope_destination_profile](docs/data-sources/destination_profile.md) | Look up a destination profile |
+| [netskope_destination_profile_list](docs/data-sources/destination_profile_list.md) | List destination profiles |
+| [netskope_dns_profile_v2](docs/data-sources/dns_profile_v2.md) | Look up a DNS profile |
+| [netskope_dns_profile_v2_list](docs/data-sources/dns_profile_v2_list.md) | List DNS profiles |
+| [netskope_ips_status](docs/data-sources/ips_status.md) | IPS license status |
 
 ## Examples and Tutorials
 
@@ -190,8 +309,11 @@ See **[terraform-netskope-examples](https://github.com/netskopeoss/terraform-net
 
 ## Upgrading
 
-- **From v0.2.x**: See the [Migration Guide](docs/MIGRATION_GUIDE.md) for step-by-step instructions. Version 0.3.x is a complete rewrite with renamed resources and changed schemas. Existing state must be re-imported.
-- **From v0.3.2**: See the [v0.3.2 to v0.3.3 upgrade section](docs/MIGRATION_GUIDE.md#upgrading-from-v032-to-v033) for details on schema changes affecting NPA rules, policy groups, and private apps.
+See below for version-specific upgrade notes. For full details, see the [Migration Guide](docs/MIGRATION_GUIDE.md).
+
+- **From v0.2.x**: Version 0.3.x is a complete rewrite with renamed resources and changed schemas. Existing state must be re-imported. See the [Migration Guide](docs/MIGRATION_GUIDE.md).
+- **From v0.3.2**: See the [v0.3.2 to v0.3.3 upgrade section](docs/MIGRATION_GUIDE.md#upgrading-from-v032-to-v033) for schema changes.
+- **From v0.3.x to v0.4.0**: See [Upgrading to v0.4.0](#upgrading-to-v040) at the top of this document.
 
 ## Development
 

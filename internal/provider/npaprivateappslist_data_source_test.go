@@ -1,67 +1,32 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
-package provider
+package provider_test
 
 import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-testing/config"
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/provider/testutil"
 )
 
 func TestAccNPAPrivateAppsListDataSource_basic(t *testing.T) {
-	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	dataSourceName := "data.netskope_npa_private_apps_list.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { testAccPreCheck(t) },
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNPAPrivateAppsListDataSourceConfig_basic(rName),
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: config.Variables{
+					"name": config.StringVariable(rName),
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
-					// Verify the list contains private apps
 					resource.TestCheckResourceAttrSet(dataSourceName, "private_apps.#"),
 				),
 			},
 		},
 	})
-}
-
-func testAccNPAPrivateAppsListDataSourceConfig_basic(name string) string {
-	return fmt.Sprintf(`
-%s
-
-resource "netskope_npa_publisher" "test" {
-  publisher_name = "%s-publisher"
-}
-
-resource "netskope_npa_private_app" "test" {
-  private_app_name     = %q
-  private_app_hostname = "192.168.1.100"
-
-  protocols = [
-    {
-      port     = "443"
-      protocol = "tcp"
-    }
-  ]
-
-  publishers = [
-    {
-      publisher_id   = tostring(netskope_npa_publisher.test.publisher_id)
-      publisher_name = netskope_npa_publisher.test.publisher_name
-    }
-  ]
-
-  use_publisher_dns       = true
-  trust_self_signed_certs = false
-}
-
-data "netskope_npa_private_apps_list" "test" {
-  depends_on = [netskope_npa_private_app.test]
-}
-`, testAccProviderConfig(), name, name)
 }

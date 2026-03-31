@@ -123,6 +123,16 @@ func (i *myBulkAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.
 				return responseMap.BulkApps.AppData[i].Tags[a].TagID < responseMap.BulkApps.AppData[i].Tags[b].TagID
 			})
 
+			// Populate label_ids from labels array (same as single app hook).
+			if len(responseMap.BulkApps.AppData[i].Labels) > 0 {
+				labelIds := make([]string, 0, len(responseMap.BulkApps.AppData[i].Labels))
+				for _, label := range responseMap.BulkApps.AppData[i].Labels {
+					labelIds = append(labelIds, label.LabelID)
+				}
+				sort.Strings(labelIds)
+				responseMap.BulkApps.AppData[i].LabelIds = labelIds
+			}
+
 			if myBulkAppResponseDebug {
 				log.Print("--------------------")
 				log.Print(responseMap.BulkApps.AppData[i].AppName)

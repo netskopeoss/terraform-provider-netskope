@@ -65,6 +65,10 @@ func (e *ActionName) UnmarshalJSON(data []byte) error {
 
 type MatchCriteriaAction struct {
 	ActionName *ActionName `json:"action_name,omitempty"`
+	// Whether to emit an alert when the rule matches (required for block action)
+	EmitAlert *bool `json:"emit_alert,omitempty"`
+	// Notification template name (required for block action). Use the display name (e.g. "Default Template"), not the file name.
+	Template *string `json:"template,omitempty"`
 }
 
 func (m *MatchCriteriaAction) GetActionName() *ActionName {
@@ -72,6 +76,20 @@ func (m *MatchCriteriaAction) GetActionName() *ActionName {
 		return nil
 	}
 	return m.ActionName
+}
+
+func (m *MatchCriteriaAction) GetEmitAlert() *bool {
+	if m == nil {
+		return nil
+	}
+	return m.EmitAlert
+}
+
+func (m *MatchCriteriaAction) GetTemplate() *string {
+	if m == nil {
+		return nil
+	}
+	return m.Template
 }
 
 type PolicyType string
@@ -188,7 +206,7 @@ type NpaPolicyRuleData struct {
 	Classification            *string                      `json:"classification,omitempty"`
 	PeriodicReauth            *NpaPolicyRulePeriodicReauth `json:"periodic_reauth,omitempty"`
 	JSONVersion               *int64                       `default:"3" json:"json_version"`
-	DeviceClassificationID    []int64                      `json:"device_classification_id,omitempty"`
+	DeviceClassificationID    []string                     `json:"device_classification_id,omitempty"`
 	MatchCriteriaAction       *MatchCriteriaAction         `json:"match_criteria_action,omitempty"`
 	NetLocationObj            []string                     `json:"net_location_obj,omitempty"`
 	OrganizationUnits         []string                     `json:"organization_units,omitempty"`
@@ -264,7 +282,7 @@ func (n *NpaPolicyRuleData) GetJSONVersion() *int64 {
 	return n.JSONVersion
 }
 
-func (n *NpaPolicyRuleData) GetDeviceClassificationID() []int64 {
+func (n *NpaPolicyRuleData) GetDeviceClassificationID() []string {
 	if n == nil {
 		return nil
 	}

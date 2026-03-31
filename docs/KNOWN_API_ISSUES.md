@@ -19,8 +19,9 @@ This document tracks known behavioral inconsistencies and quirks in the Netskope
   - [10. Write-Only Fields Not Returned in Response](#10-write-only-fields-not-returned-in-response)
 - [Steering API Issues (11)](#steering-api-issues-11)
   - [11. Protocol Ordering Causes Terraform State Drift](#11-protocol-ordering-causes-terraform-state-drift)
-- [Policy API Issues (12)](#policy-api-issues-12)
+- [Policy API Issues (12-13)](#policy-api-issues-12-13)
   - [12. NPA Rules `group_id` is Write-Only](#12-npa-rules-group_id-is-write-only)
+  - [13. API Tokens Cannot Resolve User Notification Templates for Block Rules](#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules)
 - [Terraform Provider Implications](#terraform-provider-implications)
 - [General Recommendations](#general-recommendations)
 
@@ -495,25 +496,11 @@ protocols = [
 ]
 ```
 
-**Alternative Solutions (Not Implemented):**
-
-1. **Use Terraform Set Type:** Sets are unordered, so protocol ordering wouldn't matter. However, Speakeasy-generated SDKs don't currently support `x-speakeasy-terraform-custom-type: set` annotations, and changing the schema type would be a breaking change.
-
-2. **Sort in AfterSuccess Hook:** The SDK could sort protocols in the response to match the configuration order. This adds complexity and would need to handle edge cases (e.g., multiple protocols with same port but different protocol types).
-
-3. **Sort in BeforeRequest Hook:** Normalize the request payload order before sending. This would make the configuration canonical but doesn't solve the response ordering issue.
-
-**Status:** Known API behavior - Users should specify protocols in API sort order
-
-**Best Practice:** When defining multiple protocols for a private app:
-1. Group all TCP protocols together, sorted by port ascending (e.g., 22, 80, 443)
-2. Group all UDP protocols together after TCP, sorted by port ascending (e.g., 53, 123)
-
-This ensures consistent ordering between your configuration and the API response.
+**Status:** **Fixed in v0.4.0** — The AfterSuccess hooks (`hookMyAppAfterSuccess.go`, `hookMyBulkAppAfterSuccess.go`) now sort protocols by type (alphabetically) then port (numerically ascending) in all API responses. Users no longer need to specify protocols in a specific order.
 
 ---
 
-## Policy API Issues (12)
+## Policy API Issues (12-13)
 
 ### 12. NPA Rules `group_id` is Write-Only
 
@@ -560,6 +547,82 @@ This ensures consistent ordering between your configuration and the API response
 
 ---
 
+### 13. API Tokens Cannot Resolve User Notification Templates for Block Rules
+
+**Endpoint:** `POST /api/v2/policy/npa/rules`
+
+**Issue:** When creating an NPA rule with `action_name: "block"`, the API requires a `template` field in `match_criteria_action` containing the notification page **file_name** (e.g. `1.html`, `block_page.html`). However, API tokens cannot resolve any template — all requests return `"Undefined template"`, even for the default public template `block_page.html`. The same operation succeeds when performed via the UI.
+
+**Example:**
+
+```json
+// Request
+{
+  "rule_data": {
+    "match_criteria_action": {
+      "action_name": "block",
+      "emit_alert": true,
+      "template": "1.html"
+    }
+  }
+}
+
+// Response (200 OK with error)
+{"message": "Undefined template: 1.html", "status": "error"}
+```
+
+**Additional Context:**
+- The `template` field expects the `file_name` from user notification pages (e.g. `1.html`), **not** the `template_name` display name (e.g. "tf_test_template")
+- The `/api/v2/templates/usernotifications` endpoint returns `"Permission Error"` for API tokens, so template file_names cannot be looked up programmatically
+- The Terraform provider schema correctly includes `emit_alert` and `template` fields in `match_criteria_action` (added in v0.4.0), but block rules cannot be created via API until this permission issue is resolved
+- Existing block rules created via UI can be read and imported by the provider
+
+**Impact:** Block rules cannot be created via API or Terraform. Only allow rules can be automated.
+
+**Workaround:** Create block rules manually via the UI. Use Terraform import to bring existing block rules under management.
+
+**Additional Finding:** The `template` field has a **name/filename mismatch**:
+- **Create/Update** requires the template **display name** (e.g. `"Default Template"`)
+- **GET response** returns the template **file name** (e.g. `"block_page.html"`)
+
+This causes perpetual drift in Terraform — the config specifies the display name, the state refreshes to the filename, and every subsequent plan shows a change. Using the filename on create returns "Undefined template".
+
+```
+# Perpetual drift example:
+~ match_criteria_action = {
+    ~ template = "block_page.html" -> "Default Template"
+  }
+```
+
+**Workaround:** Use `lifecycle { ignore_changes }` to suppress the drift on `match_criteria_action`:
+
+```hcl
+resource "netskope_npa_rules" "block_rule" {
+  rule_name = "my-block-rule"
+  enabled   = "1"
+  group_id  = netskope_npa_policy_groups.example.id
+
+  rule_data = {
+    policy_type = "private-app"
+    match_criteria_action = {
+      action_name = "block"
+      template    = "Default Template"
+      emit_alert  = true
+    }
+    private_apps  = [netskope_npa_private_app.example.private_app_name]
+    access_method = ["Client"]
+  }
+
+  lifecycle {
+    ignore_changes = [rule_data]
+  }
+}
+```
+
+**Status:** API inconsistency — Jira ticket raised. Block rules can be created but will show perpetual drift on the `template` field until the API returns a consistent value. Use `lifecycle { ignore_changes = [rule_data] }` as a workaround.
+
+---
+
 ## Terraform Provider Implications
 
 These API issues have specific implications for the Terraform provider:
@@ -574,8 +637,9 @@ These API issues have specific implications for the Terraform provider:
 | Empty objects cause SQL error | Update operations fail without workaround |
 | Protocol type/transport mismatch | State mapping requires hook transformation |
 | Write-only fields | Perpetual drift in plan output for certain fields |
-| Protocol ordering | Perpetual drift for multi-protocol apps if not sorted by port |
+| Protocol ordering | **Fixed in v0.4.0** — hooks sort protocols automatically |
 | NPA rules `group_id` write-only | `group_id` removed from response schema to preserve state (0.3.3) |
+| Block rule template name/filename mismatch | Create requires display name, GET returns filename — causes perpetual drift |
 
 ### Implemented Mitigations
 
@@ -619,10 +683,10 @@ The provider implements several SDK hooks to work around API issues:
 | Hook File | Type | Purpose |
 |-----------|------|---------|
 | `hookErrorStatusResponse.go` | AfterSuccess | Detects 200 OK responses with `"status": "error"` and converts to proper errors |
-| `hookMyAppAfterSuccess.go` | AfterSuccess | Maps protocol `transport` → `type` in private app responses |
-| `hookMyBulkAppAfterSuccess.go` | AfterSuccess | Handles bulk app response transformations |
+| `hookMyAppAfterSuccess.go` | AfterSuccess | Maps protocol `transport` → `type`, sorts protocols/publishers/tags, populates `label_ids` from `labels` |
+| `hookMyBulkAppAfterSuccess.go` | AfterSuccess | Same transformations as above for bulk (list) responses |
 | `hookMyPolicyAfterSuccess.go` | AfterSuccess | Handles policy response transformations (privateApps bracket trimming) |
-| `hookMyPolicyBeforeRequest.go` | BeforeRequest | Transforms policy request payloads (bracket wrapping) |
+| `hookMyPolicyBeforeRequest.go` | BeforeRequest | Transforms policy request payloads (bracket wrapping, preserves `emit_alert`/`template` in `match_criteria_action`) |
 | `hookPrivateAppRequest.go` | BeforeRequest | Strips empty `app_option`, `paths`, `uribypass_header_value` from PUT requests |
 | `hookDebugRequest.go` | BeforeRequest | Debug hook for logging HTTP requests (disabled by default) |
 
