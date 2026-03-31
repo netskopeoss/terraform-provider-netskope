@@ -6,7 +6,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## [0.3.6] - 2026-02-19
+## [0.4.0] - 2026-03-31
+
+### Added
+- **RBAC Labels resource and data sources** ([#63](https://github.com/netskopeoss/terraform-provider-netskope/issues/63)) — New `netskope_rbac_label` resource (full CRUD with import), `netskope_rbac_label` data source, and `netskope_rbac_label_list` data source for Label Based Access Control (LBAC). Supports label hierarchy up to 4 levels via `parent_id`, color assignment, and name-based lookups.
+- **`label_ids` on `netskope_npa_private_app`** — RBAC labels can now be assigned to private applications. The AfterSuccess hooks populate `label_ids` from the API's `labels` response to prevent drift.
+- **Block rule fields (`emit_alert`, `template`) on `netskope_npa_rules`** — The `match_criteria_action` object now supports `emit_alert` (boolean) and `template` (string) for block actions. Note: the API has a name/filename mismatch on the `template` field requiring a `lifecycle { ignore_changes = [rule_data] }` workaround (see [KNOWN_API_ISSUES #13](docs/KNOWN_API_ISSUES.md#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules)).
+- **Destination Profile resource and data sources** — New `netskope_destination_profile` resource, `netskope_destination_profile` data source, and `netskope_destination_profile_list` data source. Requires tenant licensing.
+- **DNS Profile resource and data sources** — New `netskope_dns_profile_v2` resource, `netskope_dns_profile_v2` data source, and `netskope_dns_profile_v2_list` data source with category actions, custom configs, domain lists, and tunnel settings.
+- **IPS Status data source** — New `netskope_ips_status` data source. Requires tenant licensing.
+- RBAC label sweeper for test cleanup (`sweep_test.go`)
+- `testacc-rbaclabels` Makefile target
+- 7 RBAC label acceptance tests (basic, update, hierarchy, data sources, publisher integration, private app integration)
+- Example configurations for all new resources and data sources
+
+### Fixed
+- **Fixed perpetual protocol ordering drift** — Protocols on private apps are now auto-sorted by type then port in AfterSuccess hooks, eliminating perpetual drift for multi-protocol apps. **Upgrade note:** users may see a one-time reorder diff on first plan after upgrading; safe to apply.
+- **Fixed `bypass_uris` SQL serialization error on private app update** — Empty `bypass_uris` arrays caused the same SQL error as `paths` ([KNOWN_API_ISSUES #8](docs/KNOWN_API_ISSUES.md#8-empty-objects-cause-sql-serialization-error-on-update)). Added to the BeforeRequest hook's strip list.
+- **Fixed `emit_alert`/`template` silently stripped from block rules** — The policy BeforeRequest hook's local `MatchCriteriaAction` struct and the AfterSuccess hook model were missing these fields, causing them to be dropped during unmarshal/re-marshal.
+- **Fixed `device_classification_id` type mismatch** ([KNOWN_API_ISSUES #14](docs/KNOWN_API_ISSUES.md)) — The API returns strings but expects integers. OAS uses `string`; BeforeRequest hook coerces to `int` on write.
+
+### Changed
+- Updated Go version from 1.24.11 to 1.26.0
+- Updated GitHub Actions: `actions/checkout` to v4, `actions/setup-go` to v5
+- Removed obsolete `terraform_release.yaml` workflow (superseded by `tf_provider_release.yaml`)
+- Updated README with v0.4.0 upgrade guide, block rule `lifecycle` workaround, and RBAC label examples
+- Updated KNOWN_API_ISSUES: marked #11 (protocol ordering) as fixed, added #13 (block rule template mismatch), added #14 (device_classification_id type mismatch)
+
+## [0.3.6] - 2026-02-25
 
 ### Fixed
 - **Fixed concurrent rule creation failure** ([#66](https://github.com/netskopeoss/terraform-provider-netskope/issues/66), [BUG-008](docs/bugs/BUG-008-rule-creation-race-condition.md)) — Creating multiple `netskope_npa_rules` resources concurrently caused intermittent duplicate primary key errors from the API. Added a `sync.Mutex`-based serialization hook (`hookRuleCreateSerializer`) that ensures only one rule creation request is in-flight at a time. Users no longer need `-parallelism=1` or `depends_on` workarounds.
