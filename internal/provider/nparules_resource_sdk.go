@@ -72,9 +72,9 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			}
 			r.RuleData.BNegateNetLocation = types.BoolPointerValue(resp.RuleData.BNegateNetLocation)
 			r.RuleData.BNegateSrcCountries = types.BoolPointerValue(resp.RuleData.BNegateSrcCountries)
-			r.RuleData.DeviceClassificationID = make([]types.Int64, 0, len(resp.RuleData.DeviceClassificationID))
+			r.RuleData.DeviceClassificationID = make([]types.String, 0, len(resp.RuleData.DeviceClassificationID))
 			for _, v := range resp.RuleData.DeviceClassificationID {
-				r.RuleData.DeviceClassificationID = append(r.RuleData.DeviceClassificationID, types.Int64Value(v))
+				r.RuleData.DeviceClassificationID = append(r.RuleData.DeviceClassificationID, types.StringValue(v))
 			}
 			r.RuleData.JSONVersion = types.Int64PointerValue(resp.RuleData.JSONVersion)
 			if resp.RuleData.MatchCriteriaAction == nil {
@@ -86,6 +86,8 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 				} else {
 					r.RuleData.MatchCriteriaAction.ActionName = types.StringNull()
 				}
+				r.RuleData.MatchCriteriaAction.EmitAlert = types.BoolPointerValue(resp.RuleData.MatchCriteriaAction.EmitAlert)
+				r.RuleData.MatchCriteriaAction.Template = types.StringPointerValue(resp.RuleData.MatchCriteriaAction.Template)
 			}
 			r.RuleData.NetLocationObj = make([]types.String, 0, len(resp.RuleData.NetLocationObj))
 			for _, v := range resp.RuleData.NetLocationObj {
@@ -225,9 +227,9 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		} else {
 			jsonVersion = nil
 		}
-		deviceClassificationID := make([]int64, 0, len(r.RuleData.DeviceClassificationID))
+		deviceClassificationID := make([]string, 0, len(r.RuleData.DeviceClassificationID))
 		for deviceClassificationIDIndex := range r.RuleData.DeviceClassificationID {
-			deviceClassificationID = append(deviceClassificationID, r.RuleData.DeviceClassificationID[deviceClassificationIDIndex].ValueInt64())
+			deviceClassificationID = append(deviceClassificationID, r.RuleData.DeviceClassificationID[deviceClassificationIDIndex].ValueString())
 		}
 		var matchCriteriaAction *shared.MatchCriteriaAction
 		if r.RuleData.MatchCriteriaAction != nil {
@@ -237,8 +239,22 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			} else {
 				actionName = nil
 			}
+			emitAlert := new(bool)
+			if !r.RuleData.MatchCriteriaAction.EmitAlert.IsUnknown() && !r.RuleData.MatchCriteriaAction.EmitAlert.IsNull() {
+				*emitAlert = r.RuleData.MatchCriteriaAction.EmitAlert.ValueBool()
+			} else {
+				emitAlert = nil
+			}
+			template := new(string)
+			if !r.RuleData.MatchCriteriaAction.Template.IsUnknown() && !r.RuleData.MatchCriteriaAction.Template.IsNull() {
+				*template = r.RuleData.MatchCriteriaAction.Template.ValueString()
+			} else {
+				template = nil
+			}
 			matchCriteriaAction = &shared.MatchCriteriaAction{
 				ActionName: actionName,
+				EmitAlert:  emitAlert,
+				Template:   template,
 			}
 		}
 		netLocationObj := make([]string, 0, len(r.RuleData.NetLocationObj))

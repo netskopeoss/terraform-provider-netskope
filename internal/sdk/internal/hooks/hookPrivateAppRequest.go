@@ -63,7 +63,7 @@ func (i *privateAppRequestHook) BeforeRequest(hookCtx BeforeRequestContext, req 
 	// Remove problematic empty fields that cause API errors
 	// These fields cause "Object of type bytes is not JSON serializable" errors
 	// when empty on the API backend
-	fieldsToRemove := []string{"paths"}
+	fieldsToRemove := []string{"paths", "bypass_uris"}
 	for _, field := range fieldsToRemove {
 		if val, exists := requestMap[field]; exists {
 			// Remove if nil, empty object, or empty array

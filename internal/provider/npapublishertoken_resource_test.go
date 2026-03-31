@@ -1,49 +1,35 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
-package provider
+package provider_test
 
 import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-testing/config"
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/provider/testutil"
 )
 
 func TestAccNPAPublisherToken_basic(t *testing.T) {
-	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_publisher_token.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { testAccPreCheck(t) },
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
 		// No CheckDestroy - token resource doesn't support delete
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNPAPublisherTokenConfig_basic(rName),
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: config.Variables{
+					"name": config.StringVariable(rName),
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckResourceExists(resourceName, "publisher_id", "token"),
+					testutil.CheckResourceExists(resourceName, "publisher_id", "token"),
 					resource.TestCheckResourceAttrSet(resourceName, "publisher_id"),
 					resource.TestCheckResourceAttrSet(resourceName, "token"),
 				),
 			},
 		},
 	})
-}
-
-// Configuration functions
-
-func testAccNPAPublisherTokenConfig_basic(name string) string {
-	return fmt.Sprintf(`
-%s
-
-resource "netskope_npa_publisher" "test" {
-  publisher_name = %q
-}
-
-resource "netskope_npa_publisher_token" "test" {
-  publisher_id = netskope_npa_publisher.test.publisher_id
-}
-`, testAccProviderConfig(), name)
 }

@@ -42,9 +42,9 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			}
 			r.RuleData.BNegateNetLocation = types.BoolPointerValue(resp.RuleData.BNegateNetLocation)
 			r.RuleData.BNegateSrcCountries = types.BoolPointerValue(resp.RuleData.BNegateSrcCountries)
-			r.RuleData.DeviceClassificationID = make([]types.Int64, 0, len(resp.RuleData.DeviceClassificationID))
+			r.RuleData.DeviceClassificationID = make([]types.String, 0, len(resp.RuleData.DeviceClassificationID))
 			for _, v := range resp.RuleData.DeviceClassificationID {
-				r.RuleData.DeviceClassificationID = append(r.RuleData.DeviceClassificationID, types.Int64Value(v))
+				r.RuleData.DeviceClassificationID = append(r.RuleData.DeviceClassificationID, types.StringValue(v))
 			}
 			r.RuleData.JSONVersion = types.Int64PointerValue(resp.RuleData.JSONVersion)
 			if resp.RuleData.MatchCriteriaAction == nil {
@@ -56,6 +56,8 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 				} else {
 					r.RuleData.MatchCriteriaAction.ActionName = types.StringNull()
 				}
+				r.RuleData.MatchCriteriaAction.EmitAlert = types.BoolPointerValue(resp.RuleData.MatchCriteriaAction.EmitAlert)
+				r.RuleData.MatchCriteriaAction.Template = types.StringPointerValue(resp.RuleData.MatchCriteriaAction.Template)
 			}
 			r.RuleData.NetLocationObj = make([]types.String, 0, len(resp.RuleData.NetLocationObj))
 			for _, v := range resp.RuleData.NetLocationObj {
