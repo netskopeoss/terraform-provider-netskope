@@ -142,6 +142,8 @@ func (p *NetskopeProvider) Actions(_ context.Context) []func() action.Action {
 
 func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		NewDestinationProfileResource,
+		NewDNSProfileV2Resource,
 		NewGRETunnelResource,
 		NewIPSecTunnelResource,
 		NewNPALocalBrokerResource,
@@ -157,11 +159,16 @@ func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Reso
 		NewNPAPublisherTokenResource,
 		NewNPAPublisherUpgradeProfileResource,
 		NewNPARulesResource,
+		NewRBACLabelResource,
 	}
 }
 
 func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewDestinationProfileDataSource,
+		NewDestinationProfileListDataSource,
+		NewDNSProfileV2DataSource,
+		NewDNSProfileV2ListDataSource,
 		NewGrepopDataSource,
 		NewGREPOPsListDataSource,
 		NewGRETunnelDataSource,
@@ -170,6 +177,7 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 		NewIPSecPOPsListDataSource,
 		NewIPSecTunnelDataSource,
 		NewIPSecTunnelsListDataSource,
+		NewIPSStatusDataSource,
 		NewNPALocalBrokerDataSource,
 		NewNPALocalBrokerConfigDataSource,
 		NewNPALocalBrokersListDataSource,
@@ -188,6 +196,8 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 		NewNPAPublisherUpgradeProfilesListDataSource,
 		NewNPARulesDataSource,
 		NewNPARulesListDataSource,
+		NewRBACLabelDataSource,
+		NewRBACLabelListDataSource,
 	}
 }
 

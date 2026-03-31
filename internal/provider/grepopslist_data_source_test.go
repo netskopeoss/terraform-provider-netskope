@@ -1,31 +1,21 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
-package provider
+package provider_test
 
 import (
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-testing/config"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/provider/testutil"
 )
 
 func TestAccGREPOPsListDataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { testAccPreCheck(t) },
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGREPOPsListDataSourceConfig_basic(),
+				ConfigDirectory: config.TestNameDirectory(),
 			},
 		},
 	})
-}
-
-// Configuration functions
-
-func testAccGREPOPsListDataSourceConfig_basic() string {
-	return testAccProviderConfig() + `
-data "netskope_grepo_ps_list" "test" {
-}
-`
 }

@@ -126,6 +126,19 @@ func (i *myAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.Resp
 			return responseMap.Data.Tags[i].TagID < responseMap.Data.Tags[j].TagID
 		})
 
+		// Populate label_ids from labels array.
+		// The API returns labels as [{label_id, permission}] but the Terraform schema
+		// uses label_ids (a flat string array) for input. We extract the IDs so the
+		// read state matches what was configured.
+		if len(responseMap.Data.Labels) > 0 {
+			labelIds := make([]string, 0, len(responseMap.Data.Labels))
+			for _, label := range responseMap.Data.Labels {
+				labelIds = append(labelIds, label.LabelID)
+			}
+			sort.Strings(labelIds)
+			responseMap.Data.LabelIds = labelIds
+		}
+
 		// Marshal the modified response back to json.RawMessage
 		modifiedBody, err := json.MarshalIndent(responseMap, "", "")
 		if err != nil {

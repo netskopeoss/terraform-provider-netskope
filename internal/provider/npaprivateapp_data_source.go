@@ -29,22 +29,30 @@ type NPAPrivateAppDataSource struct {
 
 // NPAPrivateAppDataSourceModel describes the data model.
 type NPAPrivateAppDataSourceModel struct {
-	AllowUnauthenticatedCors types.Bool              `tfsdk:"allow_unauthenticated_cors"`
-	ClientlessAccess         types.Bool              `tfsdk:"clientless_access"`
-	IsUserPortalApp          types.Bool              `tfsdk:"is_user_portal_app"`
-	Labels                   []tfTypes.Labels        `tfsdk:"labels"`
-	PrivateAppHostname       types.String            `tfsdk:"private_app_hostname"`
-	PrivateAppID             types.Int32             `tfsdk:"private_app_id"`
-	PrivateAppName           types.String            `tfsdk:"private_app_name"`
-	PrivateAppProtocol       types.String            `tfsdk:"private_app_protocol"`
-	Protocols                []tfTypes.ProtocolItem  `tfsdk:"protocols"`
-	Publishers               []tfTypes.PublisherItem `tfsdk:"publishers"`
-	RealHost                 types.String            `tfsdk:"real_host"`
-	Status                   types.String            `tfsdk:"status"`
-	SteeringConfigs          []types.String          `tfsdk:"steering_configs"`
-	Tags                     []tfTypes.Tags          `tfsdk:"tags"`
-	TrustSelfSignedCerts     types.Bool              `tfsdk:"trust_self_signed_certs"`
-	UsePublisherDNS          types.Bool              `tfsdk:"use_publisher_dns"`
+	AllowUnauthenticatedCors types.Bool                           `tfsdk:"allow_unauthenticated_cors"`
+	AllowURIBypass           types.Bool                           `tfsdk:"allow_uri_bypass"`
+	AppOption                *tfTypes.PrivateAppsRequestAppOption `tfsdk:"app_option"`
+	BypassUris               []types.String                       `tfsdk:"bypass_uris"`
+	ClientlessAccess         types.Bool                           `tfsdk:"clientless_access"`
+	CustomHost               types.String                         `tfsdk:"custom_host"`
+	HideAppInPortal          types.Bool                           `tfsdk:"hide_app_in_portal"`
+	IsUserPortalApp          types.Bool                           `tfsdk:"is_user_portal_app"`
+	LabelIds                 []types.String                       `tfsdk:"label_ids"`
+	Paths                    []types.String                       `tfsdk:"paths"`
+	PrivateAppHostname       types.String                         `tfsdk:"private_app_hostname"`
+	PrivateAppID             types.Int32                          `tfsdk:"private_app_id"`
+	PrivateAppName           types.String                         `tfsdk:"private_app_name"`
+	PrivateAppProtocol       types.String                         `tfsdk:"private_app_protocol"`
+	Protocols                []tfTypes.ProtocolItem               `tfsdk:"protocols"`
+	Publishers               []tfTypes.PublisherItem              `tfsdk:"publishers"`
+	RealHost                 types.String                         `tfsdk:"real_host"`
+	Status                   types.String                         `tfsdk:"status"`
+	SteeringConfigs          []types.String                       `tfsdk:"steering_configs"`
+	Tags                     []tfTypes.Tags                       `tfsdk:"tags"`
+	TrustSelfSignedCerts     types.Bool                           `tfsdk:"trust_self_signed_certs"`
+	UpgradeInsecureRequests  types.Bool                           `tfsdk:"upgrade_insecure_requests"`
+	UribypassHeaderValue     types.String                         `tfsdk:"uribypass_header_value"`
+	UsePublisherDNS          types.Bool                           `tfsdk:"use_publisher_dns"`
 }
 
 // Metadata returns the data source type name.
@@ -61,17 +69,36 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 			"allow_unauthenticated_cors": schema.BoolAttribute{
 				Computed: true,
 			},
+			"allow_uri_bypass": schema.BoolAttribute{
+				Computed: true,
+			},
+			"app_option": schema.SingleNestedAttribute{
+				Computed: true,
+			},
+			"bypass_uris": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+			},
 			"clientless_access": schema.BoolAttribute{
+				Computed: true,
+			},
+			"custom_host": schema.StringAttribute{
+				Computed: true,
+			},
+			"hide_app_in_portal": schema.BoolAttribute{
 				Computed: true,
 			},
 			"is_user_portal_app": schema.BoolAttribute{
 				Computed: true,
 			},
-			"labels": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{},
-				},
+			"label_ids": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `Associated RBAC label IDs`,
+			},
+			"paths": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
 			},
 			"private_app_hostname": schema.StringAttribute{
 				Computed: true,
@@ -137,6 +164,12 @@ func (r *NPAPrivateAppDataSource) Schema(ctx context.Context, req datasource.Sch
 				},
 			},
 			"trust_self_signed_certs": schema.BoolAttribute{
+				Computed: true,
+			},
+			"upgrade_insecure_requests": schema.BoolAttribute{
+				Computed: true,
+			},
+			"uribypass_header_value": schema.StringAttribute{
 				Computed: true,
 			},
 			"use_publisher_dns": schema.BoolAttribute{

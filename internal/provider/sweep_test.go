@@ -45,6 +45,12 @@ func init() {
 		// Rules should be deleted first (they reference apps, groups)
 		Dependencies: []string{},
 	})
+
+	resource.AddTestSweepers("netskope_rbac_label", &resource.Sweeper{
+		Name: "netskope_rbac_label",
+		F:    sweepRBACLabels,
+		Dependencies: []string{},
+	})
 }
 
 // TestMain runs the sweepers if the -sweep flag is passed
@@ -246,6 +252,67 @@ func sweepNPARules(region string) error {
 		})
 		if err != nil {
 			log.Printf("[WARN] Error deleting rule %s: %s", *rule.RuleName, err)
+		}
+	}
+
+	return nil
+}
+
+// sweepRBACLabels removes all RBAC labels with the test prefix.
+// Child labels must be deleted before parents, so we delete labels with parentId first.
+func sweepRBACLabels(region string) error {
+	client, err := getSweepClient()
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	res, err := client.Rbac.ListRBACLabels(ctx, operations.ListRBACLabelsRequest{})
+	if err != nil {
+		return fmt.Errorf("error listing RBAC labels for sweeping: %w", err)
+	}
+
+	if res.RbacLabelListResponse == nil {
+		return nil
+	}
+
+	// Collect labels to delete, children first (those with parentId), then parents
+	var children, parents []struct {
+		id   string
+		name string
+	}
+
+	for _, label := range res.RbacLabelListResponse.Labels {
+		if label.Name == nil || label.LabelID == nil {
+			continue
+		}
+
+		if !strings.HasPrefix(*label.Name, testAccResourcePrefix) {
+			continue
+		}
+
+		entry := struct {
+			id   string
+			name string
+		}{id: *label.LabelID, name: *label.Name}
+
+		if label.ParentID != nil && *label.ParentID != "" {
+			children = append(children, entry)
+		} else {
+			parents = append(parents, entry)
+		}
+	}
+
+	// Delete children first, then parents
+	for _, label := range append(children, parents...) {
+		log.Printf("[INFO] Sweeping RBAC Label: %s (ID: %s)", label.name, label.id)
+
+		_, err := client.Rbac.DeleteRBACLabel(ctx, operations.DeleteRBACLabelRequest{
+			LabelID: label.id,
+		})
+		if err != nil {
+			log.Printf("[WARN] Error deleting RBAC label %s: %s", label.name, err)
 		}
 	}
 

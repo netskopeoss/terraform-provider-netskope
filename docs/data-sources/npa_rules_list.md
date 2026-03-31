@@ -56,7 +56,7 @@ Read-Only:
 - `access_method` (List of String)
 - `b_negate_net_location` (Boolean)
 - `b_negate_src_countries` (Boolean)
-- `device_classification_id` (List of Number)
+- `device_classification_id` (List of String)
 - `json_version` (Number)
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--data--rule_data--match_criteria_action))
 - `net_location_obj` (List of String)

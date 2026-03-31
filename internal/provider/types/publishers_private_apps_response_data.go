@@ -8,7 +8,7 @@ import (
 
 type PublishersPrivateAppsResponseData struct {
 	AllowUnauthenticatedCors    types.Bool                                 `tfsdk:"allow_unauthenticated_cors"`
-	AppOption                   *Labels                                    `tfsdk:"app_option"`
+	AppOption                   *PrivateAppsRequestAppOption               `tfsdk:"app_option"`
 	ClientlessAccess            types.Bool                                 `tfsdk:"clientless_access"`
 	ExternalID                  types.Int32                                `tfsdk:"external_id"`
 	Host                        types.String                               `tfsdk:"host"`

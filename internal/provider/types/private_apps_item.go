@@ -7,19 +7,27 @@ import (
 )
 
 type PrivateAppsItem struct {
-	AllowUnauthenticatedCors types.Bool      `tfsdk:"allow_unauthenticated_cors"`
-	ClientlessAccess         types.Bool      `tfsdk:"clientless_access"`
-	IsUserPortalApp          types.Bool      `tfsdk:"is_user_portal_app"`
-	Labels                   []Labels        `tfsdk:"labels"`
-	PrivateAppHostname       types.String    `tfsdk:"private_app_hostname"`
-	PrivateAppID             types.Int32     `tfsdk:"private_app_id"`
-	PrivateAppName           types.String    `tfsdk:"private_app_name"`
-	PrivateAppProtocol       types.String    `tfsdk:"private_app_protocol"`
-	Protocols                []ProtocolItem  `tfsdk:"protocols"`
-	Publishers               []PublisherItem `tfsdk:"publishers"`
-	RealHost                 types.String    `tfsdk:"real_host"`
-	SteeringConfigs          []types.String  `tfsdk:"steering_configs"`
-	Tags                     []Tags          `tfsdk:"tags"`
-	TrustSelfSignedCerts     types.Bool      `tfsdk:"trust_self_signed_certs"`
-	UsePublisherDNS          types.Bool      `tfsdk:"use_publisher_dns"`
+	AllowUnauthenticatedCors types.Bool                   `tfsdk:"allow_unauthenticated_cors"`
+	AllowURIBypass           types.Bool                   `tfsdk:"allow_uri_bypass"`
+	AppOption                *PrivateAppsRequestAppOption `tfsdk:"app_option"`
+	BypassUris               []types.String               `tfsdk:"bypass_uris"`
+	ClientlessAccess         types.Bool                   `tfsdk:"clientless_access"`
+	CustomHost               types.String                 `tfsdk:"custom_host"`
+	HideAppInPortal          types.Bool                   `tfsdk:"hide_app_in_portal"`
+	IsUserPortalApp          types.Bool                   `tfsdk:"is_user_portal_app"`
+	LabelIds                 []types.String               `tfsdk:"label_ids"`
+	Paths                    []types.String               `tfsdk:"paths"`
+	PrivateAppHostname       types.String                 `tfsdk:"private_app_hostname"`
+	PrivateAppID             types.Int32                  `tfsdk:"private_app_id"`
+	PrivateAppName           types.String                 `tfsdk:"private_app_name"`
+	PrivateAppProtocol       types.String                 `tfsdk:"private_app_protocol"`
+	Protocols                []ProtocolItem               `tfsdk:"protocols"`
+	Publishers               []PublisherItem              `tfsdk:"publishers"`
+	RealHost                 types.String                 `tfsdk:"real_host"`
+	SteeringConfigs          []types.String               `tfsdk:"steering_configs"`
+	Tags                     []Tags                       `tfsdk:"tags"`
+	TrustSelfSignedCerts     types.Bool                   `tfsdk:"trust_self_signed_certs"`
+	UpgradeInsecureRequests  types.Bool                   `tfsdk:"upgrade_insecure_requests"`
+	UribypassHeaderValue     types.String                 `tfsdk:"uribypass_header_value"`
+	UsePublisherDNS          types.Bool                   `tfsdk:"use_publisher_dns"`
 }
