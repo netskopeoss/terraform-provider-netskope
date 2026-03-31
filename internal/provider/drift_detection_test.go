@@ -1424,6 +1424,8 @@ resource "netskope_gre_tunnel" "test" {
 // TestAccDrift_DestinationProfile verifies no drift on destination profile
 // resources with values list and optional description.
 func TestAccDrift_DestinationProfile(t *testing.T) {
+	t.Skip("Skipping: Destination profiles require a license not enabled on the CI tenant")
+
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 
 	resource.Test(t, resource.TestCase{
@@ -1453,6 +1455,8 @@ func TestAccDrift_DestinationProfile(t *testing.T) {
 // TestAccDrift_DestinationProfile_Minimal verifies no drift when only required
 // fields (name, type) are set and optional Computed fields are omitted.
 func TestAccDrift_DestinationProfile_Minimal(t *testing.T) {
+	t.Skip("Skipping: Destination profiles require a license not enabled on the CI tenant")
+
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 
 	resource.Test(t, resource.TestCase{
