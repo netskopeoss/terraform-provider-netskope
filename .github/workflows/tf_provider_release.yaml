@@ -32,7 +32,7 @@ jobs:
           GPG_FINGERPRINT=$(gpg --list-secret-keys --keyid-format long | grep sec | head -1 | awk '{print $2}' | cut -d'/' -f2)
           echo "GPG_FINGERPRINT=$GPG_FINGERPRINT" >> "$GITHUB_ENV"
       - name: Install GoReleaser
-        run: go install github.com/goreleaser/goreleaser/v2@v2.8.2
+        run: go install github.com/goreleaser/goreleaser/v2@latest
       - name: Run GoReleaser
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
