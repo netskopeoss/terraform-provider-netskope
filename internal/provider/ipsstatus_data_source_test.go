@@ -9,6 +9,7 @@ import (
 )
 
 func TestAccIPSStatusDataSource_basic(t *testing.T) {
+	t.Skip("Skipping: IPS requires a license not enabled on the CI tenant")
 	dataSourceName := "data.netskope_ips_status.test"
 
 	resource.Test(t, resource.TestCase{
