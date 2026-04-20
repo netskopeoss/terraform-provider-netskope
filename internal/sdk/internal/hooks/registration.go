@@ -55,4 +55,8 @@ func initHooks(h *Hooks) {
 	// Private app request hook - strips problematic empty fields that cause API errors
 	privateAppReq := &privateAppRequestHook{}
 	h.registerBeforeRequestHook(privateAppReq)
+
+	// Device classification tags - wrap raw array response into {"tags": [...]}
+	dcTags := &deviceClassificationTagsResponse{}
+	h.registerAfterSuccessHook(dcTags)
 }
