@@ -16,6 +16,7 @@ sources:
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/platform/ips_status.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/profiles/destination_profiles.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/platform/rbac_labels.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/platform/deviceclassification_tags.yaml
         overlays:
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
         registry:
