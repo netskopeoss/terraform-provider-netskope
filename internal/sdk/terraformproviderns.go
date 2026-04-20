@@ -75,6 +75,7 @@ type TerraformProviderNs struct {
 	DestinationProfile          *DestinationProfile
 	Rbac                        *Rbac
 	RBACLabel                   *RBACLabel
+	Deviceclassification        *Deviceclassification
 
 	sdkConfiguration config.SDKConfiguration
 	hooks            *hooks.Hooks
@@ -211,6 +212,7 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk.DestinationProfile = newDestinationProfile(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Rbac = newRbac(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.RBACLabel = newRBACLabel(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Deviceclassification = newDeviceclassification(sdk, sdk.sdkConfiguration, sdk.hooks)
 
 	return sdk
 }

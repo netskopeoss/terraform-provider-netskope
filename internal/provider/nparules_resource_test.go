@@ -174,6 +174,59 @@ func TestAccNPARules_ruleOrderAfter(t *testing.T) {
 					testutil.CheckResourceExists("netskope_npa_rules.rule2"),
 					resource.TestCheckResourceAttr("netskope_npa_rules.rule1", "rule_name", rName+"-rule1"),
 					resource.TestCheckResourceAttr("netskope_npa_rules.rule2", "rule_name", rName+"-rule2"),
+					testutil.CheckRuleOrder("netskope_npa_rules.rule1", "netskope_npa_rules.rule2"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccNPARules_ruleOrderBottom(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists("netskope_npa_rules.rule1"),
+					testutil.CheckResourceExists("netskope_npa_rules.rule2"),
+					resource.TestCheckResourceAttr("netskope_npa_rules.rule1", "rule_name", rName+"-rule1"),
+					resource.TestCheckResourceAttr("netskope_npa_rules.rule2", "rule_name", rName+"-rule2"),
+					testutil.CheckRuleOrder("netskope_npa_rules.rule1", "netskope_npa_rules.rule2"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccNPARules_ruleOrderBefore(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists("netskope_npa_rules.rule1"),
+					testutil.CheckResourceExists("netskope_npa_rules.rule2"),
+					resource.TestCheckResourceAttr("netskope_npa_rules.rule1", "rule_name", rName+"-rule1"),
+					resource.TestCheckResourceAttr("netskope_npa_rules.rule2", "rule_name", rName+"-rule2"),
+					testutil.CheckRuleOrder("netskope_npa_rules.rule2", "netskope_npa_rules.rule1"),
 				),
 			},
 		},
