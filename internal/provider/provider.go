@@ -167,6 +167,7 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 	return []func() datasource.DataSource{
 		NewDestinationProfileDataSource,
 		NewDestinationProfileListDataSource,
+		NewDeviceClassificationTagListDataSource,
 		NewDNSProfileV2DataSource,
 		NewDNSProfileV2ListDataSource,
 		NewGrepopDataSource,
