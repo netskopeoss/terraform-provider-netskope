@@ -56,7 +56,11 @@ func initHooks(h *Hooks) {
 	privateAppReq := &privateAppRequestHook{}
 	h.registerBeforeRequestHook(privateAppReq)
 
-	// Device classification tags - wrap raw array response into {"tags": [...]}
+	// Device classification tags - response transformations for all DC endpoints
 	dcTags := &deviceClassificationTagsResponse{}
 	h.registerAfterSuccessHook(dcTags)
+
+	// Device classification tag create - wrap single object into array for API
+	dcTagReq := &deviceClassificationTagRequest{}
+	h.registerBeforeRequestHook(dcTagReq)
 }
