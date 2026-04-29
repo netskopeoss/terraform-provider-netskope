@@ -6,6 +6,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.4.3] - Unreleased
+
+### Added
+- **`netskope_npa_rules_order` resource** — Manages the list position of NPA policy rules.
+
+### Fixed
+- **Fixed perpetual hostname whitespace drift on `netskope_npa_private_app`** ([BUG-011](docs/bugs/BUG-011-hostname-whitespace-drift.md)) — Multi-host `private_app_hostname` values with comma-separated hosts caused perpetual plan diffs due to the API normalizing whitespace around commas (e.g., `"host1,host2"` vs `"host1, host2"`). Added `suppressHostnameWhitespaceDrift` plan modifier.
+
+### Changed
+- Added documentation for configuring multiple ports per application, including how to split CSV port strings into individual protocol entries to avoid drift. See [terraform-netskope-examples](https://github.com/netskopeoss/terraform-netskope-examples) and the [NPA Rules Guide](docs/guides/NPA_RULES_GUIDE.md#handling-csv-port-strings).
+
+## [0.4.2] - 2026-04-22
+
+### Added
+- **Device Classification Tag resource** (`netskope_device_classification_tag`) — Full CRUD with import support. AfterSuccess hooks handle non-standard API responses (create returns `{status, data:[id]}`, update returns `{status:true}`).
+- **Device Classification data sources** — `netskope_device_classification_tag` (single lookup), `netskope_device_classification_tag_list` (list all tags), `netskope_device_classification_options_list` (list classification options).
+- Rule placement acceptance tests: `TestAccNPARules_ruleOrderBottom`, `TestAccNPARules_ruleOrderBefore`
+- Drift detection test: `TestAccDrift_PrivateApp_MultiHostWhitespace` (BUG-011)
+- Device classification acceptance tests (5 tests)
+
+### Fixed
+- Updated `hc-install` to v0.9.4 to fix expired HashiCorp GPG key
+- Updated `terraform-plugin-testing` to v1.14.1 to fix GPG key expiry
+- Fixed 10 dependency vulnerabilities: Go 1.26.2, grpc v1.79.3, circl v1.6.3
+
 ## [0.4.0] - 2026-03-31
 
 ### Added

@@ -160,6 +160,7 @@ func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Reso
 		NewNPAPublisherTokenResource,
 		NewNPAPublisherUpgradeProfileResource,
 		NewNPARulesResource,
+		NewNPARulesOrderResource,
 		NewRBACLabelResource,
 	}
 }
