@@ -116,12 +116,6 @@ func TestAccNPARules_import(t *testing.T) {
 }
 
 func TestAccNPARules_denyRule(t *testing.T) {
-	// Skip: The API has a name/filename mismatch for the template field in match_criteria_action:
-	//   - Create/Update requires the template display NAME (e.g. "Default Template")
-	//   - GET response returns the template FILE NAME (e.g. "block_page.html")
-	// SuppressDiff on the template attribute doesn't prevent the diff because the parent
-	// object (match_criteria_action) detects the change. See docs/KNOWN_API_ISSUES.md #13.
-	t.Skip("Skipping: API template name/filename mismatch causes perpetual drift (KNOWN_API_ISSUES #13)")
 
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
@@ -143,7 +137,7 @@ func TestAccNPARules_denyRule(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "enabled", "1"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.action_name", "block"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.emit_alert", "true"),
-					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.template", "Default Template"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.template", "tf-test-template"),
 				),
 			},
 		},

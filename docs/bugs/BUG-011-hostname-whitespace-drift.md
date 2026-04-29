@@ -2,7 +2,7 @@
 
 **Resource:** `netskope_npa_private_app`
 **Severity:** Medium (perpetual diff on every plan/apply for multi-host apps)
-**Status:** Open
+**Status:** Fixed in 0.4.3
 **Affected attributes:** `private_app_hostname`
 
 ---
