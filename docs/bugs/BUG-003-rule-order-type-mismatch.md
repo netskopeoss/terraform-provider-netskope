@@ -2,7 +2,7 @@
 
 **Resource:** `netskope_npa_rules`
 **Severity:** High (blocks creation of any rule using `rule_order.order = "after"` with a `rule_id`)
-**Status:** Open
+**Status:** Fixed in 0.3.5
 **Discovered:** 2026-02-13 via `test-examples.sh` drift detection run against `full-deployment` example
 
 ---

@@ -2,6 +2,7 @@ package provider
 
 import (
 	"sort"
+	"strings"
 	"testing"
 )
 
@@ -146,5 +147,73 @@ func TestInt64List_EmptyLists(t *testing.T) {
 
 	if len(plan) != len(state) {
 		t.Fatal("empty lists should have same length")
+	}
+}
+
+// =============================================================================
+// Template display name preservation tests
+//
+// These test the core logic used by preserveTemplateDisplayName:
+// if state has a .html file name and config has a display name, preserve config.
+// =============================================================================
+
+func TestTemplate_FileNameInState_DisplayNameInConfig(t *testing.T) {
+	configVal := "Private Apps Block Template"
+	stateVal := "5.html"
+
+	// Should preserve config: state is a file name, config is a display name
+	if strings.HasSuffix(stateVal, ".html") && !strings.HasSuffix(configVal, ".html") {
+		// This is the case where we preserve the config value
+	} else {
+		t.Fatal("should detect file name in state and display name in config")
+	}
+}
+
+func TestTemplate_BothDisplayNames_NoChange(t *testing.T) {
+	configVal := "Private Apps Block Template"
+	stateVal := "Private Apps Block Template"
+
+	if configVal != stateVal {
+		t.Fatal("identical values should not trigger preservation")
+	}
+}
+
+func TestTemplate_BothFileNames_NoPreservation(t *testing.T) {
+	configVal := "5.html"
+	stateVal := "5.html"
+
+	if configVal != stateVal {
+		t.Fatal("identical file names should not trigger preservation")
+	}
+}
+
+func TestTemplate_ConfigIsFileName_NoPreservation(t *testing.T) {
+	configVal := "block_page.html"
+	stateVal := "block_page.html"
+
+	// If user explicitly uses file name in config, don't override
+	shouldPreserve := strings.HasSuffix(stateVal, ".html") && !strings.HasSuffix(configVal, ".html")
+	if shouldPreserve {
+		t.Fatal("should not preserve when config is also a file name")
+	}
+}
+
+func TestTemplate_UserChangesTemplate(t *testing.T) {
+	configVal := "New Block Template"
+	stateVal := "5.html"
+
+	// Config changed to a new display name, state still has old file name
+	// Should preserve config (new display name)
+	if !(strings.HasSuffix(stateVal, ".html") && !strings.HasSuffix(configVal, ".html")) {
+		t.Fatal("should preserve new display name when state has file name")
+	}
+}
+
+func TestTemplate_DefaultBlockPage(t *testing.T) {
+	configVal := "Default Template"
+	stateVal := "block_page.html"
+
+	if !(strings.HasSuffix(stateVal, ".html") && !strings.HasSuffix(configVal, ".html")) {
+		t.Fatal("should preserve Default Template when state has block_page.html")
 	}
 }

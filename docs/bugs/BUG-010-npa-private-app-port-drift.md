@@ -1,5 +1,8 @@
-# Port Drift Test Results
+# BUG-010: CSV Port Strings Cause Perpetual Drift on `netskope_npa_private_app`
 
+**Resource:** `netskope_npa_private_app`
+**Severity:** Medium (perpetual diff when using CSV port strings)
+**Status:** Documented — workaround available (split CSV ports into individual entries)
 **Date:** 2026-04-22
 **Tenant:** bespin.goskope.com
 **Provider:** netskopeoss/netskope v0.4.2
