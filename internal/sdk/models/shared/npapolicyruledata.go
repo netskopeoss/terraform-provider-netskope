@@ -203,7 +203,7 @@ type NpaPolicyRuleData struct {
 	AccessMethod              []AccessMethod               `json:"access_method,omitempty"`
 	BNegateNetLocation        *bool                        `default:"false" json:"b_negateNetLocation"`
 	BNegateSrcCountries       *bool                        `default:"false" json:"b_negateSrcCountries"`
-	Classification            *string                      `json:"classification,omitempty"`
+	Classification            []string                     `json:"classification,omitempty"`
 	PeriodicReauth            *NpaPolicyRulePeriodicReauth `json:"periodic_reauth,omitempty"`
 	JSONVersion               *int64                       `default:"3" json:"json_version"`
 	DeviceClassificationID    []string                     `json:"device_classification_id,omitempty"`
@@ -261,7 +261,7 @@ func (n *NpaPolicyRuleData) GetBNegateSrcCountries() *bool {
 	return n.BNegateSrcCountries
 }
 
-func (n *NpaPolicyRuleData) GetClassification() *string {
+func (n *NpaPolicyRuleData) GetClassification() []string {
 	if n == nil {
 		return nil
 	}

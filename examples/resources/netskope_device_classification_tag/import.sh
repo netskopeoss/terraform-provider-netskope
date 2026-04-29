@@ -1,0 +1,1 @@
+terraform import netskope_device_classification_tag.my_netskope_device_classification_tag 0

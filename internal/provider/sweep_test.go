@@ -51,6 +51,12 @@ func init() {
 		F:    sweepRBACLabels,
 		Dependencies: []string{},
 	})
+
+	resource.AddTestSweepers("netskope_device_classification_tag", &resource.Sweeper{
+		Name: "netskope_device_classification_tag",
+		F:    sweepDeviceClassificationTags,
+		Dependencies: []string{},
+	})
 }
 
 // TestMain runs the sweepers if the -sweep flag is passed
@@ -313,6 +319,45 @@ func sweepRBACLabels(region string) error {
 		})
 		if err != nil {
 			log.Printf("[WARN] Error deleting RBAC label %s: %s", label.name, err)
+		}
+	}
+
+	return nil
+}
+
+func sweepDeviceClassificationTags(region string) error {
+	client, err := getSweepClient()
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	res, err := client.Deviceclassification.ListDeviceClassificationTags(ctx)
+	if err != nil {
+		return fmt.Errorf("error listing device classification tags for sweeping: %w", err)
+	}
+
+	if res.DeviceclassificationTagListResponse == nil {
+		return nil
+	}
+
+	for _, tag := range res.DeviceclassificationTagListResponse.Tags {
+		if tag.Name == nil || tag.TagID == nil {
+			continue
+		}
+
+		if !strings.HasPrefix(*tag.Name, testAccResourcePrefix) {
+			continue
+		}
+
+		log.Printf("[INFO] Sweeping Device Classification Tag: %s (ID: %d)", *tag.Name, *tag.TagID)
+
+		_, err := client.Deviceclassification.DeleteDeviceClassificationTag(ctx, operations.DeleteDeviceClassificationTagRequest{
+			TagID: *tag.TagID,
+		})
+		if err != nil {
+			log.Printf("[WARN] Error deleting device classification tag %s: %s", *tag.Name, err)
 		}
 	}
 
