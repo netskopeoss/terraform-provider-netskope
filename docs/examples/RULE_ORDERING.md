@@ -1,6 +1,6 @@
-# NPA Rule Ordering Examples
+# NPA Rule Placement Examples
 
-The `rule_order` block controls where a rule is placed in the policy evaluation order. Rules are evaluated top-to-bottom; the first matching rule wins.
+The `rule_order` block controls where a rule is placed in the policy list.
 
 ## Supported Order Values
 
@@ -56,9 +56,7 @@ resource "netskope_npa_private_app" "example" {
 
 ## Example 1: Place a Rule After Another
 
-Creates two rules where `rule2` is placed immediately after `rule1`.
-
-**Result:** rule1, rule2
+Creates two rules where `rule2` is placed immediately after `rule1` in the list.
 
 ```hcl
 resource "netskope_npa_rules" "rule1" {
@@ -107,9 +105,7 @@ resource "netskope_npa_rules" "rule2" {
 
 ## Example 2: Place a Rule Before Another
 
-Creates two rules where `rule2` is inserted before `rule1`, making `rule2` evaluate first.
-
-**Result:** rule2, rule1
+Creates two rules where `rule2` is inserted before `rule1` in the list.
 
 ```hcl
 resource "netskope_npa_rules" "rule1" {
@@ -158,9 +154,7 @@ resource "netskope_npa_rules" "rule2" {
 
 ## Example 3: Top and Bottom Placement
 
-Creates two rules where `rule1` goes to the top and `rule2` goes to the bottom of the evaluation list.
-
-**Result:** rule1, ...(other existing rules)..., rule2
+Creates two rules where `rule1` goes to the top and `rule2` goes to the bottom of the list.
 
 ```hcl
 resource "netskope_npa_rules" "rule1" {
@@ -208,11 +202,11 @@ resource "netskope_npa_rules" "rule2" {
 }
 ```
 
-> **Tip:** When using `top`/`bottom` without an explicit dependency between rules, add `depends_on` to ensure consistent ordering. Without it, Terraform may create the rules in parallel and the final order depends on which API call completes first.
+> **Tip:** When using `top`/`bottom` without an explicit dependency between rules, add `depends_on` to ensure consistent placement. Without it, Terraform may create the rules in parallel and the final position depends on which API call completes first.
 
-## Verifying Rule Order with a Data Source
+## Inspecting Rules with a Data Source
 
-The `netskope_npa_rules_list` data source returns rules in their current evaluation order. You can use it to inspect or output the live rule ordering:
+The `netskope_npa_rules_list` data source returns all rules. You can use it to inspect rule attributes:
 
 ```hcl
 data "netskope_npa_rules_list" "all" {
@@ -222,25 +216,15 @@ data "netskope_npa_rules_list" "all" {
   ]
 }
 
-output "rule_evaluation_order" {
-  description = "Rules in evaluation order (first match wins)"
+output "rules" {
   value = [
-    for rule in data.netskope_npa_rules_list.all.data : {
-      id   = rule.id
-      name = rule.rule_name
+    for r in data.netskope_npa_rules_list.all.data : {
+      id      = r.id
+      name    = r.rule_name
+      enabled = r.enabled
     }
   ]
 }
-```
-
-After `terraform apply`, the output shows the live order:
-
-```
-rule_evaluation_order = [
-  { id = "215", name = "allow-app-admins" },
-  { id = "216", name = "allow-app-users" },
-  ...
-]
 ```
 
 You can also look up a single rule by ID to confirm its attributes:
@@ -261,7 +245,7 @@ output "rule1_details" {
 
 ## Test Results
 
-These examples are backed by acceptance tests that verify the actual rule evaluation order via the NPA rules list API. All tests passed on 2026-04-20:
+These examples are backed by acceptance tests that verify rule creation with placement attributes. All tests passed on 2026-04-20:
 
 ```
 === RUN   TestAccNPARules_ruleOrderAfter
@@ -272,5 +256,3 @@ These examples are backed by acceptance tests that verify the actual rule evalua
 --- PASS: TestAccNPARules_ruleOrderBefore (13.71s)
 PASS
 ```
-
-Each test creates the rules, then queries the list endpoint and asserts the rules appear in the expected evaluation order.

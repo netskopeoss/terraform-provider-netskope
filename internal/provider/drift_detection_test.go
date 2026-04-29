@@ -198,6 +198,35 @@ func TestAccDrift_PrivateApp_MultiPublisherWithTags(t *testing.T) {
 	})
 }
 
+// TestAccDrift_PrivateApp_MultiHostWhitespace verifies no drift when the API
+// normalizes whitespace around commas in multi-host private_app_hostname values.
+// BUG-011: e.g. config sends "host1,host2", API returns "host1, host2".
+func TestAccDrift_PrivateApp_MultiHostWhitespace(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_private_app"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftPrivateAppMultiHostConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_npa_private_app.test", "private_app_id"),
+				),
+			},
+			{
+				Config: testAccDriftPrivateAppMultiHostConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
 // TestAccDrift_PolicyGroup verifies no drift on policy group resources
 func TestAccDrift_PolicyGroup(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
@@ -503,6 +532,37 @@ resource "netskope_npa_publisher" "test" {
 resource "netskope_npa_private_app" "test" {
   private_app_name     = %q
   private_app_hostname = "192.168.1.100"
+  use_publisher_dns    = true
+
+  protocols = [
+    {
+      port     = "443"
+      protocol = "tcp"
+    }
+  ]
+
+  publishers = [
+    {
+      publisher_id   = tostring(netskope_npa_publisher.test.publisher_id)
+      publisher_name = netskope_npa_publisher.test.publisher_name
+    }
+  ]
+}
+`, testAccProviderConfig(), name, name)
+}
+
+func testAccDriftPrivateAppMultiHostConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_npa_publisher" "test" {
+  publisher_name = "%s-pub"
+  lbrokerconnect = false
+}
+
+resource "netskope_npa_private_app" "test" {
+  private_app_name     = %q
+  private_app_hostname = "192.168.1.100,192.168.1.101"
   use_publisher_dns    = true
 
   protocols = [
