@@ -52,6 +52,10 @@ api-src/
 CLAUDE.md
 # Local planning/design documents
 planning_docs/
+# Internal docs not for the repo
+docs/customer/
+docs/guides/
+docs/examples/
 NPA_POLICY_UPDATE_PLAN.md
 ACCEPTANCE_TEST_DESIGN_SPEC.md
 # Log files
