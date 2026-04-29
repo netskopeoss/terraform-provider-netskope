@@ -6,11 +6,18 @@
 
 The official Terraform provider for [Netskope](https://www.netskope.com/), enabling infrastructure-as-code management of Netskope resources.
 
-## Upgrading to v0.4.0
+## Upgrading to v0.4.2 / v0.4.3
 
-If you are upgrading from v0.3.x, review the following changes before running `terraform plan`.
+### What's New in v0.4.3
 
-### What's New
+- **Fixed hostname whitespace drift** — Multi-host `private_app_hostname` values no longer cause perpetual plan diffs when the API normalizes whitespace around commas.
+
+### What's New in v0.4.2
+
+- **Device Classification Tags** — New `netskope_device_classification_tag` resource (full CRUD with import) and data sources (`netskope_device_classification_tag`, `netskope_device_classification_tag_list`, `netskope_device_classification_options_list`). Use device classification tags in NPA rules via `device_classification_id` to enforce device posture requirements.
+- **Dependency security fixes** — Updated Go 1.26.2, hc-install v0.9.4, terraform-plugin-testing v1.14.1, grpc v1.79.3, circl v1.6.3.
+
+### What's New in v0.4.0
 
 - **RBAC Labels** — Full CRUD resource (`netskope_rbac_label`) and data sources for Label Based Access Control. Create labels, look them up by name, and assign them to resources via `label_ids`. See [RBAC Labels](#rbac-labels) for examples.
 - **`label_ids` on Private Apps** — You can now assign RBAC labels to private applications directly in Terraform.
@@ -114,8 +121,9 @@ resource "netskope_npa_publisher" "pub" {
 
 ## Features
 
+- **Device Classification Tags** - Create and manage device classification tags, and use them in NPA rules to enforce device posture requirements
 - **RBAC Labels** - Create and manage labels for Label Based Access Control (LBAC), with hierarchy support up to 4 levels
-- **Private Applications** - Create and manage private applications accessible via browser (clientless) or NPA client, with label assignment via `label_ids` (new in v0.4.0)
+- **Private Applications** - Create and manage private applications accessible via browser (clientless) or NPA client, with label assignment via `label_ids`
 - **Publishers** - Deploy and configure NPA publishers with upgrade profiles, alerting, and bulk operations
 - **Local Brokers** - Manage NPA local brokers and their configurations
 - **Access Policies** - Define policy groups and rules for zero-trust access control, including block rules with notification templates
@@ -139,7 +147,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "~> 0.4.0"
+      version = "~> 0.4.3"
     }
   }
 }
@@ -251,6 +259,7 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_npa_publishers_bulk_upgrade_request](docs/resources/npa_publishers_bulk_upgrade_request.md) | Bulk publisher upgrades |
 | [netskope_npa_policy_groups](docs/resources/npa_policy_groups.md) | Policy groups |
 | [netskope_npa_rules](docs/resources/npa_rules.md) | Policy rules |
+| [netskope_npa_rules_order](docs/resources/npa_rules_order.md) | Policy rule list positioning |
 | [netskope_npa_local_broker](docs/resources/npa_local_broker.md) | Local brokers |
 | [netskope_npa_local_broker_config](docs/resources/npa_local_broker_config.md) | Local broker configuration |
 | [netskope_npa_local_broker_token](docs/resources/npa_local_broker_token.md) | Local broker registration tokens |
@@ -259,6 +268,7 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_rbac_label](docs/resources/rbac_label.md) | RBAC labels for Label Based Access Control |
 | [netskope_destination_profile](docs/resources/destination_profile.md) | Destination profiles |
 | [netskope_dns_profile_v2](docs/resources/dns_profile_v2.md) | DNS security profiles |
+| [netskope_device_classification_tag](docs/resources/device_classification_tag.md) | Device classification tags |
 
 ### Data Sources
 
@@ -297,6 +307,9 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_dns_profile_v2](docs/data-sources/dns_profile_v2.md) | Look up a DNS profile |
 | [netskope_dns_profile_v2_list](docs/data-sources/dns_profile_v2_list.md) | List DNS profiles |
 | [netskope_ips_status](docs/data-sources/ips_status.md) | IPS license status |
+| [netskope_device_classification_tag](docs/data-sources/device_classification_tag.md) | Look up a device classification tag |
+| [netskope_device_classification_tag_list](docs/data-sources/device_classification_tag_list.md) | List device classification tags |
+| [netskope_device_classification_options_list](docs/data-sources/device_classification_options_list.md) | List classification options |
 
 ## Examples and Tutorials
 
@@ -313,7 +326,7 @@ See below for version-specific upgrade notes. For full details, see the [Migrati
 
 - **From v0.2.x**: Version 0.3.x is a complete rewrite with renamed resources and changed schemas. Existing state must be re-imported. See the [Migration Guide](docs/MIGRATION_GUIDE.md).
 - **From v0.3.2**: See the [v0.3.2 to v0.3.3 upgrade section](docs/MIGRATION_GUIDE.md#upgrading-from-v032-to-v033) for schema changes.
-- **From v0.3.x to v0.4.0**: See [Upgrading to v0.4.0](#upgrading-to-v040) at the top of this document.
+- **From v0.3.x to v0.4.x**: See [Upgrading to v0.4.2 / v0.4.3](#upgrading-to-v042--v043) at the top of this document.
 
 ## Development
 
