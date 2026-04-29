@@ -76,6 +76,7 @@ type TerraformProviderNs struct {
 	Rbac                        *Rbac
 	RBACLabel                   *RBACLabel
 	Deviceclassification        *Deviceclassification
+	DeviceClassificationTag     *DeviceClassificationTag
 
 	sdkConfiguration config.SDKConfiguration
 	hooks            *hooks.Hooks
@@ -164,9 +165,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk := &TerraformProviderNs{
-		SDKVersion: "0.3.20",
+		SDKVersion: "0.3.21",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 0.3.20 2.839.0 1.0.0 github.com/netskopeoss/terraform-provider-netskope/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 0.3.21 2.839.0 1.0.0 github.com/netskopeoss/terraform-provider-netskope/internal/sdk",
 			ServerList: ServerList,
 			ServerVariables: []map[string]string{
 				{
@@ -213,6 +214,7 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk.Rbac = newRbac(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.RBACLabel = newRBACLabel(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Deviceclassification = newDeviceclassification(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.DeviceClassificationTag = newDeviceClassificationTag(sdk, sdk.sdkConfiguration, sdk.hooks)
 
 	return sdk
 }

@@ -143,6 +143,7 @@ func (p *NetskopeProvider) Actions(_ context.Context) []func() action.Action {
 func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewDestinationProfileResource,
+		NewDeviceClassificationTagResource,
 		NewDNSProfileV2Resource,
 		NewGRETunnelResource,
 		NewIPSecTunnelResource,
@@ -159,6 +160,7 @@ func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Reso
 		NewNPAPublisherTokenResource,
 		NewNPAPublisherUpgradeProfileResource,
 		NewNPARulesResource,
+		NewNPARulesOrderResource,
 		NewRBACLabelResource,
 	}
 }
@@ -167,6 +169,8 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 	return []func() datasource.DataSource{
 		NewDestinationProfileDataSource,
 		NewDestinationProfileListDataSource,
+		NewDeviceClassificationOptionsListDataSource,
+		NewDeviceClassificationTagDataSource,
 		NewDeviceClassificationTagListDataSource,
 		NewDNSProfileV2DataSource,
 		NewDNSProfileV2ListDataSource,

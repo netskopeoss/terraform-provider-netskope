@@ -3,7 +3,7 @@
 This document tracks test parameters, coverage, and dependencies across all
 acceptance tests. Update this file when adding or modifying tests.
 
-Last updated: 2026-02-25
+Last updated: 2026-04-22
 
 ---
 
@@ -21,29 +21,72 @@ TF_ACC=1 go test -v ./internal/provider/ -run "TestAccDrift_" -timeout 30m
 
 # Specific drift test
 TF_ACC=1 go test -v ./internal/provider/ -run "TestAccDrift_IPSecTunnel_Basic" -timeout 30m
+
+# Device classification tests
+TF_ACC=1 go test -v ./internal/provider/ -run "TestAccDeviceClassification" -timeout 30m
+
+# Rule placement tests
+TF_ACC=1 go test -v ./internal/provider/ -run "TestAccNPARules_ruleOrder" -timeout 30m
 ```
 
 Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 
 ---
 
-## Latest Results (0.3.6 - 2026-02-25)
+## Latest Results (0.4.2 - 2026-04-20)
 
 | Metric | Count |
 |--------|-------|
-| **Total Tests** | 110 |
-| **Passed** | 107 |
+| **Total Tests** | 118 |
+| **Passed** | 112 |
 | **Failed** | 0 |
-| **Skipped** | 3 |
+| **Skipped** | 6 |
 
 ### Test Breakdown
 
 | Category | Count |
 |----------|-------|
-| Acceptance tests (resource CRUD) | 50 |
-| Acceptance tests (data sources) | 16 |
+| Acceptance tests (resource CRUD) | 56 |
+| Acceptance tests (data sources) | 20 |
 | Acceptance tests (drift detection) | 22 |
 | Unit tests (plan modifier helpers) | 22 |
+
+### Changes Since 0.3.6
+
+#### Added in v0.4.0
+
+| Test | File | Description |
+|------|------|-------------|
+| `TestAccRBACLabel_basic` | `rbaclabel_resource_test.go` | Create, verify, import |
+| `TestAccRBACLabel_update` | `rbaclabel_resource_test.go` | Update name, color |
+| `TestAccRBACLabel_hierarchy` | `rbaclabel_resource_test.go` | Parent/child label hierarchy |
+| `TestAccRBACLabelDataSource_basic` | `rbaclabel_resource_test.go` | Single label data source |
+| `TestAccRBACLabel_withPublisher` | `rbaclabel_resource_test.go` | Label assignment to publisher |
+| `TestAccRBACLabel_withPrivateApp` | `rbaclabel_resource_test.go` | Label assignment to private app |
+| `TestAccRBACLabelListDataSource_basic` | `rbaclabel_resource_test.go` | List all labels |
+| `TestAccDNSProfileV2_basic` | `dnsprofilev2_resource_test.go` | Basic DNS profile CRUD |
+| `TestAccDNSProfileV2_update` | `dnsprofilev2_resource_test.go` | Update DNS profile |
+| `TestAccDNSProfileV2_withSecurityCategories` | `dnsprofilev2_resource_test.go` | Security category actions |
+| `TestAccDNSProfileV2_withTunnelConfig` | `dnsprofilev2_resource_test.go` | Tunnel detection config |
+| `TestAccDNSProfileV2_withCustomConfig` | `dnsprofilev2_resource_test.go` | Custom DNS server |
+| `TestAccDNSProfileV2_withDomainLists` | `dnsprofilev2_resource_test.go` | Domain allow/block lists |
+| `TestAccDNSProfileV2_fullConfig` | `dnsprofilev2_resource_test.go` | All options |
+| `TestAccDNSProfileV2_blockAllExceptAllowList` | `dnsprofilev2_resource_test.go` | Block-all with allowlist |
+| `TestAccDNSProfileV2_withTunnelAllowList` | `dnsprofilev2_resource_test.go` | Tunnel allow list |
+| `TestAccDNSProfileV2DataSource_basic` | `dnsprofilev2_resource_test.go` | DNS profile data source |
+| `TestAccDNSProfileV2ListDataSource_basic` | `dnsprofilev2_resource_test.go` | DNS profile list data source |
+| `TestAccDNSProfileV2_import` | `dnsprofilev2_resource_test.go` | Import state |
+
+#### Added in v0.4.2
+
+| Test | File | Description |
+|------|------|-------------|
+| `TestAccDeviceClassificationTagListDataSource_basic` | `deviceclassificationtag_data_source_test.go` | List all device classification tags |
+| `TestAccDeviceClassificationOptionsListDataSource_basic` | `deviceclassificationtag_data_source_test.go` | List classification options |
+| `TestAccDeviceClassificationTag_basic` | `deviceclassificationtag_resource_test.go` | Tag CRUD with import |
+| `TestAccDeviceClassificationTag_update` | `deviceclassificationtag_resource_test.go` | Tag name/description update |
+| `TestAccNPARules_ruleOrderBottom` | `nparules_resource_test.go` | Rule placement order=bottom verification |
+| `TestAccNPARules_ruleOrderBefore` | `nparules_resource_test.go` | Rule placement order=before verification |
 
 ### Skips
 
@@ -51,7 +94,10 @@ Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 |------|--------|
 | `TestAccNPAPolicyGroups_update` | Provider bug: missing `new_order` parameter |
 | `TestAccNPAPublishersAlertsConfiguration_basic` | Valid `event_types` not documented by API |
-| `TestAccNPARules_denyRule` | Block action requires DLP/Threat Protection profile |
+| `TestAccNPARules_denyRule` | API template name/filename mismatch (KNOWN_API_ISSUES #13) |
+| `TestAccDestinationProfile_basic` | Pending tenant license enablement |
+| `TestAccDestinationProfile_update` | Pending tenant license enablement |
+| `TestAccIPSStatusDataSource_basic` | Pending tenant license enablement |
 
 ---
 
@@ -286,9 +332,9 @@ Fields tested per resource across test types. Columns:
 | rule_data.match_criteria_action | x | | | x | | Only "allow" tested |
 | rule_data.private_apps | x | | | x | | References private app |
 | rule_data.access_method | x | | | x | | "Client" only |
-| rule_data.device_classification_id | | | | | | **NOT TESTED** — type mismatch fixed in 0.3.6, needs test tenant with device classifications |
-| rule_order.order | x | | | | x | "top" and "after" tested |
-| rule_order.rule_id | | | | | x | BUG-003 regression test |
+| rule_data.device_classification_id | | | | | | Tested indirectly via device classification tag resource |
+| rule_order.order | x | | | | x | "top", "after", "before", "bottom" all tested (0.4.2) |
+| rule_order.rule_id | | | | | x | BUG-003 regression test (0.4.2) |
 | (concurrency) | | | | | x | 3 independent rules, exercises BUG-008 mutex (0.3.6) |
 
 ### netskope_npa_publisher_upgrade_profile
@@ -316,6 +362,38 @@ Fields tested per resource across test types. Columns:
 | Field | C | U | I | D | O | Notes |
 |-------|---|---|---|---|---|-------|
 | publisher_id | x | | | | | References publisher resource |
+
+### netskope_rbac_label (v0.4.0)
+
+| Field | C | U | I | D | O | Notes |
+|-------|---|---|---|---|---|-------|
+| name | x | x | x | | | |
+| parent_id | | | | | x | Hierarchy test |
+| color | x | x | x | | | |
+| label_id | x | | x | | | Import by label_id |
+
+### netskope_dns_profile_v2 (v0.4.0)
+
+| Field | C | U | I | D | O | Notes |
+|-------|---|---|---|---|---|-------|
+| name | x | x | x | | | |
+| description | x | x | | | | |
+| log_traffic | x | | | | | |
+| domain_config.allow_list | | | | | x | withDomainLists test |
+| domain_config.block_list | | | | | x | withDomainLists test |
+| domain_config.security_categories | | | | | x | withSecurityCategories test |
+| custom_config | | | | | x | withCustomConfig test |
+| tunnel_config | | | | | x | withTunnelConfig test |
+
+### netskope_device_classification_tag (v0.4.2)
+
+| Field | C | U | I | D | O | Notes |
+|-------|---|---|---|---|---|-------|
+| name | x | x | x | | | |
+| description | x | x | | | | |
+| tag_id | x | | x | | | Import by tag_id |
+| priority | | | | | | Computed, server-managed |
+| policy_names | | | | | | Computed, read-only |
 
 ### netskope_npa_publishers_alerts_configuration
 
@@ -349,6 +427,16 @@ All tests SKIPPED - valid event_types not documented by API.
 | netskope_npa_publishers_host_os_versions | **NO** | Missing test file |
 | netskope_npa_publishers_releases_list | No | Used indirectly by upgrade profile tests |
 | netskope_npa_publisher_apps_list | **NO** | Missing test file |
+| netskope_rbac_label | Yes | label_id, name, color via AttrPair | v0.4.0 |
+| netskope_rbac_label_list | Yes | labels.#, total_count is set | v0.4.0 |
+| netskope_dns_profile_v2 | Yes | name via AttrPair | v0.4.0 |
+| netskope_dns_profile_v2_list | Yes | profiles.# is set | v0.4.0 |
+| netskope_destination_profile | **SKIPPED** | Pending tenant license | v0.4.0 |
+| netskope_destination_profile_list | **SKIPPED** | Pending tenant license | v0.4.0 |
+| netskope_ips_status | **SKIPPED** | Pending tenant license | v0.4.0 |
+| netskope_device_classification_tag | Yes | tag_id, name, description | v0.4.2 |
+| netskope_device_classification_tag_list | Yes | tags.#, tags.0.tag_id, tags.0.name | v0.4.2 |
+| netskope_device_classification_options_list | Yes | options.#, options.0.key, options.0.value | v0.4.2 |
 
 ---
 
@@ -368,6 +456,9 @@ Important for understanding cascading failures and cleanup.
 | `nparules_data_source_test.go` | Policy Group, Publisher, Private App, Rule |
 | `nparuleslist_data_source_test.go` | Policy Group, Publisher, Private App, Rule |
 | `gretunnel_data_source_test.go` | GRE Tunnel |
+| `rbaclabel_resource_test.go` | None (standalone); `withPublisher` creates Publisher; `withPrivateApp` creates Publisher + Private App |
+| `deviceclassificationtag_resource_test.go` | None (standalone) |
+| `deviceclassificationtag_data_source_test.go` | None (uses existing tags on tenant) |
 
 All other tests create only the resource under test.
 
@@ -402,6 +493,10 @@ All other tests create only the resource under test.
 | `netskope_npa_rules` | Concurrent rule creation failed with duplicate primary key | **Fixed** (0.3.6) - BUG-008, provider-side mutex serializer |
 | `netskope_npa_rules` | Rule creation failed after app creation (eventual consistency) | **Fixed** (0.3.6) - BUG-009, retry with exponential backoff |
 | `netskope_npa_private_app` | `bypass_uris: []` on PUT caused SQL error | **Fixed** (0.3.6) - Hook strips empty `bypass_uris` from PUT requests |
+| `netskope_npa_rules` | `device_classification_id` type mismatch (string vs int) | **Fixed** (0.3.6) - BeforeRequest hook coerces string→int |
+| `netskope_npa_private_app` | `label_ids` not populated from API response | **Fixed** (0.4.0) - AfterSuccess hook populates from response |
+| `netskope_device_classification_tag` | Create returns `{status,data:[id]}` not full object | **Fixed** (0.4.2) - AfterSuccess hook does follow-up GET |
+| `netskope_device_classification_tag` | Update returns `{status:true}` not full object | **Fixed** (0.4.2) - AfterSuccess hook does follow-up GET |
 
 ---
 
@@ -419,6 +514,8 @@ in a different format or does not return them at all.
 | `netskope_npa_rules` | `rule_order`, `rule_data`, `description`, `group_id` | Complex computed fields |
 | `netskope_npa_publisher_upgrade_profile` | `next_update_time`, `created_at`, `updated_at` | Server-managed timestamps |
 | `netskope_npa_local_broker` | `label_ids` | Write-only field |
+| `netskope_rbac_label` | (none) | All fields verified on import |
+| `netskope_device_classification_tag` | (none) | All fields verified on import |
 
 ---
 

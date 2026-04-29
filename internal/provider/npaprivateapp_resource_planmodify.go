@@ -56,6 +56,10 @@ func (r *NPAPrivateAppResource) ModifyPlan(ctx context.Context, req resource.Mod
 	// value to suppress the false diff.
 	suppressClientlessHostnameDrift(ctx, req, resp)
 
+	// BUG-011: Normalize whitespace around commas in multi-host hostnames
+	// to prevent false drift from API whitespace normalization.
+	suppressHostnameWhitespaceDrift(ctx, req, resp)
+
 	// Normalize list ordering to prevent false drift from position differences.
 	normalizeProtocolsOrder(ctx, req, resp)
 	normalizePublishersOrder(ctx, req, resp)
@@ -297,6 +301,34 @@ func normalizeTagsOrder(ctx context.Context, req resource.ModifyPlanRequest, res
 	}
 
 	resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, path.Root("tags"), stateList)...)
+}
+
+// suppressHostnameWhitespaceDrift suppresses false diffs caused by the API
+// normalizing whitespace around commas in multi-host private_app_hostname
+// values. BUG-011: e.g. "host1,host2" vs "host1, host2".
+func suppressHostnameWhitespaceDrift(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	var planHost, stateHost types.String
+	resp.Diagnostics.Append(req.Plan.GetAttribute(ctx, path.Root("private_app_hostname"), &planHost)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("private_app_hostname"), &stateHost)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if planHost.IsNull() || planHost.IsUnknown() || stateHost.IsNull() || stateHost.IsUnknown() {
+		return
+	}
+
+	normalize := func(s string) string {
+		parts := strings.Split(s, ",")
+		for i, p := range parts {
+			parts[i] = strings.TrimSpace(p)
+		}
+		return strings.Join(parts, ",")
+	}
+
+	if normalize(planHost.ValueString()) == normalize(stateHost.ValueString()) {
+		resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, path.Root("private_app_hostname"), stateHost)...)
+	}
 }
 
 // suppressClientlessHostnameDrift preserves the state value of
