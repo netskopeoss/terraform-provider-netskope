@@ -255,3 +255,71 @@ func TestAccNPARules_concurrentCreate(t *testing.T) {
 		},
 	})
 }
+
+// TestAccNPARules_withDeviceClassification verifies that a rule with
+// device_classification_id works end-to-end, including:
+// - The BeforeRequest hook string→int conversion
+// - The plan modifier normalization on refresh
+func TestAccNPARules_withDeviceClassification(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_rules.test"
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_name", rName),
+					resource.TestCheckResourceAttr(resourceName, "enabled", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.device_classification_id.#", "1"),
+				),
+			},
+		},
+	})
+}
+
+// TestAccNPARules_updateFields verifies that updating rule_name, description,
+// and adding private_apps works correctly through the update path.
+func TestAccNPARules_updateFields(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_rules.test"
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_name", rName+"-original"),
+					resource.TestCheckResourceAttr(resourceName, "description", "Original description"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.private_apps.#", "1"),
+				),
+			},
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_name", rName+"-updated"),
+					resource.TestCheckResourceAttr(resourceName, "description", "Updated description"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.private_apps.#", "2"),
+				),
+			},
+		},
+	})
+}
