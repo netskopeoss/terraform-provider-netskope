@@ -56,6 +56,11 @@ func initHooks(h *Hooks) {
 	privateAppReq := &privateAppRequestHook{}
 	h.registerBeforeRequestHook(privateAppReq)
 
+	// Policy template hook - strips file name from GET response to prevent drift
+	// between display name in config and file name returned by API (issue #79)
+	policyTemplate := &policyTemplateResponseHook{}
+	h.registerAfterSuccessHook(policyTemplate)
+
 	// Device classification tags - response transformations for all DC endpoints
 	dcTags := &deviceClassificationTagsResponse{}
 	h.registerAfterSuccessHook(dcTags)

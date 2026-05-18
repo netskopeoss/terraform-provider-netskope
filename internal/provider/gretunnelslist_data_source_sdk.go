@@ -31,6 +31,30 @@ func (r *GRETunnelsListDataSourceModel) RefreshFromSharedGreTunnelListResponse(c
 			result.TunnelID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resultItem.TunnelID))
 			result.Vendor = types.StringPointerValue(resultItem.Vendor)
 
+			// Extract pop_names from Pops status items (BUG-014)
+			var popNames []types.String
+			for _, pop := range resultItem.Pops {
+				if pop.Name != nil {
+					popNames = append(popNames, types.StringValue(*pop.Name))
+				}
+			}
+			result.PopNames = popNames
+
+			// Extract options (XFF config) (BUG-014)
+			if resultItem.Options != nil && resultItem.Options.Xff != nil {
+				xff := resultItem.Options.Xff
+				var xffIpList []types.String
+				for _, ip := range xff.Iplist {
+					xffIpList = append(xffIpList, types.StringValue(ip))
+				}
+				result.Options = &tfTypes.GreTunnelRequestOptions{
+					Xff: &tfTypes.GreTunnelRequestXff{
+						XffEnabled: types.BoolPointerValue(xff.Enabled),
+						XffIPList:  xffIpList,
+					},
+				}
+			}
+
 			r.Result = append(r.Result, result)
 		}
 		r.Total = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.Total))

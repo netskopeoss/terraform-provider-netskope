@@ -88,6 +88,16 @@ Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 | `TestAccNPARules_ruleOrderBottom` | `nparules_resource_test.go` | Rule placement order=bottom verification |
 | `TestAccNPARules_ruleOrderBefore` | `nparules_resource_test.go` | Rule placement order=before verification |
 
+#### Added in v0.4.4
+
+| Test | File | Description |
+|------|------|-------------|
+| `TestBulkAppIdCopiedToId` | `hookPublisherSort_test.go` | Unit test: app_id → id copy in bulk hook (BUG-012) |
+| `TestBulkAppIdNotOverwrittenWhenIdExists` | `hookPublisherSort_test.go` | Unit test: id not overwritten when already present |
+| `TestAccIPSecTunnelsListDataSource_basic` | `ipsectunnelslist_data_source_test.go` | List IPSec tunnels, verify pop_names populated (BUG-015) |
+
+Note: BUG-016 (`group_name` on `netskope_npa_rules`) is covered by existing tests — `group_name` is now a Computed attribute returned in state for all rules tests.
+
 ### Skips
 
 | Test | Reason |
@@ -406,15 +416,15 @@ All tests SKIPPED - valid event_types not documented by API.
 | Data Source | Test Exists | Checks Performed | Notes |
 |-------------|:-----------:|-----------------|-------|
 | netskope_gre_tunnel | Yes | tunnel_id, site, source_ip via AttrPair | |
-| netskope_gre_tunnels_list | Yes | result.# is set | |
+| netskope_gre_tunnels_list | Yes | result.#, pop_names.# > 0 (BUG-014) | |
 | netskope_grepop | Yes | pop_id, pop_name, gateway | |
 | netskope_grepo_ps_list | Yes | result.# is set | |
 | netskope_ip_sec_tunnel | **NO** | Missing test file |
-| netskope_ip_sec_tunnels_list | **NO** | Missing test file |
+| netskope_ip_sec_tunnels_list | Yes | result.#, pop_names.# > 0 (BUG-015) |
 | netskope_ip_sec_pop | **NO** | Missing test file |
 | netskope_ip_sec_po_ps_list | **NO** | Missing test file |
 | netskope_npa_private_app | Yes | private_app_id, name, hostname via AttrPair |
-| netskope_npa_private_apps_list | Yes | private_apps.# is set |
+| netskope_npa_private_apps_list | Yes | private_apps.#, private_app_id > 0 (BUG-012) |
 | netskope_npa_publisher | Yes | publisher_id, publisher_name via AttrPair |
 | netskope_npa_publishers_list | Yes | data.publishers.# is set |
 | netskope_npa_policy_groups | Yes | id, group_name via AttrPair |
@@ -497,6 +507,7 @@ All other tests create only the resource under test.
 | `netskope_npa_private_app` | `label_ids` not populated from API response | **Fixed** (0.4.0) - AfterSuccess hook populates from response |
 | `netskope_device_classification_tag` | Create returns `{status,data:[id]}` not full object | **Fixed** (0.4.2) - AfterSuccess hook does follow-up GET |
 | `netskope_device_classification_tag` | Update returns `{status:true}` not full object | **Fixed** (0.4.2) - AfterSuccess hook does follow-up GET |
+| `netskope_npa_private_apps_list` | List data source returns `private_app_id = 0` for all apps | **Fixed** (0.4.4) - AfterSuccess hook copies `app_id` → `id` (BUG-012) |
 
 ---
 

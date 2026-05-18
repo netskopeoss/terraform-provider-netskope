@@ -43,6 +43,7 @@ type NPARulesResourceModel struct {
 	Description types.String               `tfsdk:"description"`
 	Enabled     types.String               `tfsdk:"enabled"`
 	GroupID     types.String               `tfsdk:"group_id"`
+	GroupName   types.String               `tfsdk:"group_name"`
 	ID          types.String               `tfsdk:"id"`
 	RuleData    *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
 	RuleName    types.String               `tfsdk:"rule_name"`
@@ -66,6 +67,10 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 			},
 			"group_id": schema.StringAttribute{
 				Optional: true,
+			},
+			"group_name": schema.StringAttribute{
+				Computed:    true,
+				Description: `Policy group name this rule belongs to (read-only, returned by API)`,
 			},
 			"id": schema.StringAttribute{
 				Computed:    true,

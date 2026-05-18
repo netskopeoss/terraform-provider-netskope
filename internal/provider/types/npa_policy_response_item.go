@@ -7,8 +7,9 @@ import (
 )
 
 type NpaPolicyResponseItem struct {
-	Enabled  types.String       `tfsdk:"enabled"`
-	ID       types.String       `tfsdk:"id"`
-	RuleData *NpaPolicyRuleData `tfsdk:"rule_data"`
-	RuleName types.String       `tfsdk:"rule_name"`
+	Enabled   types.String       `tfsdk:"enabled"`
+	GroupName types.String       `tfsdk:"group_name"`
+	ID        types.String       `tfsdk:"id"`
+	RuleData  *NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleName  types.String       `tfsdk:"rule_name"`
 }

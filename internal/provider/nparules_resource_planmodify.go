@@ -18,6 +18,7 @@ package provider
 import (
 	"context"
 	"sort"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -33,6 +34,10 @@ func (r *NPARulesResource) ModifyPlan(ctx context.Context, req resource.ModifyPl
 		return
 	}
 
+	// Preserve computed-only attributes that don't change after creation.
+	// Without this, Terraform shows (known after apply) on every plan.
+	preserveComputedStringAttr(ctx, req, resp, path.Root("id"))
+
 	// All Computed+Optional list attributes under rule_data.
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("private_apps"))
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("users"))
@@ -43,6 +48,64 @@ func (r *NPARulesResource) ModifyPlan(ctx context.Context, req resource.ModifyPl
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("net_location_obj"))
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("private_app_tags"))
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("device_classification_id"))
+
+	// Suppress template display-name/file-name drift.
+	// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/79
+	suppressTemplateDrift(ctx, req, resp)
+}
+
+// suppressTemplateDrift suppresses the perpetual diff between the template
+// display name (in config) and the file name (returned by API).
+// The API accepts display names on create/update but returns file names on GET.
+// We set the plan template to the state value (the file name) so Terraform
+// sees no change. The display name is only sent when other fields change.
+// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/79
+func suppressTemplateDrift(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	templatePath := path.Root("rule_data").AtName("match_criteria_action").AtName("template")
+
+	var configVal, stateVal types.String
+
+	resp.Diagnostics.Append(req.Config.GetAttribute(ctx, templatePath, &configVal)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, templatePath, &stateVal)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Skip if either is null/unknown.
+	if configVal.IsNull() || configVal.IsUnknown() || stateVal.IsNull() || stateVal.IsUnknown() {
+		return
+	}
+
+	configStr := configVal.ValueString()
+	stateStr := stateVal.ValueString()
+
+	// If they match, nothing to do.
+	if configStr == stateStr {
+		return
+	}
+
+	// If state has a file name and config has a display name,
+	// use the state value in the plan to suppress the false diff.
+	if strings.HasSuffix(stateStr, ".html") && !strings.HasSuffix(configStr, ".html") {
+		resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, templatePath, stateVal)...)
+	}
+}
+
+// preserveComputedStringAttr copies the state value to the plan for a
+// computed-only attribute. Without this, computed attributes show
+// (known after apply) on every refresh plan.
+func preserveComputedStringAttr(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse, attrPath path.Path) {
+	var stateVal, planVal types.String
+
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, attrPath, &stateVal)...)
+	resp.Diagnostics.Append(req.Plan.GetAttribute(ctx, attrPath, &planVal)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if !stateVal.IsNull() && !stateVal.IsUnknown() && planVal.IsUnknown() {
+		resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, attrPath, stateVal)...)
+	}
 }
 
 // normalizeStringListAttr checks if plan and state have the same set of string

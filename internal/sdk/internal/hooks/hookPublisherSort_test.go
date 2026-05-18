@@ -703,6 +703,126 @@ func TestEmptyListsDoNotPanic(t *testing.T) {
 	}
 }
 
+// TestBulkAppIdCopiedToId verifies that the bulk hook copies app_id → id
+// when id is missing from the list response. Without this, private_app_id
+// is always 0 in the data source. See docs/bugs/BUG-012.
+func TestBulkAppIdCopiedToId(t *testing.T) {
+	hook := &myBulkAppResponse{}
+
+	// Simulate list endpoint response: has app_id but no id
+	body := map[string]interface{}{
+		"status": "success",
+		"data": map[string]interface{}{
+			"private_apps": []map[string]interface{}{
+				{
+					"app_id":                       float64(6802),
+					"app_name":                     "[Database Cluster]",
+					"host":                         "db.internal",
+					"protocols":                    []interface{}{},
+					"service_publisher_assignments": []interface{}{},
+					"tags":                         []interface{}{},
+				},
+				{
+					"app_id":                       float64(7100),
+					"app_name":                     "[Web Portal]",
+					"host":                         "web.internal",
+					"protocols":                    []interface{}{},
+					"service_publisher_assignments": []interface{}{},
+					"tags":                         []interface{}{},
+				},
+			},
+		},
+	}
+	b, err := json.Marshal(body)
+	if err != nil {
+		t.Fatalf("failed to marshal test response: %v", err)
+	}
+	res := &http.Response{
+		StatusCode: 200,
+		Body:       io.NopCloser(strings.NewReader(string(b))),
+		Header:     make(http.Header),
+	}
+
+	ctx := hookCtxForOp("listNPAPrivateApps")
+	res, err = hook.AfterSuccess(ctx, res)
+	if err != nil {
+		t.Fatalf("AfterSuccess returned error: %v", err)
+	}
+
+	// Parse and verify id was populated from app_id
+	resultBody, _ := io.ReadAll(res.Body)
+	var parsed map[string]interface{}
+	if err := json.Unmarshal(resultBody, &parsed); err != nil {
+		t.Fatalf("failed to unmarshal result: %v", err)
+	}
+	data := parsed["data"].(map[string]interface{})
+	apps := data["private_apps"].([]interface{})
+
+	expectedIDs := []float64{6802, 7100}
+	for i, expectedID := range expectedIDs {
+		app := apps[i].(map[string]interface{})
+		gotID, ok := app["id"].(float64)
+		if !ok {
+			t.Fatalf("app[%d]: id field missing or not a number", i)
+		}
+		if gotID != expectedID {
+			t.Errorf("app[%d]: expected id=%.0f, got=%.0f", i, expectedID, gotID)
+		}
+	}
+}
+
+// TestBulkAppIdNotOverwrittenWhenIdExists verifies that when both app_id and id
+// are present, the hook does NOT overwrite the existing id value.
+func TestBulkAppIdNotOverwrittenWhenIdExists(t *testing.T) {
+	hook := &myBulkAppResponse{}
+
+	body := map[string]interface{}{
+		"status": "success",
+		"data": map[string]interface{}{
+			"private_apps": []map[string]interface{}{
+				{
+					"app_id":                       float64(6802),
+					"id":                           float64(6802),
+					"app_name":                     "[Test App]",
+					"host":                         "test.internal",
+					"protocols":                    []interface{}{},
+					"service_publisher_assignments": []interface{}{},
+					"tags":                         []interface{}{},
+				},
+			},
+		},
+	}
+	b, err := json.Marshal(body)
+	if err != nil {
+		t.Fatalf("failed to marshal test response: %v", err)
+	}
+	res := &http.Response{
+		StatusCode: 200,
+		Body:       io.NopCloser(strings.NewReader(string(b))),
+		Header:     make(http.Header),
+	}
+
+	ctx := hookCtxForOp("listNPAPrivateApps")
+	res, err = hook.AfterSuccess(ctx, res)
+	if err != nil {
+		t.Fatalf("AfterSuccess returned error: %v", err)
+	}
+
+	resultBody, _ := io.ReadAll(res.Body)
+	var parsed map[string]interface{}
+	if err := json.Unmarshal(resultBody, &parsed); err != nil {
+		t.Fatalf("failed to unmarshal result: %v", err)
+	}
+	data := parsed["data"].(map[string]interface{})
+	apps := data["private_apps"].([]interface{})
+	app := apps[0].(map[string]interface{})
+
+	gotID := app["id"].(float64)
+	if gotID != 6802 {
+		t.Errorf("expected id=6802, got=%.0f (should not be overwritten)", gotID)
+	}
+}
+
 // TestBulkEmptyListsDoNotPanic verifies that the bulk hook handles empty lists.
 func TestBulkEmptyListsDoNotPanic(t *testing.T) {
 	hook := &myBulkAppResponse{}
