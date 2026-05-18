@@ -61,6 +61,7 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 
 	if resp != nil {
 		r.Enabled = types.StringPointerValue(resp.Enabled)
+		r.GroupName = types.StringPointerValue(resp.GroupName)
 		r.ID = types.StringPointerValue(resp.ID)
 		if resp.RuleData == nil {
 			r.RuleData = nil

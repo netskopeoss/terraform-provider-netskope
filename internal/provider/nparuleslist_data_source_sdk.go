@@ -21,6 +21,7 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 			var data tfTypes.NpaPolicyResponseItem
 
 			data.Enabled = types.StringPointerValue(dataItem.Enabled)
+			data.GroupName = types.StringPointerValue(dataItem.GroupName)
 			data.ID = types.StringPointerValue(dataItem.ID)
 			if dataItem.RuleData == nil {
 				data.RuleData = nil
