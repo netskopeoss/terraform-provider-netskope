@@ -56,6 +56,10 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 						"enabled": schema.StringAttribute{
 							Computed: true,
 						},
+						"group_name": schema.StringAttribute{
+							Computed:    true,
+							Description: `Policy group name this rule belongs to (read-only, returned by API)`,
+						},
 						"id": schema.StringAttribute{
 							Computed: true,
 						},

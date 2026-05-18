@@ -3,7 +3,8 @@
 package shared
 
 type NpaPolicyResponseItem struct {
-	Enabled    *string            `json:"enabled,omitempty"`
+	Enabled *string `json:"enabled,omitempty"`
+	// Policy group name this rule belongs to (read-only, returned by API)
 	GroupName  *string            `json:"group_name,omitempty"`
 	ModifyBy   *string            `json:"modify_by,omitempty"`
 	ModifyTime *string            `json:"modify_time,omitempty"`
