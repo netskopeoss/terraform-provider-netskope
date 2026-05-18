@@ -1560,6 +1560,8 @@ resource "netskope_destination_profile" "test" {
 // the plan modifier suppresses the diff against the config display name.
 // See: https://github.com/netskopeoss/terraform-provider-netskope/issues/79
 func TestAccDrift_NPARules_BlockTemplate(t *testing.T) {
+	t.Skip("API tokens cannot create block rules — KNOWN_API_ISSUES #13")
+
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 
 	resource.Test(t, resource.TestCase{
