@@ -96,6 +96,8 @@ Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 | `TestBulkAppIdNotOverwrittenWhenIdExists` | `hookPublisherSort_test.go` | Unit test: id not overwritten when already present |
 | `TestAccIPSecTunnelsListDataSource_basic` | `ipsectunnelslist_data_source_test.go` | List IPSec tunnels, verify pop_names populated (BUG-015) |
 
+Note: BUG-016 (`group_name` on `netskope_npa_rules`) is covered by existing tests — `group_name` is now a Computed attribute returned in state for all rules tests.
+
 ### Skips
 
 | Test | Reason |
