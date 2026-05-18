@@ -116,6 +116,7 @@ func TestAccNPARules_import(t *testing.T) {
 }
 
 func TestAccNPARules_denyRule(t *testing.T) {
+	t.Skip("API tokens cannot create block rules — KNOWN_API_ISSUES #13")
 
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
