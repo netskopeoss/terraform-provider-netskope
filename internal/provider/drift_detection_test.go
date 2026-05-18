@@ -1555,6 +1555,189 @@ resource "netskope_destination_profile" "test" {
 `, testAccProviderConfig(), name)
 }
 
+// TestAccDrift_NPARules_BlockTemplate verifies no perpetual drift on block rules
+// with template display name. The API returns the file name (e.g. "2.html") but
+// the plan modifier suppresses the diff against the config display name.
+// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/79
+func TestAccDrift_NPARules_BlockTemplate(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftNPARulesBlockTemplateConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_npa_rules.test"),
+				),
+			},
+			{
+				Config: testAccDriftNPARulesBlockTemplateConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+// TestAccDrift_NPARules_DeviceClassification verifies no perpetual drift on rules
+// with device_classification_id. The plan modifier normalizes the list ordering.
+func TestAccDrift_NPARules_DeviceClassification(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftNPARulesDeviceClassificationConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_npa_rules.test"),
+				),
+			},
+			{
+				Config: testAccDriftNPARulesDeviceClassificationConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftNPARulesBlockTemplateConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_npa_policy_groups" "test" {
+  group_name = "%s-group"
+
+  group_order = {
+    group_id = "2"
+    order    = "after"
+  }
+}
+
+resource "netskope_npa_publisher" "test" {
+  publisher_name = "%s-publisher"
+}
+
+resource "netskope_npa_private_app" "test" {
+  private_app_name     = "%s-app"
+  private_app_hostname = "192.168.1.100"
+
+  protocols = [
+    {
+      port     = "443"
+      protocol = "tcp"
+    }
+  ]
+
+  publishers = [
+    {
+      publisher_id   = tostring(netskope_npa_publisher.test.publisher_id)
+      publisher_name = netskope_npa_publisher.test.publisher_name
+    }
+  ]
+
+  use_publisher_dns       = true
+  trust_self_signed_certs = false
+}
+
+resource "netskope_npa_rules" "test" {
+  rule_name   = %q
+  description = "Block template drift test"
+  enabled     = "1"
+  group_id    = netskope_npa_policy_groups.test.id
+
+  rule_data = {
+    policy_type = "private-app"
+
+    match_criteria_action = {
+      action_name = "block"
+      emit_alert  = true
+      template    = "tf-test-template"
+    }
+
+    private_apps  = [netskope_npa_private_app.test.private_app_name]
+    access_method = ["Client"]
+  }
+}
+`, testAccProviderConfig(), name, name, name, name)
+}
+
+func testAccDriftNPARulesDeviceClassificationConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_npa_policy_groups" "test" {
+  group_name = "%s-group"
+
+  group_order = {
+    group_id = "2"
+    order    = "after"
+  }
+}
+
+resource "netskope_npa_publisher" "test" {
+  publisher_name = "%s-publisher"
+}
+
+resource "netskope_npa_private_app" "test" {
+  private_app_name     = "%s-app"
+  private_app_hostname = "192.168.1.100"
+
+  protocols = [
+    {
+      port     = "443"
+      protocol = "tcp"
+    }
+  ]
+
+  publishers = [
+    {
+      publisher_id   = tostring(netskope_npa_publisher.test.publisher_id)
+      publisher_name = netskope_npa_publisher.test.publisher_name
+    }
+  ]
+
+  use_publisher_dns       = true
+  trust_self_signed_certs = false
+}
+
+resource "netskope_device_classification_tag" "test" {
+  name = "%s-tag"
+}
+
+resource "netskope_npa_rules" "test" {
+  rule_name   = %q
+  description = "Device classification drift test"
+  enabled     = "1"
+  group_id    = netskope_npa_policy_groups.test.id
+
+  rule_data = {
+    policy_type = "private-app"
+
+    match_criteria_action = {
+      action_name = "allow"
+    }
+
+    private_apps             = [netskope_npa_private_app.test.private_app_name]
+    access_method            = ["Client"]
+    device_classification_id = [tostring(netskope_device_classification_tag.test.tag_id)]
+  }
+}
+`, testAccProviderConfig(), name, name, name, name, name)
+}
+
 func testAccDriftDestinationProfileMinimalConfig(name string) string {
 	return fmt.Sprintf(`
 %s

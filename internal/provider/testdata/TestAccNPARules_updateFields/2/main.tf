@@ -15,8 +15,8 @@ resource "netskope_npa_publisher" "test" {
   publisher_name = "${var.name}-publisher"
 }
 
-resource "netskope_npa_private_app" "test" {
-  private_app_name     = "${var.name}-app"
+resource "netskope_npa_private_app" "app1" {
+  private_app_name     = "${var.name}-app1"
   private_app_hostname = "192.168.1.100"
 
   protocols = [
@@ -37,9 +37,31 @@ resource "netskope_npa_private_app" "test" {
   trust_self_signed_certs = false
 }
 
+resource "netskope_npa_private_app" "app2" {
+  private_app_name     = "${var.name}-app2"
+  private_app_hostname = "192.168.1.101"
+
+  protocols = [
+    {
+      port     = "443"
+      protocol = "tcp"
+    }
+  ]
+
+  publishers = [
+    {
+      publisher_id   = tostring(netskope_npa_publisher.test.publisher_id)
+      publisher_name = netskope_npa_publisher.test.publisher_name
+    }
+  ]
+
+  use_publisher_dns       = true
+  trust_self_signed_certs = false
+}
+
 resource "netskope_npa_rules" "test" {
-  rule_name   = var.name
-  description = "Acceptance test deny rule"
+  rule_name   = "${var.name}-updated"
+  description = "Updated description"
   enabled     = "1"
   group_id    = netskope_npa_policy_groups.test.id
 
@@ -47,12 +69,13 @@ resource "netskope_npa_rules" "test" {
     policy_type = "private-app"
 
     match_criteria_action = {
-      action_name = "block"
-      emit_alert  = true
-      template    = "tf-test-template"
+      action_name = "allow"
     }
 
-    private_apps  = [netskope_npa_private_app.test.private_app_name]
+    private_apps = [
+      netskope_npa_private_app.app1.private_app_name,
+      netskope_npa_private_app.app2.private_app_name,
+    ]
     access_method = ["Client"]
   }
 }
