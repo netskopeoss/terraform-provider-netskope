@@ -6,10 +6,22 @@
 
 The official Terraform provider for [Netskope](https://www.netskope.com/), enabling infrastructure-as-code management of Netskope resources.
 
-## Upgrading to v0.4.2 / v0.4.3
+> **Examples:** See [terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples) for ready-to-use Terraform configurations covering NPA private apps, policy-as-code, device classification, RBAC labels, and more.
+
+## Upgrading to v0.4.4
+
+### What's New in v0.4.4
+
+- **List data sources now expose all fields needed for backup/restore workflows:**
+  - `netskope_npa_private_apps_list` — `private_app_id` now returns the correct app ID (was always 0)
+  - `netskope_gre_tunnels_list` — added `pop_names` and `options` (XFF config)
+  - `netskope_ip_sec_tunnels_list` — added `pop_names`
+- **`group_name` on NPA rules** — Rules now expose the policy group name as a Computed attribute on both the resource and data sources. Previously only `group_id` (write-only) was available.
+- **Block rule template drift fixed** — The `lifecycle { ignore_changes }` workaround is no longer needed. A plan modifier now automatically suppresses the false diff between template display names and file names.
 
 ### What's New in v0.4.3
 
+- **`netskope_npa_rules_order` resource** — Manages the list position of NPA policy rules.
 - **Fixed hostname whitespace drift** — Multi-host `private_app_hostname` values no longer cause perpetual plan diffs when the API normalizes whitespace around commas.
 
 ### What's New in v0.4.2
@@ -39,11 +51,9 @@ In v0.3.x, private apps with multiple protocols could show perpetual drift if pr
   ]
 ```
 
-### Block Rules Require `lifecycle` Workaround
+### Block Rules
 
-NPA block rules can now be created via Terraform using `match_criteria_action` with `action_name = "block"`. However, the Netskope API has an inconsistency where the `template` field accepts a **display name** on create (e.g. `"Default Template"`) but returns a **file name** on read (e.g. `"block_page.html"`). This causes Terraform to detect a diff on every plan.
-
-**You must add a `lifecycle` block to any block rule** to prevent perpetual drift:
+NPA block rules can be managed via Terraform using `match_criteria_action` with `action_name = "block"`. Use the template **display name** (e.g. `"Default Template"`) in your config — the provider automatically handles the API's inconsistency of returning file names on read.
 
 ```hcl
 resource "netskope_npa_rules" "block_example" {
@@ -56,24 +66,17 @@ resource "netskope_npa_rules" "block_example" {
 
     match_criteria_action = {
       action_name = "block"
-      template    = "Default Template"  # Use the display name, not the file name
+      template    = "Default Template"
       emit_alert  = true
     }
 
     private_apps  = [netskope_npa_private_app.example.private_app_name]
     access_method = ["Client"]
   }
-
-  # Required: The API returns the template file name (e.g. "block_page.html") on read,
-  # which differs from the display name used on create. This lifecycle block prevents
-  # Terraform from detecting a false diff on every plan.
-  lifecycle {
-    ignore_changes = [rule_data]
-  }
 }
 ```
 
-> **Note:** This workaround means Terraform will not detect changes to `rule_data` after initial creation. If you need to update rule_data fields, use `terraform taint` or remove the lifecycle block temporarily. This limitation will be removed once the API returns consistent template values. See [KNOWN_API_ISSUES.md](docs/KNOWN_API_ISSUES.md#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules) for details.
+> **Note:** Block rules must be created through the Netskope UI first, then imported into Terraform. API tokens cannot create block rules directly due to a template resolution limitation. See [KNOWN_API_ISSUES.md](docs/KNOWN_API_ISSUES.md#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules) for details.
 
 > **Allow rules are not affected** — only block rules that use the `template` field need this workaround.
 
@@ -121,17 +124,25 @@ resource "netskope_npa_publisher" "pub" {
 
 ## Features
 
-- **Device Classification Tags** - Create and manage device classification tags, and use them in NPA rules to enforce device posture requirements
-- **RBAC Labels** - Create and manage labels for Label Based Access Control (LBAC), with hierarchy support up to 4 levels
-- **Private Applications** - Create and manage private applications accessible via browser (clientless) or NPA client, with label assignment via `label_ids`
-- **Publishers** - Deploy and configure NPA publishers with upgrade profiles, alerting, and bulk operations
-- **Local Brokers** - Manage NPA local brokers and their configurations
-- **Access Policies** - Define policy groups and rules for zero-trust access control, including block rules with notification templates
-- **Destination Profiles** - Manage destination profiles with label assignment
-- **DNS Profiles** - Manage DNS security profiles with category actions, custom configs, and tunnel settings
-- **GRE Tunnels** - Manage GRE tunnel configurations and PoPs
-- **IPSec Tunnels** - Manage IPSec tunnel configurations and PoPs
-- **Full Lifecycle Management** - Create, read, update, delete, and import for all supported resources
+### Netskope Private Access (NPA)
+- **Private Applications** — Create and manage private applications accessible via browser (clientless) or NPA client, with label assignment via `label_ids`
+- **Publishers** — Deploy and configure NPA publishers with upgrade profiles, alerting, and bulk operations
+- **Local Brokers** — Manage NPA local brokers and their configurations
+- **Access Policies** — Define policy groups and rules for zero-trust access control, including block rules with notification templates and rule ordering
+
+### Steering
+- **GRE Tunnels** — Manage GRE tunnel configurations, PoPs, and XFF options
+- **IPSec Tunnels** — Manage IPSec tunnel configurations, PoPs, encryption, and rekey/reauth options
+
+### Security Profiles
+- **DNS Profiles** — Manage DNS security profiles with category actions, custom configs, and tunnel settings
+- **Destination Profiles** — Manage destination profiles with label assignment
+
+### Platform
+- **Device Classification Tags** — Create and manage device classification tags for device posture enforcement in NPA rules
+- **RBAC Labels** — Create and manage labels for Label Based Access Control (LBAC), with hierarchy support up to 4 levels
+
+- **Full Lifecycle Management** — Create, read, update, delete, and import for all supported resources
 
 ## Requirements
 
@@ -147,7 +158,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "~> 0.4.3"
+      version = "~> 0.4.4"
     }
   }
 }
@@ -313,7 +324,7 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 
 ## Examples and Tutorials
 
-See **[terraform-netskope-examples](https://github.com/netskopeoss/terraform-netskope-examples)** for:
+See **[terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples)** for:
 
 - Getting started guides for Terraform beginners
 - Step-by-step tutorials for private apps, publishers on AWS/Azure/GCP, policy-as-code
@@ -326,7 +337,7 @@ See below for version-specific upgrade notes. For full details, see the [Migrati
 
 - **From v0.2.x**: Version 0.3.x is a complete rewrite with renamed resources and changed schemas. Existing state must be re-imported. See the [Migration Guide](docs/MIGRATION_GUIDE.md).
 - **From v0.3.2**: See the [v0.3.2 to v0.3.3 upgrade section](docs/MIGRATION_GUIDE.md#upgrading-from-v032-to-v033) for schema changes.
-- **From v0.3.x to v0.4.x**: See [Upgrading to v0.4.2 / v0.4.3](#upgrading-to-v042--v043) at the top of this document.
+- **From v0.3.x to v0.4.x**: See [Upgrading to v0.4.4](#upgrading-to-v044) at the top of this document.
 
 ## Development
 
