@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"regexp"
+
 	"github.com/hashicorp/terraform-plugin-testing/config"
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -25,6 +27,8 @@ func TestAccNPAPrivateAppsListDataSource_basic(t *testing.T) {
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet(dataSourceName, "private_apps.#"),
+					// BUG-012: Verify private_app_id is non-zero for the created app
+					resource.TestMatchResourceAttr(dataSourceName, "private_apps.0.private_app_id", regexp.MustCompile(`^[1-9][0-9]*$`)),
 				),
 			},
 		},

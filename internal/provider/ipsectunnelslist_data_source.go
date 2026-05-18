@@ -87,6 +87,11 @@ func (r *IPSecTunnelsListDataSource) Schema(ctx context.Context, req datasource.
 								},
 							},
 						},
+						"pop_names": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `List of POP names this tunnel connects to`,
+						},
 						"site": schema.StringAttribute{
 							Computed:    true,
 							Description: `Site name for the tunnel`,
