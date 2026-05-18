@@ -78,7 +78,6 @@ type NpaPolicyRequest struct {
 	Description *string            `json:"description,omitempty"`
 	Enabled     *string            `json:"enabled,omitempty"`
 	GroupID     *string            `json:"group_id,omitempty"`
-	GroupName   *string            `json:"group_name,omitempty"`
 	RuleName    *string            `json:"rule_name,omitempty"`
 	RuleData    *NpaPolicyRuleData `json:"rule_data,omitempty"`
 	RuleOrder   *RuleOrder         `json:"rule_order,omitempty"`
@@ -103,13 +102,6 @@ func (n *NpaPolicyRequest) GetGroupID() *string {
 		return nil
 	}
 	return n.GroupID
-}
-
-func (n *NpaPolicyRequest) GetGroupName() *string {
-	if n == nil {
-		return nil
-	}
-	return n.GroupName
 }
 
 func (n *NpaPolicyRequest) GetRuleName() *string {

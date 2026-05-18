@@ -37,9 +37,14 @@ resource "netskope_npa_private_app" "test" {
   trust_self_signed_certs = false
 }
 
+# Create a device classification tag for this test
+resource "netskope_device_classification_tag" "test" {
+  name = "${var.name}-tag"
+}
+
 resource "netskope_npa_rules" "test" {
   rule_name   = var.name
-  description = "Acceptance test deny rule"
+  description = "Device classification test rule"
   enabled     = "1"
   group_id    = netskope_npa_policy_groups.test.id
 
@@ -47,12 +52,11 @@ resource "netskope_npa_rules" "test" {
     policy_type = "private-app"
 
     match_criteria_action = {
-      action_name = "block"
-      emit_alert  = true
-      template    = "tf-test-template"
+      action_name = "allow"
     }
 
-    private_apps  = [netskope_npa_private_app.test.private_app_name]
-    access_method = ["Client"]
+    private_apps             = [netskope_npa_private_app.test.private_app_name]
+    access_method            = ["Client"]
+    device_classification_id = [tostring(netskope_device_classification_tag.test.tag_id)]
   }
 }

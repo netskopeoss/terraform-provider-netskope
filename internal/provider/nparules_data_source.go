@@ -29,10 +29,11 @@ type NPARulesDataSource struct {
 
 // NPARulesDataSourceModel describes the data model.
 type NPARulesDataSourceModel struct {
-	Enabled  types.String               `tfsdk:"enabled"`
-	ID       types.String               `tfsdk:"id"`
-	RuleData *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
-	RuleName types.String               `tfsdk:"rule_name"`
+	Enabled   types.String               `tfsdk:"enabled"`
+	GroupName types.String               `tfsdk:"group_name"`
+	ID        types.String               `tfsdk:"id"`
+	RuleData  *tfTypes.NpaPolicyRuleData `tfsdk:"rule_data"`
+	RuleName  types.String               `tfsdk:"rule_name"`
 }
 
 // Metadata returns the data source type name.
@@ -48,6 +49,10 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 		Attributes: map[string]schema.Attribute{
 			"enabled": schema.StringAttribute{
 				Computed: true,
+			},
+			"group_name": schema.StringAttribute{
+				Computed:    true,
+				Description: `Policy group name this rule belongs to (read-only, returned by API)`,
 			},
 			"id": schema.StringAttribute{
 				Required:    true,

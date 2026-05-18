@@ -1,6 +1,6 @@
 # BUG-007: Empty protocols array causes API error on private app create/update
 
-**Status:** Fixed
+**Status:** Fixed in 0.3.6
 **Branch:** `0.3.6-beta`
 **Reported:** 2026-02-13
 **Affected versions:** 0.3.2 — 0.3.5

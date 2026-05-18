@@ -11,15 +11,15 @@ import (
 	"github.com/netskopeoss/terraform-provider-netskope/internal/provider/testutil"
 )
 
-func TestAccGRETunnelsListDataSource_basic(t *testing.T) {
+func TestAccIPSecTunnelsListDataSource_basic(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
-	sourceIP := fmt.Sprintf("203.0.113.%d", acctest.RandIntRange(1, 254))
-	dataSourceName := "data.netskope_gre_tunnels_list.test"
+	sourceIP := fmt.Sprintf("198.51.100.%d", acctest.RandIntRange(1, 254))
+	dataSourceName := "data.netskope_ip_sec_tunnels_list.test"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testutil.PreCheck(t) },
 		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
-		CheckDestroy:             testutil.CheckResourceDestroy("netskope_gre_tunnel"),
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_ip_sec_tunnel"),
 		Steps: []resource.TestStep{
 			{
 				ConfigDirectory: config.TestNameDirectory(),
@@ -29,7 +29,7 @@ func TestAccGRETunnelsListDataSource_basic(t *testing.T) {
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet(dataSourceName, "result.#"),
-					// BUG-014: Verify pop_names is populated
+					// BUG-015: Verify pop_names is populated
 					resource.TestMatchResourceAttr(dataSourceName, "result.0.pop_names.#", regexp.MustCompile(`^[1-9][0-9]*$`)),
 				),
 			},

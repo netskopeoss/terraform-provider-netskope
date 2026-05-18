@@ -50,6 +50,13 @@ func (i *myBulkAppResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.
 			log.Print("--------------------")
 		}
 		for i := range responseMap.BulkApps.AppData {
+			// Copy app_id → id. The list endpoint returns "app_id" but the SDK
+			// struct maps private_app_id from "id". Without this, private_app_id
+			// is always 0 in the data source. See docs/bugs/BUG-012.
+			if responseMap.BulkApps.AppData[i].AppID != 0 && responseMap.BulkApps.AppData[i].ID == 0 {
+				responseMap.BulkApps.AppData[i].ID = responseMap.BulkApps.AppData[i].AppID
+			}
+
 			oldAppNameValue := responseMap.BulkApps.AppData[i].AppName
 			responseMap.BulkApps.AppData[i].AppName = strings.Trim(oldAppNameValue, "[]")
 

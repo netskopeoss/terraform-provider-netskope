@@ -2,7 +2,7 @@
 
 **Resource:** `netskope_npa_rules`
 **Severity:** Medium (perpetual diff on every plan/apply, workaround available)
-**Status:** Open
+**Status:** Fixed in 0.3.6
 **Branch:** `0.3.6-beta`
 **Affected attributes:** `rule_data.private_app_tag_ids`
 

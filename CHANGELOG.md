@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.4.4] - Unreleased
+
+### Fixed
+- **Fixed `private_app_id = 0` in `netskope_npa_private_apps_list` data source** ([BUG-012](docs/bugs/BUG-012-list-datasource-private-app-id-zero.md)) — The list endpoint returns `app_id` but the SDK mapping read from `id` (absent in list responses). Added `app_id` → `id` normalization in the bulk app AfterSuccess hook.
+- **Added `pop_names` and `options` to `netskope_gre_tunnels_list` data source** ([BUG-014](docs/bugs/BUG-014-gre-tunnel-list-missing-pop-names.md)) — Fields were present in the API response but excluded from the Terraform schema by `x-speakeasy-terraform-ignore`. Manually added to generated files and protected via `.genignore`.
+- **Added `pop_names` to `netskope_ip_sec_tunnels_list` data source** ([BUG-015](docs/bugs/BUG-015-ipsec-tunnel-list-missing-pop-names.md)) — Same pattern as BUG-014. `pop_names` is Required on the resource but was missing from the list data source.
+- **Added `group_name` to `netskope_npa_rules` resource and data sources** ([BUG-016](docs/bugs/BUG-016-npa-rules-group-name-not-mapped.md)) — The API returns `group_name` but it was excluded by `x-speakeasy-terraform-ignore`. Removed the annotation and regenerated. Rules now preserve policy group assignment in state.
+
 ## [0.4.3] - Unreleased
 
 ### Added
