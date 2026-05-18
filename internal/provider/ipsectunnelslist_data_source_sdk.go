@@ -50,6 +50,15 @@ func (r *IPSecTunnelsListDataSourceModel) RefreshFromSharedIpsecTunnelListRespon
 			result.TunnelID = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resultItem.TunnelID))
 			result.Vendor = types.StringPointerValue(resultItem.Vendor)
 
+			// Extract pop_names from Pops status items (BUG-015)
+			var popNames []types.String
+			for _, pop := range resultItem.Pops {
+				if pop.Name != nil {
+					popNames = append(popNames, types.StringValue(*pop.Name))
+				}
+			}
+			result.PopNames = popNames
+
 			r.Result = append(r.Result, result)
 		}
 		r.Total = types.Int32PointerValue(typeconvert.IntPointerToInt32Pointer(resp.Total))

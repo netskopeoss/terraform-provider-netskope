@@ -7,13 +7,15 @@ import (
 )
 
 type GreTunnelListItem struct {
-	Bandwidth  types.Int32  `tfsdk:"bandwidth"`
-	Enabled    types.Bool   `tfsdk:"enabled"`
-	Notes      types.String `tfsdk:"notes"`
-	Site       types.String `tfsdk:"site"`
-	SourceIP   types.String `tfsdk:"source_ip"`
-	SourceType types.String `tfsdk:"source_type"`
-	Template   types.String `tfsdk:"template"`
-	TunnelID   types.Int32  `tfsdk:"tunnel_id"`
-	Vendor     types.String `tfsdk:"vendor"`
+	Bandwidth  types.Int32              `tfsdk:"bandwidth"`
+	Enabled    types.Bool               `tfsdk:"enabled"`
+	Notes      types.String             `tfsdk:"notes"`
+	Options    *GreTunnelRequestOptions `tfsdk:"options"`
+	PopNames   []types.String           `tfsdk:"pop_names"`
+	Site       types.String             `tfsdk:"site"`
+	SourceIP   types.String             `tfsdk:"source_ip"`
+	SourceType types.String             `tfsdk:"source_type"`
+	Template   types.String             `tfsdk:"template"`
+	TunnelID   types.Int32              `tfsdk:"tunnel_id"`
+	Vendor     types.String             `tfsdk:"vendor"`
 }

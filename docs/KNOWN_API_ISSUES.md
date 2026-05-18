@@ -17,8 +17,9 @@ This document tracks known behavioral inconsistencies and quirks in the Netskope
   - [8. Empty Objects Cause SQL Serialization Error on Update](#8-empty-objects-cause-sql-serialization-error-on-update)
   - [9. Protocol Field Name Mismatch (type vs transport)](#9-protocol-field-name-mismatch-type-vs-transport)
   - [10. Write-Only Fields Not Returned in Response](#10-write-only-fields-not-returned-in-response)
-- [Steering API Issues (11)](#steering-api-issues-11)
+- [Steering API Issues (11-15)](#steering-api-issues-11-15)
   - [11. Protocol Ordering Causes Terraform State Drift](#11-protocol-ordering-causes-terraform-state-drift)
+  - [15. Inconsistent App ID Field Name Across Endpoints](#15-inconsistent-app-id-field-name-across-endpoints)
 - [Policy API Issues (12-14)](#policy-api-issues-12-14)
   - [12. NPA Rules `group_id` is Write-Only](#12-npa-rules-group_id-is-write-only)
   - [13. API Tokens Cannot Resolve User Notification Templates for Block Rules](#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules)
@@ -359,7 +360,7 @@ resource "netskope_npa_private_app" "example" {
 
 ---
 
-## Steering API Issues (11)
+## Steering API Issues (11-15)
 
 ### 11. Protocol Ordering Causes Terraform State Drift
 
@@ -498,6 +499,33 @@ protocols = [
 ```
 
 **Status:** **Fixed in v0.4.0** — The AfterSuccess hooks (`hookMyAppAfterSuccess.go`, `hookMyBulkAppAfterSuccess.go`) now sort protocols by type (alphabetically) then port (numerically ascending) in all API responses. Users no longer need to specify protocols in a specific order.
+
+---
+
+### 15. Inconsistent App ID Field Name Across Endpoints
+
+**Endpoints:**
+- `GET /api/v2/steering/apps/private` (list apps)
+- `GET /api/v2/steering/apps/private/{id}` (single app)
+- `POST /api/v2/steering/apps/private` (create app)
+
+**Issue:** The app identifier uses different JSON field names depending on the endpoint:
+
+| Endpoint | ID Field |
+|----------|----------|
+| List apps (GET) | `app_id` |
+| Single app (GET) | `app_id` |
+| Create app (POST response) | `id` |
+
+**Impact:**
+- The SDK struct has both `AppID` (json: `app_id`) and `PrivateAppID` (json: `id`)
+- Speakeasy maps Terraform's `private_app_id` to `PrivateAppID` (json: `id`)
+- The list endpoint returns `app_id` but not `id`, so `private_app_id` deserializes as 0
+- Blocks workflows that discover app IDs from the list data source (import, backup, cross-resource references)
+
+**Workaround:** The AfterSuccess hook (`hookMyBulkAppAfterSuccess.go`) copies `app_id` → `id` in list responses so the SDK mapping finds the value.
+
+**Status:** API inconsistency - Workaround implemented via hook (0.4.4). See [BUG-012](bugs/BUG-012-list-datasource-private-app-id-zero.md).
 
 ---
 
@@ -681,6 +709,7 @@ These API issues have specific implications for the Terraform provider:
 | NPA rules `group_id` write-only | `group_id` removed from response schema to preserve state (0.3.3) |
 | Block rule template name/filename mismatch | Create requires display name, GET returns filename — causes perpetual drift |
 | `device_classification_id` type mismatch | OAS uses `string`; BeforeRequest hook coerces to `int` for writes (0.3.6) |
+| Inconsistent app ID field name (`app_id` vs `id`) | List data source returns `private_app_id = 0`; hook copies `app_id` → `id` (0.4.4) |
 
 ### Implemented Mitigations
 
@@ -725,7 +754,7 @@ The provider implements several SDK hooks to work around API issues:
 |-----------|------|---------|
 | `hookErrorStatusResponse.go` | AfterSuccess | Detects 200 OK responses with `"status": "error"` and converts to proper errors |
 | `hookMyAppAfterSuccess.go` | AfterSuccess | Maps protocol `transport` → `type`, sorts protocols/publishers/tags, populates `label_ids` from `labels` |
-| `hookMyBulkAppAfterSuccess.go` | AfterSuccess | Same transformations as above for bulk (list) responses |
+| `hookMyBulkAppAfterSuccess.go` | AfterSuccess | Same transformations as above for bulk (list) responses, plus `app_id` → `id` copy (BUG-012) |
 | `hookMyPolicyAfterSuccess.go` | AfterSuccess | Handles policy response transformations (privateApps bracket trimming) |
 | `hookMyPolicyBeforeRequest.go` | BeforeRequest | Transforms policy request payloads (bracket wrapping, preserves `emit_alert`/`template` in `match_criteria_action`, device_classification_id string→int coercion) |
 | `hookPrivateAppRequest.go` | BeforeRequest | Strips empty `app_option`, `paths`, `uribypass_header_value` from PUT requests |

@@ -12,6 +12,7 @@ type IpsecTunnelItem struct {
 	Encryption     types.String               `tfsdk:"encryption"`
 	Notes          types.String               `tfsdk:"notes"`
 	Options        *IpsecTunnelRequestOptions `tfsdk:"options"`
+	PopNames       []types.String             `tfsdk:"pop_names"`
 	Site           types.String               `tfsdk:"site"`
 	SourceIdentity types.String               `tfsdk:"source_identity"`
 	SourceIP       types.String               `tfsdk:"source_ip"`

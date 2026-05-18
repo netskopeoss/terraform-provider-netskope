@@ -60,6 +60,30 @@ func (r *GRETunnelsListDataSource) Schema(ctx context.Context, req datasource.Sc
 							Computed:    true,
 							Description: `User-provided notes for the tunnel`,
 						},
+						"options": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"xff": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"xff_enabled": schema.BoolAttribute{
+											Computed:    true,
+											Description: `Whether XFF header insertion is enabled`,
+										},
+										"xff_ip_list": schema.ListAttribute{
+											Computed:    true,
+											ElementType: types.StringType,
+											Description: `List of XFF IP addresses`,
+										},
+									},
+								},
+							},
+						},
+						"pop_names": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `List of POP names this tunnel connects to`,
+						},
 						"site": schema.StringAttribute{
 							Computed:    true,
 							Description: `Site name for the tunnel`,
