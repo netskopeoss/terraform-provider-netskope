@@ -2,18 +2,15 @@ package provider
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
-	"os"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/operations"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
 )
 
 var (
@@ -123,38 +120,17 @@ func (r *NPARulesOrderResource) Read(ctx context.Context, req resource.ReadReque
 // readLiveOrder queries the rules list API and returns the managed rule IDs
 // in their current list order. Rules deleted out-of-band are removed.
 func (r *NPARulesOrderResource) readLiveOrder(ctx context.Context, managedIDs []types.String) ([]types.String, error) {
-	serverURL := os.Getenv("NETSKOPE_SERVER_URL")
-	apiKey := os.Getenv("NETSKOPE_API_KEY")
-
-	if serverURL == "" || apiKey == "" {
-		return nil, fmt.Errorf("NETSKOPE_SERVER_URL and NETSKOPE_API_KEY must be set")
-	}
-
-	url := fmt.Sprintf("%s/policy/npa/rules", serverURL)
-	getReq, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create GET request: %w", err)
-	}
-	getReq.Header.Set("Netskope-Api-Token", apiKey)
-
-	getResp, err := http.DefaultClient.Do(getReq)
+	res, err := r.client.ListNPARules(ctx, operations.ListNPARulesRequest{})
 	if err != nil {
 		return nil, fmt.Errorf("GET rules failed: %w", err)
 	}
-	body, _ := io.ReadAll(getResp.Body)
-	getResp.Body.Close()
 
-	if getResp.StatusCode != 200 {
-		return nil, fmt.Errorf("GET rules returned %d: %s", getResp.StatusCode, string(body))
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("GET rules returned %d", res.StatusCode)
 	}
 
-	var rulesResp struct {
-		Data []struct {
-			RuleID string `json:"rule_id"`
-		} `json:"data"`
-	}
-	if err := json.Unmarshal(body, &rulesResp); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal rules response: %w", err)
+	if res.NpaPolicyResponse == nil {
+		return nil, fmt.Errorf("GET rules returned empty response")
 	}
 
 	// Build set of managed IDs for fast lookup
@@ -165,9 +141,9 @@ func (r *NPARulesOrderResource) readLiveOrder(ctx context.Context, managedIDs []
 
 	// Extract managed rules in their current API order
 	var liveOrder []types.String
-	for _, rule := range rulesResp.Data {
-		if managed[rule.RuleID] {
-			liveOrder = append(liveOrder, types.StringValue(rule.RuleID))
+	for _, rule := range res.NpaPolicyResponse.Data {
+		if rule.ID != nil && managed[*rule.ID] {
+			liveOrder = append(liveOrder, types.StringValue(*rule.ID))
 		}
 	}
 
@@ -203,13 +179,6 @@ func (r *NPARulesOrderResource) applyOrder(ctx context.Context, ruleIDs []types.
 		return nil
 	}
 
-	serverURL := os.Getenv("NETSKOPE_SERVER_URL")
-	apiKey := os.Getenv("NETSKOPE_API_KEY")
-
-	if serverURL == "" || apiKey == "" {
-		return fmt.Errorf("NETSKOPE_SERVER_URL and NETSKOPE_API_KEY must be set")
-	}
-
 	// Wait for recently created rules to settle before reordering.
 	// The API has eventual consistency — rules created in parallel
 	// may not be fully committed when the order resource starts.
@@ -218,13 +187,13 @@ func (r *NPARulesOrderResource) applyOrder(ctx context.Context, ruleIDs []types.
 	// Apply ordering with verify-and-retry
 	const maxAttempts = 3
 	for attempt := 0; attempt < maxAttempts; attempt++ {
-		if err := r.patchOrder(ctx, ruleIDs, serverURL, apiKey); err != nil {
+		if err := r.patchOrder(ctx, ruleIDs); err != nil {
 			return err
 		}
 
 		// Verify the order took effect
 		time.Sleep(2 * time.Second)
-		if r.verifyOrder(ctx, ruleIDs, serverURL, apiKey) {
+		if r.verifyOrder(ctx, ruleIDs) {
 			return nil
 		}
 
@@ -239,34 +208,26 @@ func (r *NPARulesOrderResource) applyOrder(ctx context.Context, ruleIDs []types.
 // Processing [A, B, C] in reverse: C→top, B→top (pushes C down), A→top
 // (pushes B and C down). Result: A, B, C from top.
 // This avoids "after" references which have eventual consistency issues.
-func (r *NPARulesOrderResource) patchOrder(ctx context.Context, ruleIDs []types.String, serverURL, apiKey string) error {
-	topPayload, _ := json.Marshal(map[string]interface{}{
-		"rule_order": map[string]interface{}{
-			"order": "top",
-		},
-	})
+func (r *NPARulesOrderResource) patchOrder(ctx context.Context, ruleIDs []types.String) error {
+	order := shared.OrderTop
 
 	// Process in reverse — each "top" pushes previous ones down
 	for i := len(ruleIDs) - 1; i >= 0; i-- {
 		id := ruleIDs[i].ValueString()
 
-		url := fmt.Sprintf("%s/policy/npa/rules/%s", serverURL, id)
-		patchReq, err := http.NewRequestWithContext(ctx, "PATCH", url, strings.NewReader(string(topPayload)))
-		if err != nil {
-			return fmt.Errorf("failed to create PATCH request for rule %s: %w", id, err)
-		}
-		patchReq.Header.Set("Content-Type", "application/json")
-		patchReq.Header.Set("Netskope-Api-Token", apiKey)
-
-		patchResp, err := http.DefaultClient.Do(patchReq)
+		res, err := r.client.UpdateNPARules(ctx, operations.UpdateNPARulesRequest{
+			ID: id,
+			NpaPolicyRequest: shared.NpaPolicyRequest{
+				RuleOrder: &shared.RuleOrder{
+					Order: &order,
+				},
+			},
+		})
 		if err != nil {
 			return fmt.Errorf("PATCH failed for rule %s: %w", id, err)
 		}
-		respBody, _ := io.ReadAll(patchResp.Body)
-		patchResp.Body.Close()
-
-		if patchResp.StatusCode != 200 {
-			return fmt.Errorf("PATCH rule %s returned %d: %s", id, patchResp.StatusCode, string(respBody))
+		if res.StatusCode != 200 {
+			return fmt.Errorf("PATCH rule %s returned %d", id, res.StatusCode)
 		}
 
 		// Wait for the position to commit before moving the next rule
@@ -278,7 +239,7 @@ func (r *NPARulesOrderResource) patchOrder(ctx context.Context, ruleIDs []types.
 
 // verifyOrder checks if the managed rules appear in the expected order
 // in the API's list.
-func (r *NPARulesOrderResource) verifyOrder(ctx context.Context, ruleIDs []types.String, serverURL, apiKey string) bool {
+func (r *NPARulesOrderResource) verifyOrder(ctx context.Context, ruleIDs []types.String) bool {
 	liveOrder, err := r.readLiveOrder(ctx, ruleIDs)
 	if err != nil || len(liveOrder) != len(ruleIDs) {
 		return false

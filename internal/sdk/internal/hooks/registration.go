@@ -68,4 +68,8 @@ func initHooks(h *Hooks) {
 	// Device classification tag create - wrap single object into array for API
 	dcTagReq := &deviceClassificationTagRequest{}
 	h.registerBeforeRequestHook(dcTagReq)
+
+	// URL list - response transformations (deploy after CRUD, wrap list response)
+	urllist := &urllistAfterSuccess{}
+	h.registerAfterSuccessHook(urllist)
 }

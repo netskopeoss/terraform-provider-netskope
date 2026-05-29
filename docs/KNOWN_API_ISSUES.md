@@ -20,10 +20,11 @@ This document tracks known behavioral inconsistencies and quirks in the Netskope
 - [Steering API Issues (11-15)](#steering-api-issues-11-15)
   - [11. Protocol Ordering Causes Terraform State Drift](#11-protocol-ordering-causes-terraform-state-drift)
   - [15. Inconsistent App ID Field Name Across Endpoints](#15-inconsistent-app-id-field-name-across-endpoints)
-- [Policy API Issues (12-14)](#policy-api-issues-12-14)
+- [Policy API Issues (12-14, 16)](#policy-api-issues-12-14-16)
   - [12. NPA Rules `group_id` is Write-Only](#12-npa-rules-group_id-is-write-only)
   - [13. API Tokens Cannot Resolve User Notification Templates for Block Rules](#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules)
   - [14. `device_classification_id` Type Mismatch (String vs Integer)](#14-device_classification_id-type-mismatch-string-vs-integer)
+  - [16. NPA Rules Ordering — Eventual Consistency](#16-npa-rules-ordering--eventual-consistency)
 - [Terraform Provider Implications](#terraform-provider-implications)
 - [General Recommendations](#general-recommendations)
 
@@ -529,7 +530,7 @@ protocols = [
 
 ---
 
-## Policy API Issues (12-14)
+## Policy API Issues (12-14, 16)
 
 ### 12. NPA Rules `group_id` is Write-Only
 
@@ -691,6 +692,41 @@ resource "netskope_npa_rules" "block_rule" {
 
 ---
 
+### 16. NPA Rules Ordering — Eventual Consistency
+
+**Endpoint:** `PATCH /api/v2/policy/npa/rules/{id}`
+
+**Issue:** There is no atomic endpoint to reorder multiple NPA rules in a single call. Each rule must be PATCHed individually with a `rule_order` payload (`{"rule_order": {"order": "top"}}`). The API has eventual consistency — a position change does not take effect immediately, so a subsequent GET may still return the old order.
+
+**Impact:**
+- Rule ordering cannot be applied atomically. During the ordering loop, the rule list is temporarily inconsistent.
+- A verify step is required after each full pass to confirm the order has committed.
+- If verification fails, the entire pass must be retried.
+
+**Provider behaviour (`netskope_npa_rules_order`):**
+
+The provider works around this by processing rules in reverse order, moving each to `top` sequentially. This is equivalent to building the desired order from back to front:
+
+```
+Desired: [A, B, C]
+Step 1: PATCH C → top  →  [C, ...]
+Step 2: PATCH B → top  →  [B, C, ...]
+Step 3: PATCH A → top  →  [A, B, C]
+```
+
+The provider then sleeps 2 seconds and verifies the live order matches the desired order. If it does not, it waits 3 seconds and retries — up to 3 attempts total.
+
+**Timing:**
+- 3s initial sleep (lets recently created rules settle before reordering)
+- 500ms between each individual PATCH (lets each position commit)
+- 2s before verify, 3s before retry
+
+The SDK's default retry policy (exponential backoff, up to 5 minutes per call on 429 or 5XX responses) applies to each PATCH. Apply time may be longer if the API returns transient errors.
+
+**Status:** Known API limitation — no fix possible without an atomic reorder endpoint. Workaround implemented in `netskope_npa_rules_order` resource.
+
+---
+
 ## Terraform Provider Implications
 
 These API issues have specific implications for the Terraform provider:
@@ -710,6 +746,7 @@ These API issues have specific implications for the Terraform provider:
 | Block rule template name/filename mismatch | Create requires display name, GET returns filename — causes perpetual drift |
 | `device_classification_id` type mismatch | OAS uses `string`; BeforeRequest hook coerces to `int` for writes (0.3.6) |
 | Inconsistent app ID field name (`app_id` vs `id`) | List data source returns `private_app_id = 0`; hook copies `app_id` → `id` (0.4.4) |
+| NPA rules ordering eventual consistency | No atomic reorder endpoint; provider PATCHes rules individually with verify-and-retry loop |
 
 ### Implemented Mitigations
 

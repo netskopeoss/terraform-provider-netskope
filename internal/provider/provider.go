@@ -162,6 +162,7 @@ func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Reso
 		NewNPARulesResource,
 		NewNPARulesOrderResource,
 		NewRBACLabelResource,
+		NewUrllistResource,
 	}
 }
 
@@ -203,6 +204,8 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 		NewNPARulesListDataSource,
 		NewRBACLabelDataSource,
 		NewRBACLabelListDataSource,
+		NewUrllistDataSource,
+		NewUrllistListDataSource,
 	}
 }
 
