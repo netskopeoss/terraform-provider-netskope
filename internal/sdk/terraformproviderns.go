@@ -77,6 +77,7 @@ type TerraformProviderNs struct {
 	RBACLabel                   *RBACLabel
 	Deviceclassification        *Deviceclassification
 	DeviceClassificationTag     *DeviceClassificationTag
+	Urllist                     *Urllist
 
 	sdkConfiguration config.SDKConfiguration
 	hooks            *hooks.Hooks
@@ -215,6 +216,7 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk.RBACLabel = newRBACLabel(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Deviceclassification = newDeviceclassification(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.DeviceClassificationTag = newDeviceClassificationTag(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Urllist = newUrllist(sdk, sdk.sdkConfiguration, sdk.hooks)
 
 	return sdk
 }

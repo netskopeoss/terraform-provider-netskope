@@ -1,0 +1,1 @@
+terraform import netskope_urllist.my_netskope_urllist 0
