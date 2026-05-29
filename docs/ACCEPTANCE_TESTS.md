@@ -405,6 +405,15 @@ Fields tested per resource across test types. Columns:
 | priority | | | | | | Computed, server-managed |
 | policy_names | | | | | | Computed, read-only |
 
+### netskope_urllist (v0.5.0)
+
+| Field | C | U | I | D | O | Notes |
+|-------|---|---|---|---|---|-------|
+| name | x | x | x | | | |
+| data.urls | x | x | x | | | Exact match and multiple URLs tested |
+| data.type | x | | x | | | Only "exact" tested |
+| id | x | | x | | | Import by numeric ID |
+
 ### netskope_npa_publishers_alerts_configuration
 
 All tests SKIPPED - valid event_types not documented by API.
@@ -447,6 +456,8 @@ All tests SKIPPED - valid event_types not documented by API.
 | netskope_device_classification_tag | Yes | tag_id, name, description | v0.4.2 |
 | netskope_device_classification_tag_list | Yes | tags.#, tags.0.tag_id, tags.0.name | v0.4.2 |
 | netskope_device_classification_options_list | Yes | options.#, options.0.key, options.0.value | v0.4.2 |
+| netskope_urllist | Yes | id, name, data.type, data.urls via AttrPair | v0.5.0 |
+| netskope_urllist_list | Yes | items.# is set | v0.5.0 |
 
 ---
 

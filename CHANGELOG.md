@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+- **`netskope_urllist` resource** — Manage URL lists for Netskope policies. Supports create, read, update, delete, and import. Changes are auto-deployed via hooks.
+- **`netskope_urllist` data source** — Look up a single URL list by ID.
+- **`netskope_urllist_list` data source** — List all URL lists.
+
+### Fixed
+- **`netskope_npa_rules_order` now respects provider-level configuration** ([#80](https://github.com/netskopeoss/terraform-provider-netskope/issues/80)) — The resource previously read credentials directly from `NETSKOPE_SERVER_URL` and `NETSKOPE_API_KEY` environment variables, causing it to fail when credentials were supplied via the provider block (required for multi-tenant configurations). It now uses the provider-configured SDK client, consistent with all other resources. The SDK's default retry policy now applies to ordering calls — apply time may be longer if the API returns transient errors. See [Known API Issues #16](docs/KNOWN_API_ISSUES.md#16-npa-rules-ordering--eventual-consistency).
+
 ## [0.4.4] - 2026-05-18
 
 ### Fixed
