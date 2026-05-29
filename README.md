@@ -8,7 +8,14 @@ The official Terraform provider for [Netskope](https://www.netskope.com/), enabl
 
 > **Examples:** See [terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples) for ready-to-use Terraform configurations covering NPA private apps, policy-as-code, device classification, RBAC labels, and more.
 
-## Upgrading to v0.4.4
+## Upgrading to v0.4.5
+
+### What's New in v0.4.5
+
+- **`netskope_urllist` resource** — Manage URL lists for Netskope policies. Full CRUD with import support. Changes are auto-deployed after each apply.
+- **`netskope_urllist` data source** — Look up a single URL list by ID.
+- **`netskope_urllist_list` data source** — List all URL lists.
+- **Fix `netskope_npa_rules_order` with provider-block credentials** — The resource previously failed when credentials were supplied via the provider block rather than environment variables, breaking multi-tenant configurations. It now uses the provider-configured client consistently with all other resources.
 
 ### What's New in v0.4.4
 
@@ -141,6 +148,7 @@ resource "netskope_npa_publisher" "pub" {
 ### Platform
 - **Device Classification Tags** — Create and manage device classification tags for device posture enforcement in NPA rules
 - **RBAC Labels** — Create and manage labels for Label Based Access Control (LBAC), with hierarchy support up to 4 levels
+- **URL Lists** — Manage URL lists used in Netskope steering policies
 
 - **Full Lifecycle Management** — Create, read, update, delete, and import for all supported resources
 
@@ -158,7 +166,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "~> 0.4.4"
+      version = "~> 0.4.5"
     }
   }
 }
@@ -280,6 +288,7 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_destination_profile](docs/resources/destination_profile.md) | Destination profiles |
 | [netskope_dns_profile_v2](docs/resources/dns_profile_v2.md) | DNS security profiles |
 | [netskope_device_classification_tag](docs/resources/device_classification_tag.md) | Device classification tags |
+| [netskope_urllist](docs/resources/urllist.md) | URL lists |
 
 ### Data Sources
 
@@ -321,6 +330,8 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_device_classification_tag](docs/data-sources/device_classification_tag.md) | Look up a device classification tag |
 | [netskope_device_classification_tag_list](docs/data-sources/device_classification_tag_list.md) | List device classification tags |
 | [netskope_device_classification_options_list](docs/data-sources/device_classification_options_list.md) | List classification options |
+| [netskope_urllist](docs/data-sources/urllist.md) | Look up a URL list by ID |
+| [netskope_urllist_list](docs/data-sources/urllist_list.md) | List all URL lists |
 
 ## Examples and Tutorials
 
@@ -337,7 +348,7 @@ See below for version-specific upgrade notes. For full details, see the [Migrati
 
 - **From v0.2.x**: Version 0.3.x is a complete rewrite with renamed resources and changed schemas. Existing state must be re-imported. See the [Migration Guide](docs/MIGRATION_GUIDE.md).
 - **From v0.3.2**: See the [v0.3.2 to v0.3.3 upgrade section](docs/MIGRATION_GUIDE.md#upgrading-from-v032-to-v033) for schema changes.
-- **From v0.3.x to v0.4.x**: See [Upgrading to v0.4.4](#upgrading-to-v044) at the top of this document.
+- **From v0.3.x to v0.4.x**: See [Upgrading to v0.4.5](#upgrading-to-v045) at the top of this document.
 
 ## Development
 
