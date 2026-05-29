@@ -131,23 +131,27 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.
 
 		}
 
-		oldPrivateAppValue := requestMap.RuleData.PrivateApps
-		requestMap.RuleData.PrivateApps = nil
-		for _, trimmedApp := range oldPrivateAppValue {
-			untrimmedApp := "[" + trimmedApp + "]"
-			requestMap.RuleData.PrivateApps = append(requestMap.RuleData.PrivateApps, untrimmedApp)
+		if requestMap.RuleData != nil {
+			oldPrivateAppValue := requestMap.RuleData.PrivateApps
+			requestMap.RuleData.PrivateApps = nil
+			for _, trimmedApp := range oldPrivateAppValue {
+				untrimmedApp := "[" + trimmedApp + "]"
+				requestMap.RuleData.PrivateApps = append(requestMap.RuleData.PrivateApps, untrimmedApp)
+			}
 		}
 
 		// Convert device_classification_id from []string to []int64 for the API
 		// The API returns strings but expects integers on write
 		var deviceClassificationIDInts []int64
-		for _, s := range requestMap.RuleData.DeviceClassificationID {
-			n, err := strconv.ParseInt(s, 10, 64)
-			if err != nil {
-				log.Printf("ERROR: Unable to convert device_classification_id value %q to int: %v", s, err)
-				return nil, fmt.Errorf("ERROR: Unable to convert device_classification_id value %q to int: %w", s, err)
+		if requestMap.RuleData != nil {
+			for _, s := range requestMap.RuleData.DeviceClassificationID {
+				n, err := strconv.ParseInt(s, 10, 64)
+				if err != nil {
+					log.Printf("ERROR: Unable to convert device_classification_id value %q to int: %v", s, err)
+					return nil, fmt.Errorf("ERROR: Unable to convert device_classification_id value %q to int: %w", s, err)
+				}
+				deviceClassificationIDInts = append(deviceClassificationIDInts, n)
 			}
-			deviceClassificationIDInts = append(deviceClassificationIDInts, n)
 		}
 
 		// Marshal using a temporary wrapper that outputs device_classification_id as []int64
