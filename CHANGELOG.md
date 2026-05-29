@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.4.5] - 2026-05-29
+
 ### Added
 - **`netskope_urllist` resource** — Manage URL lists for Netskope policies. Supports create, read, update, delete, and import. Changes are auto-deployed via hooks.
 - **`netskope_urllist` data source** — Look up a single URL list by ID.
