@@ -23,6 +23,12 @@ GOGET = $(GOCMD) get
 # Build the provider for all supported platforms
 all: build-darwin build-linux build-windows
 
+install:
+	@echo "Building and installing provider for local development..."
+	$(GOBUILD) -o $(GOPATH)/bin/$(BINARY_NAME) ./main.go
+	@echo "Installed to $(GOPATH)/bin/$(BINARY_NAME)"
+	@echo "dev_overrides in ~/.terraformrc points terraform to this binary."
+
 build-darwin:
 	@echo "Building for Darwin (macOS) with version $(VERSION)..."
 	GOOS=darwin GOARCH=amd64 $(GOBUILD) -o bin/mac/$(BINARY_NAME)_v$(VERSION) ./main.go
@@ -101,4 +107,9 @@ testacc-rbaclabels:
 	@echo "Running RBAC labels acceptance tests..."
 	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccRBACLabel -timeout 30m
 
-.PHONY: all build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels
+.PHONY: testacc-aig
+testacc-aig:
+	@echo "Running AI Gateway appliance acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccAIGAppliance -timeout 30m
+
+.PHONY: all install build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels testacc-aig

@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.4.6] - TBD
+
+### Added
+- **`netskope_aig_appliance` resource** — Manage AI Gateway appliances. Supports create, read, update, delete, and import. Fields: `name`, `host`, `ports` (http/https enable + port), `status`, `ai_provider_ids`, `certificate_imported`.
+- **`netskope_aig_appliance` data source** — Look up a single AI Gateway appliance by ID.
+- **`netskope_aig_appliance_list` data source** — List all AI Gateway appliances.
+- **`netskope_aig_appliance_enrollment_token` resource** — Generate an enrollment token for a registered AI Gateway appliance. Token and expiry time are stored as computed attributes.
+
 ## [0.4.5] - 2026-05-29
 
 ### Added

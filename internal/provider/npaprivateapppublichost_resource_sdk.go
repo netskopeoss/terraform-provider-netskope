@@ -60,9 +60,9 @@ func (r *NPAPrivateAppPublicHostResourceModel) ToOperationsGetNPAPrivateAppPubli
 		} else {
 			port = nil
 		}
-		protocol := new(shared.Protocol)
+		protocol := new(shared.ProtocolItemProtocol)
 		if !r.Protocols[protocolsIndex].Protocol.IsUnknown() && !r.Protocols[protocolsIndex].Protocol.IsNull() {
-			*protocol = shared.Protocol(r.Protocols[protocolsIndex].Protocol.ValueString())
+			*protocol = shared.ProtocolItemProtocol(r.Protocols[protocolsIndex].Protocol.ValueString())
 		} else {
 			protocol = nil
 		}
