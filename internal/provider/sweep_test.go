@@ -57,6 +57,12 @@ func init() {
 		F:    sweepDeviceClassificationTags,
 		Dependencies: []string{},
 	})
+
+	resource.AddTestSweepers("netskope_aig_appliance", &resource.Sweeper{
+		Name:         "netskope_aig_appliance",
+		F:            sweepAIGAppliances,
+		Dependencies: []string{},
+	})
 }
 
 // TestMain runs the sweepers if the -sweep flag is passed
@@ -358,6 +364,41 @@ func sweepDeviceClassificationTags(region string) error {
 		})
 		if err != nil {
 			log.Printf("[WARN] Error deleting device classification tag %s: %s", *tag.Name, err)
+		}
+	}
+
+	return nil
+}
+
+func sweepAIGAppliances(region string) error {
+	client, err := getSweepClient()
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	res, err := client.AIGAppliances.ListObjects(ctx)
+	if err != nil {
+		return fmt.Errorf("error listing AIG appliances for sweeping: %w", err)
+	}
+
+	if res.AigApplianceListResponse == nil {
+		return nil
+	}
+
+	for _, appliance := range res.AigApplianceListResponse.Elements {
+		if !strings.HasPrefix(appliance.Name, testAccResourcePrefix) {
+			continue
+		}
+
+		log.Printf("[INFO] Sweeping AIG Appliance: %s (ID: %s)", appliance.Name, appliance.ID)
+
+		_, err := client.AIGAppliance.Delete(ctx, operations.DeleteAigApplianceRequest{
+			ApplianceID: appliance.ID,
+		})
+		if err != nil {
+			log.Printf("[WARN] Error deleting AIG appliance %s: %s", appliance.Name, err)
 		}
 	}
 

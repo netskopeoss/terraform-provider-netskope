@@ -354,6 +354,91 @@ func TestBeforeRequest_DeviceClassificationIDInvalidValue(t *testing.T) {
 	}
 }
 
+// TestBeforeRequest_NegateNetLocationStrippedWhenEmpty verifies that
+// b_negateNetLocation is removed from the request when net_location_obj is
+// empty or absent. Tenants with the source-IP-criteria feature flag disabled
+// reject b_negateNetLocation even when set to false.
+func TestBeforeRequest_NegateNetLocationStrippedWhenEmpty(t *testing.T) {
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "test-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {"action_name": "allow"},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"],
+			"b_negateNetLocation": false,
+			"b_negateSrcCountries": false
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+	var out map[string]interface{}
+	if err := json.Unmarshal([]byte(resultBody), &out); err != nil {
+		t.Fatalf("failed to parse result body: %v", err)
+	}
+	ruleData, ok := out["rule_data"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("rule_data missing from result body")
+	}
+	if _, found := ruleData["b_negateNetLocation"]; found {
+		t.Errorf("expected b_negateNetLocation to be stripped when net_location_obj is empty, got %s", resultBody)
+	}
+	if _, found := ruleData["b_negateSrcCountries"]; found {
+		t.Errorf("expected b_negateSrcCountries to be stripped when srcCountries is empty, got %s", resultBody)
+	}
+}
+
+// TestBeforeRequest_NegateNetLocationPreservedWhenPopulated verifies that
+// b_negateNetLocation is kept in the request when net_location_obj has entries.
+func TestBeforeRequest_NegateNetLocationPreservedWhenPopulated(t *testing.T) {
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "test-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {"action_name": "allow"},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"],
+			"net_location_obj": ["192.168.0.0/16"],
+			"b_negateNetLocation": true
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+	var out map[string]interface{}
+	if err := json.Unmarshal([]byte(resultBody), &out); err != nil {
+		t.Fatalf("failed to parse result body: %v", err)
+	}
+	ruleData, ok := out["rule_data"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("rule_data missing from result body")
+	}
+	if v, found := ruleData["b_negateNetLocation"]; !found {
+		t.Errorf("expected b_negateNetLocation to be present when net_location_obj is non-empty, got %s", resultBody)
+	} else if v != true {
+		t.Errorf("expected b_negateNetLocation=true, got %v", v)
+	}
+}
+
 // TestBeforeRequest_NonMatchingOperationPassthrough verifies that operations
 // other than createNPARules/updateNPARules pass through without modification.
 func TestBeforeRequest_NonMatchingOperationPassthrough(t *testing.T) {

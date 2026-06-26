@@ -18,6 +18,11 @@ sources:
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/platform/rbac_labels.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/platform/deviceclassification_tags.yaml
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/policy/urllist.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/aig/aig-appliances-openapi.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/aig/aig-aiproviders-openapi.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/aig/aig-mcpservers-openapi.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/aig/aig-ratelimits-openapi.yaml
+            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/aig/aig-tokens-openapi.yaml
         overlays:
             - location: /Users/jharris/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
         registry:

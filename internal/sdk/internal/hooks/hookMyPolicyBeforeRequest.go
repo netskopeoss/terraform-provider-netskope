@@ -138,6 +138,17 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.
 				untrimmedApp := "[" + trimmedApp + "]"
 				requestMap.RuleData.PrivateApps = append(requestMap.RuleData.PrivateApps, untrimmedApp)
 			}
+
+			// Strip negate flags when their associated criteria lists are empty.
+			// The API rejects b_negateNetLocation / b_negateSrcCountries even set to
+			// false on tenants where the source-IP-criteria feature flag is disabled.
+			// The flags are meaningless without a populated criteria list anyway.
+			if len(requestMap.RuleData.NetLocationObj) == 0 {
+				requestMap.RuleData.BNegateNetLocation = nil
+			}
+			if len(requestMap.RuleData.SrcCountries) == 0 {
+				requestMap.RuleData.BNegateSrcCountries = nil
+			}
 		}
 
 		// Convert device_classification_id from []string to []int64 for the API
