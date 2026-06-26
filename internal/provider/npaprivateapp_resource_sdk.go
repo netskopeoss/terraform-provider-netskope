@@ -312,9 +312,9 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsPutRequest(ctx context.C
 		} else {
 			port = nil
 		}
-		protocol := new(shared.Protocol)
+		protocol := new(shared.ProtocolItemProtocol)
 		if !r.Protocols[protocolsIndex].Protocol.IsUnknown() && !r.Protocols[protocolsIndex].Protocol.IsNull() {
-			*protocol = shared.Protocol(r.Protocols[protocolsIndex].Protocol.ValueString())
+			*protocol = shared.ProtocolItemProtocol(r.Protocols[protocolsIndex].Protocol.ValueString())
 		} else {
 			protocol = nil
 		}
@@ -481,9 +481,9 @@ func (r *NPAPrivateAppResourceModel) ToSharedPrivateAppsRequest(ctx context.Cont
 		} else {
 			port = nil
 		}
-		protocol := new(shared.Protocol)
+		protocol := new(shared.ProtocolItemProtocol)
 		if !r.Protocols[protocolsIndex].Protocol.IsUnknown() && !r.Protocols[protocolsIndex].Protocol.IsNull() {
-			*protocol = shared.Protocol(r.Protocols[protocolsIndex].Protocol.ValueString())
+			*protocol = shared.ProtocolItemProtocol(r.Protocols[protocolsIndex].Protocol.ValueString())
 		} else {
 			protocol = nil
 		}

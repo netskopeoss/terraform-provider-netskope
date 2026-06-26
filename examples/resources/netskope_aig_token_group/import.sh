@@ -1,0 +1,1 @@
+terraform import netskope_aig_token_group.my_netskope_aig_token_group "019812aa-bdba-7a48-baa2-2de8c6006fda"

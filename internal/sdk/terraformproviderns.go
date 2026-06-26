@@ -22,7 +22,6 @@ import (
 
 // ServerList contains the list of servers available to the SDK
 var ServerList = []string{
-	// The production API server
 	"https://{tenant}.goskope.com/api/v2",
 }
 
@@ -78,6 +77,21 @@ type TerraformProviderNs struct {
 	Deviceclassification        *Deviceclassification
 	DeviceClassificationTag     *DeviceClassificationTag
 	Urllist                     *Urllist
+	AIGAppliances               *AIGAppliances
+	AIGAppliance                *AIGAppliance
+	AIGApplianceEnrollmentToken *AIGApplianceEnrollmentToken
+	AIGAppliancesCapacity       *AIGAppliancesCapacity
+	AIGAppliancesImages         *AIGAppliancesImages
+	AIGAiProviders              *AIGAiProviders
+	AIGAiProvider               *AIGAiProvider
+	AIGMcpServers               *AIGMcpServers
+	AIGMcpServer                *AIGMcpServer
+	AIGRateLimits               *AIGRateLimits
+	AIGRateLimit                *AIGRateLimit
+	AIGTokenGroups              *AIGTokenGroups
+	AIGTokenGroup               *AIGTokenGroup
+	AIGTokens                   *AIGTokens
+	AIGToken                    *AIGToken
 
 	sdkConfiguration config.SDKConfiguration
 	hooks            *hooks.Hooks
@@ -172,7 +186,7 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 			ServerList: ServerList,
 			ServerVariables: []map[string]string{
 				{
-					"tenant": "demo",
+					"tenant": "bespin",
 				},
 			},
 		},
@@ -217,6 +231,21 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk.Deviceclassification = newDeviceclassification(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.DeviceClassificationTag = newDeviceClassificationTag(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Urllist = newUrllist(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGAppliances = newAIGAppliances(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGAppliance = newAIGAppliance(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGApplianceEnrollmentToken = newAIGApplianceEnrollmentToken(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGAppliancesCapacity = newAIGAppliancesCapacity(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGAppliancesImages = newAIGAppliancesImages(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGAiProviders = newAIGAiProviders(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGAiProvider = newAIGAiProvider(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGMcpServers = newAIGMcpServers(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGMcpServer = newAIGMcpServer(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGRateLimits = newAIGRateLimits(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGRateLimit = newAIGRateLimit(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGTokenGroups = newAIGTokenGroups(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGTokenGroup = newAIGTokenGroup(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGTokens = newAIGTokens(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AIGToken = newAIGToken(sdk, sdk.sdkConfiguration, sdk.hooks)
 
 	return sdk
 }

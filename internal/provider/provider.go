@@ -56,7 +56,7 @@ func (p *NetskopeProvider) Schema(ctx context.Context, req provider.SchemaReques
 				Optional:    true,
 			},
 			"tenant": schema.StringAttribute{
-				MarkdownDescription: `this value is assigned by Netskope, in this example ` + "`" + `demo.goskope.com` + "`" + ` (defaults to demo)`,
+				MarkdownDescription: `Netskope tenant name (defaults to bespin)`,
 				Optional:            true,
 			},
 		},
@@ -90,7 +90,7 @@ func (p *NetskopeProvider) Configure(ctx context.Context, req provider.Configure
 	}
 
 	if _, ok := serverUrlParams["tenant"]; !ok {
-		serverUrlParams["tenant"] = "demo"
+		serverUrlParams["tenant"] = "bespin"
 	}
 
 	security := shared.Security{}
@@ -142,6 +142,13 @@ func (p *NetskopeProvider) Actions(_ context.Context) []func() action.Action {
 
 func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		NewAIGAiProviderResource,
+		NewAIGApplianceResource,
+		NewAIGApplianceEnrollmentTokenResource,
+		NewAIGMcpServerResource,
+		NewAIGRateLimitResource,
+		NewAIGTokenResource,
+		NewAIGTokenGroupResource,
 		NewDestinationProfileResource,
 		NewDeviceClassificationTagResource,
 		NewDNSProfileV2Resource,
@@ -168,6 +175,20 @@ func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Reso
 
 func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewAIGAiProviderDataSource,
+		NewAIGAiProviderListDataSource,
+		NewAIGApplianceDataSource,
+		NewAIGApplianceCapacityListDataSource,
+		NewAIGApplianceImageListDataSource,
+		NewAIGApplianceListDataSource,
+		NewAIGMcpServerDataSource,
+		NewAIGMcpServerListDataSource,
+		NewAIGRateLimitDataSource,
+		NewAIGRateLimitListDataSource,
+		NewAIGTokenDataSource,
+		NewAIGTokenGroupDataSource,
+		NewAIGTokenGroupListDataSource,
+		NewAIGTokenListDataSource,
 		NewDestinationProfileDataSource,
 		NewDestinationProfileListDataSource,
 		NewDeviceClassificationOptionsListDataSource,

@@ -1750,3 +1750,52 @@ resource "netskope_destination_profile" "test" {
 }
 `, testAccProviderConfig(), name)
 }
+
+// TestAccDrift_AIGAppliance verifies no drift on AIG appliance resources
+func TestAccDrift_AIGAppliance(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_aig_appliance"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftAIGApplianceConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_aig_appliance.test", "id"),
+				),
+			},
+			{
+				Config: testAccDriftAIGApplianceConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftAIGApplianceConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_aig_appliance" "test" {
+  name = %q
+  host = "%s.example.com"
+
+  ports = {
+    http = {
+      enable = true
+      port   = 80
+    }
+    https = {
+      enable = true
+      port   = 443
+    }
+  }
+}
+`, testAccProviderConfig(), name, name)
+}

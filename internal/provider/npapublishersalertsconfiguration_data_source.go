@@ -41,7 +41,7 @@ func (r *NPAPublishersAlertsConfigurationDataSource) Metadata(ctx context.Contex
 // Schema defines the schema for the data source.
 func (r *NPAPublishersAlertsConfigurationDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The NPA Publisher is a software package that enables private application\nconnectivity between your data center and the Netskope cloud. It is a crucial \ncomponent of Netskope’s Private Access (NPA) solution, which provides zero-trust \nnetwork access (ZTNA) to private applications and data in hybrid IT environments.\n\nThis resource supports the ability to retrieve publisher alert configurations.\n",
+		MarkdownDescription: "Manages the tenant-wide NPA publisher alerts configuration. This is a singleton resource — there is one global alerts policy per tenant, and it applies automatically to all publishers. No per-publisher attachment is required.\n\nUse this resource to configure which admin users receive alert emails, which event types trigger alerts (e.g. CONNECTION_FAILED, UPGRADE_STARTED), and the recipient selection mode.\n",
 
 		Attributes: map[string]schema.Attribute{
 			"admin_users": schema.ListAttribute{
