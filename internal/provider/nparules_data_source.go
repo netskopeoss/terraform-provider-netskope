@@ -97,6 +97,7 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					"net_location_obj": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
+						Description: `List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27").`,
 					},
 					"organization_units": schema.ListAttribute{
 						Computed:    true,

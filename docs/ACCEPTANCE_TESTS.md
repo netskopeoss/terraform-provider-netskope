@@ -92,6 +92,7 @@ Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 
 | Test | File | Description |
 |------|------|-------------|
+| `TestAccNPARules_withNetLocation` | `nparules_resource_test.go` | Verifies net_location_obj accepts Network Location IDs (not IP strings) |
 | `TestAccAIGAppliance_basic` | `aigappliance_resource_test.go` | Create appliance, verify fields, import |
 | `TestAccAIGAppliance_update` | `aigappliance_resource_test.go` | Update name and host |
 | `TestAccAIGAppliance_import` | `aigappliance_resource_test.go` | Import state verification |
