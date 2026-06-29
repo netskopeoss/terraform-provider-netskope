@@ -200,31 +200,32 @@ func (p *PrivateAppsWithActivities) GetActivities() []Activities {
 }
 
 type NpaPolicyRuleData struct {
-	AccessMethod              []AccessMethod               `json:"access_method,omitempty"`
-	BNegateNetLocation        *bool                        `default:"false" json:"b_negateNetLocation"`
-	BNegateSrcCountries       *bool                        `default:"false" json:"b_negateSrcCountries"`
-	Classification            []string                     `json:"classification,omitempty"`
-	PeriodicReauth            *NpaPolicyRulePeriodicReauth `json:"periodic_reauth,omitempty"`
-	JSONVersion               *int64                       `default:"3" json:"json_version"`
-	DeviceClassificationID    []string                     `json:"device_classification_id,omitempty"`
-	MatchCriteriaAction       *MatchCriteriaAction         `json:"match_criteria_action,omitempty"`
-	NetLocationObj            []string                     `json:"net_location_obj,omitempty"`
-	OrganizationUnits         []string                     `json:"organization_units,omitempty"`
-	PolicyType                *PolicyType                  `default:"private-app" json:"policy_type"`
-	PrivateAppTagIds          []string                     `json:"privateAppTagIds,omitempty"`
-	PrivateAppTags            []string                     `json:"privateAppTags,omitempty"`
-	PrivateApps               []string                     `json:"privateApps,omitempty"`
-	SrcCountries              []string                     `json:"srcCountries,omitempty"`
-	UserGroups                []string                     `json:"userGroups,omitempty"`
-	UserType                  *UserType                    `json:"userType,omitempty"`
-	Users                     []string                     `json:"users,omitempty"`
-	Version                   *int64                       `json:"version,omitempty"`
-	DlpActions                []NpaPolicyRuleDlp           `json:"dlp_actions,omitempty"`
-	TssActions                []NpaPolicyRuleTss           `json:"tss_actions,omitempty"`
-	TssProfile                []string                     `json:"tss_profile,omitempty"`
-	ExternalDlp               *bool                        `default:"false" json:"external_dlp"`
-	PrivateAppsWithActivities []PrivateAppsWithActivities  `json:"privateAppsWithActivities,omitempty"`
-	ShowDlpProfileActionTable *bool                        `default:"false" json:"show_dlp_profile_action_table"`
+	AccessMethod           []AccessMethod               `json:"access_method,omitempty"`
+	BNegateNetLocation     *bool                        `default:"false" json:"b_negateNetLocation"`
+	BNegateSrcCountries    *bool                        `default:"false" json:"b_negateSrcCountries"`
+	Classification         []string                     `json:"classification,omitempty"`
+	PeriodicReauth         *NpaPolicyRulePeriodicReauth `json:"periodic_reauth,omitempty"`
+	JSONVersion            *int64                       `default:"3" json:"json_version"`
+	DeviceClassificationID []string                     `json:"device_classification_id,omitempty"`
+	MatchCriteriaAction    *MatchCriteriaAction         `json:"match_criteria_action,omitempty"`
+	// List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27").
+	NetLocationObj            []string                    `json:"net_location_obj,omitempty"`
+	OrganizationUnits         []string                    `json:"organization_units,omitempty"`
+	PolicyType                *PolicyType                 `default:"private-app" json:"policy_type"`
+	PrivateAppTagIds          []string                    `json:"privateAppTagIds,omitempty"`
+	PrivateAppTags            []string                    `json:"privateAppTags,omitempty"`
+	PrivateApps               []string                    `json:"privateApps,omitempty"`
+	SrcCountries              []string                    `json:"srcCountries,omitempty"`
+	UserGroups                []string                    `json:"userGroups,omitempty"`
+	UserType                  *UserType                   `json:"userType,omitempty"`
+	Users                     []string                    `json:"users,omitempty"`
+	Version                   *int64                      `json:"version,omitempty"`
+	DlpActions                []NpaPolicyRuleDlp          `json:"dlp_actions,omitempty"`
+	TssActions                []NpaPolicyRuleTss          `json:"tss_actions,omitempty"`
+	TssProfile                []string                    `json:"tss_profile,omitempty"`
+	ExternalDlp               *bool                       `default:"false" json:"external_dlp"`
+	PrivateAppsWithActivities []PrivateAppsWithActivities `json:"privateAppsWithActivities,omitempty"`
+	ShowDlpProfileActionTable *bool                       `default:"false" json:"show_dlp_profile_action_table"`
 	// Schedule configuration for policy enforcement timing
 	Schedule *NpaSchedule `json:"schedule,omitempty"`
 }

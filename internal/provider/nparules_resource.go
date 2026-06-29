@@ -150,7 +150,7 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Optional:    true,
 						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
-						Description: `Default: []`,
+						Description: `List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27"). Default: []`,
 					},
 					"organization_units": schema.ListAttribute{
 						Computed:    true,
