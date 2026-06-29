@@ -1799,3 +1799,221 @@ resource "netskope_aig_appliance" "test" {
 }
 `, testAccProviderConfig(), name, name)
 }
+
+// TestAccDrift_AIGAiProvider verifies no drift on AIG AI provider resources.
+// Key computed field: type (always "custom" for user-managed providers).
+func TestAccDrift_AIGAiProvider(t *testing.T) {
+	// Names must start with "cust-" and be ≤15 chars
+	rName := "cust-tf" + acctest.RandString(7)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_aig_ai_provider"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftAIGAiProviderConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_aig_ai_provider.test", "id"),
+				),
+			},
+			{
+				Config: testAccDriftAIGAiProviderConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftAIGAiProviderConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_aig_ai_provider" "test" {
+  name     = %q
+  host     = "ai-backend.example.com"
+  port     = 443
+  protocol = "https-skip"
+  schema   = "openai"
+}
+`, testAccProviderConfig(), name)
+}
+
+// TestAccDrift_AIGMcpServer verifies no drift on AIG MCP server resources.
+// Key computed fields: schema (has default "mcp-http"), type (always "custom").
+func TestAccDrift_AIGMcpServer(t *testing.T) {
+	// Names must start with "mcp-cust-" and be ≤19 chars
+	rName := "mcp-cust-tf" + acctest.RandString(7)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_aig_mcp_server"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftAIGMcpServerConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_aig_mcp_server.test", "id"),
+				),
+			},
+			{
+				Config: testAccDriftAIGMcpServerConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftAIGMcpServerConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_aig_mcp_server" "test" {
+  name     = %q
+  host     = "mcp-backend.example.com"
+  port     = 8080
+  path     = "/mcp"
+  protocol = "http"
+}
+`, testAccProviderConfig(), name)
+}
+
+// TestAccDrift_AIGRateLimit verifies no drift on AIG rate limit resources.
+func TestAccDrift_AIGRateLimit(t *testing.T) {
+	rName := "tfrl" + acctest.RandString(10)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_aig_rate_limit"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftAIGRateLimitConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_aig_rate_limit.test", "id"),
+				),
+			},
+			{
+				Config: testAccDriftAIGRateLimitConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftAIGRateLimitConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_aig_rate_limit" "test" {
+  name = %q
+
+  criteria = {
+    apply_on = "ai"
+  }
+
+  limit = {
+    requests = 100
+    unit     = "hour"
+  }
+}
+`, testAccProviderConfig(), name)
+}
+
+// TestAccDrift_AIGTokenGroup verifies no drift on AIG token group resources.
+// Key computed field: token_count (increments as tokens are added).
+func TestAccDrift_AIGTokenGroup(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_aig_token_group"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftAIGTokenGroupConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_aig_token_group.test", "id"),
+				),
+			},
+			{
+				Config: testAccDriftAIGTokenGroupConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftAIGTokenGroupConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_aig_token_group" "test" {
+  name        = %q
+  description = "Drift detection test group"
+}
+`, testAccProviderConfig(), name)
+}
+
+// TestAccDrift_AIGToken verifies no drift on AIG token resources.
+// Key computed fields: enabled, expire_time.
+func TestAccDrift_AIGToken(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_aig_token_group"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftAIGTokenConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_aig_token.test", "id"),
+				),
+			},
+			{
+				Config: testAccDriftAIGTokenConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftAIGTokenConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_aig_token_group" "test" {
+  name = %q
+}
+
+resource "netskope_aig_token" "test" {
+  name           = %q
+  token_group_id = netskope_aig_token_group.test.id
+  expire_in = {
+    unit  = "month"
+    value = 1
+  }
+}
+`, testAccProviderConfig(), name, name)
+}
