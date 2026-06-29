@@ -63,6 +63,37 @@ func init() {
 		F:            sweepAIGAppliances,
 		Dependencies: []string{},
 	})
+
+	resource.AddTestSweepers("netskope_aig_ai_provider", &resource.Sweeper{
+		Name:         "netskope_aig_ai_provider",
+		F:            sweepAIGAiProviders,
+		Dependencies: []string{},
+	})
+
+	resource.AddTestSweepers("netskope_aig_mcp_server", &resource.Sweeper{
+		Name:         "netskope_aig_mcp_server",
+		F:            sweepAIGMcpServers,
+		Dependencies: []string{},
+	})
+
+	resource.AddTestSweepers("netskope_aig_rate_limit", &resource.Sweeper{
+		Name:         "netskope_aig_rate_limit",
+		F:            sweepAIGRateLimits,
+		Dependencies: []string{},
+	})
+
+	// Tokens must be swept before the groups they belong to
+	resource.AddTestSweepers("netskope_aig_token", &resource.Sweeper{
+		Name:         "netskope_aig_token",
+		F:            sweepAIGTokens,
+		Dependencies: []string{},
+	})
+
+	resource.AddTestSweepers("netskope_aig_token_group", &resource.Sweeper{
+		Name:         "netskope_aig_token_group",
+		F:            sweepAIGTokenGroups,
+		Dependencies: []string{"netskope_aig_token"},
+	})
 }
 
 // TestMain runs the sweepers if the -sweep flag is passed
@@ -399,6 +430,184 @@ func sweepAIGAppliances(region string) error {
 		})
 		if err != nil {
 			log.Printf("[WARN] Error deleting AIG appliance %s: %s", appliance.Name, err)
+		}
+	}
+
+	return nil
+}
+
+func sweepAIGAiProviders(region string) error {
+	client, err := getSweepClient()
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	res, err := client.AIGAiProviders.ListObjects(ctx)
+	if err != nil {
+		return fmt.Errorf("error listing AIG AI providers for sweeping: %w", err)
+	}
+
+	if res.AigAiProviderListResponse == nil {
+		return nil
+	}
+
+	// Test AI provider names use "cust-tf" prefix (constraint: must start with "cust-")
+	for _, provider := range res.AigAiProviderListResponse.Elements {
+		if !strings.HasPrefix(provider.Name, "cust-tf") {
+			continue
+		}
+
+		log.Printf("[INFO] Sweeping AIG AI Provider: %s (ID: %s)", provider.Name, provider.ID)
+
+		_, err := client.AIGAiProvider.Delete(ctx, operations.DeleteAigAiProviderRequest{
+			ProviderID: provider.ID,
+		})
+		if err != nil {
+			log.Printf("[WARN] Error deleting AIG AI provider %s: %s", provider.Name, err)
+		}
+	}
+
+	return nil
+}
+
+func sweepAIGMcpServers(region string) error {
+	client, err := getSweepClient()
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	res, err := client.AIGMcpServers.ListObjects(ctx)
+	if err != nil {
+		return fmt.Errorf("error listing AIG MCP servers for sweeping: %w", err)
+	}
+
+	if res.AigMcpServerListResponse == nil {
+		return nil
+	}
+
+	// Test MCP server names use "mcp-cust-tf" prefix (constraint: must start with "mcp-cust-")
+	for _, server := range res.AigMcpServerListResponse.Elements {
+		if !strings.HasPrefix(server.Name, "mcp-cust-tf") {
+			continue
+		}
+
+		log.Printf("[INFO] Sweeping AIG MCP Server: %s (ID: %s)", server.Name, server.ID)
+
+		_, err := client.AIGMcpServer.Delete(ctx, operations.DeleteAigMcpServerRequest{
+			ServerID: server.ID,
+		})
+		if err != nil {
+			log.Printf("[WARN] Error deleting AIG MCP server %s: %s", server.Name, err)
+		}
+	}
+
+	return nil
+}
+
+func sweepAIGRateLimits(region string) error {
+	client, err := getSweepClient()
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	res, err := client.AIGRateLimits.ListObjects(ctx)
+	if err != nil {
+		return fmt.Errorf("error listing AIG rate limits for sweeping: %w", err)
+	}
+
+	if res.AigRateLimitListResponse == nil {
+		return nil
+	}
+
+	// Test rate limit names use "tfrl" prefix
+	for _, rule := range res.AigRateLimitListResponse.Elements {
+		if !strings.HasPrefix(rule.Name, "tfrl") {
+			continue
+		}
+
+		log.Printf("[INFO] Sweeping AIG Rate Limit: %s (ID: %s)", rule.Name, rule.ID)
+
+		_, err := client.AIGRateLimit.Delete(ctx, operations.DeleteAigRateLimitRequest{
+			RuleID: rule.ID,
+		})
+		if err != nil {
+			log.Printf("[WARN] Error deleting AIG rate limit %s: %s", rule.Name, err)
+		}
+	}
+
+	return nil
+}
+
+func sweepAIGTokens(region string) error {
+	client, err := getSweepClient()
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	res, err := client.AIGTokens.ListObjects(ctx)
+	if err != nil {
+		return fmt.Errorf("error listing AIG tokens for sweeping: %w", err)
+	}
+
+	if res.AigTokenListResponse == nil {
+		return nil
+	}
+
+	for _, token := range res.AigTokenListResponse.Elements {
+		if !strings.HasPrefix(token.Name, testAccResourcePrefix) {
+			continue
+		}
+
+		log.Printf("[INFO] Sweeping AIG Token: %s (ID: %s)", token.Name, token.ID)
+
+		_, err := client.AIGToken.Delete(ctx, operations.DeleteAigTokenRequest{
+			TokenID: token.ID,
+		})
+		if err != nil {
+			log.Printf("[WARN] Error deleting AIG token %s: %s", token.Name, err)
+		}
+	}
+
+	return nil
+}
+
+func sweepAIGTokenGroups(region string) error {
+	client, err := getSweepClient()
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	res, err := client.AIGTokenGroups.ListObjects(ctx)
+	if err != nil {
+		return fmt.Errorf("error listing AIG token groups for sweeping: %w", err)
+	}
+
+	if res.AigTokenGroupListResponse == nil {
+		return nil
+	}
+
+	for _, group := range res.AigTokenGroupListResponse.Elements {
+		if !strings.HasPrefix(group.Name, testAccResourcePrefix) {
+			continue
+		}
+
+		log.Printf("[INFO] Sweeping AIG Token Group: %s (ID: %s)", group.Name, group.ID)
+
+		_, err := client.AIGTokenGroup.Delete(ctx, operations.DeleteAigTokenGroupRequest{
+			GroupID: group.ID,
+		})
+		if err != nil {
+			log.Printf("[WARN] Error deleting AIG token group %s: %s", group.Name, err)
 		}
 	}
 
