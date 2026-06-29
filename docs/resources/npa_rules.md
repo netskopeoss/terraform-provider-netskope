@@ -31,8 +31,8 @@ resource "netskope_npa_rules" "my_nparules" {
       action_name = "allow"
     }
     net_location_obj = [
-      "190.123.150.10",
-      "190.218.0.0/16",
+      "27",
+      "42",
     ]
     organization_units = [
       "engineering/qa",
@@ -95,7 +95,7 @@ Optional:
 - `device_classification_id` (List of String) Default: []
 - `json_version` (Number) Default: 3
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
-- `net_location_obj` (List of String) Default: []
+- `net_location_obj` (List of String) List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27"). Default: []
 - `organization_units` (List of String) Default: []
 - `policy_type` (String) Default: "private-app"; must be "private-app"
 - `private_app_tags` (List of String) Default: []

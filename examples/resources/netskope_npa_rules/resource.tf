@@ -18,8 +18,8 @@ resource "netskope_npa_rules" "my_nparules" {
       template    = "...my_template..."
     }
     net_location_obj = [
-      "190.123.150.10",
-      "190.218.0.0/16",
+      "27",
+      "42",
     ]
     organization_units = [
       "engineering/qa",
