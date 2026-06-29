@@ -287,6 +287,34 @@ func TestAccNPARules_withDeviceClassification(t *testing.T) {
 	})
 }
 
+// TestAccNPARules_withNetLocation verifies that net_location_obj accepts
+// Network Location IDs (numeric strings) and round-trips correctly.
+func TestAccNPARules_withNetLocation(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_rules.test"
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_name", rName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.net_location_obj.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.net_location_obj.0", "1"),
+				),
+			},
+		},
+	})
+}
+
 // TestAccNPARules_updateFields verifies that updating rule_name, description,
 // and adding private_apps works correctly through the update path.
 func TestAccNPARules_updateFields(t *testing.T) {
