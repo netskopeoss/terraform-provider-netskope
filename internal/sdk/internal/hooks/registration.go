@@ -72,4 +72,12 @@ func initHooks(h *Hooks) {
 	// URL list - response transformations (deploy after CRUD, wrap list response)
 	urllist := &urllistAfterSuccess{}
 	h.registerAfterSuccessHook(urllist)
+
+	// AIG rate limit - strip criteria fields excluded by the API based on apply_on
+	aigRateLimit := &aigRateLimitRequestHook{}
+	h.registerBeforeRequestHook(aigRateLimit)
+
+	// AIG token - remove expire_in when not configured (zero values rejected by API)
+	aigToken := &aigTokenRequestHook{}
+	h.registerBeforeRequestHook(aigToken)
 }
