@@ -7,17 +7,17 @@ import (
 	"fmt"
 )
 
-type Protocol string
+type ProtocolItemProtocol string
 
 const (
-	ProtocolTCP Protocol = "tcp"
-	ProtocolUDP Protocol = "udp"
+	ProtocolItemProtocolTCP ProtocolItemProtocol = "tcp"
+	ProtocolItemProtocolUDP ProtocolItemProtocol = "udp"
 )
 
-func (e Protocol) ToPointer() *Protocol {
+func (e ProtocolItemProtocol) ToPointer() *ProtocolItemProtocol {
 	return &e
 }
-func (e *Protocol) UnmarshalJSON(data []byte) error {
+func (e *ProtocolItemProtocol) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -26,21 +26,21 @@ func (e *Protocol) UnmarshalJSON(data []byte) error {
 	case "tcp":
 		fallthrough
 	case "udp":
-		*e = Protocol(v)
+		*e = ProtocolItemProtocol(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for Protocol: %v", v)
+		return fmt.Errorf("invalid value for ProtocolItemProtocol: %v", v)
 	}
 }
 
 // ProtocolItem - Protocol configuration - type field for tcp/udp value
 type ProtocolItem struct {
-	Port      *string   `json:"port,omitempty"`
-	Protocol  *Protocol `json:"type,omitempty"`
-	CreatedAt *string   `json:"created_at,omitempty"`
-	ID        *int      `json:"id,omitempty"`
-	ServiceID *int      `json:"service_id,omitempty"`
-	UpdatedAt *string   `json:"updated_at,omitempty"`
+	Port      *string               `json:"port,omitempty"`
+	Protocol  *ProtocolItemProtocol `json:"type,omitempty"`
+	CreatedAt *string               `json:"created_at,omitempty"`
+	ID        *int                  `json:"id,omitempty"`
+	ServiceID *int                  `json:"service_id,omitempty"`
+	UpdatedAt *string               `json:"updated_at,omitempty"`
 }
 
 func (p *ProtocolItem) GetPort() *string {
@@ -50,7 +50,7 @@ func (p *ProtocolItem) GetPort() *string {
 	return p.Port
 }
 
-func (p *ProtocolItem) GetProtocol() *Protocol {
+func (p *ProtocolItem) GetProtocol() *ProtocolItemProtocol {
 	if p == nil {
 		return nil
 	}

@@ -88,6 +88,17 @@ Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 | `TestAccNPARules_ruleOrderBottom` | `nparules_resource_test.go` | Rule placement order=bottom verification |
 | `TestAccNPARules_ruleOrderBefore` | `nparules_resource_test.go` | Rule placement order=before verification |
 
+#### Added in v0.4.6
+
+| Test | File | Description |
+|------|------|-------------|
+| `TestAccAIGAppliance_basic` | `aigappliance_resource_test.go` | Create appliance, verify fields, import |
+| `TestAccAIGAppliance_update` | `aigappliance_resource_test.go` | Update name and host |
+| `TestAccAIGAppliance_import` | `aigappliance_resource_test.go` | Import state verification |
+| `TestAccAIGApplianceDataSource_basic` | `aigappliance_data_source_test.go` | Data source lookup by id |
+| `TestAccAIGApplianceEnrollmentToken_basic` | `aigapplianceenrollmenttoken_resource_test.go` | Generate enrollment token; verify token + expiry set |
+| `TestAccDrift_AIGAppliance` | `drift_detection_test.go` | No perpetual plan diff after create |
+
 #### Added in v0.4.4
 
 | Test | File | Description |
@@ -405,6 +416,28 @@ Fields tested per resource across test types. Columns:
 | priority | | | | | | Computed, server-managed |
 | policy_names | | | | | | Computed, read-only |
 
+### netskope_aig_appliance (v0.4.6)
+
+| Field | C | U | I | D | O | Notes |
+|-------|---|---|---|---|---|-------|
+| name | x | x | x | x | | |
+| host | x | x | x | x | | |
+| ports.http.enable | x | | x | x | | |
+| ports.http.port | x | | x | x | | |
+| ports.https.enable | x | | x | x | | |
+| ports.https.port | x | | x | x | | |
+| status | x | | x | x | | Computed; "not-registered" on create |
+| ai_provider_ids | | | | | | **NOT TESTED** |
+| certificate_imported | | | | | | **NOT TESTED** Computed |
+
+### netskope_aig_appliance_enrollment_token (v0.4.6)
+
+| Field | C | U | I | D | O | Notes |
+|-------|---|---|---|---|---|-------|
+| appliance_id | x | | | | | Input, references aig_appliance |
+| enrollment_token | x | | | | | Computed; verified set |
+| expire_time | x | | | | | Computed; verified set |
+
 ### netskope_urllist (v0.5.0)
 
 | Field | C | U | I | D | O | Notes |
@@ -458,6 +491,8 @@ All tests SKIPPED - valid event_types not documented by API.
 | netskope_device_classification_options_list | Yes | options.#, options.0.key, options.0.value | v0.4.2 |
 | netskope_urllist | Yes | id, name, data.type, data.urls via AttrPair | v0.5.0 |
 | netskope_urllist_list | Yes | items.# is set | v0.5.0 |
+| netskope_aig_appliance | Yes | id, name, host, status via AttrPair | v0.4.6 |
+| netskope_aig_appliance_list | **NO** | Missing test file | v0.4.6 |
 
 ---
 
@@ -570,6 +605,7 @@ a second plan asserting `ExpectEmptyPlan()`.
 | `TestAccDrift_GRETunnel_UnsortedXffIpList` | GRE Tunnel | Unsorted xff_ip_list (0.3.5, BUG-002) |
 | `TestAccDrift_GRETunnel_MinimalConfig` | GRE Tunnel | Minimal config, no optional computed drift (0.3.5) |
 | `TestAccDrift_IPSecTunnel_MinimalConfig` | IPSec Tunnel | Minimal config, no optional computed drift (0.3.5) |
+| `TestAccDrift_AIGAppliance` | AIG Appliance | name, host, ports (0.4.6) |
 
 ---
 
