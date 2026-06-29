@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.4.6] - TBD
+
+### Added
+
+**AI Gateway (AIG) resources and data sources** — Full Terraform support for the Netskope AI Gateway:
+
+- **`netskope_aig_appliance`** resource and data source — Manage AIG appliances. Fields: `name`, `host`, `ports` (http/https), `status`, `ai_provider_ids`, `mcp_server_ids`, `sku_addons`, `certificate_imported`.
+- **`netskope_aig_appliance_list`** data source — List all AIG appliances.
+- **`netskope_aig_appliance_capacity_list`** data source — List capacity metrics per appliance.
+- **`netskope_aig_appliance_image_list`** data source — List available AIG firmware images.
+- **`netskope_aig_appliance_enrollment_token`** resource — Generate an enrollment token for a registered AIG appliance. Token value and expiry are stored as computed (sensitive) attributes.
+- **`netskope_aig_ai_provider`** resource and data source — Manage custom AI providers (e.g. on-prem Ollama, private LLM endpoints). Supports `openai`, `gemini`, and `claude` schemas. Name must start with `cust-`.
+- **`netskope_aig_ai_provider_list`** data source — List all AI providers (predefined and custom).
+- **`netskope_aig_mcp_server`** resource and data source — Manage custom MCP (Model Context Protocol) servers for AI agent workflows. Supports tool/resource/prompt filtering. Name must start with `mcp-cust-`.
+- **`netskope_aig_mcp_server_list`** data source — List all MCP servers (predefined and custom).
+- **`netskope_aig_rate_limit`** resource and data source — Manage AI Gateway rate limit rules for AI provider or MCP server traffic. Supports per-token-group and per-model filtering.
+- **`netskope_aig_rate_limit_list`** data source — List all rate limit rules.
+- **`netskope_aig_token_group`** resource and data source — Manage AIG token groups for grouping API tokens.
+- **`netskope_aig_token_group_list`** data source — List all token groups.
+- **`netskope_aig_token`** resource and data source — Manage AIG tokens. The token value is write-only (returned only on create) and stored sensitive in state.
+- **`netskope_aig_token_list`** data source — List all tokens.
+
+### Fixed
+- **Fixed "Cannot configure source IP criteria when flag is disabled" error on `netskope_npa_rules`** — On tenants where the Egress IP feature flag is disabled, the API rejected rule create/update requests that included `b_negateNetLocation` or `b_negateSrcCountries` even when set to `false`. These flags are now stripped from the request when no source IP objects (`net_location_obj`) or source countries (`src_countries`) are configured.
+- **Registered `netskope_npa_rules_order` in the provider** — The resource was implemented in v0.4.3 but accidentally omitted from provider registration, causing "Invalid resource type" errors.
+
 ## [0.4.5] - 2026-05-29
 
 ### Added

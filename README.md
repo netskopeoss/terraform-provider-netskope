@@ -8,7 +8,33 @@ The official Terraform provider for [Netskope](https://www.netskope.com/), enabl
 
 > **Examples:** See [terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples) for ready-to-use Terraform configurations covering NPA private apps, policy-as-code, device classification, RBAC labels, and more.
 
-## Upgrading to v0.4.5
+## Upgrading to v0.4.6
+
+### What's New in v0.4.6
+
+**AI Gateway (AIG)** — Terraform resources and data sources for the Netskope AI Gateway are now available:
+
+| Resource / Data Source | Description |
+|---|---|
+| `netskope_aig_appliance` | Manage AIG appliances (create, read, update, delete, import) |
+| `netskope_aig_appliance_list` | List all AIG appliances |
+| `netskope_aig_appliance_capacity_list` | List capacity metrics per appliance |
+| `netskope_aig_appliance_image_list` | List available AIG firmware images |
+| `netskope_aig_appliance_enrollment_token` | Generate enrollment tokens for AIG appliances |
+| `netskope_aig_ai_provider` | Manage custom AI providers (on-prem LLM endpoints) |
+| `netskope_aig_ai_provider_list` | List all AI providers |
+| `netskope_aig_mcp_server` | Manage custom MCP servers for AI agent workflows |
+| `netskope_aig_mcp_server_list` | List all MCP servers |
+| `netskope_aig_rate_limit` | Manage AI Gateway rate limit rules |
+| `netskope_aig_rate_limit_list` | List all rate limit rules |
+| `netskope_aig_token_group` | Manage AIG token groups |
+| `netskope_aig_token_group_list` | List all token groups |
+| `netskope_aig_token` | Manage AIG tokens (token value is sensitive, returned only on create) |
+| `netskope_aig_token_list` | List all tokens |
+
+**Bug fixes:**
+- **Fixed "Cannot configure source IP criteria when flag is disabled"** on `netskope_npa_rules` — On tenants where the Egress IP feature flag is disabled, rule creates/updates failed with this API error even when no source IP criteria were configured. The provider no longer sends the negate flags when their associated criteria lists are empty.
+- **Fixed `netskope_npa_rules_order` not found** — The resource was registered in v0.4.3's implementation but accidentally missing from provider registration.
 
 ### What's New in v0.4.5
 
@@ -131,6 +157,13 @@ resource "netskope_npa_publisher" "pub" {
 
 ## Features
 
+### AI Gateway (AIG)
+- **Appliances** — Manage AIG appliance deployments, enrollment tokens, capacity, and firmware images
+- **AI Providers** — Configure custom AI provider backends (OpenAI, Gemini, or Claude-compatible endpoints)
+- **MCP Servers** — Manage custom MCP (Model Context Protocol) servers for AI agent tool/resource access
+- **Rate Limits** — Define per-appliance rate limit rules for AI provider and MCP server traffic
+- **Token Groups & Tokens** — Manage API token groups and individual tokens for AIG authentication
+
 ### Netskope Private Access (NPA)
 - **Private Applications** — Create and manage private applications accessible via browser (clientless) or NPA client, with label assignment via `label_ids`
 - **Publishers** — Deploy and configure NPA publishers with upgrade profiles, alerting, and bulk operations
@@ -166,7 +199,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "~> 0.4.5"
+      version = "~> 0.4.6"
     }
   }
 }
@@ -268,6 +301,13 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 
 | Resource | Description |
 |---|---|
+| [netskope_aig_appliance](docs/resources/aig_appliance.md) | AI Gateway appliances |
+| [netskope_aig_appliance_enrollment_token](docs/resources/aig_appliance_enrollment_token.md) | AIG appliance enrollment tokens |
+| [netskope_aig_ai_provider](docs/resources/aig_ai_provider.md) | Custom AI providers |
+| [netskope_aig_mcp_server](docs/resources/aig_mcp_server.md) | Custom MCP servers |
+| [netskope_aig_rate_limit](docs/resources/aig_rate_limit.md) | AI Gateway rate limit rules |
+| [netskope_aig_token_group](docs/resources/aig_token_group.md) | AIG token groups |
+| [netskope_aig_token](docs/resources/aig_token.md) | AIG tokens |
 | [netskope_npa_private_app](docs/resources/npa_private_app.md) | Private applications |
 | [netskope_npa_private_app_public_host](docs/resources/npa_private_app_public_host.md) | Private app public host configuration |
 | [netskope_npa_publisher](docs/resources/npa_publisher.md) | NPA publishers |
@@ -294,6 +334,20 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 
 | Data Source | Description |
 |---|---|
+| [netskope_aig_appliance](docs/data-sources/aig_appliance.md) | Look up an AIG appliance |
+| [netskope_aig_appliance_list](docs/data-sources/aig_appliance_list.md) | List AIG appliances |
+| [netskope_aig_appliance_capacity_list](docs/data-sources/aig_appliance_capacity_list.md) | List AIG appliance capacity metrics |
+| [netskope_aig_appliance_image_list](docs/data-sources/aig_appliance_image_list.md) | List AIG firmware images |
+| [netskope_aig_ai_provider](docs/data-sources/aig_ai_provider.md) | Look up an AI provider |
+| [netskope_aig_ai_provider_list](docs/data-sources/aig_ai_provider_list.md) | List AI providers |
+| [netskope_aig_mcp_server](docs/data-sources/aig_mcp_server.md) | Look up an MCP server |
+| [netskope_aig_mcp_server_list](docs/data-sources/aig_mcp_server_list.md) | List MCP servers |
+| [netskope_aig_rate_limit](docs/data-sources/aig_rate_limit.md) | Look up a rate limit rule |
+| [netskope_aig_rate_limit_list](docs/data-sources/aig_rate_limit_list.md) | List rate limit rules |
+| [netskope_aig_token_group](docs/data-sources/aig_token_group.md) | Look up a token group |
+| [netskope_aig_token_group_list](docs/data-sources/aig_token_group_list.md) | List token groups |
+| [netskope_aig_token](docs/data-sources/aig_token.md) | Look up a token |
+| [netskope_aig_token_list](docs/data-sources/aig_token_list.md) | List tokens |
 | [netskope_npa_private_app](docs/data-sources/npa_private_app.md) | Look up a private app |
 | [netskope_npa_private_apps_list](docs/data-sources/npa_private_apps_list.md) | List private apps |
 | [netskope_npa_private_policy_in_use](docs/data-sources/npa_private_policy_in_use.md) | Check policy usage |
@@ -348,7 +402,8 @@ See below for version-specific upgrade notes. For full details, see the [Migrati
 
 - **From v0.2.x**: Version 0.3.x is a complete rewrite with renamed resources and changed schemas. Existing state must be re-imported. See the [Migration Guide](docs/MIGRATION_GUIDE.md).
 - **From v0.3.2**: See the [v0.3.2 to v0.3.3 upgrade section](docs/MIGRATION_GUIDE.md#upgrading-from-v032-to-v033) for schema changes.
-- **From v0.3.x to v0.4.x**: See [Upgrading to v0.4.5](#upgrading-to-v045) at the top of this document.
+- **From v0.3.x to v0.4.x**: See the [Migration Guide](docs/MIGRATION_GUIDE.md) for schema changes.
+- **From v0.4.x to v0.4.6**: See [What's New in v0.4.6](#whats-new-in-v046) at the top of this document.
 
 ## Development
 

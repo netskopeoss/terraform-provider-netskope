@@ -1,0 +1,1 @@
+terraform import netskope_aig_ai_provider.my_netskope_aig_ai_provider "019812aa-bdba-7a48-baa2-2de8c6006fda"
