@@ -49,6 +49,12 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
 
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1"
+          terraform_wrapper: false
+
       - name: Download dependencies
         run: go mod download
 
