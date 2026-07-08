@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## [0.4.7] - Unreleased
+## [0.4.7] - 2026-07-08
 
 ### Fixed
 - **`netskope_npa_publisher` ReadResource crash for publishers with connected apps** ([BUG-017](docs/bugs/BUG-017-publisher-connected-apps-type-mismatch.md), [#96](https://github.com/netskopeoss/terraform-provider-netskope/issues/96)) — The `GET /infrastructure/publishers/{id}` endpoint changed `connected_apps` from an array of strings to an array of objects. The SDK struct still declared `[]string`, causing `json: cannot unmarshal object into Go value of type string` on every state refresh for publishers with at least one app connected. Fixed by excluding the field from SDK deserialization (`x-speakeasy-ignore`); it was already excluded from Terraform state. **Affects all releases from v0.3.3 onwards** — upgrade to v0.4.7 to resolve.
