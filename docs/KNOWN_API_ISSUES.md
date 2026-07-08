@@ -25,6 +25,8 @@ This document tracks known behavioral inconsistencies and quirks in the Netskope
   - [13. API Tokens Cannot Resolve User Notification Templates for Block Rules](#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules)
   - [14. `device_classification_id` Type Mismatch (String vs Integer)](#14-device_classification_id-type-mismatch-string-vs-integer)
   - [16. NPA Rules Ordering — Eventual Consistency](#16-npa-rules-ordering--eventual-consistency)
+- [Infrastructure API Issues (17)](#infrastructure-api-issues-17)
+  - [17. `connected_apps` Field Shape Differs Between List and Get-by-ID](#17-connected_apps-field-shape-differs-between-list-and-get-by-id)
 - [Terraform Provider Implications](#terraform-provider-implications)
 - [General Recommendations](#general-recommendations)
 
@@ -724,6 +726,33 @@ The provider then sleeps 2 seconds and verifies the live order matches the desir
 The SDK's default retry policy (exponential backoff, up to 5 minutes per call on 429 or 5XX responses) applies to each PATCH. Apply time may be longer if the API returns transient errors.
 
 **Status:** Known API limitation — no fix possible without an atomic reorder endpoint. Workaround implemented in `netskope_npa_rules_order` resource.
+
+---
+
+## Infrastructure API Issues (17)
+
+### 17. `connected_apps` Field Shape Differs Between List and Get-by-ID
+
+**Endpoints:** `GET /api/v2/infrastructure/publishers` vs `GET /api/v2/infrastructure/publishers/{id}`
+
+**Symptom:** `netskope_npa_publisher` ReadResource fails with `json: cannot unmarshal object into Go value of type string` for publishers that have at least one private app connected.
+
+**Details:** The two publisher endpoints return `connected_apps` in different shapes:
+
+- **List** (`GET /infrastructure/publishers`): array of strings
+  ```json
+  "connected_apps": ["[AppName]"]
+  ```
+- **Get-by-ID** (`GET /infrastructure/publishers/{id}`): array of objects
+  ```json
+  "connected_apps": [{"access_method": "client", "host": "...", "last_connected": null, "name": "[AppName]"}]
+  ```
+
+The SDK struct previously declared `ConnectedApps []string`, which matched the list endpoint but broke on the get-by-ID response for publishers with connected apps. Publishers with no connected apps returned `connected_apps: []` (empty array), which masked the bug in tests.
+
+**Workaround:** The `connected_apps` field is marked `x-speakeasy-ignore: true` in the OAS for the `publisher_response` (get-by-ID) schema. This removes the field from the SDK struct entirely — the JSON deserializer skips it, avoiding the type mismatch. The field was already excluded from Terraform state (`x-speakeasy-terraform-ignore`), so there is no change in Terraform behaviour.
+
+**Fixed in:** v0.4.7 — see [BUG-017](bugs/BUG-017-publisher-connected-apps-type-mismatch.md), GitHub issue #96.
 
 ---
 

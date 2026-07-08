@@ -141,6 +141,44 @@ func TestAccNPAPublisher_withUpgradeProfile(t *testing.T) {
 	})
 }
 
+// TestAccNPAPublisher_withConnectedApp verifies that publisher ReadResource
+// succeeds when the publisher has at least one private app connected to it.
+// Regression test for BUG-017: the GET-by-ID endpoint returns connected_apps
+// as an array of objects, not strings. Without the fix the Read fails with:
+//
+//	json: cannot unmarshal object into Go value of type string
+func TestAccNPAPublisher_withConnectedApp(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_publisher.test"
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_publisher"),
+		Steps: []resource.TestStep{
+			{
+				// Create publisher + private app assigned to it.
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName, "publisher_id"),
+					resource.TestCheckResourceAttrSet(resourceName, "publisher_id"),
+				),
+			},
+			{
+				// Re-read the publisher now that it has a connected app.
+				// This exercises the connected_apps object deserialization path.
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: vars,
+				PlanOnly:        true,
+			},
+		},
+	})
+}
+
 // TestAccNPAPublisher_disappears verifies the resource lifecycle works correctly.
 // Note: A true "disappears" test that deletes via API requires the provider's
 // Read function to properly handle "resource not found" responses and remove
