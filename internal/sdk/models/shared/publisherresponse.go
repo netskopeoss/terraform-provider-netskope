@@ -254,7 +254,6 @@ type PublisherResponseData struct {
 	Assessment                 *PublisherResponseAssessment   `json:"assessment,omitempty"`
 	Capabilities               *PublisherResponseCapabilities `json:"capabilities,omitempty"`
 	CommonName                 *string                        `json:"common_name,omitempty"`
-	ConnectedApps              []string                       `json:"connected_apps,omitempty"`
 	PublisherID                *int                           `json:"id,omitempty"`
 	Labels                     []PublisherResponseLabels      `json:"labels,omitempty"`
 	Lbrokerconnect             *bool                          `json:"lbrokerconnect,omitempty"`
@@ -298,13 +297,6 @@ func (p *PublisherResponseData) GetCommonName() *string {
 		return nil
 	}
 	return p.CommonName
-}
-
-func (p *PublisherResponseData) GetConnectedApps() []string {
-	if p == nil {
-		return nil
-	}
-	return p.ConnectedApps
 }
 
 func (p *PublisherResponseData) GetPublisherID() *int {
