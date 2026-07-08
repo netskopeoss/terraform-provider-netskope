@@ -80,4 +80,9 @@ func initHooks(h *Hooks) {
 	// AIG token - remove expire_in when not configured (zero values rejected by API)
 	aigToken := &aigTokenRequestHook{}
 	h.registerBeforeRequestHook(aigToken)
+
+	// Publisher delete guard - blocks delete if connected apps are present and
+	// returns a descriptive error listing the app names (see BUG-017)
+	publisherDeleteGuard := &publisherDeleteGuardHook{}
+	h.registerBeforeRequestHook(publisherDeleteGuard)
 }

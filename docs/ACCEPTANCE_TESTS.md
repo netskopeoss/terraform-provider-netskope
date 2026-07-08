@@ -88,6 +88,12 @@ Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 | `TestAccNPARules_ruleOrderBottom` | `nparules_resource_test.go` | Rule placement order=bottom verification |
 | `TestAccNPARules_ruleOrderBefore` | `nparules_resource_test.go` | Rule placement order=before verification |
 
+#### Added in v0.4.7
+
+| Test | File | Description |
+|------|------|-------------|
+| `TestAccPlatformOAuth2Token_basic` | `platformoauth2token_data_source_test.go` | Exchange client credentials for bearer token; requires `NETSKOPE_OAUTH2_CLIENT_ID` and `NETSKOPE_OAUTH2_CLIENT_SECRET` env vars (skipped if absent) |
+
 #### Added in v0.4.6
 
 | Test | File | Description |
@@ -468,7 +474,7 @@ All tests SKIPPED - valid event_types not documented by API.
 | netskope_ip_sec_po_ps_list | **NO** | Missing test file |
 | netskope_npa_private_app | Yes | private_app_id, name, hostname via AttrPair |
 | netskope_npa_private_apps_list | Yes | private_apps.#, private_app_id > 0 (BUG-012) |
-| netskope_npa_publisher | Yes | publisher_id, publisher_name via AttrPair |
+| netskope_npa_publisher | Yes | publisher_id, publisher_name via AttrPair; `TestAccNPAPublisher_withConnectedApp` exercises BUG-017 read path with connected apps |
 | netskope_npa_publishers_list | Yes | data.publishers.# is set |
 | netskope_npa_policy_groups | Yes | id, group_name via AttrPair |
 | netskope_npa_policy_groups_list | Yes | data.# is set |
