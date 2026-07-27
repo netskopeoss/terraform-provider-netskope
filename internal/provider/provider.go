@@ -149,6 +149,7 @@ func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Reso
 		NewAIGRateLimitResource,
 		NewAIGTokenResource,
 		NewAIGTokenGroupResource,
+		NewCustomCategoryResource,
 		NewDestinationProfileResource,
 		NewDeviceClassificationTagResource,
 		NewDNSProfileV2Resource,
@@ -169,6 +170,7 @@ func (p *NetskopeProvider) Resources(ctx context.Context) []func() resource.Reso
 		NewNPARulesResource,
 		NewNPARulesOrderResource,
 		NewRBACLabelResource,
+		NewServiceObjectResource,
 		NewUrllistResource,
 	}
 }
@@ -189,6 +191,8 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 		NewAIGTokenGroupDataSource,
 		NewAIGTokenGroupListDataSource,
 		NewAIGTokenListDataSource,
+		NewCustomCategoryDataSource,
+		NewCustomCategoryListDataSource,
 		NewDestinationProfileDataSource,
 		NewDestinationProfileListDataSource,
 		NewDeviceClassificationOptionsListDataSource,
@@ -225,6 +229,8 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 		NewNPARulesListDataSource,
 		NewRBACLabelDataSource,
 		NewRBACLabelListDataSource,
+		NewServiceObjectDataSource,
+		NewServiceObjectListDataSource,
 		NewUrllistDataSource,
 		NewUrllistListDataSource,
 	}
