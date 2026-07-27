@@ -112,4 +112,14 @@ testacc-aig:
 	@echo "Running AI Gateway appliance acceptance tests..."
 	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccAIGAppliance -timeout 30m
 
-.PHONY: all install build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels testacc-aig
+.PHONY: testacc-customcategory
+testacc-customcategory:
+	@echo "Running custom category acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccCustomCategory -timeout 30m
+
+.PHONY: testacc-serviceobject
+testacc-serviceobject:
+	@echo "Running service object acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccServiceObject -timeout 30m
+
+.PHONY: all install build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels testacc-aig testacc-customcategory testacc-serviceobject
