@@ -72,6 +72,8 @@ type TerraformProviderNs struct {
 	DNSProfileV2                *DNSProfileV2
 	Ips                         *Ips
 	DestinationProfile          *DestinationProfile
+	CustomCategory              *CustomCategory
+	ServiceObject               *ServiceObject
 	Rbac                        *Rbac
 	RBACLabel                   *RBACLabel
 	Deviceclassification        *Deviceclassification
@@ -226,6 +228,8 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk.DNSProfileV2 = newDNSProfileV2(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Ips = newIps(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.DestinationProfile = newDestinationProfile(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.CustomCategory = newCustomCategory(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.ServiceObject = newServiceObject(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Rbac = newRbac(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.RBACLabel = newRBACLabel(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Deviceclassification = newDeviceclassification(sdk, sdk.sdkConfiguration, sdk.hooks)
