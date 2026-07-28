@@ -6,6 +6,6 @@ The files in this directory are minimal single-resource snippets used to generat
 
 End-to-end configurations — covering NPA, GRE/IPSec tunnels, web policy, and more — are maintained in a separate repository:
 
-**[github.com/netskopeoss/terraform-netskope-examples](https://github.com/netskopeoss/terraform-netskope-examples)**
+**[github.com/jharris-ns/terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples)**
 
 Each example in that repo includes a `README.md` with quick-start instructions, key patterns, and common mistakes.
