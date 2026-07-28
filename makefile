@@ -122,4 +122,9 @@ testacc-serviceobject:
 	@echo "Running service object acceptance tests..."
 	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccServiceObject -timeout 30m
 
-.PHONY: all install build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels testacc-aig testacc-customcategory testacc-serviceobject
+.PHONY: testacc-rbacrole
+testacc-rbacrole:
+	@echo "Running RBAC role acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccRBACRole -timeout 30m
+
+.PHONY: all install build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels testacc-aig testacc-customcategory testacc-serviceobject testacc-rbacrole

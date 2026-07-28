@@ -1,0 +1,1 @@
+terraform import netskope_rbac_role.my_netskope_rbac_role 0
