@@ -36,6 +36,7 @@ type ServiceObjectResourceModel struct {
 	ID          types.String                    `tfsdk:"id"`
 	Name        types.String                    `tfsdk:"name"`
 	Protocols   *tfTypes.ServiceObjectProtocols `tfsdk:"protocols"`
+	Type        types.String                    `tfsdk:"type"`
 }
 
 func (r *ServiceObjectResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -95,6 +96,10 @@ func (r *ServiceObjectResource) Schema(ctx context.Context, req resource.SchemaR
 					},
 				},
 				Description: `Protocol configuration. At least one protocol must be set.`,
+			},
+			"type": schema.StringAttribute{
+				Computed:    true,
+				Description: `Object type — custom (user-created) or PREDEFINED (Netskope built-in, read-only) (API-computed)`,
 			},
 		},
 	}

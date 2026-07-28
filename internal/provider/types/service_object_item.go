@@ -11,4 +11,5 @@ type ServiceObjectItem struct {
 	ID          types.String            `tfsdk:"id"`
 	Name        types.String            `tfsdk:"name"`
 	Protocols   *ServiceObjectProtocols `tfsdk:"protocols"`
+	Type        types.String            `tfsdk:"type"`
 }

@@ -36,6 +36,11 @@ func (r *ServiceObjectDataSourceModel) RefreshFromSharedServiceObjectItem(ctx co
 				r.Protocols.UDP = append(r.Protocols.UDP, types.StringValue(v))
 			}
 		}
+		if resp.Type != nil {
+			r.Type = types.StringValue(string(*resp.Type))
+		} else {
+			r.Type = types.StringNull()
+		}
 	}
 
 	return diags
