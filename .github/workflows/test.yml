@@ -63,4 +63,6 @@ jobs:
           TF_ACC: "1"
           NETSKOPE_API_KEY: ${{ secrets.NETSKOPE_API_KEY }}
           NETSKOPE_SERVER_URL: ${{ secrets.NETSKOPE_SERVER_URL }}
+          NETSKOPE_OAUTH2_CLIENT_ID: ${{ secrets.NETSKOPE_OAUTH2_CLIENT_ID }}
+          NETSKOPE_OAUTH2_CLIENT_SECRET: ${{ secrets.NETSKOPE_OAUTH2_CLIENT_SECRET }}
         run: go test -v ./internal/provider/... -timeout 120m -parallel 8

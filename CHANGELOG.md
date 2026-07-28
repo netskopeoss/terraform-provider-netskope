@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.4.8] - 2026-07-28
+
+### Added
+
+- **`netskope_custom_category`** resource and data source — Manage custom URL categories for Real-time Protection policies. Combines URL lists (included/excluded) and predefined Netskope categories into named policy objects. Auto-deployed after create/update.
+- **`netskope_custom_category_list`** data source — List all custom categories on the tenant.
+- **`netskope_service_object`** resource and data source — Manage service objects (port/protocol profiles) for Real-time Protection firewall rules. Supports `icmp`, `tcp`, `udp`, and `tcp_udp` protocol fields with single ports (`"443"`) and ranges (`"8080-9090"`). Auto-deployed after create/update.
+- **`netskope_service_object_list`** data source — List all service objects (custom and Netskope predefined). Each element exposes a `type` attribute (`"custom"` or `"PREDEFINED"`) for filtering.
+- **`netskope_rbac_role`** resource and data source — Manage custom RBAC admin roles via `/api/v2/rbac/roles`. Covers `name`, `api_groups` (per-group `permission` and `constraints`), `scope`, `ip_allow_list`, and `obfuscation`. Only custom roles are writable; predefined roles are read-only.
+- **`netskope_rbac_role_list`** data source — List all RBAC roles on the tenant.
+- **`netskope_platform_oauth2_token`** data source — Exchange OAuth2 client credentials for a bearer access token (RFC 6749 `client_credentials` grant). Use this to obtain tokens as Terraform values for token rotation, passing to other resources, or external tooling. The token is re-fetched on every plan and apply. `access_token` is sensitive. Requires an OAuth2 client configured in the Netskope tenant UI under Settings → Security Cloud Platform → OAuth2 Settings. **Note:** this data source returns a token as a value — it does not change how the provider authenticates its own API calls (provider-level OAuth2 authentication is planned for v0.4.9).
+
+### Fixed
+
+- **`netskope_service_object` create/update failed with `tcp_udp` protocol** — The API returns integer port values in create/update responses, but the AfterSuccess hook only normalized GET responses. Ports in create/update responses now go through the same int-to-string normalization, resolving `json: cannot unmarshal number into Go value of type string` errors.
+
 ## [0.4.7] - 2026-07-08
 
 ### Fixed
