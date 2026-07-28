@@ -85,4 +85,15 @@ func initHooks(h *Hooks) {
 	// returns a descriptive error listing the app names (see BUG-017)
 	publisherDeleteGuard := &publisherDeleteGuardHook{}
 	h.registerBeforeRequestHook(publisherDeleteGuard)
+
+	// Service object - cap limit at 150 (API max) and normalize predefined object
+	// responses (integer ports → strings, uppercase status → lowercase)
+	serviceObj := &serviceObjectHook{}
+	h.registerBeforeRequestHook(serviceObj)
+	h.registerAfterSuccessHook(serviceObj)
+
+	// RBAC role - fetch full role after create/update (API returns only {roleId}),
+	// and normalize ipAllowList.ipList from objects to strings on GET responses
+	rbacRole := &rbacRoleHook{}
+	h.registerAfterSuccessHook(rbacRole)
 }
