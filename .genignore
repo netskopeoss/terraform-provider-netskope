@@ -1,5 +1,6 @@
 registration.go
 README.md
+examples/README.md
 docs/index.md
 docs/resources/npa_private_app.md
 internal/provider/npaprivateapp_resource_planmodify.go

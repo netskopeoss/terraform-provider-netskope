@@ -84,6 +84,10 @@ func (r *ServiceObjectListDataSource) Schema(ctx context.Context, req datasource
 							},
 							Description: `Protocol configuration. At least one protocol must be set.`,
 						},
+						"type": schema.StringAttribute{
+							Computed:    true,
+							Description: `Object type — custom (user-created) or PREDEFINED (Netskope built-in, read-only) (API-computed)`,
+						},
 					},
 				},
 			},
