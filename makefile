@@ -127,4 +127,11 @@ testacc-rbacrole:
 	@echo "Running RBAC role acceptance tests..."
 	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccRBACRole -timeout 30m
 
-.PHONY: all install build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels testacc-aig testacc-customcategory testacc-serviceobject testacc-rbacrole
+.PHONY: testacc-oauth2
+testacc-oauth2:
+	@echo "Running OAuth2 token acceptance tests..."
+	@test -n "$(NETSKOPE_OAUTH2_CLIENT_ID)" || (echo "Error: NETSKOPE_OAUTH2_CLIENT_ID is not set" && exit 1)
+	@test -n "$(NETSKOPE_OAUTH2_CLIENT_SECRET)" || (echo "Error: NETSKOPE_OAUTH2_CLIENT_SECRET is not set" && exit 1)
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccPlatformOAuth2Token -timeout 10m
+
+.PHONY: all install build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels testacc-aig testacc-customcategory testacc-serviceobject testacc-rbacrole testacc-oauth2
