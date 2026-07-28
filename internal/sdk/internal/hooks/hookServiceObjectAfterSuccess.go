@@ -45,7 +45,7 @@ func (h *serviceObjectHook) AfterSuccess(hookCtx AfterSuccessContext, res *http.
 	switch hookCtx.OperationID {
 	case "listServiceObjects":
 		return h.normalizeListResponse(res)
-	case "getServiceObject":
+	case "getServiceObject", "createServiceObject", "updateServiceObject":
 		return h.normalizeItemResponse(res)
 	default:
 		return res, nil

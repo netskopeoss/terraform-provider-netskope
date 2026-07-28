@@ -41,6 +41,11 @@ func (r *ServiceObjectListDataSourceModel) RefreshFromSharedServiceObjectListRes
 					services.Protocols.UDP = append(services.Protocols.UDP, types.StringValue(v))
 				}
 			}
+			if servicesItem.Type != nil {
+				services.Type = types.StringValue(string(*servicesItem.Type))
+			} else {
+				services.Type = types.StringNull()
+			}
 
 			r.Services = append(r.Services, services)
 		}

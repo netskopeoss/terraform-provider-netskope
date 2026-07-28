@@ -33,6 +33,7 @@ type ServiceObjectDataSourceModel struct {
 	ID          types.String                    `tfsdk:"id"`
 	Name        types.String                    `tfsdk:"name"`
 	Protocols   *tfTypes.ServiceObjectProtocols `tfsdk:"protocols"`
+	Type        types.String                    `tfsdk:"type"`
 }
 
 // Metadata returns the data source type name.
@@ -82,6 +83,10 @@ func (r *ServiceObjectDataSource) Schema(ctx context.Context, req datasource.Sch
 					},
 				},
 				Description: `Protocol configuration. At least one protocol must be set.`,
+			},
+			"type": schema.StringAttribute{
+				Computed:    true,
+				Description: `Object type — custom (user-created) or PREDEFINED (Netskope built-in, read-only) (API-computed)`,
 			},
 		},
 	}
