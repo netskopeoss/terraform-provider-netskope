@@ -91,4 +91,9 @@ func initHooks(h *Hooks) {
 	serviceObj := &serviceObjectHook{}
 	h.registerBeforeRequestHook(serviceObj)
 	h.registerAfterSuccessHook(serviceObj)
+
+	// RBAC role - fetch full role after create/update (API returns only {roleId}),
+	// and normalize ipAllowList.ipList from objects to strings on GET responses
+	rbacRole := &rbacRoleHook{}
+	h.registerAfterSuccessHook(rbacRole)
 }
