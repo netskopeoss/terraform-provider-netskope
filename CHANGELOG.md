@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **`netskope_service_object_list`** data source — List all service objects (custom and Netskope predefined). Each element exposes a `type` attribute (`"custom"` or `"PREDEFINED"`) for filtering.
 - **`netskope_rbac_role`** resource and data source — Manage custom RBAC admin roles via `/api/v2/rbac/roles`. Covers `name`, `api_groups` (per-group `permission` and `constraints`), `scope`, `ip_allow_list`, and `obfuscation`. Only custom roles are writable; predefined roles are read-only.
 - **`netskope_rbac_role_list`** data source — List all RBAC roles on the tenant.
-- **`netskope_platform_oauth2_token`** data source — Exchange OAuth2 client credentials for a bearer access token (RFC 6749 `client_credentials` grant). The token is re-fetched on every plan and apply. `access_token` is sensitive. Requires an OAuth2 client configured in the Netskope tenant UI under Settings → Security Cloud Platform → OAuth2 Settings.
+- **`netskope_platform_oauth2_token`** data source — Exchange OAuth2 client credentials for a bearer access token (RFC 6749 `client_credentials` grant). Use this to obtain tokens as Terraform values for token rotation, passing to other resources, or external tooling. The token is re-fetched on every plan and apply. `access_token` is sensitive. Requires an OAuth2 client configured in the Netskope tenant UI under Settings → Security Cloud Platform → OAuth2 Settings. **Note:** this data source returns a token as a value — it does not change how the provider authenticates its own API calls (provider-level OAuth2 authentication is planned for v0.4.9).
 
 ### Fixed
 
