@@ -230,6 +230,7 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 		NewNPARulesListDataSource,
 		NewRBACLabelDataSource,
 		NewRBACLabelListDataSource,
+		NewPlatformOAuth2TokenDataSource,
 		NewRBACRoleDataSource,
 		NewRBACRoleListDataSource,
 		NewServiceObjectDataSource,
