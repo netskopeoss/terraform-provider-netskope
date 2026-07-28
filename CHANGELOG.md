@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.4.8] - 2026-07-28
+
+### Added
+
+- **`netskope_custom_category`** resource and data source — Manage custom URL categories for Real-time Protection policies. Combines URL lists (included/excluded) and predefined Netskope categories into named policy objects. Auto-deployed after create/update.
+- **`netskope_custom_category_list`** data source — List all custom categories on the tenant.
+- **`netskope_service_object`** resource and data source — Manage service objects (port/protocol profiles) for Real-time Protection firewall rules. Supports `icmp`, `tcp`, `udp`, and `tcp_udp` protocol fields with single ports (`"443"`) and ranges (`"8080-9090"`). Auto-deployed after create/update.
+- **`netskope_service_object_list`** data source — List all service objects (custom and Netskope predefined). Each element exposes a `type` attribute (`"custom"` or `"PREDEFINED"`) for filtering.
+- **`netskope_rbac_role`** resource and data source — Manage custom RBAC admin roles via `/api/v2/rbac/roles`. Covers `name`, `api_groups` (per-group `permission` and `constraints`), `scope`, `ip_allow_list`, and `obfuscation`. Only custom roles are writable; predefined roles are read-only.
+- **`netskope_rbac_role_list`** data source — List all RBAC roles on the tenant.
+
+### Fixed
+
+- **`netskope_service_object` create/update failed with `tcp_udp` protocol** — The API returns integer port values in create/update responses, but the AfterSuccess hook only normalized GET responses. Ports in create/update responses now go through the same int-to-string normalization, resolving `json: cannot unmarshal number into Go value of type string` errors.
+
 ## [0.4.7] - 2026-07-08
 
 ### Fixed
