@@ -8,7 +8,29 @@ The official Terraform provider for [Netskope](https://www.netskope.com/), enabl
 
 > **Examples:** See [terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples) for ready-to-use Terraform configurations covering NPA private apps, policy-as-code, device classification, RBAC labels, and more.
 
-## Upgrading to v0.4.6
+## Upgrading to v0.4.8
+
+### What's New in v0.4.8
+
+| Resource / Data Source | Description |
+|---|---|
+| `netskope_custom_category` | Manage custom URL categories for Real-time Protection policies |
+| `netskope_custom_category_list` | List all custom categories |
+| `netskope_service_object` | Manage service objects (port/protocol profiles) for firewall rules |
+| `netskope_service_object_list` | List all service objects — each element includes a `type` attribute (`"custom"` or `"PREDEFINED"`) for filtering |
+| `netskope_rbac_role` | Manage custom RBAC admin roles |
+| `netskope_rbac_role_list` | List all RBAC roles |
+| `netskope_platform_oauth2_token` | Exchange OAuth2 client credentials for a bearer token (RFC 6749 `client_credentials` grant) — use for token rotation or passing tokens to other resources |
+
+**Bug fixes:**
+- **`netskope_service_object` create/update failed with `tcp_udp` protocol** — The API returns integer port values in create/update responses but the provider expected strings. This caused `json: cannot unmarshal number into Go value of type string` errors on any `tcp_udp` service object. Fixed.
+
+**Security:**
+- Updated `golang.org/x/crypto` (v0.49.0 → v0.52.0), `golang.org/x/net` (v0.52.0 → v0.55.0), and `google.golang.org/grpc` (v1.79.3 → v1.82.1) to resolve 15 Dependabot advisories (7 critical, 3 high, 5 moderate).
+
+### What's New in v0.4.7
+
+- **Fixed `netskope_npa_publisher` crash for publishers with connected apps** — Publishers with at least one app connected caused a JSON unmarshal panic on every state refresh. Upgrade from any v0.3.x–v0.4.6 release to resolve.
 
 ### What's New in v0.4.6
 
@@ -199,7 +221,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "~> 0.4.6"
+      version = "~> 0.4.8"
     }
   }
 }
@@ -403,7 +425,7 @@ See below for version-specific upgrade notes. For full details, see the [Migrati
 - **From v0.2.x**: Version 0.3.x is a complete rewrite with renamed resources and changed schemas. Existing state must be re-imported. See the [Migration Guide](docs/MIGRATION_GUIDE.md).
 - **From v0.3.2**: See the [v0.3.2 to v0.3.3 upgrade section](docs/MIGRATION_GUIDE.md#upgrading-from-v032-to-v033) for schema changes.
 - **From v0.3.x to v0.4.x**: See the [Migration Guide](docs/MIGRATION_GUIDE.md) for schema changes.
-- **From v0.4.x to v0.4.6**: See [What's New in v0.4.6](#whats-new-in-v046) at the top of this document.
+- **From v0.4.x to v0.4.8**: See [What's New in v0.4.8](#whats-new-in-v048) at the top of this document.
 
 ## Development
 
