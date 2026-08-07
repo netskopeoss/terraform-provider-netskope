@@ -8,45 +8,12 @@ description: |-
 
 # netskope_device_classification_tag_list (Data Source)
 
-Retrieves all device classification tags (labels). Each tag has a numeric ID that can be used in the `device_classification_id` field of NPA policy rules.
-
-Tags are created in the Netskope UI under **Settings > Device Classification**.
+DeviceClassificationTagList DataSource
 
 ## Example Usage
 
 ```terraform
-data "netskope_device_classification_tag_list" "all" {}
-```
-
-### Look up a tag by name for use in an NPA rule
-
-```terraform
-data "netskope_device_classification_tag_list" "all" {}
-
-locals {
-  crowdstrike_tag_id = tostring([
-    for t in data.netskope_device_classification_tag_list.all.tags : t.tag_id
-    if t.name == "CrowdStrike Installed"
-  ][0])
-}
-
-resource "netskope_npa_rules" "crowdstrike_only" {
-  rule_name = "allow-crowdstrike-devices"
-  enabled   = "1"
-  group_id  = netskope_npa_policy_groups.example.id
-
-  rule_data = {
-    policy_type = "private-app"
-
-    match_criteria_action = {
-      action_name = "allow"
-    }
-
-    private_apps  = [netskope_npa_private_app.example.private_app_name]
-    access_method = ["Client"]
-
-    device_classification_id = [local.crowdstrike_tag_id]
-  }
+data "netskope_device_classification_tag_list" "my_deviceclassificationtaglist" {
 }
 ```
 
@@ -62,8 +29,8 @@ resource "netskope_npa_rules" "crowdstrike_only" {
 
 Read-Only:
 
-- `tag_id` (Number) Tag ID (used in `device_classification_id` on NPA rules)
-- `name` (String) Tag name
 - `description` (String) Tag description
-- `priority` (Number) Tag priority (lower values = higher priority)
+- `name` (String) Tag name
 - `policy_names` (List of String) Policy names associated with this tag
+- `priority` (Number) Tag priority (lower values = higher priority)
+- `tag_id` (Number) Tag ID (used in device_classification_id on NPA rules)

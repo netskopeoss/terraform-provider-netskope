@@ -7,9 +7,13 @@ internal/provider/npaprivateapp_resource_planmodify.go
 internal/provider/nparules_resource_planmodify.go
 internal/provider/ipsectunnel_resource_planmodify.go
 internal/provider/gretunnel_resource_planmodify.go
+internal/sdk/internal/utils/retries.go
+internal/provider/provider.go
 internal/provider/types/gre_tunnel_list_item.go
 internal/provider/gretunnelslist_data_source.go
 internal/provider/gretunnelslist_data_source_sdk.go
 internal/provider/types/ipsec_tunnel_item.go
 internal/provider/ipsectunnelslist_data_source.go
 internal/provider/ipsectunnelslist_data_source_sdk.go
+examples/data-sources/netskope_rbac_role_config/data-source.tf
+examples/data-sources/netskope_cci_category_list/data-source.tf

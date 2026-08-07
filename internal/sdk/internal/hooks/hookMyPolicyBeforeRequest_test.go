@@ -439,6 +439,117 @@ func TestBeforeRequest_NegateNetLocationPreservedWhenPopulated(t *testing.T) {
 	}
 }
 
+// TestBeforeRequest_HtmlTemplateStrippedOnUpdate verifies that the BeforeRequest
+// hook removes the template field from update payloads when it contains a .html
+// file name. suppressTemplateDrift sets the planned template to the API-returned
+// file name to suppress phantom diffs; stripping it here prevents the PUT from
+// sending a file name the API rejects with "Undefined template: *.html".
+// See docs/bugs/BUG-019-block-rule-template-phantom-update.md
+func TestBeforeRequest_HtmlTemplateStrippedOnUpdate(t *testing.T) {
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "block-rule",
+		"enabled": "0",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {
+				"action_name": "block",
+				"emit_alert": true,
+				"template": "23.html"
+			},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"]
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "updateNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+
+	if strings.Contains(resultBody, `"template"`) {
+		t.Errorf("expected .html template to be stripped from update payload, got: %s", resultBody)
+	}
+	if strings.Contains(resultBody, "23.html") {
+		t.Errorf("expected file name '23.html' to be absent from update payload, got: %s", resultBody)
+	}
+}
+
+// TestBeforeRequest_DisplayNamePreservedOnUpdate verifies that display name
+// template values (no .html suffix) are NOT stripped from update payloads.
+// A user intentionally changing their template should have the new display name sent.
+func TestBeforeRequest_DisplayNamePreservedOnUpdate(t *testing.T) {
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "block-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {
+				"action_name": "block",
+				"emit_alert": true,
+				"template": "Generic Block"
+			},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"]
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "updateNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+
+	if !strings.Contains(resultBody, `"Generic Block"`) {
+		t.Errorf("expected display name 'Generic Block' to be preserved in update payload, got: %s", resultBody)
+	}
+}
+
+// TestBeforeRequest_DisplayNamePreservedOnCreate verifies that display name
+// template values are NOT stripped from create payloads. The API accepts display
+// names on create and rejects file names — create payloads must never be stripped.
+func TestBeforeRequest_DisplayNamePreservedOnCreate(t *testing.T) {
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "block-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {
+				"action_name": "block",
+				"emit_alert": true,
+				"template": "Default Template"
+			},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"]
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+
+	if !strings.Contains(resultBody, `"Default Template"`) {
+		t.Errorf("expected 'Default Template' to be preserved in create payload, got: %s", resultBody)
+	}
+}
+
 // TestBeforeRequest_NonMatchingOperationPassthrough verifies that operations
 // other than createNPARules/updateNPARules pass through without modification.
 func TestBeforeRequest_NonMatchingOperationPassthrough(t *testing.T) {

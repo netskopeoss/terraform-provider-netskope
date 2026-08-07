@@ -36,7 +36,11 @@ func (r *NPARulesResource) ModifyPlan(ctx context.Context, req resource.ModifyPl
 
 	// Preserve computed-only attributes that don't change after creation.
 	// Without this, Terraform shows (known after apply) on every plan.
+	// group_name: GET-by-ID never returns it, so state is always null.
+	// Without preservation it stays (known after apply) and keeps updates alive.
+	// See docs/bugs/BUG-019-block-rule-template-phantom-update.md
 	preserveComputedStringAttr(ctx, req, resp, path.Root("id"))
+	preserveComputedStringAttr(ctx, req, resp, path.Root("group_name"))
 
 	// All Computed+Optional list attributes under rule_data.
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("private_apps"))
@@ -46,8 +50,33 @@ func (r *NPARulesResource) ModifyPlan(ctx context.Context, req resource.ModifyPl
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("src_countries"))
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("organization_units"))
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("net_location_obj"))
-	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("private_app_tags"))
+	// private_app_tag_ids: when set via private_app_tags (name resolution), the API
+	// does not return privateAppTagIds on GET. Preserve state when not in config so
+	// the resolved IDs don't vanish on refresh. normalizeStringListAttr handles
+	// ordering when the user sets the field explicitly.
+	preserveComputedListAttr(ctx, req, resp, path.Root("rule_data").AtName("private_app_tag_ids"))
+	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("private_app_tag_ids"))
 	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("device_classification_id"))
+	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("classification"))
+	normalizeStringListAttr(ctx, req, resp, path.Root("rule_data").AtName("os"))
+
+	// schedule is a ListNestedAttribute — x-speakeasy-param-suppress-computed-diff
+	// does not generate a list plan modifier for nested-object lists. Preserve state
+	// manually so it does not show (known after apply) when not set in config.
+	preserveComputedListAttr(ctx, req, resp, path.Root("rule_data").AtName("schedule"))
+
+	// private_app_tags is auto-populated by the API as a side-effect of setting
+	// private_app_tag_ids (name enrichment). Users don't set it directly. Preserve
+	// state when not in config to prevent phantom removal diffs.
+	preserveComputedListAttr(ctx, req, resp, path.Root("rule_data").AtName("private_app_tags"))
+
+	// These SingleNestedAttributes use SuppressDiff(ExplicitSuppress) which only
+	// suppresses when the value was previously non-null. For rules that never set
+	// these fields (state is null), we must explicitly use state to prevent
+	// (known after apply) on every plan.
+	preserveComputedObjectAttr(ctx, req, resp, path.Root("rule_data").AtName("periodic_reauth"))
+	preserveComputedObjectAttr(ctx, req, resp, path.Root("rule_data").AtName("notify"))
+	preserveComputedObjectAttr(ctx, req, resp, path.Root("rule_data").AtName("user_confidence"))
 
 	// Suppress template display-name/file-name drift.
 	// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/79
@@ -58,8 +87,10 @@ func (r *NPARulesResource) ModifyPlan(ctx context.Context, req resource.ModifyPl
 // display name (in config) and the file name (returned by API).
 // The API accepts display names on create/update but returns file names on GET.
 // We set the plan template to the state value (the file name) so Terraform
-// sees no change. The display name is only sent when other fields change.
+// sees no change. The BeforeRequest hook strips .html file names from update
+// payloads so that when a real update fires, it does not send the file name.
 // See: https://github.com/netskopeoss/terraform-provider-netskope/issues/79
+// See: docs/bugs/BUG-019-block-rule-template-phantom-update.md
 func suppressTemplateDrift(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
 	templatePath := path.Root("rule_data").AtName("match_criteria_action").AtName("template")
 
@@ -91,9 +122,90 @@ func suppressTemplateDrift(ctx context.Context, req resource.ModifyPlanRequest, 
 	}
 }
 
+// preserveComputedObjectAttr copies the state value to the plan for a
+// computed SingleNestedAttribute when the attribute is not set in the config.
+//
+// Handles two cases:
+//   - plan unknown (first create, before API returns a value): prevents (known after apply)
+//   - plan null (attribute omitted from config, state is non-null): prevents phantom
+//     removal diffs on post-import plans and on updates that don't touch the field
+//
+// For notify and user_confidence, Speakeasy generates SuppressDiff(ExplicitSuppress)
+// which covers the non-null state case. periodic_reauth uses a $ref so that
+// plan modifier is not generated — this function covers both cases for all three.
+//
+// This matches ExplicitSuppress semantics: the field is preserved when not in
+// config. Users cannot clear the field by omitting it (same API/omitempty limitation
+// as schedule and private_app_tags).
+func preserveComputedObjectAttr(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse, attrPath path.Path) {
+	var stateVal, planVal types.Object
+
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, attrPath, &stateVal)...)
+	resp.Diagnostics.Append(req.Plan.GetAttribute(ctx, attrPath, &planVal)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// If state is unknown there is nothing meaningful to preserve.
+	if stateVal.IsUnknown() {
+		return
+	}
+
+	// Preserve state when plan is unknown (not yet computed) or null (omitted
+	// from config). An explicit config value passes through unchanged.
+	if planVal.IsUnknown() || planVal.IsNull() {
+		resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, attrPath, stateVal)...)
+	}
+}
+
+// preserveComputedListAttr copies the state value to the plan for a
+// computed list attribute when the attribute is not set in the config.
+// Handles both:
+//   - unknown plan (Computed+Optional, first create): prevents (known after apply)
+//   - null plan (Computed+Optional, no Default, attribute absent from config):
+//     prevents phantom removal diffs on API-computed side-effects
+//   - empty plan from Default (Computed+Optional with Default: [], attribute absent
+//     from config): prevents phantom removal diffs when a Default turns null → []
+//
+// The config value is the canonical signal for "user didn't set this". If config is
+// null, the attribute was omitted from HCL and we preserve state even if the
+// Default produced [] in the plan. An explicit config value (including []) passes
+// through so users can intentionally set or clear the list.
+//
+// Used for ListNestedAttribute (schedule) where x-speakeasy-param-suppress-computed-diff
+// generates no plan modifier, and for API side-effect lists (private_app_tags)
+// that are auto-populated from sibling fields.
+func preserveComputedListAttr(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse, attrPath path.Path) {
+	var stateVal, planVal, configVal types.List
+
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, attrPath, &stateVal)...)
+	resp.Diagnostics.Append(req.Plan.GetAttribute(ctx, attrPath, &planVal)...)
+	resp.Diagnostics.Append(req.Config.GetAttribute(ctx, attrPath, &configVal)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// If state is unknown there is nothing meaningful to preserve.
+	if stateVal.IsUnknown() {
+		return
+	}
+
+	// Preserve state when plan is unknown (first create, not yet computed) or
+	// when the attribute was not set in config (configVal is null).
+	// Checking config rather than plan handles the case where a Default value
+	// turns null → [] in the plan, which would otherwise bypass the IsNull check.
+	if planVal.IsUnknown() || configVal.IsNull() {
+		resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, attrPath, stateVal)...)
+	}
+}
+
 // preserveComputedStringAttr copies the state value to the plan for a
 // computed-only attribute. Without this, computed attributes show
-// (known after apply) on every refresh plan.
+// (known after apply) on every plan that touches the resource.
+// Handles both cases:
+//   - state has a real value (e.g. id): plan gets the known value
+//   - state is null (e.g. group_name, never returned by GET-by-ID): plan
+//     stays null, which collapses to a no-op vs null state
 func preserveComputedStringAttr(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse, attrPath path.Path) {
 	var stateVal, planVal types.String
 
@@ -103,7 +215,9 @@ func preserveComputedStringAttr(ctx context.Context, req resource.ModifyPlanRequ
 		return
 	}
 
-	if !stateVal.IsNull() && !stateVal.IsUnknown() && planVal.IsUnknown() {
+	// If state is known (or null) and plan is unknown, use state value.
+	// This is equivalent to UseStateForUnknown for computed-only fields.
+	if planVal.IsUnknown() && !stateVal.IsUnknown() {
 		resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, attrPath, stateVal)...)
 	}
 }

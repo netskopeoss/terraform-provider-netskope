@@ -12,32 +12,32 @@ import (
 	"time"
 )
 
-// oauth2TokenHook implements OAuth2 Client Credentials authentication for
-// Netskope's non-standard token endpoint.
+// oauth2TokenHook implements OAuth2 Client Credentials authentication (RFC 6749)
+// for the Netskope API.
 //
 // Credentials are read from environment variables:
 //   - NETSKOPE_OAUTH2_CLIENT_ID
 //   - NETSKOPE_OAUTH2_CLIENT_SECRET
 //
 // When both are set, this hook fetches a bearer token from
-// POST /api/v2/platform/oauth2/token/generate and sets it on every request,
+// POST /api/v2/platform/oauth2/token and sets it on every request,
 // taking priority over the API key header.
 //
-// The Netskope token endpoint expects a JSON body:
+// The endpoint expects a JSON body:
 //
-//	{"clientID": "...", "secretKey": "..."}
+//	{"client_id": "...", "client_secret": "...", "grant_type": "client_credentials"}
 //
 // And returns:
 //
-//	{"oAuth2AccessToken": "...", "expiryTime": "2024-11-04T14:24:10.000Z"}
+//	{"access_token": "...", "token_type": "Bearer", "expires_in": 3600}
 type oauth2TokenHook struct {
-	mu        sync.Mutex
-	baseURL   string
-	client    HTTPClient
-	clientID  string
-	secretKey string
-	token     string
-	expiresAt time.Time
+	mu           sync.Mutex
+	baseURL      string
+	client       HTTPClient
+	clientID     string
+	clientSecret string
+	token        string
+	expiresAt    time.Time
 }
 
 var (
@@ -46,30 +46,32 @@ var (
 	_ afterErrorHook    = (*oauth2TokenHook)(nil)
 )
 
-const tokenPath = "/platform/oauth2/token/generate"
+const tokenPath = "/platform/oauth2/token"
 
-// tokenRequest is the JSON body Netskope's token endpoint expects.
+// tokenRequest is the JSON body the RFC 6749 token endpoint expects.
 type tokenRequest struct {
-	ClientID  string `json:"clientID"`
-	SecretKey string `json:"secretKey"`
+	ClientID     string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
+	GrantType    string `json:"grant_type"`
 }
 
-// tokenResponse is the JSON body Netskope's token endpoint returns.
+// tokenResponse is the JSON body the RFC 6749 token endpoint returns.
 type tokenResponse struct {
-	OAuth2AccessToken string `json:"oAuth2AccessToken"`
-	ExpiryTime        string `json:"expiryTime"`
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+	ExpiresIn   int    `json:"expires_in"`
 }
 
 func (h *oauth2TokenHook) SDKInit(baseURL string, client HTTPClient) (string, HTTPClient) {
 	h.baseURL = baseURL
 	h.client = client
 	h.clientID = os.Getenv("NETSKOPE_OAUTH2_CLIENT_ID")
-	h.secretKey = os.Getenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	h.clientSecret = os.Getenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
 	return baseURL, client
 }
 
 func (h *oauth2TokenHook) enabled() bool {
-	return h.clientID != "" && h.secretKey != ""
+	return h.clientID != "" && h.clientSecret != ""
 }
 
 func (h *oauth2TokenHook) BeforeRequest(hookCtx BeforeRequestContext, req *http.Request) (*http.Request, error) {
@@ -126,8 +128,9 @@ func (h *oauth2TokenHook) fetchToken(hookCtx BeforeRequestContext) (string, time
 	tokenURL := strings.TrimSuffix(h.baseURL, "/") + tokenPath
 
 	body, err := json.Marshal(tokenRequest{
-		ClientID:  h.clientID,
-		SecretKey: h.secretKey,
+		ClientID:     h.clientID,
+		ClientSecret: h.clientSecret,
+		GrantType:    "client_credentials",
 	})
 	if err != nil {
 		return "", time.Time{}, fmt.Errorf("marshal token request: %w", err)
@@ -159,15 +162,16 @@ func (h *oauth2TokenHook) fetchToken(hookCtx BeforeRequestContext) (string, time
 		return "", time.Time{}, fmt.Errorf("decode token response: %w", err)
 	}
 
-	if tokenResp.OAuth2AccessToken == "" {
-		return "", time.Time{}, fmt.Errorf("token response missing oAuth2AccessToken")
+	if tokenResp.AccessToken == "" {
+		return "", time.Time{}, fmt.Errorf("token response missing access_token")
 	}
 
-	// Parse the expiry time. If parsing fails, default to 1 hour from now.
-	expiresAt, err := time.Parse(time.RFC3339Nano, tokenResp.ExpiryTime)
-	if err != nil {
-		expiresAt = time.Now().Add(1 * time.Hour)
+	// Calculate expiry from expires_in seconds. Default to 1 hour if zero.
+	expiresIn := tokenResp.ExpiresIn
+	if expiresIn <= 0 {
+		expiresIn = 3600
 	}
+	expiresAt := time.Now().Add(time.Duration(expiresIn) * time.Second)
 
-	return tokenResp.OAuth2AccessToken, expiresAt, nil
+	return tokenResp.AccessToken, expiresAt, nil
 }

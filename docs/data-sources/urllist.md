@@ -8,17 +8,13 @@ description: |-
 
 # netskope_urllist (Data Source)
 
-Retrieves a single URL list by its ID.
+Urllist DataSource
 
 ## Example Usage
 
 ```terraform
-data "netskope_urllist" "example" {
-  id = 42
-}
-
-output "urls" {
-  value = data.netskope_urllist.example.data.urls
+data "netskope_urllist" "my_urllist" {
+  id = 0
 }
 ```
 
@@ -27,17 +23,17 @@ output "urls" {
 
 ### Required
 
-- `id` (Number) URL list ID
+- `id` (Number) URL list ID (assigned by API)
 
 ### Read-Only
 
+- `data` (Attributes) (see [below for nested schema](#nestedatt--data))
 - `name` (String) URL list name
-- `data` (Object) URL list data (see [Nested Schema](#nestedatt--data))
 
 <a id="nestedatt--data"></a>
 ### Nested Schema for `data`
 
 Read-Only:
 
+- `type` (String) URL matching type
 - `urls` (List of String) List of URLs or regex patterns
-- `type` (String) URL matching type (`exact` or `regex`)

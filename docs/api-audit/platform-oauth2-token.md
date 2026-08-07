@@ -1,7 +1,7 @@
 # API Audit: POST /platform/oauth2/token
 
 **Date:** 2026-07-01
-**OAS source:** `/Users/jharris/PycharmProjects/api-gateway-endpoints-master/production/endpoints/platform/ms-platform.yaml`
+**OAS source:** `endpoints/platform/ms-platform.yaml`
 **Terraform resource:** `data.netskope_platform_oauth2_token`
 
 ---
@@ -58,7 +58,7 @@ RFC 6749 §5.2 format. Tested error codes: `invalid_request`, `invalid_client`, 
 ## Discrepancies vs OAS
 
 - **`client_id` is effectively required** even though OAS marks it optional. Omitting it returns `400 invalid_request`.
-- **Bad credentials return 400, not 401.** OAS documents `invalid_client` as a 401, but the bespin tenant returned 400 for unknown `client_id`. May differ for known-but-wrong credentials.
+- **Bad credentials return 400, not 401.** OAS documents `invalid_client` as a 401, but the tested tenant returned 400 for unknown `client_id`. May differ for known-but-wrong credentials.
 
 ---
 

@@ -71,6 +71,15 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					"b_negate_src_countries": schema.BoolAttribute{
 						Computed: true,
 					},
+					"classification": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+						Description: `Device classification filter: list of managed/unmanaged categories to match (e.g. ["unmanaged"]). Set in the Netskope UI under Device Classification criteria.`,
+					},
+					"description": schema.StringAttribute{
+						Computed:    true,
+						Description: `Description stored within rule_data (separate from the top-level rule description)`,
+					},
 					"device_classification_id": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
@@ -99,12 +108,57 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						ElementType: types.StringType,
 						Description: `List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27").`,
 					},
+					"notify": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"emails": schema.ListAttribute{
+								Computed:    true,
+								ElementType: types.StringType,
+								Description: `Email addresses to notify`,
+							},
+							"from_user": schema.StringAttribute{
+								Computed:    true,
+								Description: `Sender user identifier`,
+							},
+							"interval": schema.StringAttribute{
+								Computed:    true,
+								Description: `Notification interval in minutes (as string, e.g. '30')`,
+							},
+							"to_users": schema.ListAttribute{
+								Computed:    true,
+								ElementType: types.StringType,
+								Description: `Recipient user types (e.g. 'admin')`,
+							},
+						},
+						Description: `Notification configuration for alert/block rule actions`,
+					},
 					"organization_units": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
 					},
+					"os": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+						Description: `Operating system filter (Client access only). Known values: "Windows", "macOS", "Linux", "Android", "iOS", "Chrome OS". Periodic Authentication requires "Windows" and/or "macOS".`,
+					},
+					"periodic_reauth": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"reauth_interval": schema.StringAttribute{
+								Computed: true,
+							},
+							"reauth_interval_unit": schema.StringAttribute{
+								Computed: true,
+							},
+						},
+					},
 					"policy_type": schema.StringAttribute{
 						Computed: true,
+					},
+					"private_app_tag_ids": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+						Description: `Tag IDs (numeric as string) — alternative to privateAppTags (names)`,
 					},
 					"private_app_tags": schema.ListAttribute{
 						Computed:    true,
@@ -114,17 +168,70 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						Computed:    true,
 						ElementType: types.StringType,
 					},
+					"schedule": schema.ListNestedAttribute{
+						Computed: true,
+						NestedObject: schema.NestedAttributeObject{
+							Attributes: map[string]schema.Attribute{
+								"time_interval_obj": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+									Description: `IDs of Time Interval objects configured in the Netskope console (Policies > Time Intervals). No API endpoint exists to list these; obtain IDs from the Netskope UI.`,
+								},
+								"time_range": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"end_date": schema.StringAttribute{
+												Computed: true,
+											},
+											"end_time": schema.StringAttribute{
+												Computed: true,
+											},
+											"start_date": schema.StringAttribute{
+												Computed: true,
+											},
+											"start_time": schema.StringAttribute{
+												Computed: true,
+											},
+										},
+									},
+									Description: `Date/time ranges when the policy is active`,
+								},
+							},
+						},
+						Description: `Schedule configuration for policy enforcement timing`,
+					},
 					"src_countries": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
+					},
+					"user_confidence": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"index": schema.StringAttribute{
+								Computed:    true,
+								Description: `Confidence index threshold value (e.g. 350, 351, 650, 651)`,
+							},
+							"operator": schema.StringAttribute{
+								Computed:    true,
+								Description: `Comparison operator: lt (below threshold) or gt (above threshold)`,
+							},
+						},
+						Description: `User Confidence Index filter. Requires the User Confidence Index feature to be enabled on the tenant.`,
 					},
 					"user_groups": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
 					},
+					"user_type": schema.StringAttribute{
+						Computed: true,
+					},
 					"users": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
+					},
+					"version": schema.Int64Attribute{
+						Computed: true,
 					},
 				},
 			},

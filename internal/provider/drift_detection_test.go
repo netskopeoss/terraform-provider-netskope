@@ -5,12 +5,31 @@ package provider
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 )
+
+// skipUnlessEnvSet skips the test unless the given environment variable is set to a non-empty value.
+// Use for opt-in tests that require a specific tenant or licensed feature.
+func skipUnlessEnvSet(t *testing.T, envVar, reason string) {
+	t.Helper()
+	if os.Getenv(envVar) == "" {
+		t.Skipf("Skipping: %s (set %s=1 to run)", reason, envVar)
+	}
+}
+
+// skipIfEnvSet skips the test when the given environment variable is set to a non-empty value.
+// Used in package provider (no testutil import) to gate tests on tenant capabilities.
+func skipIfEnvSet(t *testing.T, envVar, reason string) {
+	t.Helper()
+	if os.Getenv(envVar) != "" {
+		t.Skipf("Skipping: %s (set %s to enable)", reason, envVar)
+	}
+}
 
 // =============================================================================
 // DRIFT DETECTION TESTS
@@ -1484,7 +1503,7 @@ resource "netskope_gre_tunnel" "test" {
 // TestAccDrift_DestinationProfile verifies no drift on destination profile
 // resources with values list and optional description.
 func TestAccDrift_DestinationProfile(t *testing.T) {
-	t.Skip("Skipping: Destination profiles require a license not enabled on the CI tenant")
+	skipUnlessEnvSet(t, "TF_RUN_DESTINATION_PROFILES", "destination profiles require a tenant with the licensed feature enabled")
 
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 
@@ -1515,7 +1534,7 @@ func TestAccDrift_DestinationProfile(t *testing.T) {
 // TestAccDrift_DestinationProfile_Minimal verifies no drift when only required
 // fields (name, type) are set and optional Computed fields are omitted.
 func TestAccDrift_DestinationProfile_Minimal(t *testing.T) {
-	t.Skip("Skipping: Destination profiles require a license not enabled on the CI tenant")
+	skipUnlessEnvSet(t, "TF_RUN_DESTINATION_PROFILES", "destination profiles require a tenant with the licensed feature enabled")
 
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 
@@ -1560,8 +1579,6 @@ resource "netskope_destination_profile" "test" {
 // the plan modifier suppresses the diff against the config display name.
 // See: https://github.com/netskopeoss/terraform-provider-netskope/issues/79
 func TestAccDrift_NPARules_BlockTemplate(t *testing.T) {
-	t.Skip("API tokens cannot create block rules — KNOWN_API_ISSUES #13")
-
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 
 	resource.Test(t, resource.TestCase{
@@ -1738,6 +1755,279 @@ resource "netskope_npa_rules" "test" {
   }
 }
 `, testAccProviderConfig(), name, name, name, name, name)
+}
+
+// TestAccDrift_NPARules_OS verifies no perpetual drift on rules with rule_data.os.
+// The plan modifier normalizes list ordering so API-returned order never triggers a diff.
+func TestAccDrift_NPARules_OS(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftNPARulesOSConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_npa_rules.test"),
+				),
+			},
+			{
+				Config: testAccDriftNPARulesOSConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftNPARulesOSConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_npa_policy_groups" "test" {
+  group_name = "%s-group"
+
+  group_order = {
+    group_id = "2"
+    order    = "after"
+  }
+}
+
+resource "netskope_npa_publisher" "test" {
+  publisher_name = "%s-publisher"
+}
+
+resource "netskope_npa_private_app" "test" {
+  private_app_name     = "%s-app"
+  private_app_hostname = "192.168.1.100"
+
+  protocols = [
+    {
+      port     = "443"
+      protocol = "tcp"
+    }
+  ]
+
+  publishers = [
+    {
+      publisher_id   = tostring(netskope_npa_publisher.test.publisher_id)
+      publisher_name = netskope_npa_publisher.test.publisher_name
+    }
+  ]
+
+  use_publisher_dns       = true
+  trust_self_signed_certs = false
+}
+
+resource "netskope_npa_rules" "test" {
+  rule_name   = %q
+  description = "OS drift test"
+  enabled     = "1"
+  group_id    = netskope_npa_policy_groups.test.id
+
+  rule_data = {
+    policy_type = "private-app"
+
+    match_criteria_action = {
+      action_name = "allow"
+    }
+
+    private_apps  = [netskope_npa_private_app.test.private_app_name]
+    access_method = ["Client"]
+    os            = ["Android", "iOS"]
+  }
+}
+`, testAccProviderConfig(), name, name, name, name)
+}
+
+// TestAccDrift_NPARules_PeriodicReauth verifies no perpetual drift on rules with periodic_reauth.
+// The nested object must round-trip through the API without triggering a phantom update.
+func TestAccDrift_NPARules_PeriodicReauth(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftNPARulesPeriodicReauthConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_npa_rules.test"),
+				),
+			},
+			{
+				Config: testAccDriftNPARulesPeriodicReauthConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftNPARulesPeriodicReauthConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_npa_policy_groups" "test" {
+  group_name = "%s-group"
+
+  group_order = {
+    group_id = "2"
+    order    = "after"
+  }
+}
+
+resource "netskope_npa_publisher" "test" {
+  publisher_name = "%s-publisher"
+}
+
+resource "netskope_npa_private_app" "test" {
+  private_app_name     = "%s-app"
+  private_app_hostname = "192.168.1.100"
+
+  protocols = [
+    {
+      port     = "443"
+      protocol = "tcp"
+    }
+  ]
+
+  publishers = [
+    {
+      publisher_id   = tostring(netskope_npa_publisher.test.publisher_id)
+      publisher_name = netskope_npa_publisher.test.publisher_name
+    }
+  ]
+
+  use_publisher_dns       = true
+  trust_self_signed_certs = false
+}
+
+resource "netskope_npa_rules" "test" {
+  rule_name   = %q
+  description = "PeriodicReauth drift test"
+  enabled     = "1"
+  group_id    = netskope_npa_policy_groups.test.id
+
+  rule_data = {
+    policy_type = "private-app"
+
+    match_criteria_action = {
+      action_name = "allow"
+    }
+
+    private_apps  = [netskope_npa_private_app.test.private_app_name]
+    access_method = ["Client"]
+
+    periodic_reauth = {
+      reauth_interval      = "60"
+      reauth_interval_unit = "hours"
+    }
+  }
+}
+`, testAccProviderConfig(), name, name, name, name)
+}
+
+// TestAccDrift_NPARules_Schedule verifies no perpetual drift on rules with schedule.
+// Requires time interval ID 3 to exist on the tenant; skip with TF_SKIP_TIME_INTERVAL=1.
+func TestAccDrift_NPARules_Schedule(t *testing.T) {
+	skipIfEnvSet(t, "TF_SKIP_TIME_INTERVAL", "requires time interval ID 3 on tenant")
+
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftNPARulesScheduleConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_npa_rules.test"),
+				),
+			},
+			{
+				Config: testAccDriftNPARulesScheduleConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftNPARulesScheduleConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_npa_policy_groups" "test" {
+  group_name = "%s-group"
+
+  group_order = {
+    group_id = "2"
+    order    = "after"
+  }
+}
+
+resource "netskope_npa_publisher" "test" {
+  publisher_name = "%s-publisher"
+}
+
+resource "netskope_npa_private_app" "test" {
+  private_app_name     = "%s-app"
+  private_app_hostname = "192.168.1.100"
+
+  protocols = [
+    {
+      port     = "443"
+      protocol = "tcp"
+    }
+  ]
+
+  publishers = [
+    {
+      publisher_id   = tostring(netskope_npa_publisher.test.publisher_id)
+      publisher_name = netskope_npa_publisher.test.publisher_name
+    }
+  ]
+
+  use_publisher_dns       = true
+  trust_self_signed_certs = false
+}
+
+resource "netskope_npa_rules" "test" {
+  rule_name   = %q
+  description = "Schedule drift test"
+  enabled     = "1"
+  group_id    = netskope_npa_policy_groups.test.id
+
+  rule_data = {
+    policy_type = "private-app"
+
+    match_criteria_action = {
+      action_name = "allow"
+    }
+
+    private_apps  = [netskope_npa_private_app.test.private_app_name]
+    access_method = ["Client"]
+
+    schedule = [{
+      time_interval_obj = ["3"]
+    }]
+  }
+}
+`, testAccProviderConfig(), name, name, name, name)
 }
 
 func testAccDriftDestinationProfileMinimalConfig(name string) string {

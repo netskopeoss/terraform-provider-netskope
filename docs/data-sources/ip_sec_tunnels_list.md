@@ -35,6 +35,7 @@ Read-Only:
 - `encryption` (String) Encryption algorithm
 - `notes` (String) Notes for the tunnel
 - `options` (Attributes) (see [below for nested schema](#nestedatt--result--options))
+- `pop_names` (List of String) List of POP names this tunnel connects to
 - `site` (String) Site name for the tunnel
 - `source_identity` (String) Source identity (FQDN)
 - `source_ip` (String) Source IP identity

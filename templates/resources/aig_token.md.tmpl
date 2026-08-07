@@ -1,0 +1,40 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+  Manages an AI Gateway API token — an individual API key that client applications use to authenticate requests through the Netskope AI Gateway.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages a Netskope AI Gateway (AIG) API token. Tokens are individual API keys that belong to a [`netskope_aig_token_group`](aig_token_group) and are distributed to client applications that need to send requests through the AI Gateway.
+
+## Token Value Is Write-Once
+
+The actual token string (the `token` output attribute — the API key clients will use) is only returned once: in the response to the create API call. The Netskope API never returns it again on subsequent reads. Terraform stores it in state after creation; plan modifiers prevent it from being overwritten by `null` on refresh.
+
+**Treat the token value like a password:**
+- Store the Terraform state file securely (encrypted remote backend)
+- Do not log or output the token value unprotected
+
+## Token Lifecycle
+
+- **`expire_in`** — optional; sets the token lifetime (max 1 year / 8760 hours). If omitted the token never expires. Changing `expire_in` or `token_group_id` **forces replacement** (a new token is created and the old one is deleted).
+- **`enabled`** — read-only computed field; reflects whether the token is active in AIG.
+- **`expire_time`** — computed; the absolute expiry timestamp. `null` if no expiry.
+
+## Token Groups
+
+Every token belongs to exactly one token group (`token_group_id`). Token groups are used in rate limit rules and AI provider access policies to control which client credentials have access to which backends. Create the [`netskope_aig_token_group`](aig_token_group) before creating tokens.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}

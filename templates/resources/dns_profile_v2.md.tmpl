@@ -1,0 +1,57 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+  Manages a Netskope DNS Security profile (v2) — controls domain blocking, sinkholing, DNS tunneling detection, and custom DNS routing.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages a Netskope DNS Security profile (v2). A DNS profile controls how the Netskope client handles DNS queries from enrolled devices: it can block known-bad domains, redirect suspicious traffic to a sinkhole, detect DNS tunneling, and route queries through internal DNS servers.
+
+## Three Independent Configuration Sections
+
+All three sections are optional. Combine them as needed; they are evaluated independently:
+
+| Section | Purpose |
+|---|---|
+| `domain_config` | Static allow/block lists and security category filtering |
+| `tunnel_config` | DNS tunneling detection with an allowlist for legitimate services |
+| `custom_config` | Route DNS queries through internal servers, with optional fallback |
+
+### `domain_config` — Domain Blocking and Sinkholing
+
+- `allow_list` — domains/record types that are always allowed, even if matched by a block rule
+- `block_list` — domains/record types that are blocked and return NXDOMAIN
+- `security_categories` — real-time threat intelligence feeds; each entry has a `name` (from the Netskope UI) and an `action`:
+  - `"Block"` — returns NXDOMAIN
+  - `"Sinkhole"` — redirects the DNS response to `sinkhole_ip` instead of NXDOMAIN; useful for forensic capture
+- `block_all_except_allow_list` — when `true`, blocks all domains not in the allow list
+
+### `tunnel_config` — DNS Tunneling Detection
+
+DNS tunneling encodes data in DNS query strings. Set `enable = true` to activate detection. Add legitimate services (e.g. VPN clients, cloud backup agents) to `allow_list` to prevent false positives.
+
+### `custom_config` — Internal DNS Routing
+
+Routes queries through your internal DNS servers (`server_ip`). When `fallback_to_netskope_dns = true`, failed queries fall back to Netskope DNS. When `bypass_original_dns = true`, the original DNS server is bypassed entirely.
+
+## Security Category IDs
+
+Security category names are looked up by display name as shown in the Netskope UI under Settings → DNS Security → Categories. The names are tenant-independent.
+
+## Auto-Deploy
+
+The provider automatically deploys the DNS profile after every create and update — no separate deployment step is needed.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}

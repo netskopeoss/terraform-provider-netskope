@@ -15,8 +15,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/models/shared"
+	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/retry"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 var _ provider.Provider = (*NetskopeProvider)(nil)
@@ -33,9 +35,11 @@ type NetskopeProvider struct {
 
 // NetskopeProviderModel describes the provider data model.
 type NetskopeProviderModel struct {
-	APIKey    types.String `tfsdk:"api_key"`
-	ServerURL types.String `tfsdk:"server_url"`
-	Tenant    types.String `tfsdk:"tenant"`
+	APIKey               types.String `tfsdk:"api_key"`
+	ServerURL            types.String `tfsdk:"server_url"`
+	Tenant               types.String `tfsdk:"tenant"`
+	RetryMaxElapsedTime  types.Int64  `tfsdk:"retry_max_elapsed_time"`
+	RetryDisabled        types.Bool   `tfsdk:"retry_disabled"`
 }
 
 func (p *NetskopeProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -56,8 +60,16 @@ func (p *NetskopeProvider) Schema(ctx context.Context, req provider.SchemaReques
 				Optional:    true,
 			},
 			"tenant": schema.StringAttribute{
-				MarkdownDescription: `Netskope tenant name (defaults to bespin)`,
+				MarkdownDescription: `Netskope tenant name (e.g. "acme" for acme.goskope.com)`,
 				Optional:            true,
+			},
+			"retry_max_elapsed_time": schema.Int64Attribute{
+				Description: `Maximum total time in seconds to spend retrying rate-limited (429) or transient (5xx) API calls before giving up. Default is 300 (5 minutes). Set to a lower value (e.g. 30) in CI pipelines to fail fast. Configurable via environment variable NETSKOPE_RETRY_MAX_ELAPSED.`,
+				Optional:    true,
+			},
+			"retry_disabled": schema.BoolAttribute{
+				Description: `Disable automatic retries on rate-limited (429) or transient (5xx) errors. Default is false. When true, the provider returns the error immediately. Configurable via environment variable NETSKOPE_RETRY_DISABLED.`,
+				Optional:    true,
 			},
 		},
 		MarkdownDescription: `Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy`,
@@ -90,7 +102,7 @@ func (p *NetskopeProvider) Configure(ctx context.Context, req provider.Configure
 	}
 
 	if _, ok := serverUrlParams["tenant"]; !ok {
-		serverUrlParams["tenant"] = "bespin"
+		serverUrlParams["tenant"] = "demo"
 	}
 
 	security := shared.Security{}
@@ -118,10 +130,43 @@ func (p *NetskopeProvider) Configure(ctx context.Context, req provider.Configure
 	httpClient := http.DefaultClient
 	httpClient.Transport = NewProviderHTTPTransport(providerHTTPTransportOpts)
 
+	// Build retry config from schema attributes, falling back to env vars, then defaults.
+	retryDisabled := data.RetryDisabled.ValueBool()
+	if !retryDisabled && os.Getenv("NETSKOPE_RETRY_DISABLED") == "true" {
+		retryDisabled = true
+	}
+
+	retryMaxElapsed := data.RetryMaxElapsedTime.ValueInt64()
+	if retryMaxElapsed == 0 {
+		if v := os.Getenv("NETSKOPE_RETRY_MAX_ELAPSED"); v != "" {
+			if n, err := strconv.ParseInt(v, 10, 64); err == nil && n > 0 {
+				retryMaxElapsed = n
+			}
+		}
+	}
+	if retryMaxElapsed == 0 {
+		retryMaxElapsed = 300 // default: 5 minutes
+	}
+
 	opts := []sdk.SDKOption{
 		sdk.WithTemplatedServerURL(serverUrl, serverUrlParams),
 		sdk.WithSecurity(security),
 		sdk.WithClient(httpClient),
+	}
+
+	if retryDisabled {
+		opts = append(opts, sdk.WithRetryConfig(retry.Config{Strategy: "none"}))
+	} else {
+		opts = append(opts, sdk.WithRetryConfig(retry.Config{
+			Strategy: "backoff",
+			Backoff: &retry.BackoffStrategy{
+				InitialInterval: 500,
+				MaxInterval:     60000,
+				Exponent:        1.5,
+				MaxElapsedTime:  int(retryMaxElapsed * 1000), // convert seconds to ms
+			},
+			RetryConnectionErrors: true,
+		}))
 	}
 
 	client := sdk.New(opts...)
@@ -192,6 +237,7 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 		NewAIGTokenGroupDataSource,
 		NewAIGTokenGroupListDataSource,
 		NewAIGTokenListDataSource,
+		NewCCICategoryListDataSource,
 		NewCustomCategoryDataSource,
 		NewCustomCategoryListDataSource,
 		NewDestinationProfileDataSource,
@@ -230,7 +276,7 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 		NewNPARulesListDataSource,
 		NewRBACLabelDataSource,
 		NewRBACLabelListDataSource,
-		NewPlatformOAuth2TokenDataSource,
+		NewRBACRoleConfigDataSource,
 		NewRBACRoleDataSource,
 		NewRBACRoleListDataSource,
 		NewServiceObjectDataSource,

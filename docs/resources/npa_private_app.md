@@ -26,6 +26,28 @@ These two fields serve different purposes:
 - **`protocols`** — Transport-layer definition (port + tcp/udp). Required for all private apps regardless of access mode.
 - **`private_app_protocol`** — Application-layer scheme (`"http"` or `"https"`) used by the backend service. Only required when `clientless_access = true`. Requires replacement if changed.
 
+## Assigning Publishers
+
+Private apps are served through NPA publishers. Use the [`netskope_npa_publishers_list`](../data-sources/npa_publishers_list) data source to look up a publisher ID by name:
+
+```hcl
+data "netskope_npa_publishers_list" "all" {}
+
+locals {
+  publisher_id = {
+    for p in data.netskope_npa_publishers_list.all.publishers : p.publisher_name => p.publisher_id
+  }
+}
+
+resource "netskope_npa_private_app" "example" {
+  private_app_name = "my-app"
+  publishers = [
+    { publisher_id = local.publisher_id["my-publisher"] }
+  ]
+  # ...
+}
+```
+
 ## Example Usage
 
 ```terraform
@@ -41,6 +63,9 @@ resource "netskope_npa_private_app" "my_npaprivateapp" {
   clientless_access  = false
   hide_app_in_portal = false
   is_user_portal_app = true
+  label_ids = [
+    "a0df8672-0c34-45f7-a4a0-6bedd3238fa5"
+  ]
   paths = [
     "..."
   ]
@@ -88,6 +113,7 @@ resource "netskope_npa_private_app" "my_npaprivateapp" {
 - `clientless_access` (Boolean) Default: false
 - `hide_app_in_portal` (Boolean)
 - `is_user_portal_app` (Boolean) Default: false
+- `label_ids` (List of String) Associated RBAC label IDs
 - `paths` (List of String)
 - `private_app_hostname` (String)
 - `private_app_name` (String) Requires replacement if changed.

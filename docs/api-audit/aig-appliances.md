@@ -1,6 +1,6 @@
 # API Audit: AIG Appliances (`/aig/appliances`)
 
-Audited: 2026-06-05 against bespin.goskope.com
+Audited: 2026-06-05 against <tenant>.goskope.com
 
 ## Endpoints Tested
 

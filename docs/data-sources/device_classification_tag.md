@@ -8,17 +8,13 @@ description: |-
 
 # netskope_device_classification_tag (Data Source)
 
-Retrieve a specific device classification tag by its numeric ID.
+DeviceClassificationTag DataSource
 
 ## Example Usage
 
 ```terraform
-data "netskope_device_classification_tag" "example" {
-  tag_id = 12345
-}
-
-output "tag_name" {
-  value = data.netskope_device_classification_tag.example.name
+data "netskope_device_classification_tag" "my_deviceclassificationtag" {
+  tag_id = 6
 }
 ```
 
@@ -27,11 +23,11 @@ output "tag_name" {
 
 ### Required
 
-- `tag_id` (Number) Tag ID
+- `tag_id` (Number) Tag ID (used in device_classification_id on NPA rules)
 
 ### Read-Only
 
-- `name` (String) Tag name
 - `description` (String) Tag description
-- `priority` (Number) Tag priority (lower values = higher priority)
+- `name` (String) Tag name
 - `policy_names` (List of String) Policy names associated with this tag
+- `priority` (Number) Tag priority (lower values = higher priority)

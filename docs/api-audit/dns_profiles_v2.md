@@ -1,7 +1,7 @@
 # API Audit: DNS Profiles v2
 
 **Date:** 2026-03-06
-**Tenant:** bespin.goskope.com
+**Tenant:** <tenant>.goskope.com
 **Base path:** `/api/v2/profiles/dns`
 
 ## Endpoints Tested
@@ -123,7 +123,7 @@ When creating a profile with only `{"name": "..."}`, the API returns these defau
 
 ## Acceptance Tests
 
-All 7 tests pass against `bespin.goskope.com`:
+All 7 tests pass against `<tenant>.goskope.com`:
 
 | Test | Coverage |
 |------|----------|
@@ -137,7 +137,7 @@ All 7 tests pass against `bespin.goskope.com`:
 
 Run with:
 ```bash
-NETSKOPE_SERVER_URL="https://bespin.goskope.com/api/v2" \
+NETSKOPE_SERVER_URL="https://<tenant>.goskope.com/api/v2" \
 NETSKOPE_API_KEY="<key>" \
 TF_ACC=1 go test -v ./internal/provider/... -run TestAccDNSProfileV2 -timeout 30m
 ```

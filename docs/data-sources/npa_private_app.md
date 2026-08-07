@@ -35,7 +35,7 @@ data "netskope_npa_private_app" "my_npaprivateapp" {
 - `custom_host` (String)
 - `hide_app_in_portal` (Boolean)
 - `is_user_portal_app` (Boolean)
-- `labels` (Attributes List) (see [below for nested schema](#nestedatt--labels))
+- `label_ids` (List of String) Associated RBAC label IDs
 - `paths` (List of String)
 - `private_app_hostname` (String)
 - `private_app_name` (String)
@@ -53,10 +53,6 @@ data "netskope_npa_private_app" "my_npaprivateapp" {
 
 <a id="nestedatt--app_option"></a>
 ### Nested Schema for `app_option`
-
-
-<a id="nestedatt--labels"></a>
-### Nested Schema for `labels`
 
 
 <a id="nestedatt--protocols"></a>

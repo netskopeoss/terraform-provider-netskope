@@ -33,6 +33,11 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 				}
 				data.RuleData.BNegateNetLocation = types.BoolPointerValue(dataItem.RuleData.BNegateNetLocation)
 				data.RuleData.BNegateSrcCountries = types.BoolPointerValue(dataItem.RuleData.BNegateSrcCountries)
+				data.RuleData.Classification = make([]types.String, 0, len(dataItem.RuleData.Classification))
+				for _, v := range dataItem.RuleData.Classification {
+					data.RuleData.Classification = append(data.RuleData.Classification, types.StringValue(v))
+				}
+				data.RuleData.Description = types.StringPointerValue(dataItem.RuleData.Description)
 				data.RuleData.DeviceClassificationID = make([]types.String, 0, len(dataItem.RuleData.DeviceClassificationID))
 				for _, v := range dataItem.RuleData.DeviceClassificationID {
 					data.RuleData.DeviceClassificationID = append(data.RuleData.DeviceClassificationID, types.StringValue(v))
@@ -54,9 +59,35 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 				for _, v := range dataItem.RuleData.NetLocationObj {
 					data.RuleData.NetLocationObj = append(data.RuleData.NetLocationObj, types.StringValue(v))
 				}
+				if dataItem.RuleData.Notify == nil {
+					data.RuleData.Notify = nil
+				} else {
+					data.RuleData.Notify = &tfTypes.Notify{}
+					data.RuleData.Notify.Emails = make([]types.String, 0, len(dataItem.RuleData.Notify.Emails))
+					for _, v := range dataItem.RuleData.Notify.Emails {
+						data.RuleData.Notify.Emails = append(data.RuleData.Notify.Emails, types.StringValue(v))
+					}
+					data.RuleData.Notify.FromUser = types.StringPointerValue(dataItem.RuleData.Notify.FromUser)
+					data.RuleData.Notify.Interval = types.StringPointerValue(dataItem.RuleData.Notify.Interval)
+					data.RuleData.Notify.ToUsers = make([]types.String, 0, len(dataItem.RuleData.Notify.ToUsers))
+					for _, v := range dataItem.RuleData.Notify.ToUsers {
+						data.RuleData.Notify.ToUsers = append(data.RuleData.Notify.ToUsers, types.StringValue(v))
+					}
+				}
 				data.RuleData.OrganizationUnits = make([]types.String, 0, len(dataItem.RuleData.OrganizationUnits))
 				for _, v := range dataItem.RuleData.OrganizationUnits {
 					data.RuleData.OrganizationUnits = append(data.RuleData.OrganizationUnits, types.StringValue(v))
+				}
+				data.RuleData.Os = make([]types.String, 0, len(dataItem.RuleData.Os))
+				for _, v := range dataItem.RuleData.Os {
+					data.RuleData.Os = append(data.RuleData.Os, types.StringValue(v))
+				}
+				if dataItem.RuleData.PeriodicReauth == nil {
+					data.RuleData.PeriodicReauth = nil
+				} else {
+					data.RuleData.PeriodicReauth = &tfTypes.NpaPolicyRulePeriodicReauth{}
+					data.RuleData.PeriodicReauth.ReauthInterval = types.StringPointerValue(dataItem.RuleData.PeriodicReauth.ReauthInterval)
+					data.RuleData.PeriodicReauth.ReauthIntervalUnit = types.StringPointerValue(dataItem.RuleData.PeriodicReauth.ReauthIntervalUnit)
 				}
 				if dataItem.RuleData.PolicyType != nil {
 					data.RuleData.PolicyType = types.StringValue(string(*dataItem.RuleData.PolicyType))
@@ -67,13 +98,48 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 				for _, v := range dataItem.RuleData.PrivateApps {
 					data.RuleData.PrivateApps = append(data.RuleData.PrivateApps, types.StringValue(v))
 				}
+				data.RuleData.PrivateAppTagIds = make([]types.String, 0, len(dataItem.RuleData.PrivateAppTagIds))
+				for _, v := range dataItem.RuleData.PrivateAppTagIds {
+					data.RuleData.PrivateAppTagIds = append(data.RuleData.PrivateAppTagIds, types.StringValue(v))
+				}
 				data.RuleData.PrivateAppTags = make([]types.String, 0, len(dataItem.RuleData.PrivateAppTags))
 				for _, v := range dataItem.RuleData.PrivateAppTags {
 					data.RuleData.PrivateAppTags = append(data.RuleData.PrivateAppTags, types.StringValue(v))
 				}
+				data.RuleData.Schedule = []tfTypes.NpaSchedule{}
+
+				for _, scheduleItem := range dataItem.RuleData.Schedule {
+					var schedule tfTypes.NpaSchedule
+
+					schedule.TimeIntervalObj = make([]types.String, 0, len(scheduleItem.TimeIntervalObj))
+					for _, v := range scheduleItem.TimeIntervalObj {
+						schedule.TimeIntervalObj = append(schedule.TimeIntervalObj, types.StringValue(v))
+					}
+					schedule.TimeRange = []tfTypes.TimeRange{}
+
+					for _, timeRangeItem := range scheduleItem.TimeRange {
+						var timeRange tfTypes.TimeRange
+
+						timeRange.EndDate = types.StringPointerValue(timeRangeItem.EndDate)
+						timeRange.EndTime = types.StringPointerValue(timeRangeItem.EndTime)
+						timeRange.StartDate = types.StringPointerValue(timeRangeItem.StartDate)
+						timeRange.StartTime = types.StringPointerValue(timeRangeItem.StartTime)
+
+						schedule.TimeRange = append(schedule.TimeRange, timeRange)
+					}
+
+					data.RuleData.Schedule = append(data.RuleData.Schedule, schedule)
+				}
 				data.RuleData.SrcCountries = make([]types.String, 0, len(dataItem.RuleData.SrcCountries))
 				for _, v := range dataItem.RuleData.SrcCountries {
 					data.RuleData.SrcCountries = append(data.RuleData.SrcCountries, types.StringValue(v))
+				}
+				if dataItem.RuleData.UserConfidence == nil {
+					data.RuleData.UserConfidence = nil
+				} else {
+					data.RuleData.UserConfidence = &tfTypes.UserConfidence{}
+					data.RuleData.UserConfidence.Index = types.StringPointerValue(dataItem.RuleData.UserConfidence.Index)
+					data.RuleData.UserConfidence.Operator = types.StringPointerValue(dataItem.RuleData.UserConfidence.Operator)
 				}
 				data.RuleData.UserGroups = make([]types.String, 0, len(dataItem.RuleData.UserGroups))
 				for _, v := range dataItem.RuleData.UserGroups {
@@ -83,6 +149,12 @@ func (r *NPARulesListDataSourceModel) RefreshFromSharedNpaPolicyResponse(ctx con
 				for _, v := range dataItem.RuleData.Users {
 					data.RuleData.Users = append(data.RuleData.Users, types.StringValue(v))
 				}
+				if dataItem.RuleData.UserType != nil {
+					data.RuleData.UserType = types.StringValue(string(*dataItem.RuleData.UserType))
+				} else {
+					data.RuleData.UserType = types.StringNull()
+				}
+				data.RuleData.Version = types.Int64PointerValue(dataItem.RuleData.Version)
 			}
 			data.RuleName = types.StringPointerValue(dataItem.RuleName)
 

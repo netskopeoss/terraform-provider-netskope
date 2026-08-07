@@ -11,7 +11,7 @@ import (
 )
 
 func TestAccDestinationProfile_basic(t *testing.T) {
-	t.Skip("Skipping: Destination profiles require a license not enabled on the CI tenant")
+	testutil.SkipUnlessEnvSet(t, "TF_RUN_DESTINATION_PROFILES", "destination profiles require a tenant with the licensed feature enabled")
 
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_destination_profile.test"
@@ -49,7 +49,7 @@ func TestAccDestinationProfile_basic(t *testing.T) {
 }
 
 func TestAccDestinationProfile_update(t *testing.T) {
-	t.Skip("Skipping: Destination profiles require a license not enabled on the CI tenant")
+	testutil.SkipUnlessEnvSet(t, "TF_RUN_DESTINATION_PROFILES", "destination profiles require a tenant with the licensed feature enabled")
 
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	rNameUpdated := fmt.Sprintf("%s-updated", rName)
@@ -89,7 +89,7 @@ func TestAccDestinationProfile_update(t *testing.T) {
 }
 
 func TestAccDestinationProfileDataSource_basic(t *testing.T) {
-	t.Skip("Skipping: Destination profiles require a license not enabled on the CI tenant")
+	testutil.SkipUnlessEnvSet(t, "TF_RUN_DESTINATION_PROFILES", "destination profiles require a tenant with the licensed feature enabled")
 
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	dataSourceName := "data.netskope_destination_profile.test"
@@ -116,7 +116,7 @@ func TestAccDestinationProfileDataSource_basic(t *testing.T) {
 }
 
 func TestAccDestinationProfileListDataSource_basic(t *testing.T) {
-	t.Skip("Skipping: Destination profiles require a license not enabled on the CI tenant")
+	testutil.SkipUnlessEnvSet(t, "TF_RUN_DESTINATION_PROFILES", "destination profiles require a tenant with the licensed feature enabled")
 
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	dataSourceName := "data.netskope_destination_profile_list.test"

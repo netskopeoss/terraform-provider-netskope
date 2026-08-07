@@ -22,7 +22,7 @@ This document tracks known behavioral inconsistencies and quirks in the Netskope
   - [15. Inconsistent App ID Field Name Across Endpoints](#15-inconsistent-app-id-field-name-across-endpoints)
 - [Policy API Issues (12-14, 16)](#policy-api-issues-12-14-16)
   - [12. NPA Rules `group_id` is Write-Only](#12-npa-rules-group_id-is-write-only)
-  - [13. API Tokens Cannot Resolve User Notification Templates for Block Rules](#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules)
+  - [13. Block Rule Template — Display Name vs File Name Mismatch](#13-block-rule-template--display-name-vs-file-name-mismatch)
   - [14. `device_classification_id` Type Mismatch (String vs Integer)](#14-device_classification_id-type-mismatch-string-vs-integer)
   - [16. NPA Rules Ordering — Eventual Consistency](#16-npa-rules-ordering--eventual-consistency)
 - [Infrastructure API Issues (17)](#infrastructure-api-issues-17)
@@ -579,54 +579,51 @@ protocols = [
 
 ---
 
-### 13. API Tokens Cannot Resolve User Notification Templates for Block Rules
+### 13. Block Rule Template — Display Name vs File Name Mismatch
 
 **Endpoint:** `POST /api/v2/policy/npa/rules`
 
-**Issue:** When creating an NPA rule with `action_name: "block"`, the API requires a `template` field in `match_criteria_action` containing the notification page **file_name** (e.g. `1.html`, `block_page.html`). However, API tokens cannot resolve any template — all requests return `"Undefined template"`, even for the default public template `block_page.html`. The same operation succeeds when performed via the UI.
+**Issue:** The `template` field in `match_criteria_action` has a name/filename mismatch across operations:
+- **Create/Update** requires the template **display name** (e.g. `"Default Template"`, `"Generic Block"`)
+- **GET response** returns the template **file name** (e.g. `"block_page.html"`, `"23.html"`)
+
+Using a file name on create/update returns `"Undefined template: <filename>"`.
 
 **Example:**
 
 ```json
-// Request
+// Create request — use display name
 {
   "rule_data": {
     "match_criteria_action": {
       "action_name": "block",
       "emit_alert": true,
-      "template": "1.html"
+      "template": "Default Template"
     }
   }
 }
 
-// Response (200 OK with error)
-{"message": "Undefined template: 1.html", "status": "error"}
+// GET response — API returns file name
+{
+  "rule_data": {
+    "match_criteria_action": {
+      "action_name": "block",
+      "template": "block_page.html"
+    }
+  }
+}
 ```
+
+**Provider Handling (v0.4.9+):**
+- The provider's `suppressTemplateDrift` plan modifier suppresses the diff between the config display name and the state file name
+- The `BeforeRequest` hook strips file names (`.html` suffix) from update payloads so that real updates (e.g. toggling `enabled`) do not send a file name to the API
+- Block rules can be fully managed via Terraform — create, read, update, import all work
 
 **Additional Context:**
-- The `template` field expects the `file_name` from user notification pages (e.g. `1.html`), **not** the `template_name` display name (e.g. "tf_test_template")
-- The `/api/v2/templates/usernotifications` endpoint returns `"Permission Error"` for API tokens, so template file_names cannot be looked up programmatically
-- The Terraform provider schema correctly includes `emit_alert` and `template` fields in `match_criteria_action` (added in v0.4.0), but block rules cannot be created via API until this permission issue is resolved
-- Existing block rules created via UI can be read and imported by the provider
+- The `/api/v2/templates/usernotifications` endpoint returns `"Permission Error"` for API tokens, so template file names cannot be looked up programmatically
+- Use the template display name (visible in the Netskope UI under Notifications) in your Terraform config
 
-**Impact:** Block rules cannot be created via API or Terraform. Only allow rules can be automated.
-
-**Workaround:** Create block rules manually via the UI. Use Terraform import to bring existing block rules under management.
-
-**Additional Finding:** The `template` field has a **name/filename mismatch**:
-- **Create/Update** requires the template **display name** (e.g. `"Default Template"`)
-- **GET response** returns the template **file name** (e.g. `"block_page.html"`)
-
-This causes perpetual drift in Terraform — the config specifies the display name, the state refreshes to the filename, and every subsequent plan shows a change. Using the filename on create returns "Undefined template".
-
-```
-# Perpetual drift example:
-~ match_criteria_action = {
-    ~ template = "block_page.html" -> "Default Template"
-  }
-```
-
-**Workaround:** Use `lifecycle { ignore_changes }` to suppress the drift on `match_criteria_action`:
+**Example config:**
 
 ```hcl
 resource "netskope_npa_rules" "block_rule" {
@@ -638,20 +635,16 @@ resource "netskope_npa_rules" "block_rule" {
     policy_type = "private-app"
     match_criteria_action = {
       action_name = "block"
-      template    = "Default Template"
+      template    = "Default Template"   # use display name, not file name
       emit_alert  = true
     }
     private_apps  = [netskope_npa_private_app.example.private_app_name]
     access_method = ["Client"]
   }
-
-  lifecycle {
-    ignore_changes = [rule_data]
-  }
 }
 ```
 
-**Status:** API inconsistency — Jira ticket raised. Block rules can be created but will show perpetual drift on the `template` field until the API returns a consistent value. Use `lifecycle { ignore_changes = [rule_data] }` as a workaround.
+**Status:** Fixed in v0.4.9 (BUG-019). `lifecycle { ignore_changes }` workaround is no longer needed.
 
 ---
 

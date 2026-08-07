@@ -43,6 +43,11 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			}
 			r.RuleData.BNegateNetLocation = types.BoolPointerValue(resp.RuleData.BNegateNetLocation)
 			r.RuleData.BNegateSrcCountries = types.BoolPointerValue(resp.RuleData.BNegateSrcCountries)
+			r.RuleData.Classification = make([]types.String, 0, len(resp.RuleData.Classification))
+			for _, v := range resp.RuleData.Classification {
+				r.RuleData.Classification = append(r.RuleData.Classification, types.StringValue(v))
+			}
+			r.RuleData.Description = types.StringPointerValue(resp.RuleData.Description)
 			r.RuleData.DeviceClassificationID = make([]types.String, 0, len(resp.RuleData.DeviceClassificationID))
 			for _, v := range resp.RuleData.DeviceClassificationID {
 				r.RuleData.DeviceClassificationID = append(r.RuleData.DeviceClassificationID, types.StringValue(v))
@@ -64,9 +69,35 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			for _, v := range resp.RuleData.NetLocationObj {
 				r.RuleData.NetLocationObj = append(r.RuleData.NetLocationObj, types.StringValue(v))
 			}
+			if resp.RuleData.Notify == nil {
+				r.RuleData.Notify = nil
+			} else {
+				r.RuleData.Notify = &tfTypes.Notify{}
+				r.RuleData.Notify.Emails = make([]types.String, 0, len(resp.RuleData.Notify.Emails))
+				for _, v := range resp.RuleData.Notify.Emails {
+					r.RuleData.Notify.Emails = append(r.RuleData.Notify.Emails, types.StringValue(v))
+				}
+				r.RuleData.Notify.FromUser = types.StringPointerValue(resp.RuleData.Notify.FromUser)
+				r.RuleData.Notify.Interval = types.StringPointerValue(resp.RuleData.Notify.Interval)
+				r.RuleData.Notify.ToUsers = make([]types.String, 0, len(resp.RuleData.Notify.ToUsers))
+				for _, v := range resp.RuleData.Notify.ToUsers {
+					r.RuleData.Notify.ToUsers = append(r.RuleData.Notify.ToUsers, types.StringValue(v))
+				}
+			}
 			r.RuleData.OrganizationUnits = make([]types.String, 0, len(resp.RuleData.OrganizationUnits))
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
+			}
+			r.RuleData.Os = make([]types.String, 0, len(resp.RuleData.Os))
+			for _, v := range resp.RuleData.Os {
+				r.RuleData.Os = append(r.RuleData.Os, types.StringValue(v))
+			}
+			if resp.RuleData.PeriodicReauth == nil {
+				r.RuleData.PeriodicReauth = nil
+			} else {
+				r.RuleData.PeriodicReauth = &tfTypes.NpaPolicyRulePeriodicReauth{}
+				r.RuleData.PeriodicReauth.ReauthInterval = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthInterval)
+				r.RuleData.PeriodicReauth.ReauthIntervalUnit = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthIntervalUnit)
 			}
 			if resp.RuleData.PolicyType != nil {
 				r.RuleData.PolicyType = types.StringValue(string(*resp.RuleData.PolicyType))
@@ -77,13 +108,48 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			for _, v := range resp.RuleData.PrivateApps {
 				r.RuleData.PrivateApps = append(r.RuleData.PrivateApps, types.StringValue(v))
 			}
+			r.RuleData.PrivateAppTagIds = make([]types.String, 0, len(resp.RuleData.PrivateAppTagIds))
+			for _, v := range resp.RuleData.PrivateAppTagIds {
+				r.RuleData.PrivateAppTagIds = append(r.RuleData.PrivateAppTagIds, types.StringValue(v))
+			}
 			r.RuleData.PrivateAppTags = make([]types.String, 0, len(resp.RuleData.PrivateAppTags))
 			for _, v := range resp.RuleData.PrivateAppTags {
 				r.RuleData.PrivateAppTags = append(r.RuleData.PrivateAppTags, types.StringValue(v))
 			}
+			r.RuleData.Schedule = []tfTypes.NpaSchedule{}
+
+			for _, scheduleItem := range resp.RuleData.Schedule {
+				var schedule tfTypes.NpaSchedule
+
+				schedule.TimeIntervalObj = make([]types.String, 0, len(scheduleItem.TimeIntervalObj))
+				for _, v := range scheduleItem.TimeIntervalObj {
+					schedule.TimeIntervalObj = append(schedule.TimeIntervalObj, types.StringValue(v))
+				}
+				schedule.TimeRange = []tfTypes.TimeRange{}
+
+				for _, timeRangeItem := range scheduleItem.TimeRange {
+					var timeRange tfTypes.TimeRange
+
+					timeRange.EndDate = types.StringPointerValue(timeRangeItem.EndDate)
+					timeRange.EndTime = types.StringPointerValue(timeRangeItem.EndTime)
+					timeRange.StartDate = types.StringPointerValue(timeRangeItem.StartDate)
+					timeRange.StartTime = types.StringPointerValue(timeRangeItem.StartTime)
+
+					schedule.TimeRange = append(schedule.TimeRange, timeRange)
+				}
+
+				r.RuleData.Schedule = append(r.RuleData.Schedule, schedule)
+			}
 			r.RuleData.SrcCountries = make([]types.String, 0, len(resp.RuleData.SrcCountries))
 			for _, v := range resp.RuleData.SrcCountries {
 				r.RuleData.SrcCountries = append(r.RuleData.SrcCountries, types.StringValue(v))
+			}
+			if resp.RuleData.UserConfidence == nil {
+				r.RuleData.UserConfidence = nil
+			} else {
+				r.RuleData.UserConfidence = &tfTypes.UserConfidence{}
+				r.RuleData.UserConfidence.Index = types.StringPointerValue(resp.RuleData.UserConfidence.Index)
+				r.RuleData.UserConfidence.Operator = types.StringPointerValue(resp.RuleData.UserConfidence.Operator)
 			}
 			r.RuleData.UserGroups = make([]types.String, 0, len(resp.RuleData.UserGroups))
 			for _, v := range resp.RuleData.UserGroups {
@@ -93,6 +159,12 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			for _, v := range resp.RuleData.Users {
 				r.RuleData.Users = append(r.RuleData.Users, types.StringValue(v))
 			}
+			if resp.RuleData.UserType != nil {
+				r.RuleData.UserType = types.StringValue(string(*resp.RuleData.UserType))
+			} else {
+				r.RuleData.UserType = types.StringNull()
+			}
+			r.RuleData.Version = types.Int64PointerValue(resp.RuleData.Version)
 		}
 		r.RuleName = types.StringPointerValue(resp.RuleName)
 	}

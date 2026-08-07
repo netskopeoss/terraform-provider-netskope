@@ -2,144 +2,58 @@
 
 package shared
 
-import (
-	"encoding/json"
-	"fmt"
-)
-
-// ScheduleType - Type of schedule - always active or custom time windows
-type ScheduleType string
-
-const (
-	ScheduleTypeAlways ScheduleType = "always"
-	ScheduleTypeCustom ScheduleType = "custom"
-)
-
-func (e ScheduleType) ToPointer() *ScheduleType {
-	return &e
-}
-func (e *ScheduleType) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "always":
-		fallthrough
-	case "custom":
-		*e = ScheduleType(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for ScheduleType: %v", v)
-	}
-}
-
-type Days string
-
-const (
-	DaysMonday    Days = "monday"
-	DaysTuesday   Days = "tuesday"
-	DaysWednesday Days = "wednesday"
-	DaysThursday  Days = "thursday"
-	DaysFriday    Days = "friday"
-	DaysSaturday  Days = "saturday"
-	DaysSunday    Days = "sunday"
-)
-
-func (e Days) ToPointer() *Days {
-	return &e
-}
-func (e *Days) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "monday":
-		fallthrough
-	case "tuesday":
-		fallthrough
-	case "wednesday":
-		fallthrough
-	case "thursday":
-		fallthrough
-	case "friday":
-		fallthrough
-	case "saturday":
-		fallthrough
-	case "sunday":
-		*e = Days(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for Days: %v", v)
-	}
-}
-
-type TimeWindows struct {
-	Days []Days `json:"days,omitempty"`
-	// Start time in HH:MM format
+type TimeRange struct {
+	StartDate *string `json:"start_date,omitempty"`
 	StartTime *string `json:"start_time,omitempty"`
-	// End time in HH:MM format
-	EndTime *string `json:"end_time,omitempty"`
+	EndDate   *string `json:"end_date,omitempty"`
+	EndTime   *string `json:"end_time,omitempty"`
 }
 
-func (t *TimeWindows) GetDays() []Days {
+func (t *TimeRange) GetStartDate() *string {
 	if t == nil {
 		return nil
 	}
-	return t.Days
+	return t.StartDate
 }
 
-func (t *TimeWindows) GetStartTime() *string {
+func (t *TimeRange) GetStartTime() *string {
 	if t == nil {
 		return nil
 	}
 	return t.StartTime
 }
 
-func (t *TimeWindows) GetEndTime() *string {
+func (t *TimeRange) GetEndDate() *string {
+	if t == nil {
+		return nil
+	}
+	return t.EndDate
+}
+
+func (t *TimeRange) GetEndTime() *string {
 	if t == nil {
 		return nil
 	}
 	return t.EndTime
 }
 
-// NpaSchedule - Schedule configuration for policy enforcement timing
 type NpaSchedule struct {
-	// Whether scheduling is enabled for this policy
-	Enabled *bool `json:"enabled,omitempty"`
-	// Timezone for schedule (e.g., "America/Los_Angeles")
-	Timezone *string `json:"timezone,omitempty"`
-	// Type of schedule - always active or custom time windows
-	ScheduleType *ScheduleType `json:"schedule_type,omitempty"`
-	// Custom time windows when policy is active
-	TimeWindows []TimeWindows `json:"time_windows,omitempty"`
+	// Date/time ranges when the policy is active
+	TimeRange []TimeRange `json:"time_range,omitempty"`
+	// IDs of Time Interval objects configured in the Netskope console (Policies > Time Intervals). No API endpoint exists to list these; obtain IDs from the Netskope UI.
+	TimeIntervalObj []string `json:"time_interval_obj,omitempty"`
 }
 
-func (n *NpaSchedule) GetEnabled() *bool {
+func (n *NpaSchedule) GetTimeRange() []TimeRange {
 	if n == nil {
 		return nil
 	}
-	return n.Enabled
+	return n.TimeRange
 }
 
-func (n *NpaSchedule) GetTimezone() *string {
+func (n *NpaSchedule) GetTimeIntervalObj() []string {
 	if n == nil {
 		return nil
 	}
-	return n.Timezone
-}
-
-func (n *NpaSchedule) GetScheduleType() *ScheduleType {
-	if n == nil {
-		return nil
-	}
-	return n.ScheduleType
-}
-
-func (n *NpaSchedule) GetTimeWindows() []TimeWindows {
-	if n == nil {
-		return nil
-	}
-	return n.TimeWindows
+	return n.TimeIntervalObj
 }

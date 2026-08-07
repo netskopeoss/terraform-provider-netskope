@@ -1,0 +1,38 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+  Returns the complete list of predefined CCI categories with their numeric IDs.
+---
+
+# {{.Name}} ({{.Type}})
+
+Returns the complete list of predefined CCI (Cloud Confidence Index) categories with their numeric IDs. Use this data source to resolve category names to IDs for use in [`netskope_custom_category`](../resources/custom_category) resources.
+
+## Why Use This Data Source?
+
+`netskope_custom_category` accepts `included_predefined_categories` as a list of numeric strings (e.g. `"600"` for Generative AI). These IDs are **tenant-independent** — the same category has the same ID on every Netskope tenant — but hardcoding them makes configs harder to read and review.
+
+This data source lets you reference categories by name instead:
+
+```hcl
+data "netskope_cci_category_list" "all" {}
+
+locals {
+  cci_category_id = {
+    for c in data.netskope_cci_category_list.all.categories :
+    c.category_name => c.category_id
+  }
+}
+
+resource "netskope_custom_category" "genai" {
+  name                           = "CAT-GenAI"
+  included_predefined_categories = [tostring(local.cci_category_id["Generative AI"])]
+}
+```
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}

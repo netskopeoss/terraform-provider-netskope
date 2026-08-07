@@ -65,4 +65,6 @@ jobs:
           NETSKOPE_SERVER_URL: ${{ secrets.NETSKOPE_SERVER_URL }}
           NETSKOPE_OAUTH2_CLIENT_ID: ${{ secrets.NETSKOPE_OAUTH2_CLIENT_ID }}
           NETSKOPE_OAUTH2_CLIENT_SECRET: ${{ secrets.NETSKOPE_OAUTH2_CLIENT_SECRET }}
+          NETSKOPE_TEST_USER: ${{ secrets.NETSKOPE_TEST_USER }}
+          TF_RUN_DESTINATION_PROFILES: ${{ secrets.TF_RUN_DESTINATION_PROFILES }}
         run: go test -v ./internal/provider/... -timeout 120m -parallel 8
