@@ -20,8 +20,11 @@ var ProtoV6ProviderFactories = map[string]func() (tfprotov6.ProviderServer, erro
 
 func PreCheck(t *testing.T) {
 	t.Helper()
-	if v := os.Getenv("NETSKOPE_API_KEY"); v == "" {
-		t.Fatal("NETSKOPE_API_KEY must be set for acceptance tests")
+	apiKey := os.Getenv("NETSKOPE_API_KEY")
+	oauth2ID := os.Getenv("NETSKOPE_OAUTH2_CLIENT_ID")
+	oauth2Secret := os.Getenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	if apiKey == "" && (oauth2ID == "" || oauth2Secret == "") {
+		t.Fatal("Either NETSKOPE_API_KEY or both NETSKOPE_OAUTH2_CLIENT_ID and NETSKOPE_OAUTH2_CLIENT_SECRET must be set for acceptance tests")
 	}
 	if v := os.Getenv("NETSKOPE_SERVER_URL"); v == "" {
 		t.Fatal("NETSKOPE_SERVER_URL must be set for acceptance tests")
@@ -59,6 +62,16 @@ func CheckResourceDestroy(resourceType string) resource.TestCheckFunc {
 			}
 		}
 		return nil
+	}
+}
+
+// SkipUnlessEnvSet skips the test unless the given environment variable is set
+// to a non-empty value. Use for opt-in tests that require a specific tenant or
+// licensed feature (e.g. TF_RUN_DESTINATION_PROFILES=1 for destination profile tests).
+func SkipUnlessEnvSet(t *testing.T, envVar, reason string) {
+	t.Helper()
+	if os.Getenv(envVar) == "" {
+		t.Skipf("Skipping: %s (set %s=1 to run)", reason, envVar)
 	}
 }
 

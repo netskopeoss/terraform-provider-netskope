@@ -79,6 +79,7 @@ type TerraformProviderNs struct {
 	RBACRole                    *RBACRole
 	Deviceclassification        *Deviceclassification
 	DeviceClassificationTag     *DeviceClassificationTag
+	Cci                         *Cci
 	Urllist                     *Urllist
 	AIGAppliances               *AIGAppliances
 	AIGAppliance                *AIGAppliance
@@ -189,7 +190,7 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 			ServerList: ServerList,
 			ServerVariables: []map[string]string{
 				{
-					"tenant": "bespin",
+					"tenant": "demo",
 				},
 			},
 		},
@@ -236,6 +237,7 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk.RBACRole = newRBACRole(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Deviceclassification = newDeviceclassification(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.DeviceClassificationTag = newDeviceClassificationTag(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Cci = newCci(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Urllist = newUrllist(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.AIGAppliances = newAIGAppliances(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.AIGAppliance = newAIGAppliance(sdk, sdk.sdkConfiguration, sdk.hooks)

@@ -3,30 +3,32 @@ speakeasyVersion: 1.728.0
 sources:
     openapi:
         inputs:
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/base_oas.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/steering/npa_apps_private.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/steering/ipsec_tunnels.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/steering/gre_tunnels.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policy.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/policy/npa_policygroup.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_publishers.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/npa_upgrade_profiles.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/infrastructure/lbrokers.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/profiles/dns_profiles_v2.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/platform/ips_status.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/profiles/destination_profiles.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/profiles/custom_categories.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/profiles/service_objects.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/platform/rbac_labels.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/platform/deviceclassification_tags.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/policy/urllist.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/aig/aig-appliances-openapi.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/aig/aig-aiproviders-openapi.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/aig/aig-mcpservers-openapi.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/aig/aig-ratelimits-openapi.yaml
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/endpoints/aig/aig-tokens-openapi.yaml
+            - location: $NETSKOPE_OAS_DIR/base_oas.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/steering/npa_apps_private.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/steering/ipsec_tunnels.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/steering/gre_tunnels.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/policy/npa_policy.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/policy/npa_policygroup.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/infrastructure/npa_publishers.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/infrastructure/npa_upgrade_profiles.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/infrastructure/lbrokers.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/profiles/dns_profiles_v2.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/platform/ips_status.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/profiles/destination_profiles.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/profiles/custom_categories.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/profiles/service_objects.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/platform/rbac_labels.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/platform/rbac_roles.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/platform/deviceclassification_tags.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/platform/cci_data.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/policy/urllist.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/aig/aig-appliances-openapi.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/aig/aig-aiproviders-openapi.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/aig/aig-mcpservers-openapi.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/aig/aig-ratelimits-openapi.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/aig/aig-tokens-openapi.yaml
         overlays:
-            - location: /Users/jharris/speakeasy/netskope-apiv2-oas/terraform_overlay.yaml
+            - location: $NETSKOPE_OAS_DIR/terraform_overlay.yaml
         registry:
             location: registry.speakeasyapi.dev/api-dev-ns/api-dev-ns/openapi
 targets:

@@ -33,5 +33,7 @@ provider "netskope" {
 ### Optional
 
 - `api_key` (String, Sensitive) API Key. Configurable via environment variable `NETSKOPE_API_KEY`.
+- `retry_disabled` (Boolean) Disable automatic retries on rate-limited (429) or transient (5xx) errors. Default is false. When true, the provider returns the error immediately. Configurable via environment variable NETSKOPE_RETRY_DISABLED.
+- `retry_max_elapsed_time` (Number) Maximum total time in seconds to spend retrying rate-limited (429) or transient (5xx) API calls before giving up. Default is 300 (5 minutes). Set to a lower value (e.g. 30) in CI pipelines to fail fast. Configurable via environment variable NETSKOPE_RETRY_MAX_ELAPSED.
 - `server_url` (String) Server URL (defaults to https://{tenant}.goskope.com/api/v2)
-- `tenant` (String) this value is assigned by Netskope, in this example `demo.goskope.com` (defaults to demo)
+- `tenant` (String) Netskope tenant name (e.g. "acme" for acme.goskope.com)

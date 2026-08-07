@@ -53,9 +53,14 @@ CLAUDE.md
 # Local planning/design documents
 planning_docs/
 # Internal docs not for the repo
+docs/bugs/
+docs/TODO.md
 docs/customer/
 docs/guides/
 docs/examples/
+# Testdata for permanently-skipped tests (hardcoded t.Skip, never run in CI)
+internal/provider/testdata/TestAccIPSStatusDataSource_basic/
+internal/provider/testdata/TestAccNPAPublishersAlertsConfiguration_basic/
 NPA_POLICY_UPDATE_PLAN.md
 ACCEPTANCE_TEST_DESIGN_SPEC.md
 # Log files

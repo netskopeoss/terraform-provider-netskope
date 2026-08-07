@@ -177,7 +177,7 @@ TF_ACC=1 go test -v ./internal/provider/... -count 1
 ```bash
 # Complete acceptance test run
 NETSKOPE_API_KEY="your-api-key" \
-NETSKOPE_SERVER_URL="https://bespin.goskope.com/api/v2" \
+NETSKOPE_SERVER_URL="https://<your-tenant>.goskope.com/api/v2" \
 TF_ACC=1 go test -v ./internal/provider/... -timeout 120m -parallel 1
 ```
 

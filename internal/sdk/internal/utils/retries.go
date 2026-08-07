@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk/retry"
 	"io"
 	"math"
@@ -190,6 +191,23 @@ func retryWithBackoff(ctx context.Context, s *retry.BackoffStrategy, operation f
 		if next <= 0 {
 			next = nextInterval(s, attempt)
 		}
+
+		// Cap to MaxInterval so a Retry-After header cannot override the configured ceiling.
+		if maxInterval := time.Duration(s.MaxInterval) * time.Millisecond; next > maxInterval {
+			next = maxInterval
+		}
+
+		// If sleeping would push us past the budget, fail now. Sleeping and then
+		// failing on the very next attempt wastes compute and silently blocks CI
+		// pipelines for the entire Retry-After window (can be tens of minutes).
+		if remaining := maxElapsedTime - time.Since(start); next > remaining {
+			return err
+		}
+
+		tflog.Warn(ctx, "API rate limited, waiting before retry", map[string]interface{}{
+			"wait_seconds": next.Seconds(),
+			"attempt":      attempt + 1,
+		})
 
 		timer.Start(next)
 

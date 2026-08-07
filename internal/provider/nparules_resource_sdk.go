@@ -73,6 +73,11 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			}
 			r.RuleData.BNegateNetLocation = types.BoolPointerValue(resp.RuleData.BNegateNetLocation)
 			r.RuleData.BNegateSrcCountries = types.BoolPointerValue(resp.RuleData.BNegateSrcCountries)
+			r.RuleData.Classification = make([]types.String, 0, len(resp.RuleData.Classification))
+			for _, v := range resp.RuleData.Classification {
+				r.RuleData.Classification = append(r.RuleData.Classification, types.StringValue(v))
+			}
+			r.RuleData.Description = types.StringPointerValue(resp.RuleData.Description)
 			r.RuleData.DeviceClassificationID = make([]types.String, 0, len(resp.RuleData.DeviceClassificationID))
 			for _, v := range resp.RuleData.DeviceClassificationID {
 				r.RuleData.DeviceClassificationID = append(r.RuleData.DeviceClassificationID, types.StringValue(v))
@@ -94,9 +99,35 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			for _, v := range resp.RuleData.NetLocationObj {
 				r.RuleData.NetLocationObj = append(r.RuleData.NetLocationObj, types.StringValue(v))
 			}
+			if resp.RuleData.Notify == nil {
+				r.RuleData.Notify = nil
+			} else {
+				r.RuleData.Notify = &tfTypes.Notify{}
+				r.RuleData.Notify.Emails = make([]types.String, 0, len(resp.RuleData.Notify.Emails))
+				for _, v := range resp.RuleData.Notify.Emails {
+					r.RuleData.Notify.Emails = append(r.RuleData.Notify.Emails, types.StringValue(v))
+				}
+				r.RuleData.Notify.FromUser = types.StringPointerValue(resp.RuleData.Notify.FromUser)
+				r.RuleData.Notify.Interval = types.StringPointerValue(resp.RuleData.Notify.Interval)
+				r.RuleData.Notify.ToUsers = make([]types.String, 0, len(resp.RuleData.Notify.ToUsers))
+				for _, v := range resp.RuleData.Notify.ToUsers {
+					r.RuleData.Notify.ToUsers = append(r.RuleData.Notify.ToUsers, types.StringValue(v))
+				}
+			}
 			r.RuleData.OrganizationUnits = make([]types.String, 0, len(resp.RuleData.OrganizationUnits))
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
+			}
+			r.RuleData.Os = make([]types.String, 0, len(resp.RuleData.Os))
+			for _, v := range resp.RuleData.Os {
+				r.RuleData.Os = append(r.RuleData.Os, types.StringValue(v))
+			}
+			if resp.RuleData.PeriodicReauth == nil {
+				r.RuleData.PeriodicReauth = nil
+			} else {
+				r.RuleData.PeriodicReauth = &tfTypes.NpaPolicyRulePeriodicReauth{}
+				r.RuleData.PeriodicReauth.ReauthInterval = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthInterval)
+				r.RuleData.PeriodicReauth.ReauthIntervalUnit = types.StringPointerValue(resp.RuleData.PeriodicReauth.ReauthIntervalUnit)
 			}
 			if resp.RuleData.PolicyType != nil {
 				r.RuleData.PolicyType = types.StringValue(string(*resp.RuleData.PolicyType))
@@ -107,13 +138,48 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			for _, v := range resp.RuleData.PrivateApps {
 				r.RuleData.PrivateApps = append(r.RuleData.PrivateApps, types.StringValue(v))
 			}
+			r.RuleData.PrivateAppTagIds = make([]types.String, 0, len(resp.RuleData.PrivateAppTagIds))
+			for _, v := range resp.RuleData.PrivateAppTagIds {
+				r.RuleData.PrivateAppTagIds = append(r.RuleData.PrivateAppTagIds, types.StringValue(v))
+			}
 			r.RuleData.PrivateAppTags = make([]types.String, 0, len(resp.RuleData.PrivateAppTags))
 			for _, v := range resp.RuleData.PrivateAppTags {
 				r.RuleData.PrivateAppTags = append(r.RuleData.PrivateAppTags, types.StringValue(v))
 			}
+			r.RuleData.Schedule = []tfTypes.NpaSchedule{}
+
+			for _, scheduleItem := range resp.RuleData.Schedule {
+				var schedule tfTypes.NpaSchedule
+
+				schedule.TimeIntervalObj = make([]types.String, 0, len(scheduleItem.TimeIntervalObj))
+				for _, v := range scheduleItem.TimeIntervalObj {
+					schedule.TimeIntervalObj = append(schedule.TimeIntervalObj, types.StringValue(v))
+				}
+				schedule.TimeRange = []tfTypes.TimeRange{}
+
+				for _, timeRangeItem := range scheduleItem.TimeRange {
+					var timeRange tfTypes.TimeRange
+
+					timeRange.EndDate = types.StringPointerValue(timeRangeItem.EndDate)
+					timeRange.EndTime = types.StringPointerValue(timeRangeItem.EndTime)
+					timeRange.StartDate = types.StringPointerValue(timeRangeItem.StartDate)
+					timeRange.StartTime = types.StringPointerValue(timeRangeItem.StartTime)
+
+					schedule.TimeRange = append(schedule.TimeRange, timeRange)
+				}
+
+				r.RuleData.Schedule = append(r.RuleData.Schedule, schedule)
+			}
 			r.RuleData.SrcCountries = make([]types.String, 0, len(resp.RuleData.SrcCountries))
 			for _, v := range resp.RuleData.SrcCountries {
 				r.RuleData.SrcCountries = append(r.RuleData.SrcCountries, types.StringValue(v))
+			}
+			if resp.RuleData.UserConfidence == nil {
+				r.RuleData.UserConfidence = nil
+			} else {
+				r.RuleData.UserConfidence = &tfTypes.UserConfidence{}
+				r.RuleData.UserConfidence.Index = types.StringPointerValue(resp.RuleData.UserConfidence.Index)
+				r.RuleData.UserConfidence.Operator = types.StringPointerValue(resp.RuleData.UserConfidence.Operator)
 			}
 			r.RuleData.UserGroups = make([]types.String, 0, len(resp.RuleData.UserGroups))
 			for _, v := range resp.RuleData.UserGroups {
@@ -123,6 +189,12 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			for _, v := range resp.RuleData.Users {
 				r.RuleData.Users = append(r.RuleData.Users, types.StringValue(v))
 			}
+			if resp.RuleData.UserType != nil {
+				r.RuleData.UserType = types.StringValue(string(*resp.RuleData.UserType))
+			} else {
+				r.RuleData.UserType = types.StringNull()
+			}
+			r.RuleData.Version = types.Int64PointerValue(resp.RuleData.Version)
 		}
 		r.RuleName = types.StringPointerValue(resp.RuleName)
 	}
@@ -222,6 +294,33 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		} else {
 			bNegateSrcCountries = nil
 		}
+		classification := make([]string, 0, len(r.RuleData.Classification))
+		for classificationIndex := range r.RuleData.Classification {
+			classification = append(classification, r.RuleData.Classification[classificationIndex].ValueString())
+		}
+		os := make([]string, 0, len(r.RuleData.Os))
+		for osIndex := range r.RuleData.Os {
+			os = append(os, r.RuleData.Os[osIndex].ValueString())
+		}
+		var periodicReauth *shared.NpaPolicyRulePeriodicReauth
+		if r.RuleData.PeriodicReauth != nil {
+			reauthInterval := new(string)
+			if !r.RuleData.PeriodicReauth.ReauthInterval.IsUnknown() && !r.RuleData.PeriodicReauth.ReauthInterval.IsNull() {
+				*reauthInterval = r.RuleData.PeriodicReauth.ReauthInterval.ValueString()
+			} else {
+				reauthInterval = nil
+			}
+			reauthIntervalUnit := new(string)
+			if !r.RuleData.PeriodicReauth.ReauthIntervalUnit.IsUnknown() && !r.RuleData.PeriodicReauth.ReauthIntervalUnit.IsNull() {
+				*reauthIntervalUnit = r.RuleData.PeriodicReauth.ReauthIntervalUnit.ValueString()
+			} else {
+				reauthIntervalUnit = nil
+			}
+			periodicReauth = &shared.NpaPolicyRulePeriodicReauth{
+				ReauthInterval:     reauthInterval,
+				ReauthIntervalUnit: reauthIntervalUnit,
+			}
+		}
 		jsonVersion := new(int64)
 		if !r.RuleData.JSONVersion.IsUnknown() && !r.RuleData.JSONVersion.IsNull() {
 			*jsonVersion = r.RuleData.JSONVersion.ValueInt64()
@@ -272,6 +371,10 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		} else {
 			policyType = nil
 		}
+		privateAppTagIds := make([]string, 0, len(r.RuleData.PrivateAppTagIds))
+		for privateAppTagIdsIndex := range r.RuleData.PrivateAppTagIds {
+			privateAppTagIds = append(privateAppTagIds, r.RuleData.PrivateAppTagIds[privateAppTagIdsIndex].ValueString())
+		}
 		privateAppTags := make([]string, 0, len(r.RuleData.PrivateAppTags))
 		for privateAppTagsIndex := range r.RuleData.PrivateAppTags {
 			privateAppTags = append(privateAppTags, r.RuleData.PrivateAppTags[privateAppTagsIndex].ValueString())
@@ -288,25 +391,145 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		for userGroupsIndex := range r.RuleData.UserGroups {
 			userGroups = append(userGroups, r.RuleData.UserGroups[userGroupsIndex].ValueString())
 		}
+		userType := new(shared.UserType)
+		if !r.RuleData.UserType.IsUnknown() && !r.RuleData.UserType.IsNull() {
+			*userType = shared.UserType(r.RuleData.UserType.ValueString())
+		} else {
+			userType = nil
+		}
 		users := make([]string, 0, len(r.RuleData.Users))
 		for usersIndex := range r.RuleData.Users {
 			users = append(users, r.RuleData.Users[usersIndex].ValueString())
+		}
+		version := new(int64)
+		if !r.RuleData.Version.IsUnknown() && !r.RuleData.Version.IsNull() {
+			*version = r.RuleData.Version.ValueInt64()
+		} else {
+			version = nil
+		}
+		schedule := make([]shared.NpaSchedule, 0, len(r.RuleData.Schedule))
+		for scheduleIndex := range r.RuleData.Schedule {
+			timeRange := make([]shared.TimeRange, 0, len(r.RuleData.Schedule[scheduleIndex].TimeRange))
+			for timeRangeIndex := range r.RuleData.Schedule[scheduleIndex].TimeRange {
+				startDate := new(string)
+				if !r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].StartDate.IsUnknown() && !r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].StartDate.IsNull() {
+					*startDate = r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].StartDate.ValueString()
+				} else {
+					startDate = nil
+				}
+				startTime := new(string)
+				if !r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].StartTime.IsUnknown() && !r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].StartTime.IsNull() {
+					*startTime = r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].StartTime.ValueString()
+				} else {
+					startTime = nil
+				}
+				endDate := new(string)
+				if !r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].EndDate.IsUnknown() && !r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].EndDate.IsNull() {
+					*endDate = r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].EndDate.ValueString()
+				} else {
+					endDate = nil
+				}
+				endTime := new(string)
+				if !r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].EndTime.IsUnknown() && !r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].EndTime.IsNull() {
+					*endTime = r.RuleData.Schedule[scheduleIndex].TimeRange[timeRangeIndex].EndTime.ValueString()
+				} else {
+					endTime = nil
+				}
+				timeRange = append(timeRange, shared.TimeRange{
+					StartDate: startDate,
+					StartTime: startTime,
+					EndDate:   endDate,
+					EndTime:   endTime,
+				})
+			}
+			timeIntervalObj := make([]string, 0, len(r.RuleData.Schedule[scheduleIndex].TimeIntervalObj))
+			for timeIntervalObjIndex := range r.RuleData.Schedule[scheduleIndex].TimeIntervalObj {
+				timeIntervalObj = append(timeIntervalObj, r.RuleData.Schedule[scheduleIndex].TimeIntervalObj[timeIntervalObjIndex].ValueString())
+			}
+			schedule = append(schedule, shared.NpaSchedule{
+				TimeRange:       timeRange,
+				TimeIntervalObj: timeIntervalObj,
+			})
+		}
+		var userConfidence *shared.UserConfidence
+		if r.RuleData.UserConfidence != nil {
+			operator := new(string)
+			if !r.RuleData.UserConfidence.Operator.IsUnknown() && !r.RuleData.UserConfidence.Operator.IsNull() {
+				*operator = r.RuleData.UserConfidence.Operator.ValueString()
+			} else {
+				operator = nil
+			}
+			index := new(string)
+			if !r.RuleData.UserConfidence.Index.IsUnknown() && !r.RuleData.UserConfidence.Index.IsNull() {
+				*index = r.RuleData.UserConfidence.Index.ValueString()
+			} else {
+				index = nil
+			}
+			userConfidence = &shared.UserConfidence{
+				Operator: operator,
+				Index:    index,
+			}
+		}
+		description1 := new(string)
+		if !r.RuleData.Description.IsUnknown() && !r.RuleData.Description.IsNull() {
+			*description1 = r.RuleData.Description.ValueString()
+		} else {
+			description1 = nil
+		}
+		var notify *shared.Notify
+		if r.RuleData.Notify != nil {
+			emails := make([]string, 0, len(r.RuleData.Notify.Emails))
+			for emailsIndex := range r.RuleData.Notify.Emails {
+				emails = append(emails, r.RuleData.Notify.Emails[emailsIndex].ValueString())
+			}
+			fromUser := new(string)
+			if !r.RuleData.Notify.FromUser.IsUnknown() && !r.RuleData.Notify.FromUser.IsNull() {
+				*fromUser = r.RuleData.Notify.FromUser.ValueString()
+			} else {
+				fromUser = nil
+			}
+			interval := new(string)
+			if !r.RuleData.Notify.Interval.IsUnknown() && !r.RuleData.Notify.Interval.IsNull() {
+				*interval = r.RuleData.Notify.Interval.ValueString()
+			} else {
+				interval = nil
+			}
+			toUsers := make([]string, 0, len(r.RuleData.Notify.ToUsers))
+			for toUsersIndex := range r.RuleData.Notify.ToUsers {
+				toUsers = append(toUsers, r.RuleData.Notify.ToUsers[toUsersIndex].ValueString())
+			}
+			notify = &shared.Notify{
+				Emails:   emails,
+				FromUser: fromUser,
+				Interval: interval,
+				ToUsers:  toUsers,
+			}
 		}
 		ruleData = &shared.NpaPolicyRuleData{
 			AccessMethod:           accessMethod,
 			BNegateNetLocation:     bNegateNetLocation,
 			BNegateSrcCountries:    bNegateSrcCountries,
+			Classification:         classification,
+			Os:                     os,
+			PeriodicReauth:         periodicReauth,
 			JSONVersion:            jsonVersion,
 			DeviceClassificationID: deviceClassificationID,
 			MatchCriteriaAction:    matchCriteriaAction,
 			NetLocationObj:         netLocationObj,
 			OrganizationUnits:      organizationUnits,
 			PolicyType:             policyType,
+			PrivateAppTagIds:       privateAppTagIds,
 			PrivateAppTags:         privateAppTags,
 			PrivateApps:            privateApps,
 			SrcCountries:           srcCountries,
 			UserGroups:             userGroups,
+			UserType:               userType,
 			Users:                  users,
+			Version:                version,
+			Schedule:               schedule,
+			UserConfidence:         userConfidence,
+			Description:            description1,
+			Notify:                 notify,
 		}
 	}
 	var ruleOrder *shared.RuleOrder

@@ -8,15 +8,12 @@ description: |-
 
 # netskope_urllist_list (Data Source)
 
-Retrieves all URL lists.
+UrllistList DataSource
 
 ## Example Usage
 
 ```terraform
-data "netskope_urllist_list" "all" {}
-
-output "url_lists" {
-  value = data.netskope_urllist_list.all.items
+data "netskope_urllist_list" "my_urllistlist" {
 }
 ```
 
@@ -25,13 +22,21 @@ output "url_lists" {
 
 ### Read-Only
 
-- `items` (List of Object) List of URL list items (see [Nested Schema](#nestedatt--items))
+- `items` (Attributes List) (see [below for nested schema](#nestedatt--items))
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
 
 Read-Only:
 
-- `id` (Number) URL list ID
+- `data` (Attributes) (see [below for nested schema](#nestedatt--items--data))
+- `id` (Number) URL list ID (assigned by API)
 - `name` (String) URL list name
-- `data` (Object) URL list data containing URLs and match type
+
+<a id="nestedatt--items--data"></a>
+### Nested Schema for `items.data`
+
+Read-Only:
+
+- `type` (String) URL matching type
+- `urls` (List of String) List of URLs or regex patterns

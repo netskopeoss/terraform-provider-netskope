@@ -19,9 +19,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_boolplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/boolplanmodifier"
+	speakeasy_int64planmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/int64planmodifier"
+	speakeasy_listplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/listplanmodifier"
+	speakeasy_objectplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/objectplanmodifier"
 	speakeasy_stringplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
+	speakeasy_objectvalidators "github.com/netskopeoss/terraform-provider-netskope/internal/validators/objectvalidators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -99,6 +103,21 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Default:     booldefault.StaticBool(false),
 						Description: `Default: false`,
 					},
+					"classification": schema.ListAttribute{
+						Computed:    true,
+						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
+						ElementType: types.StringType,
+						Description: `Device classification filter: list of managed/unmanaged categories to match (e.g. ["unmanaged"]). Set in the Netskope UI under Device Classification criteria. Default: []`,
+					},
+					"description": schema.StringAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.String{
+							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+						},
+						Description: `Description stored within rule_data (separate from the top-level rule description)`,
+					},
 					"device_classification_id": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
@@ -152,12 +171,86 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						ElementType: types.StringType,
 						Description: `List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27"). Default: []`,
 					},
+					"notify": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"emails": schema.ListAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.List{
+									speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+								},
+								ElementType: types.StringType,
+								Description: `Email addresses to notify`,
+							},
+							"from_user": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `Sender user identifier`,
+							},
+							"interval": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `Notification interval in minutes (as string, e.g. '30')`,
+							},
+							"to_users": schema.ListAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.List{
+									speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+								},
+								ElementType: types.StringType,
+								Description: `Recipient user types (e.g. 'admin')`,
+							},
+						},
+						Description: `Notification configuration for alert/block rule actions`,
+					},
 					"organization_units": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
 						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 						Description: `Default: []`,
+					},
+					"os": schema.ListAttribute{
+						Computed:    true,
+						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
+						ElementType: types.StringType,
+						Description: `Operating system filter (Client access only). Known values: "Windows", "macOS", "Linux", "Android", "iOS", "Chrome OS". Periodic Authentication requires "Windows" and/or "macOS". Default: []`,
+					},
+					"periodic_reauth": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"reauth_interval": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+							},
+							"reauth_interval_unit": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+							},
+						},
 					},
 					"policy_type": schema.StringAttribute{
 						Computed:    true,
@@ -169,6 +262,13 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 								"private-app",
 							),
 						},
+					},
+					"private_app_tag_ids": schema.ListAttribute{
+						Computed:    true,
+						Optional:    true,
+						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
+						ElementType: types.StringType,
+						Description: `Tag IDs (numeric as string) — alternative to privateAppTags (names). Default: []`,
 					},
 					"private_app_tags": schema.ListAttribute{
 						Computed:    true,
@@ -184,12 +284,85 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						ElementType: types.StringType,
 						Description: `Default: []`,
 					},
+					"schedule": schema.ListNestedAttribute{
+						Computed: true,
+						Optional: true,
+						NestedObject: schema.NestedAttributeObject{
+							Validators: []validator.Object{
+								speakeasy_objectvalidators.NotNull(),
+							},
+							Attributes: map[string]schema.Attribute{
+								"time_interval_obj": schema.ListAttribute{
+									Computed:    true,
+									Optional:    true,
+									Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
+									ElementType: types.StringType,
+									Description: `IDs of Time Interval objects configured in the Netskope console (Policies > Time Intervals). No API endpoint exists to list these; obtain IDs from the Netskope UI. Default: []`,
+								},
+								"time_range": schema.ListNestedAttribute{
+									Computed: true,
+									Optional: true,
+									NestedObject: schema.NestedAttributeObject{
+										Validators: []validator.Object{
+											speakeasy_objectvalidators.NotNull(),
+										},
+										Attributes: map[string]schema.Attribute{
+											"end_date": schema.StringAttribute{
+												Computed: true,
+												Optional: true,
+											},
+											"end_time": schema.StringAttribute{
+												Computed: true,
+												Optional: true,
+											},
+											"start_date": schema.StringAttribute{
+												Computed: true,
+												Optional: true,
+											},
+											"start_time": schema.StringAttribute{
+												Computed: true,
+												Optional: true,
+											},
+										},
+									},
+									Description: `Date/time ranges when the policy is active`,
+								},
+							},
+						},
+						Description: `Schedule configuration for policy enforcement timing`,
+					},
 					"src_countries": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
 						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 						Description: `Default: []`,
+					},
+					"user_confidence": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"index": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `Confidence index threshold value (e.g. 350, 351, 650, 651)`,
+							},
+							"operator": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `Comparison operator: lt (below threshold) or gt (above threshold)`,
+							},
+						},
+						Description: `User Confidence Index filter. Requires the User Confidence Index feature to be enabled on the tenant.`,
 					},
 					"user_groups": schema.ListAttribute{
 						Computed:    true,
@@ -198,12 +371,28 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						ElementType: types.StringType,
 						Description: `Default: []`,
 					},
+					"user_type": schema.StringAttribute{
+						Computed:    true,
+						Optional:    true,
+						Default:     stringdefault.StaticString(`user`),
+						Description: `Default: "user"; must be "user"`,
+						Validators: []validator.String{
+							stringvalidator.OneOf("user"),
+						},
+					},
 					"users": schema.ListAttribute{
 						Computed:    true,
 						Optional:    true,
 						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 						Description: `Default: []`,
+					},
+					"version": schema.Int64Attribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Int64{
+							speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
+						},
 					},
 				},
 			},

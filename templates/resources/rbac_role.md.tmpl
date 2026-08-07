@@ -1,0 +1,72 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+  Manages a custom Netskope RBAC role — a named set of API group permissions with an optional IP allow list.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages a custom Netskope RBAC role. RBAC roles control what API groups a user or service account can access and at what permission level.
+
+## Custom Roles Only
+
+Only **custom roles** can be created, updated, or deleted via Terraform. Predefined system roles (e.g. Tenant Admin, Operator) are read-only. Attempting to update a predefined role returns a 400 error.
+
+Custom role names must be unique per tenant.
+
+## Permission Levels
+
+| Value | Access |
+|---|---|
+| `"none"` | No access to the API group |
+| `"r"` | Read-only |
+| `"rw"` | Read and write |
+| `"rwa"` | Read, write, and admin |
+
+At least one `api_groups` entry is required per role.
+
+## Finding API Group IDs
+
+API group IDs are numeric and tenant-specific. Use the [`netskope_rbac_role_config`](../data-sources/rbac_role_config) data source to retrieve them programmatically — it returns all available API groups and obfuscation options for your tenant:
+
+```hcl
+data "netskope_rbac_role_config" "this" {}
+
+locals {
+  # Build a name → ID map for portable cross-tenant configs
+  api_group_id = {
+    for g in data.netskope_rbac_role_config.this.api_groups : g.name => g.api_group_id
+  }
+}
+
+resource "netskope_rbac_role" "example" {
+  name = "helpdesk-readonly"
+  api_groups = [{
+    api_group_id = local.api_group_id["events_alerts"]
+    permission   = "r"
+  }]
+}
+```
+
+Using the data source instead of hardcoded IDs makes configs portable across tenants.
+
+## IP Allow List
+
+`ip_allow_list` restricts role usage to logins originating from specified IP addresses or CIDR ranges. Useful for service accounts that should only be used from specific systems.
+
+## Deletion Constraint
+
+A role cannot be deleted while users are assigned to it. Remove all user role assignments in the Netskope UI (Settings → Administration → Users) before running `terraform destroy`.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}

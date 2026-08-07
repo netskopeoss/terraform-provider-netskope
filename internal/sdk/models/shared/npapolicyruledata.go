@@ -199,25 +199,127 @@ func (p *PrivateAppsWithActivities) GetActivities() []Activities {
 	return p.Activities
 }
 
+// UserConfidence - User Confidence Index filter. Requires the User Confidence Index feature to be enabled on the tenant.
+type UserConfidence struct {
+	// Comparison operator: lt (below threshold) or gt (above threshold)
+	Operator *string `json:"operator,omitempty"`
+	// Confidence index threshold value (e.g. 350, 351, 650, 651)
+	Index *string `json:"index,omitempty"`
+}
+
+func (u *UserConfidence) GetOperator() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Operator
+}
+
+func (u *UserConfidence) GetIndex() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Index
+}
+
+// Notify - Notification configuration for alert/block rule actions
+type Notify struct {
+	// Email addresses to notify
+	Emails []string `json:"emails,omitempty"`
+	// Sender user identifier
+	FromUser *string `json:"from_user,omitempty"`
+	// Notification interval in minutes (as string, e.g. '30')
+	Interval *string `json:"interval,omitempty"`
+	// Recipient user types (e.g. 'admin')
+	ToUsers []string `json:"to_users,omitempty"`
+	// Internal templates array (not user-settable)
+	Templates [][]string `json:"templates,omitempty"`
+}
+
+func (n *Notify) GetEmails() []string {
+	if n == nil {
+		return nil
+	}
+	return n.Emails
+}
+
+func (n *Notify) GetFromUser() *string {
+	if n == nil {
+		return nil
+	}
+	return n.FromUser
+}
+
+func (n *Notify) GetInterval() *string {
+	if n == nil {
+		return nil
+	}
+	return n.Interval
+}
+
+func (n *Notify) GetToUsers() []string {
+	if n == nil {
+		return nil
+	}
+	return n.ToUsers
+}
+
+func (n *Notify) GetTemplates() [][]string {
+	if n == nil {
+		return nil
+	}
+	return n.Templates
+}
+
+type UserGroupObjects struct {
+	ID       *string `json:"id,omitempty"`
+	Name     *string `json:"name,omitempty"`
+	Disabled *string `json:"disabled,omitempty"`
+}
+
+func (u *UserGroupObjects) GetID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.ID
+}
+
+func (u *UserGroupObjects) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UserGroupObjects) GetDisabled() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Disabled
+}
+
 type NpaPolicyRuleData struct {
-	AccessMethod           []AccessMethod               `json:"access_method,omitempty"`
-	BNegateNetLocation     *bool                        `default:"false" json:"b_negateNetLocation"`
-	BNegateSrcCountries    *bool                        `default:"false" json:"b_negateSrcCountries"`
-	Classification         []string                     `json:"classification,omitempty"`
+	AccessMethod        []AccessMethod `json:"access_method,omitempty"`
+	BNegateNetLocation  *bool          `default:"false" json:"b_negateNetLocation"`
+	BNegateSrcCountries *bool          `default:"false" json:"b_negateSrcCountries"`
+	// Device classification filter: list of managed/unmanaged categories to match (e.g. ["unmanaged"]). Set in the Netskope UI under Device Classification criteria.
+	Classification []string `json:"classification,omitempty"`
+	// Operating system filter (Client access only). Known values: "Windows", "macOS", "Linux", "Android", "iOS", "Chrome OS". Periodic Authentication requires "Windows" and/or "macOS".
+	Os                     []string                     `json:"os,omitempty"`
 	PeriodicReauth         *NpaPolicyRulePeriodicReauth `json:"periodic_reauth,omitempty"`
 	JSONVersion            *int64                       `default:"3" json:"json_version"`
 	DeviceClassificationID []string                     `json:"device_classification_id,omitempty"`
 	MatchCriteriaAction    *MatchCriteriaAction         `json:"match_criteria_action,omitempty"`
 	// List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27").
-	NetLocationObj            []string                    `json:"net_location_obj,omitempty"`
-	OrganizationUnits         []string                    `json:"organization_units,omitempty"`
-	PolicyType                *PolicyType                 `default:"private-app" json:"policy_type"`
+	NetLocationObj    []string    `json:"net_location_obj,omitempty"`
+	OrganizationUnits []string    `json:"organization_units,omitempty"`
+	PolicyType        *PolicyType `default:"private-app" json:"policy_type"`
+	// Tag IDs (numeric as string) — alternative to privateAppTags (names)
 	PrivateAppTagIds          []string                    `json:"privateAppTagIds,omitempty"`
 	PrivateAppTags            []string                    `json:"privateAppTags,omitempty"`
 	PrivateApps               []string                    `json:"privateApps,omitempty"`
 	SrcCountries              []string                    `json:"srcCountries,omitempty"`
 	UserGroups                []string                    `json:"userGroups,omitempty"`
-	UserType                  *UserType                   `json:"userType,omitempty"`
+	UserType                  *UserType                   `default:"user" json:"userType"`
 	Users                     []string                    `json:"users,omitempty"`
 	Version                   *int64                      `json:"version,omitempty"`
 	DlpActions                []NpaPolicyRuleDlp          `json:"dlp_actions,omitempty"`
@@ -227,7 +329,16 @@ type NpaPolicyRuleData struct {
 	PrivateAppsWithActivities []PrivateAppsWithActivities `json:"privateAppsWithActivities,omitempty"`
 	ShowDlpProfileActionTable *bool                       `default:"false" json:"show_dlp_profile_action_table"`
 	// Schedule configuration for policy enforcement timing
-	Schedule *NpaSchedule `json:"schedule,omitempty"`
+	Schedule []NpaSchedule `json:"schedule,omitempty"`
+	// User Confidence Index filter. Requires the User Confidence Index feature to be enabled on the tenant.
+	UserConfidence *UserConfidence `json:"user_confidence,omitempty"`
+	// Description stored within rule_data (separate from the top-level rule description)
+	Description *string `json:"description,omitempty"`
+	// Notification configuration for alert/block rule actions
+	Notify                      *Notify `json:"notify,omitempty"`
+	ShowAisecProfileActionTable *bool   `default:"false" json:"show_aisec_profile_action_table"`
+	// Computed enrichment of userGroups with full group detail (read-only)
+	UserGroupObjects []UserGroupObjects `json:"userGroupObjects,omitempty"`
 }
 
 func (n NpaPolicyRuleData) MarshalJSON() ([]byte, error) {
@@ -267,6 +378,13 @@ func (n *NpaPolicyRuleData) GetClassification() []string {
 		return nil
 	}
 	return n.Classification
+}
+
+func (n *NpaPolicyRuleData) GetOs() []string {
+	if n == nil {
+		return nil
+	}
+	return n.Os
 }
 
 func (n *NpaPolicyRuleData) GetPeriodicReauth() *NpaPolicyRulePeriodicReauth {
@@ -416,9 +534,44 @@ func (n *NpaPolicyRuleData) GetShowDlpProfileActionTable() *bool {
 	return n.ShowDlpProfileActionTable
 }
 
-func (n *NpaPolicyRuleData) GetSchedule() *NpaSchedule {
+func (n *NpaPolicyRuleData) GetSchedule() []NpaSchedule {
 	if n == nil {
 		return nil
 	}
 	return n.Schedule
+}
+
+func (n *NpaPolicyRuleData) GetUserConfidence() *UserConfidence {
+	if n == nil {
+		return nil
+	}
+	return n.UserConfidence
+}
+
+func (n *NpaPolicyRuleData) GetDescription() *string {
+	if n == nil {
+		return nil
+	}
+	return n.Description
+}
+
+func (n *NpaPolicyRuleData) GetNotify() *Notify {
+	if n == nil {
+		return nil
+	}
+	return n.Notify
+}
+
+func (n *NpaPolicyRuleData) GetShowAisecProfileActionTable() *bool {
+	if n == nil {
+		return nil
+	}
+	return n.ShowAisecProfileActionTable
+}
+
+func (n *NpaPolicyRuleData) GetUserGroupObjects() []UserGroupObjects {
+	if n == nil {
+		return nil
+	}
+	return n.UserGroupObjects
 }

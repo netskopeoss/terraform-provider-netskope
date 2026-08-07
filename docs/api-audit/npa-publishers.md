@@ -1,7 +1,7 @@
 # API Audit: NPA Publishers
 
 **Date:** 2026-07-07
-**Tenant:** bespin.goskope.com
+**Tenant:** <tenant>.goskope.com
 **Base path:** `/api/v2/infrastructure/publishers`
 
 ## Endpoints Tested

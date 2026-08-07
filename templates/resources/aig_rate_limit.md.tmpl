@@ -1,0 +1,67 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+  Manages a rate limit rule for the Netskope AI Gateway — controls request throughput per appliance for AI provider or MCP server traffic.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages a rate limit rule for the Netskope AI Gateway (AIG). Rate limit rules control how many requests per time unit are allowed through a given appliance, with optional filtering by token group, AI provider, model, or MCP server capability.
+
+## `apply_on` Controls Which Criteria Fields Are Valid
+
+The `criteria.apply_on` field determines which traffic type the rule applies to, and which other `criteria` fields are valid:
+
+| `apply_on` | Valid criteria fields | Invalid (will be stripped) |
+|---|---|---|
+| `"ai"` | `ai_provider_ids`, `models`, `token_group_ids` | `mcp_server_ids`, `prompts`, `resources`, `tools` |
+| `"mcp"` | `mcp_server_ids`, `prompts`, `resources`, `tools`, `token_group_ids` | `ai_provider_ids`, `models` |
+
+The provider automatically strips criteria fields that do not apply to the selected `apply_on` value. You can safely include them in configuration and they will be ignored at the API level.
+
+## Rate Limit Scope
+
+The limit (`requests` per `unit`) applies **per appliance**. If `appliance_ids` is empty, the rule applies to all appliances. If specified, it applies only to the listed appliances (max 5).
+
+## Finding AI Provider and Appliance IDs
+
+`ai_provider_ids` and `appliance_ids` are UUIDs. Use the [`netskope_aig_ai_provider_list`](../data-sources/aig_ai_provider_list) data source to find AI provider IDs, and the [`netskope_aig_appliance_list`](../data-sources/aig_appliance_list) data source for appliance IDs:
+
+```hcl
+data "netskope_aig_ai_provider_list" "all" {}
+
+locals {
+  provider_id = {
+    for p in data.netskope_aig_ai_provider_list.all.ai_providers : p.name => p.id
+  }
+}
+
+resource "netskope_aig_rate_limit" "example" {
+  # ...
+  criteria = {
+    apply_on       = "ai"
+    ai_provider_ids = [local.provider_id["openai"]]
+  }
+}
+```
+
+## Token Groups
+
+`token_group_ids` filters the rule to traffic authenticated with tokens from the listed groups. An empty list means the rule matches all token groups.
+
+## Custom Response Message
+
+Use `response` to return a human-readable error message when the rate limit is exceeded. Clients receive this in the API response body.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}

@@ -96,4 +96,17 @@ func initHooks(h *Hooks) {
 	// and normalize ipAllowList.ipList from objects to strings on GET responses
 	rbacRole := &rbacRoleHook{}
 	h.registerAfterSuccessHook(rbacRole)
+
+	// CCI data - flatten data.category → categories in getCCICategoryList responses
+	cciData := &cciDataAfterSuccess{}
+	h.registerAfterSuccessHook(cciData)
+
+	// OAuth2 client credentials - fetches bearer token from /platform/oauth2/token
+	// when NETSKOPE_OAUTH2_CLIENT_ID and NETSKOPE_OAUTH2_CLIENT_SECRET are set.
+	// Registered last so it runs after all other before-request hooks and can
+	// override the API key header set by the SDK security middleware.
+	oauth2 := &oauth2TokenHook{}
+	h.registerSDKInitHook(oauth2)
+	h.registerBeforeRequestHook(oauth2)
+	h.registerAfterErrorHook(oauth2)
 }

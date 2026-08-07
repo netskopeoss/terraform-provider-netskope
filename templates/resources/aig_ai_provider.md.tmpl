@@ -1,0 +1,49 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+  Manages a custom AI provider in the Netskope AI Gateway — configures AIG appliances to proxy traffic to on-premise or private AI backends.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages a custom AI provider in the Netskope AI Gateway (AIG). Custom providers allow AIG appliances to proxy traffic to on-premise, self-hosted, or private AI backends using the OpenAI, Gemini, or Claude API schema.
+
+## Custom Providers Only
+
+Only **custom providers** (names starting with `cust-`) can be created, updated, or deleted via Terraform. Predefined providers (e.g. OpenAI, Anthropic, Google) are read-only in the API and cannot be managed here.
+
+Name constraints: must start with `cust-`, lowercase letters/numbers/dashes only, max 15 characters total.
+
+## Protocol Options
+
+| `protocol` | When to use |
+|---|---|
+| `"http"` | Plain HTTP to backend (dev/test only) |
+| `"https-system"` | HTTPS using the system trust store (public CAs) |
+| `"https-custom"` | HTTPS with a custom CA certificate (`certificate` field required) |
+| `"https-skip"` | HTTPS without certificate verification (not recommended for production) |
+
+When `protocol = "https-custom"`, provide the PEM-encoded CA certificate in the `certificate` field. This field is write-only — the API does not return it on GET requests. It is not stored in plain text in the provider state.
+
+## API Schema
+
+`schema` controls the API format the provider exposes to clients:
+
+- `"openai"` — OpenAI-compatible REST API (most widely supported)
+- `"gemini"` — Google Gemini API format
+- `"claude"` — Anthropic Claude API format
+
+The backend must implement the selected schema.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}

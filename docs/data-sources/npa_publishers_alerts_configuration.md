@@ -3,21 +3,15 @@
 page_title: "netskope_npa_publishers_alerts_configuration Data Source - terraform-provider-netskope"
 subcategory: ""
 description: |-
-  The NPA Publisher is a software package that enables private application
-  connectivity between your data center and the Netskope cloud. It is a crucial
-  component of Netskope’s Private Access (NPA) solution, which provides zero-trust
-  network access (ZTNA) to private applications and data in hybrid IT environments.
-  This resource supports the ability to retrieve publisher alert configurations.
+  Manages the tenant-wide NPA publisher alerts configuration. This is a singleton resource — there is one global alerts policy per tenant, and it applies automatically to all publishers. No per-publisher attachment is required.
+  Use this resource to configure which admin users receive alert emails, which event types trigger alerts (e.g. CONNECTION_FAILED, UPGRADE_STARTED), and the recipient selection mode.
 ---
 
 # netskope_npa_publishers_alerts_configuration (Data Source)
 
-The NPA Publisher is a software package that enables private application
-connectivity between your data center and the Netskope cloud. It is a crucial 
-component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
-network access (ZTNA) to private applications and data in hybrid IT environments.
+Manages the tenant-wide NPA publisher alerts configuration. This is a singleton resource — there is one global alerts policy per tenant, and it applies automatically to all publishers. No per-publisher attachment is required.
 
-This resource supports the ability to retrieve publisher alert configurations.
+Use this resource to configure which admin users receive alert emails, which event types trigger alerts (e.g. CONNECTION_FAILED, UPGRADE_STARTED), and the recipient selection mode.
 
 ## Example Usage
 

@@ -33,9 +33,26 @@ Read-Only:
 - `bandwidth` (Number) Bandwidth limit in Mbps
 - `enabled` (Boolean) Whether the tunnel is enabled
 - `notes` (String) User-provided notes for the tunnel
+- `options` (Attributes) (see [below for nested schema](#nestedatt--result--options))
+- `pop_names` (List of String) List of POP names this tunnel connects to
 - `site` (String) Site name for the tunnel
 - `source_ip` (String) Source IP address identity
 - `source_type` (String) Source type (sdwan, firewall, router, other)
 - `template` (String) Configuration template name
 - `tunnel_id` (Number) Unique identifier for the GRE tunnel
 - `vendor` (String) Network equipment vendor name
+
+<a id="nestedatt--result--options"></a>
+### Nested Schema for `result.options`
+
+Read-Only:
+
+- `xff` (Attributes) (see [below for nested schema](#nestedatt--result--options--xff))
+
+<a id="nestedatt--result--options--xff"></a>
+### Nested Schema for `result.options.xff`
+
+Read-Only:
+
+- `xff_enabled` (Boolean) Whether XFF header insertion is enabled
+- `xff_ip_list` (List of String) List of XFF IP addresses

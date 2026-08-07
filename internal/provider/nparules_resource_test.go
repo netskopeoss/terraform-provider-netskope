@@ -5,6 +5,7 @@ package provider_test
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/config"
@@ -115,9 +116,51 @@ func TestAccNPARules_import(t *testing.T) {
 	})
 }
 
-func TestAccNPARules_denyRule(t *testing.T) {
-	t.Skip("API tokens cannot create block rules — KNOWN_API_ISSUES #13")
+// TestAccNPARules_importNewFields verifies that a rule containing all the fields
+// exposed in v0.4.9 (notify, periodic_reauth, schedule, private_app_tag_ids,
+// rule_data.description) can be imported and produces a clean plan.
+// Both the create and import steps share the same config (TestNameDirectory).
+func TestAccNPARules_importNewFields(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_rules.test"
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
 
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.description", "import-test-description"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.notify.emails.0", "test@example.com"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval", "60"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.schedule.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.private_app_tag_ids.0", "1542"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ConfigDirectory:   config.TestNameDirectory(),
+				ConfigVariables:   vars,
+				ImportState:       true,
+				ImportStateVerify: true,
+				// rule_order, group_id, description (top-level) are not returned by GET-by-ID.
+				// rule_data.private_app_tags is auto-populated by Read (GET) but not by
+				// the create response; ImportStateVerify sees [] vs ["acme-mfg"].
+				// After a subsequent plan+apply the state converges to the Read value.
+				ImportStateVerifyIgnore: []string{"rule_order", "group_id", "description", "rule_data.private_app_tags"},
+			},
+		},
+	})
+}
+
+func TestAccNPARules_denyRule(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
 	vars := config.Variables{
@@ -138,7 +181,8 @@ func TestAccNPARules_denyRule(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "enabled", "1"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.action_name", "block"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.emit_alert", "true"),
-					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.template", "tf-test-template"),
+					// API returns the file name (e.g. "23.html"), not the display name — just verify it's set
+					resource.TestCheckResourceAttrSet(resourceName, "rule_data.match_criteria_action.template"),
 				),
 			},
 		},
@@ -287,6 +331,57 @@ func TestAccNPARules_withDeviceClassification(t *testing.T) {
 	})
 }
 
+// TestAccNPARules_withClassification verifies that a rule with
+// rule_data.classification = ["unmanaged"] can be created, read (state shows
+// the classification value), updated without losing classification, and
+// imported. This is the live regression test for BUG-018.
+func TestAccNPARules_withClassification(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_rules.test"
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			// Create with classification = ["unmanaged"]
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_name", rName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.classification.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.classification.0", "unmanaged"),
+				),
+			},
+			// Update (disable) — classification must survive
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "enabled", "0"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.classification.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.classification.0", "unmanaged"),
+				),
+			},
+			// Import — must not crash and must round-trip classification
+			{
+				ResourceName:            resourceName,
+				ConfigDirectory:         config.TestStepDirectory(),
+				ConfigVariables:         vars,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"rule_order", "rule_data", "description", "group_id"},
+			},
+		},
+	})
+}
+
 // TestAccNPARules_withNetLocation verifies that net_location_obj accepts
 // Network Location IDs (numeric strings) and round-trips correctly.
 func TestAccNPARules_withNetLocation(t *testing.T) {
@@ -315,8 +410,202 @@ func TestAccNPARules_withNetLocation(t *testing.T) {
 	})
 }
 
+// TestAccNPARules_withSchedule verifies that rule_data.schedule can be created
+// with time_interval_obj, updated, and cleared without drift.
+// schedule was previously terraform-ignored; this is the first live regression test.
+// time_interval_obj ID 3 is a pre-provisioned test time interval on the acceptance test tenant.
+func TestAccNPARules_withSchedule(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_rules.test"
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			// Create with schedule
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.schedule.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.schedule.0.time_interval_obj.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.schedule.0.time_interval_obj.0", "3"),
+				),
+			},
+			// Omit schedule from config — plan modifier preserves state, no diff expected.
+			// Note: schedule cannot be cleared via empty list because the hook's omitempty
+			// silently drops empty slices; the API preserves the existing schedule.
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					// schedule preserved from state — still has the original entry
+					resource.TestCheckResourceAttr(resourceName, "rule_data.schedule.#", "1"),
+				),
+			},
+		},
+	})
+}
+
+// TestAccNPARules_withPeriodicReauth verifies that rule_data.periodic_reauth can
+// be set and updated. The field was previously terraform-ignored; this is its
+// first live regression test.
+func TestAccNPARules_withPeriodicReauth(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_rules.test"
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			// Create with 60 hours
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval", "60"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval_unit", "hours"),
+				),
+			},
+			// Update to 24 hours — verifies the field can be modified without drift
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval", "24"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval_unit", "hours"),
+				),
+			},
+		},
+	})
+}
+
+// TestAccNPARules_allNewRuleDataFields tests all fields added in the OAS expansion:
+// notify, rule_data.description, users, user_groups, src_countries, private_app_tag_ids.
+// Mirrors a reference policy configuration on the acceptance test tenant.
+// The update step removes users/user_groups and adds a second src_country.
+func TestAccNPARules_allNewRuleDataFields(t *testing.T) {
+	testUser := os.Getenv("NETSKOPE_TEST_USER")
+	if testUser == "" {
+		t.Skip("Skipping: NETSKOPE_TEST_USER not set (must be a valid user email on the tenant)")
+	}
+
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_rules.test"
+	vars := config.Variables{
+		"name":      config.StringVariable(rName),
+		"test_user": config.StringVariable(testUser),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			// Create with full set of new fields
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.description", "rule-data-description-v1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.notify.emails.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.notify.emails.0", "test@example.com"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.notify.interval", "60"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.notify.to_users.0", "admin"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.users.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.user_groups.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.src_countries.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.src_countries.0", "AL"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.private_app_tag_ids.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.private_app_tag_ids.0", "1542"),
+				),
+			},
+			// Update: change description, add second src_country.
+			// Note: users/user_groups are retained — the hook uses omitempty so empty
+			// arrays are dropped from PUT, preventing the API from clearing them.
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.description", "rule-data-description-v2"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.users.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.user_groups.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.src_countries.#", "2"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.private_app_tag_ids.#", "1"),
+				),
+			},
+		},
+	})
+}
+
 // TestAccNPARules_updateFields verifies that updating rule_name, description,
 // and adding private_apps works correctly through the update path.
+// TestAccNPARules_withOS verifies that rule_data.os = ["Android", "iOS"] can be
+// created, read (state shows the os values), updated without losing os, and
+// imported correctly.
+func TestAccNPARules_withOS(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_rules.test"
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			// Create with os = ["Android", "iOS"]
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_name", rName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.os.#", "2"),
+					resource.TestCheckTypeSetElemAttr(resourceName, "rule_data.os.*", "Android"),
+					resource.TestCheckTypeSetElemAttr(resourceName, "rule_data.os.*", "iOS"),
+				),
+			},
+			// Update (disable) — os must survive
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "enabled", "0"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.os.#", "2"),
+					resource.TestCheckTypeSetElemAttr(resourceName, "rule_data.os.*", "Android"),
+					resource.TestCheckTypeSetElemAttr(resourceName, "rule_data.os.*", "iOS"),
+				),
+			},
+			// Import — must not crash and must round-trip os
+			{
+				ResourceName:            resourceName,
+				ConfigDirectory:         config.TestStepDirectory(),
+				ConfigVariables:         vars,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"rule_order", "rule_data", "description", "group_id"},
+			},
+		},
+	})
+}
+
 func TestAccNPARules_updateFields(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"

@@ -40,7 +40,7 @@ All association ID fields are `type: string` in the API — **including URL list
 
 ---
 
-## Verified via live API (bespin.goskope.com)
+## Verified via live API (<tenant>.goskope.com)
 
 | Operation | Result |
 |-----------|--------|

@@ -55,7 +55,7 @@
 
 ---
 
-## Verified via live API (bespin.goskope.com)
+## Verified via live API (<tenant>.goskope.com)
 
 | Operation | Result |
 |-----------|--------|

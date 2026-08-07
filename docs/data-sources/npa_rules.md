@@ -28,6 +28,7 @@ data "netskope_npa_rules" "my_nparules" {
 ### Read-Only
 
 - `enabled` (String)
+- `group_name` (String) Policy group name this rule belongs to (read-only, returned by API)
 - `rule_data` (Attributes) (see [below for nested schema](#nestedatt--rule_data))
 - `rule_name` (String)
 
@@ -39,17 +40,26 @@ Read-Only:
 - `access_method` (List of String)
 - `b_negate_net_location` (Boolean)
 - `b_negate_src_countries` (Boolean)
+- `classification` (List of String) Device classification filter: list of managed/unmanaged categories to match (e.g. ["unmanaged"]). Set in the Netskope UI under Device Classification criteria.
+- `description` (String) Description stored within rule_data (separate from the top-level rule description)
 - `device_classification_id` (List of String)
 - `json_version` (Number)
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
-- `net_location_obj` (List of String)
+- `net_location_obj` (List of String) List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27").
+- `notify` (Attributes) Notification configuration for alert/block rule actions (see [below for nested schema](#nestedatt--rule_data--notify))
 - `organization_units` (List of String)
+- `periodic_reauth` (Attributes) (see [below for nested schema](#nestedatt--rule_data--periodic_reauth))
 - `policy_type` (String)
+- `private_app_tag_ids` (List of String) Tag IDs (numeric as string) — alternative to privateAppTags (names)
 - `private_app_tags` (List of String)
 - `private_apps` (List of String)
+- `schedule` (Attributes List) Schedule configuration for policy enforcement timing (see [below for nested schema](#nestedatt--rule_data--schedule))
 - `src_countries` (List of String)
+- `user_confidence` (Attributes) User Confidence Index filter. Requires the User Confidence Index feature to be enabled on the tenant. (see [below for nested schema](#nestedatt--rule_data--user_confidence))
 - `user_groups` (List of String)
+- `user_type` (String)
 - `users` (List of String)
+- `version` (Number)
 
 <a id="nestedatt--rule_data--match_criteria_action"></a>
 ### Nested Schema for `rule_data.match_criteria_action`
@@ -57,3 +67,54 @@ Read-Only:
 Read-Only:
 
 - `action_name` (String)
+- `emit_alert` (Boolean) Whether to emit an alert when the rule matches (required for block action)
+- `template` (String) Notification template name (required for block action). Use the display name (e.g. "Default Template"), not the file name.
+
+
+<a id="nestedatt--rule_data--notify"></a>
+### Nested Schema for `rule_data.notify`
+
+Read-Only:
+
+- `emails` (List of String) Email addresses to notify
+- `from_user` (String) Sender user identifier
+- `interval` (String) Notification interval in minutes (as string, e.g. '30')
+- `to_users` (List of String) Recipient user types (e.g. 'admin')
+
+
+<a id="nestedatt--rule_data--periodic_reauth"></a>
+### Nested Schema for `rule_data.periodic_reauth`
+
+Read-Only:
+
+- `reauth_interval` (String)
+- `reauth_interval_unit` (String)
+
+
+<a id="nestedatt--rule_data--schedule"></a>
+### Nested Schema for `rule_data.schedule`
+
+Read-Only:
+
+- `time_interval_obj` (List of String) IDs of Time Interval objects configured in the Netskope console (Policies > Time Intervals). No API endpoint exists to list these; obtain IDs from the Netskope UI.
+- `time_range` (Attributes List) Date/time ranges when the policy is active (see [below for nested schema](#nestedatt--rule_data--schedule--time_range))
+
+<a id="nestedatt--rule_data--schedule--time_range"></a>
+### Nested Schema for `rule_data.schedule.time_range`
+
+Read-Only:
+
+- `end_date` (String)
+- `end_time` (String)
+- `start_date` (String)
+- `start_time` (String)
+
+
+
+<a id="nestedatt--rule_data--user_confidence"></a>
+### Nested Schema for `rule_data.user_confidence`
+
+Read-Only:
+
+- `index` (String) Confidence index threshold value (e.g. 350, 351, 650, 651)
+- `operator` (String) Comparison operator: lt (below threshold) or gt (above threshold)

@@ -8,23 +8,14 @@ description: |-
 
 # netskope_device_classification_options_list (Data Source)
 
-Retrieve available device classification options for use in classification rules. Options include antivirus product names, OS versions, and other device posture check types.
+DeviceClassificationOptionsList DataSource
 
 ## Example Usage
 
 ```terraform
-data "netskope_device_classification_options_list" "av_windows" {
-  type = "av_prod_name"
-  os   = "windows"
-}
-
-output "available_av_products" {
-  value = [
-    for opt in data.netskope_device_classification_options_list.av_windows.options : {
-      name  = opt.key
-      value = opt.value
-    }
-  ]
+data "netskope_device_classification_options_list" "my_deviceclassificationoptionslist" {
+  os   = "...my_os..."
+  type = "...my_type..."
 }
 ```
 
@@ -33,11 +24,11 @@ output "available_av_products" {
 
 ### Required
 
-- `type` (String) Option type (e.g. `av_prod_name`)
+- `type` (String) Option type (e.g. av_prod_name)
 
 ### Optional
 
-- `os` (String) Operating system filter (`windows`, `mac`, `linux`, `android`, `ios`, `chromeos`)
+- `os` (String) Operating system filter (windows, mac, linux, android, ios, chromeos)
 
 ### Read-Only
 
@@ -48,7 +39,7 @@ output "available_av_products" {
 
 Read-Only:
 
-- `type` (String) Option type
-- `os` (String) Operating system
 - `key` (String) Option display name
+- `os` (String) Operating system
+- `type` (String) Option type (e.g. av_prod_name)
 - `value` (String) Option value for use in classification rules

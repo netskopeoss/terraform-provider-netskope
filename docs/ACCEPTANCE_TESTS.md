@@ -88,6 +88,18 @@ Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 | `TestAccNPARules_ruleOrderBottom` | `nparules_resource_test.go` | Rule placement order=bottom verification |
 | `TestAccNPARules_ruleOrderBefore` | `nparules_resource_test.go` | Rule placement order=before verification |
 
+#### Added in v0.4.9
+
+| Test | File | Description |
+|------|------|-------------|
+| `TestAccCCICategoryListDataSource_basic` | `ccicategorylist_data_source_test.go` | List CCI categories, verify category_id and category_name populated ([#107](https://github.com/netskopeoss/terraform-provider-netskope/issues/107)) |
+| `TestAccRBACRoleConfig_basic` | `rbacroleconfig_data_source_test.go` | RBAC role config catalog: verify api_groups and obfuscation populated ([#109](https://github.com/netskopeoss/terraform-provider-netskope/issues/109)) |
+| `TestAccNPARules_withOS` | `nparules_resource_test.go` | Create rule with `os = ["Android", "iOS"]`, verify survives update, imports correctly ([#111](https://github.com/netskopeoss/terraform-provider-netskope/issues/111)) |
+| `TestAccNPARules_withClassification` | `nparules_resource_test.go` | Create rule with `classification = ["unmanaged"]`, verify survives update, imports without crash ([BUG-018](https://github.com/netskopeoss/terraform-provider-netskope/issues/106)) |
+| `TestAccDrift_NPARules_OS` | `drift_detection_test.go` | No perpetual drift on `rule_data.os`; list ordering normalised by plan modifier |
+| `TestAccDrift_NPARules_PeriodicReauth` | `drift_detection_test.go` | No perpetual drift on `rule_data.periodic_reauth` nested object |
+| `TestAccDrift_NPARules_Schedule` | `drift_detection_test.go` | No perpetual drift on `rule_data.schedule`; requires time interval ID 3 (`TF_SKIP_TIME_INTERVAL`) |
+
 #### Added in v0.4.7
 
 | Test | File | Description |
@@ -236,7 +248,7 @@ search this table to find every test that needs updating.
 
 | Parameter | Value | Used In | Notes |
 |-----------|-------|---------|-------|
-| Admin email | `jharris@netskope.com` | Alerts config test (SKIPPED) | Environment-specific |
+| Admin email | *(set in testdata)* | Alerts config test (SKIPPED) | Environment-specific |
 | Event types | `["publisher_up", "publisher_down"]` | Alerts config test (SKIPPED) | API rejects these values |
 
 ---
@@ -608,6 +620,9 @@ a second plan asserting `ExpectEmptyPlan()`.
 | `TestAccDrift_PolicyGroup` | Policy Group | group_name, group_order |
 | `TestAccDrift_NPARules_Basic` | NPA Rules | rule_name, description, enabled, group_id, rule_data |
 | `TestAccDrift_NPARules_UnsortedLists` | NPA Rules | Unsorted private_apps, access_method (0.3.5, BUG-002) |
+| `TestAccDrift_NPARules_OS` | NPA Rules | os list ordering normalised by plan modifier (0.4.9) |
+| `TestAccDrift_NPARules_PeriodicReauth` | NPA Rules | periodic_reauth nested object round-trips without phantom update (0.4.9) |
+| `TestAccDrift_NPARules_Schedule` | NPA Rules | schedule list preserves time_interval_obj without drift (0.4.9, TF_SKIP_TIME_INTERVAL) |
 | `TestAccDrift_UpgradeProfile` | Upgrade Profile | name, enabled, docker_tag, frequency, timezone, release_type |
 | `TestAccDrift_GRETunnel_UnsortedXffIpList` | GRE Tunnel | Unsorted xff_ip_list (0.3.5, BUG-002) |
 | `TestAccDrift_GRETunnel_MinimalConfig` | GRE Tunnel | Minimal config, no optional computed drift (0.3.5) |

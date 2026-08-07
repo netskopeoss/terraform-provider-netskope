@@ -7,18 +7,28 @@ import (
 )
 
 type NpaPolicyRuleData struct {
-	AccessMethod           []types.String       `tfsdk:"access_method"`
-	BNegateNetLocation     types.Bool           `tfsdk:"b_negate_net_location"`
-	BNegateSrcCountries    types.Bool           `tfsdk:"b_negate_src_countries"`
-	DeviceClassificationID []types.String       `tfsdk:"device_classification_id"`
-	JSONVersion            types.Int64          `tfsdk:"json_version"`
-	MatchCriteriaAction    *MatchCriteriaAction `tfsdk:"match_criteria_action"`
-	NetLocationObj         []types.String       `tfsdk:"net_location_obj"`
-	OrganizationUnits      []types.String       `tfsdk:"organization_units"`
-	PolicyType             types.String         `tfsdk:"policy_type"`
-	PrivateAppTags         []types.String       `tfsdk:"private_app_tags"`
-	PrivateApps            []types.String       `tfsdk:"private_apps"`
-	SrcCountries           []types.String       `tfsdk:"src_countries"`
-	UserGroups             []types.String       `tfsdk:"user_groups"`
-	Users                  []types.String       `tfsdk:"users"`
+	AccessMethod           []types.String               `tfsdk:"access_method"`
+	BNegateNetLocation     types.Bool                   `tfsdk:"b_negate_net_location"`
+	BNegateSrcCountries    types.Bool                   `tfsdk:"b_negate_src_countries"`
+	Classification         []types.String               `tfsdk:"classification"`
+	Description            types.String                 `tfsdk:"description"`
+	DeviceClassificationID []types.String               `tfsdk:"device_classification_id"`
+	JSONVersion            types.Int64                  `tfsdk:"json_version"`
+	MatchCriteriaAction    *MatchCriteriaAction         `tfsdk:"match_criteria_action"`
+	NetLocationObj         []types.String               `tfsdk:"net_location_obj"`
+	Notify                 *Notify                      `tfsdk:"notify"`
+	OrganizationUnits      []types.String               `tfsdk:"organization_units"`
+	Os                     []types.String               `tfsdk:"os"`
+	PeriodicReauth         *NpaPolicyRulePeriodicReauth `tfsdk:"periodic_reauth"`
+	PolicyType             types.String                 `tfsdk:"policy_type"`
+	PrivateAppTagIds       []types.String               `tfsdk:"private_app_tag_ids"`
+	PrivateAppTags         []types.String               `tfsdk:"private_app_tags"`
+	PrivateApps            []types.String               `tfsdk:"private_apps"`
+	Schedule               []NpaSchedule                `tfsdk:"schedule"`
+	SrcCountries           []types.String               `tfsdk:"src_countries"`
+	UserGroups             []types.String               `tfsdk:"user_groups"`
+	UserType               types.String                 `tfsdk:"user_type"`
+	UserConfidence         *UserConfidence              `tfsdk:"user_confidence"`
+	Users                  []types.String               `tfsdk:"users"`
+	Version                types.Int64                  `tfsdk:"version"`
 }
