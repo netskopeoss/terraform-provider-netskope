@@ -115,10 +115,14 @@ func (p *NetskopeProvider) Configure(ctx context.Context, req provider.Configure
 		security.APIKey = apiKeyEnvVar
 	}
 
-	if security.APIKey == "" {
+	oauth2ClientID := os.Getenv("NETSKOPE_OAUTH2_CLIENT_ID")
+	oauth2ClientSecret := os.Getenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	hasOAuth2 := oauth2ClientID != "" && oauth2ClientSecret != ""
+
+	if security.APIKey == "" && !hasOAuth2 {
 		resp.Diagnostics.AddError(
 			"Missing Provider Security Configuration",
-			"Either the environment variable NETSKOPE_API_KEY or provider configuration api_key attribute must be configured.",
+			"Either the environment variable NETSKOPE_API_KEY or provider configuration api_key attribute must be configured. Alternatively, set NETSKOPE_OAUTH2_CLIENT_ID and NETSKOPE_OAUTH2_CLIENT_SECRET for OAuth2 client credentials authentication.",
 		)
 	}
 
@@ -274,6 +278,7 @@ func (p *NetskopeProvider) DataSources(ctx context.Context) []func() datasource.
 		NewNPAPublisherUpgradeProfilesListDataSource,
 		NewNPARulesDataSource,
 		NewNPARulesListDataSource,
+		NewPlatformOAuth2TokenDataSource,
 		NewRBACLabelDataSource,
 		NewRBACLabelListDataSource,
 		NewRBACRoleConfigDataSource,

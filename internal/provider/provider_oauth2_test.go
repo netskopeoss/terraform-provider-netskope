@@ -16,6 +16,7 @@ func TestAccOAuth2ProviderAuth_PublisherList(t *testing.T) {
 	if os.Getenv("TF_ACC") == "" {
 		t.Skip("acceptance tests skipped unless TF_ACC set")
 	}
+	testutil.SkipUnlessEnvSet(t, "TF_RUN_OAUTH2_TESTS", "OAuth2 provider auth tests require TF_RUN_OAUTH2_TESTS=1 and valid OAuth2 client credentials registered on the tenant")
 	if os.Getenv("NETSKOPE_OAUTH2_CLIENT_ID") == "" || os.Getenv("NETSKOPE_OAUTH2_CLIENT_SECRET") == "" {
 		t.Skip("NETSKOPE_OAUTH2_CLIENT_ID and NETSKOPE_OAUTH2_CLIENT_SECRET must be set")
 	}
