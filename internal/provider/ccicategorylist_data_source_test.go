@@ -8,9 +8,8 @@ import (
 )
 
 func TestAccCCICategoryList_basic(t *testing.T) {
-	testutil.PreCheck(t)
-
 	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
 		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
