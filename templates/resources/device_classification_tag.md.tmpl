@@ -1,0 +1,34 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: "Platform"
+description: |-
+  Manages a Netskope device classification tag — a named label assigned to devices based on their security posture, used as match criteria in NPA access rules.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages a Netskope device classification tag — a named label assigned to devices based on their security posture. Tags are evaluated by the Netskope client and used as match criteria in NPA access rules to enforce device-based zero-trust policies.
+
+## How device classification works
+
+1. Create a tag with this resource.
+2. Configure classification criteria in the Netskope UI (e.g. antivirus installed, disk encryption enabled, OS version). The criteria determine which devices receive the tag.
+3. Reference the tag's `tag_id` in an NPA rule via `device_classification_id`.
+
+Use the [`netskope_device_classification_options_list`](../data-sources/device_classification_options_list) data source to browse available classification criteria.
+
+## Priority
+
+The `priority` field (read-only, API-assigned) determines evaluation order when a device matches multiple tags. Lower values mean higher priority.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}

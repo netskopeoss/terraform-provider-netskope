@@ -11,6 +11,21 @@ on:
       - main
 
 jobs:
+  # Secret scanning runs on every push and PR to catch leaked credentials early.
+  secrets:
+    name: Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   # Unit tests run on every push and PR
   unit:
     name: Unit Tests

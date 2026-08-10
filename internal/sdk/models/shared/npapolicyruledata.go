@@ -303,7 +303,7 @@ type NpaPolicyRuleData struct {
 	BNegateSrcCountries *bool          `default:"false" json:"b_negateSrcCountries"`
 	// Device classification filter: list of managed/unmanaged categories to match (e.g. ["unmanaged"]). Set in the Netskope UI under Device Classification criteria.
 	Classification []string `json:"classification,omitempty"`
-	// Operating system filter (Client access only). Known values: "Windows", "macOS", "Linux", "Android", "iOS", "Chrome OS". Periodic Authentication requires "Windows" and/or "macOS".
+	// Operating system filter (Client access only). Valid values: "AmigaOS", "Android", "BlackBerry", "BSD", "Chrome OS", "Darwin", "Debian", "Fedora", "iOS", "Linux", "Mac", "Others", "Red", "RHEL", "Solaris", "SunOS", "Symbian", "Ubuntu", "Windows".
 	Os                     []string                     `json:"os,omitempty"`
 	PeriodicReauth         *NpaPolicyRulePeriodicReauth `json:"periodic_reauth,omitempty"`
 	JSONVersion            *int64                       `default:"3" json:"json_version"`

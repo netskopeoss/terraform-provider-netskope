@@ -39,8 +39,7 @@ resource "netskope_npa_rules" "my_nparules" {
       "engineering/qa",
     ]
     os = [
-      "Windows",
-      "Mac",
+      "..."
     ]
     periodic_reauth = {
       reauth_interval      = "60"
@@ -88,7 +87,7 @@ resource "netskope_npa_rules" "my_nparules" {
     ]
     user_type = "user"
     users = [
-      "user@example.com",
+      "vphan@netskope.com",
     ]
     version = 1
   }

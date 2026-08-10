@@ -139,7 +139,7 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					"os": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
-						Description: `Operating system filter (Client access only). Known values: "Windows", "macOS", "Linux", "Android", "iOS", "Chrome OS". Periodic Authentication requires "Windows" and/or "macOS".`,
+						Description: `Operating system filter (Client access only). Valid values: "AmigaOS", "Android", "BlackBerry", "BSD", "Chrome OS", "Darwin", "Debian", "Fedora", "iOS", "Linux", "Mac", "Others", "Red", "RHEL", "Solaris", "SunOS", "Symbian", "Ubuntu", "Windows".`,
 					},
 					"periodic_reauth": schema.SingleNestedAttribute{
 						Computed: true,

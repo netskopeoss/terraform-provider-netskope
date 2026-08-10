@@ -1,0 +1,47 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: "Platform"
+description: |-
+  Manages a Netskope RBAC label for Label Based Access Control (LBAC) — attaches to resources and controls which admin roles can see and manage them.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages a Netskope RBAC label for Label Based Access Control (LBAC). Labels are attached to resources (publishers, private apps, policy groups, local brokers, destination profiles) and control which admin roles can see and manage them.
+
+## Label hierarchies
+
+Labels support up to 4 levels of nesting via `parent_id`. A role granted access to a parent label automatically has access to all child labels.
+
+```
+Engineering (root)
+├── Backend
+│   ├── API Team
+│   └── Platform Team
+└── Frontend
+```
+
+## Assigning labels to resources
+
+Once created, assign a label by including its `label_id` in the `label_ids` attribute of supported resources:
+
+```hcl
+resource "netskope_npa_publisher" "api" {
+  publisher_name = "api-publisher"
+  label_ids      = [netskope_rbac_label.backend.label_id]
+}
+```
+
+Supported resources: `netskope_npa_publisher`, `netskope_npa_private_app`, `netskope_npa_policy_groups`, `netskope_npa_local_broker`, `netskope_destination_profile`.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}

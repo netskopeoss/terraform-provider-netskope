@@ -12,6 +12,39 @@ import (
 	"time"
 )
 
+func TestOAuth2Hook_Disabled_WhenAPIKeySet(t *testing.T) {
+	// When NETSKOPE_API_KEY is set, OAuth2 must not activate even if both OAuth2
+	// env vars are also present. API key takes precedence — this is the invariant
+	// that prevents sourcing .env (which sets all three) from silently switching
+	// the provider from API key auth to OAuth2.
+	t.Setenv("NETSKOPE_API_KEY", "some-api-key")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_ID", "test-client-id")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET", "test-secret")
+
+	hook := &oauth2TokenHook{}
+	hook.SDKInit("https://test.goskope.com/api/v2", http.DefaultClient)
+
+	if hook.enabled() {
+		t.Fatal("hook should be disabled when NETSKOPE_API_KEY is set, even if OAuth2 env vars are also present")
+	}
+
+	// BeforeRequest should pass through without touching headers.
+	req, _ := http.NewRequest("GET", "https://test.goskope.com/api/v2/test", nil)
+	req.Header.Set("Netskope-Api-Token", "some-api-key")
+
+	ctx := BeforeRequestContext{HookContext: HookContext{Context: context.Background()}}
+	out, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if out.Header.Get("Netskope-Api-Token") != "some-api-key" {
+		t.Fatal("API key header should be preserved when hook is disabled")
+	}
+	if out.Header.Get("Authorization") != "" {
+		t.Fatal("Authorization header should not be set when API key takes precedence")
+	}
+}
+
 func TestOAuth2Hook_Disabled_WhenEnvVarsUnset(t *testing.T) {
 	os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_ID")
 	os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_SECRET")

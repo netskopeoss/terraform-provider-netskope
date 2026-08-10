@@ -1,0 +1,35 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: "Security Profiles"
+description: |-
+  Manages a Netskope service object — a named set of protocols and ports used in Real-time Protection firewall rules.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages a Netskope service object — a named set of protocols and ports used in Real-time Protection firewall rules. Service objects are referenced by name in policies, so a single update propagates to all rules that reference the object.
+
+Only **custom** service objects can be created, updated, or deleted via Terraform. Netskope predefined objects (e.g. "HTTP", "HTTPS", "DNS") are read-only and have `type = "PREDEFINED"`.
+
+## Port format
+
+Ports are specified as strings. Both single ports and ranges are supported:
+
+```hcl
+tcp = ["22", "443", "8080-8090"]
+udp = ["53", "1194"]
+```
+
+At least one protocol field must be set. You can combine protocols in one object.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}

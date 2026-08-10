@@ -1,0 +1,45 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: "NPA"
+description: |-
+  Manages an NPA Publisher upgrade profile — a schedule that controls when publishers automatically upgrade their software.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages an NPA Publisher upgrade profile — a schedule that controls when publishers automatically upgrade their software. Assign a profile to a publisher via the `publisher_upgrade_profiles_id` attribute on [`netskope_npa_publisher`](npa_publisher).
+
+## Release types
+
+| Value | Description |
+|---|---|
+| `"Latest"` | Most recent stable release |
+| `"Latest-1"` | One release behind latest |
+| `"Latest-2"` | Two releases behind latest |
+| `"Beta"` | Pre-release build |
+
+Use `"Latest-1"` or `"Latest-2"` for canary rollouts — upgrade a subset of publishers first and promote others once stable.
+
+## Frequency (cron format)
+
+The `frequency` field uses a 5-field cron expression: `minute hour day-of-month month day-of-week`.
+
+```
+0 2 * * SUN   # Every Sunday at 02:00
+0 0 1 * TUE   # First day of each month at midnight (if it falls on Tuesday)
+0 3 * * MON,WED,FRI  # Mon/Wed/Fri at 03:00
+```
+
+The `docker_tag` field specifies which exact build to install. Obtain available tags from the [`netskope_npa_publishers_releases_list`](../data-sources/npa_publishers_releases_list) data source.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}

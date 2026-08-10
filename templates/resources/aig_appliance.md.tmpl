@@ -1,0 +1,36 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: "AI Gateway"
+description: |-
+  Manages an AI Gateway (AIG) appliance in a Netskope tenant. AIG appliances proxy AI provider and MCP server traffic through Netskope for inspection, policy enforcement, and observability.
+  After creation the appliance is in not-registered status. Use the aig_appliance_enrollment_token resource to generate an enrollment token for registering the appliance.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages an AI Gateway (AIG) appliance in a Netskope tenant. AIG appliances proxy AI provider and MCP server traffic through Netskope for inspection, policy enforcement, and observability.
+
+After creation the appliance is in `not-registered` status. Use [`netskope_aig_appliance_enrollment_token`](aig_appliance_enrollment_token) to generate a token for registering the appliance.
+
+## Appliance lifecycle
+
+1. Create this resource — note the `id` output.
+2. Create a [`netskope_aig_appliance_enrollment_token`](aig_appliance_enrollment_token) using the appliance ID.
+3. Install the AIG appliance software on the host and enroll it with the token.
+4. After registration, the `status` attribute reflects the connection state.
+
+## Associating AI providers and MCP servers
+
+Add provider or server UUIDs to `ai_provider_ids` and `mcp_server_ids`. Use the [`netskope_aig_ai_provider_list`](../data-sources/aig_ai_provider_list) and [`netskope_aig_mcp_server_list`](../data-sources/aig_mcp_server_list) data sources to look up IDs by name.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}
