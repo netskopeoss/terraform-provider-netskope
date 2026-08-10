@@ -1,12 +1,9 @@
-//go:build retrytest
-
-// Retry behaviour tests. They start a local HTTP server and rely on real
-// wall-clock time, so they are excluded from the default test run.
+// Retry behaviour tests. They start a local HTTP server and use real wall-clock
+// time but complete in under 500 ms total — fast enough for the default CI run.
 //
-// Run explicitly:
+// Run with:
 //
-//	go test -tags retrytest -v ./internal/sdk/internal/utils/ -timeout 30s
-//	make test-retry
+//	go test -v ./internal/sdk/internal/utils/ -timeout 30s
 
 package utils
 

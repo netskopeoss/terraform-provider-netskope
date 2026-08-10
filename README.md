@@ -8,7 +8,25 @@ The official Terraform provider for [Netskope](https://www.netskope.com/), enabl
 
 > **Examples:** See [terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples) for ready-to-use Terraform configurations covering NPA private apps, policy-as-code, device classification, RBAC labels, and more.
 
-## Upgrading to v0.4.8
+## Upgrading to v0.4.9
+
+### What's New in v0.4.9
+
+| Resource / Data Source | Description |
+|---|---|
+| `netskope_cci_category_list` | Read-only catalog of predefined CCI categories. Exposes `category_id` and `category_name` — IDs are tenant-independent, eliminating magic numbers in `netskope_custom_category` resources. ([#107](https://github.com/netskopeoss/terraform-provider-netskope/issues/107)) |
+| `netskope_rbac_role_config` | Read-only catalog of RBAC role configuration — exposes tenant-specific API group IDs, names, display names, permission levels, and UI function groupings. Resolves the portability problem of hardcoded tenant-specific API group IDs in `netskope_rbac_role` resources. ([#109](https://github.com/netskopeoss/terraform-provider-netskope/issues/109)) |
+
+**New `netskope_npa_rules` fields** — `rule_data` now exposes `schedule` (time-window restrictions), `periodic_reauth` (re-authentication interval), `notify` (user notification settings), `user_confidence` (user confidence level filter), `private_app_tag_ids` (read-only tag ID list), and `os` (OS filter: `"Windows"`, `"macOS"`, `"Linux"`, `"Android"`, `"iOS"`, `"Chrome OS"`). These fields were previously silently dropped on every read and write. ([#111](https://github.com/netskopeoss/terraform-provider-netskope/issues/111))
+
+**OAuth2 provider authentication** — The provider now accepts OAuth2 client credentials as an alternative to API key authentication. See [Authentication](#authentication) below.
+
+**Retry configuration** — New optional provider attributes `retry_max_elapsed_time` (seconds) and `retry_disabled` (bool) allow per-workspace retry tuning without environment variables.
+
+**Bug fixes:**
+- **Rate-limited operations could hang for up to 29 minutes** ([#108](https://github.com/netskopeoss/terraform-provider-netskope/issues/108)) — `Retry-After` values were not capped to `MaxInterval` and the elapsed-budget check ran after sleeping. Fixed; a warning is now logged with wait duration and attempt number. See [Retry Configuration](docs/RETRY_CONFIGURATION.md) for tuning options.
+- **`netskope_npa_rules` read crashes when `classification` is set** ([#106](https://github.com/netskopeoss/terraform-provider-netskope/issues/106)) — The hook deserialized `classification` as `*string` but the API returns `[]string` for device-classified rules. Any state refresh or import of such a rule crashed with a JSON unmarshal error. Fixed.
+- **`netskope_npa_rules` block rules always showed a plan diff, and every apply failed** ([#105](https://github.com/netskopeoss/terraform-provider-netskope/issues/105)) — Block rules now plan and apply cleanly. Previously two bugs combined: `group_name` was never marked stable, keeping the plan perpetually dirty; and the template name normalization wrote the API's internal file name (e.g. `23.html`) into update requests, causing the API to reject every apply with "Undefined template". Both are fixed.
 
 ### What's New in v0.4.8
 
@@ -221,7 +239,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "~> 0.4.8"
+      version = "~> 0.4.9"
     }
   }
 }
@@ -231,7 +249,9 @@ Then run `terraform init`.
 
 ## Authentication
 
-### Option 1: Environment Variables (Recommended)
+The provider supports two authentication methods.
+
+### Option 1: API key (default)
 
 ```bash
 export NETSKOPE_SERVER_URL="https://your-tenant.goskope.com/api/v2"
@@ -242,7 +262,7 @@ export NETSKOPE_API_KEY="your-api-token"
 provider "netskope" {}
 ```
 
-### Option 2: Provider Configuration
+Or via the provider block:
 
 ```hcl
 provider "netskope" {
@@ -255,6 +275,24 @@ provider "netskope" {
 |---|---|---|
 | `server_url` | `NETSKOPE_SERVER_URL` | Netskope tenant API v2 URL |
 | `api_key` | `NETSKOPE_API_KEY` | REST API v2 token |
+
+### Option 2: OAuth2 client credentials
+
+Set both OAuth2 environment variables instead of an API key. The provider fetches a bearer token automatically, caches it for its lifetime, and refreshes it on expiry or 401.
+
+```bash
+export NETSKOPE_SERVER_URL="https://your-tenant.goskope.com/api/v2"
+export NETSKOPE_OAUTH2_CLIENT_ID="<client-id>"
+export NETSKOPE_OAUTH2_CLIENT_SECRET="<client-secret>"
+```
+
+```hcl
+provider "netskope" {}
+```
+
+OAuth2 clients must be created in the Netskope admin UI under **Settings → Security Cloud Platform → OAuth2 Settings**. The client must have sufficient API permissions for the resources being managed.
+
+**Precedence:** if `NETSKOPE_API_KEY` is set, it takes priority and OAuth2 is not used.
 
 ## Quick Start
 
@@ -347,6 +385,9 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_gre_tunnel](docs/resources/gre_tunnel.md) | GRE tunnels |
 | [netskope_ip_sec_tunnel](docs/resources/ip_sec_tunnel.md) | IPSec tunnels |
 | [netskope_rbac_label](docs/resources/rbac_label.md) | RBAC labels for Label Based Access Control |
+| [netskope_rbac_role](docs/resources/rbac_role.md) | Custom RBAC admin roles |
+| [netskope_custom_category](docs/resources/custom_category.md) | Custom URL categories |
+| [netskope_service_object](docs/resources/service_object.md) | Service objects (port/protocol profiles) |
 | [netskope_destination_profile](docs/resources/destination_profile.md) | Destination profiles |
 | [netskope_dns_profile_v2](docs/resources/dns_profile_v2.md) | DNS security profiles |
 | [netskope_device_classification_tag](docs/resources/device_classification_tag.md) | Device classification tags |
@@ -398,6 +439,12 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_ip_sec_po_ps_list](docs/data-sources/ip_sec_po_ps_list.md) | List IPSec PoPs |
 | [netskope_rbac_label](docs/data-sources/rbac_label.md) | Look up an RBAC label by ID |
 | [netskope_rbac_label_list](docs/data-sources/rbac_label_list.md) | List all RBAC labels |
+| [netskope_rbac_role](docs/data-sources/rbac_role.md) | Look up a custom RBAC role |
+| [netskope_rbac_role_list](docs/data-sources/rbac_role_list.md) | List all RBAC roles |
+| [netskope_custom_category](docs/data-sources/custom_category.md) | Look up a custom URL category |
+| [netskope_custom_category_list](docs/data-sources/custom_category_list.md) | List all custom URL categories |
+| [netskope_service_object](docs/data-sources/service_object.md) | Look up a service object |
+| [netskope_service_object_list](docs/data-sources/service_object_list.md) | List all service objects (custom and predefined) |
 | [netskope_destination_profile](docs/data-sources/destination_profile.md) | Look up a destination profile |
 | [netskope_destination_profile_list](docs/data-sources/destination_profile_list.md) | List destination profiles |
 | [netskope_dns_profile_v2](docs/data-sources/dns_profile_v2.md) | Look up a DNS profile |
@@ -408,6 +455,9 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_device_classification_options_list](docs/data-sources/device_classification_options_list.md) | List classification options |
 | [netskope_urllist](docs/data-sources/urllist.md) | Look up a URL list by ID |
 | [netskope_urllist_list](docs/data-sources/urllist_list.md) | List all URL lists |
+| [netskope_cci_category_list](docs/data-sources/cci_category_list.md) | List predefined CCI categories (tenant-independent IDs) |
+| [netskope_rbac_role_config](docs/data-sources/rbac_role_config.md) | RBAC role configuration catalog (API group IDs, permissions, functions) |
+| [netskope_platform_oauth2_token](docs/data-sources/platform_oauth2_token.md) | Exchange OAuth2 client credentials for a bearer token |
 
 ## Examples and Tutorials
 
@@ -425,7 +475,7 @@ See below for version-specific upgrade notes. For full details, see the [Migrati
 - **From v0.2.x**: Version 0.3.x is a complete rewrite with renamed resources and changed schemas. Existing state must be re-imported. See the [Migration Guide](docs/MIGRATION_GUIDE.md).
 - **From v0.3.2**: See the [v0.3.2 to v0.3.3 upgrade section](docs/MIGRATION_GUIDE.md#upgrading-from-v032-to-v033) for schema changes.
 - **From v0.3.x to v0.4.x**: See the [Migration Guide](docs/MIGRATION_GUIDE.md) for schema changes.
-- **From v0.4.x to v0.4.8**: See [What's New in v0.4.8](#whats-new-in-v048) at the top of this document.
+- **From v0.4.x to v0.4.9**: See [What's New in v0.4.9](#whats-new-in-v049) at the top of this document.
 
 ## Development
 

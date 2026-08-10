@@ -11,6 +11,25 @@ on:
       - main
 
 jobs:
+  # Secret scanning runs on every push and PR to catch leaked credentials early.
+  gitleaks:
+    name: Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.24.0/gitleaks_8.24.0_linux_x64.tar.gz \
+            | tar -xz gitleaks
+          sudo mv gitleaks /usr/local/bin/
+
+      - name: Run gitleaks
+        run: gitleaks detect --source . --log-opts "origin/main..HEAD" --verbose
+
   # Unit tests run on every push and PR
   unit:
     name: Unit Tests
@@ -31,14 +50,17 @@ jobs:
       - name: Run unit tests
         run: go test -v ./... -timeout 10m
 
-  # Acceptance tests run on main branch pushes only (not PRs)
-  # These require real API credentials and create actual resources
+  # Acceptance tests run on PRs to main and on pushes to main/release branches.
+  # Secrets are available to PRs from this repo only (not forks), so the condition
+  # excludes fork PRs to avoid exposing credentials to untrusted code.
   acceptance:
     name: Acceptance Tests
     runs-on: ubuntu-latest
     needs: unit
-    # Only run on push to main or manual trigger, not on PRs (to avoid exposing secrets)
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2

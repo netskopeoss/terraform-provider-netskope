@@ -190,7 +190,7 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 			ServerList: ServerList,
 			ServerVariables: []map[string]string{
 				{
-					"tenant": "demo",
+					"tenant": "bespin",
 				},
 			},
 		},

@@ -58,6 +58,7 @@ docs/TODO.md
 docs/customer/
 docs/guides/
 docs/examples/
+docs/api-audit/
 # Testdata for permanently-skipped tests (hardcoded t.Skip, never run in CI)
 internal/provider/testdata/TestAccIPSStatusDataSource_basic/
 internal/provider/testdata/TestAccNPAPublishersAlertsConfiguration_basic/

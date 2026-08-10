@@ -10,6 +10,7 @@ import (
 )
 
 func TestAccPlatformOAuth2Token_basic(t *testing.T) {
+	testutil.SkipUnlessEnvSet(t, "TF_RUN_OAUTH2_TESTS", "OAuth2 tests require TF_RUN_OAUTH2_TESTS=1 and valid OAuth2 client credentials registered on the tenant")
 	clientID := os.Getenv("NETSKOPE_OAUTH2_CLIENT_ID")
 	clientSecret := os.Getenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
 	if clientID == "" || clientSecret == "" {

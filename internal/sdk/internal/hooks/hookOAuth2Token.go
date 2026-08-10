@@ -65,8 +65,13 @@ type tokenResponse struct {
 func (h *oauth2TokenHook) SDKInit(baseURL string, client HTTPClient) (string, HTTPClient) {
 	h.baseURL = baseURL
 	h.client = client
-	h.clientID = os.Getenv("NETSKOPE_OAUTH2_CLIENT_ID")
-	h.clientSecret = os.Getenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	// Only activate OAuth2 when no API key is configured. API key takes precedence
+	// so that setting both in the environment does not silently break API-key-based
+	// workflows (e.g. acceptance tests that source .env for both).
+	if os.Getenv("NETSKOPE_API_KEY") == "" {
+		h.clientID = os.Getenv("NETSKOPE_OAUTH2_CLIENT_ID")
+		h.clientSecret = os.Getenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	}
 	return baseURL, client
 }
 

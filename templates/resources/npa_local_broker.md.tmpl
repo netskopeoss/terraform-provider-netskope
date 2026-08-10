@@ -1,0 +1,45 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: "NPA"
+description: |-
+  Manages an NPA Local Broker — an on-premises component that enables direct client-to-application connectivity without routing traffic through the Netskope cloud.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages an NPA Local Broker — an on-premises component that enables direct client-to-application connectivity without routing traffic through the Netskope cloud. Local Brokers are used in high-performance or latency-sensitive environments where cloud-proxied access is not suitable.
+
+## Local Broker vs Publisher
+
+| | Publisher | Local Broker |
+|---|---|---|
+| Traffic path | Client → Netskope cloud → Publisher → App | Client → Local Broker → App (direct) |
+| Use case | Standard zero-trust access | Low-latency, high-throughput, or air-gapped environments |
+| Registration | `netskope_npa_publisher_token` | `netskope_npa_local_broker_token` |
+
+## Broker lifecycle
+
+1. Create the broker object with this resource.
+2. Use [`netskope_npa_local_broker_token`](npa_local_broker_token) to generate a registration token.
+3. Install the Local Broker software and register it with the token.
+4. Configure the broker via [`netskope_npa_local_broker_config`](npa_local_broker_config).
+
+## `access_via_public_ip`
+
+Controls how clients reach the broker:
+- `"NONE"` (default) — clients connect via the broker's private IP only
+- `"ON_PREM"` — on-premises clients may use the public IP
+- `"OFF_PREM"` — off-premises clients (e.g. remote workers) use the public IP
+- `"ON_OFF_PREM"` — all clients use the public IP
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}

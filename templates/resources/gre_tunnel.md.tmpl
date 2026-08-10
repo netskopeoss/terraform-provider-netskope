@@ -1,0 +1,42 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: "Steering"
+description: |-
+  Manages a Netskope GRE tunnel — connects a network device to a Netskope Point of Presence (POP) for inline traffic steering and inspection.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages a Netskope GRE (Generic Routing Encapsulation) tunnel. GRE tunnels connect a network device (router, firewall, or SD-WAN appliance) to a Netskope Point of Presence (POP) for inline traffic steering and inspection.
+
+## GRE vs IPSec
+
+| | GRE | IPSec |
+|---|---|---|
+| Encryption | None (relies on underlying network security) | Yes (IKEv2) |
+| Overhead | Low | Higher |
+| Use case | Internal networks where encryption is handled elsewhere | Internet-facing tunnels requiring encrypted transport |
+
+## Choosing a POP
+
+Use the [`netskope_grepop`](../data-sources/grepop) or [`netskope_grepo_ps_list`](../data-sources/grepo_ps_list) data source to look up available POP names:
+
+```hcl
+data "netskope_grepo_ps_list" "all" {}
+```
+
+## X-Forwarded-For (XFF)
+
+Enable `options.xff.xff_enabled` to insert the original client IP into the XFF header. Use `xff_ip_list` to restrict which source IPs are trusted for XFF insertion.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+{{codefile "shell" .ImportFile}}

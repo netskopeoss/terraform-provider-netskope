@@ -1,0 +1,43 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: "AI Gateway"
+description: |-
+  Generates an enrollment JWT token for an AI Gateway (AIG) appliance. The token is used to register the appliance with the Netskope tenant. Tokens expire 24 hours after generation.
+  This is a create-only resource — each apply generates a new token.
+---
+
+# {{.Name}} ({{.Type}})
+
+Generates an enrollment JWT token for an AI Gateway (AIG) appliance. The token is used to register the appliance with the Netskope tenant. Tokens expire 24 hours after generation.
+
+This is a create-only resource — each apply generates a new token. The token value is stored in state as a sensitive attribute and can be passed to an installation script or used in a `null_resource` provisioner.
+
+## Usage with appliance lifecycle
+
+```hcl
+resource "netskope_aig_appliance" "primary" {
+  name = "aig-primary"
+  host = "aig.example.com"
+  ports = {
+    http  = { enable = false, port = 80 }
+    https = { enable = true, port = 443 }
+  }
+}
+
+resource "netskope_aig_appliance_enrollment_token" "primary" {
+  appliance_id = netskope_aig_appliance.primary.id
+}
+
+output "enrollment_token" {
+  value     = netskope_aig_appliance_enrollment_token.primary.enrollment_token
+  sensitive = true
+}
+```
+
+Tokens expire 24 hours after creation. If the token expires before the appliance is enrolled, destroy and re-create this resource to generate a fresh token.
+
+## Example Usage
+
+{{tffile .ExampleFile}}
+
+{{ .SchemaMarkdown | trimspace }}

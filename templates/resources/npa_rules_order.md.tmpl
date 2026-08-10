@@ -1,0 +1,18 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: "NPA"
+description: |-
+  Manages the display order of NPA policy rules within a policy group. Use after creating rules with netskope_npa_rules to set their list position in the Netskope UI.
+---
+
+# {{.Name}} ({{.Type}})
+
+Manages the list position of NPA policy rules within a policy group.
+
+Takes a list of rule IDs and reorders them so that the first ID in the list appears first (top), and each subsequent ID appears after the previous one.
+
+**Note:** NPA rules use most-specific-match evaluation. List position does not determine which rule wins — it is for organizational purposes only.
+
+Rules should be created separately with [`netskope_npa_rules`](npa_rules) using `rule_order = { order = "bottom" }` (safe default), then pass their IDs to this resource to set the list position.
+
+{{ .SchemaMarkdown | trimspace }}
