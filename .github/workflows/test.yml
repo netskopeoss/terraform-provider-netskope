@@ -12,7 +12,7 @@ on:
 
 jobs:
   # Secret scanning runs on every push and PR to catch leaked credentials early.
-  secrets:
+  gitleaks:
     name: Secret Scan
     runs-on: ubuntu-latest
     steps:
