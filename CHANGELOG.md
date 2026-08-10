@@ -4,7 +4,7 @@ All notable changes to the Netskope Terraform Provider will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.9] - 2026-08-07
+## [0.4.9] - 2026-08-10
 
 ### Added
 - **`netskope_cci_category_list`** data source — Read-only catalog of predefined CCI categories from `GET /api/v2/services/cci/data?category=all`. Exposes `categories` with `category_id` (number) and `category_name` (string). IDs are tenant-independent so `for` expressions resolving names to IDs are fully portable across tenants. Eliminates magic numbers in `netskope_custom_category` resources. ([#107](https://github.com/netskopeoss/terraform-provider-netskope/issues/107))
