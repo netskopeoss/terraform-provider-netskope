@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_aig_token Resource - terraform-provider-netskope"
-subcategory: ""
+subcategory: "AI Gateway"
 description: |-
   Manages an AI Gateway API token — an individual API key that client applications use to authenticate requests through the Netskope AI Gateway.
 ---

@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_npa_rules Resource - terraform-provider-netskope"
-subcategory: ""
+subcategory: "NPA"
 description: |-
   Manages an NPA access rule that allows, blocks, or monitors user access to private applications.
 ---
@@ -141,6 +141,9 @@ resource "netskope_npa_rules" "my_nparules" {
     organization_units = [
       "engineering/qa",
     ]
+    os = [
+      "..."
+    ]
     periodic_reauth = {
       reauth_interval      = "60"
       reauth_interval_unit = "hours"
@@ -187,7 +190,7 @@ resource "netskope_npa_rules" "my_nparules" {
     ]
     user_type = "user"
     users = [
-      "user@example.com",
+      "vphan@netskope.com",
     ]
     version = 1
   }
@@ -234,6 +237,7 @@ Optional:
 - `net_location_obj` (List of String) List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27"). Default: []
 - `notify` (Attributes) Notification configuration for alert/block rule actions (see [below for nested schema](#nestedatt--rule_data--notify))
 - `organization_units` (List of String) Default: []
+- `os` (List of String) Operating system filter (Client access only). Valid values: "AmigaOS", "Android", "BlackBerry", "BSD", "Chrome OS", "Darwin", "Debian", "Fedora", "iOS", "Linux", "Mac", "Others", "Red", "RHEL", "Solaris", "SunOS", "Symbian", "Ubuntu", "Windows". Default: []
 - `periodic_reauth` (Attributes) (see [below for nested schema](#nestedatt--rule_data--periodic_reauth))
 - `policy_type` (String) Default: "private-app"; must be "private-app"
 - `private_app_tag_ids` (List of String) Tag IDs (numeric as string) — alternative to privateAppTags (names). Default: []

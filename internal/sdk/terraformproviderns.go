@@ -53,49 +53,52 @@ func Pointer[T any](v T) *T { return &v }
 
 // TerraformProviderNs - Netskope Terraform Provider: Combined specification to produce netskope terraform provider via speakeasy
 type TerraformProviderNs struct {
-	SDKVersion                  string
-	NPAPrivateApp               *NPAPrivateApp
-	IPSecTunnel                 *IPSecTunnel
-	GRETunnel                   *GRETunnel
-	NPAPublishers               *NPAPublishers
-	NPAPublisher                *NPAPublisher
-	NPAPublishersReleases       *NPAPublishersReleases
-	NPAPublisherApps            *NPAPublisherApps
-	NPAPublisherToken           *NPAPublisherToken
-	NPAPublisherUpgradeProfiles *NPAPublisherUpgradeProfiles
-	NPAPublisherUpgradeProfile  *NPAPublisherUpgradeProfile
-	NPALocalBrokers             *NPALocalBrokers
-	NPALocalBroker              *NPALocalBroker
-	NPALocalBrokerConfig        *NPALocalBrokerConfig
-	NPALocalBrokerToken         *NPALocalBrokerToken
-	Profiles                    *Profiles
-	DNSProfileV2                *DNSProfileV2
-	Ips                         *Ips
-	DestinationProfile          *DestinationProfile
-	CustomCategory              *CustomCategory
-	ServiceObject               *ServiceObject
-	Rbac                        *Rbac
-	RBACLabel                   *RBACLabel
-	RBACRole                    *RBACRole
-	Deviceclassification        *Deviceclassification
-	DeviceClassificationTag     *DeviceClassificationTag
-	Cci                         *Cci
-	Urllist                     *Urllist
-	AIGAppliances               *AIGAppliances
-	AIGAppliance                *AIGAppliance
-	AIGApplianceEnrollmentToken *AIGApplianceEnrollmentToken
-	AIGAppliancesCapacity       *AIGAppliancesCapacity
-	AIGAppliancesImages         *AIGAppliancesImages
-	AIGAiProviders              *AIGAiProviders
-	AIGAiProvider               *AIGAiProvider
-	AIGMcpServers               *AIGMcpServers
-	AIGMcpServer                *AIGMcpServer
-	AIGRateLimits               *AIGRateLimits
-	AIGRateLimit                *AIGRateLimit
-	AIGTokenGroups              *AIGTokenGroups
-	AIGTokenGroup               *AIGTokenGroup
-	AIGTokens                   *AIGTokens
-	AIGToken                    *AIGToken
+	SDKVersion                          string
+	NPAPrivateApp                       *NPAPrivateApp
+	IPSecTunnel                         *IPSecTunnel
+	GRETunnel                           *GRETunnel
+	NPAPublishers                       *NPAPublishers
+	NPAPublisher                        *NPAPublisher
+	NPAPublishersReleases               *NPAPublishersReleases
+	NPAPublisherApps                    *NPAPublisherApps
+	NPAPublisherToken                   *NPAPublisherToken
+	NPAPublisherUpgradeProfiles         *NPAPublisherUpgradeProfiles
+	NPAPublisherUpgradeProfile          *NPAPublisherUpgradeProfile
+	NPALocalBrokers                     *NPALocalBrokers
+	NPALocalBroker                      *NPALocalBroker
+	NPALocalBrokerConfig                *NPALocalBrokerConfig
+	NPALocalBrokerToken                 *NPALocalBrokerToken
+	Profiles                            *Profiles
+	DNSProfileV2                        *DNSProfileV2
+	Ips                                 *Ips
+	DestinationProfile                  *DestinationProfile
+	CustomCategory                      *CustomCategory
+	ServiceObject                       *ServiceObject
+	Rbac                                *Rbac
+	RBACLabel                           *RBACLabel
+	RBACRole                            *RBACRole
+	Deviceclassification                *Deviceclassification
+	DeviceClassificationTag             *DeviceClassificationTag
+	DeviceClassificationRule            *DeviceClassificationRule
+	DeviceClassificationOnPremDetection *DeviceClassificationOnPremDetection
+	DeviceClassificationSteeringMapping *DeviceClassificationSteeringMapping
+	Cci                                 *Cci
+	Urllist                             *Urllist
+	AIGAppliances                       *AIGAppliances
+	AIGAppliance                        *AIGAppliance
+	AIGApplianceEnrollmentToken         *AIGApplianceEnrollmentToken
+	AIGAppliancesCapacity               *AIGAppliancesCapacity
+	AIGAppliancesImages                 *AIGAppliancesImages
+	AIGAiProviders                      *AIGAiProviders
+	AIGAiProvider                       *AIGAiProvider
+	AIGMcpServers                       *AIGMcpServers
+	AIGMcpServer                        *AIGMcpServer
+	AIGRateLimits                       *AIGRateLimits
+	AIGRateLimit                        *AIGRateLimit
+	AIGTokenGroups                      *AIGTokenGroups
+	AIGTokenGroup                       *AIGTokenGroup
+	AIGTokens                           *AIGTokens
+	AIGToken                            *AIGToken
 
 	sdkConfiguration config.SDKConfiguration
 	hooks            *hooks.Hooks
@@ -237,6 +240,9 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk.RBACRole = newRBACRole(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Deviceclassification = newDeviceclassification(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.DeviceClassificationTag = newDeviceClassificationTag(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.DeviceClassificationRule = newDeviceClassificationRule(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.DeviceClassificationOnPremDetection = newDeviceClassificationOnPremDetection(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.DeviceClassificationSteeringMapping = newDeviceClassificationSteeringMapping(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Cci = newCci(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Urllist = newUrllist(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.AIGAppliances = newAIGAppliances(sdk, sdk.sdkConfiguration, sdk.hooks)

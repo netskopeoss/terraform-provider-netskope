@@ -4,6 +4,15 @@ All notable changes to the Netskope Terraform Provider will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 0.4.10
+
+### Added
+- **`netskope_device_classification_rule`** resource and data source — Manage device classification rules via `/api/v2/deviceclassification/rules`. Fields: `name`, `label` (tag name), `os` (enum: windows/mac/android/ios/chromeos/linux), `conditions` (JSON string with 3-level `$and/$or` nesting required by API). `rule_id` is computed. Create uses a follow-up GET after the 201 empty-body response to populate state.
+- **`netskope_device_classification_rule_list`** data source — List all device classification rules. Supports optional `label` filter.
+- **`netskope_device_classification_on_prem_detection`** resource and data source — Manage on-prem detection labels via `/api/v2/deviceclassification/client/onpremdetection`. Fields: `name`, `config` (JSON string for `onpremcheck` configuration). `onprem_id` and `steering_ids` are computed. Create uses a follow-up GET after the `{status:true, data:[id]}` response to populate state.
+- **`netskope_device_classification_on_prem_detection_list`** data source — List all on-prem detection labels.
+- **`netskope_device_classification_steering_mapping`** resource and data source — Manage steering config → on-prem label mappings via `PUT /api/v2/deviceclassification/onpremdetection/steering/{steering_id}`. Fields: `steering_id`, `onprem_detection_ids` (both ForceNew). All changes require replacement.
+
 ## [0.4.9] - 2026-08-10
 
 ### Added

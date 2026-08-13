@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_dns_profile_v2 Resource - terraform-provider-netskope"
-subcategory: ""
+subcategory: "Security Profiles"
 description: |-
   Manages a Netskope DNS Security profile (v2) — controls domain blocking, sinkholing, DNS tunneling detection, and custom DNS routing.
 ---

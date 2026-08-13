@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_rbac_role Resource - terraform-provider-netskope"
-subcategory: ""
+subcategory: "Platform"
 description: |-
   Manages a custom Netskope RBAC role — a named set of API group permissions with an optional IP allow list.
 ---

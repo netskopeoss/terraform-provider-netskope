@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_custom_category Resource - terraform-provider-netskope"
-subcategory: ""
+subcategory: "Security Profiles"
 description: |-
   Manages a Netskope custom category — a named set of URL lists and predefined categories used in Real-time Protection policies.
 ---

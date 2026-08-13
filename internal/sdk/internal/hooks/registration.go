@@ -61,13 +61,18 @@ func initHooks(h *Hooks) {
 	policyTemplate := &policyTemplateResponseHook{}
 	h.registerAfterSuccessHook(policyTemplate)
 
-	// Device classification tags - response transformations for all DC endpoints
+	// Device classification tags - response transformations for all DC tag/options endpoints
 	dcTags := &deviceClassificationTagsResponse{}
 	h.registerAfterSuccessHook(dcTags)
 
 	// Device classification tag create - wrap single object into array for API
 	dcTagReq := &deviceClassificationTagRequest{}
 	h.registerBeforeRequestHook(dcTagReq)
+
+	// Device classification rules + on-prem detection + steering mapping hooks
+	dcConfig := &dcConfigHooks{}
+	h.registerBeforeRequestHook(dcConfig)
+	h.registerAfterSuccessHook(dcConfig)
 
 	// URL list - response transformations (deploy after CRUD, wrap list response)
 	urllist := &urllistAfterSuccess{}

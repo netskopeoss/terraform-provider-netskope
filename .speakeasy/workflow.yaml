@@ -20,6 +20,8 @@ sources:
             - location: $NETSKOPE_OAS_DIR/endpoints/platform/rbac_labels.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/platform/rbac_roles.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/platform/deviceclassification_tags.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/platform/deviceclassification_rules.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/platform/deviceclassification_onpremdetection.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/platform/cci_data.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/policy/urllist.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/aig/aig-appliances-openapi.yaml

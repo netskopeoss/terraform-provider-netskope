@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_cci_category_list Data Source - terraform-provider-netskope"
-subcategory: ""
+subcategory: "Security Profiles"
 description: |-
   Returns the complete list of predefined CCI categories with their numeric IDs.
 ---

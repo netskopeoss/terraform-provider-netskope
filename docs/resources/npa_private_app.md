@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_npa_private_app Resource - terraform-provider-netskope"
-subcategory: ""
+subcategory: "NPA"
 description: |-
   Manages an NPA private application, supporting both client-based (tunnel) and clientless (browser) access modes.
 ---

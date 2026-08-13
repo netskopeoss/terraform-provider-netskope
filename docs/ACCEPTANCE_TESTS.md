@@ -88,6 +88,39 @@ Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 | `TestAccNPARules_ruleOrderBottom` | `nparules_resource_test.go` | Rule placement order=bottom verification |
 | `TestAccNPARules_ruleOrderBefore` | `nparules_resource_test.go` | Rule placement order=before verification |
 
+#### Added in v0.4.10
+
+| Test | File | Description |
+|------|------|-------------|
+| `TestAccDeviceClassificationRule_basic` | `deviceclassificationrule_resource_test.go` | Create rule, verify all fields, import |
+| `TestAccDeviceClassificationRule_update` | `deviceclassificationrule_resource_test.go` | Update OS and conditions |
+| `TestAccDeviceClassificationRuleDataSource_basic` | `deviceclassificationrule_resource_test.go` | Single rule data source lookup by rule_id |
+| `TestAccDeviceClassificationRuleListDataSource_basic` | `deviceclassificationrule_resource_test.go` | List rules; verify rule_id, name, os, label populated |
+| `TestAccDeviceClassificationOnPremDetection_basic` | `deviceclassificationonpremdetection_resource_test.go` | Create on-prem detection, verify all fields, import |
+| `TestAccDeviceClassificationOnPremDetection_update` | `deviceclassificationonpremdetection_resource_test.go` | Update name and config |
+| `TestAccDeviceClassificationOnPremDetectionDataSource_basic` | `deviceclassificationonpremdetection_resource_test.go` | Single on-prem detection data source lookup by onprem_id |
+| `TestAccDeviceClassificationOnPremDetectionListDataSource_basic` | `deviceclassificationonpremdetection_resource_test.go` | List on-prem detections; verify onprem_id, name, config populated |
+| `TestAccDeviceClassificationSteeringMapping_basic` | `deviceclassificationsteeringmapping_resource_test.go` | Create/update steering mapping (skipped unless `NETSKOPE_TEST_STEERING_ID` set) |
+| `TestAccDrift_DeviceClassificationRule` | `drift_detection_test.go` | No perpetual diff on rule after create |
+| `TestAccDrift_DeviceClassificationOnPremDetection` | `drift_detection_test.go` | No perpetual diff on on-prem detection after create |
+
+**Hook Unit Tests Added:**
+
+| Test | File | Coverage |
+|------|------|---------|
+| `TestDCConfig_BeforeCreateRule_WrapsAndSetsHeaders` | `hookDeviceClassificationConfig_test.go` | Rule create body wrapped in array, headers set |
+| `TestDCConfig_BeforeCreateOnPrem_WrapsInArray` | `hookDeviceClassificationConfig_test.go` | On-prem create body wrapped in array |
+| `TestDCConfig_BeforeUpdateSteering_UnwrapsToArray` | `hookDeviceClassificationConfig_test.go` | Steering update unwraps SDK struct to bare int array |
+| `TestDCConfig_BeforeListRules_StripsOffsetWithoutLimit` | `hookDeviceClassificationConfig_test.go` | `offset=0` removed when `limit` absent (prevents API 400) |
+| `TestDCConfig_BeforeListRules_KeepsOffsetWhenLimitSet` | `hookDeviceClassificationConfig_test.go` | `offset` preserved when `limit` is provided |
+| `TestDCConfig_AfterCreateRule_FindsRuleByName` | `hookDeviceClassificationConfig_test.go` | Rule found in list by name after POST 201 |
+| `TestDCConfig_AfterCreateRule_ErrorIfNotFound` | `hookDeviceClassificationConfig_test.go` | Error returned when rule not in list after retries |
+| `TestDCConfig_AfterCreateOnPrem_FetchesById` | `hookDeviceClassificationConfig_test.go` | On-prem ID extracted from `{status,data:[id]}`, full item fetched |
+| `TestDCConfig_AfterUpdateRule_FetchesFromPath` | `hookDeviceClassificationConfig_test.go` | Rule fetched by ID from URL path after PUT 200 |
+| `TestDCConfig_AfterListRules_WrapsInRulesKey` | `hookDeviceClassificationConfig_test.go` | Flat array wrapped in `{"rules":[…]}` |
+| `TestDCConfig_AfterListOnPrem_WrapsInOnpremdetectionKey` | `hookDeviceClassificationConfig_test.go` | Flat array wrapped in `{"onpremdetection":[…]}` |
+| `TestDCConfig_PassthroughForUnrelatedOps` | `hookDeviceClassificationConfig_test.go` | Non-DC operations pass through unchanged |
+
 #### Added in v0.4.9
 
 | Test | File | Description |

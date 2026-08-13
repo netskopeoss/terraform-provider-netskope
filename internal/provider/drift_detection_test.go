@@ -2307,3 +2307,117 @@ resource "netskope_aig_token" "test" {
 }
 `, testAccProviderConfig(), name, name)
 }
+
+// TestAccDrift_DeviceClassificationRule verifies no perpetual drift on DC rule resources.
+// Key computed field: rule_id. conditions is a JSON string that must round-trip without diff.
+func TestAccDrift_DeviceClassificationRule(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_device_classification_rule"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftDCRuleConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_device_classification_rule.test", "rule_id"),
+				),
+			},
+			{
+				Config: testAccDriftDCRuleConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftDCRuleConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_device_classification_tag" "test" {
+  name = "%s-tag"
+}
+
+resource "netskope_device_classification_rule" "test" {
+  name  = %q
+  label = netskope_device_classification_tag.test.name
+  os    = "windows"
+
+  conditions = jsonencode({
+    "$and" = [
+      {
+        "$and" = [
+          {
+            "$and" = [
+              {
+                "min_os_version_check" = {
+                  "min_os_version" = "10.0.0"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  })
+}
+`, testAccProviderConfig(), name, name)
+}
+
+// TestAccDrift_DeviceClassificationOnPremDetection verifies no perpetual drift on DC on-prem detection resources.
+// Key computed fields: onprem_id, steering_ids. config is a JSON string that must round-trip without diff.
+func TestAccDrift_DeviceClassificationOnPremDetection(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_device_classification_on_prem_detection"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftDCOnPremConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_device_classification_on_prem_detection.test", "onprem_id"),
+				),
+			},
+			{
+				Config: testAccDriftDCOnPremConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftDCOnPremConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_device_classification_on_prem_detection" "test" {
+  name = %q
+
+  config = jsonencode({
+    "onpremcheck" = {
+      "onprem_use_dns"                     = "1"
+      "onprem_host"                        = "internal.example.com"
+      "onprem_ip"                          = "10.0.0.1"
+      "onprem_http_host"                   = ""
+      "onprem_http_tcp_connection_timeout" = "10"
+      "onprem_additional_ips"              = []
+      "onprem_additional_http_hosts"       = []
+      "onprem_detection_method"            = "1"
+      "onprem_egress_ips"                  = []
+    }
+  })
+}
+`, testAccProviderConfig(), name)
+}

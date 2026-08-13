@@ -1,0 +1,1 @@
+terraform import netskope_device_classification_on_prem_detection.my_netskope_device_classification_on_prem_detection 0

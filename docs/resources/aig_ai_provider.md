@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_aig_ai_provider Resource - terraform-provider-netskope"
-subcategory: ""
+subcategory: "AI Gateway"
 description: |-
   Manages a custom AI provider in the Netskope AI Gateway — configures AIG appliances to proxy traffic to on-premise or private AI backends.
 ---
