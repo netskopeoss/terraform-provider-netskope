@@ -4,7 +4,7 @@ All notable changes to the Netskope Terraform Provider will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 0.4.10
+## [Unreleased]
 
 ### Added
 - **`netskope_device_classification_rule`** resource and data source — Manage device classification rules via `/api/v2/deviceclassification/rules`. Fields: `name`, `label` (tag name), `os` (enum: windows/mac/android/ios/chromeos/linux), `conditions` (JSON string with 3-level `$and/$or` nesting required by API). `rule_id` is computed. Create uses a follow-up GET after the 201 empty-body response to populate state.
