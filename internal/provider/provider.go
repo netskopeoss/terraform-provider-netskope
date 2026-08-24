@@ -35,11 +35,11 @@ type NetskopeProvider struct {
 
 // NetskopeProviderModel describes the provider data model.
 type NetskopeProviderModel struct {
-	APIKey               types.String `tfsdk:"api_key"`
-	ServerURL            types.String `tfsdk:"server_url"`
-	Tenant               types.String `tfsdk:"tenant"`
-	RetryMaxElapsedTime  types.Int64  `tfsdk:"retry_max_elapsed_time"`
-	RetryDisabled        types.Bool   `tfsdk:"retry_disabled"`
+	APIKey              types.String `tfsdk:"api_key"`
+	ServerURL           types.String `tfsdk:"server_url"`
+	Tenant              types.String `tfsdk:"tenant"`
+	RetryMaxElapsedTime types.Int64  `tfsdk:"retry_max_elapsed_time"`
+	RetryDisabled       types.Bool   `tfsdk:"retry_disabled"`
 }
 
 func (p *NetskopeProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {

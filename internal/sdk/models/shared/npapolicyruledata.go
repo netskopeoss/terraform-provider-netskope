@@ -40,8 +40,9 @@ func (e *AccessMethod) UnmarshalJSON(data []byte) error {
 type ActionName string
 
 const (
-	ActionNameAllow ActionName = "allow"
-	ActionNameBlock ActionName = "block"
+	ActionNameAllow          ActionName = "allow"
+	ActionNameBlock          ActionName = "block"
+	ActionNamePeriodicReauth ActionName = "periodic_reauth"
 )
 
 func (e ActionName) ToPointer() *ActionName {
@@ -56,6 +57,8 @@ func (e *ActionName) UnmarshalJSON(data []byte) error {
 	case "allow":
 		fallthrough
 	case "block":
+		fallthrough
+	case "periodic_reauth":
 		*e = ActionName(v)
 		return nil
 	default:
@@ -67,7 +70,7 @@ type MatchCriteriaAction struct {
 	ActionName *ActionName `json:"action_name,omitempty"`
 	// Whether to emit an alert when the rule matches (required for block action)
 	EmitAlert *bool `json:"emit_alert,omitempty"`
-	// Notification template name (required for block action). Use the display name (e.g. "Default Template"), not the file name.
+	// Notification template display name. Required for block and periodic_reauth actions. Use the display name (e.g. "Default Template"), not the file name returned by the API. The API returns a .html file name on read; the suppressTemplateDrift plan modifier and BeforeRequest hook handle the mismatch transparently.
 	Template *string `json:"template,omitempty"`
 }
 

@@ -13,6 +13,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **`netskope_device_classification_on_prem_detection_list`** data source — List all on-prem detection labels.
 - **`netskope_device_classification_steering_mapping`** resource and data source — Manage steering config → on-prem label mappings via `PUT /api/v2/deviceclassification/onpremdetection/steering/{steering_id}`. Fields: `steering_id`, `onprem_detection_ids` (both ForceNew). All changes require replacement.
 
+### Fixed
+- **`netskope_npa_rules` import crashes and `periodic_reauth` action rejected by schema** ([#116](https://github.com/netskopeoss/terraform-provider-netskope/issues/116)) — The `action_name` enum in `match_criteria_action` was missing `"periodic_reauth"`, causing two failures: (1) `terraform import` of any rule with the Periodic Authentication action set via the UI crashed with `"invalid value for ActionName: periodic_reauth"` on every state refresh; (2) setting `action_name = "periodic_reauth"` in HCL was rejected at plan time with a schema validation error, making Periodic Authentication rules entirely unmanageable via Terraform. Fixed by adding `periodic_reauth` to the OAS enum and regenerating. The existing template drift suppression (plan modifier + BeforeRequest hook) already handles `periodic_reauth` rules transparently — no additional changes were needed.
+
+## [0.4.10] - 2026-08-24
+
+### Fixed
+- **`netskope_npa_rules` import crashes and `periodic_reauth` action rejected by schema** ([#116](https://github.com/netskopeoss/terraform-provider-netskope/issues/116)) — The `action_name` enum in `match_criteria_action` was missing `"periodic_reauth"`, causing two failures: (1) `terraform import` of any rule with the Periodic Authentication action set via the UI crashed with `"invalid value for ActionName: periodic_reauth"` on every state refresh; (2) setting `action_name = "periodic_reauth"` in HCL was rejected at plan time with a schema validation error, making Periodic Authentication rules entirely unmanageable via Terraform. Fixed by adding `periodic_reauth` to the OAS enum and regenerating. The existing template drift suppression (plan modifier + BeforeRequest hook) already handles `periodic_reauth` rules transparently — no additional changes were needed.
+
 ## [0.4.9] - 2026-08-10
 
 ### Added

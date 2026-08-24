@@ -104,7 +104,7 @@ func (r *NPARulesListDataSource) Schema(ctx context.Context, req datasource.Sche
 										},
 										"template": schema.StringAttribute{
 											Computed:    true,
-											Description: `Notification template name (required for block action). Use the display name (e.g. "Default Template"), not the file name.`,
+											Description: `Notification template display name. Required for block and periodic_reauth actions. Use the display name (e.g. "Default Template"), not the file name returned by the API. The API returns a .html file name on read; the suppressTemplateDrift plan modifier and BeforeRequest hook handle the mismatch transparently.`,
 										},
 									},
 								},

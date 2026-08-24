@@ -27,35 +27,35 @@ type myPolicyRequest struct {
 }
 
 type RuleData struct {
-	AccessMethod                []string                    `json:"access_method,omitempty"`
-	BNegateNetLocation          *bool                       `json:"b_negateNetLocation,omitempty"`
-	BNegateSrcCountries         *bool                       `json:"b_negateSrcCountries,omitempty"`
-	Classification              []string                    `json:"classification,omitempty"` // See docs/bugs/BUG-018: API returns array, not string
-	Description                 *string                     `json:"description,omitempty"`
-	DeviceClassificationID      []string                    `json:"device_classification_id,omitempty"`
-	DlpActions                  []NpaPolicyRuleDlp          `json:"dlp_actions,omitempty"`
-	ExternalDlp                 *bool                       `json:"external_dlp,omitempty"`
-	JSONVersion                 *int64                      `json:"json_version,omitempty"`
-	MatchCriteriaAction         *MatchCriteriaAction        `json:"match_criteria_action,omitempty"`
-	NetLocationObj              []string                    `json:"net_location_obj,omitempty"`
-	Notify                      *Notify                     `json:"notify,omitempty"`
-	OrganizationUnits           []string                    `json:"organization_units,omitempty"`
-	Os                          []string                    `json:"os,omitempty"`
-	PeriodicReauth              *PeriodicReauth             `json:"periodic_reauth,omitempty"`
-	PrivateAppTagIds            []string                    `json:"privateAppTagIds,omitempty"`
-	PrivateAppTags              []string                    `json:"privateAppTags,omitempty"`
-	PrivateApps                 []string                    `json:"privateApps,omitempty"`
-	PrivateAppsWithActivities   []PrivateAppsWithActivities `json:"privateAppsWithActivities,omitempty"`
-	Schedule                    []ScheduleItem              `json:"schedule,omitempty"`
-	ShowDlpProfileActionTable   *bool                       `json:"show_dlp_profile_action_table,omitempty"`
-	SrcCountries                []string                    `json:"srcCountries,omitempty"`
-	TssActions                  []NpaPolicyRuleTss          `json:"tss_actions,omitempty"`
-	TssProfile                  []string                    `json:"tss_profile,omitempty"`
-	UserConfidence              *UserConfidence             `json:"user_confidence,omitempty"`
-	UserGroups                  []string                    `json:"userGroups,omitempty"`
-	UserType                    *string                     `json:"userType,omitempty"`
-	Users                       []string                    `json:"users,omitempty"`
-	Version                     *int64                      `json:"version,omitempty"`
+	AccessMethod              []string                    `json:"access_method,omitempty"`
+	BNegateNetLocation        *bool                       `json:"b_negateNetLocation,omitempty"`
+	BNegateSrcCountries       *bool                       `json:"b_negateSrcCountries,omitempty"`
+	Classification            []string                    `json:"classification,omitempty"` // See docs/bugs/BUG-018: API returns array, not string
+	Description               *string                     `json:"description,omitempty"`
+	DeviceClassificationID    []string                    `json:"device_classification_id,omitempty"`
+	DlpActions                []NpaPolicyRuleDlp          `json:"dlp_actions,omitempty"`
+	ExternalDlp               *bool                       `json:"external_dlp,omitempty"`
+	JSONVersion               *int64                      `json:"json_version,omitempty"`
+	MatchCriteriaAction       *MatchCriteriaAction        `json:"match_criteria_action,omitempty"`
+	NetLocationObj            []string                    `json:"net_location_obj,omitempty"`
+	Notify                    *Notify                     `json:"notify,omitempty"`
+	OrganizationUnits         []string                    `json:"organization_units,omitempty"`
+	Os                        []string                    `json:"os,omitempty"`
+	PeriodicReauth            *PeriodicReauth             `json:"periodic_reauth,omitempty"`
+	PrivateAppTagIds          []string                    `json:"privateAppTagIds,omitempty"`
+	PrivateAppTags            []string                    `json:"privateAppTags,omitempty"`
+	PrivateApps               []string                    `json:"privateApps,omitempty"`
+	PrivateAppsWithActivities []PrivateAppsWithActivities `json:"privateAppsWithActivities,omitempty"`
+	Schedule                  []ScheduleItem              `json:"schedule,omitempty"`
+	ShowDlpProfileActionTable *bool                       `json:"show_dlp_profile_action_table,omitempty"`
+	SrcCountries              []string                    `json:"srcCountries,omitempty"`
+	TssActions                []NpaPolicyRuleTss          `json:"tss_actions,omitempty"`
+	TssProfile                []string                    `json:"tss_profile,omitempty"`
+	UserConfidence            *UserConfidence             `json:"user_confidence,omitempty"`
+	UserGroups                []string                    `json:"userGroups,omitempty"`
+	UserType                  *string                     `json:"userType,omitempty"`
+	Users                     []string                    `json:"users,omitempty"`
+	Version                   *int64                      `json:"version,omitempty"`
 }
 
 type RuleOrder struct {
@@ -194,6 +194,10 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.
 			// which the API rejects with "Undefined template: *.html".
 			// Omitting template on update is safe — the API preserves the existing one.
 			// Create payloads are left unchanged (display names work on create).
+			// Note: with the npaTemplateCache fix, state stores display names after
+			// the initial create, so update payloads will normally contain display
+			// names (no .html). This strip is retained as a safety fallback for
+			// cold-cache scenarios (e.g. importing a rule created via the UI).
 			// See docs/bugs/BUG-019-block-rule-template-phantom-update.md
 			if hookCtx.OperationID == "updateNPARules" &&
 				requestMap.RuleData.MatchCriteriaAction != nil &&
@@ -223,16 +227,16 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.
 			DeviceClassificationID []int64 `json:"device_classification_id,omitempty"`
 		}
 		type requestWithIntIDs struct {
-			Enabled    *string              `json:"enabled,omitempty"`
-			ModifyBy   *string              `json:"modify_by,omitempty"`
-			ModifyTime *string              `json:"modify_time,omitempty"`
-			ModifyType *string              `json:"modify_type,omitempty"`
-			PolicyType *string              `json:"policy_type,omitempty"`
-			GroupID    *string              `json:"group_id,omitempty"`
-			RuleData   *ruleDataWithIntIDs  `json:"rule_data,omitempty"`
-			RuleID     *string              `json:"rule_id,omitempty"`
-			RuleName   *string              `json:"rule_name,omitempty"`
-			RuleOrder  *RuleOrder           `json:"rule_order,omitempty"`
+			Enabled    *string             `json:"enabled,omitempty"`
+			ModifyBy   *string             `json:"modify_by,omitempty"`
+			ModifyTime *string             `json:"modify_time,omitempty"`
+			ModifyType *string             `json:"modify_type,omitempty"`
+			PolicyType *string             `json:"policy_type,omitempty"`
+			GroupID    *string             `json:"group_id,omitempty"`
+			RuleData   *ruleDataWithIntIDs `json:"rule_data,omitempty"`
+			RuleID     *string             `json:"rule_id,omitempty"`
+			RuleName   *string             `json:"rule_name,omitempty"`
+			RuleOrder  *RuleOrder          `json:"rule_order,omitempty"`
 		}
 
 		marshalReq := requestWithIntIDs{
@@ -272,6 +276,18 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.
 		s := string(modifiedBody)
 		req.Body = io.NopCloser(strings.NewReader(s))
 		req.ContentLength = int64(len(modifiedBody))
+
+		// For createNPARules: store the template display name in the request context
+		// so the AfterSuccess hook can populate npaTemplateCache with the
+		// file-name → display-name mapping returned by the API.
+		if hookCtx.OperationID == "createNPARules" &&
+			requestMap.RuleData != nil &&
+			requestMap.RuleData.MatchCriteriaAction != nil &&
+			requestMap.RuleData.MatchCriteriaAction.Template != nil &&
+			!strings.HasSuffix(*requestMap.RuleData.MatchCriteriaAction.Template, ".html") {
+			req = req.WithContext(withNPATemplateDisplayName(req.Context(), *requestMap.RuleData.MatchCriteriaAction.Template))
+		}
+
 		return req, nil
 	}
 	return req, nil

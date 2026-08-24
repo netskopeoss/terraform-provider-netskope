@@ -1,6 +1,3 @@
-# Step 1: create rule with action_name = "periodic_reauth".
-# Verifies that the enum is accepted by the schema and that the API creates the rule correctly.
-# os = ["Windows"] is required by the API for periodic_reauth action.
 variable "name" {
   type = string
 }

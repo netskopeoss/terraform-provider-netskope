@@ -47,14 +47,14 @@ func init() {
 	})
 
 	resource.AddTestSweepers("netskope_rbac_label", &resource.Sweeper{
-		Name: "netskope_rbac_label",
-		F:    sweepRBACLabels,
+		Name:         "netskope_rbac_label",
+		F:            sweepRBACLabels,
 		Dependencies: []string{},
 	})
 
 	resource.AddTestSweepers("netskope_device_classification_tag", &resource.Sweeper{
-		Name: "netskope_device_classification_tag",
-		F:    sweepDeviceClassificationTags,
+		Name:         "netskope_device_classification_tag",
+		F:            sweepDeviceClassificationTags,
 		Dependencies: []string{},
 	})
 
@@ -613,3 +613,4 @@ func sweepAIGTokenGroups(region string) error {
 
 	return nil
 }
+
