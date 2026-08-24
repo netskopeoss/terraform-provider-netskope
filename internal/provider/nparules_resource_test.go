@@ -453,9 +453,11 @@ func TestAccNPARules_withSchedule(t *testing.T) {
 	})
 }
 
-// TestAccNPARules_withPeriodicReauth verifies that rule_data.periodic_reauth can
-// be set and updated. The field was previously terraform-ignored; this is its
-// first live regression test.
+// TestAccNPARules_withPeriodicReauth verifies that action_name = "periodic_reauth" is
+// accepted by the schema and that the interval can be updated.
+// Regression test for https://github.com/netskopeoss/terraform-provider-netskope/issues/116:
+// the ActionName enum was missing "periodic_reauth", causing plan-time validation errors
+// and import crashes with "invalid value for ActionName: periodic_reauth".
 func TestAccNPARules_withPeriodicReauth(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
@@ -468,25 +470,68 @@ func TestAccNPARules_withPeriodicReauth(t *testing.T) {
 		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
 		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
 		Steps: []resource.TestStep{
-			// Create with 60 hours
+			// Create with action_name = "periodic_reauth" and 60h interval.
+			// Verifies the schema accepts the new enum value and the API creates the rule.
 			{
 				ConfigDirectory: config.TestStepDirectory(),
 				ConfigVariables: vars,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.action_name", "periodic_reauth"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval", "60"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval_unit", "hours"),
 				),
 			},
-			// Update to 24 hours — verifies the field can be modified without drift
+			// Update to 24h — verifies the interval can be changed without drift.
 			{
 				ConfigDirectory: config.TestStepDirectory(),
 				ConfigVariables: vars,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.action_name", "periodic_reauth"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval", "24"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval_unit", "hours"),
 				),
+			},
+		},
+	})
+}
+
+// TestAccNPARules_periodicReauthImport verifies that importing a rule with
+// action_name = "periodic_reauth" no longer crashes.
+// Before the fix (issue #116), the SDK's ActionName.UnmarshalJSON returned
+// "invalid value for ActionName: periodic_reauth" on any state refresh of
+// a rule created via the UI with Periodic Authentication action.
+func TestAccNPARules_periodicReauthImport(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_npa_rules.test"
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			{
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.action_name", "periodic_reauth"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ConfigDirectory:   config.TestNameDirectory(),
+				ConfigVariables:   vars,
+				ImportState:       true,
+				ImportStateVerify: true,
+				// template: API returns a .html file name on GET ("2.html") but the config
+				// holds the display name ("tf-test-template"). The mismatch is suppressed
+				// at plan time by suppressTemplateDrift; ignore it here for the same reason.
+				ImportStateVerifyIgnore: []string{"rule_order", "group_id", "description", "rule_data.private_app_tags", "rule_data.match_criteria_action.template"},
 			},
 		},
 	})

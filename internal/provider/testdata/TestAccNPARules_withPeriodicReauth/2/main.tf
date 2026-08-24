@@ -1,4 +1,4 @@
-# Step 2: update interval — verifies the field can be modified
+# Step 2: update reauth_interval — verifies the field can be modified without drift.
 variable "name" {
   type = string
 }
@@ -33,10 +33,14 @@ resource "netskope_npa_rules" "test" {
   group_id  = netskope_npa_policy_groups.test.id
 
   rule_data = {
-    policy_type           = "private-app"
-    match_criteria_action = { action_name = "allow" }
-    private_apps          = [netskope_npa_private_app.test.private_app_name]
-    access_method         = ["Client"]
+    policy_type = "private-app"
+    match_criteria_action = {
+      action_name = "periodic_reauth"
+      template    = "tf-test-template"
+    }
+    private_apps  = [netskope_npa_private_app.test.private_app_name]
+    access_method = ["Client"]
+    os            = ["Windows"]
 
     periodic_reauth = {
       reauth_interval      = "24"

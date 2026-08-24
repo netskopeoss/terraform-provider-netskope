@@ -4,6 +4,11 @@ All notable changes to the Netskope Terraform Provider will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.10] - 2026-08-24
+
+### Fixed
+- **`netskope_npa_rules` import crashes and `periodic_reauth` action rejected by schema** ([#116](https://github.com/netskopeoss/terraform-provider-netskope/issues/116)) — The `action_name` enum in `match_criteria_action` was missing `"periodic_reauth"`, causing two failures: (1) `terraform import` of any rule with the Periodic Authentication action set via the UI crashed with `"invalid value for ActionName: periodic_reauth"` on every state refresh; (2) setting `action_name = "periodic_reauth"` in HCL was rejected at plan time with a schema validation error, making Periodic Authentication rules entirely unmanageable via Terraform. Fixed by adding `periodic_reauth` to the OAS enum and regenerating. The existing template drift suppression (plan modifier + BeforeRequest hook) already handles `periodic_reauth` rules transparently — no additional changes were needed.
+
 ## [0.4.9] - 2026-08-10
 
 ### Added

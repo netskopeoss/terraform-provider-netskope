@@ -141,4 +141,9 @@ testacc-oauth2-provider:
 	@test -n "$(NETSKOPE_OAUTH2_CLIENT_SECRET)" || (echo "Error: NETSKOPE_OAUTH2_CLIENT_SECRET is not set" && exit 1)
 	NETSKOPE_API_KEY="" TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccOAuth2ProviderAuth -timeout 10m
 
-.PHONY: all install build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels testacc-aig testacc-customcategory testacc-serviceobject testacc-rbacrole testacc-oauth2 testacc-oauth2-provider
+.PHONY: testacc-deviceclassification
+testacc-deviceclassification:
+	@echo "Running device classification acceptance tests..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccDeviceClassification -timeout 30m
+
+.PHONY: all install build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels testacc-aig testacc-customcategory testacc-serviceobject testacc-rbacrole testacc-oauth2 testacc-oauth2-provider testacc-deviceclassification

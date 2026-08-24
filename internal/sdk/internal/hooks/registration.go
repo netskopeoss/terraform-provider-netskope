@@ -43,13 +43,13 @@ func initHooks(h *Hooks) {
 
 	MyApp := &myAppResponse{}
 	h.registerAfterSuccessHook(MyApp)
-	MyBulkApp := &myBulkAppResponse{} 
+	MyBulkApp := &myBulkAppResponse{}
 	h.registerAfterSuccessHook(MyBulkApp)
-	MyPolicy :=&myPolicyResponse{}
+	MyPolicy := &myPolicyResponse{}
 	h.registerAfterSuccessHook(MyPolicy)
-	MyBulkPolicy :=&myBulkPolicyResponse{}
+	MyBulkPolicy := &myBulkPolicyResponse{}
 	h.registerAfterSuccessHook(MyBulkPolicy)
-	MyPolicyRequest :=&myPolicyRequest{}
+	MyPolicyRequest := &myPolicyRequest{}
 	h.registerBeforeRequestHook(MyPolicyRequest)
 
 	// Private app request hook - strips problematic empty fields that cause API errors

@@ -17,7 +17,7 @@ resource "netskope_npa_rules" "my_nparules" {
     ]
     json_version = 3
     match_criteria_action = {
-      action_name = "allow"
+      action_name = "block"
       emit_alert  = true
       template    = "...my_template..."
     }
