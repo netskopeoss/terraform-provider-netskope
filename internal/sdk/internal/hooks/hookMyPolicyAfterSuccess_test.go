@@ -1,6 +1,7 @@
 package hooks
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"strings"
@@ -21,6 +22,22 @@ func buildFakePolicyResponse(body string, operationID string) (AfterSuccessConte
 		},
 	}
 	return ctx, res
+}
+
+// buildFakePolicyResponseWithDisplayName constructs a fake *http.Response whose
+// associated Request carries the given template display name in its context, as
+// BeforeRequest does for createNPARules. Use this for testing the cache population
+// path in AfterSuccess.
+func buildFakePolicyResponseWithDisplayName(body string, operationID string, displayName string) (AfterSuccessContext, *http.Response) {
+	req, _ := http.NewRequestWithContext(
+		withNPATemplateDisplayName(context.Background(), displayName),
+		http.MethodPost,
+		"https://example.com/api/v2/policy/npa/rules",
+		nil,
+	)
+	hookCtx, res := buildFakePolicyResponse(body, operationID)
+	res.Request = req
+	return hookCtx, res
 }
 
 // TestAfterSuccess_ClassificationArrayUnmarshal verifies that the AfterSuccess hook
@@ -116,5 +133,117 @@ func TestAfterSuccess_NonMatchingOperationPassthrough(t *testing.T) {
 	}
 	if result == nil {
 		t.Fatal("expected non-nil response")
+	}
+}
+
+// TestAfterSuccess_CreatePopulatesTemplateCacheAndFixesResponse verifies that when
+// createNPARules is processed, the AfterSuccess hook:
+//  1. Reads the display name from the request context (set by BeforeRequest)
+//  2. Populates npaTemplateCache with the file→display mapping
+//  3. Substitutes the display name into the response body
+//
+// This ensures Terraform state stores the display name rather than the API-returned
+// .html file name, eliminating the perpetual drift for block and periodic_reauth rules.
+// See https://github.com/netskopeoss/terraform-provider-netskope/issues/116
+func TestAfterSuccess_CreatePopulatesTemplateCacheAndFixesResponse(t *testing.T) {
+	hook := &myPolicyResponse{}
+
+	body := `{
+		"data": {
+			"rule_id": "42",
+			"rule_name": "block-rule",
+			"enabled": "1",
+			"rule_data": {
+				"policy_type": "private-app",
+				"match_criteria_action": {
+					"action_name": "block",
+					"emit_alert": true,
+					"template": "99.html"
+				},
+				"privateApps": ["[my-app]"],
+				"access_method": ["Client"]
+			}
+		},
+		"status": "success"
+	}`
+
+	ctx, res := buildFakePolicyResponseWithDisplayName(body, "createNPARules", "My Block Template")
+
+	result, err := hook.AfterSuccess(ctx, res)
+	if err != nil {
+		t.Fatalf("AfterSuccess failed: %v", err)
+	}
+
+	rawBody, err := io.ReadAll(result.Body)
+	if err != nil {
+		t.Fatalf("failed to read result body: %v", err)
+	}
+	bodyStr := string(rawBody)
+
+	// Template should be replaced with the display name
+	if strings.Contains(bodyStr, "99.html") {
+		t.Errorf("expected .html file name to be replaced in response, got: %s", bodyStr)
+	}
+	if !strings.Contains(bodyStr, "My Block Template") {
+		t.Errorf("expected display name 'My Block Template' in response, got: %s", bodyStr)
+	}
+
+	// Cache should be populated
+	displayName, ok := npaTemplateCacheGet("99.html")
+	if !ok {
+		t.Error("expected cache to be populated with file→display mapping")
+	}
+	if displayName != "My Block Template" {
+		t.Errorf("expected cache entry 'My Block Template', got %q", displayName)
+	}
+}
+
+// TestAfterSuccess_ReadUsesTemplateCacheToFixResponse verifies that getNPARules
+// responses have their .html template file name replaced with the display name
+// from the cache (populated by a prior create). This ensures state stays consistent
+// after any Read/refresh following the initial create.
+func TestAfterSuccess_ReadUsesTemplateCacheToFixResponse(t *testing.T) {
+	hook := &myPolicyResponse{}
+
+	// Seed the cache as if a prior create had run
+	npaTemplateCacheSet("7.html", "Periodic Reauth Template")
+
+	body := `{
+		"data": {
+			"rule_id": "55",
+			"rule_name": "reauth-rule",
+			"enabled": "1",
+			"rule_data": {
+				"policy_type": "private-app",
+				"match_criteria_action": {
+					"action_name": "periodic_reauth",
+					"template": "7.html"
+				},
+				"privateApps": ["[my-app]"],
+				"access_method": ["Client"],
+				"os": ["Windows"]
+			}
+		},
+		"status": "success"
+	}`
+
+	ctx, res := buildFakePolicyResponse(body, "getNPARules")
+
+	result, err := hook.AfterSuccess(ctx, res)
+	if err != nil {
+		t.Fatalf("AfterSuccess failed: %v", err)
+	}
+
+	rawBody, err := io.ReadAll(result.Body)
+	if err != nil {
+		t.Fatalf("failed to read result body: %v", err)
+	}
+	bodyStr := string(rawBody)
+
+	if strings.Contains(bodyStr, "7.html") {
+		t.Errorf("expected .html file name to be replaced by cache lookup, got: %s", bodyStr)
+	}
+	if !strings.Contains(bodyStr, "Periodic Reauth Template") {
+		t.Errorf("expected 'Periodic Reauth Template' in response, got: %s", bodyStr)
 	}
 }

@@ -1845,8 +1845,10 @@ resource "netskope_npa_rules" "test" {
 `, testAccProviderConfig(), name, name, name, name)
 }
 
-// TestAccDrift_NPARules_PeriodicReauth verifies no perpetual drift on rules with periodic_reauth.
-// The nested object must round-trip through the API without triggering a phantom update.
+// TestAccDrift_NPARules_PeriodicReauth verifies no perpetual drift on rules with
+// action_name = "periodic_reauth". The nested periodic_reauth object and the
+// action_name must both round-trip through the API without triggering phantom updates.
+// Regression test for https://github.com/netskopeoss/terraform-provider-netskope/issues/116.
 func TestAccDrift_NPARules_PeriodicReauth(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 
@@ -1922,11 +1924,13 @@ resource "netskope_npa_rules" "test" {
     policy_type = "private-app"
 
     match_criteria_action = {
-      action_name = "allow"
+      action_name = "periodic_reauth"
+      template    = "tf-test-template"
     }
 
     private_apps  = [netskope_npa_private_app.test.private_app_name]
     access_method = ["Client"]
+    os            = ["Windows"]
 
     periodic_reauth = {
       reauth_interval      = "60"
