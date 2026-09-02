@@ -2,6 +2,10 @@ variable "name" {
   type = string
 }
 
+variable "net_location_id" {
+  type = string
+}
+
 resource "netskope_npa_policy_groups" "test" {
   group_name = "${var.name}-group"
 
@@ -52,6 +56,6 @@ resource "netskope_npa_rules" "test" {
 
     private_apps     = [netskope_npa_private_app.test.private_app_name]
     access_method    = ["Client"]
-    net_location_obj = ["1"]
+    net_location_obj = [var.net_location_id]
   }
 }

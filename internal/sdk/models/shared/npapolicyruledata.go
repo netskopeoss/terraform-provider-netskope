@@ -224,7 +224,7 @@ func (u *UserConfidence) GetIndex() *string {
 	return u.Index
 }
 
-// Notify - Notification configuration for alert/block rule actions
+// Notify - Computed notification configuration derived from the rule's action/template settings. Not directly user-configurable via the policy rules API — the API populates this from the selected notification template. Includes emails, from_user, interval, to_users, and templates sub-fields.
 type Notify struct {
 	// Email addresses to notify
 	Emails []string `json:"emails,omitempty"`
@@ -234,8 +234,8 @@ type Notify struct {
 	Interval *string `json:"interval,omitempty"`
 	// Recipient user types (e.g. 'admin')
 	ToUsers []string `json:"to_users,omitempty"`
-	// Internal templates array (not user-settable)
-	Templates [][]string `json:"templates,omitempty"`
+	// Internal templates array; API returns array of objects
+	Templates []map[string]any `json:"templates,omitempty"`
 }
 
 func (n *Notify) GetEmails() []string {
@@ -266,7 +266,7 @@ func (n *Notify) GetToUsers() []string {
 	return n.ToUsers
 }
 
-func (n *Notify) GetTemplates() [][]string {
+func (n *Notify) GetTemplates() []map[string]any {
 	if n == nil {
 		return nil
 	}
@@ -317,13 +317,14 @@ type NpaPolicyRuleData struct {
 	OrganizationUnits []string    `json:"organization_units,omitempty"`
 	PolicyType        *PolicyType `default:"private-app" json:"policy_type"`
 	// Tag IDs (numeric as string) — alternative to privateAppTags (names)
-	PrivateAppTagIds          []string                    `json:"privateAppTagIds,omitempty"`
-	PrivateAppTags            []string                    `json:"privateAppTags,omitempty"`
-	PrivateApps               []string                    `json:"privateApps,omitempty"`
-	SrcCountries              []string                    `json:"srcCountries,omitempty"`
-	UserGroups                []string                    `json:"userGroups,omitempty"`
-	UserType                  *UserType                   `default:"user" json:"userType"`
-	Users                     []string                    `json:"users,omitempty"`
+	PrivateAppTagIds []string  `json:"privateAppTagIds,omitempty"`
+	PrivateAppTags   []string  `json:"privateAppTags,omitempty"`
+	PrivateApps      []string  `json:"privateApps,omitempty"`
+	SrcCountries     []string  `json:"srcCountries,omitempty"`
+	UserGroups       []string  `json:"userGroups,omitempty"`
+	UserType         *UserType `default:"user" json:"userType"`
+	Users            []string  `json:"users,omitempty"`
+	// API-managed monotonic update counter (read-only, not user-settable)
 	Version                   *int64                      `json:"version,omitempty"`
 	DlpActions                []NpaPolicyRuleDlp          `json:"dlp_actions,omitempty"`
 	TssActions                []NpaPolicyRuleTss          `json:"tss_actions,omitempty"`
@@ -337,7 +338,7 @@ type NpaPolicyRuleData struct {
 	UserConfidence *UserConfidence `json:"user_confidence,omitempty"`
 	// Description stored within rule_data (separate from the top-level rule description)
 	Description *string `json:"description,omitempty"`
-	// Notification configuration for alert/block rule actions
+	// Computed notification configuration derived from the rule's action/template settings. Not directly user-configurable via the policy rules API — the API populates this from the selected notification template. Includes emails, from_user, interval, to_users, and templates sub-fields.
 	Notify                      *Notify `json:"notify,omitempty"`
 	ShowAisecProfileActionTable *bool   `default:"false" json:"show_aisec_profile_action_table"`
 	// Computed enrichment of userGroups with full group detail (read-only)

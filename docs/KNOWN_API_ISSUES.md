@@ -579,72 +579,86 @@ protocols = [
 
 ---
 
-### 13. Block Rule Template — Display Name vs File Name Mismatch
+### 13. Template Field — Different Behavior for Block vs Periodic Reauth Rules
 
 **Endpoint:** `POST /api/v2/policy/npa/rules`
 
-**Issue:** The `template` field in `match_criteria_action` has a name/filename mismatch across operations:
-- **Create/Update** requires the template **display name** (e.g. `"Default Template"`, `"Generic Block"`)
+The `template` field in `match_criteria_action` behaves differently depending on `action_name`:
+
+#### Block rules (`action_name = "block"`)
+
+**Issue:** The API has a display name / filename mismatch:
+- **Create/Update** accepts the template **display name** (e.g. `"Default Template"`, `"Generic Block"`)
 - **GET response** returns the template **file name** (e.g. `"block_page.html"`, `"23.html"`)
 
 Using a file name on create/update returns `"Undefined template: <filename>"`.
 
-**Example:**
-
-```json
-// Create request — use display name
-{
-  "rule_data": {
-    "match_criteria_action": {
-      "action_name": "block",
-      "emit_alert": true,
-      "template": "Default Template"
-    }
-  }
-}
-
-// GET response — API returns file name
-{
-  "rule_data": {
-    "match_criteria_action": {
-      "action_name": "block",
-      "template": "block_page.html"
-    }
-  }
-}
-```
-
 **Provider Handling (v0.4.9+):**
-- The provider's `suppressTemplateDrift` plan modifier suppresses the diff between the config display name and the state file name
-- The `BeforeRequest` hook strips file names (`.html` suffix) from update payloads so that real updates (e.g. toggling `enabled`) do not send a file name to the API
-- Block rules can be fully managed via Terraform — create, read, update, import all work
+- The `npaTemplateCache` records the display name → filename mapping on create and substitutes
+  it back on subsequent GETs, so state always holds the display name
+- The `suppressTemplateDrift` plan modifier prevents false diffs in cold-cache scenarios
+- The `BeforeRequest` hook strips `.html` file names from block rule update payloads as a fallback
+- Block rules can be fully managed via Terraform — use the display name in config
 
-**Additional Context:**
-- The `/api/v2/templates/usernotifications` endpoint returns `"Permission Error"` for API tokens, so template file names cannot be looked up programmatically
-- Use the template display name (visible in the Netskope UI under Notifications) in your Terraform config
-
-**Example config:**
-
+**Example:**
 ```hcl
-resource "netskope_npa_rules" "block_rule" {
-  rule_name = "my-block-rule"
-  enabled   = "1"
-  group_id  = netskope_npa_policy_groups.example.id
-
-  rule_data = {
-    policy_type = "private-app"
-    match_criteria_action = {
-      action_name = "block"
-      template    = "Default Template"   # use display name, not file name
-      emit_alert  = true
-    }
-    private_apps  = [netskope_npa_private_app.example.private_app_name]
-    access_method = ["Client"]
-  }
+match_criteria_action = {
+  action_name = "block"
+  template    = "Default Template"   # display name — visible in Netskope UI under Notifications
+  emit_alert  = true
 }
 ```
 
-**Status:** Fixed in v0.4.9 (BUG-019). `lifecycle { ignore_changes }` workaround is no longer needed.
+#### Periodic reauth rules (`action_name = "periodic_reauth"`)
+
+**Issue:** The API accepts display names natively on create/update (same as block rules) and
+translates them to `.html` filenames server-side. GET responses return the filename. Sending a
+`.html` filename directly on create/update fails with `"Undefined template: *.html"`.
+
+**Provider Handling (v0.4.11+):**
+
+The provider resolves filenames → display names via the `/api/v2/templates/usernotifications`
+endpoint, which returns all notification templates with their `file_name`, `name`, and `action_type`.
+This cache is populated lazily on the first rule operation and is keyed on `action_type:name` /
+`action_type:file_name` to avoid block/periodic_reauth collisions. A global filename fallback
+handles templates whose `action_type` in the templates API differs from the rule's `action_name`
+(e.g. a "block"-typed template used in a periodic_reauth rule).
+
+- **On write (create/update):** the display name is sent as-is. The API accepts display names
+  natively — no BeforeRequest translation occurs.
+- **On read (get):** if the API returns a `.html` filename, AfterSuccess looks it up in the
+  templates API cache (with global fallback) and substitutes the display name into state.
+  State then stores the display name, not the filename.
+- **Drift-free round-trip:** config/state shows display name → POST/PATCH sends display name →
+  API translates to `.html` server-side → GET returns `.html` → AfterSuccess substitutes
+  display name → state consistent with config.
+
+**Configuring with display name (recommended):**
+```hcl
+match_criteria_action = {
+  action_name = "periodic_reauth"
+  template    = "My Reauth Template"   # display name as shown in Netskope UI
+}
+```
+
+**Fallback (if templates API unavailable on your tenant):**
+
+If `/api/v2/templates/usernotifications` is inaccessible, AfterSuccess cannot substitute the
+display name. State will hold the `.html` filename. The `SuppressDiff` plan modifier on the
+`template` field prevents subsequent plans from showing drift between the config display name
+and the state filename. In this scenario, supply the filename directly:
+```hcl
+match_criteria_action = {
+  action_name = "periodic_reauth"
+  template    = "10.html"   # .html filename from the API
+}
+```
+
+To find the filename, create a rule in the Netskope console then call
+`GET /api/v2/policy/npa/rules/{id}` or `terraform import` it — the `template` field shows the
+filename (e.g. `"10.html"`).
+
+**Status:** Block rule drift fixed in v0.4.9 (BUG-019). Periodic_reauth template handling fixed in v0.4.11 (BUG-020).
 
 ---
 

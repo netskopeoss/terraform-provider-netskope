@@ -135,6 +135,15 @@ var (
 )
 
 func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.Request) (*http.Request, error) {
+	// Ensure the templates API cache is populated for any NPA rule operation, including
+	// getNPARules (used by import/read). This allows AfterSuccess to translate .html
+	// filenames → display names on the first read even when no create/update preceded it
+	// in the same session (e.g. terraform import on a fresh provider invocation).
+	switch hookCtx.OperationID {
+	case "createNPARules", "updateNPARules", "getNPARules", "NPARules", "listNPARules":
+		ensureNPATemplatesAPILoaded(extractAPIBase(req), req.Header.Get("Netskope-Api-Token"))
+	}
+
 	if hookCtx.OperationID == "createNPARules" || hookCtx.OperationID == "updateNPARules" {
 		if myPolicyRequestDebug {
 			log.Print("Executing BeforeRequest hook....")
@@ -186,21 +195,22 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.
 				requestMap.RuleData.BNegateSrcCountries = nil
 			}
 
-			// Strip .html file names from update payloads.
-			// suppressTemplateDrift (in nparules_resource_planmodify.go) sets the
-			// planned template to the state value (a .html file name) to suppress
-			// the display-name vs file-name diff. When a legitimate update fires for
-			// any reason, the PUT body would otherwise contain the .html file name
-			// which the API rejects with "Undefined template: *.html".
-			// Omitting template on update is safe — the API preserves the existing one.
-			// Create payloads are left unchanged (display names work on create).
-			// Note: with the npaTemplateCache fix, state stores display names after
-			// the initial create, so update payloads will normally contain display
-			// names (no .html). This strip is retained as a safety fallback for
-			// cold-cache scenarios (e.g. importing a rule created via the UI).
+			// Strip .html template filenames from block rule UPDATE payloads.
+			// State normally holds a display name (set by AfterSuccess), so .html only
+			// appears in cold-cache scenarios (e.g. after importing a UI-created rule).
+			// The API rejects filenames on update with "Undefined template: *.html".
+			// Omitting the field causes the API to preserve the existing template.
 			// See docs/bugs/BUG-019-block-rule-template-phantom-update.md
+			//
+			// Non-block rules (periodic_reauth, etc.): the display name is sent as-is on
+			// create and update. The API translates display names to .html filenames on
+			// the server side (same as block); GET returns the .html filename which
+			// AfterSuccess translates back to the display name via the templates API cache.
+			// See docs/bugs/BUG-020-periodic-reauth-template.md
 			if hookCtx.OperationID == "updateNPARules" &&
 				requestMap.RuleData.MatchCriteriaAction != nil &&
+				requestMap.RuleData.MatchCriteriaAction.ActionName != nil &&
+				*requestMap.RuleData.MatchCriteriaAction.ActionName == "block" &&
 				requestMap.RuleData.MatchCriteriaAction.Template != nil &&
 				strings.HasSuffix(*requestMap.RuleData.MatchCriteriaAction.Template, ".html") {
 				requestMap.RuleData.MatchCriteriaAction.Template = nil
@@ -277,12 +287,17 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.
 		req.Body = io.NopCloser(strings.NewReader(s))
 		req.ContentLength = int64(len(modifiedBody))
 
-		// For createNPARules: store the template display name in the request context
-		// so the AfterSuccess hook can populate npaTemplateCache with the
+		// For block createNPARules: store the template display name in the request
+		// context so the AfterSuccess hook can populate npaTemplateCache with the
 		// file-name → display-name mapping returned by the API.
+		// Only block rules are cached — for periodic_reauth rules the API stores the
+		// value as-is (no translation), so users must supply filenames directly and
+		// no cache substitution is needed or desired.
 		if hookCtx.OperationID == "createNPARules" &&
 			requestMap.RuleData != nil &&
 			requestMap.RuleData.MatchCriteriaAction != nil &&
+			requestMap.RuleData.MatchCriteriaAction.ActionName != nil &&
+			*requestMap.RuleData.MatchCriteriaAction.ActionName == "block" &&
 			requestMap.RuleData.MatchCriteriaAction.Template != nil &&
 			!strings.HasSuffix(*requestMap.RuleData.MatchCriteriaAction.Template, ".html") {
 			req = req.WithContext(withNPATemplateDisplayName(req.Context(), *requestMap.RuleData.MatchCriteriaAction.Template))

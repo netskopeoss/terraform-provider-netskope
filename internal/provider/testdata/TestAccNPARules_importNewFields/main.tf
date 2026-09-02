@@ -1,7 +1,15 @@
 # Used for both the create step and the import verify step.
-# Contains all the new fields added in v0.4.9: notify, periodic_reauth,
-# schedule, private_app_tag_ids, rule_data.description.
+# Contains new fields: periodic_reauth, schedule, private_app_tag_ids, rule_data.description.
+# Note: notify is API-computed from the action/template settings and is not in the Terraform schema.
 variable "name" {
+  type = string
+}
+
+variable "time_interval_id" {
+  type = string
+}
+
+variable "private_app_tag_id" {
   type = string
 }
 
@@ -43,12 +51,6 @@ resource "netskope_npa_rules" "test" {
 
     description = "import-test-description"
 
-    notify = {
-      emails   = ["test@example.com"]
-      interval = "60"
-      to_users = ["admin"]
-    }
-
     periodic_reauth = {
       reauth_interval      = "60"
       reauth_interval_unit = "hours"
@@ -57,10 +59,10 @@ resource "netskope_npa_rules" "test" {
     # time_range must be set explicitly (even as empty) — without it the attribute
     # shows (known after apply) due to missing Default in the schema.
     schedule = [{
-      time_interval_obj = ["3"]
+      time_interval_obj = [var.time_interval_id]
       time_range        = []
     }]
 
-    private_app_tag_ids = ["1542"]
+    private_app_tag_ids = [var.private_app_tag_id]
   }
 }

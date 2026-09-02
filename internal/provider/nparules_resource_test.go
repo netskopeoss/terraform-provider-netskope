@@ -117,14 +117,27 @@ func TestAccNPARules_import(t *testing.T) {
 }
 
 // TestAccNPARules_importNewFields verifies that a rule containing all the fields
-// exposed in v0.4.9 (notify, periodic_reauth, schedule, private_app_tag_ids,
+// exposed in v0.4.9 (periodic_reauth, schedule, private_app_tag_ids,
 // rule_data.description) can be imported and produces a clean plan.
 // Both the create and import steps share the same config (TestNameDirectory).
+// Requires NETSKOPE_TEST_TIME_INTERVAL_ID and NETSKOPE_TEST_PRIVATE_APP_TAG_ID
+// to be set to valid IDs on the tenant; skipped if either is absent.
 func TestAccNPARules_importNewFields(t *testing.T) {
+	timeIntervalID := os.Getenv("NETSKOPE_TEST_TIME_INTERVAL_ID")
+	if timeIntervalID == "" {
+		t.Skip("Skipping: NETSKOPE_TEST_TIME_INTERVAL_ID not set (must be a valid time interval ID on the tenant)")
+	}
+	privateAppTagID := os.Getenv("NETSKOPE_TEST_PRIVATE_APP_TAG_ID")
+	if privateAppTagID == "" {
+		t.Skip("Skipping: NETSKOPE_TEST_PRIVATE_APP_TAG_ID not set (must be a valid private app tag ID on the tenant)")
+	}
+
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
 	vars := config.Variables{
-		"name": config.StringVariable(rName),
+		"name":               config.StringVariable(rName),
+		"time_interval_id":   config.StringVariable(timeIntervalID),
+		"private_app_tag_id": config.StringVariable(privateAppTagID),
 	}
 
 	resource.Test(t, resource.TestCase{
@@ -138,10 +151,9 @@ func TestAccNPARules_importNewFields(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testutil.CheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.description", "import-test-description"),
-					resource.TestCheckResourceAttr(resourceName, "rule_data.notify.emails.0", "test@example.com"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval", "60"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.schedule.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "rule_data.private_app_tag_ids.0", "1542"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.private_app_tag_ids.0", privateAppTagID),
 				),
 			},
 			{
@@ -383,12 +395,19 @@ func TestAccNPARules_withClassification(t *testing.T) {
 }
 
 // TestAccNPARules_withNetLocation verifies that net_location_obj accepts
-// Network Location IDs (numeric strings) and round-trips correctly.
+// Network Location IDs and round-trips correctly.
+// Requires NETSKOPE_TEST_NET_LOCATION_ID to be set to a valid ID on the tenant.
 func TestAccNPARules_withNetLocation(t *testing.T) {
+	netLocationID := os.Getenv("NETSKOPE_TEST_NET_LOCATION_ID")
+	if netLocationID == "" {
+		t.Skip("Skipping: NETSKOPE_TEST_NET_LOCATION_ID not set (must be a valid network location ID on the tenant)")
+	}
+
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
 	vars := config.Variables{
-		"name": config.StringVariable(rName),
+		"name":            config.StringVariable(rName),
+		"net_location_id": config.StringVariable(netLocationID),
 	}
 
 	resource.Test(t, resource.TestCase{
@@ -403,7 +422,7 @@ func TestAccNPARules_withNetLocation(t *testing.T) {
 					testutil.CheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "rule_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.net_location_obj.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "rule_data.net_location_obj.0", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.net_location_obj.0", netLocationID),
 				),
 			},
 		},
@@ -413,12 +432,18 @@ func TestAccNPARules_withNetLocation(t *testing.T) {
 // TestAccNPARules_withSchedule verifies that rule_data.schedule can be created
 // with time_interval_obj, updated, and cleared without drift.
 // schedule was previously terraform-ignored; this is the first live regression test.
-// time_interval_obj ID 3 is a pre-provisioned test time interval on the acceptance test tenant.
+// Requires NETSKOPE_TEST_TIME_INTERVAL_ID to be set to a valid time interval ID on the tenant.
 func TestAccNPARules_withSchedule(t *testing.T) {
+	timeIntervalID := os.Getenv("NETSKOPE_TEST_TIME_INTERVAL_ID")
+	if timeIntervalID == "" {
+		t.Skip("Skipping: NETSKOPE_TEST_TIME_INTERVAL_ID not set (must be a valid time interval ID on the tenant)")
+	}
+
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
 	vars := config.Variables{
-		"name": config.StringVariable(rName),
+		"name":             config.StringVariable(rName),
+		"time_interval_id": config.StringVariable(timeIntervalID),
 	}
 
 	resource.Test(t, resource.TestCase{
@@ -434,7 +459,7 @@ func TestAccNPARules_withSchedule(t *testing.T) {
 					testutil.CheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.schedule.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.schedule.0.time_interval_obj.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "rule_data.schedule.0.time_interval_obj.0", "3"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.schedule.0.time_interval_obj.0", timeIntervalID),
 				),
 			},
 			// Omit schedule from config — plan modifier preserves state, no diff expected.
@@ -453,16 +478,27 @@ func TestAccNPARules_withSchedule(t *testing.T) {
 	})
 }
 
-// TestAccNPARules_withPeriodicReauth verifies that action_name = "periodic_reauth" is
-// accepted by the schema and that the interval can be updated.
-// Regression test for https://github.com/netskopeoss/terraform-provider-netskope/issues/116:
-// the ActionName enum was missing "periodic_reauth", causing plan-time validation errors
-// and import crashes with "invalid value for ActionName: periodic_reauth".
+// TestAccNPARules_withPeriodicReauth verifies that:
+//  1. action_name = "periodic_reauth" is accepted by the schema.
+//  2. Setting template by display name works — the provider translates it to the
+//     filename via /api/v2/templates/usernotifications before sending to the API,
+//     and translates the filename back to the display name on read so state is consistent.
+//  3. The interval field can be updated without template drift.
+//
+// Regression test for https://github.com/netskopeoss/terraform-provider-netskope/issues/116
+// (enum missing) and https://github.com/netskopeoss/terraform-provider-netskope/issues/118
+// (display name not applied; template stripped on update).
 func TestAccNPARules_withPeriodicReauth(t *testing.T) {
+	templateName := os.Getenv("NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE")
+	if templateName == "" {
+		t.Skip("Skipping: NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE not set (must be a valid periodic_reauth template display name on the tenant)")
+	}
+
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
 	vars := config.Variables{
-		"name": config.StringVariable(rName),
+		"name":     config.StringVariable(rName),
+		"template": config.StringVariable(templateName),
 	}
 
 	resource.Test(t, resource.TestCase{
@@ -471,24 +507,27 @@ func TestAccNPARules_withPeriodicReauth(t *testing.T) {
 		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
 		Steps: []resource.TestStep{
 			// Create with action_name = "periodic_reauth" and 60h interval.
-			// Verifies the schema accepts the new enum value and the API creates the rule.
+			// The provider translates the display name to a .html filename via the
+			// templates API and back to display name on read — state shows display name.
 			{
 				ConfigDirectory: config.TestStepDirectory(),
 				ConfigVariables: vars,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testutil.CheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.action_name", "periodic_reauth"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.template", templateName),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval", "60"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval_unit", "hours"),
 				),
 			},
-			// Update to 24h — verifies the interval can be changed without drift.
+			// Update to 24h — verifies the template is preserved on update (not stripped).
 			{
 				ConfigDirectory: config.TestStepDirectory(),
 				ConfigVariables: vars,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testutil.CheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.action_name", "periodic_reauth"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.template", templateName),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval", "24"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.periodic_reauth.reauth_interval_unit", "hours"),
 				),
@@ -497,16 +536,26 @@ func TestAccNPARules_withPeriodicReauth(t *testing.T) {
 	})
 }
 
-// TestAccNPARules_periodicReauthImport verifies that importing a rule with
-// action_name = "periodic_reauth" no longer crashes.
-// Before the fix (issue #116), the SDK's ActionName.UnmarshalJSON returned
-// "invalid value for ActionName: periodic_reauth" on any state refresh of
-// a rule created via the UI with Periodic Authentication action.
+// TestAccNPARules_periodicReauthImport verifies that:
+//  1. Importing a rule with action_name = "periodic_reauth" works without crashing.
+//  2. After import, state shows the template display name (not the .html filename) —
+//     the provider uses /api/v2/templates/usernotifications to translate the filename
+//     back to the display name, so there is no config/state drift after import.
+//
+// Regression test for https://github.com/netskopeoss/terraform-provider-netskope/issues/116
+// (import crash) and https://github.com/netskopeoss/terraform-provider-netskope/issues/118
+// (template not applied; import shows filename instead of display name).
 func TestAccNPARules_periodicReauthImport(t *testing.T) {
+	templateName := os.Getenv("NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE")
+	if templateName == "" {
+		t.Skip("Skipping: NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE not set (must be a valid periodic_reauth template display name on the tenant)")
+	}
+
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	resourceName := "netskope_npa_rules.test"
 	vars := config.Variables{
-		"name": config.StringVariable(rName),
+		"name":     config.StringVariable(rName),
+		"template": config.StringVariable(templateName),
 	}
 
 	resource.Test(t, resource.TestCase{
@@ -520,6 +569,7 @@ func TestAccNPARules_periodicReauthImport(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testutil.CheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.action_name", "periodic_reauth"),
+					resource.TestCheckResourceAttr(resourceName, "rule_data.match_criteria_action.template", templateName),
 				),
 			},
 			{
@@ -528,17 +578,17 @@ func TestAccNPARules_periodicReauthImport(t *testing.T) {
 				ConfigVariables:   vars,
 				ImportState:       true,
 				ImportStateVerify: true,
-				// template: API returns a .html file name on GET ("2.html") but the config
-				// holds the display name ("tf-test-template"). The mismatch is suppressed
-				// at plan time by suppressTemplateDrift; ignore it here for the same reason.
-				ImportStateVerifyIgnore: []string{"rule_order", "group_id", "description", "rule_data.private_app_tags", "rule_data.match_criteria_action.template"},
+				// template now round-trips correctly: the provider translates the .html
+				// filename returned by GET back to the display name via the templates API,
+				// so state matches config without any suppressTemplateDrift override.
+				ImportStateVerifyIgnore: []string{"rule_order", "group_id", "description", "rule_data.private_app_tags"},
 			},
 		},
 	})
 }
 
 // TestAccNPARules_allNewRuleDataFields tests all fields added in the OAS expansion:
-// notify, rule_data.description, users, user_groups, src_countries, private_app_tag_ids.
+// rule_data.description, users, user_groups, src_countries, private_app_tag_ids.
 // Mirrors a reference policy configuration on the acceptance test tenant.
 // The update step removes users/user_groups and adds a second src_country.
 func TestAccNPARules_allNewRuleDataFields(t *testing.T) {
@@ -566,10 +616,6 @@ func TestAccNPARules_allNewRuleDataFields(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testutil.CheckResourceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.description", "rule-data-description-v1"),
-					resource.TestCheckResourceAttr(resourceName, "rule_data.notify.emails.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "rule_data.notify.emails.0", "test@example.com"),
-					resource.TestCheckResourceAttr(resourceName, "rule_data.notify.interval", "60"),
-					resource.TestCheckResourceAttr(resourceName, "rule_data.notify.to_users.0", "admin"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.users.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.user_groups.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "rule_data.src_countries.#", "1"),

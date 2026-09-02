@@ -99,21 +99,6 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			for _, v := range resp.RuleData.NetLocationObj {
 				r.RuleData.NetLocationObj = append(r.RuleData.NetLocationObj, types.StringValue(v))
 			}
-			if resp.RuleData.Notify == nil {
-				r.RuleData.Notify = nil
-			} else {
-				r.RuleData.Notify = &tfTypes.Notify{}
-				r.RuleData.Notify.Emails = make([]types.String, 0, len(resp.RuleData.Notify.Emails))
-				for _, v := range resp.RuleData.Notify.Emails {
-					r.RuleData.Notify.Emails = append(r.RuleData.Notify.Emails, types.StringValue(v))
-				}
-				r.RuleData.Notify.FromUser = types.StringPointerValue(resp.RuleData.Notify.FromUser)
-				r.RuleData.Notify.Interval = types.StringPointerValue(resp.RuleData.Notify.Interval)
-				r.RuleData.Notify.ToUsers = make([]types.String, 0, len(resp.RuleData.Notify.ToUsers))
-				for _, v := range resp.RuleData.Notify.ToUsers {
-					r.RuleData.Notify.ToUsers = append(r.RuleData.Notify.ToUsers, types.StringValue(v))
-				}
-			}
 			r.RuleData.OrganizationUnits = make([]types.String, 0, len(resp.RuleData.OrganizationUnits))
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
@@ -194,7 +179,6 @@ func (r *NPARulesResourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx conte
 			} else {
 				r.RuleData.UserType = types.StringNull()
 			}
-			r.RuleData.Version = types.Int64PointerValue(resp.RuleData.Version)
 		}
 		r.RuleName = types.StringPointerValue(resp.RuleName)
 	}
@@ -401,12 +385,6 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		for usersIndex := range r.RuleData.Users {
 			users = append(users, r.RuleData.Users[usersIndex].ValueString())
 		}
-		version := new(int64)
-		if !r.RuleData.Version.IsUnknown() && !r.RuleData.Version.IsNull() {
-			*version = r.RuleData.Version.ValueInt64()
-		} else {
-			version = nil
-		}
 		schedule := make([]shared.NpaSchedule, 0, len(r.RuleData.Schedule))
 		for scheduleIndex := range r.RuleData.Schedule {
 			timeRange := make([]shared.TimeRange, 0, len(r.RuleData.Schedule[scheduleIndex].TimeRange))
@@ -476,35 +454,6 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 		} else {
 			description1 = nil
 		}
-		var notify *shared.Notify
-		if r.RuleData.Notify != nil {
-			emails := make([]string, 0, len(r.RuleData.Notify.Emails))
-			for emailsIndex := range r.RuleData.Notify.Emails {
-				emails = append(emails, r.RuleData.Notify.Emails[emailsIndex].ValueString())
-			}
-			fromUser := new(string)
-			if !r.RuleData.Notify.FromUser.IsUnknown() && !r.RuleData.Notify.FromUser.IsNull() {
-				*fromUser = r.RuleData.Notify.FromUser.ValueString()
-			} else {
-				fromUser = nil
-			}
-			interval := new(string)
-			if !r.RuleData.Notify.Interval.IsUnknown() && !r.RuleData.Notify.Interval.IsNull() {
-				*interval = r.RuleData.Notify.Interval.ValueString()
-			} else {
-				interval = nil
-			}
-			toUsers := make([]string, 0, len(r.RuleData.Notify.ToUsers))
-			for toUsersIndex := range r.RuleData.Notify.ToUsers {
-				toUsers = append(toUsers, r.RuleData.Notify.ToUsers[toUsersIndex].ValueString())
-			}
-			notify = &shared.Notify{
-				Emails:   emails,
-				FromUser: fromUser,
-				Interval: interval,
-				ToUsers:  toUsers,
-			}
-		}
 		ruleData = &shared.NpaPolicyRuleData{
 			AccessMethod:           accessMethod,
 			BNegateNetLocation:     bNegateNetLocation,
@@ -525,11 +474,9 @@ func (r *NPARulesResourceModel) ToSharedNpaPolicyRequest(ctx context.Context) (*
 			UserGroups:             userGroups,
 			UserType:               userType,
 			Users:                  users,
-			Version:                version,
 			Schedule:               schedule,
 			UserConfidence:         userConfidence,
 			Description:            description1,
-			Notify:                 notify,
 		}
 	}
 	var ruleOrder *shared.RuleOrder

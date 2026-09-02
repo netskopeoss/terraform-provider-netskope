@@ -25,16 +25,6 @@ resource "netskope_npa_rules" "my_nparules" {
       "27",
       "42",
     ]
-    notify = {
-      emails = [
-        "..."
-      ]
-      from_user = "...my_from_user..."
-      interval  = "30"
-      to_users = [
-        "..."
-      ]
-    }
     organization_units = [
       "engineering/qa",
     ]
@@ -89,7 +79,6 @@ resource "netskope_npa_rules" "my_nparules" {
     users = [
       "vphan@netskope.com",
     ]
-    version = 1
   }
   rule_name = "vantest"
   rule_order = {
