@@ -80,6 +80,37 @@ func TestAccServiceObject_update(t *testing.T) {
 	})
 }
 
+// TestAccServiceObject_tcpOnly verifies that omitted protocol lists (udp, tcp_udp) are
+// not sent to the API as empty arrays. Before the fix, the SDK produced []string{} for
+// unset protocols; Speakeasy's marshaler serialized that as [] which the API interpreted
+// as "Any port". The BeforeRequest hook now strips empty arrays before they reach the API.
+func TestAccServiceObject_tcpOnly(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	resourceName := "netskope_service_object.test"
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_service_object"),
+		Steps: []resource.TestStep{
+			{
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists(resourceName, "id"),
+					resource.TestCheckResourceAttr(resourceName, "protocols.tcp.#", "1"),
+					// Omitted protocols must not be recorded as "Any" — they should be absent (len 0).
+					resource.TestCheckResourceAttr(resourceName, "protocols.udp.#", "0"),
+					resource.TestCheckResourceAttr(resourceName, "protocols.tcp_udp.#", "0"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccServiceObjectDataSource_basic(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
 	dataSourceName := "data.netskope_service_object.test"

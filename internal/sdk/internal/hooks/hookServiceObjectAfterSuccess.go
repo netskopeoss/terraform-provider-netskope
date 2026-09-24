@@ -28,16 +28,95 @@ var _ beforeRequestHook = (*serviceObjectHook)(nil)
 var _ afterSuccessHook = (*serviceObjectHook)(nil)
 
 func (h *serviceObjectHook) BeforeRequest(hookCtx BeforeRequestContext, req *http.Request) (*http.Request, error) {
-	if hookCtx.OperationID != "listServiceObjects" {
+	switch hookCtx.OperationID {
+	case "listServiceObjects":
+		q := req.URL.Query()
+		if limit := q.Get("limit"); limit == "" || limit == "500" {
+			q.Set("limit", "150")
+			req.URL.RawQuery = q.Encode()
+		}
+	case "createServiceObject", "updateServiceObject":
+		return h.stripEmptyProtocols(req)
+	}
+	return req, nil
+}
+
+// stripEmptyProtocols removes protocol array keys (tcp, udp, tcp_udp) whose value
+// is an empty JSON array from the service object request body.
+//
+// Root cause: the generated SDK conversion code builds omitted protocol lists as
+// non-nil empty slices ([]string{}). Speakeasy's JSON marshaler treats omitempty
+// as "omit nil only", so []string{} is serialized as []. The API interprets an
+// empty array as "Any port" — semantically different from the key being absent.
+func (h *serviceObjectHook) stripEmptyProtocols(req *http.Request) (*http.Request, error) {
+	if req.Body == nil {
 		return req, nil
 	}
 
-	q := req.URL.Query()
-	if limit := q.Get("limit"); limit == "" || limit == "500" {
-		q.Set("limit", "150")
-		req.URL.RawQuery = q.Encode()
+	body, err := io.ReadAll(req.Body)
+	req.Body.Close()
+	if err != nil {
+		return nil, fmt.Errorf("serviceObject hook: failed to read request body: %w", err)
 	}
 
+	var obj map[string]json.RawMessage
+	if err := json.Unmarshal(body, &obj); err != nil {
+		// Not JSON or malformed — pass through unchanged.
+		req.Body = io.NopCloser(strings.NewReader(string(body)))
+		req.ContentLength = int64(len(body))
+		return req, nil
+	}
+
+	protocolsRaw, ok := obj["protocols"]
+	if !ok {
+		req.Body = io.NopCloser(strings.NewReader(string(body)))
+		req.ContentLength = int64(len(body))
+		return req, nil
+	}
+
+	var protocols map[string]json.RawMessage
+	if err := json.Unmarshal(protocolsRaw, &protocols); err != nil {
+		req.Body = io.NopCloser(strings.NewReader(string(body)))
+		req.ContentLength = int64(len(body))
+		return req, nil
+	}
+
+	changed := false
+	for _, key := range []string{"tcp", "udp", "tcp_udp"} {
+		val, exists := protocols[key]
+		if !exists {
+			continue
+		}
+		var arr []json.RawMessage
+		if err := json.Unmarshal(val, &arr); err == nil && len(arr) == 0 {
+			delete(protocols, key)
+			changed = true
+		}
+	}
+
+	if !changed {
+		req.Body = io.NopCloser(strings.NewReader(string(body)))
+		req.ContentLength = int64(len(body))
+		return req, nil
+	}
+
+	normalizedProtocols, err := json.Marshal(protocols)
+	if err != nil {
+		req.Body = io.NopCloser(strings.NewReader(string(body)))
+		req.ContentLength = int64(len(body))
+		return req, nil
+	}
+	obj["protocols"] = normalizedProtocols
+
+	normalized, err := json.Marshal(obj)
+	if err != nil {
+		req.Body = io.NopCloser(strings.NewReader(string(body)))
+		req.ContentLength = int64(len(body))
+		return req, nil
+	}
+
+	req.Body = io.NopCloser(strings.NewReader(string(normalized)))
+	req.ContentLength = int64(len(normalized))
 	return req, nil
 }
 
