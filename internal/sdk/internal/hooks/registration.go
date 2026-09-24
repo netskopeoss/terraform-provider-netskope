@@ -106,6 +106,13 @@ func initHooks(h *Hooks) {
 	cciData := &cciDataAfterSuccess{}
 	h.registerAfterSuccessHook(cciData)
 
+	// Device tags - rewrite GET reads to POST /device/tags/gettags and unwrap API envelopes
+	// See hookDeviceTagBeforeRequest.go
+	deviceTagReq := &deviceTagRequestHook{}
+	h.registerBeforeRequestHook(deviceTagReq)
+	deviceTagResp := &deviceTagAfterSuccessHook{}
+	h.registerAfterSuccessHook(deviceTagResp)
+
 	// OAuth2 client credentials - fetches bearer token from /platform/oauth2/token
 	// when NETSKOPE_OAUTH2_CLIENT_ID and NETSKOPE_OAUTH2_CLIENT_SECRET are set.
 	// Registered last so it runs after all other before-request hooks and can

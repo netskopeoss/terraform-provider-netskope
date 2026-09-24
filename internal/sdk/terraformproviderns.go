@@ -82,6 +82,8 @@ type TerraformProviderNs struct {
 	DeviceClassificationRule            *DeviceClassificationRule
 	DeviceClassificationOnPremDetection *DeviceClassificationOnPremDetection
 	DeviceClassificationSteeringMapping *DeviceClassificationSteeringMapping
+	DeviceTags                          *DeviceTags
+	DeviceTag                           *DeviceTag
 	Cci                                 *Cci
 	Urllist                             *Urllist
 	AIGAppliances                       *AIGAppliances
@@ -243,6 +245,8 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk.DeviceClassificationRule = newDeviceClassificationRule(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.DeviceClassificationOnPremDetection = newDeviceClassificationOnPremDetection(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.DeviceClassificationSteeringMapping = newDeviceClassificationSteeringMapping(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.DeviceTags = newDeviceTags(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.DeviceTag = newDeviceTag(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Cci = newCci(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Urllist = newUrllist(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.AIGAppliances = newAIGAppliances(sdk, sdk.sdkConfiguration, sdk.hooks)
