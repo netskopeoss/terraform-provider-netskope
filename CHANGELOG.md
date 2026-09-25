@@ -4,7 +4,7 @@ All notable changes to the Netskope Terraform Provider will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.4.11] - 2026-09-25
 
 ### Added
 - **`netskope_device_tag`** resource and data sources (`netskope_device_tag`, `netskope_device_tag_list`) — Manage device tags via `/api/v2/devices/device/tags`. Fields: `name` (required, max 80 chars, alphanumeric/hyphens/spaces), `description` (optional). `tag_id` is computed. Reads use `POST /device/tags/gettags` (the API has no conventional GET). Feature is in beta — acceptance tests require `NETSKOPE_TEST_DEVICE_TAGS=1`.
