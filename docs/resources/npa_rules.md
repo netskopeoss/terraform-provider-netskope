@@ -14,7 +14,7 @@ Manages an NPA access rule. Rules are evaluated against user connections to dete
 Each rule has two logical parts inside `rule_data`:
 
 - **Match criteria** — who the rule applies to: `users`, `user_groups`, `private_apps`, `device_classification_id`, `src_countries`, etc.
-- **`match_criteria_action`** — what happens when the criteria match: `allow`, `block`, or `monitor`.
+- **Match criteria action** — what happens when the criteria match: `allow`, `block`, or `periodic_reauth`. Configured via the `match_criteria_action` block.
 
 ## Policy Groups
 
@@ -81,10 +81,6 @@ Once a schedule is set, it cannot be cleared by removing `schedule` from config 
 ## Periodic Re-authentication
 
 `periodic_reauth` forces users to re-authenticate after a set interval. It is only meaningful on `allow` rules. Set `reauth_interval` as a quoted number (e.g. `"60"`) and `reauth_interval_unit` as `"hours"` or `"days"`.
-
-## Notifications
-
-`notify` sends an alert when the rule matches. Typically used on `block` or `monitor` rules. `interval` is the notification frequency in minutes, supplied as a quoted number (e.g. `"60"`). `to_users` accepts role types such as `"admin"`.
 
 ## Known Limitations
 
@@ -323,8 +319,343 @@ Optional:
 
 ## Import
 
-Import is supported using the following syntax:
+NPA rules are imported by their numeric rule ID.
 
-```shell
-terraform import netskope_npa_rules.my_netskope_npa_rules "1"
+| Approach | Terraform version | Config generation |
+|----------|------------------|-------------------|
+| **`import` block + `-generate-config-out`** | ≥ 1.5 | Automatic — Terraform writes the HCL |
+| **`terraform import` CLI** | Any | Manual — copy values from `terraform state show` |
+
+Use the `import` block approach whenever possible. It generates complete HCL from the API response so you do not need to copy field values by hand.
+
+### Finding rule IDs
+
+Every NPA rule has a numeric ID assigned by the API:
+
+```bash
+curl "https://<tenant>.goskope.com/api/v2/policy/npa/rules" \
+  -H "Netskope-Api-Token: <token>" | jq '.data[] | {id: .rule_id, name: .rule_name}'
 ```
+
+Or look up IDs in Terraform using the data source:
+
+```hcl
+data "netskope_npa_rules_list" "all" {}
+
+output "rule_ids" {
+  value = { for r in data.netskope_npa_rules_list.all.rules : r.rule_name => r.id }
+}
+```
+
+### Approach 1: `import` block with automatic config generation (Terraform ≥ 1.5)
+
+**Step 1** — Add one `import` block per rule. Do not write `resource` blocks yet — they are generated in the next step.
+
+```hcl
+import {
+  to = netskope_npa_rules.web_allow
+  id = "<id>"
+}
+
+import {
+  to = netskope_npa_rules.db_block
+  id = "<id>"
+}
+```
+
+**Step 2** — Generate resource config automatically:
+
+```bash
+terraform plan -generate-config-out=generated.tf
+```
+
+Terraform reads each rule from the API and writes a complete `resource` block into `generated.tf` with every field filled in:
+
+```hcl
+# __generated__ by Terraform from "<id>"
+resource "netskope_npa_rules" "web_allow" {
+  description = null
+  enabled     = "1"
+  group_id    = null
+  rule_data = {
+    access_method            = ["Client"]
+    b_negate_net_location    = false
+    b_negate_src_countries   = false
+    classification           = []
+    description              = null
+    device_classification_id = ["22688"]
+    json_version             = 3
+    match_criteria_action = {
+      action_name = "allow"
+      emit_alert  = null
+      template    = null
+    }
+    net_location_obj    = []
+    organization_units  = []
+    os                  = ["Mac"]
+    periodic_reauth     = null
+    policy_type         = "private-app"
+    private_app_tag_ids = []
+    private_app_tags    = []
+    private_apps        = ["my-internal-app"]
+    schedule = [
+      {
+        time_interval_obj = ["14"]
+        time_range        = []
+      },
+    ]
+    src_countries   = []
+    user_confidence = null
+    user_groups     = ["engineering-team"]
+    user_type       = "user"
+    users           = ["alice@example.com"]
+  }
+  rule_name  = "web-allow-client"
+  rule_order = null
+}
+```
+
+**Step 3** — Review `generated.tf`. It is valid as-is. Optionally clean up `null` values for fields you don't need to manage — they are preserved from state automatically when absent from config:
+
+| Field | Safe to remove |
+|-------|---------------|
+| `description = null` | Preserved from state when absent |
+| `group_id = null` | API doesn't return it on GET; no drift |
+| `rule_order = null` | Only meaningful on create |
+| `emit_alert = null` | Only needed when emitting alerts |
+| `template = null` | Only needed for block / periodic_reauth actions |
+| `periodic_reauth = null` | Only needed when action is periodic_reauth |
+| `user_confidence = null` | Only needed when using UCI feature |
+| `b_negate_net_location = false` | Default value |
+| `b_negate_src_countries = false` | Default value |
+| `json_version = 3` | Computed by API |
+| `policy_type = "private-app"` | Default value |
+| `user_type = "user"` | Default value |
+| Empty lists (`= []`) | Default value |
+
+**Keep all non-empty list values.** Lists like `private_apps`, `access_method`, `device_classification_id`, `user_groups`, `users`, and `schedule` must remain in config if non-empty — removing them causes Terraform to plan clearing them.
+
+**Step 4** — Move `generated.tf` content into your main config, then apply:
+
+```bash
+terraform apply
+terraform plan   # expected: No changes
+```
+
+### Approach 2: `terraform import` CLI (any Terraform version)
+
+**Step 1** — Write placeholder resource blocks. Use `rule_data = {}` — a completely empty block (no `rule_data`) causes all fields to show as `(known after apply)`:
+
+```hcl
+resource "netskope_npa_rules" "web_allow" {
+  rule_data = {}
+}
+```
+
+**Step 2** — Import by numeric ID:
+
+```bash
+terraform import netskope_npa_rules.web_allow <id>
+```
+
+**Step 3** — Inspect state to get all field values:
+
+```bash
+terraform state show netskope_npa_rules.web_allow
+```
+
+Output example:
+
+```
+resource "netskope_npa_rules" "web_allow" {
+    enabled   = "1"
+    id        = "<id>"
+    rule_data = {
+        access_method            = ["Client"]
+        device_classification_id = ["22688"]
+        match_criteria_action    = {
+            action_name = "allow"
+        }
+        os                       = ["Mac"]
+        private_apps             = ["my-internal-app"]
+        schedule                 = [{
+            time_interval_obj = ["14"]
+            time_range        = []
+        }]
+        user_groups              = ["engineering-team"]
+        users                    = ["alice@example.com"]
+    }
+    rule_name = "web-allow-client"
+}
+```
+
+Every value shown — group names, device classification IDs, time interval IDs — was read from the API during import. Copy them verbatim into your config.
+
+**Step 4** — Replace the placeholder block with a full config from the state output, include all non-empty lists, then verify:
+
+```bash
+terraform plan   # expected: No changes
+```
+
+### Import troubleshooting
+
+| Plan shows | Cause | Fix |
+|-----------|-------|-----|
+| Removing items from a list | Non-empty list in state but absent from config | Add the list and its values to config |
+| `template` drift | Display name / `.html` filename mismatch | Use the display name exactly as shown in state |
+| `(known after apply)` on all fields | `rule_data` omitted from config block | Add `rule_data = {}` as minimum placeholder |
+| `schedule` drift | `time_range` omitted | Include `time_range = []` when using `time_interval_obj` |
+
+### Import examples
+
+#### Simple allow rule
+
+```hcl
+resource "netskope_npa_rules" "web_allow" {
+  rule_name = "web-allow-client"
+  enabled   = "1"
+
+  rule_data = {
+    match_criteria_action = {
+      action_name = "allow"
+    }
+    private_apps  = ["my-web-app"]
+    access_method = ["Client"]
+  }
+}
+```
+
+#### Block rule with notification template
+
+The `template` value is the display name as shown in the Netskope UI — the provider translates `.html` filenames to display names automatically on import and refresh.
+
+```hcl
+resource "netskope_npa_rules" "db_block" {
+  rule_name = "db-block-unmanaged"
+  enabled   = "1"
+
+  rule_data = {
+    match_criteria_action = {
+      action_name = "block"
+      template    = "Default Block Page"
+    }
+    private_apps             = ["my-db-app"]
+    access_method            = ["Client"]
+    os                       = ["Windows"]
+    device_classification_id = ["22691"]
+    user_groups              = ["all-employees"]
+    users                    = ["contractor@example.com"]
+    schedule = [{
+      time_interval_obj = ["14"]
+      time_range        = []
+    }]
+  }
+}
+```
+
+#### Periodic re-authentication rule
+
+```hcl
+resource "netskope_npa_rules" "app_reauth_daily" {
+  rule_name = "app-reauth-daily"
+  enabled   = "1"
+
+  rule_data = {
+    match_criteria_action = {
+      action_name = "periodic_reauth"
+      template    = "Re-authentication Required"
+    }
+    private_apps             = ["my-internal-app"]
+    access_method            = ["Client"]
+    os                       = ["Mac"]
+    device_classification_id = ["22688"]
+    user_groups              = ["engineering-team"]
+    users                    = ["alice@example.com"]
+    periodic_reauth = {
+      reauth_interval      = "1"
+      reauth_interval_unit = "days"
+    }
+    schedule = [{
+      time_interval_obj = ["14"]
+      time_range        = []
+    }]
+  }
+}
+```
+
+#### Rule with OU and network location filter
+
+A Clientless rule scoped to an Active Directory OU, a specific network location, and source country.
+
+```hcl
+resource "netskope_npa_rules" "ou_web_allow" {
+  rule_name = "ou-web-allow-clientless"
+  enabled   = "1"
+
+  rule_data = {
+    match_criteria_action = {
+      action_name = "allow"
+    }
+    private_apps       = ["my-web-app"]
+    access_method      = ["Clientless"]
+    organization_units = ["Corp/Engineering"]
+    net_location_obj   = ["4749e572-604d-45dc-bac5-2d3fc3cce732"]
+    src_countries      = ["US"]
+    schedule = [{
+      time_interval_obj = ["14"]
+      time_range        = []
+    }]
+  }
+}
+```
+
+The `net_location_obj` UUID comes from your tenant's Network Locations configuration. After import it appears in state — copy it verbatim. To look it up:
+
+```bash
+curl "https://<tenant>.goskope.com/api/v2/policy/network-locations" \
+  -H "Netskope-Api-Token: <token>" | jq '.data[] | {id: .id, name: .name}'
+```
+
+#### Source country filter
+
+```hcl
+resource "netskope_npa_rules" "geo_allow" {
+  rule_name = "geo-allow-emea"
+  enabled   = "1"
+
+  rule_data = {
+    match_criteria_action = {
+      action_name = "allow"
+    }
+    private_apps  = ["my-web-app"]
+    access_method = ["Client"]
+    src_countries = ["GB", "DE", "FR", "NL"]
+  }
+}
+```
+
+#### Importing multiple rules at once
+
+```hcl
+# imports.tf
+import { to = netskope_npa_rules.web_allow    id = "<id>" }
+import { to = netskope_npa_rules.db_block     id = "<id>" }
+import { to = netskope_npa_rules.app_reauth   id = "<id>" }
+import { to = netskope_npa_rules.ou_web_allow id = "<id>" }
+```
+
+```bash
+terraform plan -generate-config-out=generated.tf
+terraform apply
+terraform plan   # expected: No changes
+```
+
+### Notes on specific fields
+
+**`notify` is not imported** — email notification configuration is computed by the API from the rule's action and template settings. It is excluded from the Terraform schema and always shows as `null` in state. Configure it via the notification template, not Terraform.
+
+**`group_id` is not returned by the API on read** — the API does not include the policy group ID in GET responses. After import, `group_id` is `null` in state. This does not cause drift. Set it in config if you want Terraform to enforce group membership.
+
+**`userGroupObjects` is computed and ignored** — the API enriches `user_groups` with full group detail in a `userGroupObjects` field. This is excluded from the Terraform schema and does not appear in state.
+
+**Template names** — on import and every refresh, the provider translates `.html` template filenames returned by the API to display names. State always stores the display name. Use the value shown by `terraform state show` or in `generated.tf` verbatim — never the `.html` filename.
