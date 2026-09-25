@@ -195,25 +195,46 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.
 				requestMap.RuleData.BNegateSrcCountries = nil
 			}
 
-			// Strip .html template filenames from block rule UPDATE payloads.
-			// State normally holds a display name (set by AfterSuccess), so .html only
-			// appears in cold-cache scenarios (e.g. after importing a UI-created rule).
-			// The API rejects filenames on update with "Undefined template: *.html".
-			// Omitting the field causes the API to preserve the existing template.
+			// Template translation for create and update payloads.
+			//
+			// block rules (update only): strip .html filenames — state normally holds a
+			// display name (set by AfterSuccess), so .html only appears in cold-cache
+			// scenarios (e.g. after importing a UI-created rule). The API rejects filenames
+			// on update with "Undefined template: *.html". Omitting the field causes the
+			// API to preserve the existing template.
 			// See docs/bugs/BUG-019-block-rule-template-phantom-update.md
 			//
-			// Non-block rules (periodic_reauth, etc.): the display name is sent as-is on
-			// create and update. The API translates display names to .html filenames on
-			// the server side (same as block); GET returns the .html filename which
-			// AfterSuccess translates back to the display name via the templates API cache.
+			// periodic_reauth rules (create and update): translate display name → .html
+			// filename before sending. Unlike block rules, the periodic_reauth API endpoint
+			// stores the value verbatim — it does not translate display names server-side.
+			// Sending a display name results in the template being stored as the raw string,
+			// which Netskope does not recognise as a valid template, so it is silently ignored.
 			// See docs/bugs/BUG-020-periodic-reauth-template.md
-			if hookCtx.OperationID == "updateNPARules" &&
-				requestMap.RuleData.MatchCriteriaAction != nil &&
+			// See https://github.com/netskopeoss/terraform-provider-netskope/issues/118
+			if requestMap.RuleData.MatchCriteriaAction != nil &&
 				requestMap.RuleData.MatchCriteriaAction.ActionName != nil &&
-				*requestMap.RuleData.MatchCriteriaAction.ActionName == "block" &&
-				requestMap.RuleData.MatchCriteriaAction.Template != nil &&
-				strings.HasSuffix(*requestMap.RuleData.MatchCriteriaAction.Template, ".html") {
-				requestMap.RuleData.MatchCriteriaAction.Template = nil
+				requestMap.RuleData.MatchCriteriaAction.Template != nil {
+
+				action := *requestMap.RuleData.MatchCriteriaAction.ActionName
+				tmpl := *requestMap.RuleData.MatchCriteriaAction.Template
+
+				switch action {
+				case "block":
+					// Strip .html on update so the API preserves the existing template.
+					if hookCtx.OperationID == "updateNPARules" && strings.HasSuffix(tmpl, ".html") {
+						requestMap.RuleData.MatchCriteriaAction.Template = nil
+					}
+				case "periodic_reauth":
+					// Translate display name → .html filename for both create and update.
+					// If the value is already a filename, leave it unchanged.
+					if !strings.HasSuffix(tmpl, ".html") {
+						if fileName, ok := npaTemplatesAPIFileName(action, tmpl); ok {
+							requestMap.RuleData.MatchCriteriaAction.Template = &fileName
+						} else {
+							log.Printf("WARN: periodic_reauth template %q not found in templates API cache — sending as-is", tmpl)
+						}
+					}
+				}
 			}
 		}
 

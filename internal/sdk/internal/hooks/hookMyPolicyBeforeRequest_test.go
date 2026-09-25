@@ -596,14 +596,15 @@ func TestBeforeRequest_DisplayNamePreservedOnCreate(t *testing.T) {
 	}
 }
 
-// TestBeforeRequest_PeriodicReauthDisplayNamePreservedOnCreate verifies that a
-// display name in a periodic_reauth template field is NOT translated to a filename
-// in BeforeRequest. The periodic_reauth API (like block) accepts display names
-// natively and translates them server-side — sending a filename causes the API to
-// reject with "Undefined template". The display name must reach the API as-is.
-// AfterSuccess translates the returned .html filename back to the display name.
+// TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnCreate verifies
+// that a display name in a periodic_reauth template field IS translated to the
+// corresponding .html filename before the create payload is sent to the API.
+// Unlike block rules, the periodic_reauth API endpoint stores the template value
+// verbatim — it does not translate display names server-side. Sending a display name
+// results in the template not being applied by Netskope.
 // See docs/bugs/BUG-020-periodic-reauth-template.md
-func TestBeforeRequest_PeriodicReauthDisplayNamePreservedOnCreate(t *testing.T) {
+// See https://github.com/netskopeoss/terraform-provider-netskope/issues/118
+func TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnCreate(t *testing.T) {
 	npaTemplatesAPIResetForTest()
 	t.Cleanup(npaTemplatesAPIResetForTest)
 
@@ -641,19 +642,21 @@ func TestBeforeRequest_PeriodicReauthDisplayNamePreservedOnCreate(t *testing.T) 
 
 	resultBody := readRequestBody(t, result)
 
-	// Display name must be preserved — BeforeRequest must not translate to filename.
-	// The API accepts display names for periodic_reauth just like block rules.
-	if !strings.Contains(resultBody, `"My Reauth Template"`) {
-		t.Errorf("expected display name 'My Reauth Template' to be preserved in create payload, got: %s", resultBody)
+	// Display name must be translated to filename — the periodic_reauth API stores
+	// the value verbatim and does not accept display names server-side.
+	if strings.Contains(resultBody, `"My Reauth Template"`) {
+		t.Errorf("expected display name to be translated, but raw display name remains in payload: %s", resultBody)
 	}
-	if strings.Contains(resultBody, "10.html") {
-		t.Errorf("expected filename NOT to appear — BeforeRequest must not translate for periodic_reauth, got: %s", resultBody)
+	if !strings.Contains(resultBody, `"10.html"`) {
+		t.Errorf("expected filename '10.html' in create payload after translation, got: %s", resultBody)
 	}
 }
 
 // TestBeforeRequest_PeriodicReauthDisplayNamePreservedWhenTemplatesAPIEmpty
-// verifies that display names are preserved in create payloads regardless of
-// templates API cache state. BeforeRequest never translates for periodic_reauth.
+// verifies that when the templates API cache has no entry for the given template
+// name, the display name is sent as-is rather than failing. This is the graceful
+// fallback when the /api/v2/templates/usernotifications endpoint is unavailable
+// (e.g. 403 on some tenants) or does not contain the template.
 // See docs/bugs/BUG-020-periodic-reauth-template.md
 func TestBeforeRequest_PeriodicReauthDisplayNamePreservedWhenTemplatesAPIEmpty(t *testing.T) {
 	npaTemplatesAPIResetForTest()
@@ -695,13 +698,12 @@ func TestBeforeRequest_PeriodicReauthDisplayNamePreservedWhenTemplatesAPIEmpty(t
 	}
 }
 
-// TestBeforeRequest_PeriodicReauthDisplayNamePreservedOnUpdate verifies that the
-// display name template value is NOT stripped or translated on periodic_reauth
-// update payloads. Translation (display name → filename) is only done on CREATE.
-// On UPDATE the display name is sent as-is; the API stores it verbatim, and
-// subsequent GET responses return it unchanged — no drift.
+// TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnUpdate verifies
+// that a display name in a periodic_reauth template field IS translated to the .html
+// filename on update payloads, mirroring the create behaviour.
 // See docs/bugs/BUG-020-periodic-reauth-template.md
-func TestBeforeRequest_PeriodicReauthDisplayNamePreservedOnUpdate(t *testing.T) {
+// See https://github.com/netskopeoss/terraform-provider-netskope/issues/118
+func TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnUpdate(t *testing.T) {
 	npaTemplatesAPIResetForTest()
 	t.Cleanup(npaTemplatesAPIResetForTest)
 
@@ -739,16 +741,15 @@ func TestBeforeRequest_PeriodicReauthDisplayNamePreservedOnUpdate(t *testing.T) 
 
 	resultBody := readRequestBody(t, result)
 
-	// Display name must be preserved — no stripping or translation on update for non-block.
+	// Display name must be translated to filename on update.
 	if !strings.Contains(resultBody, `"template"`) {
 		t.Errorf("expected template to be present in periodic_reauth update payload, got: %s", resultBody)
 	}
-	if !strings.Contains(resultBody, `"My Template"`) {
-		t.Errorf("expected display name 'My Template' to be preserved in update payload, got: %s", resultBody)
+	if strings.Contains(resultBody, `"My Template"`) {
+		t.Errorf("expected display name to be translated, but raw display name remains in update payload: %s", resultBody)
 	}
-	// Must NOT be translated to filename on update (translation only happens on create)
-	if strings.Contains(resultBody, "10.html") {
-		t.Errorf("expected filename NOT to appear on update (no translation), got: %s", resultBody)
+	if !strings.Contains(resultBody, `"10.html"`) {
+		t.Errorf("expected filename '10.html' in update payload after translation, got: %s", resultBody)
 	}
 }
 
