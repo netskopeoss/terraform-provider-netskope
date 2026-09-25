@@ -8,7 +8,24 @@ The official Terraform provider for [Netskope](https://www.netskope.com/), enabl
 
 > **Examples:** See [terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples) for ready-to-use Terraform configurations covering NPA private apps, policy-as-code, device classification, RBAC labels, and more.
 
-## Upgrading to v0.4.9
+## Upgrading to v0.4.11
+
+### What's New in v0.4.11
+
+| Resource / Data Source | Description |
+|---|---|
+| `netskope_device_tag` | Manage device tags via `/api/v2/devices/device/tags`. Tags can be assigned to devices using the `bulkreplace` endpoint (see [examples/npa/device-tags-for-classification](https://github.com/netskopeoss/terraform-netskope-examples/tree/main/npa/device-tags-for-classification)). **Note:** `terraform destroy` does not delete device tags — they must be removed via the Netskope UI (API restriction). `tag_id` is computed. Acceptance tests require `NETSKOPE_TEST_DEVICE_TAGS=1`. |
+| `netskope_device_tag_list` | List all device tags on the tenant. |
+| `netskope_device_classification_rule` | Manage device classification rules via `/api/v2/deviceclassification/rules`. Supports all condition types including `device_tag_check` (reference a device tag by `tag_id`). |
+| `netskope_device_classification_rule_list` | List all device classification rules. Supports optional `label` filter. |
+| `netskope_device_classification_on_prem_detection` | Manage on-prem detection labels via `/api/v2/deviceclassification/client/onpremdetection`. |
+| `netskope_device_classification_on_prem_detection_list` | List all on-prem detection labels. |
+| `netskope_device_classification_steering_mapping` | Manage steering config → on-prem label mappings. All changes require resource replacement (`ForceNew`). |
+
+**Bug fixes:**
+- **`netskope_npa_rules` `periodic_reauth` template lost on every update** ([#118](https://github.com/netskopeoss/terraform-provider-netskope/issues/118)) — The BeforeRequest hook was stripping the template from all update payloads regardless of `action_name`. For `periodic_reauth` rules this caused the API to reject every update. Additionally, AfterSuccess did not translate the API-returned `.html` filename back to a display name, causing state drift and import failures. Both are now fixed. Use `template = "My Reauth Template"` (the display name from the Netskope UI).
+- **`netskope_npa_rules` `notify` removed from schema** — `notify` was API-computed and caused import crashes for rules with custom AD attribute notifications. **Breaking:** Remove any `notify` blocks from HCL configurations.
+- **`netskope_service_object` omitted protocols sent as empty arrays** ([#119](https://github.com/netskopeoss/terraform-provider-netskope/issues/119)) — Omitting `udp` or `tcp_udp` from the `protocols` block caused the API to record those protocols as "Any port". Now fixed — omitted protocols are absent from the API request.
 
 ### What's New in v0.4.9
 

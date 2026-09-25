@@ -3,7 +3,7 @@
 This document tracks test parameters, coverage, and dependencies across all
 acceptance tests. Update this file when adding or modifying tests.
 
-Last updated: 2026-04-22
+Last updated: 2026-09-25
 
 ---
 
@@ -87,6 +87,45 @@ Required environment variables: `NETSKOPE_SERVER_URL`, `NETSKOPE_API_KEY`
 | `TestAccDeviceClassificationTag_update` | `deviceclassificationtag_resource_test.go` | Tag name/description update |
 | `TestAccNPARules_ruleOrderBottom` | `nparules_resource_test.go` | Rule placement order=bottom verification |
 | `TestAccNPARules_ruleOrderBefore` | `nparules_resource_test.go` | Rule placement order=before verification |
+
+#### Added in v0.4.11
+
+| Test | File | Description |
+|------|------|-------------|
+| `TestAccDeviceTag_basic` | `devicetag_resource_test.go` | Create device tag, verify name/description/tag_id, import; gated on `NETSKOPE_TEST_DEVICE_TAGS=1` |
+| `TestAccDeviceTag_update` | `devicetag_resource_test.go` | Update description; gated on `NETSKOPE_TEST_DEVICE_TAGS=1` |
+| `TestAccDeviceTagDataSource_basic` | `devicetag_resource_test.go` | Look up device tag by tag_id via data source; gated on `NETSKOPE_TEST_DEVICE_TAGS=1` |
+| `TestAccDeviceTagListDataSource_basic` | `devicetag_resource_test.go` | List all device tags; gated on `NETSKOPE_TEST_DEVICE_TAGS=1` |
+| `TestAccDeviceClassificationRule_withDeviceTagCheck` | `deviceclassificationrule_resource_test.go` | Create classification rule using `device_tag_check` condition referencing a device tag by `tag_id`; verifies end-to-end `device_tag_check` condition type; gated on `NETSKOPE_TEST_DEVICE_TAGS=1` |
+| `TestAccNPARules_withPeriodicReauth` | `nparules_resource_test.go` | Create rule with `action_name = "periodic_reauth"` and display name template; verify state shows display name (not `.html` filename); update interval and verify template preserved. Regression for [#118](https://github.com/netskopeoss/terraform-provider-netskope/issues/118). Gated on `NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE` |
+| `TestAccNPARules_periodicReauthImport` | `nparules_resource_test.go` | Import a `periodic_reauth` rule; verify state shows display name (not raw `.html` filename). Regression for [#118](https://github.com/netskopeoss/terraform-provider-netskope/issues/118). Gated on `NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE` |
+| `TestAccServiceObject_tcpOnly` | `serviceobject_resource_test.go` | Create service object with only `tcp` protocol; verify `protocols.udp.#` and `protocols.tcp_udp.#` are 0 (not recorded as "Any"). Regression for [#119](https://github.com/netskopeoss/terraform-provider-netskope/issues/119) |
+
+**Hook Unit Tests Added:**
+
+| Test | File | Coverage |
+|------|------|---------|
+| `TestDeviceTag_GetRewritesToPost` | `hookDeviceTag_test.go` | GET rewritten to POST /device/tags/gettags with correct body |
+| `TestDeviceTag_GetPreservesAuthHeader` | `hookDeviceTag_test.go` | Auth header preserved after URL rewrite |
+| `TestDeviceTag_ListRewritesToPost` | `hookDeviceTag_test.go` | List GET rewritten to POST with empty body |
+| `TestDeviceTag_BeforeRequest_Passthrough` | `hookDeviceTag_test.go` | Non-device-tag operations pass through unchanged |
+| `TestDeviceTag_CreateUnwrapsEnvelope` | `hookDeviceTag_test.go` | Create response envelope unwrapped to bare tag object |
+| `TestDeviceTag_UpdateUnwrapsEnvelope` | `hookDeviceTag_test.go` | Update response envelope unwrapped |
+| `TestDeviceTag_GetUnwrapsSingleFromPaginated` | `hookDeviceTag_test.go` | GET response: first matching tag extracted from paginated list |
+| `TestDeviceTag_GetNotFoundSynthesises404` | `hookDeviceTag_test.go` | When tag not in list, 404 synthesized so Terraform removes from state |
+| `TestDeviceTag_ListUnwrapsToTagsWrapper` | `hookDeviceTag_test.go` | List response wrapped in `{"tags":[…]}` for SDK |
+| `TestDeviceTag_AfterSuccess_Passthrough` | `hookDeviceTag_test.go` | Non-device-tag AfterSuccess operations pass through |
+| `TestServiceObjectHook_BeforeRequest_StripsEmptyProtocols_TCPOnly` | `hookServiceObjectAfterSuccess_test.go` | Empty `udp` and `tcp_udp` stripped when only `tcp` set (regression #119) |
+| `TestServiceObjectHook_BeforeRequest_StripsEmptyProtocols_UDPOnly` | `hookServiceObjectAfterSuccess_test.go` | Empty `tcp` and `tcp_udp` stripped when only `udp` set |
+| `TestServiceObjectHook_BeforeRequest_PreservesAllNonEmptyProtocols` | `hookServiceObjectAfterSuccess_test.go` | Non-empty arrays are never stripped |
+| `TestServiceObjectHook_BeforeRequest_ICMPOnlyNoPortArrays` | `hookServiceObjectAfterSuccess_test.go` | ICMP-only object: all port arrays stripped, boolean `icmp` untouched |
+| `TestServiceObjectHook_BeforeRequest_NoProtocolsKey` | `hookServiceObjectAfterSuccess_test.go` | Body without `protocols` key passes through unchanged |
+| `TestServiceObjectHook_BeforeRequest_NilBody` | `hookServiceObjectAfterSuccess_test.go` | Nil request body passes through unchanged |
+| `TestBeforeRequest_HtmlTemplatePreservedForPeriodicReauthOnUpdate` | `hookMyPolicyBeforeRequest_test.go` | `.html` filename NOT stripped for `periodic_reauth` updates (regression #118) |
+| `TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnCreate` | `hookMyPolicyBeforeRequest_test.go` | Display name → `.html` filename for `periodic_reauth` create |
+| `TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnUpdate` | `hookMyPolicyBeforeRequest_test.go` | Display name → `.html` filename for `periodic_reauth` update |
+| `TestBeforeRequest_PeriodicReauthDisplayNamePreservedWhenTemplatesAPIEmpty` | `hookMyPolicyBeforeRequest_test.go` | Display name sent as-is when templates cache empty (fallback) |
+| `TestBeforeRequest_BlockRuleDisplayNameNotTranslatedViaTemplatesAPI` | `hookMyPolicyBeforeRequest_test.go` | Block rules do not go through templates API translation |
 
 #### Added in v0.4.10
 
