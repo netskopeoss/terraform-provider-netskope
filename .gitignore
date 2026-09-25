@@ -55,6 +55,8 @@ planning_docs/
 # Internal docs not for the repo
 docs/bugs/
 docs/TODO.md
+docs/ACCEPTANCE_TESTS.md
+docs/KNOWN_API_ISSUES.md
 docs/customer/
 docs/guides/
 docs/examples/
