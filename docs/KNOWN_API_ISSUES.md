@@ -763,29 +763,6 @@ The SDK struct previously declared `ConnectedApps []string`, which matched the l
 
 ---
 
-## Device Tag API Issues (18)
-
-### 18. Device Tag DELETE Returns 403 — Tags Cannot Be Deleted via API
-
-**Endpoint:** `DELETE /api/v2/devices/device/tags/{tag_id}`
-
-**Issue:** Deleting a device tag via the REST API returns `403 Forbidden`. Tags can only be deleted through the Netskope UI. This is an API restriction, not a permissions issue — even admin tokens with full scope receive a 403.
-
-Additionally, there is no conventional `GET /api/v2/devices/device/tags/{id}` endpoint. The only read path is `POST /api/v2/devices/device/tags/gettags` which returns a paginated list; the provider fetches the full list and finds the tag by ID.
-
-**Impact:**
-- `terraform destroy` cannot delete device tags — they must be removed manually from the UI
-- Resources that reference a device tag by `tag_id` may become broken if the tag is manually deleted outside Terraform (the resource will remain in state but the tag will not exist)
-
-**Provider Handling (v0.4.11+):**
-- The `netskope_device_tag` resource `Delete` method is a no-op: it logs a warning and removes the resource from Terraform state without calling the API
-- `CheckDestroy` is omitted from device tag acceptance tests because the tag survives `terraform destroy`
-- Acceptance tests are gated on `NETSKOPE_TEST_DEVICE_TAGS=1` to avoid accumulating orphaned tags in CI
-
-**Status:** API restriction — no fix possible. Provider no-op workaround implemented. Tags must be cleaned up via the Netskope UI.
-
----
-
 ## Terraform Provider Implications
 
 These API issues have specific implications for the Terraform provider:
@@ -806,7 +783,6 @@ These API issues have specific implications for the Terraform provider:
 | `device_classification_id` type mismatch | OAS uses `string`; BeforeRequest hook coerces to `int` for writes (0.3.6) |
 | Inconsistent app ID field name (`app_id` vs `id`) | List data source returns `private_app_id = 0`; hook copies `app_id` → `id` (0.4.4) |
 | NPA rules ordering eventual consistency | No atomic reorder endpoint; provider PATCHes rules individually with verify-and-retry loop |
-| Device tag DELETE returns 403 | `netskope_device_tag` Delete is a no-op; tags must be removed via the UI (0.4.11) |
 
 ### Implemented Mitigations
 
