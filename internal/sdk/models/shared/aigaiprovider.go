@@ -13,9 +13,10 @@ import (
 type Schema string
 
 const (
-	SchemaOpenai Schema = "openai"
-	SchemaGemini Schema = "gemini"
-	SchemaClaude Schema = "claude"
+	SchemaOpenai  Schema = "openai"
+	SchemaGemini  Schema = "gemini"
+	SchemaClaude  Schema = "claude"
+	SchemaBedrock Schema = "bedrock"
 )
 
 func (e Schema) ToPointer() *Schema {
@@ -32,6 +33,8 @@ func (e *Schema) UnmarshalJSON(data []byte) error {
 	case "gemini":
 		fallthrough
 	case "claude":
+		fallthrough
+	case "bedrock":
 		*e = Schema(v)
 		return nil
 	default:
