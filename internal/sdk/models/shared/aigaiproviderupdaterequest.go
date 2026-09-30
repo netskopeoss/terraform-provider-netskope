@@ -11,9 +11,10 @@ import (
 type AigAiProviderUpdateRequestSchema string
 
 const (
-	AigAiProviderUpdateRequestSchemaOpenai AigAiProviderUpdateRequestSchema = "openai"
-	AigAiProviderUpdateRequestSchemaGemini AigAiProviderUpdateRequestSchema = "gemini"
-	AigAiProviderUpdateRequestSchemaClaude AigAiProviderUpdateRequestSchema = "claude"
+	AigAiProviderUpdateRequestSchemaOpenai  AigAiProviderUpdateRequestSchema = "openai"
+	AigAiProviderUpdateRequestSchemaGemini  AigAiProviderUpdateRequestSchema = "gemini"
+	AigAiProviderUpdateRequestSchemaClaude  AigAiProviderUpdateRequestSchema = "claude"
+	AigAiProviderUpdateRequestSchemaBedrock AigAiProviderUpdateRequestSchema = "bedrock"
 )
 
 func (e AigAiProviderUpdateRequestSchema) ToPointer() *AigAiProviderUpdateRequestSchema {
@@ -30,6 +31,8 @@ func (e *AigAiProviderUpdateRequestSchema) UnmarshalJSON(data []byte) error {
 	case "gemini":
 		fallthrough
 	case "claude":
+		fallthrough
+	case "bedrock":
 		*e = AigAiProviderUpdateRequestSchema(v)
 		return nil
 	default:
