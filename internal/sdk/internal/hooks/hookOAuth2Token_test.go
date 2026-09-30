@@ -82,22 +82,22 @@ func TestOAuth2Hook_FetchesToken(t *testing.T) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
 		}
-		if ct := r.Header.Get("Content-Type"); ct != "application/json" {
-			t.Errorf("expected application/json content-type, got %s", ct)
+		if ct := r.Header.Get("Content-Type"); ct != "application/x-www-form-urlencoded" {
+			t.Errorf("expected application/x-www-form-urlencoded content-type, got %s", ct)
 		}
 
-		var body tokenRequest
-		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-			t.Fatalf("failed to decode request: %v", err)
+		if err := r.ParseForm(); err != nil {
+			t.Fatalf("failed to parse form: %v", err)
 		}
-		if body.ClientID != "test-client-id" {
-			t.Errorf("expected client_id=test-client-id, got %s", body.ClientID)
+		body := r.PostForm
+		if got := body.Get("client_id"); got != "test-client-id" {
+			t.Errorf("expected client_id=test-client-id, got %s", got)
 		}
-		if body.ClientSecret != "test-secret" {
-			t.Errorf("expected client_secret=test-secret, got %s", body.ClientSecret)
+		if got := body.Get("client_secret"); got != "test-secret" {
+			t.Errorf("expected client_secret=test-secret, got %s", got)
 		}
-		if body.GrantType != "client_credentials" {
-			t.Errorf("expected grant_type=client_credentials, got %s", body.GrantType)
+		if got := body.Get("grant_type"); got != "client_credentials" {
+			t.Errorf("expected grant_type=client_credentials, got %s", got)
 		}
 
 		w.WriteHeader(http.StatusOK)
@@ -109,10 +109,9 @@ func TestOAuth2Hook_FetchesToken(t *testing.T) {
 	}))
 	defer tokenServer.Close()
 
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_ID", "test-client-id")
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET", "test-secret")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_ID")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	t.Setenv("NETSKOPE_API_KEY", "")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_ID","test-client-id")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET","test-secret")
 
 	hook := &oauth2TokenHook{}
 	hook.SDKInit(tokenServer.URL, tokenServer.Client())
@@ -165,10 +164,9 @@ func TestOAuth2Hook_ClearsTokenOn401(t *testing.T) {
 	}))
 	defer tokenServer.Close()
 
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_ID", "client")
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET", "secret")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_ID")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	t.Setenv("NETSKOPE_API_KEY", "")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_ID","client")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET","secret")
 
 	hook := &oauth2TokenHook{}
 	hook.SDKInit(tokenServer.URL, tokenServer.Client())
@@ -204,10 +202,9 @@ func TestOAuth2Hook_TokenEndpointError(t *testing.T) {
 	}))
 	defer tokenServer.Close()
 
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_ID", "bad-client")
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET", "bad-secret")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_ID")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	t.Setenv("NETSKOPE_API_KEY", "")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_ID","bad-client")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET","bad-secret")
 
 	hook := &oauth2TokenHook{}
 	hook.SDKInit(tokenServer.URL, tokenServer.Client())
@@ -235,10 +232,9 @@ func TestOAuth2Hook_RefreshesNearExpiry(t *testing.T) {
 	}))
 	defer tokenServer.Close()
 
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_ID", "client")
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET", "secret")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_ID")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	t.Setenv("NETSKOPE_API_KEY", "")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_ID","client")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET","secret")
 
 	hook := &oauth2TokenHook{}
 	hook.SDKInit(tokenServer.URL, tokenServer.Client())
@@ -277,10 +273,9 @@ func TestOAuth2Hook_ZeroExpiresIn_DefaultsTo3600(t *testing.T) {
 	}))
 	defer tokenServer.Close()
 
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_ID", "client")
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET", "secret")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_ID")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	t.Setenv("NETSKOPE_API_KEY", "")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_ID","client")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET","secret")
 
 	hook := &oauth2TokenHook{}
 	hook.SDKInit(tokenServer.URL, tokenServer.Client())
@@ -314,10 +309,9 @@ func TestOAuth2Hook_ConcurrentFetch_OnlyOneTokenCall(t *testing.T) {
 	}))
 	defer tokenServer.Close()
 
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_ID", "client")
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET", "secret")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_ID")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	t.Setenv("NETSKOPE_API_KEY", "")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_ID","client")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET","secret")
 
 	hook := &oauth2TokenHook{}
 	hook.SDKInit(tokenServer.URL, tokenServer.Client())
@@ -361,10 +355,9 @@ func TestOAuth2Hook_TokenURL_TrailingSlash(t *testing.T) {
 	}))
 	defer tokenServer.Close()
 
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_ID", "client")
-	os.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET", "secret")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_ID")
-	defer os.Unsetenv("NETSKOPE_OAUTH2_CLIENT_SECRET")
+	t.Setenv("NETSKOPE_API_KEY", "")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_ID","client")
+	t.Setenv("NETSKOPE_OAUTH2_CLIENT_SECRET","secret")
 
 	hook := &oauth2TokenHook{}
 	// baseURL has a trailing slash — should not produce double slash in token URL.

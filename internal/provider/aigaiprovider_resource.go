@@ -103,12 +103,13 @@ func (r *AIGAiProviderResource) Schema(ctx context.Context, req resource.SchemaR
 			},
 			"schema": schema.StringAttribute{
 				Required:    true,
-				Description: `AI API schema the provider exposes. must be one of ["openai", "gemini", "claude"]`,
+				Description: `AI API schema the provider exposes. must be one of ["openai", "gemini", "claude", "bedrock"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"openai",
 						"gemini",
 						"claude",
+						"bedrock",
 					),
 				},
 			},

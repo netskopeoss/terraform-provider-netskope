@@ -7,17 +7,17 @@ import (
 	"fmt"
 )
 
-type Status string
+type NpaPolicyResponseStatus string
 
 const (
-	StatusSuccess Status = "success"
-	StatusError   Status = "error"
+	NpaPolicyResponseStatusSuccess NpaPolicyResponseStatus = "success"
+	NpaPolicyResponseStatusError   NpaPolicyResponseStatus = "error"
 )
 
-func (e Status) ToPointer() *Status {
+func (e NpaPolicyResponseStatus) ToPointer() *NpaPolicyResponseStatus {
 	return &e
 }
-func (e *Status) UnmarshalJSON(data []byte) error {
+func (e *NpaPolicyResponseStatus) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -26,16 +26,16 @@ func (e *Status) UnmarshalJSON(data []byte) error {
 	case "success":
 		fallthrough
 	case "error":
-		*e = Status(v)
+		*e = NpaPolicyResponseStatus(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for Status: %v", v)
+		return fmt.Errorf("invalid value for NpaPolicyResponseStatus: %v", v)
 	}
 }
 
 type NpaPolicyResponse struct {
-	Data   []NpaPolicyResponseItem `json:"data,omitempty"`
-	Status *Status                 `json:"status,omitempty"`
+	Data   []NpaPolicyResponseItem  `json:"data,omitempty"`
+	Status *NpaPolicyResponseStatus `json:"status,omitempty"`
 }
 
 func (n *NpaPolicyResponse) GetData() []NpaPolicyResponseItem {
@@ -45,7 +45,7 @@ func (n *NpaPolicyResponse) GetData() []NpaPolicyResponseItem {
 	return n.Data
 }
 
-func (n *NpaPolicyResponse) GetStatus() *Status {
+func (n *NpaPolicyResponse) GetStatus() *NpaPolicyResponseStatus {
 	if n == nil {
 		return nil
 	}

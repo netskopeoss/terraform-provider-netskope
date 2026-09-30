@@ -5,6 +5,7 @@ sources:
         inputs:
             - location: $NETSKOPE_OAS_DIR/base_oas.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/steering/npa_apps_private.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/steering/npa_private_app_tags.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/steering/ipsec_tunnels.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/steering/gre_tunnels.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/policy/npa_policy.yaml

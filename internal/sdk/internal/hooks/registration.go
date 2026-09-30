@@ -113,6 +113,11 @@ func initHooks(h *Hooks) {
 	deviceTagResp := &deviceTagAfterSuccessHook{}
 	h.registerAfterSuccessHook(deviceTagResp)
 
+	// NPA private app tag - wrap create request in {"tags": [...]} envelope and unwrap response
+	npaTag := &npaPrivateAppTagHook{}
+	h.registerBeforeRequestHook(npaTag)
+	h.registerAfterSuccessHook(npaTag)
+
 	// OAuth2 client credentials - fetches bearer token from /platform/oauth2/token
 	// when NETSKOPE_OAUTH2_CLIENT_ID and NETSKOPE_OAUTH2_CLIENT_SECRET are set.
 	// Registered last so it runs after all other before-request hooks and can

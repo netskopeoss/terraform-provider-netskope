@@ -9,64 +9,53 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &DeviceTagListDataSource{}
-var _ datasource.DataSourceWithConfigure = &DeviceTagListDataSource{}
+var _ datasource.DataSource = &NPAPrivateAppTagDataSource{}
+var _ datasource.DataSourceWithConfigure = &NPAPrivateAppTagDataSource{}
 
-func NewDeviceTagListDataSource() datasource.DataSource {
-	return &DeviceTagListDataSource{}
+func NewNPAPrivateAppTagDataSource() datasource.DataSource {
+	return &NPAPrivateAppTagDataSource{}
 }
 
-// DeviceTagListDataSource is the data source implementation.
-type DeviceTagListDataSource struct {
+// NPAPrivateAppTagDataSource is the data source implementation.
+type NPAPrivateAppTagDataSource struct {
 	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
-// DeviceTagListDataSourceModel describes the data model.
-type DeviceTagListDataSourceModel struct {
-	Tags []tfTypes.DeviceTagItem `tfsdk:"tags"`
+// NPAPrivateAppTagDataSourceModel describes the data model.
+type NPAPrivateAppTagDataSourceModel struct {
+	TagID   types.Int32  `tfsdk:"tag_id"`
+	TagName types.String `tfsdk:"tag_name"`
 }
 
 // Metadata returns the data source type name.
-func (r *DeviceTagListDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_tag_list"
+func (r *NPAPrivateAppTagDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_npa_private_app_tag"
 }
 
 // Schema defines the schema for the data source.
-func (r *DeviceTagListDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (r *NPAPrivateAppTagDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "DeviceTagList DataSource",
+		MarkdownDescription: "NPAPrivateAppTag DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"tags": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"description": schema.StringAttribute{
-							Computed:    true,
-							Description: `Tag description`,
-						},
-						"name": schema.StringAttribute{
-							Computed:    true,
-							Description: `Tag name (alphanumeric, hyphens, spaces only)`,
-						},
-						"tag_id": schema.Int64Attribute{
-							Computed:    true,
-							Description: `Tag ID`,
-						},
-					},
-				},
+			"tag_id": schema.Int32Attribute{
+				Required:    true,
+				Description: `Tag ID (API-assigned). Reference this value in NPA Real-Time Protection rules via privateAppTagIds.`,
+			},
+			"tag_name": schema.StringAttribute{
+				Computed:    true,
+				Description: `Tag name. Must be unique per tenant. Private apps reference this tag by name on create/update; the API resolves the name to tag_id.`,
 			},
 		},
 	}
 }
 
-func (r *DeviceTagListDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (r *NPAPrivateAppTagDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -86,8 +75,8 @@ func (r *DeviceTagListDataSource) Configure(ctx context.Context, req datasource.
 	r.client = client
 }
 
-func (r *DeviceTagListDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data *DeviceTagListDataSourceModel
+func (r *NPAPrivateAppTagDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data *NPAPrivateAppTagDataSourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &item)...)
@@ -104,7 +93,13 @@ func (r *DeviceTagListDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	res, err := r.client.DeviceTags.ListDeviceTags(ctx)
+	request, requestDiags := data.ToOperationsGetNPAPrivateAppTagRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.GetNPAPrivateAppTag(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -120,11 +115,11 @@ func (r *DeviceTagListDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.DeviceTagListResponse != nil) {
+	if !(res.NpaTagGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedDeviceTagListResponse(ctx, res.DeviceTagListResponse)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaTagGetResponse(ctx, res.NpaTagGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return

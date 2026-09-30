@@ -1,12 +1,13 @@
 package provider
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -122,12 +123,6 @@ func (d *PlatformOAuth2TokenDataSource) Read(ctx context.Context, req datasource
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-type oauth2TokenRequest struct {
-	ClientID     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
-	GrantType    string `json:"grant_type"`
-}
-
 type oauth2TokenResponse struct {
 	AccessToken string `json:"access_token"`
 	TokenType   string `json:"token_type"`
@@ -147,20 +142,17 @@ func (d *PlatformOAuth2TokenDataSource) fetchToken(ctx context.Context, clientID
 
 	endpoint := serverURL + "/platform/oauth2/token"
 
-	body, err := json.Marshal(oauth2TokenRequest{
-		ClientID:     clientID,
-		ClientSecret: clientSecret,
-		GrantType:    grantType,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal request: %w", err)
+	formData := url.Values{
+		"client_id":     {clientID},
+		"client_secret": {clientSecret},
+		"grant_type":    {grantType},
 	}
 
-	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, bytes.NewReader(body))
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, strings.NewReader(formData.Encode()))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
-	httpReq.Header.Set("Content-Type", "application/json")
+	httpReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	httpClient := d.client.GetHTTPClient()
 	httpResp, err := httpClient.Do(httpReq)

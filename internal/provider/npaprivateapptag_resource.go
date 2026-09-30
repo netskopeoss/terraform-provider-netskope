@@ -11,56 +11,51 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/sdk"
+	"math"
 	"strconv"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &DeviceTagResource{}
-var _ resource.ResourceWithImportState = &DeviceTagResource{}
+var _ resource.Resource = &NPAPrivateAppTagResource{}
+var _ resource.ResourceWithImportState = &NPAPrivateAppTagResource{}
 
-func NewDeviceTagResource() resource.Resource {
-	return &DeviceTagResource{}
+func NewNPAPrivateAppTagResource() resource.Resource {
+	return &NPAPrivateAppTagResource{}
 }
 
-// DeviceTagResource defines the resource implementation.
-type DeviceTagResource struct {
+// NPAPrivateAppTagResource defines the resource implementation.
+type NPAPrivateAppTagResource struct {
 	// Provider configured SDK client.
 	client *sdk.TerraformProviderNs
 }
 
-// DeviceTagResourceModel describes the resource data model.
-type DeviceTagResourceModel struct {
-	Description types.String `tfsdk:"description"`
-	Name        types.String `tfsdk:"name"`
-	TagID       types.Int64  `tfsdk:"tag_id"`
+// NPAPrivateAppTagResourceModel describes the resource data model.
+type NPAPrivateAppTagResourceModel struct {
+	TagID   types.Int32  `tfsdk:"tag_id"`
+	TagName types.String `tfsdk:"tag_name"`
 }
 
-func (r *DeviceTagResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_tag"
+func (r *NPAPrivateAppTagResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_npa_private_app_tag"
 }
 
-func (r *DeviceTagResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NPAPrivateAppTagResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "DeviceTag Resource",
+		MarkdownDescription: "NPAPrivateAppTag Resource",
 		Attributes: map[string]schema.Attribute{
-			"description": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
-				Description: `Tag description`,
-			},
-			"name": schema.StringAttribute{
-				Required:    true,
-				Description: `Tag name (alphanumeric, hyphens, spaces only, max 80 chars)`,
-			},
-			"tag_id": schema.Int64Attribute{
+			"tag_id": schema.Int32Attribute{
 				Computed:    true,
 				Description: `Tag ID`,
+			},
+			"tag_name": schema.StringAttribute{
+				Required:    true,
+				Description: `Tag name. Must be unique per tenant. The hook wraps this in the {"tags": [...]} envelope required by the POST API.`,
 			},
 		},
 	}
 }
 
-func (r *DeviceTagResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *NPAPrivateAppTagResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -80,8 +75,8 @@ func (r *DeviceTagResource) Configure(ctx context.Context, req resource.Configur
 	r.client = client
 }
 
-func (r *DeviceTagResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data *DeviceTagResourceModel
+func (r *NPAPrivateAppTagResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data *NPAPrivateAppTagResourceModel
 	var plan types.Object
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -98,13 +93,13 @@ func (r *DeviceTagResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 
-	request, requestDiags := data.ToSharedDeviceTagRequest(ctx)
+	request, requestDiags := data.ToSharedNpaTagRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.DeviceTag.CreateDeviceTag(ctx, *request)
+	res, err := r.client.NPAPrivateAppTag.CreateNPAPrivateAppTag(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -116,22 +111,15 @@ func (r *DeviceTagResource) Create(ctx context.Context, req resource.CreateReque
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 409 {
-		resp.Diagnostics.AddError(
-			"Resource Already Exists",
-			"When creating this resource, the API indicated that this resource already exists. You can bring the existing resource under management using Terraform import functionality or retry with a unique configuration.",
-		)
-		return
-	}
-	if res.StatusCode != 201 {
+	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.DeviceTagItem != nil) {
+	if !(res.NpaTagGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedDeviceTagItem(ctx, res.DeviceTagItem)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaTagGetResponse(ctx, res.NpaTagGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -147,8 +135,8 @@ func (r *DeviceTagResource) Create(ctx context.Context, req resource.CreateReque
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *DeviceTagResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data *DeviceTagResourceModel
+func (r *NPAPrivateAppTagResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data *NPAPrivateAppTagResourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &item)...)
@@ -165,13 +153,13 @@ func (r *DeviceTagResource) Read(ctx context.Context, req resource.ReadRequest, 
 		return
 	}
 
-	request, requestDiags := data.ToOperationsGetDeviceTagRequest(ctx)
+	request, requestDiags := data.ToOperationsGetNPAPrivateAppTagRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.DeviceTags.GetDeviceTag(ctx, *request)
+	res, err := r.client.GetNPAPrivateAppTag(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -191,11 +179,11 @@ func (r *DeviceTagResource) Read(ctx context.Context, req resource.ReadRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.DeviceTagItem != nil) {
+	if !(res.NpaTagGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedDeviceTagItem(ctx, res.DeviceTagItem)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaTagGetResponse(ctx, res.NpaTagGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -205,8 +193,8 @@ func (r *DeviceTagResource) Read(ctx context.Context, req resource.ReadRequest, 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *DeviceTagResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data *DeviceTagResourceModel
+func (r *NPAPrivateAppTagResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data *NPAPrivateAppTagResourceModel
 	var plan types.Object
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -219,13 +207,13 @@ func (r *DeviceTagResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 
-	request, requestDiags := data.ToOperationsUpdateDeviceTagRequest(ctx)
+	request, requestDiags := data.ToOperationsUpdateNPAPrivateAppTagRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.DeviceTag.UpdateDeviceTag(ctx, *request)
+	res, err := r.client.NPAPrivateAppTag.UpdateNPAPrivateAppTag(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -241,11 +229,11 @@ func (r *DeviceTagResource) Update(ctx context.Context, req resource.UpdateReque
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.DeviceTagItem != nil) {
+	if !(res.NpaTagGetResponse != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedDeviceTagItem(ctx, res.DeviceTagItem)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedNpaTagGetResponse(ctx, res.NpaTagGetResponse)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -261,8 +249,8 @@ func (r *DeviceTagResource) Update(ctx context.Context, req resource.UpdateReque
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *DeviceTagResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data *DeviceTagResourceModel
+func (r *NPAPrivateAppTagResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data *NPAPrivateAppTagResourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &item)...)
@@ -279,13 +267,13 @@ func (r *DeviceTagResource) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	}
 
-	request, requestDiags := data.ToOperationsDeleteDeviceTagRequest(ctx)
+	request, requestDiags := data.ToOperationsDeleteNPAPrivateAppTagRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.DeviceTags.DeleteDeviceTag(ctx, *request)
+	res, err := r.client.DeleteNPAPrivateAppTag(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -307,10 +295,15 @@ func (r *DeviceTagResource) Delete(ctx context.Context, req resource.DeleteReque
 
 }
 
-func (r *DeviceTagResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *NPAPrivateAppTagResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	tagID, err := strconv.Atoi(req.ID)
 	if err != nil {
 		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an integer but was %s", req.ID))
+		return
+	}
+
+	if tagID < math.MinInt32 || tagID > math.MaxInt32 {
+		resp.Diagnostics.AddError("Invalid ID", fmt.Sprintf("ID must be an int32 but was %d", tagID))
 		return
 	}
 

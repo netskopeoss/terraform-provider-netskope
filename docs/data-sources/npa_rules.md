@@ -46,7 +46,6 @@ Read-Only:
 - `json_version` (Number)
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
 - `net_location_obj` (List of String) List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27").
-- `notify` (Attributes) Notification configuration for alert/block rule actions (see [below for nested schema](#nestedatt--rule_data--notify))
 - `organization_units` (List of String)
 - `os` (List of String) Operating system filter (Client access only). Valid values: "AmigaOS", "Android", "BlackBerry", "BSD", "Chrome OS", "Darwin", "Debian", "Fedora", "iOS", "Linux", "Mac", "Others", "Red", "RHEL", "Solaris", "SunOS", "Symbian", "Ubuntu", "Windows".
 - `periodic_reauth` (Attributes) (see [below for nested schema](#nestedatt--rule_data--periodic_reauth))
@@ -60,7 +59,6 @@ Read-Only:
 - `user_groups` (List of String)
 - `user_type` (String)
 - `users` (List of String)
-- `version` (Number)
 
 <a id="nestedatt--rule_data--match_criteria_action"></a>
 ### Nested Schema for `rule_data.match_criteria_action`
@@ -69,18 +67,7 @@ Read-Only:
 
 - `action_name` (String)
 - `emit_alert` (Boolean) Whether to emit an alert when the rule matches (required for block action)
-- `template` (String) Notification template name (required for block action). Use the display name (e.g. "Default Template"), not the file name.
-
-
-<a id="nestedatt--rule_data--notify"></a>
-### Nested Schema for `rule_data.notify`
-
-Read-Only:
-
-- `emails` (List of String) Email addresses to notify
-- `from_user` (String) Sender user identifier
-- `interval` (String) Notification interval in minutes (as string, e.g. '30')
-- `to_users` (List of String) Recipient user types (e.g. 'admin')
+- `template` (String) Notification template display name. Required for block and periodic_reauth actions. Use the display name (e.g. "Default Template"), not the file name returned by the API. The API returns a .html file name on read; the suppressTemplateDrift plan modifier and BeforeRequest hook handle the mismatch transparently.
 
 
 <a id="nestedatt--rule_data--periodic_reauth"></a>
