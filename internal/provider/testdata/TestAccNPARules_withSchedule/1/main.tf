@@ -2,6 +2,10 @@ variable "name" {
   type = string
 }
 
+variable "time_interval_id" {
+  type = string
+}
+
 resource "netskope_npa_policy_groups" "test" {
   group_name = "${var.name}-group"
   group_order = {
@@ -38,7 +42,7 @@ resource "netskope_npa_rules" "test" {
     access_method         = ["Client"]
 
     schedule = [{
-      time_interval_obj = ["3"]
+      time_interval_obj = [var.time_interval_id]
     }]
   }
 }

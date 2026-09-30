@@ -141,11 +141,17 @@ func (d *deviceClassificationTagsResponse) fetchTag(origRes *http.Response, tagI
 	return replaceBody(origRes, tagBody), nil
 }
 
-// replaceBody returns the response with a new body.
+// replaceBody returns the response with a new body and ensures Content-Type is
+// set to application/json so SDK content-type checks succeed even when the
+// original response had an empty or absent Content-Type (e.g. 201 with no body).
 func replaceBody(res *http.Response, body []byte) *http.Response {
 	res.Body = io.NopCloser(bytes.NewReader(body))
 	res.ContentLength = int64(len(body))
+	if res.Header == nil {
+		res.Header = make(http.Header)
+	}
 	res.Header.Set("Content-Length", strconv.Itoa(len(body)))
+	res.Header.Set("Content-Type", "application/json")
 	return res
 }
 

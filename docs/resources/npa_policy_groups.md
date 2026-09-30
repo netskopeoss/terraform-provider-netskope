@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_npa_policy_groups Resource - terraform-provider-netskope"
-subcategory: ""
+subcategory: "NPA"
 description: |-
   Manages an NPA policy group — a named container for NPA access rules with a configurable evaluation order.
 ---

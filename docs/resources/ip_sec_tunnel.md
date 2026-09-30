@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_ip_sec_tunnel Resource - terraform-provider-netskope"
-subcategory: ""
+subcategory: "Steering"
 description: |-
   Manages a Netskope IPSec tunnel — an IKEv2 site-to-network tunnel connecting a network device to a Netskope Point of Presence (POP).
 ---

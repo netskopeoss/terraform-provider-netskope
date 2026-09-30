@@ -71,6 +71,176 @@ func TestServiceObjectHook_BeforeRequest_PassthroughForOtherOps(t *testing.T) {
 	}
 }
 
+// --- BeforeRequest: stripEmptyProtocols tests ---
+
+func TestServiceObjectHook_BeforeRequest_StripsEmptyProtocols_TCPOnly(t *testing.T) {
+	hook := &serviceObjectHook{}
+
+	// User specified only tcp; udp and tcp_udp are empty arrays from the SDK
+	body := `{"name":"test","description":"d","protocols":{"tcp":["443"],"udp":[],"tcp_udp":[]}}`
+	req := makeServiceObjectRequest("createServiceObject", body)
+	hookCtx := BeforeRequestContext{HookContext: HookContext{OperationID: "createServiceObject"}}
+
+	out, err := hook.BeforeRequest(hookCtx, req)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	var parsed struct {
+		Protocols map[string]json.RawMessage `json:"protocols"`
+	}
+	readServiceObjectRequest(t, out, &parsed)
+
+	if _, ok := parsed.Protocols["udp"]; ok {
+		t.Error("udp key should be absent when value was []")
+	}
+	if _, ok := parsed.Protocols["tcp_udp"]; ok {
+		t.Error("tcp_udp key should be absent when value was []")
+	}
+	if _, ok := parsed.Protocols["tcp"]; !ok {
+		t.Error("tcp key should be present")
+	}
+}
+
+func TestServiceObjectHook_BeforeRequest_StripsEmptyProtocols_UDPOnly(t *testing.T) {
+	hook := &serviceObjectHook{}
+
+	body := `{"name":"test","description":"d","protocols":{"tcp":[],"udp":["53"],"tcp_udp":[]}}`
+	req := makeServiceObjectRequest("updateServiceObject", body)
+	hookCtx := BeforeRequestContext{HookContext: HookContext{OperationID: "updateServiceObject"}}
+
+	out, err := hook.BeforeRequest(hookCtx, req)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	var parsed struct {
+		Protocols map[string]json.RawMessage `json:"protocols"`
+	}
+	readServiceObjectRequest(t, out, &parsed)
+
+	if _, ok := parsed.Protocols["tcp"]; ok {
+		t.Error("tcp key should be absent when value was []")
+	}
+	if _, ok := parsed.Protocols["tcp_udp"]; ok {
+		t.Error("tcp_udp key should be absent when value was []")
+	}
+	if _, ok := parsed.Protocols["udp"]; !ok {
+		t.Error("udp key should be present")
+	}
+}
+
+func TestServiceObjectHook_BeforeRequest_PreservesAllNonEmptyProtocols(t *testing.T) {
+	hook := &serviceObjectHook{}
+
+	body := `{"name":"test","description":"d","protocols":{"tcp":["80"],"udp":["53"],"tcp_udp":["443"]}}`
+	req := makeServiceObjectRequest("createServiceObject", body)
+	hookCtx := BeforeRequestContext{HookContext: HookContext{OperationID: "createServiceObject"}}
+
+	out, err := hook.BeforeRequest(hookCtx, req)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	var parsed struct {
+		Protocols map[string]json.RawMessage `json:"protocols"`
+	}
+	readServiceObjectRequest(t, out, &parsed)
+
+	for _, key := range []string{"tcp", "udp", "tcp_udp"} {
+		if _, ok := parsed.Protocols[key]; !ok {
+			t.Errorf("%s key should be present when value is non-empty", key)
+		}
+	}
+}
+
+func TestServiceObjectHook_BeforeRequest_ICMPOnlyNoPortArrays(t *testing.T) {
+	hook := &serviceObjectHook{}
+
+	// ICMP only; all port arrays are empty
+	body := `{"name":"test","description":"d","protocols":{"icmp":true,"tcp":[],"udp":[],"tcp_udp":[]}}`
+	req := makeServiceObjectRequest("createServiceObject", body)
+	hookCtx := BeforeRequestContext{HookContext: HookContext{OperationID: "createServiceObject"}}
+
+	out, err := hook.BeforeRequest(hookCtx, req)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	var parsed struct {
+		Protocols map[string]json.RawMessage `json:"protocols"`
+	}
+	readServiceObjectRequest(t, out, &parsed)
+
+	for _, key := range []string{"tcp", "udp", "tcp_udp"} {
+		if _, ok := parsed.Protocols[key]; ok {
+			t.Errorf("%s key should be absent when value was []", key)
+		}
+	}
+	if _, ok := parsed.Protocols["icmp"]; !ok {
+		t.Error("icmp key should be preserved")
+	}
+}
+
+func TestServiceObjectHook_BeforeRequest_NoProtocolsKey(t *testing.T) {
+	hook := &serviceObjectHook{}
+
+	// Body without a protocols key — should pass through cleanly
+	body := `{"name":"test","description":"d"}`
+	req := makeServiceObjectRequest("createServiceObject", body)
+	hookCtx := BeforeRequestContext{HookContext: HookContext{OperationID: "createServiceObject"}}
+
+	out, err := hook.BeforeRequest(hookCtx, req)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	b, _ := io.ReadAll(out.Body)
+	var parsed map[string]json.RawMessage
+	if err := json.Unmarshal(b, &parsed); err != nil {
+		t.Fatalf("failed to parse output: %v", err)
+	}
+	if _, ok := parsed["protocols"]; ok {
+		t.Error("protocols key should not be introduced")
+	}
+}
+
+func TestServiceObjectHook_BeforeRequest_NilBody(t *testing.T) {
+	hook := &serviceObjectHook{}
+
+	u, _ := url.Parse("https://example.com/api/v2/profiles/serviceobjects")
+	req := &http.Request{URL: u, Header: make(http.Header), Body: nil}
+	hookCtx := BeforeRequestContext{HookContext: HookContext{OperationID: "createServiceObject"}}
+
+	out, err := hook.BeforeRequest(hookCtx, req)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if out.Body != nil {
+		t.Error("nil body should remain nil")
+	}
+}
+
+// --- helpers ---
+
+func makeServiceObjectRequest(operationID, body string) *http.Request {
+	u, _ := url.Parse("https://example.com/api/v2/profiles/serviceobjects")
+	return &http.Request{
+		URL:           u,
+		Header:        make(http.Header),
+		Body:          io.NopCloser(strings.NewReader(body)),
+		ContentLength: int64(len(body)),
+	}
+}
+
+func readServiceObjectRequest(t *testing.T, req *http.Request, dst interface{}) {
+	t.Helper()
+	b, _ := io.ReadAll(req.Body)
+	if err := json.Unmarshal(b, dst); err != nil {
+		t.Fatalf("failed to parse request body: %v\nbody: %s", err, b)
+	}
+}
+
 // --- AfterSuccess tests ---
 
 func TestServiceObjectHook_AfterSuccess_NormalizesPortIntegers(t *testing.T) {

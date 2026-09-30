@@ -19,8 +19,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_boolplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/boolplanmodifier"
-	speakeasy_int64planmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/int64planmodifier"
-	speakeasy_listplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/listplanmodifier"
 	speakeasy_objectplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/objectplanmodifier"
 	speakeasy_stringplanmodifier "github.com/netskopeoss/terraform-provider-netskope/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/netskopeoss/terraform-provider-netskope/internal/provider/types"
@@ -171,50 +169,6 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 						Description: `List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27"). Default: []`,
-					},
-					"notify": schema.SingleNestedAttribute{
-						Computed: true,
-						Optional: true,
-						PlanModifiers: []planmodifier.Object{
-							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
-						},
-						Attributes: map[string]schema.Attribute{
-							"emails": schema.ListAttribute{
-								Computed: true,
-								Optional: true,
-								PlanModifiers: []planmodifier.List{
-									speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-								},
-								ElementType: types.StringType,
-								Description: `Email addresses to notify`,
-							},
-							"from_user": schema.StringAttribute{
-								Computed: true,
-								Optional: true,
-								PlanModifiers: []planmodifier.String{
-									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-								},
-								Description: `Sender user identifier`,
-							},
-							"interval": schema.StringAttribute{
-								Computed: true,
-								Optional: true,
-								PlanModifiers: []planmodifier.String{
-									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-								},
-								Description: `Notification interval in minutes (as string, e.g. '30')`,
-							},
-							"to_users": schema.ListAttribute{
-								Computed: true,
-								Optional: true,
-								PlanModifiers: []planmodifier.List{
-									speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-								},
-								ElementType: types.StringType,
-								Description: `Recipient user types (e.g. 'admin')`,
-							},
-						},
-						Description: `Notification configuration for alert/block rule actions`,
 					},
 					"organization_units": schema.ListAttribute{
 						Computed:    true,
@@ -387,13 +341,6 @@ func (r *NPARulesResource) Schema(ctx context.Context, req resource.SchemaReques
 						Default:     listdefault.StaticValue(types.ListValueMust(types.StringType, []attr.Value{})),
 						ElementType: types.StringType,
 						Description: `Default: []`,
-					},
-					"version": schema.Int64Attribute{
-						Computed: true,
-						Optional: true,
-						PlanModifiers: []planmodifier.Int64{
-							speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
-						},
 					},
 				},
 			},

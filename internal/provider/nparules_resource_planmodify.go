@@ -75,7 +75,6 @@ func (r *NPARulesResource) ModifyPlan(ctx context.Context, req resource.ModifyPl
 	// these fields (state is null), we must explicitly use state to prevent
 	// (known after apply) on every plan.
 	preserveComputedObjectAttr(ctx, req, resp, path.Root("rule_data").AtName("periodic_reauth"))
-	preserveComputedObjectAttr(ctx, req, resp, path.Root("rule_data").AtName("notify"))
 	preserveComputedObjectAttr(ctx, req, resp, path.Root("rule_data").AtName("user_confidence"))
 
 	// Suppress template display-name/file-name drift.
@@ -130,9 +129,9 @@ func suppressTemplateDrift(ctx context.Context, req resource.ModifyPlanRequest, 
 //   - plan null (attribute omitted from config, state is non-null): prevents phantom
 //     removal diffs on post-import plans and on updates that don't touch the field
 //
-// For notify and user_confidence, Speakeasy generates SuppressDiff(ExplicitSuppress)
+// For user_confidence, Speakeasy generates SuppressDiff(ExplicitSuppress)
 // which covers the non-null state case. periodic_reauth uses a $ref so that
-// plan modifier is not generated — this function covers both cases for all three.
+// plan modifier is not generated — this function covers both cases for both fields.
 //
 // This matches ExplicitSuppress semantics: the field is preserved when not in
 // config. Users cannot clear the field by omitting it (same API/omitempty limitation

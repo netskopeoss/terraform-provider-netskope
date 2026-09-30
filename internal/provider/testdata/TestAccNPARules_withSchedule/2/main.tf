@@ -6,6 +6,10 @@ variable "name" {
   type = string
 }
 
+variable "time_interval_id" {
+  type = string
+}
+
 resource "netskope_npa_policy_groups" "test" {
   group_name = "${var.name}-group"
   group_order = {

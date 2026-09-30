@@ -1,5 +1,6 @@
-# Step 1: create with notify, rule_data.description, users, user_groups,
+# Step 1: create with rule_data.description, users, user_groups,
 # src_countries, private_app_tag_ids — mirrors the tf-test-all-npa policy (rule 21)
+# Note: notify is API-computed (not in Terraform schema)
 variable "name" {
   type = string
 }
@@ -45,12 +46,6 @@ resource "netskope_npa_rules" "test" {
     access_method         = ["Client"]
 
     description = "rule-data-description-v1"
-
-    notify = {
-      emails   = ["test@example.com"]
-      interval = "60"
-      to_users = ["admin"]
-    }
 
     users        = [var.test_user]
     user_groups  = ["admin_groups"]

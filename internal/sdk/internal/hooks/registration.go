@@ -61,13 +61,18 @@ func initHooks(h *Hooks) {
 	policyTemplate := &policyTemplateResponseHook{}
 	h.registerAfterSuccessHook(policyTemplate)
 
-	// Device classification tags - response transformations for all DC endpoints
+	// Device classification tags - response transformations for all DC tag/options endpoints
 	dcTags := &deviceClassificationTagsResponse{}
 	h.registerAfterSuccessHook(dcTags)
 
 	// Device classification tag create - wrap single object into array for API
 	dcTagReq := &deviceClassificationTagRequest{}
 	h.registerBeforeRequestHook(dcTagReq)
+
+	// Device classification rules + on-prem detection + steering mapping hooks
+	dcConfig := &dcConfigHooks{}
+	h.registerBeforeRequestHook(dcConfig)
+	h.registerAfterSuccessHook(dcConfig)
 
 	// URL list - response transformations (deploy after CRUD, wrap list response)
 	urllist := &urllistAfterSuccess{}
@@ -100,6 +105,13 @@ func initHooks(h *Hooks) {
 	// CCI data - flatten data.category → categories in getCCICategoryList responses
 	cciData := &cciDataAfterSuccess{}
 	h.registerAfterSuccessHook(cciData)
+
+	// Device tags - rewrite GET reads to POST /device/tags/gettags and unwrap API envelopes
+	// See hookDeviceTagBeforeRequest.go
+	deviceTagReq := &deviceTagRequestHook{}
+	h.registerBeforeRequestHook(deviceTagReq)
+	deviceTagResp := &deviceTagAfterSuccessHook{}
+	h.registerAfterSuccessHook(deviceTagResp)
 
 	// OAuth2 client credentials - fetches bearer token from /platform/oauth2/token
 	// when NETSKOPE_OAUTH2_CLIENT_ID and NETSKOPE_OAUTH2_CLIENT_SECRET are set.

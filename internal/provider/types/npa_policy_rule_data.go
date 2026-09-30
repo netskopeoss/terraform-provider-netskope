@@ -16,7 +16,6 @@ type NpaPolicyRuleData struct {
 	JSONVersion            types.Int64                  `tfsdk:"json_version"`
 	MatchCriteriaAction    *MatchCriteriaAction         `tfsdk:"match_criteria_action"`
 	NetLocationObj         []types.String               `tfsdk:"net_location_obj"`
-	Notify                 *Notify                      `tfsdk:"notify"`
 	OrganizationUnits      []types.String               `tfsdk:"organization_units"`
 	Os                     []types.String               `tfsdk:"os"`
 	PeriodicReauth         *NpaPolicyRulePeriodicReauth `tfsdk:"periodic_reauth"`
@@ -30,5 +29,4 @@ type NpaPolicyRuleData struct {
 	UserType               types.String                 `tfsdk:"user_type"`
 	UserConfidence         *UserConfidence              `tfsdk:"user_confidence"`
 	Users                  []types.String               `tfsdk:"users"`
-	Version                types.Int64                  `tfsdk:"version"`
 }

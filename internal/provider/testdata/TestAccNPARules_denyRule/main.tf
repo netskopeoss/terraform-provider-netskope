@@ -49,7 +49,7 @@ resource "netskope_npa_rules" "test" {
     match_criteria_action = {
       action_name = "block"
       emit_alert  = true
-      template    = "tf-test-template"
+      template    = "Default Template"
     }
 
     private_apps  = [netskope_npa_private_app.test.private_app_name]

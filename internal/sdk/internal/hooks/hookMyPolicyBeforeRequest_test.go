@@ -480,6 +480,52 @@ func TestBeforeRequest_HtmlTemplateStrippedOnUpdate(t *testing.T) {
 	}
 }
 
+// TestBeforeRequest_HtmlTemplatePreservedForPeriodicReauthOnUpdate verifies that
+// the .html template filename is NOT stripped from periodic_reauth update payloads.
+// Only block rule update payloads have .html filenames stripped (to prevent the API
+// rejecting them). For periodic_reauth, the display name is sent as-is on update and
+// the API stores it verbatim — the template applied from CREATE persists.
+// See docs/bugs/BUG-020-periodic-reauth-template.md
+func TestBeforeRequest_HtmlTemplatePreservedForPeriodicReauthOnUpdate(t *testing.T) {
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "reauth-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {
+				"action_name": "periodic_reauth",
+				"template": "10.html"
+			},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"],
+			"os": ["Windows"],
+			"periodic_reauth": {
+				"reauth_interval": "8",
+				"reauth_interval_unit": "hours"
+			}
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "updateNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+
+	// Template must be preserved — the .html strip only applies to block rules.
+	if !strings.Contains(resultBody, `"template"`) {
+		t.Errorf("expected template to be preserved in periodic_reauth update payload, got: %s", resultBody)
+	}
+	if !strings.Contains(resultBody, "10.html") {
+		t.Errorf("expected '10.html' to be present in periodic_reauth update payload, got: %s", resultBody)
+	}
+}
+
 // TestBeforeRequest_DisplayNamePreservedOnUpdate verifies that display name
 // template values (no .html suffix) are NOT stripped from update payloads.
 // A user intentionally changing their template should have the new display name sent.
@@ -547,6 +593,211 @@ func TestBeforeRequest_DisplayNamePreservedOnCreate(t *testing.T) {
 
 	if !strings.Contains(resultBody, `"Default Template"`) {
 		t.Errorf("expected 'Default Template' to be preserved in create payload, got: %s", resultBody)
+	}
+}
+
+// TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnCreate verifies
+// that a display name in a periodic_reauth template field IS translated to the
+// corresponding .html filename before the create payload is sent to the API.
+// Unlike block rules, the periodic_reauth API endpoint stores the template value
+// verbatim — it does not translate display names server-side. Sending a display name
+// results in the template not being applied by Netskope.
+// See docs/bugs/BUG-020-periodic-reauth-template.md
+// See https://github.com/netskopeoss/terraform-provider-netskope/issues/118
+func TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnCreate(t *testing.T) {
+	npaTemplatesAPIResetForTest()
+	t.Cleanup(npaTemplatesAPIResetForTest)
+
+	npaTemplatesAPISeedForTest([]npaTemplatesAPIEntry{
+		{FileName: "10.html", Name: "My Reauth Template", ActionType: "periodic_reauth"},
+	})
+
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "reauth-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {
+				"action_name": "periodic_reauth",
+				"template": "My Reauth Template"
+			},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"],
+			"os": ["Windows"],
+			"periodic_reauth": {
+				"reauth_interval": "8",
+				"reauth_interval_unit": "hours"
+			}
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+
+	// Display name must be translated to filename — the periodic_reauth API stores
+	// the value verbatim and does not accept display names server-side.
+	if strings.Contains(resultBody, `"My Reauth Template"`) {
+		t.Errorf("expected display name to be translated, but raw display name remains in payload: %s", resultBody)
+	}
+	if !strings.Contains(resultBody, `"10.html"`) {
+		t.Errorf("expected filename '10.html' in create payload after translation, got: %s", resultBody)
+	}
+}
+
+// TestBeforeRequest_PeriodicReauthDisplayNamePreservedWhenTemplatesAPIEmpty
+// verifies that when the templates API cache has no entry for the given template
+// name, the display name is sent as-is rather than failing. This is the graceful
+// fallback when the /api/v2/templates/usernotifications endpoint is unavailable
+// (e.g. 403 on some tenants) or does not contain the template.
+// See docs/bugs/BUG-020-periodic-reauth-template.md
+func TestBeforeRequest_PeriodicReauthDisplayNamePreservedWhenTemplatesAPIEmpty(t *testing.T) {
+	npaTemplatesAPIResetForTest()
+	t.Cleanup(npaTemplatesAPIResetForTest)
+
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "reauth-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {
+				"action_name": "periodic_reauth",
+				"template": "Unknown Template"
+			},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"],
+			"os": ["Windows"],
+			"periodic_reauth": {
+				"reauth_interval": "8",
+				"reauth_interval_unit": "hours"
+			}
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+
+	// Display name must be preserved — BeforeRequest never translates for periodic_reauth.
+	if !strings.Contains(resultBody, `"Unknown Template"`) {
+		t.Errorf("expected display name to be preserved in create payload, got: %s", resultBody)
+	}
+}
+
+// TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnUpdate verifies
+// that a display name in a periodic_reauth template field IS translated to the .html
+// filename on update payloads, mirroring the create behaviour.
+// See docs/bugs/BUG-020-periodic-reauth-template.md
+// See https://github.com/netskopeoss/terraform-provider-netskope/issues/118
+func TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnUpdate(t *testing.T) {
+	npaTemplatesAPIResetForTest()
+	t.Cleanup(npaTemplatesAPIResetForTest)
+
+	npaTemplatesAPISeedForTest([]npaTemplatesAPIEntry{
+		{FileName: "10.html", Name: "My Template", ActionType: "periodic_reauth"},
+	})
+
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "reauth-rule",
+		"enabled": "0",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {
+				"action_name": "periodic_reauth",
+				"template": "My Template"
+			},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"],
+			"os": ["Windows"],
+			"periodic_reauth": {
+				"reauth_interval": "8",
+				"reauth_interval_unit": "hours"
+			}
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "updateNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+
+	// Display name must be translated to filename on update.
+	if !strings.Contains(resultBody, `"template"`) {
+		t.Errorf("expected template to be present in periodic_reauth update payload, got: %s", resultBody)
+	}
+	if strings.Contains(resultBody, `"My Template"`) {
+		t.Errorf("expected display name to be translated, but raw display name remains in update payload: %s", resultBody)
+	}
+	if !strings.Contains(resultBody, `"10.html"`) {
+		t.Errorf("expected filename '10.html' in update payload after translation, got: %s", resultBody)
+	}
+}
+
+// TestBeforeRequest_BlockRuleDisplayNameNotTranslatedViaTemplatesAPI verifies
+// that block rule display names are NOT translated to filenames even when the
+// templates API cache has an entry. Block rules accept display names natively
+// server-side, so translation is unnecessary and would cause the .html strip to
+// unnecessarily suppress the value.
+func TestBeforeRequest_BlockRuleDisplayNameNotTranslatedViaTemplatesAPI(t *testing.T) {
+	npaTemplatesAPIResetForTest()
+	t.Cleanup(npaTemplatesAPIResetForTest)
+
+	npaTemplatesAPISeedForTest([]npaTemplatesAPIEntry{
+		{FileName: "5.html", Name: "Generic Block", ActionType: "block"},
+	})
+
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "block-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"match_criteria_action": {
+				"action_name": "block",
+				"emit_alert": true,
+				"template": "Generic Block"
+			},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"]
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+
+	// Block rule display name must NOT be translated — API accepts it as-is
+	if !strings.Contains(resultBody, `"Generic Block"`) {
+		t.Errorf("expected block rule display name to be preserved, got: %s", resultBody)
+	}
+	if strings.Contains(resultBody, "5.html") {
+		t.Errorf("expected .html filename NOT to appear for block rule create, got: %s", resultBody)
 	}
 }
 

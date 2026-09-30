@@ -48,12 +48,6 @@ resource "netskope_npa_rules" "test" {
 
     description = "rule-data-description-v2"
 
-    notify = {
-      emails   = ["test@example.com"]
-      interval = "60"
-      to_users = ["admin"]
-    }
-
     users        = [var.test_user]
     user_groups  = ["admin_groups"]
     src_countries = ["AL", "CN"]

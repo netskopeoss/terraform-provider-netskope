@@ -69,21 +69,6 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			for _, v := range resp.RuleData.NetLocationObj {
 				r.RuleData.NetLocationObj = append(r.RuleData.NetLocationObj, types.StringValue(v))
 			}
-			if resp.RuleData.Notify == nil {
-				r.RuleData.Notify = nil
-			} else {
-				r.RuleData.Notify = &tfTypes.Notify{}
-				r.RuleData.Notify.Emails = make([]types.String, 0, len(resp.RuleData.Notify.Emails))
-				for _, v := range resp.RuleData.Notify.Emails {
-					r.RuleData.Notify.Emails = append(r.RuleData.Notify.Emails, types.StringValue(v))
-				}
-				r.RuleData.Notify.FromUser = types.StringPointerValue(resp.RuleData.Notify.FromUser)
-				r.RuleData.Notify.Interval = types.StringPointerValue(resp.RuleData.Notify.Interval)
-				r.RuleData.Notify.ToUsers = make([]types.String, 0, len(resp.RuleData.Notify.ToUsers))
-				for _, v := range resp.RuleData.Notify.ToUsers {
-					r.RuleData.Notify.ToUsers = append(r.RuleData.Notify.ToUsers, types.StringValue(v))
-				}
-			}
 			r.RuleData.OrganizationUnits = make([]types.String, 0, len(resp.RuleData.OrganizationUnits))
 			for _, v := range resp.RuleData.OrganizationUnits {
 				r.RuleData.OrganizationUnits = append(r.RuleData.OrganizationUnits, types.StringValue(v))
@@ -164,7 +149,6 @@ func (r *NPARulesDataSourceModel) RefreshFromSharedNpaPolicyResponseItem(ctx con
 			} else {
 				r.RuleData.UserType = types.StringNull()
 			}
-			r.RuleData.Version = types.Int64PointerValue(resp.RuleData.Version)
 		}
 		r.RuleName = types.StringPointerValue(resp.RuleName)
 	}

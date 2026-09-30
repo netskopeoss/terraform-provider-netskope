@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_aig_rate_limit Resource - terraform-provider-netskope"
-subcategory: ""
+subcategory: "AI Gateway"
 description: |-
   Manages a rate limit rule for the Netskope AI Gateway — controls request throughput per appliance for AI provider or MCP server traffic.
 ---

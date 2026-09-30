@@ -65,6 +65,7 @@ Read-Only:
 - `net_location_obj` (List of String) List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27").
 - `notify` (Attributes) Notification configuration for alert/block rule actions (see [below for nested schema](#nestedatt--data--rule_data--notify))
 - `organization_units` (List of String)
+- `os` (List of String) Operating system filter (Client access only). Valid values: "AmigaOS", "Android", "BlackBerry", "BSD", "Chrome OS", "Darwin", "Debian", "Fedora", "iOS", "Linux", "Mac", "Others", "Red", "RHEL", "Solaris", "SunOS", "Symbian", "Ubuntu", "Windows".
 - `periodic_reauth` (Attributes) (see [below for nested schema](#nestedatt--data--rule_data--periodic_reauth))
 - `policy_type` (String)
 - `private_app_tag_ids` (List of String) Tag IDs (numeric as string) — alternative to privateAppTags (names)

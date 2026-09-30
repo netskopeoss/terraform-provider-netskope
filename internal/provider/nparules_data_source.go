@@ -108,30 +108,6 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						ElementType: types.StringType,
 						Description: `List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27").`,
 					},
-					"notify": schema.SingleNestedAttribute{
-						Computed: true,
-						Attributes: map[string]schema.Attribute{
-							"emails": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-								Description: `Email addresses to notify`,
-							},
-							"from_user": schema.StringAttribute{
-								Computed:    true,
-								Description: `Sender user identifier`,
-							},
-							"interval": schema.StringAttribute{
-								Computed:    true,
-								Description: `Notification interval in minutes (as string, e.g. '30')`,
-							},
-							"to_users": schema.ListAttribute{
-								Computed:    true,
-								ElementType: types.StringType,
-								Description: `Recipient user types (e.g. 'admin')`,
-							},
-						},
-						Description: `Notification configuration for alert/block rule actions`,
-					},
 					"organization_units": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
@@ -229,9 +205,6 @@ func (r *NPARulesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					"users": schema.ListAttribute{
 						Computed:    true,
 						ElementType: types.StringType,
-					},
-					"version": schema.Int64Attribute{
-						Computed: true,
 					},
 				},
 			},

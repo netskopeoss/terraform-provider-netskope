@@ -1,6 +1,6 @@
 ---
 page_title: "netskope_urllist Resource - terraform-provider-netskope"
-subcategory: ""
+subcategory: "Security Profiles"
 description: |-
   Manages a Netskope URL list — a named set of URLs or URL patterns used in web security policies.
 ---
