@@ -120,9 +120,10 @@ func (r *DeviceClassificationSteeringMappingResource) Create(ctx context.Context
 	}
 	res, err := r.client.DeviceClassificationSteeringMapping.UpdateDeviceClassificationSteeringMapping(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -148,9 +149,10 @@ func (r *DeviceClassificationSteeringMappingResource) Create(ctx context.Context
 	}
 	res1, err := r.client.Deviceclassification.GetDeviceClassificationSteeringMapping(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res1.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -208,9 +210,10 @@ func (r *DeviceClassificationSteeringMappingResource) Read(ctx context.Context, 
 	}
 	res, err := r.client.Deviceclassification.GetDeviceClassificationSteeringMapping(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -286,9 +289,10 @@ func (r *DeviceClassificationSteeringMappingResource) Delete(ctx context.Context
 	}
 	res, err := r.client.Deviceclassification.DeleteDeviceClassificationSteeringMapping(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}

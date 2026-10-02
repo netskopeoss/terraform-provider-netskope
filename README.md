@@ -527,6 +527,20 @@ go build -o terraform-provider-netskope
    terraform apply
    ```
 
+### API Failure Diagnostics
+
+Failed API operations report only the HTTP method, response status code, and
+`X-Netskope-Request-Id` in normal Terraform error diagnostics, for example:
+
+```text
+method="GET" status=503 request_id="request-123"
+```
+
+Unavailable metadata is reported as `unavailable`. These diagnostics are emitted
+without enabling Terraform logging and exclude URLs, request/response bodies,
+credentials, and other HTTP headers. Explicit DEBUG HTTP logging remains verbose
+and should be treated as sensitive.
+
 ### Debug Mode
 
 ```bash

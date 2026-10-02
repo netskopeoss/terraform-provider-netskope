@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httputil"
@@ -23,27 +22,6 @@ import (
 
 	tfReflect "github.com/netskopeoss/terraform-provider-netskope/internal/provider/reflect"
 )
-
-func debugResponse(response *http.Response) string {
-	if v := response.Request.Header.Get("Netskope-Api-Token"); v != "" {
-		response.Request.Header.Set("Netskope-Api-Token", "(sensitive)")
-	}
-	dumpReq, err := httputil.DumpRequest(response.Request, true)
-	if err != nil {
-		dumpReq, err = httputil.DumpRequest(response.Request, false)
-		if err != nil {
-			return err.Error()
-		}
-	}
-	dumpRes, err := httputil.DumpResponse(response, true)
-	if err != nil {
-		dumpRes, err = httputil.DumpResponse(response, false)
-		if err != nil {
-			return err.Error()
-		}
-	}
-	return fmt.Sprintf("**Request**:\n%s\n**Response**:\n%s", string(dumpReq), string(dumpRes))
-}
 
 func merge(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse, target interface{}) {
 	var plan types.Object
