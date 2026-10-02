@@ -123,9 +123,10 @@ func (r *AIGTokenGroupResource) Create(ctx context.Context, req resource.CreateR
 	}
 	res, err := r.client.AIGTokenGroup.Create(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -183,9 +184,10 @@ func (r *AIGTokenGroupResource) Read(ctx context.Context, req resource.ReadReque
 	}
 	res, err := r.client.AIGTokenGroup.Read(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -237,9 +239,10 @@ func (r *AIGTokenGroupResource) Update(ctx context.Context, req resource.UpdateR
 	}
 	res, err := r.client.AIGTokenGroup.Update(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -297,9 +300,10 @@ func (r *AIGTokenGroupResource) Delete(ctx context.Context, req resource.DeleteR
 	}
 	res, err := r.client.AIGTokenGroup.Delete(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}

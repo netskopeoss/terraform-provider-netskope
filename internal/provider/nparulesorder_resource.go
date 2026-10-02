@@ -86,7 +86,7 @@ func (r *NPARulesOrderResource) Create(ctx context.Context, req resource.CreateR
 	}
 
 	if err := r.applyOrder(ctx, data.RuleIDs); err != nil {
-		resp.Diagnostics.AddError("Failed to set rule order", err.Error())
+		resp.Diagnostics.AddError("Failed to set rule order", apiErrorDetails(err))
 		return
 	}
 
@@ -104,7 +104,7 @@ func (r *NPARulesOrderResource) Read(ctx context.Context, req resource.ReadReque
 	// Query the live rule order from the API
 	liveOrder, err := r.readLiveOrder(ctx, data.RuleIDs)
 	if err != nil {
-		resp.Diagnostics.AddError("Failed to read rule order from API", err.Error())
+		resp.Diagnostics.AddError("Failed to read rule order from API", apiErrorDetails(err))
 		return
 	}
 
@@ -126,11 +126,11 @@ func (r *NPARulesOrderResource) readLiveOrder(ctx context.Context, managedIDs []
 	}
 
 	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("GET rules returned %d", res.StatusCode)
+		return nil, &apiFailureError{response: res.RawResponse}
 	}
 
 	if res.NpaPolicyResponse == nil {
-		return nil, fmt.Errorf("GET rules returned empty response")
+		return nil, &apiFailureError{response: res.RawResponse}
 	}
 
 	// Build set of managed IDs for fast lookup
@@ -158,7 +158,7 @@ func (r *NPARulesOrderResource) Update(ctx context.Context, req resource.UpdateR
 	}
 
 	if err := r.applyOrder(ctx, data.RuleIDs); err != nil {
-		resp.Diagnostics.AddError("Failed to update rule order", err.Error())
+		resp.Diagnostics.AddError("Failed to update rule order", apiErrorDetails(err))
 		return
 	}
 
@@ -227,7 +227,7 @@ func (r *NPARulesOrderResource) patchOrder(ctx context.Context, ruleIDs []types.
 			return fmt.Errorf("PATCH failed for rule %s: %w", id, err)
 		}
 		if res.StatusCode != 200 {
-			return fmt.Errorf("PATCH rule %s returned %d", id, res.StatusCode)
+			return &apiFailureError{response: res.RawResponse}
 		}
 
 		// Wait for the position to commit before moving the next rule

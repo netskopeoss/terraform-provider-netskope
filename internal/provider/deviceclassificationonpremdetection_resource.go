@@ -118,9 +118,10 @@ func (r *DeviceClassificationOnPremDetectionResource) Create(ctx context.Context
 	}
 	res, err := r.client.DeviceClassificationOnPremDetection.CreateDeviceClassificationOnPremDetection(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -178,9 +179,10 @@ func (r *DeviceClassificationOnPremDetectionResource) Read(ctx context.Context, 
 	}
 	res, err := r.client.Deviceclassification.GetDeviceClassificationOnPremDetection(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -232,9 +234,10 @@ func (r *DeviceClassificationOnPremDetectionResource) Update(ctx context.Context
 	}
 	res, err := r.client.DeviceClassificationOnPremDetection.UpdateDeviceClassificationOnPremDetection(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -292,9 +295,10 @@ func (r *DeviceClassificationOnPremDetectionResource) Delete(ctx context.Context
 	}
 	res, err := r.client.Deviceclassification.DeleteDeviceClassificationOnPremDetection(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}

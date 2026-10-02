@@ -251,9 +251,10 @@ func (r *DNSProfileV2Resource) Create(ctx context.Context, req resource.CreateRe
 	}
 	res, err := r.client.DNSProfileV2.CreateDNSProfileV2(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -298,9 +299,10 @@ func (r *DNSProfileV2Resource) Create(ctx context.Context, req resource.CreateRe
 	}
 	res1, err := r.client.Profiles.GetDNSProfileV2(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res1.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -358,9 +360,10 @@ func (r *DNSProfileV2Resource) Read(ctx context.Context, req resource.ReadReques
 	}
 	res, err := r.client.Profiles.GetDNSProfileV2(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -412,9 +415,10 @@ func (r *DNSProfileV2Resource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	res, err := r.client.DNSProfileV2.UpdateDNSProfileV2(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -452,9 +456,10 @@ func (r *DNSProfileV2Resource) Update(ctx context.Context, req resource.UpdateRe
 	}
 	res1, err := r.client.Profiles.GetDNSProfileV2(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res1.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -512,9 +517,10 @@ func (r *DNSProfileV2Resource) Delete(ctx context.Context, req resource.DeleteRe
 	}
 	res, err := r.client.Profiles.DeleteDNSProfileV2(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}

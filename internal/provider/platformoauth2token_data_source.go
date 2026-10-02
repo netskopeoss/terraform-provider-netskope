@@ -110,7 +110,7 @@ func (d *PlatformOAuth2TokenDataSource) Read(ctx context.Context, req datasource
 
 	tokenResp, err := d.fetchToken(ctx, data.ClientID.ValueString(), data.ClientSecret.ValueString(), grantType)
 	if err != nil {
-		resp.Diagnostics.AddError("Failed to fetch OAuth2 token", err.Error())
+		resp.Diagnostics.AddError("Failed to fetch OAuth2 token", apiErrorDetails(err))
 		return
 	}
 
@@ -171,24 +171,20 @@ func (d *PlatformOAuth2TokenDataSource) fetchToken(ctx context.Context, clientID
 
 	respBody, err := io.ReadAll(httpResp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read response: %w", err)
+		return nil, &apiFailureError{response: httpResp}
 	}
 
 	if httpResp.StatusCode != http.StatusOK {
-		var errResp oauth2ErrorResponse
-		if jsonErr := json.Unmarshal(respBody, &errResp); jsonErr == nil && errResp.Error != "" {
-			return nil, fmt.Errorf("API error %d: %s — %s", httpResp.StatusCode, errResp.Error, errResp.ErrorDescription)
-		}
-		return nil, fmt.Errorf("unexpected status %d: %s", httpResp.StatusCode, string(respBody))
+		return nil, &apiFailureError{response: httpResp}
 	}
 
 	var tokenResp oauth2TokenResponse
 	if err := json.Unmarshal(respBody, &tokenResp); err != nil {
-		return nil, fmt.Errorf("failed to parse token response: %w", err)
+		return nil, &apiFailureError{response: httpResp}
 	}
 
 	if tokenResp.AccessToken == "" {
-		return nil, fmt.Errorf("API returned empty access_token")
+		return nil, &apiFailureError{response: httpResp}
 	}
 
 	return &tokenResp, nil

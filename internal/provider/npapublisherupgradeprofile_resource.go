@@ -255,9 +255,10 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 	}
 	res, err := r.client.NPAPublisherUpgradeProfile.CreateNPAPublisherUpgradeProfile(ctx, request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -292,9 +293,10 @@ func (r *NPAPublisherUpgradeProfileResource) Create(ctx context.Context, req res
 	}
 	res1, err := r.client.NPAPublisherUpgradeProfile.GetNPAPublisherUpgradeProfile(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res1.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -352,9 +354,10 @@ func (r *NPAPublisherUpgradeProfileResource) Read(ctx context.Context, req resou
 	}
 	res, err := r.client.NPAPublisherUpgradeProfile.GetNPAPublisherUpgradeProfile(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -406,9 +409,10 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 	}
 	res, err := r.client.NPAPublisherUpgradeProfile.UpdateNPAPublisherUpgradeProfile(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -443,9 +447,10 @@ func (r *NPAPublisherUpgradeProfileResource) Update(ctx context.Context, req res
 	}
 	res1, err := r.client.NPAPublisherUpgradeProfile.GetNPAPublisherUpgradeProfile(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res1.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -503,9 +508,10 @@ func (r *NPAPublisherUpgradeProfileResource) Delete(ctx context.Context, req res
 	}
 	res, err := r.client.NPAPublisherUpgradeProfile.DeleteNPAPublisherUpgradeProfile(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}

@@ -119,9 +119,10 @@ func (r *RBACLabelResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	res, err := r.client.RBACLabel.CreateRBACLabel(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -156,9 +157,10 @@ func (r *RBACLabelResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	res1, err := r.client.Rbac.GetRBACLabel(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res1.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -216,9 +218,10 @@ func (r *RBACLabelResource) Read(ctx context.Context, req resource.ReadRequest, 
 	}
 	res, err := r.client.Rbac.GetRBACLabel(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -270,9 +273,10 @@ func (r *RBACLabelResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 	res, err := r.client.RBACLabel.UpdateRBACLabel(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -307,9 +311,10 @@ func (r *RBACLabelResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 	res1, err := r.client.Rbac.GetRBACLabel(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res1.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
@@ -367,9 +372,10 @@ func (r *RBACLabelResource) Delete(ctx context.Context, req resource.DeleteReque
 	}
 	res, err := r.client.Rbac.DeleteRBACLabel(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+			resp.Diagnostics.AddError("failure to invoke API", debugResponse(res.RawResponse))
+		} else {
+			resp.Diagnostics.AddError("failure to invoke API", apiErrorDetails(err))
 		}
 		return
 	}
