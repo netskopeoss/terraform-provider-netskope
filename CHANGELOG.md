@@ -4,6 +4,11 @@ All notable changes to the Netskope Terraform Provider will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- **`netskope_npa_rules_order` re-PATCHed every managed rule on each update, taking minutes for large rule sets and scrambling the live list mid-apply** ([#125](https://github.com/netskopeoss/terraform-provider-netskope/issues/125)) — `applyOrder` never read the live order first. It sent a `top` PATCH for every ID in `rule_ids` (with a 500ms sleep each, plus fixed 3s/2s/3s sleeps), so removing a single ID from a list of ~232 rules took about 4.5 minutes and exposed the apply to 429/504 errors halfway through the reshuffle. Fixed by reading the live order first: if the managed rules are already in the requested relative order, no PATCHes are sent and no sleeps are taken; otherwise only the rules that are out of place (the prefix in front of the longest already-ordered suffix) are moved to the top. The post-PATCH live read replaces the separate verify step and any rules still out of place are moved on the next attempt (up to 3). Rules that did not need to move are no longer pushed above unmanaged rules on every apply.
+
 ## [0.4.11] - 2026-09-25
 
 ### Added
