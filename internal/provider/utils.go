@@ -25,6 +25,9 @@ import (
 )
 
 func debugResponse(response *http.Response) string {
+	if v := response.Request.Header.Get("Authorization"); v != "" {
+		response.Request.Header.Set("Authorization", "(sensitive)")
+	}
 	if v := response.Request.Header.Get("Netskope-Api-Token"); v != "" {
 		response.Request.Header.Set("Netskope-Api-Token", "(sensitive)")
 	}
@@ -238,6 +241,9 @@ func fieldHeadersFromRequestReader(reader *textproto.Reader, fields map[string]i
 		} else {
 			fields[k] = v
 		}
+	}
+	if _, ok := fields["Authorization"]; ok {
+		fields["Authorization"] = "(sensitive)"
 	}
 	if _, ok := fields["Netskope-Api-Token"]; ok {
 		fields["Netskope-Api-Token"] = "(sensitive)"

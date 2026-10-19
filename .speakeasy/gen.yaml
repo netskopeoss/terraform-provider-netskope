@@ -45,7 +45,9 @@ terraform:
   allowUnknownFieldsInWeakUnions: false
   author: netskopeoss
   baseErrorName: TerraformProviderNsError
-  debugLogging: {}
+  debugLogging:
+    additionalSensitiveHttpHeaders:
+      - Authorization
   defaultErrorName: SDKError
   enableCustomCodeRegions: false
   enableOperationSecurity: false

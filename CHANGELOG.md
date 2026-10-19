@@ -1,4 +1,4 @@
-up# Changelog
+# Changelog
 
 All notable changes to the Netskope Terraform Provider will be documented in this file.
 
@@ -12,7 +12,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **`netskope_npa_rules_order` re-PATCHed every managed rule on each update, taking minutes for large rule sets and scrambling the live list mid-apply** ([#125](https://github.com/netskopeoss/terraform-provider-netskope/issues/125)) — `applyOrder` never read the live order first. It sent a `top` PATCH for every ID in `rule_ids` (with a 500ms sleep each, plus fixed 3s/2s/3s sleeps), so removing a single ID from a list of ~232 rules took about 4.5 minutes and exposed the apply to 429/504 errors halfway through the reshuffle. Fixed by reading the live order first: if the managed rules are already in the requested relative order, no PATCHes are sent and no sleeps are taken; otherwise only the rules that are out of place (the prefix in front of the longest already-ordered suffix) are moved to the top. The post-PATCH live read replaces the separate verify step and any rules still out of place are moved on the next attempt (up to 3). Rules that did not need to move are no longer pushed above unmanaged rules on every apply.
 
 ### Added
+- **`netskope_npa_private_app_tag`** resource and data sources (`netskope_npa_private_app_tag`, `netskope_npa_private_app_tags_list`) — Manage NPA private app tags via `/api/v2/steering/tags`. Fields: `tag_name` (required), `tag_color` (optional hex color). `tag_id` is computed. The API uses a batch POST envelope; a BeforeRequest hook wraps the flat request and AfterSuccess unwraps the response so the Terraform schema remains flat.
 - **`netskope_network_profile`** resource and data sources (`netskope_network_profile`, `netskope_network_profile_list`) — Manage network location profiles via `/api/v2/profiles/networks`. Fields: `name` (required, max 100 chars), `description` (optional, max 200 chars), `values` (list of IP addresses, CIDR blocks, or IP ranges, e.g. `"192.168.0.1/24"`, `"10.0.0.1-10.0.0.254"`). `id` is computed. Requires Cloud Firewall licensing; acceptance tests require `TF_RUN_NETWORK_PROFILES=1`.
+
+### Security
+- **OAuth2 `Authorization` bearer token was logged in plaintext in provider error diagnostics** — When `TF_LOG=DEBUG` was set, the `debugResponse` helper included the raw `Authorization: Bearer <token>` header in API error output. The Speakeasy-generated `debugLogging` already masked `Netskope-Api-Token` but had no visibility into the bearer token set by the OAuth2 hook. 
 
 ## [0.4.11] - 2026-09-25
 
