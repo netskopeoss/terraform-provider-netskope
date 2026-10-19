@@ -18,6 +18,7 @@ sources:
             - location: $NETSKOPE_OAS_DIR/endpoints/profiles/destination_profiles.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/profiles/custom_categories.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/profiles/service_objects.yaml
+            - location: $NETSKOPE_OAS_DIR/endpoints/profiles/network_profiles.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/platform/rbac_labels.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/platform/rbac_roles.yaml
             - location: $NETSKOPE_OAS_DIR/endpoints/platform/deviceclassification_tags.yaml

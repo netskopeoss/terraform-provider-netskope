@@ -84,9 +84,12 @@ func (i *myPolicyResponse) AfterSuccess(hookCtx AfterSuccessContext, res *http.R
 					mca["template"] = displayName
 				} else if actionName == "block" {
 					// Fallback: session cache for block rules. Populated by BeforeRequest
-					// context storage during createNPARules when the templates API was
-					// unavailable (user supplied a display name that was stored in ctx).
-					if hookCtx.OperationID == "createNPARules" && res.Request != nil {
+					// context storage during createNPARules and updateNPARules when the
+					// templates API was unavailable (user supplied a display name that was
+					// stored in ctx). Covering updateNPARules ensures that after a successful
+					// update, state holds the display name rather than the .html file name,
+					// preventing drift on the next plan within the same session.
+					if (hookCtx.OperationID == "createNPARules" || hookCtx.OperationID == "updateNPARules") && res.Request != nil {
 						if displayName, ok := npaTemplateDisplayNameFromCtx(res.Request.Context()); ok {
 							npaTemplateCacheSet(fileName, displayName)
 						}

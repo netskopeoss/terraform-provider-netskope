@@ -75,6 +75,7 @@ type TerraformProviderNs struct {
 	DestinationProfile                  *DestinationProfile
 	CustomCategory                      *CustomCategory
 	ServiceObject                       *ServiceObject
+	NetworkProfile                      *NetworkProfile
 	Rbac                                *Rbac
 	RBACLabel                           *RBACLabel
 	RBACRole                            *RBACRole
@@ -239,6 +240,7 @@ func New(opts ...SDKOption) *TerraformProviderNs {
 	sdk.DestinationProfile = newDestinationProfile(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.CustomCategory = newCustomCategory(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.ServiceObject = newServiceObject(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.NetworkProfile = newNetworkProfile(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Rbac = newRbac(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.RBACLabel = newRBACLabel(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.RBACRole = newRBACRole(sdk, sdk.sdkConfiguration, sdk.hooks)

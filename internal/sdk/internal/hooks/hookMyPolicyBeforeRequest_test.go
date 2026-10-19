@@ -439,13 +439,15 @@ func TestBeforeRequest_NegateNetLocationPreservedWhenPopulated(t *testing.T) {
 	}
 }
 
-// TestBeforeRequest_HtmlTemplateStrippedOnUpdate verifies that the BeforeRequest
-// hook removes the template field from update payloads when it contains a .html
-// file name. suppressTemplateDrift sets the planned template to the API-returned
-// file name to suppress phantom diffs; stripping it here prevents the PUT from
-// sending a file name the API rejects with "Undefined template: *.html".
-// See docs/bugs/BUG-019-block-rule-template-phantom-update.md
-func TestBeforeRequest_HtmlTemplateStrippedOnUpdate(t *testing.T) {
+// TestBeforeRequest_HtmlTemplatePassesThroughOnUpdate verifies that the BeforeRequest
+// hook no longer strips .html file names from block rule update payloads.
+// suppressTemplateDrift now sets plan.template to the config display name (not the
+// state file name), so in practice the hook should never receive a .html file name
+// for a block update. If it does (e.g. user puts a filename directly in config),
+// the hook passes it through unchanged rather than stripping it — stripping caused
+// "template field is required" on tenants that require the field to be present.
+// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/124
+func TestBeforeRequest_HtmlTemplatePassesThroughOnUpdate(t *testing.T) {
 	hook := &myPolicyRequest{}
 
 	body := `{
@@ -472,11 +474,10 @@ func TestBeforeRequest_HtmlTemplateStrippedOnUpdate(t *testing.T) {
 
 	resultBody := readRequestBody(t, result)
 
-	if strings.Contains(resultBody, `"template"`) {
-		t.Errorf("expected .html template to be stripped from update payload, got: %s", resultBody)
-	}
-	if strings.Contains(resultBody, "23.html") {
-		t.Errorf("expected file name '23.html' to be absent from update payload, got: %s", resultBody)
+	// The file name should be present — stripping was removed to avoid the
+	// "template field is required" error on tenants that mandate the field.
+	if !strings.Contains(resultBody, "23.html") {
+		t.Errorf("expected file name '23.html' to be present in update payload (no longer stripped), got: %s", resultBody)
 	}
 }
 

@@ -2402,6 +2402,136 @@ func TestAccDrift_DeviceClassificationOnPremDetection(t *testing.T) {
 	})
 }
 
+// TestAccDrift_NetworkProfile verifies no drift on network profile resources
+// with values list and optional description.
+func TestAccDrift_NetworkProfile(t *testing.T) {
+	skipUnlessEnvSet(t, "TF_RUN_NETWORK_PROFILES", "network profiles require a tenant with Cloud Firewall licensing enabled")
+
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_network_profile"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftNetworkProfileConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_network_profile.test", "id"),
+					resource.TestCheckResourceAttr("netskope_network_profile.test", "values.#", "2"),
+				),
+			},
+			{
+				Config: testAccDriftNetworkProfileConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftNetworkProfileConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_network_profile" "test" {
+  name        = %q
+  description = "Drift detection test"
+  values      = ["192.168.1.0/24", "10.0.0.0/8"]
+}
+`, testAccProviderConfig(), name)
+}
+
+// TestAccDrift_NetworkProfile_Minimal verifies no drift when description is
+// omitted — the API may return "" or null for description, which would cause
+// a perpetual diff if the Computed field is not handled correctly.
+func TestAccDrift_NetworkProfile_Minimal(t *testing.T) {
+	skipUnlessEnvSet(t, "TF_RUN_NETWORK_PROFILES", "network profiles require a tenant with Cloud Firewall licensing enabled")
+
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_network_profile"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDriftNetworkProfileMinimalConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_network_profile.test", "id"),
+					resource.TestCheckResourceAttr("netskope_network_profile.test", "values.#", "1"),
+				),
+			},
+			{
+				Config: testAccDriftNetworkProfileMinimalConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func testAccDriftNetworkProfileMinimalConfig(name string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "netskope_network_profile" "test" {
+  name   = %q
+  values = ["192.168.1.0/24"]
+}
+`, testAccProviderConfig(), name)
+}
+
+// TestAccDrift_NetworkProfile_DescriptionRemoval verifies that removing
+// description from config after it was set causes no perpetual diff.
+// The refreshPlan call must override the API-returned description with the
+// plan value (null) so state converges on the config intent.
+func TestAccDrift_NetworkProfile_DescriptionRemoval(t *testing.T) {
+	skipUnlessEnvSet(t, "TF_RUN_NETWORK_PROFILES", "network profiles require a tenant with Cloud Firewall licensing enabled")
+
+	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckResourceDestroy("netskope_network_profile"),
+		Steps: []resource.TestStep{
+			{
+				// Step 1: create with description set.
+				Config: testAccDriftNetworkProfileConfig(rName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckResourceExists("netskope_network_profile.test", "id"),
+					resource.TestCheckResourceAttr("netskope_network_profile.test", "description", "Drift detection test"),
+				),
+			},
+			{
+				// Step 2: re-apply without description — no diff expected.
+				Config: testAccDriftNetworkProfileMinimalConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectNonEmptyPlan(),
+					},
+				},
+			},
+			{
+				// Step 3: re-apply without description again — must be stable.
+				Config: testAccDriftNetworkProfileMinimalConfig(rName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
 func testAccDriftDCOnPremConfig(name string) string {
 	return fmt.Sprintf(`
 %s
