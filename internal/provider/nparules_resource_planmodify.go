@@ -82,21 +82,43 @@ func (r *NPARulesResource) ModifyPlan(ctx context.Context, req resource.ModifyPl
 	suppressTemplateDrift(ctx, req, resp)
 }
 
-// suppressTemplateDrift suppresses the perpetual diff between the template
-// display name (in config) and the file name (returned by API).
-// The API accepts display names on create/update but returns file names on GET.
-// We set the plan template to the state value (the file name) so Terraform
-// sees no change. The BeforeRequest hook strips .html file names from update
-// payloads so that when a real update fires, it does not send the file name.
-// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/79
+// suppressTemplateDrift handles the drift between the template display name
+// (in config) and the file name (returned by API on GET responses).
+//
+// The Netskope API accepts display names on create/update but returns .html
+// file names on GET. Ideally the AfterSuccess hook translates file names back
+// to display names so state always holds the display name — but this requires
+// the /api/v2/templates/usernotifications endpoint to be accessible, which
+// returns 403 on some tenants regardless of token permissions.
+//
+// When that endpoint is unavailable (403), state ends up holding the .html
+// file name after every refresh. In that case we set the plan to the config
+// display name (not the state file name) so that:
+//  1. The update payload carries the display name, which the API accepts.
+//  2. AfterSuccess can capture the display name from BeforeRequest context
+//     and substitute it into the response, leaving state with the display name
+//     for the remainder of the session.
+//
+// The downside is a visible plan diff ("5.html" → "My Template") on tenants
+// where the templates API is 403 and state holds a file name. This is a
+// per-session one-time cost: after the first apply the state holds the display
+// name and subsequent plans show no diff (within the same Terraform run).
+//
+// On tenants where the templates API works, AfterSuccess always translates
+// file names to display names on read, so state == config == display name and
+// this function returns early without modifying the plan.
+//
+// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/124
 // See: docs/bugs/BUG-019-block-rule-template-phantom-update.md
 func suppressTemplateDrift(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
 	templatePath := path.Root("rule_data").AtName("match_criteria_action").AtName("template")
+	actionNamePath := path.Root("rule_data").AtName("match_criteria_action").AtName("action_name")
 
-	var configVal, stateVal types.String
+	var configVal, stateVal, actionNameVal types.String
 
 	resp.Diagnostics.Append(req.Config.GetAttribute(ctx, templatePath, &configVal)...)
 	resp.Diagnostics.Append(req.State.GetAttribute(ctx, templatePath, &stateVal)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, actionNamePath, &actionNameVal)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -114,10 +136,37 @@ func suppressTemplateDrift(ctx context.Context, req resource.ModifyPlanRequest, 
 		return
 	}
 
-	// If state has a file name and config has a display name,
-	// use the state value in the plan to suppress the false diff.
-	if strings.HasSuffix(stateStr, ".html") && !strings.HasSuffix(configStr, ".html") {
+	// State holds a .html file name but config holds a display name.
+	if !strings.HasSuffix(stateStr, ".html") || strings.HasSuffix(configStr, ".html") {
+		return
+	}
+
+	actionName := actionNameVal.ValueString()
+
+	switch actionName {
+	case "periodic_reauth":
+		// For periodic_reauth rules, keep the state value in the plan.
+		//
+		// The AfterSuccess hook translates the .html filename back to the display
+		// name via the templates API cache. When translation succeeds, state holds
+		// the display name and config matches — this branch is never reached.
+		// When translation fails (templates API unavailable or the cached action_type
+		// does not match the rule's action_name), state holds the .html filename.
+		// Preserving the state value here suppresses the visible diff so the plan
+		// remains stable. The BeforeRequest hook sees the filename in the plan and
+		// passes it through unchanged to the API, which is correct for periodic_reauth
+		// (the API stores the value verbatim, so a filename is always valid).
+		// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/118
 		resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, templatePath, stateVal)...)
+	default:
+		// For block and other rule types: set plan to the config display name so
+		// update payloads carry a value the API accepts. This fixes the scenario
+		// where state holds a .html filename (e.g. after importing a UI-created rule
+		// or on a fresh session against a tenant where the templates API returns 403)
+		// and a subsequent update would otherwise send the raw filename, causing
+		// "template field is required" on tenants that mandate the field.
+		// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/124
+		resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, templatePath, configVal)...)
 	}
 }
 

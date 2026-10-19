@@ -1,11 +1,11 @@
 package hooks
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"sync"
@@ -23,9 +23,9 @@ import (
 // POST /api/v2/platform/oauth2/token and sets it on every request,
 // taking priority over the API key header.
 //
-// The endpoint expects a JSON body:
+// The endpoint expects a form-encoded body (application/x-www-form-urlencoded):
 //
-//	{"client_id": "...", "client_secret": "...", "grant_type": "client_credentials"}
+//	client_id=...&client_secret=...&grant_type=client_credentials
 //
 // And returns:
 //
@@ -47,13 +47,6 @@ var (
 )
 
 const tokenPath = "/platform/oauth2/token"
-
-// tokenRequest is the JSON body the RFC 6749 token endpoint expects.
-type tokenRequest struct {
-	ClientID     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
-	GrantType    string `json:"grant_type"`
-}
 
 // tokenResponse is the JSON body the RFC 6749 token endpoint returns.
 type tokenResponse struct {
@@ -132,20 +125,17 @@ func (h *oauth2TokenHook) getToken(hookCtx BeforeRequestContext) (string, error)
 func (h *oauth2TokenHook) fetchToken(hookCtx BeforeRequestContext) (string, time.Time, error) {
 	tokenURL := strings.TrimSuffix(h.baseURL, "/") + tokenPath
 
-	body, err := json.Marshal(tokenRequest{
-		ClientID:     h.clientID,
-		ClientSecret: h.clientSecret,
-		GrantType:    "client_credentials",
-	})
-	if err != nil {
-		return "", time.Time{}, fmt.Errorf("marshal token request: %w", err)
+	formData := url.Values{
+		"client_id":     {h.clientID},
+		"client_secret": {h.clientSecret},
+		"grant_type":    {"client_credentials"},
 	}
 
-	req, err := http.NewRequestWithContext(hookCtx.Context, http.MethodPost, tokenURL, bytes.NewReader(body))
+	req, err := http.NewRequestWithContext(hookCtx.Context, http.MethodPost, tokenURL, strings.NewReader(formData.Encode()))
 	if err != nil {
 		return "", time.Time{}, fmt.Errorf("create token request: %w", err)
 	}
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := h.client.Do(req)
 	if err != nil {

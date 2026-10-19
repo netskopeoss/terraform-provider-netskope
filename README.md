@@ -8,7 +8,22 @@ The official Terraform provider for [Netskope](https://www.netskope.com/), enabl
 
 > **Examples:** See [terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples) for ready-to-use Terraform configurations covering NPA private apps, policy-as-code, device classification, RBAC labels, and more.
 
-## Upgrading to v0.4.11
+## Upgrading to v0.4.12
+
+### What's New in v0.4.12
+
+| Resource / Data Source | Description |
+|---|---|
+| `netskope_npa_private_app_tag` | Manage NPA private app tags via `/api/v2/steering/tags`. Fields: `tag_name`, `tag_color` (optional hex). `tag_id` is computed. |
+| `netskope_npa_private_app_tags_list` | List all NPA private app tags. |
+| `netskope_network_profile` | Manage network location profiles via `/api/v2/profiles/networks`. Fields: `name`, `description`, `values` (CIDR blocks, IP ranges, individual IPs). `id` is computed. Requires Cloud Firewall licensing. |
+| `netskope_network_profile_list` | List all network location profiles. |
+
+**Bug fixes:**
+- **`netskope_npa_rules` block rule updates fail with "template field is required"** ([#124](https://github.com/netskopeoss/terraform-provider-netskope/issues/124)) — On tenants where `/api/v2/templates/usernotifications` returns 403, state could end up holding the API-returned `.html` filename. A subsequent update then sent a stripped (absent) `template` field, which some tenants reject. Fixed: `suppressTemplateDrift` now sets `plan.template` to the config display name so updates always carry a valid value. See [Template Name Resolution](#template-name-resolution) for details.
+
+**Security:**
+- **OAuth2 bearer token no longer appears in provider error diagnostics** — The `Authorization` header is now masked as `(sensitive)` in all `TF_LOG=DEBUG` output, matching the existing treatment of `Netskope-Api-Token`.
 
 ### What's New in v0.4.11
 
@@ -170,6 +185,19 @@ resource "netskope_npa_rules" "block_example" {
 
 > **Allow rules are not affected** — only block rules that use the `template` field need this workaround.
 
+### Template Name Resolution
+
+Both `block` and `periodic_reauth` rules use a `template` field in `match_criteria_action`. The provider translates between the display names you write in HCL (e.g. `"Default Template"`) and the `.html` filenames the API stores internally (e.g. `"5.html"`). This translation relies on the `/api/v2/templates/usernotifications` endpoint.
+
+**Requirement:** The API token (or OAuth2 client) used by the provider must have read access to `/api/v2/templates/usernotifications`. On most tenants this is available with a standard REST API v2 token. If the endpoint returns 403, the provider degrades gracefully:
+
+| Rule type | Templates API unavailable |
+|---|---|
+| `block` | A one-time visible diff (`5.html → "My Template"`) appears on the first `terraform plan` after a fresh session. Applying it succeeds and state is corrected for the remainder of the run. Subsequent plans in the same session are clean. |
+| `periodic_reauth` | The display name is sent to the API as-is. Because the `periodic_reauth` API endpoint stores the value verbatim, no translation is applied server-side — the template may not take effect. If this occurs, supply the `.html` filename directly (e.g. `template = "10.html"`) to ensure the API applies the correct template. |
+
+If you see persistent `template = "5.html" -> "My Template"` diffs in `terraform plan`, verify that the API token has access to `GET /api/v2/templates/usernotifications`.
+
 ### RBAC Labels
 
 Labels enable Label Based Access Control (LBAC) for managing object-level permissions. You can create labels, build hierarchies, and assign them to publishers, private apps, destination profiles, local brokers, and policy groups.
@@ -256,7 +284,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "~> 0.4.9"
+      version = "~> 0.4.12"
     }
   }
 }
@@ -408,7 +436,13 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_destination_profile](docs/resources/destination_profile.md) | Destination profiles |
 | [netskope_dns_profile_v2](docs/resources/dns_profile_v2.md) | DNS security profiles |
 | [netskope_device_classification_tag](docs/resources/device_classification_tag.md) | Device classification tags |
+| [netskope_device_classification_rule](docs/resources/device_classification_rule.md) | Device classification rules |
+| [netskope_device_classification_on_prem_detection](docs/resources/device_classification_on_prem_detection.md) | On-prem detection labels |
+| [netskope_device_classification_steering_mapping](docs/resources/device_classification_steering_mapping.md) | Steering config → on-prem label mappings |
+| [netskope_device_tag](docs/resources/device_tag.md) | Device tags |
+| [netskope_npa_private_app_tag](docs/resources/npa_private_app_tag.md) | NPA private app tags |
 | [netskope_urllist](docs/resources/urllist.md) | URL lists |
+| [netskope_network_profile](docs/resources/network_profile.md) | Network location profiles (Cloud Firewall) |
 
 ### Data Sources
 
@@ -470,11 +504,22 @@ resource "netskope_npa_rules" "allow_wiki_access" {
 | [netskope_device_classification_tag](docs/data-sources/device_classification_tag.md) | Look up a device classification tag |
 | [netskope_device_classification_tag_list](docs/data-sources/device_classification_tag_list.md) | List device classification tags |
 | [netskope_device_classification_options_list](docs/data-sources/device_classification_options_list.md) | List classification options |
+| [netskope_device_classification_rule](docs/data-sources/device_classification_rule.md) | Look up a device classification rule |
+| [netskope_device_classification_rule_list](docs/data-sources/device_classification_rule_list.md) | List device classification rules |
+| [netskope_device_classification_on_prem_detection](docs/data-sources/device_classification_on_prem_detection.md) | Look up an on-prem detection label |
+| [netskope_device_classification_on_prem_detection_list](docs/data-sources/device_classification_on_prem_detection_list.md) | List on-prem detection labels |
+| [netskope_device_classification_steering_mapping](docs/data-sources/device_classification_steering_mapping.md) | Look up a steering config → on-prem label mapping |
+| [netskope_device_tag](docs/data-sources/device_tag.md) | Look up a device tag |
+| [netskope_device_tag_list](docs/data-sources/device_tag_list.md) | List device tags |
+| [netskope_npa_private_app_tag](docs/data-sources/npa_private_app_tag.md) | Look up an NPA private app tag |
+| [netskope_npa_private_app_tags_list](docs/data-sources/npa_private_app_tags_list.md) | List NPA private app tags |
 | [netskope_urllist](docs/data-sources/urllist.md) | Look up a URL list by ID |
 | [netskope_urllist_list](docs/data-sources/urllist_list.md) | List all URL lists |
 | [netskope_cci_category_list](docs/data-sources/cci_category_list.md) | List predefined CCI categories (tenant-independent IDs) |
 | [netskope_rbac_role_config](docs/data-sources/rbac_role_config.md) | RBAC role configuration catalog (API group IDs, permissions, functions) |
 | [netskope_platform_oauth2_token](docs/data-sources/platform_oauth2_token.md) | Exchange OAuth2 client credentials for a bearer token |
+| [netskope_network_profile](docs/data-sources/network_profile.md) | Look up a network location profile |
+| [netskope_network_profile_list](docs/data-sources/network_profile_list.md) | List all network location profiles |
 
 ## Examples and Tutorials
 

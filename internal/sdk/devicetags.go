@@ -200,8 +200,7 @@ func (s *DeviceTags) ListDeviceTags(ctx context.Context, opts ...operations.Opti
 	}
 
 	switch {
-	case httpRes.StatusCode == 200 || httpRes.StatusCode == 201:
-		// POST /devices/device/tags/gettags returns 201
+	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
 			rawBody, err := utils.ConsumeRawBody(httpRes)
@@ -426,8 +425,7 @@ func (s *DeviceTags) GetDeviceTag(ctx context.Context, request operations.GetDev
 	}
 
 	switch {
-	case httpRes.StatusCode == 200 || httpRes.StatusCode == 201:
-		// POST /devices/device/tags/gettags returns 201
+	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
 			rawBody, err := utils.ConsumeRawBody(httpRes)

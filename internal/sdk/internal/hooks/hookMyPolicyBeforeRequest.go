@@ -220,10 +220,11 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.
 
 				switch action {
 				case "block":
-					// Strip .html on update so the API preserves the existing template.
-					if hookCtx.OperationID == "updateNPARules" && strings.HasSuffix(tmpl, ".html") {
-						requestMap.RuleData.MatchCriteriaAction.Template = nil
-					}
+					// No transformation needed on update: suppressTemplateDrift in the plan
+					// modifier ensures the plan (and therefore this payload) already holds
+					// the display name from config, not a .html file name. Stripping was
+					// removed because some tenants reject an absent template field with
+					// "template field is required". See issue #124.
 				case "periodic_reauth":
 					// Translate display name → .html filename for both create and update.
 					// If the value is already a filename, leave it unchanged.
@@ -308,13 +309,16 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.
 		req.Body = io.NopCloser(strings.NewReader(s))
 		req.ContentLength = int64(len(modifiedBody))
 
-		// For block createNPARules: store the template display name in the request
-		// context so the AfterSuccess hook can populate npaTemplateCache with the
-		// file-name → display-name mapping returned by the API.
+		// For block createNPARules and updateNPARules: store the template display name
+		// in the request context so the AfterSuccess hook can populate npaTemplateCache
+		// with the file-name → display-name mapping returned by the API.
+		// This allows AfterSuccess to substitute the display name back into the response
+		// body, ensuring state holds the display name rather than the .html file name
+		// (which would cause drift on the next plan).
 		// Only block rules are cached — for periodic_reauth rules the API stores the
 		// value as-is (no translation), so users must supply filenames directly and
 		// no cache substitution is needed or desired.
-		if hookCtx.OperationID == "createNPARules" &&
+		if (hookCtx.OperationID == "createNPARules" || hookCtx.OperationID == "updateNPARules") &&
 			requestMap.RuleData != nil &&
 			requestMap.RuleData.MatchCriteriaAction != nil &&
 			requestMap.RuleData.MatchCriteriaAction.ActionName != nil &&

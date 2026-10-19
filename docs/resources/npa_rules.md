@@ -116,7 +116,7 @@ resource "netskope_npa_rules" "my_nparules" {
     ]
     json_version = 3
     match_criteria_action = {
-      action_name = "allow"
+      action_name = "block"
       emit_alert  = true
       template    = "...my_template..."
     }
@@ -124,16 +124,6 @@ resource "netskope_npa_rules" "my_nparules" {
       "27",
       "42",
     ]
-    notify = {
-      emails = [
-        "..."
-      ]
-      from_user = "...my_from_user..."
-      interval  = "30"
-      to_users = [
-        "..."
-      ]
-    }
     organization_units = [
       "engineering/qa",
     ]
@@ -188,7 +178,6 @@ resource "netskope_npa_rules" "my_nparules" {
     users = [
       "vphan@netskope.com",
     ]
-    version = 1
   }
   rule_name = "vantest"
   rule_order = {
@@ -231,7 +220,6 @@ Optional:
 - `json_version` (Number) Default: 3
 - `match_criteria_action` (Attributes) (see [below for nested schema](#nestedatt--rule_data--match_criteria_action))
 - `net_location_obj` (List of String) List of Network Location IDs to match. Network Locations are defined in the Netskope tenant UI (Policies > Network Locations) and referenced here by their numeric ID (e.g. "27"). Default: []
-- `notify` (Attributes) Notification configuration for alert/block rule actions (see [below for nested schema](#nestedatt--rule_data--notify))
 - `organization_units` (List of String) Default: []
 - `os` (List of String) Operating system filter (Client access only). Valid values: "AmigaOS", "Android", "BlackBerry", "BSD", "Chrome OS", "Darwin", "Debian", "Fedora", "iOS", "Linux", "Mac", "Others", "Red", "RHEL", "Solaris", "SunOS", "Symbian", "Ubuntu", "Windows". Default: []
 - `periodic_reauth` (Attributes) (see [below for nested schema](#nestedatt--rule_data--periodic_reauth))
@@ -245,27 +233,15 @@ Optional:
 - `user_groups` (List of String) Default: []
 - `user_type` (String) Default: "user"; must be "user"
 - `users` (List of String) Default: []
-- `version` (Number)
 
 <a id="nestedatt--rule_data--match_criteria_action"></a>
 ### Nested Schema for `rule_data.match_criteria_action`
 
 Optional:
 
-- `action_name` (String) must be one of ["allow", "block"]
+- `action_name` (String) must be one of ["allow", "block", "periodic_reauth"]
 - `emit_alert` (Boolean) Whether to emit an alert when the rule matches (required for block action)
-- `template` (String) Notification template name (required for block action). Use the display name (e.g. "Default Template"), not the file name.
-
-
-<a id="nestedatt--rule_data--notify"></a>
-### Nested Schema for `rule_data.notify`
-
-Optional:
-
-- `emails` (List of String) Email addresses to notify
-- `from_user` (String) Sender user identifier
-- `interval` (String) Notification interval in minutes (as string, e.g. '30')
-- `to_users` (List of String) Recipient user types (e.g. 'admin')
+- `template` (String) Notification template display name. Required for block and periodic_reauth actions. Use the display name (e.g. "Default Template"), not the file name returned by the API. The API returns a .html file name on read; the suppressTemplateDrift plan modifier and BeforeRequest hook handle the mismatch transparently.
 
 
 <a id="nestedatt--rule_data--periodic_reauth"></a>

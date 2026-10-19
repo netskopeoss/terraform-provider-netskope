@@ -187,8 +187,7 @@ func (r *DeviceTagResource) Read(ctx context.Context, req resource.ReadRequest, 
 		resp.State.RemoveResource(ctx)
 		return
 	}
-	if res.StatusCode != 200 && res.StatusCode != 201 {
-		// POST /devices/device/tags/gettags returns 201
+	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
@@ -263,17 +262,49 @@ func (r *DeviceTagResource) Update(ctx context.Context, req resource.UpdateReque
 }
 
 func (r *DeviceTagResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	// The Netskope API does not permit deleting device tags programmatically.
-	// DELETE /devices/device/tags/{id} returns 403 with:
-	//   "Tag deletion is only permitted via the Netskope UI, which enforces steering configuration checks"
-	// Terraform removes the tag from state but the tag continues to exist in the tenant.
-	// Delete the tag manually via the Netskope UI after running terraform destroy.
-	resp.Diagnostics.AddWarning(
-		"Device tag not deleted from Netskope",
-		"The Netskope API does not permit deleting device tags programmatically. "+
-			"The tag has been removed from Terraform state but still exists in the Netskope tenant. "+
-			"Delete it manually via the Netskope UI.",
-	)
+	var data *DeviceTagResourceModel
+	var item types.Object
+
+	resp.Diagnostics.Append(req.State.Get(ctx, &item)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(item.As(ctx, &data, basetypes.ObjectAsOptions{
+		UnhandledNullAsEmpty:    true,
+		UnhandledUnknownAsEmpty: true,
+	})...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	request, requestDiags := data.ToOperationsDeleteDeviceTagRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.DeviceTags.DeleteDeviceTag(ctx, *request)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
+		return
+	}
+	if res == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	switch res.StatusCode {
+	case 200, 404:
+		break
+	default:
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
+		return
+	}
+
 }
 
 func (r *DeviceTagResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {

@@ -61,7 +61,7 @@ only lowercase letters, numbers, and dashes (max 15 chars).
 - `protocol` (String) Connection protocol to the AI backend:
 `http`, `https-system`, `https-custom`, or `https-skip`.
 must be one of ["http", "https-system", "https-custom", "https-skip"]
-- `schema` (String) AI API schema the provider exposes. must be one of ["openai", "gemini", "claude"]
+- `schema` (String) AI API schema the provider exposes. must be one of ["openai", "gemini", "claude", "bedrock"]
 
 ### Optional
 
