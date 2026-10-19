@@ -170,6 +170,19 @@ resource "netskope_npa_rules" "block_example" {
 
 > **Allow rules are not affected** — only block rules that use the `template` field need this workaround.
 
+### Template Name Resolution
+
+Both `block` and `periodic_reauth` rules use a `template` field in `match_criteria_action`. The provider translates between the display names you write in HCL (e.g. `"Default Template"`) and the `.html` filenames the API stores internally (e.g. `"5.html"`). This translation relies on the `/api/v2/templates/usernotifications` endpoint.
+
+**Requirement:** The API token (or OAuth2 client) used by the provider must have read access to `/api/v2/templates/usernotifications`. On most tenants this is available with a standard REST API v2 token. If the endpoint returns 403, the provider degrades gracefully:
+
+| Rule type | Templates API unavailable |
+|---|---|
+| `block` | A one-time visible diff (`5.html → "My Template"`) appears on the first `terraform plan` after a fresh session. Applying it succeeds and state is corrected for the remainder of the run. Subsequent plans in the same session are clean. |
+| `periodic_reauth` | The display name is sent to the API as-is. Because the `periodic_reauth` API endpoint stores the value verbatim, no translation is applied server-side — the template may not take effect. If this occurs, supply the `.html` filename directly (e.g. `template = "10.html"`) to ensure the API applies the correct template. |
+
+If you see persistent `template = "5.html" -> "My Template"` diffs in `terraform plan`, verify that the API token has access to `GET /api/v2/templates/usernotifications`.
+
 ### RBAC Labels
 
 Labels enable Label Based Access Control (LBAC) for managing object-level permissions. You can create labels, build hierarchies, and assign them to publishers, private apps, destination profiles, local brokers, and policy groups.
