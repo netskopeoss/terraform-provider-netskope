@@ -133,21 +133,38 @@ func (r *NPARulesOrderResource) readLiveOrder(ctx context.Context, managedIDs []
 		return nil, fmt.Errorf("GET rules returned empty response")
 	}
 
-	// Build set of managed IDs for fast lookup
-	managed := make(map[string]bool, len(managedIDs))
-	for _, id := range managedIDs {
-		managed[id.ValueString()] = true
+	apiOrder := make([]string, 0, len(res.NpaPolicyResponse.Data))
+	for _, rule := range res.NpaPolicyResponse.Data {
+		if rule.ID != nil {
+			apiOrder = append(apiOrder, *rule.ID)
+		}
 	}
 
 	// Extract managed rules in their current API order
 	var liveOrder []types.String
-	for _, rule := range res.NpaPolicyResponse.Data {
-		if rule.ID != nil && managed[*rule.ID] {
-			liveOrder = append(liveOrder, types.StringValue(*rule.ID))
-		}
+	for _, id := range filterManaged(apiOrder, stringValues(managedIDs)) {
+		liveOrder = append(liveOrder, types.StringValue(id))
 	}
 
 	return liveOrder, nil
+}
+
+// filterManaged returns the IDs from apiOrder that are in managed, keeping
+// their API list order. Unmanaged rules (including one just removed from
+// rule_ids) are dropped, so the result is directly comparable with desired.
+func filterManaged(apiOrder, managed []string) []string {
+	set := make(map[string]bool, len(managed))
+	for _, id := range managed {
+		set[id] = true
+	}
+
+	var out []string
+	for _, id := range apiOrder {
+		if set[id] {
+			out = append(out, id)
+		}
+	}
+	return out
 }
 
 func (r *NPARulesOrderResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
@@ -170,50 +187,124 @@ func (r *NPARulesOrderResource) Delete(_ context.Context, _ resource.DeleteReque
 	// Deleting the order resource does not delete or reorder the rules.
 }
 
-// applyOrder PATCHes each rule sequentially to set list position.
-// First rule → "top", each subsequent rule → "after" the previous rule's ID.
-// After all PATCHes, verifies the order and retries if the API hasn't
-// fully committed the changes.
+// applyOrder brings the managed rules into the requested relative order while
+// sending as few PATCHes as possible.
+//
+// It reads the live order first and only moves the rules that are out of place
+// (see computeTopMoves). When the live order already matches, nothing is sent
+// and no sleeps are taken. After PATCHing, the live order is read again; that
+// read doubles as the verification, and anything still out of place is moved
+// on the next attempt.
+// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/125
 func (r *NPARulesOrderResource) applyOrder(ctx context.Context, ruleIDs []types.String) error {
 	if len(ruleIDs) == 0 {
 		return nil
 	}
 
-	// Wait for recently created rules to settle before reordering.
-	// The API has eventual consistency — rules created in parallel
-	// may not be fully committed when the order resource starts.
-	time.Sleep(3 * time.Second)
+	desired := make([]string, len(ruleIDs))
+	for i, id := range ruleIDs {
+		desired[i] = id.ValueString()
+	}
 
-	// Apply ordering with verify-and-retry
-	const maxAttempts = 3
-	for attempt := 0; attempt < maxAttempts; attempt++ {
-		if err := r.patchOrder(ctx, ruleIDs); err != nil {
+	live, err := r.readLiveOrder(ctx, ruleIDs)
+	if err != nil {
+		return err
+	}
+	// Recently created rules may not be listed yet — the API has eventual
+	// consistency. Give them a moment to settle before deciding what to move.
+	if len(live) != len(desired) {
+		time.Sleep(3 * time.Second)
+		if live, err = r.readLiveOrder(ctx, ruleIDs); err != nil {
 			return err
 		}
+	}
 
-		// Verify the order took effect
-		time.Sleep(2 * time.Second)
-		if r.verifyOrder(ctx, ruleIDs) {
+	const maxAttempts = 3
+	for attempt := 0; attempt < maxAttempts; attempt++ {
+		moves := computeTopMoves(stringValues(live), desired)
+		if len(moves) == 0 {
 			return nil
 		}
 
-		// Order didn't stick — wait before retry
-		time.Sleep(3 * time.Second)
+		if err := r.patchOrder(ctx, moves); err != nil {
+			return err
+		}
+
+		// Let the new positions commit, then re-read to verify.
+		time.Sleep(2 * time.Second)
+		if live, err = r.readLiveOrder(ctx, ruleIDs); err != nil {
+			return err
+		}
 	}
 
+	if len(computeTopMoves(stringValues(live), desired)) == 0 {
+		return nil
+	}
 	return fmt.Errorf("rule ordering did not converge after %d attempts", maxAttempts)
 }
 
-// patchOrder moves rules to the top in reverse order.
+// computeTopMoves returns the rule IDs that must be moved to the top, in the
+// order they should be listed in desired, so that the managed rules end up in
+// desired order. live is the current relative order of the same rules.
+//
+// A "top" PATCH puts a rule above everything else, so every rule that is not
+// moved must end up below all moved ones: the unmoved rules are a suffix of
+// desired. The result is therefore the prefix of desired in front of the
+// longest suffix that is already in the right relative order in live.
+//
+// It returns nil when live already matches desired. When live and desired do
+// not describe the same set of rules (a rule is not listed yet, or desired has
+// duplicates) it returns all of desired, which is always a correct fallback.
+func computeTopMoves(live, desired []string) []string {
+	if len(desired) == 0 {
+		return nil
+	}
+	if len(live) != len(desired) {
+		return desired
+	}
+
+	pos := make(map[string]int, len(live))
+	for i, id := range live {
+		pos[id] = i
+	}
+	if len(pos) != len(desired) {
+		return desired
+	}
+	for _, id := range desired {
+		if _, ok := pos[id]; !ok {
+			return desired
+		}
+	}
+
+	// Walk left from the end while the rules are already in ascending live order.
+	j := len(desired) - 1
+	for j > 0 && pos[desired[j-1]] < pos[desired[j]] {
+		j--
+	}
+	if j == 0 {
+		return nil
+	}
+	return desired[:j]
+}
+
+func stringValues(vals []types.String) []string {
+	out := make([]string, len(vals))
+	for i, v := range vals {
+		out[i] = v.ValueString()
+	}
+	return out
+}
+
+// patchOrder moves the given rules to the top in reverse order.
 // Processing [A, B, C] in reverse: C→top, B→top (pushes C down), A→top
 // (pushes B and C down). Result: A, B, C from top.
 // This avoids "after" references which have eventual consistency issues.
-func (r *NPARulesOrderResource) patchOrder(ctx context.Context, ruleIDs []types.String) error {
+func (r *NPARulesOrderResource) patchOrder(ctx context.Context, ids []string) error {
 	order := shared.OrderTop
 
 	// Process in reverse — each "top" pushes previous ones down
-	for i := len(ruleIDs) - 1; i >= 0; i-- {
-		id := ruleIDs[i].ValueString()
+	for i := len(ids) - 1; i >= 0; i-- {
+		id := ids[i]
 
 		res, err := r.client.UpdateNPARules(ctx, operations.UpdateNPARulesRequest{
 			ID: id,
@@ -235,23 +326,6 @@ func (r *NPARulesOrderResource) patchOrder(ctx context.Context, ruleIDs []types.
 	}
 
 	return nil
-}
-
-// verifyOrder checks if the managed rules appear in the expected order
-// in the API's list.
-func (r *NPARulesOrderResource) verifyOrder(ctx context.Context, ruleIDs []types.String) bool {
-	liveOrder, err := r.readLiveOrder(ctx, ruleIDs)
-	if err != nil || len(liveOrder) != len(ruleIDs) {
-		return false
-	}
-
-	for i := range ruleIDs {
-		if ruleIDs[i].ValueString() != liveOrder[i].ValueString() {
-			return false
-		}
-	}
-
-	return true
 }
 
 func (r *NPARulesOrderResource) computeID(ruleIDs []types.String) string {
