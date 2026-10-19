@@ -75,3 +75,57 @@ func TestAccNPARulesOrder_reorder(t *testing.T) {
 		},
 	})
 }
+
+// TestAccNPARulesOrder_removeRule is a regression test for issue #125: removing
+// an ID from rule_ids must leave the remaining rules in order without having to
+// re-position all of them.
+// Step 1 creates A,B,C in order A,B,C. Step 2 removes B from rule_ids while the
+// rule itself still exists. Step 3 also removes rule B's resource. The framework
+// refreshes and re-plans after each apply, and Read reports the live order, so a
+// wrong live order shows up as a non-empty plan and fails the step.
+func TestAccNPARulesOrder_removeRule(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_rules"),
+		Steps: []resource.TestStep{
+			// Step 1: Create with order A, B, C
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("netskope_npa_rules_order.test", "rule_ids.#", "3"),
+					resource.TestCheckResourceAttrPair("netskope_npa_rules_order.test", "rule_ids.0", "netskope_npa_rules.rule_a", "id"),
+					resource.TestCheckResourceAttrPair("netskope_npa_rules_order.test", "rule_ids.1", "netskope_npa_rules.rule_b", "id"),
+					resource.TestCheckResourceAttrPair("netskope_npa_rules_order.test", "rule_ids.2", "netskope_npa_rules.rule_c", "id"),
+				),
+			},
+			// Step 2: Remove B from rule_ids; remaining order must be A, C
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists("netskope_npa_rules.rule_b"),
+					resource.TestCheckResourceAttr("netskope_npa_rules_order.test", "rule_ids.#", "2"),
+					resource.TestCheckResourceAttrPair("netskope_npa_rules_order.test", "rule_ids.0", "netskope_npa_rules.rule_a", "id"),
+					resource.TestCheckResourceAttrPair("netskope_npa_rules_order.test", "rule_ids.1", "netskope_npa_rules.rule_c", "id"),
+				),
+			},
+			// Step 3: Remove rule B itself; order is unchanged
+			{
+				ConfigDirectory: config.TestStepDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("netskope_npa_rules_order.test", "rule_ids.#", "2"),
+					resource.TestCheckResourceAttrPair("netskope_npa_rules_order.test", "rule_ids.0", "netskope_npa_rules.rule_a", "id"),
+					resource.TestCheckResourceAttrPair("netskope_npa_rules_order.test", "rule_ids.1", "netskope_npa_rules.rule_c", "id"),
+				),
+			},
+		},
+	})
+}
