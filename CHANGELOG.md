@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **`netskope_network_profile`** resource and data sources (`netskope_network_profile`, `netskope_network_profile_list`) — Manage network location profiles via `/api/v2/profiles/networks`. Fields: `name` (required, max 100 chars), `description` (optional, max 200 chars), `values` (list of IP addresses, CIDR blocks, or IP ranges, e.g. `"192.168.0.1/24"`, `"10.0.0.1-10.0.0.254"`). `id` is computed. Requires Cloud Firewall licensing; acceptance tests require `TF_RUN_NETWORK_PROFILES=1`.
 
 ### Security
+- **Updated `google.golang.org/grpc` v1.82.1 → v1.83.1** — resolves three Dependabot advisories: xDS RBAC HTTP filter bypass via mixed-case header matching (medium), DoS via crash on missing `:authority`/`Host` headers (high), and heap OOM via HTTP/2 DATA frame fragmentation (high).
 - **OAuth2 `Authorization` bearer token was logged in plaintext in provider error diagnostics** — When `TF_LOG=DEBUG` was set, the `debugResponse` helper included the raw `Authorization: Bearer <token>` header in API error output. The Speakeasy-generated `debugLogging` already masked `Netskope-Api-Token` but had no visibility into the bearer token set by the OAuth2 hook. 
 
 ## [0.4.11] - 2026-09-25
