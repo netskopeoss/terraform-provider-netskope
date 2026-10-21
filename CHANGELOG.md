@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.4.13] - Unreleased
 
+### Security
+- **Updated `google.golang.org/grpc` v1.83.1 → v1.83.2** — resolves CVE-2026-84445: DoS via crash on missing `:authority`/`Host` headers in xDS servers (high), reintroduced in v1.83.0–1.83.1. Also pulls in updated `golang.org/x/crypto`, `net`, `sys`, `text`, `tools`, `sync`, and `mod`.
+
 ## [0.4.12] - 2026-10-19
 
 ### Fixed
