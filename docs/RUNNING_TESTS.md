@@ -201,7 +201,7 @@ These variables modify provider behavior for testing only. **Never set them in p
 ### NPA rules template tests on 403 tenants
 
 The acceptance tests `TestAccNPARules_blockRuleUpdate` and `TestAccDrift_NPARules_BlockTemplate` run correctly on both:
-- The templates catalogue endpoint (`/api/v2/templates/usernotifications`) is no longer used by the provider; bespin (403) and policydemo (200) behave identically for template handling.
+- The templates catalogue endpoint (`/api/v2/templates/usernotifications`) is no longer used by the provider; tenants where that endpoint returns 403 and tenants where it returns 200 behave identically for template handling.
 
 ```bash
 # Run NPA rules template tests

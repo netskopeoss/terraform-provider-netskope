@@ -37,7 +37,7 @@ For large deployments managed with `for_each`, use [`netskope_npa_rules_order`](
 
 There are two ways to specify which private apps a rule applies to. They can be used together or independently:
 
-- **`private_apps`** — a list of app names. The provider wraps each name in brackets automatically when communicating with the API; do not add brackets in config. Use the [`netskope_npa_private_app`](../data-sources/npa_private_app) data source to look up an app name by ID rather than hardcoding it:
+- **`private_apps`** — a list of app names. The provider wraps each name in brackets automatically when communicating with the API; do not add brackets in config. Use the [`netskope_npa_private_app`](../data-sources/npa_private_app.md) data source to look up an app name by ID rather than hardcoding it:
   ```hcl
   data "netskope_npa_private_app" "example" {
     private_app_id = 123
@@ -642,6 +642,6 @@ terraform plan   # expected: No changes
 
 1. **Out-of-band template change not detected** — if the template is changed in the Netskope UI while the configured display name in Terraform is unchanged, the provider does not detect the change. The private state key stores the last display name sent, not the live filename. To force re-sync, change the `template` value in config and apply.
 
-2. **One converging diff after create, import, or upgrade from ≤0.4.12** — the first plan after any of these operations shows a `"block_page.html" → "Default Template"` diff. Applying it is required for subsequent plans to be empty. This is expected and intentional.
+2. **One converging diff per block rule after create, import, or upgrade from ≤0.4.12** — the first plan after any of these operations shows a `"block_page.html" → "Default Template"` diff on each block rule. Applying it is required for subsequent plans to be empty. This is expected and intentional. `periodic_reauth` rules are not affected (the API stores the display name as given), except for a UI-created rule that is imported.
 
 3. **`rule_order` has no effect after creation** — only the initial placement is controlled by `rule_order`. Use `netskope_npa_rules_order` for post-creation position management.

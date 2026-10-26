@@ -444,7 +444,7 @@ one connected app.
 
 **Endpoints:**
 - `POST /api/v2/policy/npa/rules` (create)
-- `PUT /api/v2/policy/npa/rules/{id}` (update)
+- `PATCH /api/v2/policy/npa/rules/{id}` (update)
 - `GET /api/v2/policy/npa/rules/{id}` (read)
 
 **What happens:** `group_id` (which assigns the rule to a policy group) is required for creating
@@ -485,7 +485,7 @@ incomplete picture.
 **What happens:** The `match_criteria_action.template` field (used when `action_name` is `block`)
 uses different value formats depending on the operation direction:
 
-- **Write (POST/PUT):** the template's **display name** as shown in the UI (e.g. `"Default Template"`)
+- **Write (POST/PATCH):** the template's **display name** as shown in the UI (e.g. `"Default Template"`)
 - **Read (GET):** the template's **filename** on the backend server (e.g. `"block_page.html"`)
 
 ```
@@ -530,7 +530,7 @@ two representations are different strings for the same template.
 
 **Endpoints:**
 - `GET /api/v2/policy/npa/rules/{id}` (read — returns strings)
-- `POST/PUT /api/v2/policy/npa/rules` (write — requires integers)
+- `POST/PATCH /api/v2/policy/npa/rules` (write — requires integers)
 
 **What happens:** The same field is typed differently depending on the direction of the call.
 
@@ -542,7 +542,7 @@ two representations are different strings for the same template.
   }
 }
 
-# POST/PUT request — must send integers, not strings
+# POST/PATCH request — must send integers, not strings
 {
   "rule_data": {
     "device_classification_id": [5871, 5872]        ← integers
@@ -586,7 +586,7 @@ to `top` builds the list from the back), sleeping 2 seconds after completion, an
 
 **What the spec says:** `rule_data.match_criteria_action.template` is a string.
 
-**What actually happens (verified on bespin and policydemo, 2026-10-21, probe rows Q1/Q7/Q8 in
+**What actually happens (verified 2026-10-21 on two tenants, one where the templates endpoint returns 403 and one where it returns 200 in
 `docs/api-audit/npa-rules-template/round2-*`):**
 
 | Action | Display name on write | Filename on write | GET returns |
@@ -636,8 +636,8 @@ PATCH /api/v2/policy/npa/rules/{id}
 after create will observe the wrong order. Create and reorder must be separate API calls. The
 Terraform provider sends a PATCH immediately after create when a non-default position is requested.
 
-Additionally, the Terraform provider strips `rule_order` from PUT (update) request bodies to
-prevent accidental reordering — a PUT that includes `rule_order` would move the rule, which is
+Additionally, the Terraform provider strips `rule_order` from PATCH (update) request bodies to
+prevent accidental reordering — a PATCH that includes `rule_order` would move the rule, which is
 not the intent of a configuration update that changes rule criteria.
 
 ---
@@ -754,7 +754,7 @@ intention is to make it easy to write a client that handles both read and write 
 
 ### NPA Policy Rule
 
-| Field | POST/PUT body (write) | GET response (read) |
+| Field | Write body (POST, PUT or PATCH) | GET response (read) |
 |-------|-----------------------|---------------------|
 | `group_id` | accepted (required for create) | **not present** |
 | `device_classification_id` | `[5871, 5872]` (integer array) | `["5871", "5872"]` (string array) |
@@ -867,7 +867,7 @@ Terraform sees: type = "tcp"  ✓ matches config
 ### Example B — Type mismatch: `device_classification_id` (string vs integer)
 
 The API returns device classification IDs as strings in GET responses but requires integers in
-POST/PUT requests. The OAS documents both as integers, which is wrong for the read path.
+POST/PATCH requests. The OAS documents both as integers, which is wrong for the read path.
 
 If the provider's data structure declares the field as `integer`, reading `"5871"` (a JSON string)
 will fail to deserialise — or the field will be read as zero — causing create-then-read to fail
@@ -880,7 +880,7 @@ Step 1 — Declare the field as `string` internally, matching what GET actually 
 GET returns:    ["5871", "5872"]   ← strings, stored in state as strings
 ```
 
-Step 2 — A BeforeRequest hook converts strings to integers just before any POST/PUT:
+Step 2 — A BeforeRequest hook converts strings to integers just before any POST/PATCH:
 ```
 Config/state:   device_classification_id = ["5871", "5872"]
 Before hook:    device_classification_id → [5871, 5872]  (integers)
@@ -901,7 +901,7 @@ special handling, this is what happens:
 2. Provider reads the rule back via GET → `group_id` is absent from response
 3. Provider updates state with GET response → `group_id` is now `null` in state
 4. Next `terraform plan` shows `group_id: "873" → null` as a proposed change
-5. User runs apply → provider sends PUT with `group_id = "873"` again → back to step 2
+5. User runs apply → provider sends PATCH with `group_id = "873"` again → back to step 2
 
 **How the provider resolves it:** The field is excluded from the GET response schema entirely.
 When Terraform reads the GET response, it ignores `group_id` (because the schema says it is not
@@ -973,11 +973,11 @@ The same technique is applied to:
 | 10 | `id` from upgrade profile create is `external_id` in GET | `POST`/`GET /infrastructure/publisherupgradeprofiles` | Breaking | Provider uses POST `id` as path parameter |
 | 11 | `connected_apps` is string array in list, object array in single | `GET /infrastructure/publishers` vs `/{id}` | Breaking | Provider ignores `connected_apps` on single read |
 | 12 | `group_id` not returned by GET on rules | `GET /policy/npa/rules/{id}` | Informational | Provider preserves from state |
-| 13 | Block rule template display name vs filename | `POST`/`GET /policy/npa/rules` | Breaking | Provider suppresses diff; strips `.html` on PUT |
+| 13 | Block rule template display name vs filename | `POST`/`GET /policy/npa/rules` | Breaking | Provider sends the display name unchanged and reconciles the GET filename via resource private state (0.4.13) |
 | 14 | `device_classification_id` string in GET, integer in POST | `GET`/`POST /policy/npa/rules` | Breaking | Provider stores as string, converts to int on write |
 | 15 | Rule ordering eventually consistent | `PATCH /policy/npa/rules/{id}` | Informational | Provider retries with verify loop |
 | 16 | `periodic_reauth` template: display name stored verbatim (no filename translation) | `POST`/`GET /policy/npa/rules` | Informational | Provider passes through unchanged; no drift suppression needed |
-| 17 | `rule_order` ignored on create; `rule_order` stripped from PUT updates | `POST`/`PUT /policy/npa/rules/{id}` | Informational | Provider sends PATCH after create; strips field on update |
+| 17 | `rule_order` ignored on create; `rule_order` stripped from PATCH updates | `POST`/`PATCH /policy/npa/rules/{id}` | Informational | Provider sends PATCH after create; strips field on update |
 | 18 | DC rule create: array body, empty 201 | `POST /deviceclassification/rules` | Breaking | Provider wraps body, does follow-up GET |
 | 19 | On-prem detection create: non-standard 201 envelope | `POST /deviceclassification/client/onpremdetection` | Informational | Provider reads `data[0]` for ID |
 
@@ -1033,13 +1033,13 @@ name = retrieved_app["app_name"].strip("[]")
 
 ### Convert `device_classification_id` before writing
 
-Read as strings; convert to integers before POST/PUT:
+Read as strings; convert to integers before writing (POST/PATCH for rules):
 
 ```python
 # IDs from GET (strings)
 ids = rule_data["device_classification_id"]  # ["5871", "5872"]
 
-# Convert for POST/PUT
+# Convert for write (POST/PATCH)
 request_body["rule_data"]["device_classification_id"] = [int(i) for i in ids]
 ```
 
