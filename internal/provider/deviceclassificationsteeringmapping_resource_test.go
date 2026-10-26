@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 // TestAccDeviceClassificationSteeringMapping_basic tests steering mapping CRUD.
@@ -36,9 +37,17 @@ func TestAccDeviceClassificationSteeringMapping_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      resourceName,
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:  resourceName,
+				ImportState:   true,
+				ImportStateIdFunc: func(s *terraform.State) (string, error) {
+					rs, ok := s.RootModule().Resources[resourceName]
+					if !ok {
+						return "", fmt.Errorf("resource %s not found in state", resourceName)
+					}
+					return rs.Primary.Attributes["steering_id"], nil
+				},
+				ImportStateVerify:                    true,
+				ImportStateVerifyIdentifierAttribute: "steering_id",
 				ImportStateVerifyIgnore: []string{
 					// onprem_detection_ids is not returned by the GET endpoint; the GET response
 					// returns `data` (the same IDs) which is the computed representation.

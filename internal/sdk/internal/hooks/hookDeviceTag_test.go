@@ -260,7 +260,7 @@ func TestDeviceTag_AfterSuccess_Passthrough(t *testing.T) {
 	hook := &deviceTagAfterSuccessHook{}
 	body := `{"something":"else"}`
 	res, _ := buildDeviceTagSuccessResponse(200, body)
-	ctx := AfterSuccessContext{HookContext: HookContext{OperationID: "deleteDeviceTag"}}
+	ctx := AfterSuccessContext{HookContext: HookContext{OperationID: "someOtherOperation"}}
 
 	result, err := hook.AfterSuccess(ctx, res)
 	if err != nil {
@@ -270,5 +270,88 @@ func TestDeviceTag_AfterSuccess_Passthrough(t *testing.T) {
 	raw, _ := io.ReadAll(result.Body)
 	if string(raw) != body {
 		t.Errorf("expected body unchanged for passthrough, got: %s", raw)
+	}
+}
+
+// TestDeviceTag_GetRewrites201To200 verifies that a 201 response from gettags (getDeviceTag)
+// is rewritten to 200 so the SDK's status switch accepts it.
+func TestDeviceTag_GetRewrites201To200(t *testing.T) {
+	hook := &deviceTagAfterSuccessHook{}
+	body := `{"success":true,"data":{"data":[{"id":7,"name":"tag-x","description":""}],"total_count":1,"offset":0,"limit":1}}`
+	res, _ := buildDeviceTagSuccessResponse(201, body)
+	ctx := AfterSuccessContext{HookContext: HookContext{OperationID: "getDeviceTag"}}
+
+	result, err := hook.AfterSuccess(ctx, res)
+	if err != nil {
+		t.Fatalf("AfterSuccess failed: %v", err)
+	}
+	if result.StatusCode != http.StatusOK {
+		t.Errorf("expected status 200 after 201→200 rewrite, got %d", result.StatusCode)
+	}
+	raw, _ := io.ReadAll(result.Body)
+	var item map[string]interface{}
+	if err := json.Unmarshal(raw, &item); err != nil {
+		t.Fatalf("response is not valid JSON: %v\nbody: %s", err, raw)
+	}
+	if item["id"] != float64(7) {
+		t.Errorf("expected id=7, got %v", item["id"])
+	}
+}
+
+// TestDeviceTag_ListRewrites201To200 verifies that a 201 response from gettags (listDeviceTags)
+// is rewritten to 200 so the SDK's status switch accepts it.
+func TestDeviceTag_ListRewrites201To200(t *testing.T) {
+	hook := &deviceTagAfterSuccessHook{}
+	body := `{"success":true,"data":{"data":[{"id":1,"name":"a"},{"id":2,"name":"b"}],"total_count":2,"offset":0,"limit":100}}`
+	res, _ := buildDeviceTagSuccessResponse(201, body)
+	ctx := AfterSuccessContext{HookContext: HookContext{OperationID: "listDeviceTags"}}
+
+	result, err := hook.AfterSuccess(ctx, res)
+	if err != nil {
+		t.Fatalf("AfterSuccess failed: %v", err)
+	}
+	if result.StatusCode != http.StatusOK {
+		t.Errorf("expected status 200 after 201→200 rewrite, got %d", result.StatusCode)
+	}
+	raw, _ := io.ReadAll(result.Body)
+	var wrapped map[string]interface{}
+	if err := json.Unmarshal(raw, &wrapped); err != nil {
+		t.Fatalf("response is not valid JSON: %v\nbody: %s", err, raw)
+	}
+	if _, ok := wrapped["tags"]; !ok {
+		t.Error("expected 'tags' key in list response")
+	}
+}
+
+// TestDeviceTag_DeleteForbiddenRewritesTo404 verifies that the API's 403 response on DELETE
+// (tag deletion is UI-only) is rewritten to 404 so Terraform treats it as a successful no-op.
+func TestDeviceTag_DeleteForbiddenRewritesTo404(t *testing.T) {
+	hook := &deviceTagAfterSuccessHook{}
+	body := `{"success":false,"error":{"message":"Tag deletion is only permitted via the Netskope UI"}}`
+	res, _ := buildDeviceTagSuccessResponse(403, body)
+	ctx := AfterSuccessContext{HookContext: HookContext{OperationID: "deleteDeviceTag"}}
+
+	result, err := hook.AfterSuccess(ctx, res)
+	if err != nil {
+		t.Fatalf("AfterSuccess failed: %v", err)
+	}
+	if result.StatusCode != http.StatusNotFound {
+		t.Errorf("expected status 404 after 403→404 rewrite, got %d", result.StatusCode)
+	}
+}
+
+// TestDeviceTag_DeleteOKPassthrough verifies that a successful 200 DELETE response passes through unchanged.
+func TestDeviceTag_DeleteOKPassthrough(t *testing.T) {
+	hook := &deviceTagAfterSuccessHook{}
+	body := `{}`
+	res, _ := buildDeviceTagSuccessResponse(200, body)
+	ctx := AfterSuccessContext{HookContext: HookContext{OperationID: "deleteDeviceTag"}}
+
+	result, err := hook.AfterSuccess(ctx, res)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result.StatusCode != http.StatusOK {
+		t.Errorf("expected status 200 to pass through unchanged, got %d", result.StatusCode)
 	}
 }

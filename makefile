@@ -52,6 +52,25 @@ test:
 	@echo "Running tests..."
 	$(GOTEST) -v ./...
 
+# Fail if the provider version is not identical in every place it is recorded.
+# Speakeasy bumps .speakeasy/gen.yaml `terraform.version` on every `speakeasy run`
+# and stamps it into docs/index.md and examples/provider/provider.tf; the release
+# tag comes from CHANGELOG. Keeping all four equal is what stops a regen from
+# publishing docs that point at the wrong version (CLAUDE.md pitfall 6).
+.PHONY: check-version
+check-version:
+	@gen=$$(grep -A 10 '^terraform:' .speakeasy/gen.yaml | grep '^[[:space:]]*version: ' | awk '{print $$2}' | head -n 1); \
+	lock=$$(grep '^[[:space:]]*releaseVersion: ' .speakeasy/gen.lock | awk '{print $$2}'); \
+	docs=$$(grep -o 'version = "[0-9.]*"' docs/index.md | head -n 1 | grep -o '[0-9.]*'); \
+	ex=$$(grep -o 'version = "[0-9.]*"' examples/provider/provider.tf | head -n 1 | grep -o '[0-9.]*'); \
+	cl=$$(grep -m 1 -o '^## \[[0-9.]*\]' CHANGELOG.md | grep -o '[0-9.]*'); \
+	echo "gen.yaml=$$gen gen.lock=$$lock docs/index.md=$$docs examples/provider=$$ex CHANGELOG=$$cl"; \
+	if [ "$$gen" = "$$lock" ] && [ "$$gen" = "$$docs" ] && [ "$$gen" = "$$ex" ] && [ "$$gen" = "$$cl" ]; then \
+		echo "OK: all version references are $$gen"; \
+	else \
+		echo "ERROR: version references disagree (set .speakeasy/gen.yaml terraform.version and gen.lock releaseVersion to the release before 'speakeasy run')"; exit 1; \
+	fi
+
 deps:
 	@echo "Fetching dependencies..."
 	$(GOGET) -v ./...
@@ -147,3 +166,34 @@ testacc-deviceclassification:
 	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run TestAccDeviceClassification -timeout 30m
 
 .PHONY: all install build-darwin build-linux build-windows clean test deps testacc testacc-coverage testacc-privateapp testacc-publisher testacc-policygroups testacc-rules testacc-datasources testacc-debug testacc-rbaclabels testacc-aig testacc-customcategory testacc-serviceobject testacc-rbacrole testacc-oauth2 testacc-oauth2-provider testacc-deviceclassification
+
+# -----------------------------------------------------------------------------
+# Pre-PR checks (see .claude/skills/testacc/SKILL.md)
+# -----------------------------------------------------------------------------
+
+# Layer 1: build, vet, unit + hook tests, generated-file diff, secret scan.
+# No tenant required.
+.PHONY: preflight
+preflight:
+	@echo "==> go build"
+	$(GOBUILD) ./...
+	@echo "==> go vet"
+	$(GOCMD) vet ./...
+	@echo "==> unit + hook tests (TF_ACC unset, TestAcc* skip)"
+	$(GOTEST) ./internal/sdk/internal/hooks/ ./internal/provider/ -run 'Test[^A]' -timeout 10m
+	@echo "==> files changed outside hooks/tests/docs since main (must be justified — see CLAUDE.md rule 1)"
+	@git diff --name-only main...HEAD -- '*.go' | grep -v -E '^internal/sdk/internal/hooks/|_test\.go$$|_planmodify\.go$$' || echo "   (none)"
+	@echo "==> secret scan"
+	@if command -v gitleaks >/dev/null 2>&1; then gitleaks detect --source . --log-opts "origin/main..HEAD" --no-banner; else echo "   gitleaks not installed — skipped (CI runs it)"; fi
+
+# Layer 2: NPA rules template/ordering subset — the paths behind #79/#105/#118/#124/#129.
+# Run against the current tenant env (source .env or the policydemo env first).
+# Set NETSKOPE_TEST_BLOCK_TEMPLATE(_2) and NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE(_2)
+# (display names) for the template-change tests.
+NPA_TEMPLATE_TESTS = 'TestAccNPARules_(denyRule|blockRuleUpdate|blockRuleTemplateChange|updateWithIgnoredRuleOrder|importBlockRule|periodicReauth|withPeriodicReauth)|TestAccNPARulesOrder_|TestAccNPAPrivateApp_sharedTag|TestAccDrift_NPARules'
+.PHONY: testacc-npa-templates
+testacc-npa-templates:
+	@echo "Running NPA template/ordering subset against $$NETSKOPE_SERVER_URL ..."
+	TF_ACC=1 $(GOTEST) -v ./internal/provider/... -run $(NPA_TEMPLATE_TESTS) -timeout 60m -parallel $${TESTACC_PARALLEL:-4}
+
+

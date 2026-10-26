@@ -8,139 +8,63 @@ The official Terraform provider for [Netskope](https://www.netskope.com/), enabl
 
 > **Examples:** See [terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples) for ready-to-use Terraform configurations covering NPA private apps, policy-as-code, device classification, RBAC labels, and more.
 
-## Upgrading to v0.4.12
+## Upgrading to v0.4.13
 
-### What's New in v0.4.12
+v0.4.13 is a bug-fix release for `netskope_npa_rules`. It changes how the provider handles the notification `template` field and the `rule_order` field. Read this section before upgrading if you manage **block** or **periodic_reauth** rules.
 
-| Resource / Data Source | Description |
-|---|---|
-| `netskope_npa_private_app_tag` | Manage NPA private app tags via `/api/v2/steering/tags`. Fields: `tag_name`, `tag_color` (optional hex). `tag_id` is computed. |
-| `netskope_npa_private_app_tags_list` | List all NPA private app tags. |
-| `netskope_network_profile` | Manage network location profiles via `/api/v2/profiles/networks`. Fields: `name`, `description`, `values` (CIDR blocks, IP ranges, individual IPs). `id` is computed. Requires Cloud Firewall licensing. |
-| `netskope_network_profile_list` | List all network location profiles. |
+### What's fixed in v0.4.13
 
-**Bug fixes:**
-- **`netskope_npa_rules` block rule updates fail with "template field is required"** ([#124](https://github.com/netskopeoss/terraform-provider-netskope/issues/124)) — On tenants where `/api/v2/templates/usernotifications` returns 403, state could end up holding the API-returned `.html` filename. A subsequent update then sent a stripped (absent) `template` field, which some tenants reject. Fixed: `suppressTemplateDrift` now sets `plan.template` to the config display name so updates always carry a valid value. See [Template Name Resolution](#template-name-resolution) for details.
+- **Perpetual `template` diff on Terraform Cloud and on tenants where the templates endpoint is unavailable** ([#129](https://github.com/netskopeoss/terraform-provider-netskope/issues/129), [#124](https://github.com/netskopeoss/terraform-provider-netskope/issues/124)) — Earlier releases remembered the display-name ↔ filename mapping in provider memory, which is lost whenever Terraform starts a new provider process (every TFC run, every CLI command). The provider now records the last template display name it sent in Terraform **resource private state**, which lives in the state file and survives across runs. No API call is needed to reconcile the diff.
+- **Block-rule updates failing with `template field is required for block action`** ([#124](https://github.com/netskopeoss/terraform-provider-netskope/issues/124)) — Updates always send the display name; the field is never stripped.
+- **Every rule update moved the rule to the bottom of the policy** ([#129](https://github.com/netskopeoss/terraform-provider-netskope/issues/129)) — `rule_order` is no longer sent on update. See [`rule_order` is create-time only](#rule_order-is-create-time-only).
+- **`periodic_reauth` template changes were not detected** ([#118](https://github.com/netskopeoss/terraform-provider-netskope/issues/118)) — Changing `template` from one display name to another now produces a plan diff and is applied.
+- **`periodic_reauth` templates sent as filenames were rejected (`Undefined template`)** — 0.4.11/0.4.12 translated the display name to a filename before sending. The rules API only accepts the display name for `periodic_reauth` (and stores it verbatim), so the translation is removed and the provider no longer calls `/api/v2/templates/usernotifications`. See [Periodic re-authentication rules](#periodic-re-authentication-rules-use-the-template-display-name).
 
-**Security:**
-- **OAuth2 bearer token no longer appears in provider error diagnostics** — The `Authorization` header is now masked as `(sensitive)` in all `TF_LOG=DEBUG` output, matching the existing treatment of `Netskope-Api-Token`.
+### One-time converging diff after upgrade
 
-### What's New in v0.4.11
+On the first `terraform plan` after upgrading, **every block rule** shows a diff of the form:
 
-| Resource / Data Source | Description |
-|---|---|
-| `netskope_device_tag` | Manage device tags via `/api/v2/devices/device/tags`. Tags can be assigned to devices using the `bulkreplace` endpoint (see [examples/npa/device-tags-for-classification](https://github.com/netskopeoss/terraform-netskope-examples/tree/main/npa/device-tags-for-classification)). **Note:** `terraform destroy` does not delete device tags — they must be removed via the Netskope UI (API restriction). `tag_id` is computed. Acceptance tests require `NETSKOPE_TEST_DEVICE_TAGS=1`. |
-| `netskope_device_tag_list` | List all device tags on the tenant. |
-| `netskope_device_classification_rule` | Manage device classification rules via `/api/v2/deviceclassification/rules`. Supports all condition types including `device_tag_check` (reference a device tag by `tag_id`). |
-| `netskope_device_classification_rule_list` | List all device classification rules. Supports optional `label` filter. |
-| `netskope_device_classification_on_prem_detection` | Manage on-prem detection labels via `/api/v2/deviceclassification/client/onpremdetection`. |
-| `netskope_device_classification_on_prem_detection_list` | List all on-prem detection labels. |
-| `netskope_device_classification_steering_mapping` | Manage steering config → on-prem label mappings. All changes require resource replacement (`ForceNew`). |
+```
+~ rule_data = {
+    ~ match_criteria_action = {
+        ~ template = "block_page.html" -> "Default Template"
+      }
+  }
+```
 
-**Bug fixes:**
-- **`netskope_npa_rules` `periodic_reauth` template lost on every update** ([#118](https://github.com/netskopeoss/terraform-provider-netskope/issues/118)) — The BeforeRequest hook was stripping the template from all update payloads regardless of `action_name`. For `periodic_reauth` rules this caused the API to reject every update. Additionally, AfterSuccess did not translate the API-returned `.html` filename back to a display name, causing state drift and import failures. Both are now fixed. Use `template = "My Reauth Template"` (the display name from the Netskope UI).
-- **`netskope_npa_rules` `notify` removed from schema** — `notify` was API-computed and caused import crashes for rules with custom AD attribute notifications. **Breaking:** Remove any `notify` blocks from HCL configurations.
-- **`netskope_service_object` omitted protocols sent as empty arrays** ([#119](https://github.com/netskopeoss/terraform-provider-netskope/issues/119)) — Omitting `udp` or `tcp_udp` from the `protocols` block caused the API to record those protocols as "Any port". Now fixed — omitted protocols are absent from the API request.
+This is expected. Apply it once. The apply sends the display name (which the API accepts), records it in private state, and all subsequent plans are empty. The same one-time diff appears after `terraform import` and after creating a new block rule, because the API's create response returns the filename rather than the name you supplied. `periodic_reauth` rules are not affected: the API stores and returns the display name as given, so there is nothing to converge. The one exception is a `periodic_reauth` rule created in the Netskope UI and then imported — the UI stores a filename, so that rule shows the same one-time diff. If you still have `lifecycle { ignore_changes = [rule_data] }` from the v0.4.4–v0.4.11 workarounds, remove it; it is no longer needed and it would hide real changes.
 
-### What's New in v0.4.9
+### `rule_order` is create-time only
 
-| Resource / Data Source | Description |
-|---|---|
-| `netskope_cci_category_list` | Read-only catalog of predefined CCI categories. Exposes `category_id` and `category_name` — IDs are tenant-independent, eliminating magic numbers in `netskope_custom_category` resources. ([#107](https://github.com/netskopeoss/terraform-provider-netskope/issues/107)) |
-| `netskope_rbac_role_config` | Read-only catalog of RBAC role configuration — exposes tenant-specific API group IDs, names, display names, permission levels, and UI function groupings. Resolves the portability problem of hardcoded tenant-specific API group IDs in `netskope_rbac_role` resources. ([#109](https://github.com/netskopeoss/terraform-provider-netskope/issues/109)) |
+`rule_order` positions a rule when it is **created**. From v0.4.13 it is not sent on updates, because sending it re-applied the create-time position (`{ order = "bottom" }`) on every change and silently moved block rules below allow rules. Changing `rule_order` in config after creation produces a plan diff that applies without effect on the live position. Use [`netskope_npa_rules_order`](docs/resources/npa_rules_order.md) to manage order after creation.
 
-**New `netskope_npa_rules` fields** — `rule_data` now exposes `schedule` (time-window restrictions), `periodic_reauth` (re-authentication interval), `notify` (user notification settings), `user_confidence` (user confidence level filter), `private_app_tag_ids` (read-only tag ID list), and `os` (OS filter: `"Windows"`, `"macOS"`, `"Linux"`, `"Android"`, `"iOS"`, `"Chrome OS"`). These fields were previously silently dropped on every read and write. ([#111](https://github.com/netskopeoss/terraform-provider-netskope/issues/111))
+### Periodic re-authentication rules: use the template display name
 
-**OAuth2 provider authentication** — The provider now accepts OAuth2 client credentials as an alternative to API key authentication. See [Authentication](#authentication) below.
+`periodic_reauth` rules take a notification `template` like block rules do. Set it to the **display name** shown in the Netskope UI, exactly as for block rules:
 
-**Retry configuration** — New optional provider attributes `retry_max_elapsed_time` (seconds) and `retry_disabled` (bool) allow per-workspace retry tuning without environment variables.
+```hcl
+match_criteria_action = {
+  action_name = "periodic_reauth"
+  template    = "Default Periodic Authentication Template"   # display name
+}
+periodic_reauth = {
+  reauth_interval      = "8"
+  reauth_interval_unit = "hours"
+}
+```
 
-**Bug fixes:**
-- **Rate-limited operations could hang for up to 29 minutes** ([#108](https://github.com/netskopeoss/terraform-provider-netskope/issues/108)) — `Retry-After` values were not capped to `MaxInterval` and the elapsed-budget check ran after sleeping. Fixed; a warning is now logged with wait duration and attempt number. See [Retry Configuration](docs/RETRY_CONFIGURATION.md) for tuning options.
-- **`netskope_npa_rules` read crashes when `classification` is set** ([#106](https://github.com/netskopeoss/terraform-provider-netskope/issues/106)) — The hook deserialized `classification` as `*string` but the API returns `[]string` for device-classified rules. Any state refresh or import of such a rule crashed with a JSON unmarshal error. Fixed.
-- **`netskope_npa_rules` block rules always showed a plan diff, and every apply failed** ([#105](https://github.com/netskopeoss/terraform-provider-netskope/issues/105)) — Block rules now plan and apply cleanly. Previously two bugs combined: `group_name` was never marked stable, keeping the plan perpetually dirty; and the template name normalization wrote the API's internal file name (e.g. `23.html`) into update requests, causing the API to reject every apply with "Undefined template". Both are fixed.
+This works on every tenant and needs no additional API access. Verified against two tenants (one where `/api/v2/templates/usernotifications` returns 403 to all tokens, one where it returns 200): the NPA rules API stores a `periodic_reauth` template display name verbatim on create and update, returns it unchanged on read, and **rejects a `.html` filename** (`Undefined template: 3.html`). So, unlike block rules, there is no display-name/filename diff for `periodic_reauth` rules: state always equals config and no converging apply is needed.
 
-### What's New in v0.4.8
+**What changed in 0.4.13.** Releases 0.4.11 and 0.4.12 tried to translate the display name into a filename before sending it, using the templates catalogue endpoint. That endpoint is unavailable on some tenants, and on tenants where it is available the resulting filename is rejected by the rules API — which is why #118 kept recurring. 0.4.13 removes that translation and no longer calls `/api/v2/templates/usernotifications` at all. If an earlier release left you with `template = "10.html"` in configuration, change it back to the display name; the plan will show the change and the apply will succeed.
 
-| Resource / Data Source | Description |
-|---|---|
-| `netskope_custom_category` | Manage custom URL categories for Real-time Protection policies |
-| `netskope_custom_category_list` | List all custom categories |
-| `netskope_service_object` | Manage service objects (port/protocol profiles) for firewall rules |
-| `netskope_service_object_list` | List all service objects — each element includes a `type` attribute (`"custom"` or `"PREDEFINED"`) for filtering |
-| `netskope_rbac_role` | Manage custom RBAC admin roles |
-| `netskope_rbac_role_list` | List all RBAC roles |
-| `netskope_platform_oauth2_token` | Exchange OAuth2 client credentials for a bearer token (RFC 6749 `client_credentials` grant) — use for token rotation or passing tokens to other resources |
+**Importing a rule created in the Netskope UI.** The UI stores reauth templates by filename (a UI-created rule reads back as `"3.html"`), whereas the API stores names. Importing such a rule and configuring the display name shows a one-time `"3.html" -> "<display name>"` diff; applying it rewrites the rule through the API with the display name. If you would rather not change how the rule is stored, leave it unmanaged.
 
-**Bug fixes:**
-- **`netskope_service_object` create/update failed with `tcp_udp` protocol** — The API returns integer port values in create/update responses but the provider expected strings. This caused `json: cannot unmarshal number into Go value of type string` errors on any `tcp_udp` service object. Fixed.
+**Known limitation.** An API-created `periodic_reauth` rule may show no template selected in the Netskope UI's rule editor, because the UI matches templates by filename and the API stored a name. We have confirmed the API accepts and returns the name; whether the backend enforces it identically to a UI-created rule is being confirmed with the Netskope API team. If you observe reauth prompts without the expected template, please report it on the provider repository with the tenant type.
 
-**Security:**
-- Updated `golang.org/x/crypto` (v0.49.0 → v0.52.0), `golang.org/x/net` (v0.52.0 → v0.55.0), and `google.golang.org/grpc` (v1.79.3 → v1.82.1) to resolve 15 Dependabot advisories (7 critical, 3 high, 5 moderate).
+## Release history
 
-### What's New in v0.4.7
-
-- **Fixed `netskope_npa_publisher` crash for publishers with connected apps** — Publishers with at least one app connected caused a JSON unmarshal panic on every state refresh. Upgrade from any v0.3.x–v0.4.6 release to resolve.
-
-### What's New in v0.4.6
-
-**AI Gateway (AIG)** — Terraform resources and data sources for the Netskope AI Gateway are now available:
-
-| Resource / Data Source | Description |
-|---|---|
-| `netskope_aig_appliance` | Manage AIG appliances (create, read, update, delete, import) |
-| `netskope_aig_appliance_list` | List all AIG appliances |
-| `netskope_aig_appliance_capacity_list` | List capacity metrics per appliance |
-| `netskope_aig_appliance_image_list` | List available AIG firmware images |
-| `netskope_aig_appliance_enrollment_token` | Generate enrollment tokens for AIG appliances |
-| `netskope_aig_ai_provider` | Manage custom AI providers (on-prem LLM endpoints) |
-| `netskope_aig_ai_provider_list` | List all AI providers |
-| `netskope_aig_mcp_server` | Manage custom MCP servers for AI agent workflows |
-| `netskope_aig_mcp_server_list` | List all MCP servers |
-| `netskope_aig_rate_limit` | Manage AI Gateway rate limit rules |
-| `netskope_aig_rate_limit_list` | List all rate limit rules |
-| `netskope_aig_token_group` | Manage AIG token groups |
-| `netskope_aig_token_group_list` | List all token groups |
-| `netskope_aig_token` | Manage AIG tokens (token value is sensitive, returned only on create) |
-| `netskope_aig_token_list` | List all tokens |
-
-**Bug fixes:**
-- **Fixed "Cannot configure source IP criteria when flag is disabled"** on `netskope_npa_rules` — On tenants where the Egress IP feature flag is disabled, rule creates/updates failed with this API error even when no source IP criteria were configured. The provider no longer sends the negate flags when their associated criteria lists are empty.
-- **Fixed `netskope_npa_rules_order` not found** — The resource was registered in v0.4.3's implementation but accidentally missing from provider registration.
-
-### What's New in v0.4.5
-
-- **`netskope_urllist` resource** — Manage URL lists for Netskope policies. Full CRUD with import support. Changes are auto-deployed after each apply.
-- **`netskope_urllist` data source** — Look up a single URL list by ID.
-- **`netskope_urllist_list` data source** — List all URL lists.
-- **Fix `netskope_npa_rules_order` with provider-block credentials** — The resource previously failed when credentials were supplied via the provider block rather than environment variables, breaking multi-tenant configurations. It now uses the provider-configured client consistently with all other resources.
-
-### What's New in v0.4.4
-
-- **List data sources now expose all fields needed for backup/restore workflows:**
-  - `netskope_npa_private_apps_list` — `private_app_id` now returns the correct app ID (was always 0)
-  - `netskope_gre_tunnels_list` — added `pop_names` and `options` (XFF config)
-  - `netskope_ip_sec_tunnels_list` — added `pop_names`
-- **`group_name` on NPA rules** — Rules now expose the policy group name as a Computed attribute on both the resource and data sources. Previously only `group_id` (write-only) was available.
-- **Block rule template drift fixed** — The `lifecycle { ignore_changes }` workaround is no longer needed. A plan modifier now automatically suppresses the false diff between template display names and file names.
-
-### What's New in v0.4.3
-
-- **`netskope_npa_rules_order` resource** — Manages the list position of NPA policy rules.
-- **Fixed hostname whitespace drift** — Multi-host `private_app_hostname` values no longer cause perpetual plan diffs when the API normalizes whitespace around commas.
-
-### What's New in v0.4.2
-
-- **Device Classification Tags** — New `netskope_device_classification_tag` resource (full CRUD with import) and data sources (`netskope_device_classification_tag`, `netskope_device_classification_tag_list`, `netskope_device_classification_options_list`). Use device classification tags in NPA rules via `device_classification_id` to enforce device posture requirements.
-- **Dependency security fixes** — Updated Go 1.26.2, hc-install v0.9.4, terraform-plugin-testing v1.14.1, grpc v1.79.3, circl v1.6.3.
-
-### What's New in v0.4.0
-
-- **RBAC Labels** — Full CRUD resource (`netskope_rbac_label`) and data sources for Label Based Access Control. Create labels, look them up by name, and assign them to resources via `label_ids`. See [RBAC Labels](#rbac-labels) for examples.
-- **`label_ids` on Private Apps** — You can now assign RBAC labels to private applications directly in Terraform.
-- **Block Rule Support** — NPA rules now support `emit_alert` and `template` fields in `match_criteria_action` for block actions.
-- **Destination Profiles** — New resource and data sources for managing destination profiles.
-- **DNS Profiles** — New resource and data sources for managing DNS security profiles.
+Release notes for every version are in [CHANGELOG.md](CHANGELOG.md). Behaviour notes that still
+apply to current versions are kept below.
 
 ### One-Time Protocol Reorder Diff
 
@@ -181,22 +105,20 @@ resource "netskope_npa_rules" "block_example" {
 }
 ```
 
-> **Note:** Block rules must be created through the Netskope UI first, then imported into Terraform. API tokens cannot create block rules directly due to a template resolution limitation. See [KNOWN_API_ISSUES.md](docs/KNOWN_API_ISSUES.md#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules) for details.
+> **Note:** Block rules can be created directly from Terraform using the template display name (since v0.4.9). The first `terraform plan` after creation or import shows a one-time `"block_page.html" -> "Default Template"` diff; apply it once and subsequent plans are empty. See [One-time converging diff](#one-time-converging-diff-after-upgrade).
 
-> **Allow rules are not affected** — only block rules that use the `template` field need this workaround.
+> **Allow rules are not affected** — only rules that use the `template` field are subject to the behaviour described here.
 
 ### Template Name Resolution
 
-Both `block` and `periodic_reauth` rules use a `template` field in `match_criteria_action`. The provider translates between the display names you write in HCL (e.g. `"Default Template"`) and the `.html` filenames the API stores internally (e.g. `"5.html"`). This translation relies on the `/api/v2/templates/usernotifications` endpoint.
+Both `block` and `periodic_reauth` rules use a `template` field in `match_criteria_action`. Always set it to the **display name** shown in the Netskope UI. The provider does not call any template catalogue endpoint; it relies on the rules API, which behaves as follows (verified on two tenants, 2026-10-21):
 
-**Requirement:** The API token (or OAuth2 client) used by the provider must have read access to `/api/v2/templates/usernotifications`. On most tenants this is available with a standard REST API v2 token. If the endpoint returns 403, the provider degrades gracefully:
+| Action | Display name on write | Filename on write | GET returns | Plan behaviour |
+|---|---|---|---|---|
+| `block` | accepted; API resolves it to the filename | rejected (`Undefined template`) | the filename, e.g. `block_page.html` | one converging `"block_page.html" -> "<name>"` update after create or import, then empty plans; reconciled via Terraform private state, identical on CLI and Terraform Cloud |
+| `periodic_reauth` | accepted; stored verbatim | rejected (`Undefined template`) | the display name | state equals config; no converging step |
 
-| Rule type | Templates API unavailable |
-|---|---|
-| `block` | A one-time visible diff (`5.html → "My Template"`) appears on the first `terraform plan` after a fresh session. Applying it succeeds and state is corrected for the remainder of the run. Subsequent plans in the same session are clean. |
-| `periodic_reauth` | The display name is sent to the API as-is. Because the `periodic_reauth` API endpoint stores the value verbatim, no translation is applied server-side — the template may not take effect. If this occurs, supply the `.html` filename directly (e.g. `template = "10.html"`) to ensure the API applies the correct template. |
-
-If you see persistent `template = "5.html" -> "My Template"` diffs in `terraform plan`, verify that the API token has access to `GET /api/v2/templates/usernotifications`.
+Known limitation (block rules): a template changed out-of-band in the Netskope UI to a *different* template is not detected as drift while the configured display name is unchanged. Changing the display name in config is always detected.
 
 ### RBAC Labels
 
@@ -284,7 +206,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "~> 0.4.12"
+      version = "~> 0.4.13"
     }
   }
 }
@@ -335,7 +257,12 @@ export NETSKOPE_OAUTH2_CLIENT_SECRET="<client-secret>"
 provider "netskope" {}
 ```
 
-OAuth2 clients must be created in the Netskope admin UI under **Settings → Security Cloud Platform → OAuth2 Settings**. The client must have sufficient API permissions for the resources being managed.
+To create an OAuth2 service account in the Netskope admin UI:
+
+1. Enable REST API OAuth2 authentication under **Settings > Administration > Administrators & Roles > Settings > REST API Auth Settings**.
+2. On that same page click **Service Account**, then choose **OAuth 2.0** as the token type to obtain a client ID and secret.
+
+The service account must have sufficient API permissions for the resources being managed.
 
 **Precedence:** if `NETSKOPE_API_KEY` is set, it takes priority and OAuth2 is not used.
 
@@ -592,7 +519,7 @@ go test ./...
 make testacc
 ```
 
-See [docs/ACCEPTANCE_TESTS.md](docs/ACCEPTANCE_TESTS.md) for full details on running acceptance tests.
+See [docs/RUNNING_TESTS.md](docs/RUNNING_TESTS.md) for full details on running acceptance tests.
 
 ## Contributing
 

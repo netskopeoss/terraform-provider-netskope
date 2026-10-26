@@ -1,7 +1,6 @@
 package hooks
 
 import (
-	"context"
 	"io"
 	"net/http"
 	"strings"
@@ -22,22 +21,6 @@ func buildFakePolicyResponse(body string, operationID string) (AfterSuccessConte
 		},
 	}
 	return ctx, res
-}
-
-// buildFakePolicyResponseWithDisplayName constructs a fake *http.Response whose
-// associated Request carries the given template display name in its context, as
-// BeforeRequest does for createNPARules. Use this for testing the cache population
-// path in AfterSuccess.
-func buildFakePolicyResponseWithDisplayName(body string, operationID string, displayName string) (AfterSuccessContext, *http.Response) {
-	req, _ := http.NewRequestWithContext(
-		withNPATemplateDisplayName(context.Background(), displayName),
-		http.MethodPost,
-		"https://example.com/api/v2/policy/npa/rules",
-		nil,
-	)
-	hookCtx, res := buildFakePolicyResponse(body, operationID)
-	res.Request = req
-	return hookCtx, res
 }
 
 // TestAfterSuccess_ClassificationArrayUnmarshal verifies that the AfterSuccess hook
@@ -136,18 +119,13 @@ func TestAfterSuccess_NonMatchingOperationPassthrough(t *testing.T) {
 	}
 }
 
-// TestAfterSuccess_CreatePopulatesTemplateCacheAndFixesResponse verifies that when
-// createNPARules is processed for a block rule, the AfterSuccess hook:
-//  1. Reads the display name from the request context (set by BeforeRequest)
-//  2. Populates npaTemplateCache with the file→display mapping
-//  3. Substitutes the display name into the response body
-//
-// This ensures Terraform state stores the display name rather than the API-returned
-// .html file name, eliminating the perpetual drift for block rules.
-// Cache substitution is NOT applied to periodic_reauth rules — see
-// TestAfterSuccess_PeriodicReauthFilenamePreservedInResponse.
-// See https://github.com/netskopeoss/terraform-provider-netskope/issues/116
-func TestAfterSuccess_CreatePopulatesTemplateCacheAndFixesResponse(t *testing.T) {
+// TestAfterSuccess_TemplateFilenameNotRewritten_BlockRule verifies that AfterSuccess
+// no longer rewrites .html template filenames for block rules. Template reconciliation
+// is now handled by private state in the plan modifier (suppressTemplateDrift).
+// State will hold the .html filename returned by the API; the plan modifier detects
+// whether this represents the same template as the configured display name.
+// See docs/bugs/BUG-021-npa-template-private-state.md.
+func TestAfterSuccess_TemplateFilenameNotRewritten_BlockRule(t *testing.T) {
 	hook := &myPolicyResponse{}
 
 	body := `{
@@ -169,7 +147,7 @@ func TestAfterSuccess_CreatePopulatesTemplateCacheAndFixesResponse(t *testing.T)
 		"status": "success"
 	}`
 
-	ctx, res := buildFakePolicyResponseWithDisplayName(body, "createNPARules", "My Block Template")
+	ctx, res := buildFakePolicyResponse(body, "createNPARules")
 
 	result, err := hook.AfterSuccess(ctx, res)
 	if err != nil {
@@ -182,47 +160,93 @@ func TestAfterSuccess_CreatePopulatesTemplateCacheAndFixesResponse(t *testing.T)
 	}
 	bodyStr := string(rawBody)
 
-	// Template should be replaced with the display name
-	if strings.Contains(bodyStr, "99.html") {
-		t.Errorf("expected .html file name to be replaced in response, got: %s", bodyStr)
+	// Template must NOT be rewritten — state stores the filename returned by the API.
+	// The plan modifier handles reconciliation with the configured display name.
+	if !strings.Contains(bodyStr, "99.html") {
+		t.Errorf("expected .html filename to be preserved in state (no AfterSuccess rewrite), got: %s", bodyStr)
 	}
-	if !strings.Contains(bodyStr, "My Block Template") {
-		t.Errorf("expected display name 'My Block Template' in response, got: %s", bodyStr)
+	if strings.Contains(bodyStr, "My Block Template") {
+		t.Errorf("expected display name NOT to appear in response (no AfterSuccess rewrite), got: %s", bodyStr)
 	}
 
-	// Cache should be populated
-	displayName, ok := npaTemplateCacheGet("99.html")
-	if !ok {
-		t.Error("expected cache to be populated with file→display mapping")
+	// But private app brackets must still be stripped.
+	if strings.Contains(bodyStr, `"[my-app]"`) {
+		t.Errorf("expected private app brackets to be stripped, got: %s", bodyStr)
 	}
-	if displayName != "My Block Template" {
-		t.Errorf("expected cache entry 'My Block Template', got %q", displayName)
+	if !strings.Contains(bodyStr, `"my-app"`) {
+		t.Errorf("expected 'my-app' in result body, got: %s", bodyStr)
 	}
 }
 
-// TestAfterSuccess_ReadUsesTemplateCacheToFixBlockResponse verifies that getNPARules
-// responses for block rules have their .html template file name replaced with the
-// display name from the cache (populated by a prior create). This ensures state
-// stays consistent after any Read/refresh following the initial create.
-func TestAfterSuccess_ReadUsesTemplateCacheToFixBlockResponse(t *testing.T) {
+// TestAfterSuccess_TemplateFilenameNotRewritten_PeriodicReauth verifies that
+// AfterSuccess does not rewrite .html filenames for periodic_reauth rules either.
+// The plan modifier handles reconciliation via private state for all rule types.
+// See docs/bugs/BUG-021-npa-template-private-state.md.
+func TestAfterSuccess_TemplateFilenameNotRewritten_PeriodicReauth(t *testing.T) {
 	hook := &myPolicyResponse{}
-
-	// Seed the cache as if a prior block rule create had run
-	npaTemplateCacheSet("7.html", "My Block Template")
 
 	body := `{
 		"data": {
-			"rule_id": "55",
-			"rule_name": "block-rule",
+			"rule_id": "77",
+			"rule_name": "reauth-rule",
 			"enabled": "1",
 			"rule_data": {
 				"policy_type": "private-app",
 				"match_criteria_action": {
-					"action_name": "block",
-					"emit_alert": true,
-					"template": "7.html"
+					"action_name": "periodic_reauth",
+					"template": "10.html"
 				},
 				"privateApps": ["[my-app]"],
+				"access_method": ["Client"],
+				"os": ["Windows"],
+				"periodic_reauth": {
+					"reauth_interval": "8",
+					"reauth_interval_unit": "hours"
+				}
+			}
+		},
+		"status": "success"
+	}`
+
+	ctx, res := buildFakePolicyResponse(body, "getNPARules")
+
+	result, err := hook.AfterSuccess(ctx, res)
+	if err != nil {
+		t.Fatalf("AfterSuccess failed: %v", err)
+	}
+
+	rawBody, err := io.ReadAll(result.Body)
+	if err != nil {
+		t.Fatalf("failed to read result body: %v", err)
+	}
+	bodyStr := string(rawBody)
+
+	// The .html filename must be preserved in state — AfterSuccess no longer rewrites.
+	if !strings.Contains(bodyStr, "10.html") {
+		t.Errorf("expected '10.html' to be preserved in state, got: %s", bodyStr)
+	}
+	if strings.Contains(bodyStr, "My Reauth Template") {
+		t.Errorf("expected display name NOT to appear in response, got: %s", bodyStr)
+	}
+}
+
+// TestAfterSuccess_PrivateAppsStripped_TemplateFilenameKept verifies the two
+// remaining AfterSuccess transformations: bracket stripping for privateApps,
+// and no rewriting of the template field. H13 from the test spec.
+func TestAfterSuccess_PrivateAppsStripped_TemplateFilenameKept(t *testing.T) {
+	hook := &myPolicyResponse{}
+
+	body := `{
+		"data": {
+			"rule_id": "1",
+			"rule_name": "test",
+			"enabled": "1",
+			"rule_data": {
+				"match_criteria_action": {
+					"action_name": "block",
+					"template": "5.html"
+				},
+				"privateApps": ["[app-one]", "[app-two]"],
 				"access_method": ["Client"]
 			}
 		},
@@ -242,48 +266,38 @@ func TestAfterSuccess_ReadUsesTemplateCacheToFixBlockResponse(t *testing.T) {
 	}
 	bodyStr := string(rawBody)
 
-	if strings.Contains(bodyStr, "7.html") {
-		t.Errorf("expected .html file name to be replaced by cache lookup for block rule, got: %s", bodyStr)
+	// Template filename preserved
+	if !strings.Contains(bodyStr, "5.html") {
+		t.Errorf("expected template '5.html' to be preserved, got: %s", bodyStr)
 	}
-	if !strings.Contains(bodyStr, "My Block Template") {
-		t.Errorf("expected 'My Block Template' in response, got: %s", bodyStr)
+	// Private app brackets stripped
+	if strings.Contains(bodyStr, "[app-one]") {
+		t.Errorf("expected '[app-one]' brackets stripped, got: %s", bodyStr)
+	}
+	if !strings.Contains(bodyStr, `"app-one"`) {
+		t.Errorf("expected 'app-one' in result, got: %s", bodyStr)
 	}
 }
 
-// TestAfterSuccess_PeriodicReauthDisplayNameRestoredViaTemplatesAPI verifies that
-// getNPARules responses for periodic_reauth rules have their .html filename
-// replaced with the display name from the templates API cache. This allows state
-// to store the display name, eliminating drift when users configure templates by
-// display name. The templates API cache is keyed on action_type so block and
-// periodic_reauth entries do not collide.
-// See docs/bugs/BUG-020-periodic-reauth-template.md
-func TestAfterSuccess_PeriodicReauthDisplayNameRestoredViaTemplatesAPI(t *testing.T) {
-	npaTemplatesAPIResetForTest()
-	t.Cleanup(npaTemplatesAPIResetForTest)
-
-	npaTemplatesAPISeedForTest([]npaTemplatesAPIEntry{
-		{FileName: "10.html", Name: "My Reauth Template", ActionType: "periodic_reauth"},
-	})
-
+// TestAfterSuccess_NotifyTemplatesArrayOfObjects verifies that the hook correctly
+// handles responses where notify.templates is an array of objects rather than
+// the expected [][]string type. Using generic map parsing avoids unmarshal errors.
+// H14 from the test spec (regression guard from 0.4.11).
+func TestAfterSuccess_NotifyTemplatesArrayOfObjects(t *testing.T) {
 	hook := &myPolicyResponse{}
 
 	body := `{
 		"data": {
-			"rule_id": "77",
-			"rule_name": "reauth-rule",
+			"rule_id": "10",
+			"rule_name": "notify-rule",
 			"enabled": "1",
 			"rule_data": {
-				"policy_type": "private-app",
-				"match_criteria_action": {
-					"action_name": "periodic_reauth",
-					"template": "10.html"
-				},
+				"match_criteria_action": {"action_name": "allow"},
 				"privateApps": ["[my-app]"],
 				"access_method": ["Client"],
-				"os": ["Windows"],
-				"periodic_reauth": {
-					"reauth_interval": "8",
-					"reauth_interval_unit": "hours"
+				"notify": {
+					"emails": ["user@example.com"],
+					"templates": [{"name": "t1", "id": 1}, {"name": "t2", "id": 2}]
 				}
 			}
 		},
@@ -294,145 +308,9 @@ func TestAfterSuccess_PeriodicReauthDisplayNameRestoredViaTemplatesAPI(t *testin
 
 	result, err := hook.AfterSuccess(ctx, res)
 	if err != nil {
-		t.Fatalf("AfterSuccess failed: %v", err)
+		t.Fatalf("AfterSuccess failed with notify.templates as array-of-objects: %v", err)
 	}
-
-	rawBody, err := io.ReadAll(result.Body)
-	if err != nil {
-		t.Fatalf("failed to read result body: %v", err)
-	}
-	bodyStr := string(rawBody)
-
-	// The filename must be replaced with the display name from the templates API
-	if strings.Contains(bodyStr, "10.html") {
-		t.Errorf("expected .html filename to be replaced by templates API lookup, got: %s", bodyStr)
-	}
-	if !strings.Contains(bodyStr, "My Reauth Template") {
-		t.Errorf("expected display name 'My Reauth Template' in response, got: %s", bodyStr)
-	}
-}
-
-// TestAfterSuccess_PeriodicReauthDisplayNameRestoredViaGlobalFallback verifies that
-// AfterSuccess can translate a .html filename to a display name even when the
-// templates API cache entry uses a DIFFERENT action_type than the rule's action_name.
-// This covers the real-world case where a "block"-typed template is used in a
-// periodic_reauth rule: the filename is stored under "block:1.html" in the cache
-// but the rule's action_name is "periodic_reauth".
-// See docs/bugs/BUG-020-periodic-reauth-template.md
-func TestAfterSuccess_PeriodicReauthDisplayNameRestoredViaGlobalFallback(t *testing.T) {
-	npaTemplatesAPIResetForTest()
-	t.Cleanup(npaTemplatesAPIResetForTest)
-
-	// Seed the cache with a "block"-typed template — as the templates API returns it.
-	// (User created "tf-test-template" as a block template but uses it for periodic_reauth.)
-	npaTemplatesAPISeedForTest([]npaTemplatesAPIEntry{
-		{FileName: "1.html", Name: "tf-test-template", ActionType: "block"},
-	})
-
-	hook := &myPolicyResponse{}
-
-	body := `{
-		"data": {
-			"rule_id": "88",
-			"rule_name": "reauth-rule",
-			"enabled": "1",
-			"rule_data": {
-				"policy_type": "private-app",
-				"match_criteria_action": {
-					"action_name": "periodic_reauth",
-					"template": "1.html"
-				},
-				"privateApps": ["[my-app]"],
-				"access_method": ["Client"],
-				"os": ["Windows"],
-				"periodic_reauth": {
-					"reauth_interval": "60",
-					"reauth_interval_unit": "hours"
-				}
-			}
-		},
-		"status": "success"
-	}`
-
-	ctx, res := buildFakePolicyResponse(body, "getNPARules")
-
-	result, err := hook.AfterSuccess(ctx, res)
-	if err != nil {
-		t.Fatalf("AfterSuccess failed: %v", err)
-	}
-
-	rawBody, err := io.ReadAll(result.Body)
-	if err != nil {
-		t.Fatalf("failed to read result body: %v", err)
-	}
-	bodyStr := string(rawBody)
-
-	// Global fallback must translate "1.html" → "tf-test-template"
-	// even though the cache entry has action_type "block", not "periodic_reauth".
-	if strings.Contains(bodyStr, "1.html") {
-		t.Errorf("expected .html filename to be replaced via global fallback, got: %s", bodyStr)
-	}
-	if !strings.Contains(bodyStr, "tf-test-template") {
-		t.Errorf("expected display name 'tf-test-template' in response via global fallback, got: %s", bodyStr)
-	}
-}
-
-// TestAfterSuccess_PeriodicReauthFilenamePreservedInResponse verifies that getNPARules
-// responses for periodic_reauth rules have their .html filename preserved as-is in
-// state when the templates API cache has no entry. This is the graceful fallback for
-// tenants where /api/v2/templates/usernotifications is unavailable.
-// See docs/bugs/BUG-020-periodic-reauth-template.md
-func TestAfterSuccess_PeriodicReauthFilenamePreservedInResponse(t *testing.T) {
-	// Ensure the templates API cache is empty for this test — no substitution should occur.
-	npaTemplatesAPIResetForTest()
-	t.Cleanup(npaTemplatesAPIResetForTest)
-
-	hook := &myPolicyResponse{}
-
-	// Session cache must NOT be applied to periodic_reauth rules either.
-	npaTemplateCacheSet("10.html", "Should Not Be Substituted")
-
-	body := `{
-		"data": {
-			"rule_id": "77",
-			"rule_name": "reauth-rule",
-			"enabled": "1",
-			"rule_data": {
-				"policy_type": "private-app",
-				"match_criteria_action": {
-					"action_name": "periodic_reauth",
-					"template": "10.html"
-				},
-				"privateApps": ["[my-app]"],
-				"access_method": ["Client"],
-				"os": ["Windows"],
-				"periodic_reauth": {
-					"reauth_interval": "8",
-					"reauth_interval_unit": "hours"
-				}
-			}
-		},
-		"status": "success"
-	}`
-
-	ctx, res := buildFakePolicyResponse(body, "getNPARules")
-
-	result, err := hook.AfterSuccess(ctx, res)
-	if err != nil {
-		t.Fatalf("AfterSuccess failed: %v", err)
-	}
-
-	rawBody, err := io.ReadAll(result.Body)
-	if err != nil {
-		t.Fatalf("failed to read result body: %v", err)
-	}
-	bodyStr := string(rawBody)
-
-	// The .html filename must remain unchanged in state for periodic_reauth
-	if !strings.Contains(bodyStr, "10.html") {
-		t.Errorf("expected filename '10.html' to be preserved in periodic_reauth response, got: %s", bodyStr)
-	}
-	if strings.Contains(bodyStr, "Should Not Be Substituted") {
-		t.Errorf("expected cache NOT to be applied to periodic_reauth response, got: %s", bodyStr)
+	if result == nil {
+		t.Fatal("expected non-nil response")
 	}
 }

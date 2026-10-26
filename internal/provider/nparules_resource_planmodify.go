@@ -17,20 +17,92 @@ package provider
 
 import (
 	"context"
+	"encoding/json"
 	"sort"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
+// npaTemplatePrivateKey is the private state key storing the last template display
+// name sent to the API. Private state survives across provider processes (TFC,
+// terraform-plugin-testing) — unlike in-process memory caches.
+// See docs/bugs/BUG-021-npa-template-private-state.md.
+const npaTemplatePrivateKey = "npa_template_display"
+
+// templateStore abstracts private-state GetKey/SetKey for template display names.
+// *privatestate.ProviderData (internal framework package, not importable by external
+// modules) satisfies this interface implicitly. Tests inject a map-backed fake.
+type templateStore interface {
+	GetKey(ctx context.Context, key string) ([]byte, diag.Diagnostics)
+	SetKey(ctx context.Context, key string, value []byte) diag.Diagnostics
+}
+
+// templatePlanDecision is the pure decision core for suppressTemplateDrift.
+// Given cfg (config template), st (state template), last (last value written to
+// private state), and otherChanges (whether other attributes differ between plan
+// and state after normalizations), it returns the value to use for plan.template
+// and whether this is a "new record" case (branch 3: first-time seen or changed).
+//
+// Empty-string sentinel is used for null/unknown inputs.
+//
+// Branches (see docs/bugs/BUG-021-npa-template-private-state.md §Fix):
+//
+//	Branch 1 (nothing to reconcile): cfg is a filename, st is not a filename,
+//	  values are equal, or either is empty → use cfg, record=false.
+//	Branch 2 (suppress): st is a filename for the same display name we last sent
+//	  → use st to suppress spurious diff, record=false.
+//	  If other attributes also changed, a PUT happens anyway: use cfg so the API
+//	  accepts the display name (filename rejected on some tenants).
+//	Branch 3 (honest diff): private state absent or display name changed
+//	  → use cfg (honest diff), record=true (persist for next plan).
+func templatePlanDecision(cfg, st, last string, otherChanges bool) (planValue string, record bool) {
+	// Branch 1: nothing to reconcile.
+	if st == "" || cfg == "" || cfg == st ||
+		strings.HasSuffix(cfg, ".html") ||
+		!strings.HasSuffix(st, ".html") {
+		return cfg, false
+	}
+	// cfg is a display name, st is a .html filename.
+	if last != "" && last == cfg {
+		// Branch 2: we know this display name maps to the current filename.
+		if otherChanges {
+			// PUT is happening anyway — send the display name so the API accepts it.
+			return cfg, false
+		}
+		return st, false // suppress: plan = state, no new record needed
+	}
+	// Branch 3: first time, import, upgrade from ≤0.4.12, or template changed.
+	return cfg, true
+}
+
 // Compile-time check that NPARulesResource implements ModifyPlan.
 var _ resource.ResourceWithModifyPlan = &NPARulesResource{}
 
 func (r *NPARulesResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	// Build nil-safe private-state stores. Assigning a nil *ProviderData directly to
+	// a templateStore interface yields a non-nil interface (non-nil type, nil pointer),
+	// which would cause SetKey to return an error diagnostic on some framework versions.
+	// Guarding the concrete pointer before assignment avoids this.
+	var readStore, writeStore templateStore
+	if req.Private != nil {
+		readStore = req.Private
+	}
+	if resp.Private != nil {
+		writeStore = resp.Private
+	}
+
 	// Skip on create (no prior state) or destroy (null plan).
+	// suppressTemplateDrift is still called here so it records config.template in
+	// private state (step 1) even for create plans. The key is not forwarded to
+	// CreateResponse.Private by the framework today (§4.3), so it is first effectively
+	// persisted by the first update — but writing here is harmless and future-proofs
+	// Create calls that do forward resp.Private.
 	if req.State.Raw.IsNull() || req.Plan.Raw.IsNull() {
+		suppressTemplateDrift(ctx, req, resp, readStore, writeStore)
 		return
 	}
 
@@ -78,94 +150,119 @@ func (r *NPARulesResource) ModifyPlan(ctx context.Context, req resource.ModifyPl
 	preserveComputedObjectAttr(ctx, req, resp, path.Root("rule_data").AtName("user_confidence"))
 
 	// Suppress template display-name/file-name drift.
+	// MUST be called last so Raw.Equal inside suppressTemplateDrift reflects a
+	// fully-normalized plan (all other attributes already settled).
 	// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/79
-	suppressTemplateDrift(ctx, req, resp)
+	suppressTemplateDrift(ctx, req, resp, readStore, writeStore)
 }
 
-// suppressTemplateDrift handles the drift between the template display name
-// (in config) and the file name (returned by API on GET responses).
+// suppressTemplateDrift reconciles the template display name (in config) with the
+// .html filename the API returns on GET. Private state is used to remember the last
+// display name sent so the plan modifier can suppress spurious diffs across provider
+// processes (TFC, terraform-plugin-testing).
 //
-// The Netskope API accepts display names on create/update but returns .html
-// file names on GET. Ideally the AfterSuccess hook translates file names back
-// to display names so state always holds the display name — but this requires
-// the /api/v2/templates/usernotifications endpoint to be accessible, which
-// returns 403 on some tenants regardless of token permissions.
+// Step 1 (write private state) always runs first — even for create/destroy plans —
+// so the key is available on the very next update plan.
 //
-// When that endpoint is unavailable (403), state ends up holding the .html
-// file name after every refresh. In that case we set the plan to the config
-// display name (not the state file name) so that:
-//  1. The update payload carries the display name, which the API accepts.
-//  2. AfterSuccess can capture the display name from BeforeRequest context
-//     and substitute it into the response, leaving state with the display name
-//     for the remainder of the session.
+// Step 2 (reconcile display-name↔filename) only runs for update plans (both state
+// and plan non-null).
 //
-// The downside is a visible plan diff ("5.html" → "My Template") on tenants
-// where the templates API is 403 and state holds a file name. This is a
-// per-session one-time cost: after the first apply the state holds the display
-// name and subsequent plans show no diff (within the same Terraform run).
-//
-// On tenants where the templates API works, AfterSuccess always translates
-// file names to display names on read, so state == config == display name and
-// this function returns early without modifying the plan.
-//
+// Known limitation: an out-of-band UI template change (5.html → 7.html) is not detected
+// while the configured display name is unchanged (branch 2 will suppress it).
+// See docs/bugs/BUG-021-npa-template-private-state.md
+// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/129
 // See: https://github.com/netskopeoss/terraform-provider-netskope/issues/124
-// See: docs/bugs/BUG-019-block-rule-template-phantom-update.md
-func suppressTemplateDrift(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/118
+func suppressTemplateDrift(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse, readStore, writeStore templateStore) {
 	templatePath := path.Root("rule_data").AtName("match_criteria_action").AtName("template")
-	actionNamePath := path.Root("rule_data").AtName("match_criteria_action").AtName("action_name")
 
-	var configVal, stateVal, actionNameVal types.String
+	// Step 1: read the last display name sent to the API from private state.
+	//
+	// IMPORTANT: this read MUST come before the private-state write in Step 2.
+	// In terraform-plugin-framework ≥1.2, req.Private and resp.Private share the
+	// same underlying ProviderData object — a SetKey on resp.Private is immediately
+	// visible to a subsequent GetKey on req.Private within the same ModifyPlan call.
+	// Reading lastSent first preserves the value from the previous apply; reading
+	// after writing would return the just-written config value, causing Branch 2
+	// to suppress a genuine template change (RC-4 / issue #129 regression).
+	lastSent := ""
+	if readStore != nil {
+		raw, d := readStore.GetKey(ctx, npaTemplatePrivateKey)
+		resp.Diagnostics.Append(d...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+		if len(raw) > 0 {
+			var decoded string
+			if err := json.Unmarshal(raw, &decoded); err == nil {
+				lastSent = decoded
+			}
+		}
+	}
 
+	// Step 2: record config.template in private state so the next plan can suppress
+	// the display-name↔filename diff without an API round-trip.
+	// Value must be valid JSON — json.Marshal encodes the string with quotes.
+	if writeStore != nil && !req.Plan.Raw.IsNull() {
+		var cfgTpl types.String
+		resp.Diagnostics.Append(req.Config.GetAttribute(ctx, templatePath, &cfgTpl)...)
+		if !resp.Diagnostics.HasError() && !cfgTpl.IsNull() && !cfgTpl.IsUnknown() && cfgTpl.ValueString() != "" {
+			encoded, marshalErr := json.Marshal(cfgTpl.ValueString())
+			if marshalErr == nil {
+				resp.Diagnostics.Append(writeStore.SetKey(ctx, npaTemplatePrivateKey, encoded)...)
+			}
+		}
+	}
+
+	// Step 3: only reconcile on update plans (both state and plan present).
+	if req.State.Raw.IsNull() || req.Plan.Raw.IsNull() {
+		return
+	}
+
+	var configVal, stateVal types.String
 	resp.Diagnostics.Append(req.Config.GetAttribute(ctx, templatePath, &configVal)...)
 	resp.Diagnostics.Append(req.State.GetAttribute(ctx, templatePath, &stateVal)...)
-	resp.Diagnostics.Append(req.State.GetAttribute(ctx, actionNamePath, &actionNameVal)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	// Skip if either is null/unknown.
-	if configVal.IsNull() || configVal.IsUnknown() || stateVal.IsNull() || stateVal.IsUnknown() {
+	// Normalize null/unknown to empty string for the pure decision function.
+	cfg, st := "", ""
+	if !configVal.IsNull() && !configVal.IsUnknown() {
+		cfg = configVal.ValueString()
+	}
+	if !stateVal.IsNull() && !stateVal.IsUnknown() {
+		st = stateVal.ValueString()
+	}
+
+	// Branch 1 guard: return early when there is nothing to reconcile.
+	// This MUST come before the tentative plan.template = stateVal mutation below
+	// to prevent corrupting the plan when configVal is null (config omits template).
+	// For a Computed+Optional field, null config means "preserve state" — the
+	// framework's ExplicitSuppress plan modifier already keeps plan = state, so we
+	// must not overwrite it with configVal (null) when restoring after a non-suppress
+	// decision. Mirrors the Branch 1 conditions in templatePlanDecision exactly.
+	if cfg == "" || st == "" || cfg == st ||
+		strings.HasSuffix(cfg, ".html") ||
+		!strings.HasSuffix(st, ".html") {
 		return
 	}
 
-	configStr := configVal.ValueString()
-	stateStr := stateVal.ValueString()
-
-	// If they match, nothing to do.
-	if configStr == stateStr {
+	// Tentatively suppress (set plan.template = state.template) so that the
+	// Raw.Equal check below reflects only OTHER attribute differences, not the
+	// display-name↔filename diff itself. This mirrors the original logic.
+	resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, templatePath, stateVal)...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
+	// otherChanges is true when other attributes differ even after template suppression.
+	otherChanges := !resp.Plan.Raw.Equal(req.State.Raw)
 
-	// State holds a .html file name but config holds a display name.
-	if !strings.HasSuffix(stateStr, ".html") || strings.HasSuffix(configStr, ".html") {
-		return
-	}
+	planValue, _ := templatePlanDecision(cfg, st, lastSent, otherChanges)
 
-	actionName := actionNameVal.ValueString()
-
-	switch actionName {
-	case "periodic_reauth":
-		// For periodic_reauth rules, keep the state value in the plan.
-		//
-		// The AfterSuccess hook translates the .html filename back to the display
-		// name via the templates API cache. When translation succeeds, state holds
-		// the display name and config matches — this branch is never reached.
-		// When translation fails (templates API unavailable or the cached action_type
-		// does not match the rule's action_name), state holds the .html filename.
-		// Preserving the state value here suppresses the visible diff so the plan
-		// remains stable. The BeforeRequest hook sees the filename in the plan and
-		// passes it through unchanged to the API, which is correct for periodic_reauth
-		// (the API stores the value verbatim, so a filename is always valid).
-		// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/118
-		resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, templatePath, stateVal)...)
-	default:
-		// For block and other rule types: set plan to the config display name so
-		// update payloads carry a value the API accepts. This fixes the scenario
-		// where state holds a .html filename (e.g. after importing a UI-created rule
-		// or on a fresh session against a tenant where the templates API returns 403)
-		// and a subsequent update would otherwise send the raw filename, causing
-		// "template field is required" on tenants that mandate the field.
-		// See: https://github.com/netskopeoss/terraform-provider-netskope/issues/124
+	// If the decision didn't suppress (planValue = cfg rather than st), undo
+	// the tentative suppression and restore the display name.
+	if planValue != st {
 		resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, templatePath, configVal)...)
 	}
 }
@@ -326,4 +423,3 @@ func normalizeStringListAttr(ctx context.Context, req resource.ModifyPlanRequest
 	// Same set of values, different order. Use state to suppress false drift.
 	resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, attrPath, stateList)...)
 }
-

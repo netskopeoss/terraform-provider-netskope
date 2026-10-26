@@ -10,7 +10,9 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/knownvalue"
 	"github.com/hashicorp/terraform-plugin-testing/plancheck"
+	"github.com/hashicorp/terraform-plugin-testing/tfjsonpath"
 )
 
 // skipUnlessEnvSet skips the test unless the given environment variable is set to a non-empty value.
@@ -1578,28 +1580,68 @@ resource "netskope_destination_profile" "test" {
 // with template display name. The API returns the file name (e.g. "2.html") but
 // the plan modifier suppresses the diff against the config display name.
 // See: https://github.com/netskopeoss/terraform-provider-netskope/issues/79
+//
+// Five steps (A7 from the test plan):
+//  1. Create — state holds .html filename; no private state (Option A, §4.3).
+//  2. Converging apply (branch 3 honest diff) — persists private state.
+//     3–5. Three consecutive plan-only checks — branch 2 must suppress every time.
+//
+// Run on bespin (real 403 tenant), policydemo (200 tenant), and policydemo with
+// Run on bespin and policydemo; both must be green.
 func TestAccDrift_NPARules_BlockTemplate(t *testing.T) {
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	// Block template display name; "Default Template" exists on both bespin and policydemo.
+	// tf-test-template was bespin-only and made this test fail on policydemo.
+	blockTemplate := os.Getenv("NETSKOPE_TEST_BLOCK_TEMPLATE")
+	if blockTemplate == "" {
+		blockTemplate = "Default Template"
+	}
+
+	emptyPlanStep := resource.TestStep{
+		Config: testAccDriftNPARulesBlockTemplateConfig(rName, blockTemplate),
+		ConfigPlanChecks: resource.ConfigPlanChecks{
+			PreApply: []plancheck.PlanCheck{
+				plancheck.ExpectEmptyPlan(),
+			},
+		},
+	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
 		Steps: []resource.TestStep{
+			// Step 1: Create. Private state is empty after Create (§4.3). Convergence
+			// check refreshes state from API (returns .html filename) then plans a diff.
+			// ExpectNonEmptyPlan: true acknowledges this one-time diff.
 			{
-				Config: testAccDriftNPARulesBlockTemplateConfig(rName),
+				Config:             testAccDriftNPARulesBlockTemplateConfig(rName, blockTemplate),
+				ExpectNonEmptyPlan: true,
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					// The post-apply refresh plan is the documented one-time converging diff
+					// (block_page.html -> display name). ExpectNonEmptyPlan alone would accept
+					// ANY diff; these checks pin it to exactly one update on the rule, with the
+					// template planned to the display name, and no action on anything else.
+					PostApplyPostRefresh: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("netskope_npa_rules.test", plancheck.ResourceActionUpdate),
+						plancheck.ExpectKnownValue("netskope_npa_rules.test", tfjsonpath.New("rule_data").AtMapKey("match_criteria_action").AtMapKey("template"), knownvalue.StringExact(blockTemplate)),
+						plancheck.ExpectResourceAction("netskope_npa_private_app.test", plancheck.ResourceActionNoop),
+						plancheck.ExpectResourceAction("netskope_npa_publisher.test", plancheck.ResourceActionNoop),
+						plancheck.ExpectResourceAction("netskope_npa_policy_groups.test", plancheck.ResourceActionNoop),
+					},
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckResourceExists("netskope_npa_rules.test"),
 				),
 			},
+			// Step 2: Apply the converging diff (branch 3). Private state persisted.
 			{
-				Config: testAccDriftNPARulesBlockTemplateConfig(rName),
-				ConfigPlanChecks: resource.ConfigPlanChecks{
-					PreApply: []plancheck.PlanCheck{
-						plancheck.ExpectEmptyPlan(),
-					},
-				},
+				Config: testAccDriftNPARulesBlockTemplateConfig(rName, blockTemplate),
 			},
+			// Steps 3–5: three consecutive plan-only checks — must all be empty.
+			emptyPlanStep,
+			emptyPlanStep,
+			emptyPlanStep,
 		},
 	})
 }
@@ -1632,7 +1674,7 @@ func TestAccDrift_NPARules_DeviceClassification(t *testing.T) {
 	})
 }
 
-func testAccDriftNPARulesBlockTemplateConfig(name string) string {
+func testAccDriftNPARulesBlockTemplateConfig(name, template string) string {
 	return fmt.Sprintf(`
 %s
 
@@ -1683,14 +1725,14 @@ resource "netskope_npa_rules" "test" {
     match_criteria_action = {
       action_name = "block"
       emit_alert  = true
-      template    = "tf-test-template"
+      template    = %q
     }
 
     private_apps  = [netskope_npa_private_app.test.private_app_name]
     access_method = ["Client"]
   }
 }
-`, testAccProviderConfig(), name, name, name, name)
+`, testAccProviderConfig(), name, name, name, name, template)
 }
 
 func testAccDriftNPARulesDeviceClassificationConfig(name string) string {
@@ -1845,12 +1887,24 @@ resource "netskope_npa_rules" "test" {
 `, testAccProviderConfig(), name, name, name, name)
 }
 
-// TestAccDrift_NPARules_PeriodicReauth verifies no perpetual drift on rules with
-// action_name = "periodic_reauth". The nested periodic_reauth object and the
-// action_name must both round-trip through the API without triggering phantom updates.
-// Regression test for https://github.com/netskopeoss/terraform-provider-netskope/issues/116.
+// TestAccDrift_NPARules_PeriodicReauth verifies no perpetual drift on a periodic_reauth
+// rule. The template comes from NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE (a display name;
+// the API stores it verbatim on every tenant and rejects filenames); the test skips when
+// unset rather than creating a rule with a block-template name. Steps: create, then
+// three empty plans in fresh processes.
 func TestAccDrift_NPARules_PeriodicReauth(t *testing.T) {
+	templateName := os.Getenv("NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE")
+	if templateName == "" {
+		t.Skip("Skipping: NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE not set (a periodic_reauth template display name)")
+	}
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
+	cfg := testAccDriftNPARulesPeriodicReauthConfig(rName, templateName)
+	emptyPlan := resource.TestStep{
+		Config: cfg,
+		ConfigPlanChecks: resource.ConfigPlanChecks{
+			PreApply: []plancheck.PlanCheck{plancheck.ExpectEmptyPlan()},
+		},
+	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
@@ -1858,24 +1912,19 @@ func TestAccDrift_NPARules_PeriodicReauth(t *testing.T) {
 		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDriftNPARulesPeriodicReauthConfig(rName),
+				Config: cfg,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckResourceExists("netskope_npa_rules.test"),
 				),
 			},
-			{
-				Config: testAccDriftNPARulesPeriodicReauthConfig(rName),
-				ConfigPlanChecks: resource.ConfigPlanChecks{
-					PreApply: []plancheck.PlanCheck{
-						plancheck.ExpectEmptyPlan(),
-					},
-				},
-			},
+			emptyPlan,
+			emptyPlan,
+			emptyPlan,
 		},
 	})
 }
 
-func testAccDriftNPARulesPeriodicReauthConfig(name string) string {
+func testAccDriftNPARulesPeriodicReauthConfig(name, template string) string {
 	return fmt.Sprintf(`
 %s
 
@@ -1925,7 +1974,7 @@ resource "netskope_npa_rules" "test" {
 
     match_criteria_action = {
       action_name = "periodic_reauth"
-      template    = "tf-test-template"
+      template    = %q
     }
 
     private_apps  = [netskope_npa_private_app.test.private_app_name]
@@ -1938,13 +1987,18 @@ resource "netskope_npa_rules" "test" {
     }
   }
 }
-`, testAccProviderConfig(), name, name, name, name)
+`, testAccProviderConfig(), name, name, name, name, template)
 }
 
 // TestAccDrift_NPARules_Schedule verifies no perpetual drift on rules with schedule.
-// Requires time interval ID 3 to exist on the tenant; skip with TF_SKIP_TIME_INTERVAL=1.
+// Requires NETSKOPE_TEST_TIME_INTERVAL_ID — the ID of a time interval that exists on the
+// tenant (Settings > Time Intervals). Skips when unset; provision one on each tenant rather
+// than skipping, so the schedule path is covered on both.
 func TestAccDrift_NPARules_Schedule(t *testing.T) {
-	skipIfEnvSet(t, "TF_SKIP_TIME_INTERVAL", "requires time interval ID 3 on tenant")
+	timeIntervalID := os.Getenv("NETSKOPE_TEST_TIME_INTERVAL_ID")
+	if timeIntervalID == "" {
+		t.Skip("Skipping: NETSKOPE_TEST_TIME_INTERVAL_ID not set (ID of a time interval on the tenant)")
+	}
 
 	rName := fmt.Sprintf("%s-%s", testAccResourcePrefix, acctest.RandString(8))
 
@@ -1954,13 +2008,13 @@ func TestAccDrift_NPARules_Schedule(t *testing.T) {
 		CheckDestroy:             testAccCheckResourceDestroy("netskope_npa_rules"),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDriftNPARulesScheduleConfig(rName),
+				Config: testAccDriftNPARulesScheduleConfig(rName, timeIntervalID),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckResourceExists("netskope_npa_rules.test"),
 				),
 			},
 			{
-				Config: testAccDriftNPARulesScheduleConfig(rName),
+				Config: testAccDriftNPARulesScheduleConfig(rName, timeIntervalID),
 				ConfigPlanChecks: resource.ConfigPlanChecks{
 					PreApply: []plancheck.PlanCheck{
 						plancheck.ExpectEmptyPlan(),
@@ -1971,7 +2025,7 @@ func TestAccDrift_NPARules_Schedule(t *testing.T) {
 	})
 }
 
-func testAccDriftNPARulesScheduleConfig(name string) string {
+func testAccDriftNPARulesScheduleConfig(name, timeIntervalID string) string {
 	return fmt.Sprintf(`
 %s
 
@@ -2027,11 +2081,11 @@ resource "netskope_npa_rules" "test" {
     access_method = ["Client"]
 
     schedule = [{
-      time_interval_obj = ["3"]
+      time_interval_obj = [%q]
     }]
   }
 }
-`, testAccProviderConfig(), name, name, name, name)
+`, testAccProviderConfig(), name, name, name, name, timeIntervalID)
 }
 
 func testAccDriftDestinationProfileMinimalConfig(name string) string {

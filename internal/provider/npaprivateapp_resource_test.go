@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/config"
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/netskopeoss/terraform-provider-netskope/internal/provider/testutil"
 )
 
@@ -269,6 +270,47 @@ func TestAccNPAPrivateApp_tags(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "private_app_name", rName),
 					resource.TestCheckResourceAttr(resourceName, "tags.#", "1"),
 				),
+			},
+		},
+	})
+}
+
+// TestAccNPAPrivateApp_sharedTagTwoApps is the #120 scenario: two private apps in one
+// apply, no depends_on, both carrying the same NEW tag_name. Terraform creates them in
+// parallel; the API creates the tag row on first use and the second create raced on the
+// (tag_name, tag_type) unique constraint ("Duplicate entry ... for key 'tag_unique'").
+// Both apps must exist with the same tag (same tag_id), and a re-plan must be empty.
+func TestAccNPAPrivateApp_sharedTagTwoApps(t *testing.T) {
+	rName := fmt.Sprintf("%s-%s", testutil.ResourcePrefix, acctest.RandString(8))
+	vars := config.Variables{
+		"name": config.StringVariable(rName),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testutil.PreCheck(t) },
+		ProtoV6ProviderFactories: testutil.ProtoV6ProviderFactories,
+		CheckDestroy:             testutil.CheckResourceDestroy("netskope_npa_private_app"),
+		Steps: []resource.TestStep{
+			{
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: vars,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testutil.CheckResourceExists("netskope_npa_private_app.a", "private_app_id"),
+					testutil.CheckResourceExists("netskope_npa_private_app.b", "private_app_id"),
+					resource.TestCheckResourceAttr("netskope_npa_private_app.a", "tags.#", "1"),
+					resource.TestCheckResourceAttr("netskope_npa_private_app.b", "tags.#", "1"),
+					resource.TestCheckResourceAttr("netskope_npa_private_app.a", "tags.0.tag_name", rName+"-shared"),
+					resource.TestCheckResourceAttr("netskope_npa_private_app.b", "tags.0.tag_name", rName+"-shared"),
+					// One tag row shared by both apps.
+					resource.TestCheckResourceAttrPair("netskope_npa_private_app.a", "tags.0.tag_id", "netskope_npa_private_app.b", "tags.0.tag_id"),
+				),
+			},
+			{
+				ConfigDirectory: config.TestNameDirectory(),
+				ConfigVariables: vars,
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{plancheck.ExpectEmptyPlan()},
+				},
 			},
 		},
 	})

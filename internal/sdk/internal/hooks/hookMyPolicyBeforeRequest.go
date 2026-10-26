@@ -3,11 +3,8 @@ package hooks
 import (
 	"encoding/json"
 	"fmt"
-	"io"
-	"log"
 	"net/http"
 	"strconv"
-	"strings"
 )
 
 //	type myPolicyRequest struct {
@@ -129,146 +126,70 @@ type NpaPolicyRuleTssActions struct {
 	Template           string `json:"template"`
 }
 
-var (
-	_                    beforeRequestHook = (*myPolicyRequest)(nil)
-	myPolicyRequestDebug bool              = true
-)
+// ruleDataWithIntIDs overrides DeviceClassificationID as []int64 for API writes.
+// The API returns strings on GET but expects integers on POST/PATCH (#64/#74).
+type ruleDataWithIntIDs struct {
+	RuleData
+	DeviceClassificationID []int64 `json:"device_classification_id,omitempty"`
+}
+
+// requestWithIntIDs is the wire shape sent to the API. It mirrors myPolicyRequest
+// but uses ruleDataWithIntIDs so device_classification_id is serialised as integers.
+type requestWithIntIDs struct {
+	Enabled    *string             `json:"enabled,omitempty"`
+	ModifyBy   *string             `json:"modify_by,omitempty"`
+	ModifyTime *string             `json:"modify_time,omitempty"`
+	ModifyType *string             `json:"modify_type,omitempty"`
+	PolicyType *string             `json:"policy_type,omitempty"`
+	GroupID    *string             `json:"group_id,omitempty"`
+	RuleData   *ruleDataWithIntIDs `json:"rule_data,omitempty"`
+	RuleID     *string             `json:"rule_id,omitempty"`
+	RuleName   *string             `json:"rule_name,omitempty"`
+	RuleOrder  *RuleOrder          `json:"rule_order,omitempty"`
+}
+
+var _ beforeRequestHook = (*myPolicyRequest)(nil)
 
 func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.Request) (*http.Request, error) {
-	// Ensure the templates API cache is populated for any NPA rule operation, including
-	// getNPARules (used by import/read). This allows AfterSuccess to translate .html
-	// filenames → display names on the first read even when no create/update preceded it
-	// in the same session (e.g. terraform import on a fresh provider invocation).
-	switch hookCtx.OperationID {
-	case "createNPARules", "updateNPARules", "getNPARules", "NPARules", "listNPARules":
-		ensureNPATemplatesAPILoaded(extractAPIBase(req), req.Header.Get("Netskope-Api-Token"))
+	if hookCtx.OperationID != "createNPARules" && hookCtx.OperationID != "updateNPARules" {
+		return req, nil
 	}
 
-	if hookCtx.OperationID == "createNPARules" || hookCtx.OperationID == "updateNPARules" {
-		if myPolicyRequestDebug {
-			log.Print("Executing BeforeRequest hook....")
-		}
+	return rewriteRequestJSON(req, func(body []byte) ([]byte, error) {
 		var requestMap myPolicyRequest
-		// Read and unmarshal the response body
-		body, err := io.ReadAll(req.Body)
-		if err != nil {
-			log.Printf("ERROR: Unable to read request body: %v", err)
-			return nil, fmt.Errorf("ERROR: Unable to read request body: %w", err)
-		}
-		if myPolicyRequestDebug {
-			log.Printf("SUCCESS: Successfully read response body")
-		}
-		// Unmarshal the raw response into a map
-		if myPolicyRequestDebug {
-			log.Printf("--------Body--------")
-			log.Println(string(body))
-			log.Printf("--------------------")
-		}
 		if err := json.Unmarshal(body, &requestMap); err != nil {
-			log.Printf("ERROR: Unable to unmarshal response: %v", err)
-			return nil, fmt.Errorf("ERROR: Unable to unmarshal response: %v", err)
+			return nil, fmt.Errorf("unable to unmarshal request: %v", err)
 		}
 
-		if myPolicyRequestDebug {
-			log.Printf("SUCCESS: Successfully unmarshalled response")
-			log.Print(requestMap)
-			log.Print("--------------------")
-
-		}
-
+		stripRuleOrderOnUpdate(hookCtx.OperationID, &requestMap)
 		if requestMap.RuleData != nil {
-			oldPrivateAppValue := requestMap.RuleData.PrivateApps
-			requestMap.RuleData.PrivateApps = nil
-			for _, trimmedApp := range oldPrivateAppValue {
-				untrimmedApp := "[" + trimmedApp + "]"
-				requestMap.RuleData.PrivateApps = append(requestMap.RuleData.PrivateApps, untrimmedApp)
-			}
-
-			// Strip negate flags when their associated criteria lists are empty.
-			// The API rejects b_negateNetLocation / b_negateSrcCountries even set to
-			// false on tenants where the source-IP-criteria feature flag is disabled.
-			// The flags are meaningless without a populated criteria list anyway.
-			if len(requestMap.RuleData.NetLocationObj) == 0 {
-				requestMap.RuleData.BNegateNetLocation = nil
-			}
-			if len(requestMap.RuleData.SrcCountries) == 0 {
-				requestMap.RuleData.BNegateSrcCountries = nil
-			}
-
-			// Template translation for create and update payloads.
-			//
-			// block rules (update only): strip .html filenames — state normally holds a
-			// display name (set by AfterSuccess), so .html only appears in cold-cache
-			// scenarios (e.g. after importing a UI-created rule). The API rejects filenames
-			// on update with "Undefined template: *.html". Omitting the field causes the
-			// API to preserve the existing template.
-			// See docs/bugs/BUG-019-block-rule-template-phantom-update.md
-			//
-			// periodic_reauth rules (create and update): translate display name → .html
-			// filename before sending. Unlike block rules, the periodic_reauth API endpoint
-			// stores the value verbatim — it does not translate display names server-side.
-			// Sending a display name results in the template being stored as the raw string,
-			// which Netskope does not recognise as a valid template, so it is silently ignored.
-			// See docs/bugs/BUG-020-periodic-reauth-template.md
-			// See https://github.com/netskopeoss/terraform-provider-netskope/issues/118
-			if requestMap.RuleData.MatchCriteriaAction != nil &&
-				requestMap.RuleData.MatchCriteriaAction.ActionName != nil &&
-				requestMap.RuleData.MatchCriteriaAction.Template != nil {
-
-				action := *requestMap.RuleData.MatchCriteriaAction.ActionName
-				tmpl := *requestMap.RuleData.MatchCriteriaAction.Template
-
-				switch action {
-				case "block":
-					// No transformation needed on update: suppressTemplateDrift in the plan
-					// modifier ensures the plan (and therefore this payload) already holds
-					// the display name from config, not a .html file name. Stripping was
-					// removed because some tenants reject an absent template field with
-					// "template field is required". See issue #124.
-				case "periodic_reauth":
-					// Translate display name → .html filename for both create and update.
-					// If the value is already a filename, leave it unchanged.
-					if !strings.HasSuffix(tmpl, ".html") {
-						if fileName, ok := npaTemplatesAPIFileName(action, tmpl); ok {
-							requestMap.RuleData.MatchCriteriaAction.Template = &fileName
-						} else {
-							log.Printf("WARN: periodic_reauth template %q not found in templates API cache — sending as-is", tmpl)
-						}
-					}
-				}
-			}
+			bracketPrivateApps(requestMap.RuleData)
+			stripNegateFlagsWhenEmpty(requestMap.RuleData)
 		}
 
-		// Convert device_classification_id from []string to []int64 for the API
-		// The API returns strings but expects integers on write
-		var deviceClassificationIDInts []int64
-		if requestMap.RuleData != nil {
-			for _, s := range requestMap.RuleData.DeviceClassificationID {
-				n, err := strconv.ParseInt(s, 10, 64)
-				if err != nil {
-					log.Printf("ERROR: Unable to convert device_classification_id value %q to int: %v", s, err)
-					return nil, fmt.Errorf("ERROR: Unable to convert device_classification_id value %q to int: %w", s, err)
-				}
-				deviceClassificationIDInts = append(deviceClassificationIDInts, n)
-			}
-		}
+		// Template field — no transformation for ANY action type.
+		//
+		// Verified against bespin and policydemo on 2026-10-21 (docs/api-audit/npa-rules-template):
+		//   block           — the API resolves the display name to a filename on POST and
+		//                     PATCH and returns the filename on GET. A filename on write is
+		//                     rejected ("Undefined template"); an absent field is rejected
+		//                     ("template field is required").
+		//   periodic_reauth — the API stores the display name VERBATIM on POST and PATCH and
+		//                     returns it on GET. A filename on write is rejected
+		//                     ("Undefined template: 3.html") on both tenants.
+		// So the display name from config is the only value the API accepts for either
+		// action, and it must be sent unchanged. The 0.4.11–0.4.13-beta translation of
+		// periodic_reauth names to filenames (via /api/v2/templates/usernotifications) was
+		// based on a false premise and produced "Undefined template" on tenants where it
+		// ran; it has been removed, and the provider no longer calls that endpoint at all.
+		// The display-name/filename asymmetry for block rules is reconciled in the plan
+		// modifier via private state (suppressTemplateDrift).
+		// See https://github.com/netskopeoss/terraform-provider-netskope/issues/118
+		// See https://github.com/netskopeoss/terraform-provider-netskope/issues/124
 
-		// Marshal using a temporary wrapper that outputs device_classification_id as []int64
-		type ruleDataWithIntIDs struct {
-			RuleData
-			DeviceClassificationID []int64 `json:"device_classification_id,omitempty"`
-		}
-		type requestWithIntIDs struct {
-			Enabled    *string             `json:"enabled,omitempty"`
-			ModifyBy   *string             `json:"modify_by,omitempty"`
-			ModifyTime *string             `json:"modify_time,omitempty"`
-			ModifyType *string             `json:"modify_type,omitempty"`
-			PolicyType *string             `json:"policy_type,omitempty"`
-			GroupID    *string             `json:"group_id,omitempty"`
-			RuleData   *ruleDataWithIntIDs `json:"rule_data,omitempty"`
-			RuleID     *string             `json:"rule_id,omitempty"`
-			RuleName   *string             `json:"rule_name,omitempty"`
-			RuleOrder  *RuleOrder          `json:"rule_order,omitempty"`
+		idInts, err := coerceDeviceClassificationIDs(requestMap.RuleData)
+		if err != nil {
+			return nil, err
 		}
 
 		marshalReq := requestWithIntIDs{
@@ -284,51 +205,69 @@ func (i *myPolicyRequest) BeforeRequest(hookCtx BeforeRequestContext, req *http.
 		}
 		if requestMap.RuleData != nil {
 			rd := *requestMap.RuleData
-			rd.DeviceClassificationID = nil // Clear string version so embedded field doesn't conflict
+			rd.DeviceClassificationID = nil // clear string version; embedded field takes over
 			marshalReq.RuleData = &ruleDataWithIntIDs{
 				RuleData:               rd,
-				DeviceClassificationID: deviceClassificationIDInts,
+				DeviceClassificationID: idInts,
 			}
 		}
 
-		modifiedBody, err := json.Marshal(marshalReq)
-		if err != nil {
-			log.Printf("Error: Unable to marshal modified response: %v", err)
-			return nil, fmt.Errorf("Error: Unable to marshal modified response: %v", err)
-		}
-		if myPolicyRequestDebug {
-			log.Print("=======exit==========")
-			log.Println(string(modifiedBody))
-			log.Print("=================")
-		}
-		if myPolicyRequestDebug {
-			log.Printf("Modified body length: %d", len(modifiedBody))
-			log.Printf("Request Content-Length header: %d", req.ContentLength)
-		}
-		s := string(modifiedBody)
-		req.Body = io.NopCloser(strings.NewReader(s))
-		req.ContentLength = int64(len(modifiedBody))
+		return json.Marshal(marshalReq)
+	})
+}
 
-		// For block createNPARules and updateNPARules: store the template display name
-		// in the request context so the AfterSuccess hook can populate npaTemplateCache
-		// with the file-name → display-name mapping returned by the API.
-		// This allows AfterSuccess to substitute the display name back into the response
-		// body, ensuring state holds the display name rather than the .html file name
-		// (which would cause drift on the next plan).
-		// Only block rules are cached — for periodic_reauth rules the API stores the
-		// value as-is (no translation), so users must supply filenames directly and
-		// no cache substitution is needed or desired.
-		if (hookCtx.OperationID == "createNPARules" || hookCtx.OperationID == "updateNPARules") &&
-			requestMap.RuleData != nil &&
-			requestMap.RuleData.MatchCriteriaAction != nil &&
-			requestMap.RuleData.MatchCriteriaAction.ActionName != nil &&
-			*requestMap.RuleData.MatchCriteriaAction.ActionName == "block" &&
-			requestMap.RuleData.MatchCriteriaAction.Template != nil &&
-			!strings.HasSuffix(*requestMap.RuleData.MatchCriteriaAction.Template, ".html") {
-			req = req.WithContext(withNPATemplateDisplayName(req.Context(), *requestMap.RuleData.MatchCriteriaAction.Template))
-		}
-
-		return req, nil
+// stripRuleOrderOnUpdate removes rule_order from full-rule update payloads.
+// rule_order is create-time placement only. Sending it on a netskope_npa_rules
+// update silently moves the rule to the configured position, which can demote
+// block rules below allow rules (#129).
+//
+// Order-only PATCHes sent by netskope_npa_rules_order carry only rule_order
+// (no rule_data), so their rule_order is preserved.
+// See docs/bugs/BUG-021-npa-template-private-state.md.
+func stripRuleOrderOnUpdate(op string, m *myPolicyRequest) {
+	if op == "updateNPARules" && m.RuleData != nil {
+		m.RuleOrder = nil
 	}
-	return req, nil
+}
+
+// bracketPrivateApps wraps each private app name in brackets for the API write path.
+// The API expects private app names wrapped in brackets on write and returns them
+// wrapped on read; the AfterSuccess hook strips them so config and state hold plain names.
+func bracketPrivateApps(rd *RuleData) {
+	old := rd.PrivateApps
+	rd.PrivateApps = nil
+	for _, app := range old {
+		rd.PrivateApps = append(rd.PrivateApps, "["+app+"]")
+	}
+}
+
+// stripNegateFlagsWhenEmpty removes b_negateNetLocation / b_negateSrcCountries
+// when their associated criteria lists are empty. The API rejects these flags
+// even when false on tenants where the source-IP-criteria feature flag is disabled.
+// The flags are meaningless without a populated criteria list.
+func stripNegateFlagsWhenEmpty(rd *RuleData) {
+	if len(rd.NetLocationObj) == 0 {
+		rd.BNegateNetLocation = nil
+	}
+	if len(rd.SrcCountries) == 0 {
+		rd.BNegateSrcCountries = nil
+	}
+}
+
+// coerceDeviceClassificationIDs converts device_classification_id from []string
+// to []int64 for the API write path. The API returns strings on GET but expects
+// integers on POST/PATCH. Returns nil slice (not an error) when rd is nil.
+func coerceDeviceClassificationIDs(rd *RuleData) ([]int64, error) {
+	if rd == nil {
+		return nil, nil
+	}
+	var out []int64
+	for _, s := range rd.DeviceClassificationID {
+		n, err := strconv.ParseInt(s, 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf("unable to convert device_classification_id value %q to int: %w", s, err)
+		}
+		out = append(out, n)
+	}
+	return out, nil
 }
