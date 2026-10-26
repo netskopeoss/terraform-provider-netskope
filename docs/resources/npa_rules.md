@@ -37,7 +37,7 @@ For large deployments managed with `for_each`, use [`netskope_npa_rules_order`](
 
 There are two ways to specify which private apps a rule applies to. They can be used together or independently:
 
-- **`private_apps`** — a list of app names. The provider wraps each name in brackets automatically when communicating with the API; do not add brackets in config. Use the [`netskope_npa_private_app`](../data-sources/npa_private_app.md) data source to look up an app name by ID rather than hardcoding it:
+- **`private_apps`** — a list of app names. The provider wraps each name in brackets automatically when communicating with the API; do not add brackets in config. Use the [`netskope_npa_private_app`](../data-sources/npa_private_app) data source to look up an app name by ID rather than hardcoding it:
   ```hcl
   data "netskope_npa_private_app" "example" {
     private_app_id = 123
@@ -241,7 +241,7 @@ Optional:
 
 - `action_name` (String) must be one of ["allow", "block", "periodic_reauth"]
 - `emit_alert` (Boolean) Whether to emit an alert when the rule matches (required for block action)
-- `template` (String) Notification template display name. Required for block and periodic_reauth actions. Use the display name shown in the Netskope UI (e.g. "Default Template"), not the `.html` filename returned by the API on read. The provider reconciles the display-name / filename asymmetry using Terraform private state: after the first apply the plan is empty; on import or upgrade from ≤0.4.12 a one-time converging diff (`"block_page.html" → "Default Template"`) is expected and required for convergence.
+- `template` (String) Notification template display name. Required for block and periodic_reauth actions. Use the display name (e.g. "Default Template"), not the file name returned by the API. The API returns a .html file name on read; the suppressTemplateDrift plan modifier and BeforeRequest hook handle the mismatch transparently.
 
 
 <a id="nestedatt--rule_data--periodic_reauth"></a>
@@ -478,7 +478,7 @@ terraform plan   # expected: No changes
 | Plan shows | Cause | Fix |
 |-----------|-------|-----|
 | Removing items from a list | Non-empty list in state but absent from config | Add the list and its values to config |
-| `template` one-time diff after import | Expected: private state not yet set | Apply once; subsequent plans will be empty |
+| `template` drift | Display name / `.html` filename mismatch | Use the display name exactly as shown in state |
 | `(known after apply)` on all fields | `rule_data` omitted from config block | Add `rule_data = {}` as minimum placeholder |
 | `schedule` drift | `time_range` omitted | Include `time_range = []` when using `time_interval_obj` |
 
@@ -503,7 +503,7 @@ resource "netskope_npa_rules" "web_allow" {
 
 #### Block rule with notification template
 
-The `template` value is the display name as shown in the Netskope UI. After `terraform import`, the first `terraform plan` will show a converging diff (`"block_page.html" → "Default Block Page"`) — apply it once to persist the private state key; subsequent plans will be empty. See [Known limitations](#known-limitations) below.
+The `template` value is the display name as shown in the Netskope UI — the provider translates `.html` filenames to display names automatically on import and refresh.
 
 ```hcl
 resource "netskope_npa_rules" "db_block" {
@@ -634,14 +634,4 @@ terraform plan   # expected: No changes
 
 **`userGroupObjects` is computed and ignored** — the API enriches `user_groups` with full group detail in a `userGroupObjects` field. This is excluded from the Terraform schema and does not appear in state.
 
-**Template names** — the API returns the `.html` filename on GET (e.g. `"block_page.html"`) but accepts the display name on write (e.g. `"Default Block Page"`). State stores whichever value the API returned; the provider uses Terraform private state to suppress the resulting diff after the first apply. On import or upgrade from ≤0.4.12, a one-time converging plan diff is expected — apply it once.
-
-**`rule_order` is create-time only** — setting `rule_order` in config positions the rule on creation. Changing `rule_order` after creation produces a plan diff that applies without moving the live rule. For post-creation reordering, use [`netskope_npa_rules_order`](npa_rules_order). Remove any `lifecycle { ignore_changes = [rule_data] }` workarounds added to suppress template drift in ≤0.4.12 — they are no longer needed.
-
-### Known limitations
-
-1. **Out-of-band template change not detected** — if the template is changed in the Netskope UI while the configured display name in Terraform is unchanged, the provider does not detect the change. The private state key stores the last display name sent, not the live filename. To force re-sync, change the `template` value in config and apply.
-
-2. **One converging diff per block rule after create, import, or upgrade from ≤0.4.12** — the first plan after any of these operations shows a `"block_page.html" → "Default Template"` diff on each block rule. Applying it is required for subsequent plans to be empty. This is expected and intentional. `periodic_reauth` rules are not affected (the API stores the display name as given), except for a UI-created rule that is imported.
-
-3. **`rule_order` has no effect after creation** — only the initial placement is controlled by `rule_order`. Use `netskope_npa_rules_order` for post-creation position management.
+**Template names** — on import and every refresh, the provider translates `.html` template filenames returned by the API to display names. State always stores the display name. Use the value shown by `terraform state show` or in `generated.tf` verbatim — never the `.html` filename.
