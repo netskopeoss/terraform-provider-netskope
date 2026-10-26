@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.4.13] - Unreleased
 
+### Fixed
+
+- **`netskope_npa_rules` perpetual template diff on Terraform Cloud and 403 tenants; block rules reordered to bottom on every update** ([#129](https://github.com/netskopeoss/terraform-provider-netskope/issues/129)) — Two root causes: (1) The template reconciliation used in-process caches that do not survive between Terraform runs (Terraform Cloud, fresh `terraform plan` invocations). On tenants where `/api/v2/templates/usernotifications` returns 403, the cache never populated, and the plan always showed a `"5.html" → "My Template"` diff, triggering an unnecessary PATCH on every apply. (2) `Update` serialized `rule_order` from the plan and sent it on every PATCH. With `lifecycle { ignore_changes = [rule_order] }`, the previously configured `{order = "bottom"}` was re-sent unconditionally, silently moving all updated block rules to the bottom of the policy — below allow rules.
+
+  Fixed by: (1) replacing in-process caches with Terraform resource **private state** (`npa_template_display` key). Private state is persisted inside the state file and survives across provider processes. The plan modifier reads it to decide whether the `.html` filename in state corresponds to the configured display name, suppressing the diff when they match. (2) stripping `rule_order` unconditionally from `updateNPARules` request bodies in the BeforeRequest hook.
+
+  **Upgrade notes for ≤0.4.12 users:** Expect one `"<file>.html" → "<display name>"` update per block/periodic_reauth rule on the first `apply` after upgrading (import, upgrade, or first creation). This PATCH is necessary to persist the private state key; subsequent plans will show no diff. `rule_order` is now create-time only — changes to it in config after creation produce a visible plan diff that applies without moving the live rule. Use `netskope_npa_rules_order` for post-creation reordering. Remove any `ignore_changes = [rule_data]` workarounds added to suppress the drift.
+
+- **`netskope_npa_private_app`: two apps sharing a new tag created in the same apply failed with `Duplicate entry … for key 'tag_unique'`** ([#120](https://github.com/netskopeoss/terraform-provider-netskope/issues/120)) — Terraform creates independent resources in parallel; the API creates a tag row on first use, so two concurrent creates raced on the `(tag_name, tag_type)` unique constraint. Private-app creates are now serialised in the provider (the same mechanism already used for rule creates, #66), so the second create finds the tag and attaches it by name. Covered by `TestAccNPAPrivateApp_sharedTagTwoApps`.
+
+- **`netskope_npa_rules` block rule updates fail with "template field is required" on 403 tenants** ([#124](https://github.com/netskopeoss/terraform-provider-netskope/issues/124)) — Resolved by the private-state fix above. The plan modifier now correctly sends the display name on updates, which all API tenants accept.
+
+- **`netskope_npa_rules` `periodic_reauth` template rejected or not applied; template changes not detected** ([#118](https://github.com/netskopeoss/terraform-provider-netskope/issues/118)) — Since 0.4.11 the provider translated a `periodic_reauth` template display name into a `.html` filename before sending it, via `/api/v2/templates/usernotifications`. Verified against two tenants on 2026-10-21: the NPA rules API stores a `periodic_reauth` template display name **verbatim**, returns it unchanged on read, and **rejects filenames** (`Undefined template: 3.html`). The translation therefore produced `Undefined template` wherever the catalogue was reachable and could not run where it was not. Fixed by sending the configured display name unchanged for all action types and removing every call to the templates endpoint. Changing the display name in config is now detected and applied (the previous plan modifier suppressed it). If an earlier release left `template = "<n>.html"` in configuration for a `periodic_reauth` rule, change it back to the display name. See [README — Periodic re-authentication rules](README.md#periodic-re-authentication-rules-use-the-template-display-name).
+
+  **Known limitations after 0.4.13:**
+  1. An out-of-band UI template change (`5.html → 7.html`) while the configured display name is unchanged is not detected. The provider records the last-sent display name, not the live filename.
+  2. One converging `"<file>.html" → "<display name>"` diff and PATCH per rule after: upgrade from ≤0.4.12, `terraform import`, or first creation. Applying it is required for convergence.
+  3. `rule_order` is create-time placement only. Post-creation reordering requires `netskope_npa_rules_order`.
+  4. An API-created `periodic_reauth` rule may show no template selected in the Netskope UI, which matches templates by filename while the API stores the name. Whether enforcement differs is being confirmed with the API team. Importing a UI-created `periodic_reauth` rule (stored as `"3.html"`) and configuring the display name produces a one-time diff that rewrites it with the name.
+
+- **`netskope_device_tag` reads failed with an unexpected status code** — `POST /api/v2/devices/device/tags/gettags` (used for every read, since the API has no GET) returns HTTP 201 rather than 200. The response hook now normalises the status to 200 so the generated status handling accepts the body. Covered by hook unit tests `TestDeviceTag_GetRewrites201To200` and `TestDeviceTag_ListRewrites201To200`.
+
+### Changed
+
+- **`netskope_device_tag` destroy no longer fails when the API refuses deletion** — `DELETE /api/v2/devices/device/tags/{id}` returns 403 on current tenants; tag deletion is UI-only. The response hook now treats that 403 as "already gone" (404), so `terraform destroy` removes the tag from state and succeeds. **The tag still exists in the tenant and must be deleted in the Netskope UI.** Previously the destroy errored and left the resource in state. See `docs/api-audit/device-tags.md` (2026-10-26 section) for the captured API behaviour.
+
 ### Security
 - **Updated `google.golang.org/grpc` v1.83.1 → v1.83.2** — resolves CVE-2026-84445: DoS via crash on missing `:authority`/`Host` headers in xDS servers (high), reintroduced in v1.83.0–1.83.1. Also pulls in updated `golang.org/x/crypto`, `net`, `sys`, `text`, `tools`, `sync`, and `mod`.
 

@@ -181,6 +181,35 @@ NETSKOPE_SERVER_URL="https://<your-tenant>.goskope.com/api/v2" \
 TF_ACC=1 go test -v ./internal/provider/... -timeout 120m -parallel 1
 ```
 
+## Test-Only Environment Variables
+
+These variables modify provider behavior for testing only. **Never set them in production.**
+
+| Variable | Description |
+|----------|-------------|
+| `NETSKOPE_TEST_DEVICE_TAGS=1` | Enables acceptance tests for `netskope_device_tag` (which are disabled by default because the API is in beta and requires elevated permissions). |
+| | **Device tags cannot be deleted via the API** (DELETE returns 403; see `docs/api-audit/device-tags.md`). `terraform destroy` removes them from state only, `CheckDestroy` is intentionally omitted in `devicetag_resource_test.go`, and there is no sweeper. Test tags named `tf-acc-test-*` will accumulate on the tenant and must be removed in the Netskope UI periodically. |
+| `NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE` / `_2` | Display names of two `periodic_reauth` templates on the tenant, for `TestAccNPARules_withPeriodicReauth`, `_periodicReauthImport`, `_periodicReauthTemplateChange` and `TestAccDrift_NPARules_PeriodicReauth`. The API stores these names verbatim on every tenant (filenames are rejected). The tests verify via a direct GET that the backend holds the configured name; they skip when unset. |
+| `NETSKOPE_TEST_BLOCK_TEMPLATE` / `_2` | Block template display names for `TestAccNPARules_blockRuleTemplateChange`; `_BLOCK_TEMPLATE` defaults to `"Default Template"` (which the other block-rule tests hard-code). |
+| `NETSKOPE_TEST_TIME_INTERVAL_ID` | ID of a time interval on the tenant (Settings > Time Intervals). Used by `TestAccNPARules_withSchedule`, `_importNewFields` and `TestAccDrift_NPARules_Schedule`; they skip when unset. Provision one on each tenant rather than skipping. |
+| `NETSKOPE_TEST_BLOCK_TEMPLATE_2` / `NETSKOPE_TEST_PERIODIC_REAUTH_TEMPLATE_2` | A second, distinct template display name of each kind. `TestAccNPARules_blockRuleTemplateChange` and `_periodicReauthTemplateChange` change the template from the first name to the second and skip when `_2` is unset. |
+| `NETSKOPE_TEST_STEERING_ID` | ID of an existing NPA steering configuration. Used by `TestAccDeviceClassificationSteeringMapping_basic`; skipped when unset. |
+| `NETSKOPE_TEST_NET_LOCATION_ID` | ID of a network location object. Used by `TestAccNPARules_withNetLocation`; skipped when unset. |
+| `NETSKOPE_TEST_PRIVATE_APP_TAG_ID` | ID of an existing private app tag. Used by `TestAccNPARules_importNewFields`; skipped when unset. |
+| `NETSKOPE_TEST_USER` | A user email that exists on the tenant, for rules that set `users`. |
+
+### NPA rules template tests on 403 tenants
+
+The acceptance tests `TestAccNPARules_blockRuleUpdate` and `TestAccDrift_NPARules_BlockTemplate` run correctly on both:
+- The templates catalogue endpoint (`/api/v2/templates/usernotifications`) is no longer used by the provider; bespin (403) and policydemo (200) behave identically for template handling.
+
+```bash
+# Run NPA rules template tests
+TF_ACC=1 go test -v ./internal/provider/... \
+  -run 'TestAccNPARules_(blockRuleUpdate|updateWithIgnoredRuleOrder)' \
+  -timeout 60m
+```
+
 ## CI/CD Integration
 
 For GitHub Actions, set these as repository secrets:

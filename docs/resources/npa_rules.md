@@ -241,7 +241,7 @@ Optional:
 
 - `action_name` (String) must be one of ["allow", "block", "periodic_reauth"]
 - `emit_alert` (Boolean) Whether to emit an alert when the rule matches (required for block action)
-- `template` (String) Notification template display name. Required for block and periodic_reauth actions. Use the display name (e.g. "Default Template"), not the file name returned by the API. The API returns a .html file name on read; the suppressTemplateDrift plan modifier and BeforeRequest hook handle the mismatch transparently.
+- `template` (String) Notification template display name. Required for block and periodic_reauth actions. Use the display name shown in the Netskope UI (e.g. "Default Template"), not the `.html` filename returned by the API on read. The provider reconciles the display-name / filename asymmetry using Terraform private state: after the first apply the plan is empty; on import or upgrade from ≤0.4.12 a one-time converging diff (`"block_page.html" → "Default Template"`) is expected and required for convergence.
 
 
 <a id="nestedatt--rule_data--periodic_reauth"></a>
@@ -478,7 +478,7 @@ terraform plan   # expected: No changes
 | Plan shows | Cause | Fix |
 |-----------|-------|-----|
 | Removing items from a list | Non-empty list in state but absent from config | Add the list and its values to config |
-| `template` drift | Display name / `.html` filename mismatch | Use the display name exactly as shown in state |
+| `template` one-time diff after import | Expected: private state not yet set | Apply once; subsequent plans will be empty |
 | `(known after apply)` on all fields | `rule_data` omitted from config block | Add `rule_data = {}` as minimum placeholder |
 | `schedule` drift | `time_range` omitted | Include `time_range = []` when using `time_interval_obj` |
 
@@ -503,7 +503,7 @@ resource "netskope_npa_rules" "web_allow" {
 
 #### Block rule with notification template
 
-The `template` value is the display name as shown in the Netskope UI — the provider translates `.html` filenames to display names automatically on import and refresh.
+The `template` value is the display name as shown in the Netskope UI. After `terraform import`, the first `terraform plan` will show a converging diff (`"block_page.html" → "Default Block Page"`) — apply it once to persist the private state key; subsequent plans will be empty. See [Known limitations](#known-limitations) below.
 
 ```hcl
 resource "netskope_npa_rules" "db_block" {
@@ -634,4 +634,14 @@ terraform plan   # expected: No changes
 
 **`userGroupObjects` is computed and ignored** — the API enriches `user_groups` with full group detail in a `userGroupObjects` field. This is excluded from the Terraform schema and does not appear in state.
 
-**Template names** — on import and every refresh, the provider translates `.html` template filenames returned by the API to display names. State always stores the display name. Use the value shown by `terraform state show` or in `generated.tf` verbatim — never the `.html` filename.
+**Template names** — the API returns the `.html` filename on GET (e.g. `"block_page.html"`) but accepts the display name on write (e.g. `"Default Block Page"`). State stores whichever value the API returned; the provider uses Terraform private state to suppress the resulting diff after the first apply. On import or upgrade from ≤0.4.12, a one-time converging plan diff is expected — apply it once.
+
+**`rule_order` is create-time only** — setting `rule_order` in config positions the rule on creation. Changing `rule_order` after creation produces a plan diff that applies without moving the live rule. For post-creation reordering, use [`netskope_npa_rules_order`](npa_rules_order). Remove any `lifecycle { ignore_changes = [rule_data] }` workarounds added to suppress template drift in ≤0.4.12 — they are no longer needed.
+
+### Known limitations
+
+1. **Out-of-band template change not detected** — if the template is changed in the Netskope UI while the configured display name in Terraform is unchanged, the provider does not detect the change. The private state key stores the last display name sent, not the live filename. To force re-sync, change the `template` value in config and apply.
+
+2. **One converging diff after create, import, or upgrade from ≤0.4.12** — the first plan after any of these operations shows a `"block_page.html" → "Default Template"` diff. Applying it is required for subsequent plans to be empty. This is expected and intentional.
+
+3. **`rule_order` has no effect after creation** — only the initial placement is controlled by `rule_order`. Use `netskope_npa_rules_order` for post-creation position management.

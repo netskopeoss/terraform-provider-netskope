@@ -107,6 +107,8 @@ func (d *deviceTagAfterSuccessHook) AfterSuccess(hookCtx AfterSuccessContext, re
 		return d.unwrapSingleFromPaginated(res)
 	case "listDeviceTags":
 		return d.unwrapListFromPaginated(res)
+	case "deleteDeviceTag":
+		return d.handleDeleteForbidden(res)
 	default:
 		return res, nil
 	}
@@ -174,6 +176,9 @@ func (d *deviceTagAfterSuccessHook) unwrapSingleFromPaginated(res *http.Response
 		return replaceBody(res, notFound), nil
 	}
 
+	// gettags returns 201; rewrite to 200 so the SDK's status switch handles it.
+	res.StatusCode = http.StatusOK
+	res.Status = "200 OK"
 	return replaceBody(res, envelope.Data.Data[0]), nil
 }
 
@@ -202,5 +207,24 @@ func (d *deviceTagAfterSuccessHook) unwrapListFromPaginated(res *http.Response) 
 		return nil, fmt.Errorf("deviceTag list hook: failed to marshal wrapped response: %w", err)
 	}
 
+	// gettags returns 201; rewrite to 200 so the SDK's status switch handles it.
+	res.StatusCode = http.StatusOK
+	res.Status = "200 OK"
 	return replaceBody(res, wrapped), nil
+}
+
+// handleDeleteForbidden converts a 403 response from DELETE /devices/device/tags/{id}
+// into a 404 so the resource Delete method treats the tag as already gone and removes
+// it from state without error. The API forbids tag deletion (UI-only) and always returns
+// 403 — we surface this as a no-op rather than a hard failure.
+func (d *deviceTagAfterSuccessHook) handleDeleteForbidden(res *http.Response) (*http.Response, error) {
+	if res.StatusCode != http.StatusForbidden {
+		return res, nil
+	}
+	io.ReadAll(res.Body) //nolint:errcheck
+	res.Body.Close()
+	res.StatusCode = http.StatusNotFound
+	res.Status = "404 Not Found"
+	notFound := []byte(`{"success":false,"error":{"message":"Tag deletion is not supported via API; tag removed from Terraform state"}}`)
+	return replaceBody(res, notFound), nil
 }

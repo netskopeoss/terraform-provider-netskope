@@ -179,9 +179,12 @@ func TestBeforeRequest_NoRuleOrder(t *testing.T) {
 	}
 }
 
-// TestBeforeRequest_UpdateOperationWithRuleOrder verifies the hook also works
-// for updateNPARules (not just createNPARules).
-func TestBeforeRequest_UpdateOperationWithRuleOrder(t *testing.T) {
+// TestBeforeRequest_UpdateStripsRuleOrder verifies that rule_order is removed from
+// updateNPARules payloads (#129 problem 2). Sending rule_order on update silently moves
+// the rule to the specified position, which can demote block rules below allow rules.
+// rule_order is create-time placement only.
+// See docs/bugs/BUG-021-npa-template-private-state.md.
+func TestBeforeRequest_UpdateStripsRuleOrder(t *testing.T) {
 	hook := &myPolicyRequest{}
 
 	body := `{
@@ -195,8 +198,7 @@ func TestBeforeRequest_UpdateOperationWithRuleOrder(t *testing.T) {
 			"access_method": ["Client"]
 		},
 		"rule_order": {
-			"order": "after",
-			"rule_id": 42
+			"order": "bottom"
 		}
 	}`
 
@@ -214,20 +216,93 @@ func TestBeforeRequest_UpdateOperationWithRuleOrder(t *testing.T) {
 		t.Fatalf("failed to unmarshal result body: %v", err)
 	}
 
-	// Verify both private apps were wrapped in brackets
+	// rule_order must be absent on update (#129 P2).
+	if parsed.RuleOrder != nil {
+		t.Errorf("expected rule_order to be stripped on update, got %+v", *parsed.RuleOrder)
+	}
+
+	// Other fields and private app brackets must still be processed.
 	if len(parsed.RuleData.PrivateApps) != 2 {
 		t.Fatalf("expected 2 private apps, got %d", len(parsed.RuleData.PrivateApps))
 	}
 	if parsed.RuleData.PrivateApps[0] != "[app-one]" {
 		t.Errorf("expected '[app-one]', got %q", parsed.RuleData.PrivateApps[0])
 	}
-	if parsed.RuleData.PrivateApps[1] != "[app-two]" {
-		t.Errorf("expected '[app-two]', got %q", parsed.RuleData.PrivateApps[1])
+}
+
+// TestBeforeRequest_OrderOnlyUpdatePreservesRuleOrder verifies that an
+// updateNPARules body containing ONLY rule_order (as sent by
+// netskope_npa_rules_order.patchOrder) is passed through unchanged. Stripping it
+// would turn every reorder into a no-op PATCH and the order resource would fail
+// with "rule ordering did not converge". H1b.
+func TestBeforeRequest_OrderOnlyUpdatePreservesRuleOrder(t *testing.T) {
+	hook := &myPolicyRequest{}
+
+	body := `{"rule_order": {"order": "top"}}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "updateNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
 	}
 
-	// Verify rule_order preserved
-	if *parsed.RuleOrder.RuleID != 42 {
-		t.Errorf("expected rule_order.rule_id=42, got %d", *parsed.RuleOrder.RuleID)
+	var parsed myPolicyRequest
+	if err := json.Unmarshal([]byte(readRequestBody(t, result)), &parsed); err != nil {
+		t.Fatalf("failed to unmarshal result body: %v", err)
+	}
+
+	if parsed.RuleOrder == nil || parsed.RuleOrder.Order == nil || *parsed.RuleOrder.Order != "top" {
+		t.Fatalf("expected order-only update to keep rule_order {order: top}, got %+v", parsed.RuleOrder)
+	}
+	if parsed.RuleData != nil {
+		t.Errorf("expected no rule_data in order-only body, got %+v", parsed.RuleData)
+	}
+}
+
+// TestBeforeRequest_CreatePreservesRuleOrder verifies that rule_order is preserved
+// in createNPARules payloads. Only update operations strip rule_order. H2.
+func TestBeforeRequest_CreatePreservesRuleOrder(t *testing.T) {
+	hook := &myPolicyRequest{}
+
+	body := `{
+		"rule_name": "test-rule",
+		"enabled": "1",
+		"group_id": "5",
+		"rule_data": {
+			"policy_type": "private-app",
+			"match_criteria_action": {"action_name": "allow"},
+			"privateApps": ["my-app"],
+			"access_method": ["Client"]
+		},
+		"rule_order": {
+			"order": "after",
+			"rule_id": 42
+		}
+	}`
+
+	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
+
+	result, err := hook.BeforeRequest(ctx, req)
+	if err != nil {
+		t.Fatalf("BeforeRequest failed: %v", err)
+	}
+
+	resultBody := readRequestBody(t, result)
+
+	var parsed myPolicyRequest
+	if err := json.Unmarshal([]byte(resultBody), &parsed); err != nil {
+		t.Fatalf("failed to unmarshal result body: %v", err)
+	}
+
+	if parsed.RuleOrder == nil {
+		t.Fatal("expected rule_order to be preserved on create, got nil")
+	}
+	if parsed.RuleOrder.RuleID == nil || *parsed.RuleOrder.RuleID != 42 {
+		t.Errorf("expected rule_order.rule_id=42, got %v", parsed.RuleOrder.RuleID)
+	}
+	if parsed.RuleOrder.Order == nil || *parsed.RuleOrder.Order != "after" {
+		t.Errorf("expected rule_order.order='after', got %v", parsed.RuleOrder.Order)
 	}
 }
 
@@ -486,7 +561,7 @@ func TestBeforeRequest_HtmlTemplatePassesThroughOnUpdate(t *testing.T) {
 // Only block rule update payloads have .html filenames stripped (to prevent the API
 // rejecting them). For periodic_reauth, the display name is sent as-is on update and
 // the API stores it verbatim — the template applied from CREATE persists.
-// See docs/bugs/BUG-020-periodic-reauth-template.md
+// See docs/bugs/BUG-022-periodic-reauth-template.md
 func TestBeforeRequest_HtmlTemplatePreservedForPeriodicReauthOnUpdate(t *testing.T) {
 	hook := &myPolicyRequest{}
 
@@ -597,208 +672,45 @@ func TestBeforeRequest_DisplayNamePreservedOnCreate(t *testing.T) {
 	}
 }
 
-// TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnCreate verifies
-// that a display name in a periodic_reauth template field IS translated to the
-// corresponding .html filename before the create payload is sent to the API.
-// Unlike block rules, the periodic_reauth API endpoint stores the template value
-// verbatim — it does not translate display names server-side. Sending a display name
-// results in the template not being applied by Netskope.
-// See docs/bugs/BUG-020-periodic-reauth-template.md
-// See https://github.com/netskopeoss/terraform-provider-netskope/issues/118
-func TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnCreate(t *testing.T) {
-	npaTemplatesAPIResetForTest()
-	t.Cleanup(npaTemplatesAPIResetForTest)
-
-	npaTemplatesAPISeedForTest([]npaTemplatesAPIEntry{
-		{FileName: "10.html", Name: "My Reauth Template", ActionType: "periodic_reauth"},
-	})
-
+// TestBeforeRequest_PeriodicReauthDisplayNamePassesThrough verifies that a
+// periodic_reauth display name is sent to the API exactly as configured, on create
+// and on update. The API stores it verbatim and rejects filenames (verified on both
+// test tenants, 2026-10-21), so any translation here would break the rule. H10.
+func TestBeforeRequest_PeriodicReauthDisplayNamePassesThrough(t *testing.T) {
 	hook := &myPolicyRequest{}
+	body := `{"rule_name":"reauth-rule","enabled":"1","group_id":"5","rule_data":{"match_criteria_action":{"action_name":"periodic_reauth","template":"Default Periodic Authentication Template"},"privateApps":["my-app"],"access_method":["Client"],"os":["Windows"],"periodic_reauth":{"reauth_interval":"8","reauth_interval_unit":"hours"}}}`
 
-	body := `{
-		"rule_name": "reauth-rule",
-		"enabled": "1",
-		"group_id": "5",
-		"rule_data": {
-			"match_criteria_action": {
-				"action_name": "periodic_reauth",
-				"template": "My Reauth Template"
-			},
-			"privateApps": ["my-app"],
-			"access_method": ["Client"],
-			"os": ["Windows"],
-			"periodic_reauth": {
-				"reauth_interval": "8",
-				"reauth_interval_unit": "hours"
-			}
+	for _, op := range []string{"createNPARules", "updateNPARules"} {
+		ctx, req := buildFakePolicyRequest(t, body, op)
+		result, err := hook.BeforeRequest(ctx, req)
+		if err != nil {
+			t.Fatalf("%s: BeforeRequest failed: %v", op, err)
 		}
-	}`
-
-	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
-
-	result, err := hook.BeforeRequest(ctx, req)
-	if err != nil {
-		t.Fatalf("BeforeRequest failed: %v", err)
-	}
-
-	resultBody := readRequestBody(t, result)
-
-	// Display name must be translated to filename — the periodic_reauth API stores
-	// the value verbatim and does not accept display names server-side.
-	if strings.Contains(resultBody, `"My Reauth Template"`) {
-		t.Errorf("expected display name to be translated, but raw display name remains in payload: %s", resultBody)
-	}
-	if !strings.Contains(resultBody, `"10.html"`) {
-		t.Errorf("expected filename '10.html' in create payload after translation, got: %s", resultBody)
+		var parsed myPolicyRequest
+		if err := json.Unmarshal([]byte(readRequestBody(t, result)), &parsed); err != nil {
+			t.Fatalf("%s: unmarshal: %v", op, err)
+		}
+		got := parsed.RuleData.MatchCriteriaAction.Template
+		if got == nil || *got != "Default Periodic Authentication Template" {
+			t.Errorf("%s: expected display name passed through unchanged, got %v", op, got)
+		}
 	}
 }
 
-// TestBeforeRequest_PeriodicReauthDisplayNamePreservedWhenTemplatesAPIEmpty
-// verifies that when the templates API cache has no entry for the given template
-// name, the display name is sent as-is rather than failing. This is the graceful
-// fallback when the /api/v2/templates/usernotifications endpoint is unavailable
-// (e.g. 403 on some tenants) or does not contain the template.
-// See docs/bugs/BUG-020-periodic-reauth-template.md
-func TestBeforeRequest_PeriodicReauthDisplayNamePreservedWhenTemplatesAPIEmpty(t *testing.T) {
-	npaTemplatesAPIResetForTest()
-	t.Cleanup(npaTemplatesAPIResetForTest)
-
+// TestBeforeRequest_BlockDisplayNamePassesThrough verifies the same for block rules:
+// the API resolves the display name itself on POST and PATCH. H3.
+func TestBeforeRequest_BlockDisplayNamePassesThrough(t *testing.T) {
 	hook := &myPolicyRequest{}
-
-	body := `{
-		"rule_name": "reauth-rule",
-		"enabled": "1",
-		"group_id": "5",
-		"rule_data": {
-			"match_criteria_action": {
-				"action_name": "periodic_reauth",
-				"template": "Unknown Template"
-			},
-			"privateApps": ["my-app"],
-			"access_method": ["Client"],
-			"os": ["Windows"],
-			"periodic_reauth": {
-				"reauth_interval": "8",
-				"reauth_interval_unit": "hours"
-			}
+	body := `{"rule_name":"block-rule","enabled":"1","group_id":"5","rule_data":{"match_criteria_action":{"action_name":"block","emit_alert":true,"template":"Default Template"},"privateApps":["my-app"],"access_method":["Client"]}}`
+	for _, op := range []string{"createNPARules", "updateNPARules"} {
+		ctx, req := buildFakePolicyRequest(t, body, op)
+		result, err := hook.BeforeRequest(ctx, req)
+		if err != nil {
+			t.Fatalf("%s: BeforeRequest failed: %v", op, err)
 		}
-	}`
-
-	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
-
-	result, err := hook.BeforeRequest(ctx, req)
-	if err != nil {
-		t.Fatalf("BeforeRequest failed: %v", err)
-	}
-
-	resultBody := readRequestBody(t, result)
-
-	// Display name must be preserved — BeforeRequest never translates for periodic_reauth.
-	if !strings.Contains(resultBody, `"Unknown Template"`) {
-		t.Errorf("expected display name to be preserved in create payload, got: %s", resultBody)
-	}
-}
-
-// TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnUpdate verifies
-// that a display name in a periodic_reauth template field IS translated to the .html
-// filename on update payloads, mirroring the create behaviour.
-// See docs/bugs/BUG-020-periodic-reauth-template.md
-// See https://github.com/netskopeoss/terraform-provider-netskope/issues/118
-func TestBeforeRequest_PeriodicReauthDisplayNameTranslatedToFilenameOnUpdate(t *testing.T) {
-	npaTemplatesAPIResetForTest()
-	t.Cleanup(npaTemplatesAPIResetForTest)
-
-	npaTemplatesAPISeedForTest([]npaTemplatesAPIEntry{
-		{FileName: "10.html", Name: "My Template", ActionType: "periodic_reauth"},
-	})
-
-	hook := &myPolicyRequest{}
-
-	body := `{
-		"rule_name": "reauth-rule",
-		"enabled": "0",
-		"group_id": "5",
-		"rule_data": {
-			"match_criteria_action": {
-				"action_name": "periodic_reauth",
-				"template": "My Template"
-			},
-			"privateApps": ["my-app"],
-			"access_method": ["Client"],
-			"os": ["Windows"],
-			"periodic_reauth": {
-				"reauth_interval": "8",
-				"reauth_interval_unit": "hours"
-			}
+		if !strings.Contains(readRequestBody(t, result), `"template":"Default Template"`) {
+			t.Errorf("%s: expected block display name passed through unchanged", op)
 		}
-	}`
-
-	ctx, req := buildFakePolicyRequest(t, body, "updateNPARules")
-
-	result, err := hook.BeforeRequest(ctx, req)
-	if err != nil {
-		t.Fatalf("BeforeRequest failed: %v", err)
-	}
-
-	resultBody := readRequestBody(t, result)
-
-	// Display name must be translated to filename on update.
-	if !strings.Contains(resultBody, `"template"`) {
-		t.Errorf("expected template to be present in periodic_reauth update payload, got: %s", resultBody)
-	}
-	if strings.Contains(resultBody, `"My Template"`) {
-		t.Errorf("expected display name to be translated, but raw display name remains in update payload: %s", resultBody)
-	}
-	if !strings.Contains(resultBody, `"10.html"`) {
-		t.Errorf("expected filename '10.html' in update payload after translation, got: %s", resultBody)
-	}
-}
-
-// TestBeforeRequest_BlockRuleDisplayNameNotTranslatedViaTemplatesAPI verifies
-// that block rule display names are NOT translated to filenames even when the
-// templates API cache has an entry. Block rules accept display names natively
-// server-side, so translation is unnecessary and would cause the .html strip to
-// unnecessarily suppress the value.
-func TestBeforeRequest_BlockRuleDisplayNameNotTranslatedViaTemplatesAPI(t *testing.T) {
-	npaTemplatesAPIResetForTest()
-	t.Cleanup(npaTemplatesAPIResetForTest)
-
-	npaTemplatesAPISeedForTest([]npaTemplatesAPIEntry{
-		{FileName: "5.html", Name: "Generic Block", ActionType: "block"},
-	})
-
-	hook := &myPolicyRequest{}
-
-	body := `{
-		"rule_name": "block-rule",
-		"enabled": "1",
-		"group_id": "5",
-		"rule_data": {
-			"match_criteria_action": {
-				"action_name": "block",
-				"emit_alert": true,
-				"template": "Generic Block"
-			},
-			"privateApps": ["my-app"],
-			"access_method": ["Client"]
-		}
-	}`
-
-	ctx, req := buildFakePolicyRequest(t, body, "createNPARules")
-
-	result, err := hook.BeforeRequest(ctx, req)
-	if err != nil {
-		t.Fatalf("BeforeRequest failed: %v", err)
-	}
-
-	resultBody := readRequestBody(t, result)
-
-	// Block rule display name must NOT be translated — API accepts it as-is
-	if !strings.Contains(resultBody, `"Generic Block"`) {
-		t.Errorf("expected block rule display name to be preserved, got: %s", resultBody)
-	}
-	if strings.Contains(resultBody, "5.html") {
-		t.Errorf("expected .html filename NOT to appear for block rule create, got: %s", resultBody)
 	}
 }
 

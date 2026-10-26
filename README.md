@@ -8,6 +8,59 @@ The official Terraform provider for [Netskope](https://www.netskope.com/), enabl
 
 > **Examples:** See [terraform-netskope-examples](https://github.com/jharris-ns/terraform-netskope-examples) for ready-to-use Terraform configurations covering NPA private apps, policy-as-code, device classification, RBAC labels, and more.
 
+## Upgrading to v0.4.13
+
+v0.4.13 is a bug-fix release for `netskope_npa_rules`. It changes how the provider handles the notification `template` field and the `rule_order` field. Read this section before upgrading if you manage **block** or **periodic_reauth** rules.
+
+### What's fixed in v0.4.13
+
+- **Perpetual `template` diff on Terraform Cloud and on tenants where the templates endpoint is unavailable** ([#129](https://github.com/netskopeoss/terraform-provider-netskope/issues/129), [#124](https://github.com/netskopeoss/terraform-provider-netskope/issues/124)) — Earlier releases remembered the display-name ↔ filename mapping in provider memory, which is lost whenever Terraform starts a new provider process (every TFC run, every CLI command). The provider now records the last template display name it sent in Terraform **resource private state**, which lives in the state file and survives across runs. No API call is needed to reconcile the diff.
+- **Block-rule updates failing with `template field is required for block action`** ([#124](https://github.com/netskopeoss/terraform-provider-netskope/issues/124)) — Updates always send the display name; the field is never stripped.
+- **Every rule update moved the rule to the bottom of the policy** ([#129](https://github.com/netskopeoss/terraform-provider-netskope/issues/129)) — `rule_order` is no longer sent on update. See [`rule_order` is create-time only](#rule_order-is-create-time-only).
+- **`periodic_reauth` template changes were not detected** ([#118](https://github.com/netskopeoss/terraform-provider-netskope/issues/118)) — Changing `template` from one display name to another now produces a plan diff and is applied.
+- **`periodic_reauth` templates sent as filenames were rejected (`Undefined template`)** — 0.4.11/0.4.12 translated the display name to a filename before sending. The rules API only accepts the display name for `periodic_reauth` (and stores it verbatim), so the translation is removed and the provider no longer calls `/api/v2/templates/usernotifications`. See [Periodic re-authentication rules](#periodic-re-authentication-rules-use-the-template-display-name).
+
+### One-time converging diff after upgrade
+
+On the first `terraform plan` after upgrading, **every block and periodic_reauth rule** shows a diff of the form:
+
+```
+~ rule_data = {
+    ~ match_criteria_action = {
+        ~ template = "block_page.html" -> "Default Template"
+      }
+  }
+```
+
+This is expected. Apply it once. The apply sends the display name (which the API accepts), records it in private state, and all subsequent plans are empty. The same one-time diff appears after `terraform import` and after creating a new rule, because the API's create response returns the filename rather than the name you supplied. If you still have `lifecycle { ignore_changes = [rule_data] }` from the v0.4.4–v0.4.11 workarounds, remove it; it is no longer needed and it would hide real changes.
+
+### `rule_order` is create-time only
+
+`rule_order` positions a rule when it is **created**. From v0.4.13 it is not sent on updates, because sending it re-applied the create-time position (`{ order = "bottom" }`) on every change and silently moved block rules below allow rules. Changing `rule_order` in config after creation produces a plan diff that applies without effect on the live position. Use [`netskope_npa_rules_order`](docs/resources/npa_rules_order.md) to manage order after creation.
+
+### Periodic re-authentication rules: use the template display name
+
+`periodic_reauth` rules take a notification `template` like block rules do. Set it to the **display name** shown in the Netskope UI, exactly as for block rules:
+
+```hcl
+match_criteria_action = {
+  action_name = "periodic_reauth"
+  template    = "Default Periodic Authentication Template"   # display name
+}
+periodic_reauth = {
+  reauth_interval      = "8"
+  reauth_interval_unit = "hours"
+}
+```
+
+This works on every tenant and needs no additional API access. Verified against two tenants (one where `/api/v2/templates/usernotifications` returns 403 to all tokens, one where it returns 200): the NPA rules API stores a `periodic_reauth` template display name verbatim on create and update, returns it unchanged on read, and **rejects a `.html` filename** (`Undefined template: 3.html`). So, unlike block rules, there is no display-name/filename diff for `periodic_reauth` rules: state always equals config and no converging apply is needed.
+
+**What changed in 0.4.13.** Releases 0.4.11 and 0.4.12 tried to translate the display name into a filename before sending it, using the templates catalogue endpoint. That endpoint is unavailable on some tenants, and on tenants where it is available the resulting filename is rejected by the rules API — which is why #118 kept recurring. 0.4.13 removes that translation and no longer calls `/api/v2/templates/usernotifications` at all. If an earlier release left you with `template = "10.html"` in configuration, change it back to the display name; the plan will show the change and the apply will succeed.
+
+**Importing a rule created in the Netskope UI.** The UI stores reauth templates by filename (a UI-created rule reads back as `"3.html"`), whereas the API stores names. Importing such a rule and configuring the display name shows a one-time `"3.html" -> "<display name>"` diff; applying it rewrites the rule through the API with the display name. If you would rather not change how the rule is stored, leave it unmanaged.
+
+**Known limitation.** An API-created `periodic_reauth` rule may show no template selected in the Netskope UI's rule editor, because the UI matches templates by filename and the API stored a name. We have confirmed the API accepts and returns the name; whether the backend enforces it identically to a UI-created rule is being confirmed with the Netskope API team. If you observe reauth prompts without the expected template, please report it on the provider repository with the tenant type.
+
 ## Upgrading to v0.4.12
 
 ### What's New in v0.4.12
@@ -181,22 +234,20 @@ resource "netskope_npa_rules" "block_example" {
 }
 ```
 
-> **Note:** Block rules must be created through the Netskope UI first, then imported into Terraform. API tokens cannot create block rules directly due to a template resolution limitation. See [KNOWN_API_ISSUES.md](docs/KNOWN_API_ISSUES.md#13-api-tokens-cannot-resolve-user-notification-templates-for-block-rules) for details.
+> **Note:** Block rules can be created directly from Terraform using the template display name (since v0.4.9). The first `terraform plan` after creation or import shows a one-time `"block_page.html" -> "Default Template"` diff; apply it once and subsequent plans are empty. See [One-time converging diff](#one-time-converging-diff-after-upgrade).
 
-> **Allow rules are not affected** — only block rules that use the `template` field need this workaround.
+> **Allow rules are not affected** — only rules that use the `template` field are subject to the behaviour described here.
 
 ### Template Name Resolution
 
-Both `block` and `periodic_reauth` rules use a `template` field in `match_criteria_action`. The provider translates between the display names you write in HCL (e.g. `"Default Template"`) and the `.html` filenames the API stores internally (e.g. `"5.html"`). This translation relies on the `/api/v2/templates/usernotifications` endpoint.
+Both `block` and `periodic_reauth` rules use a `template` field in `match_criteria_action`. Always set it to the **display name** shown in the Netskope UI. The provider does not call any template catalogue endpoint; it relies on the rules API, which behaves as follows (verified on two tenants, 2026-10-21):
 
-**Requirement:** The API token (or OAuth2 client) used by the provider must have read access to `/api/v2/templates/usernotifications`. On most tenants this is available with a standard REST API v2 token. If the endpoint returns 403, the provider degrades gracefully:
+| Action | Display name on write | Filename on write | GET returns | Plan behaviour |
+|---|---|---|---|---|
+| `block` | accepted; API resolves it to the filename | rejected (`Undefined template`) | the filename, e.g. `block_page.html` | one converging `"block_page.html" -> "<name>"` update after create or import, then empty plans; reconciled via Terraform private state, identical on CLI and Terraform Cloud |
+| `periodic_reauth` | accepted; stored verbatim | rejected (`Undefined template`) | the display name | state equals config; no converging step |
 
-| Rule type | Templates API unavailable |
-|---|---|
-| `block` | A one-time visible diff (`5.html → "My Template"`) appears on the first `terraform plan` after a fresh session. Applying it succeeds and state is corrected for the remainder of the run. Subsequent plans in the same session are clean. |
-| `periodic_reauth` | The display name is sent to the API as-is. Because the `periodic_reauth` API endpoint stores the value verbatim, no translation is applied server-side — the template may not take effect. If this occurs, supply the `.html` filename directly (e.g. `template = "10.html"`) to ensure the API applies the correct template. |
-
-If you see persistent `template = "5.html" -> "My Template"` diffs in `terraform plan`, verify that the API token has access to `GET /api/v2/templates/usernotifications`.
+Known limitation (block rules): a template changed out-of-band in the Netskope UI to a *different* template is not detected as drift while the configured display name is unchanged. Changing the display name in config is always detected.
 
 ### RBAC Labels
 
@@ -284,7 +335,7 @@ terraform {
   required_providers {
     netskope = {
       source  = "netskopeoss/netskope"
-      version = "~> 0.4.12"
+      version = "~> 0.4.13"
     }
   }
 }
@@ -335,7 +386,12 @@ export NETSKOPE_OAUTH2_CLIENT_SECRET="<client-secret>"
 provider "netskope" {}
 ```
 
-OAuth2 clients must be created in the Netskope admin UI under **Settings → Security Cloud Platform → OAuth2 Settings**. The client must have sufficient API permissions for the resources being managed.
+To create an OAuth2 service account in the Netskope admin UI:
+
+1. Enable REST API OAuth2 authentication under **Settings > Administration > Administrators & Roles > Settings > REST API Auth Settings**.
+2. On that same page click **Service Account**, then choose **OAuth 2.0** as the token type to obtain a client ID and secret.
+
+The service account must have sufficient API permissions for the resources being managed.
 
 **Precedence:** if `NETSKOPE_API_KEY` is set, it takes priority and OAuth2 is not used.
 

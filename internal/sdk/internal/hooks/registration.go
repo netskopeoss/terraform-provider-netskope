@@ -13,10 +13,6 @@ func initHooks(h *Hooks) {
 	// with an instance of a hook that implements that specific Hook interface
 	// Hooks are registered per SDK instance, and are valid for the lifetime of the SDK instance
 
-	// Debug hook - uncomment to enable request logging for troubleshooting
-	// debug := &debugRequestHook{}
-	// h.registerBeforeRequestHook(debug)
-
 	// Retry rule creation when referenced resources haven't propagated yet (BUG-009)
 	// Wraps the HTTP client so retries happen transparently before hooks process responses.
 	// See docs/bugs/BUG-009-rule-after-app-eventual-consistency.md
@@ -49,17 +45,21 @@ func initHooks(h *Hooks) {
 	h.registerAfterSuccessHook(MyPolicy)
 	MyBulkPolicy := &myBulkPolicyResponse{}
 	h.registerAfterSuccessHook(MyBulkPolicy)
+
+	// OAuth2 client credentials - fetches bearer token from /platform/oauth2/token
+	// when NETSKOPE_OAUTH2_CLIENT_ID and NETSKOPE_OAUTH2_CLIENT_SECRET are set.
+	// Registered before the request-transforming hooks so any hook that needs to
+	// make a side request can see the Authorization header.
+	oauth2 := &oauth2TokenHook{}
+	h.registerSDKInitHook(oauth2)
+	h.registerBeforeRequestHook(oauth2)
+
 	MyPolicyRequest := &myPolicyRequest{}
 	h.registerBeforeRequestHook(MyPolicyRequest)
 
 	// Private app request hook - strips problematic empty fields that cause API errors
 	privateAppReq := &privateAppRequestHook{}
 	h.registerBeforeRequestHook(privateAppReq)
-
-	// Policy template hook - strips file name from GET response to prevent drift
-	// between display name in config and file name returned by API (issue #79)
-	policyTemplate := &policyTemplateResponseHook{}
-	h.registerAfterSuccessHook(policyTemplate)
 
 	// Device classification tags - response transformations for all DC tag/options endpoints
 	dcTags := &deviceClassificationTagsResponse{}
@@ -118,12 +118,8 @@ func initHooks(h *Hooks) {
 	h.registerBeforeRequestHook(npaTag)
 	h.registerAfterSuccessHook(npaTag)
 
-	// OAuth2 client credentials - fetches bearer token from /platform/oauth2/token
-	// when NETSKOPE_OAUTH2_CLIENT_ID and NETSKOPE_OAUTH2_CLIENT_SECRET are set.
-	// Registered last so it runs after all other before-request hooks and can
-	// override the API key header set by the SDK security middleware.
-	oauth2 := &oauth2TokenHook{}
-	h.registerSDKInitHook(oauth2)
-	h.registerBeforeRequestHook(oauth2)
+	// oauth2 AfterError — retries on 401 (token expiry). Registered here so it
+	// runs after all other after-error hooks while still allowing the BeforeRequest
+	// registration above (before MyPolicyRequest) to set Authorization early.
 	h.registerAfterErrorHook(oauth2)
 }

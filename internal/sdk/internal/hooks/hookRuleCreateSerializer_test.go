@@ -151,3 +151,37 @@ func TestRuleCreateSerializer_NonCreatePassthrough(t *testing.T) {
 		}
 	}
 }
+
+// TestRuleCreateSerializer_PrivateAppCreatesSerialized verifies that private app
+// creates take the same lock (#120: concurrent creates sharing a new tag_name hit
+// the tag_unique constraint) and that a mixed rule/app pair cannot be in flight
+// together.
+func TestRuleCreateSerializer_PrivateAppCreatesSerialized(t *testing.T) {
+	h := &ruleCreateSerializer{}
+	appCtx := BeforeRequestContext{HookContext: HookContext{OperationID: "createNPAPrivateApps"}}
+	ruleCtx := BeforeRequestContext{HookContext: HookContext{OperationID: "createNPARules"}}
+
+	if _, err := h.BeforeRequest(appCtx, nil); err != nil {
+		t.Fatalf("BeforeRequest(app): %v", err)
+	}
+	// A rule create must block while the app create holds the lock.
+	acquired := make(chan struct{})
+	go func() {
+		_, _ = h.BeforeRequest(ruleCtx, nil)
+		close(acquired)
+	}()
+	select {
+	case <-acquired:
+		t.Fatal("rule create acquired the lock while a private app create was in flight")
+	case <-time.After(50 * time.Millisecond):
+	}
+	if _, err := h.AfterSuccess(AfterSuccessContext{HookContext: HookContext{OperationID: "createNPAPrivateApps"}}, nil); err != nil {
+		t.Fatalf("AfterSuccess(app): %v", err)
+	}
+	select {
+	case <-acquired:
+	case <-time.After(time.Second):
+		t.Fatal("rule create did not acquire the lock after the private app create released it")
+	}
+	_, _ = h.AfterError(AfterErrorContext{HookContext: HookContext{OperationID: "createNPARules"}}, nil, nil)
+}
